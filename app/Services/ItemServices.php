@@ -1,0 +1,170 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Items;
+
+class ItemServices
+{
+
+
+    private $object;
+    public function __construct(ObjectServices $objectService)
+    {
+        $this->object = $objectService;
+    }
+
+    public function Store(string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE, string $CUSTOM_FIELD1, string $CUSTOM_FIELD2, string $CUSTOM_FIELD3, string $CUSTOM_FIELD4, string $CUSTOM_FIELD5, bool $NON_PORFOLIO_COMPUTATION, bool $BUNDLE_SET, bool $NON_DISCOUNTED_ITEM,   string $PIC_FILENAME, bool $IS_EXPIRED): int
+    {
+        $ID = $this->object->ObjectNextID('ITEM');
+
+        Items::create([
+            'ID'                => $ID,
+            'CODE'              => $CODE,
+            'DESCRIPTION'       => $DESCRIPTION,
+            'PURCHASE_DESCRIPTION' => $PURCHASE_DESCRIPTION,
+            'GROUP_ID'          => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'SUB_CLASS_ID'      => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
+            'TYPE'              => $TYPE,
+            'STOCK_TYPE'        => $STOCK_TYPE,
+            'GL_ACCOUNT_ID'     => $GL_ACCOUNT_ID,
+            'COGS_ACCOUNT_ID'   => $COGS_ACCOUNT_ID,
+            'ASSET_ACCOUNT_ID'  => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'TAXABLE'           => $TAXABLE,
+            'PREFERRED_VENDOR_ID' => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
+            'MANUFACTURER_ID'   => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
+            'RATE'              => $RATE,
+            'COST'              => $COST > 0 ? $COST : null,
+            'RATE_TYPE'         => $RATE_TYPE,
+            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+            'NOTES'             => $NOTES,
+            'BASE_UNIT_ID'      => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
+            'PURCHASES_UNIT_ID' => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
+            'SHIPPING_UNIT_ID'  => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
+            'SALES_UNIT_ID'     => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
+            'PRINT_INDIVIDUAL_ITEMS' => $PRINT_INDIVIDUAL_ITEMS,
+            'INACTIVE'          => $INACTIVE,
+            'CUSTOM_FIELD1'     => $CUSTOM_FIELD1,
+            'CUSTOM_FIELD2'     => $CUSTOM_FIELD2,
+            'CUSTOM_FIELD3'     => $CUSTOM_FIELD3,
+            'CUSTOM_FIELD4'     => $CUSTOM_FIELD4,
+            'CUSTOM_FIELD5'     => $CUSTOM_FIELD5,
+            'NON_PORFOLIO_COMPUTATION' => $NON_PORFOLIO_COMPUTATION,
+            'BUNDLE_SET'        => $BUNDLE_SET,
+            'NON_DISCOUNTED_ITEM' => $NON_DISCOUNTED_ITEM,
+            'PIC_FILENAME'      => $PIC_FILENAME,
+            'IS_EXPIRED'        => $IS_EXPIRED
+        ]);
+
+        return $ID;
+    }
+
+    public function Update(int $ID, string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE, string $CUSTOM_FIELD1, string $CUSTOM_FIELD2, string $CUSTOM_FIELD3, string $CUSTOM_FIELD4, string $CUSTOM_FIELD5, bool $NON_PORFOLIO_COMPUTATION, bool $BUNDLE_SET, bool $NON_DISCOUNTED_ITEM,   string $PIC_FILENAME, bool $IS_EXPIRED): void
+    {
+
+        Items::where('ID', $ID)->update([
+            'CODE'              => $CODE,
+            'DESCRIPTION'       => $DESCRIPTION,
+            'PURCHASE_DESCRIPTION' => $PURCHASE_DESCRIPTION,
+            'GROUP_ID'          => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'SUB_CLASS_ID'      => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
+            'TYPE'              => $TYPE,
+            'STOCK_TYPE'        => $STOCK_TYPE,
+            'GL_ACCOUNT_ID'     => $GL_ACCOUNT_ID,
+            'COGS_ACCOUNT_ID'   => $COGS_ACCOUNT_ID,
+            'ASSET_ACCOUNT_ID'  => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'TAXABLE'           => $TAXABLE,
+            'PREFERRED_VENDOR_ID' => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
+            'MANUFACTURER_ID'   => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
+            'RATE'              => $RATE,
+            'COST'              => $COST > 0 ? $COST : null,
+            'RATE_TYPE'         => $RATE_TYPE,
+            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+            'NOTES'             => $NOTES,
+            'BASE_UNIT_ID'      => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
+            'PURCHASES_UNIT_ID' => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
+            'SHIPPING_UNIT_ID'  => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
+            'SALES_UNIT_ID'     => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
+            'PRINT_INDIVIDUAL_ITEMS' => $PRINT_INDIVIDUAL_ITEMS,
+            'INACTIVE'          => $INACTIVE,
+            'CUSTOM_FIELD1'     => $CUSTOM_FIELD1,
+            'CUSTOM_FIELD2'     => $CUSTOM_FIELD2,
+            'CUSTOM_FIELD3'     => $CUSTOM_FIELD3,
+            'CUSTOM_FIELD4'     => $CUSTOM_FIELD4,
+            'CUSTOM_FIELD5'     => $CUSTOM_FIELD5,
+            'NON_PORFOLIO_COMPUTATION' => $NON_PORFOLIO_COMPUTATION,
+            'BUNDLE_SET'        => $BUNDLE_SET,
+            'NON_DISCOUNTED_ITEM' => $NON_DISCOUNTED_ITEM,
+            'PIC_FILENAME'      => $PIC_FILENAME,
+            'IS_EXPIRED'        => $IS_EXPIRED
+        ]);
+    }
+
+    public function Delete(int $ID): void
+    {
+        Items::where('ID', $ID)->delete();
+    }
+    public function Search($search)
+    {
+        if (!$search) {
+            return Items::query()
+                ->select([
+                    'item.ID',
+                    'item.CODE',
+                    'item.DESCRIPTION',
+                    'item.TAXABLE',
+                    'item.RATE',
+                    'item.COST',
+                    'item.INACTIVE',
+                    'item_type_map.DESCRIPTION as ITEM_TYPE',
+                    'item_sub_class.DESCRIPTION as SUB_CLASS',
+                    'item_sub_class.CLASS_ID',
+                    'item_class.DESCRIPTION as CLASS',
+                    'item_group.DESCRIPTION as GROUP_NAME',
+                    'stock_type_map.DESCRIPTION as STOCK_TYPE',
+                    'unit_of_measure.NAME as UNIT_BASE'
+                ])
+                ->join('item_type_map', 'item_type_map.ID', '=', 'item.TYPE')
+                ->leftJoin('item_sub_class', 'item_sub_class.ID', '=', 'item.SUB_CLASS_ID')
+                ->leftJoin('item_class', 'item_class.ID', '=', 'item_sub_class.CLASS_ID')
+                ->leftJoin('item_group', 'item_group.ID', '=', 'item.GROUP_ID')
+                ->leftJoin('stock_type_map', 'stock_type_map.ID', '=', 'item.STOCK_TYPE')
+                ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'item.BASE_UNIT_ID')
+                ->orderBy('ID', 'desc')->get();
+        } else {
+            return Items::query()
+                ->select([
+                    'item.ID',
+                    'item.CODE',
+                    'item.DESCRIPTION',
+                    'item.TAXABLE',
+                    'item.RATE',
+                    'item.COST',
+                    'item.INACTIVE',
+                    'item_type_map.DESCRIPTION as ITEM_TYPE',
+                    'item_sub_class.DESCRIPTION as SUB_CLASS',
+                    'item_sub_class.CLASS_ID',
+                    'item_class.DESCRIPTION as CLASS',
+                    'item_group.DESCRIPTION as GROUP_NAME',
+                    'stock_type_map.DESCRIPTION as STOCK_TYPE',
+                    'unit_of_measure.NAME as UNIT_BASE'
+                ])
+                ->join('item_type_map', 'item_type_map.ID', '=', 'item.TYPE')
+                ->leftJoin('item_sub_class', 'item_sub_class.ID', '=', 'item.SUB_CLASS_ID')
+                ->leftJoin('item_class', 'item_class.ID', '=', 'item_sub_class.CLASS_ID')
+                ->leftJoin('item_group', 'item_group.ID', '=', 'item.GROUP_ID')
+                ->leftJoin('stock_type_map', 'stock_type_map.ID', '=', 'item.STOCK_TYPE')
+                ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'item.BASE_UNIT_ID')
+                ->where('item.CODE', 'like', '%' . $search . '%')
+                ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
+                ->orWhere('item_type_map.DESCRIPTION', 'like', '%' . $search . '%')
+                ->orWhere('item_sub_class.DESCRIPTION', 'like', '%' . $search . '%')
+                ->orWhere('item_class.DESCRIPTION', 'like', '%' . $search . '%')
+                ->orWhere('item_group.DESCRIPTION', 'like', '%' . $search . '%')
+                ->orWhere('stock_type_map.DESCRIPTION', 'like', '%' . $search . '%')
+                ->orWhere('unit_of_measure.NAME', 'like', '%' . $search . '%')
+                ->orderBy('item.ID', 'desc')
+                ->get();
+        }
+    }
+}

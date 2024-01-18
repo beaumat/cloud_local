@@ -1,0 +1,4 @@
+<div style="margin-top: 40px;" class="custom-control custom-checkbox">
+    <input class="text-sm custom-control-input" wire:model='value' type="checkbox" id="{{ $name }}" >
+    <label for="{{ $name }}" class="text-sm custom-control-label">{{ $titleName }}</label>
+</div>
