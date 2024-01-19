@@ -3,30 +3,29 @@
         <h3 class="card-title">Price Level</h3>
     </div>
     <div class="card-body">
-        <div class="row"
-            @if ($itemId === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+        <div class="row" @if ($itemId === 0) style="opacity: 0.5;pointer-events: none;" @endif>
             <div class="col-md-12">
-                <div class="card">
+                <div class="card bg-light">
                     <div class="card-body">
                         <form wire:submit.prevent='saveItem'>
                             <div class="mb-1 row">
-                                <div class="col-md-10">
-                                    {{-- object --}}
+                                <div class="col-md-8">
+                                    <livewire:select-option name="PRICE_LEVEL_ID" titleName="Price Level"
+                                        :options="$priceLevels" :zero="true" wire:model='PRICE_LEVEL_ID'
+                                        :vertical="false">
                                 </div>
-                                <div class="text-right col-2">
-                                    <button class="text-white btn bg-secondary btn-xs w-100">
+                                <div class="col-md-4">
+                                    <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price"
+                                        wire:model='CUSTOM_PRICE' :vertical="false">
+                                </div>
+                                <div class="col-12 text-right">
+                                    <button class="text-white btn bg-secondary btn-xs w-25 mt-2 mb-1s">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
                                 </div>
                             </div>
                         </form>
-                        <div class="row">
-                            <div class="mb-1 col-md-12">
-                                <input type="text" wire:model.live.debounce.150ms='search'
-                                    class="w-100 form-control form-control-sm bg-light"
-                                    placeholder="Search" />
-                            </div>
-                        </div>
+                     
                         <table class="table table-sm table-bordered table-hover">
                             <thead class="text-xs bg-secondary">
                                 <tr>

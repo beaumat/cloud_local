@@ -210,7 +210,7 @@ class ItemsForm extends Component
         try {
             $Message = '';
             if ($this->ID === 0) {
-                $itemServices->Store(
+                $this->ID =  $itemServices->Store(
                     $this->CODE,
                     $this->DESCRIPTION,
                     $this->PURCHASE_DESCRIPTION,

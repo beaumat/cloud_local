@@ -56,13 +56,12 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'>
-
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:text-input name="SYMBOL" titleName="Symbol" wire:model='SYMBOL'>
 
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-12">
                                             <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
                                             wire:model='INACTIVE'>
                                         </div>

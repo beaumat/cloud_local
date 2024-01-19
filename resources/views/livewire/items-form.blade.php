@@ -40,7 +40,7 @@
                     @endif
                 </div>
                 <div class="col-md-12">
-                    <div class="card card-sm">
+                    <div class="card card-sm bg-light">
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <h3 class="card-title"> {{ $ID === 0 ? 'Create' : 'Edit' }}</h3>
                         </div>
@@ -74,7 +74,7 @@
                                         @endif
 
                                         @if ($TYPE === 6)
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <livewire:custom-check-box name="PRINT_INDIVIDUAL_ITEMS"
                                                     titleName="Print Individual Items"
                                                     wire:model='PRINT_INDIVIDUAL_ITEMS'>
@@ -109,16 +109,12 @@
                                                             <div class="col-md-12">
                                                                 <livewire:select-option name="PREFERRED_VENDOR_ID"
                                                                     :options="$vendors" :zero="true"
-                                                                    titleName="Preferred Vendor"
-                                                                    wire:model='PREFERRED_VENDOR_ID' :key="$vendors->pluck('ID')->join('-')"
-                                                                    :vertical="true">
+                                                                    titleName="Preferred Vendor" :vertical="true">
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <livewire:select-option name="MANUFACTURER_ID"
                                                                     :options="$manufacturers" :zero="true"
-                                                                    titleName="Manufacturer"
-                                                                    wire:model='MANUFACTURER_ID' :key="$manufacturers->pluck('ID')->join('-')"
-                                                                    :vertical="true">
+                                                                    titleName="Manufacturer" :vertical="true">
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <livewire:select-option name="COGS_ACCOUNT_ID"
@@ -279,8 +275,10 @@
             </div>
         </div>
     </section>
-    @if ($TYPE === 1 || $TYPE === 6)
-        <livewire:item-component-panel :itemId="$ID" :itemType="$TYPE" />
+    @if ($TYPE === 1)
+        <livewire:item-component-panel :itemId="$ID" itemTypeName="Component List" />
+    @elseif ($TYPE === 6)
+        <livewire:item-component-panel :itemId="$ID" itemTypeName="Group List" />
     @endif
 
     @if ($TYPE < 4)

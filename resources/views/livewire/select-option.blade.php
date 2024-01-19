@@ -4,6 +4,7 @@
             <div class="col-3">
                 <label for="{{ $name }}" class="text-sm"> {{ $titleName }}</label>
             </div>
+
             <div class="col-9">
                 <select wire:model='value' id="{{ $name }}" class="text-sm form-control form-control-sm">
                     @if ($zero)
@@ -14,7 +15,11 @@
                             @if ($option->DESCRIPTION)
                                 {{ $option->DESCRIPTION }}
                             @else
-                                {{ $option->NAME }}
+                                @if ($option->NAME)
+                                    {{ $option->NAME }}
+                                @else
+                                    {{ $option->CODE }}
+                                @endif
                             @endif
                         </option>
                     @endforeach
@@ -24,6 +29,7 @@
         </div>
     @else
         <label for="{{ $name }}" class="text-sm"> {{ $titleName }}</label>
+
         <select wire:model='value' id="{{ $name }}" class="text-sm form-control form-control-sm">
             @if ($zero)
                 <option value="0"> Choose {{ Str::lower($titleName) }}</option>
@@ -33,7 +39,11 @@
                     @if ($option->DESCRIPTION)
                         {{ $option->DESCRIPTION }}
                     @else
-                        {{ $option->NAME }}
+                        @if ($option->NAME)
+                            {{ $option->NAME }}
+                        @else
+                            {{ $option->CODE }}
+                        @endif
                     @endif
                 </option>
             @endforeach

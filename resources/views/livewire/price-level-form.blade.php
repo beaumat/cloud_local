@@ -63,7 +63,7 @@
                                                 :zero="false" titleName="Type" wire:model.live='TYPE'
                                                 :key="$priceLevelType->pluck('ID')->join('_')">
                                         </div>
-                                        <div class=" col-md-2">
+                                        <div class="col-md-12">
                                             <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
                                                 wire:model='INACTIVE'>
                                         </div>

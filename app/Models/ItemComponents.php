@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Locations extends Model
+class ItemComponents extends Model
 {
     use HasFactory;
-    protected $table = 'location';
+    protected $table = 'item_components';
     protected $primaryKey = 'ID';
     public $timestamps = false;
     protected $fillable = [
         'ID',
-        'CODE',
-        'NAME',
-        'INACTIVE',
-        'PRICE_LEVEL_ID',
-        'GROUP_ID'
+        'ITEM_ID',
+        'COMPONENT_ID',
+        'QUANTITY',
+        'RATE'
     ];
 }

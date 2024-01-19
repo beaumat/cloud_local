@@ -36,9 +36,7 @@ class PriceLevelForm extends Component
     private function LoadDropdown()
     {
         $this->itemList = Items::where('INACTIVE', '0')->whereIn('TYPE', ['0', '1', '2', '3'])->get();
-
         $this->priceLevelType = PriceLevelType::all();
-
         $this->itemGroup = ItemGroup::all();
     }
     public function mount($id = null)

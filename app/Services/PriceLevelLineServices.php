@@ -70,7 +70,7 @@ class PriceLevelLineServices
                     ->orWhere('price_level_lines.CUSTOM_PRICE', 'like', '%' . $search . '%')
                     ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%');
                 })
-                ->orderBy('price_level_lines.ID', 'desc')
+                ->orderBy('price_level_lines.ID', 'asc')
                 ->get();
         }
     }
