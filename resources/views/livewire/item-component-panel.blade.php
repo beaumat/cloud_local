@@ -3,7 +3,7 @@
         <div class="card card-sm">
             <div class="pt-1 pb-1 card-header bg-primary">
                 <h3 class="card-title">
-                    {{$itemTypeName}}      
+                    {{ $itemTypeName }}
                 </h3>
             </div>
             <div class="card-body">
@@ -94,7 +94,7 @@
                                             <th> Description</th>
                                             <th class="text-right col-1">Qty</th>
                                             <th class="text-right col-2">Rate</th>
-                                            <th class="col-2">Action</th>
+                                            <th class="col-2 text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="text-sm">
@@ -106,7 +106,7 @@
                                                 <td class="text-right">
                                                     @if ($editItemId === $list->ID)
                                                         <input type="number" wire:model="newQty"
-                                                            class="form-control form-control-sm">
+                                                            class="form-control form-control-sm text-right">
                                                     @else
                                                         {{ number_format($list->QUANTITY, 1) }}
                                                     @endif
@@ -114,7 +114,7 @@
                                                 <td class="text-right">
                                                     @if ($editItemId === $list->ID)
                                                         <input type="number" wire:model="newRate"
-                                                            class="form-control form-control-sm">
+                                                            class="form-control form-control-sm text-right">
                                                     @else
                                                         {{ number_format($list->RATE, 2) }}
                                                     @endif
@@ -133,7 +133,7 @@
                                                         </button>
                                                     @else
                                                         <button title="Edit" id="editbtn"
-                                                            wire:click='editItem({{ $list->ID . ',' . $list->RATE }})'
+                                                            wire:click='editItem({{ $list->ID . ',' . $list->QUANTITY . ',' . $list->RATE }})'
                                                             class="text-info btn btn-sm btn-link">
                                                             <i class="fas fa-edit" aria-hidden="true"></i>
                                                         </button>

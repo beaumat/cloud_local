@@ -22,8 +22,10 @@ class ItemComponentPanel extends Component
     public $itemCodeList = [];
     public string $search = '';
     public $componentList = [];
-
     public  $editItemId = null;
+    public float $newQty;
+    public float $newRate;
+
     public function updatedcodeBase()
     {
         if ($this->codeBase) {
@@ -34,7 +36,6 @@ class ItemComponentPanel extends Component
         $this->itemDescList = Items::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->whereIn('TYPE', ['0', '2', '3', '4', '7'])
             ->get();
     }
-
     public function deleteComponent($id, ItemComponentServices $itemComponentServices)
     {
         $itemComponentServices->Delete($id);
@@ -52,9 +53,16 @@ class ItemComponentPanel extends Component
                     }),
                 ],
                 'QUANTITY' => 'required|not_in:0',
+            ],
+            [
+                'COMPONENT_ID.required' => 'The Item field is required.',
+                'COMPONENT_ID.not_in' => 'The Item field is required.',
+                'COMPONENT_ID.unique' => 'The selected Item already exists.',
+            ],
+            [
+                'COMPONENT_ID' => 'Item',
             ]
         );
-
 
         try {
             $itemComponentServices->Store(
@@ -80,9 +88,39 @@ class ItemComponentPanel extends Component
         $this->itemTypeName = $itemTypeName;
         $this->updatedcodeBase();
     }
+    public function editItem($id, $newQty, $newRate)
+    {
+        $this->newQty = $newQty;
+        $this->newRate = $newRate;
+        $this->editItemId = $id;
+    }
+    public function updateItem($id, ItemComponentServices $itemComponentServices)
+    {
+        $this->validate(
+            [
+                'newQty' => 'required|not_in:0'
+            ],
+            [
+                'newQty.required' => 'The Quantity field is invalid.',
+                'newQty.not_in' => 'The Quantity field is invalid.'
+
+            ],
+            [
+                'newQty' => 'Quantity',
+            ]
+        );
+
+        $itemComponentServices->Update($id, $this->newQty, $this->newRate);
+        $this->editItemId = null;
+        $this->componentList = $itemComponentServices->Search($this->search, $this->itemId);
+    }
+    public function cancelItem()
+    {
+        $this->editItemId = null;
+    }
     public function render(ItemComponentServices $itemComponentServices)
     {
-        $this->componentList =  $itemComponentServices->Search($this->search, $this->itemId);
+        $this->componentList = $itemComponentServices->Search($this->search, $this->itemId);
         return view('livewire.item-component-panel');
     }
 }

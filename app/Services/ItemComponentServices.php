@@ -15,11 +15,11 @@ class ItemComponentServices
     {
         $ID = $this->object->ObjectNextID('ITEM_COMPONENTS');
         ItemComponents::create([
-            'ID' => $ID,
-            'ITEM_ID' => $ITEM_ID,
-            'COMPONENT_ID' => $COMPONENT_ID,
-            'QUANTITY' => $QUANTITY,
-            'RATE' => $RATE
+            'ID'            => $ID,
+            'ITEM_ID'       => $ITEM_ID,
+            'COMPONENT_ID'  => $COMPONENT_ID,
+            'QUANTITY'      => $QUANTITY,
+            'RATE'          => $RATE
         ]);
 
         return $ID;
@@ -28,8 +28,8 @@ class ItemComponentServices
     public function Update(int $ID, float $QUANTITY, float $RATE): void
     {
         ItemComponents::where('ID', $ID)->update([
-            'QUANTITY' => $QUANTITY,
-            'RATE' => $RATE
+            'QUANTITY'  => $QUANTITY,
+            'RATE'      => $RATE
         ]);
     }
 
@@ -45,6 +45,7 @@ class ItemComponentServices
                 ->leftjoin('item', 'item.ID', '=', 'ITEM_COMPONENTS.COMPONENT_ID')
                 ->where('ITEM_COMPONENTS.ITEM_ID', $itemId)
                 ->where('item.INACTIVE', '0')
+                ->orderBy('ITEM_COMPONENTS.ID','asc')
                 ->get();
         }
 
@@ -57,6 +58,7 @@ class ItemComponentServices
                 $query->where('item.CODE', 'like', '%' . $search . '%')
                     ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%');
             })
+            ->orderBy('ITEM_COMPONENTS.ID','asc')
             ->get();
     }
 }
