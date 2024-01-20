@@ -20,7 +20,7 @@
                     :zero="true" wire:model='UNIT_SHIPPING_UNIT_ID' :vertical="false">
                 </div>
                 <div class="text-right col-md-12">
-                    <button class="text-white btn bg-info btn-xs w-25 mt-2 mb-1">
+                    <button class="text-white btn bg-light-blue btn-xs w-25 mt-2 mb-1">
                         <i class="fas fa-plus"></i> Add
                     </button>
 
@@ -29,7 +29,7 @@
         </form>
       
         <table class="table table-sm table-bordered table-hover">
-            <thead class="text-xs bg-info">
+            <thead class="text-xs bg-light-blue">
                 <tr>
                     <th>Location</th>
                     <th class="text-right col-2">Purchases Unit</th>

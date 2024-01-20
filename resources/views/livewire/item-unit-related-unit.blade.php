@@ -21,8 +21,8 @@
                 </div>
 
                 <div class="text-right col-md-12">
-                    <button class="text-white btn bg-info btn-xs w-25">
-                        <i class="fas fa-plus"></i> Add
+                    <button class="text-white btn bg-light-blue btn-xs w-25">
+                        <i class="fas fa-plus"></i>
                     </button>
 
                 </div>
@@ -30,7 +30,7 @@
         </form>
      
         <table class="table table-sm table-bordered table-hover">
-            <thead class="text-xs bg-info">
+            <thead class="text-xs bg-light-blue">
                 <tr>
                     <th>Units</th>
                     <th class="text-right col-2">Symbol</th>

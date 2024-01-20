@@ -1,7 +1,7 @@
 <section class="content">
     <div class="container-fluid">
         <div class="card card-sm">
-            <div class="pt-1 pb-1 card-header bg-primary">
+            <div class="pt-1 pb-1 card-header bg-blue-crystal ">
                 <h3 class="card-title">
                     {{ $itemTypeName }}
                 </h3>
@@ -30,9 +30,9 @@
                         @endif
                     </div>
                     <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <form wire:submit.prevent='saveComponent'>
+                        <div class="card bg-light">
+                            <div class="card-body ">
+                                <form wire:submit.prevent='saveItem'>
                                     <div class="mb-1 row">
 
                                         <div class="col-md-6">
@@ -70,9 +70,9 @@
                                         </div>
 
                                         <div class="text-right col-md-2">
-                                            <button class="text-white btn bg-primary btn-xs w-100"
+                                            <button class="text-white btn bg-blue-crystal  btn-sm w-100"
                                                 style="margin-top: 40px;">
-                                                <i class="fas fa-plus"></i> Add
+                                                <i class="fas fa-plus"></i>
                                             </button>
                                         </div>
                                         <div class="col-md-12 mb-2">
@@ -88,7 +88,7 @@
                                     </div>
                                 </div>
                                 <table class="table table-sm table-bordered table-hover">
-                                    <thead class="text-xs bg-primary">
+                                    <thead class="text-xs bg-blue-crystal ">
                                         <tr>
                                             <th>Code</th>
                                             <th> Description</th>
@@ -97,8 +97,7 @@
                                             <th class="col-2 text-center">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="text-sm">
-
+                                    <tbody class="text-xs">
                                         @foreach ($componentList as $list)
                                             <tr>
                                                 <td> {{ $list->CODE }}</td>
@@ -138,7 +137,7 @@
                                                             <i class="fas fa-edit" aria-hidden="true"></i>
                                                         </button>
                                                         <button title="Delete" id="deletebtn"
-                                                            wire:click='deleteComponent({{ $list->ID }})'
+                                                            wire:click='deleteItem({{ $list->ID }})'
                                                             wire:confirm="Are you sure you want to delete this?"
                                                             class="text-danger btn btn-sm btn-link">
                                                             <i class="fas fa-times" aria-hidden="true"></i>

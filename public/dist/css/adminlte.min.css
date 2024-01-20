@@ -55847,6 +55847,36 @@ a.text-muted:hover {
 
 }
 
+.bg-blue-dark {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#a7cfdf+0,23538a+100;Blue+3d+%238 */
+    background: linear-gradient(to bottom, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    color: white;
+}
+
+.bg-blue-sea {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#d0e4f7+0,73b1e7+24,0a77d5+50,539fe1+79,87bcea+100;Blue+Pipe+%231 */
+    background: linear-gradient(to bottom, rgba(208, 228, 247, 1) 0%, rgba(115, 177, 231, 1) 24%, rgba(10, 119, 213, 1) 50%, rgba(83, 159, 225, 1) 79%, rgba(135, 188, 234, 1) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    color: white;
+}
+
+.bg-blue-crystal {
+/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#77cdfb+0,82b3f2+4,82b3f2+4,77cdfb+7,77cdfb+12,8cd5fc+12,6ca1f0+54,678feb+75,5e7be6+100 */
+background: linear-gradient(to bottom,  rgba(119,205,251,1) 0%,rgba(130,179,242,1) 4%,rgba(130,179,242,1) 4%,rgba(119,205,251,1) 7%,rgba(119,205,251,1) 12%,rgba(140,213,252,1) 12%,rgba(108,161,240,1) 54%,rgba(103,143,235,1) 75%,rgba(94,123,230,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
+    color: white;
+}
+
+.bg-light-blue {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#93cede+0,75bdd1+41,49a5bf+100;Blue+3D+%235 */
+    background: linear-gradient(to bottom, rgba(147, 206, 222, 1) 0%, rgba(117, 189, 209, 1) 41%, rgba(73, 165, 191, 1) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
+    color: white;
+
+}
+
 /* Custom CSS to adjust dropdown font size */
 .select2-dropdown {
     font-size: 12px;

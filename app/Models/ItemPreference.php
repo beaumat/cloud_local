@@ -22,5 +22,4 @@ class ItemPreference extends Model
         'ONHAND_MAX_LIMIT',
         'STOCK_BIN_ID'
     ];
-
 }

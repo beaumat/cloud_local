@@ -36,14 +36,9 @@ class ItemComponentPanel extends Component
         $this->itemDescList = Items::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->whereIn('TYPE', ['0', '2', '3', '4', '7'])
             ->get();
     }
-    public function deleteComponent($id, ItemComponentServices $itemComponentServices)
-    {
-        $itemComponentServices->Delete($id);
-        $this->componentList =  $itemComponentServices->Search($this->search, $this->itemId);
-    }
-    public function saveComponent(ItemComponentServices $itemComponentServices)
-    {
 
+    public function saveItem(ItemComponentServices $itemComponentServices)
+    {
         $this->validate(
             [
                 'COMPONENT_ID' => [
@@ -117,6 +112,11 @@ class ItemComponentPanel extends Component
     public function cancelItem()
     {
         $this->editItemId = null;
+    }
+    public function deleteItem($id, ItemComponentServices $itemComponentServices)
+    {
+        $itemComponentServices->Delete($id);
+        $this->componentList =  $itemComponentServices->Search($this->search, $this->itemId);
     }
     public function render(ItemComponentServices $itemComponentServices)
     {

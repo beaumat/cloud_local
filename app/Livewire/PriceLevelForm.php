@@ -55,7 +55,6 @@ class PriceLevelForm extends Component
                 $this->RATE = floatval($priceLevel->RATE);
                 $this->ITEM_GROUP_ID = intval($priceLevel->ITEM_GROUP_ID);
                 $this->INACTIVE = $priceLevel->INACTIVE;
-
                 $this->CUSTOM_PRICE = 0;
                 $this->ITEM_ID = 0;
 
