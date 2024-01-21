@@ -12,7 +12,6 @@ class ItemPriceLevelPanel extends Component
 {
     #[Reactive]
     public int $itemId = 0;
-    public int $ID;
     public int $PRICE_LEVEL_ID;
     public float $CUSTOM_PRICE;
     public $priceLevels = [];
@@ -37,15 +36,16 @@ class ItemPriceLevelPanel extends Component
 
     public function saveItem(PriceLevelLineServices $priceLevelLineServices)
     {
+    
         $this->validate(
             [
                 'PRICE_LEVEL_ID' => [
                     'required', 'not_in:0',
                     Rule::unique('price_level_lines', 'price_level_id')->where(function ($query) {
-                        return $query->where('price_level_id', $this->PRICE_LEVEL_ID);
+                        return $query->where('price_level_id', $this->PRICE_LEVEL_ID)->where('item_id', $this->itemId);
                     }),
                 ],
-                'CUSTOM_PRICE' => 'required|not_in:0,price_level_id',
+                'CUSTOM_PRICE' => 'required|not_in:0',
             ],
             [
                 'PRICE_LEVEL_ID.required' => 'The Price Level field is required.',
@@ -61,11 +61,12 @@ class ItemPriceLevelPanel extends Component
             ]
         );
 
-
-
-
-
         try {
+
+
+        
+
+
             $priceLevelLineServices->Store($this->PRICE_LEVEL_ID, $this->itemId, $this->CUSTOM_PRICE);
             $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
             $this->CUSTOM_PRICE = 0;
@@ -84,11 +85,11 @@ class ItemPriceLevelPanel extends Component
     }
     public function updateItem($id, PriceLevelLineServices $priceLevelLineServices)
     {
-       
+
         try {
             $priceLevelLineServices->Update($id, $this->newCustomPrice);
             $this->editItemId = null;
-            $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId); 
+            $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -100,15 +101,14 @@ class ItemPriceLevelPanel extends Component
     }
     public function deleteItem($id, PriceLevelLineServices $priceLevelLineServices): void
     {
-       
+
         try {
             $priceLevelLineServices->Delete($id);
-            $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId);    
-        }catch (\Exception $e) {
+            $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
+        } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-        
     }
     public function render(PriceLevelLineServices $priceLevelLineServices)
     {

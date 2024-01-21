@@ -32,7 +32,7 @@
                     <div class="col-md-12">
                         <div class="card bg-light">
                             <div class="card-body ">
-                                <form wire:submit.prevent='saveItem'>
+                                <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
                                     <div class="mb-1 row">
 
                                         <div class="col-md-6">
@@ -70,10 +70,14 @@
                                         </div>
 
                                         <div class="text-right col-md-2">
-                                            <button class="text-white btn bg-blue-crystal  btn-sm w-100"
+                                            <button type="submit" wire:loading.attr='hidden'
+                                                class="text-white btn bg-blue-crystal  btn-sm w-100"
                                                 style="margin-top: 40px;">
                                                 <i class="fas fa-plus"></i>
                                             </button>
+                                            <div wire:loading.delay>
+                                                <span class="spinner"></span>
+                                            </div>
                                         </div>
                                         <div class="col-md-12 mb-2">
                                             <livewire:custom-check-box name="codeBase" titleName="Use choose item code"
@@ -97,7 +101,7 @@
                                             <th class="col-2 text-center">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="text-xs">
+                                    <tbody class="text-sm">
                                         @foreach ($componentList as $list)
                                             <tr>
                                                 <td> {{ $list->CODE }}</td>

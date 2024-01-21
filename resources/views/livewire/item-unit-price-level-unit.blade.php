@@ -1,41 +1,114 @@
 <div class="card bg-light">
     <h5 class="px-2 card-title">Unit Price Level </h5>
     <div class="card-body">
-        <form wire:submit.prevent='saveItem'>
+        <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
+            <div class="row">
+                <div class="col-md-12">
+                    @if ($errors->any())
+                        <div class="text-sm alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    @if (session()->has('message'))
+                        <div class="pt-1 pb-1 text-sm alert alert-success">
+                            {{ session('message') }}
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="pt-1 pb-1 text-sm alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                </div>
+            </div>
             <div class="mb-1 row">
-                <div class="col-md-4">
-                    <livewire:select-option name="UNIT_RELATED_ID" titleName="Related Unit" :options="$unitRelated"
-                    :zero="true" wire:model='UNIT_RELATED_ID' :vertical="false">
+                <div class="col-md-12">
+                    @if ($newRelated)
+                        <livewire:select-option name="UnitRelatedId1" titleName="Related Unit" :options="$unitRelated"
+                            :zero="true" wire:model.live='UnitRelatedId' :vertical="true" />
+                    @else
+                        <livewire:select-option name="UnitRelatedId2" titleName="Related Unit" :options="$unitRelated"
+                            :zero="true" wire:model.live='UnitRelatedId' :vertical="true" />
+                    @endif
+
                 </div>
-       
-                <div class="col-md-4">
-                    <livewire:select-option name="UNIT_PRICE_LEVEL_ID" titleName="Price Level" :options="$priceLevels"
-                    :zero="true" wire:model='UNIT_PRICE_LEVEL_ID' :vertical="false">
+
+                <div class="col-md-6">
+                    @if ($saveSuccess)
+                        <livewire:select-option name="Unit_PRICE_LEVEL_ID1" titleName="Price Level" :options="$priceLevels"
+                            :zero="true" wire:model='PRICE_LEVEL_ID' :vertical="false" />
+                    @else
+                        <livewire:select-option name="Unit_PRICE_LEVEL_ID2" titleName="Price Level" :options="$priceLevels"
+                            :zero="true" wire:model='PRICE_LEVEL_ID' :vertical="false" />
+                    @endif
                 </div>
+
                 <div class="col-md-4">
-                    <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price"
-                    wire:model='CUSTOM_PRICE' :vertical="false">
+                    <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price" wire:model='CUSTOM_PRICE'
+                        :vertical="false">
                 </div>
-                <div class="text-right col-md-12">
-                    <button class="text-white btn bg-light-blue btn-xs w-25 mt-2 mb-1">
+                <div class="text-right col-md-2">
+                    <button type="submit" wire:loading.attr='hidden' class="text-white btn bg-light-blue btn-sm w-100"
+                        style="margin-top: 40px;">
                         <i class="fas fa-plus"></i>
                     </button>
+                    <div wire:loading.delay>
+                        <span class="spinner"></span>
+                    </div>
                 </div>
             </div>
         </form>
-    
+
         <table class="table table-sm table-bordered table-hover">
             <thead class="text-xs bg-light-blue">
                 <tr>
                     <th>Price Levels</th>
-                    <th class="text-right col-2">Custom Price</th>
+                    <th class="text-right col-4">Custom Price</th>
                     <th class="text-center col-2">Action </th>
-                        
-                   
                 </tr>
             </thead>
             <tbody class="text-sm">
 
+                @foreach ($unitPriceLevels as $list)
+                    <tr>
+                        <td> {{ $list->DESCRIPTION }}</td>
+                        <td class="text-right">
+                            @if ($editItemId === $list->ID)
+                                <input type="number" wire:model="newCustomPrice"
+                                    class="form-control form-control-sm text-xs text-right">
+                            @else
+                                {{ number_format($list->CUSTOM_PRICE, 2) }}
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if ($editItemId === $list->ID)
+                                <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
+                                    class="text-success btn btn-sm btn-link">
+                                    <i class="fas fa-check" aria-hidden="true"></i>
+                                </button>
+                                <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
+                                    class="text-warning btn btn-sm btn-link">
+                                    <i class="fas fa-ban" aria-hidden="true"></i>
+                                </button>
+                            @else
+                                <button title="Edit" id="editbtn"
+                                    wire:click='editItem({{ $list->ID . ',' . $list->CUSTOM_PRICE }})'
+                                    class="text-info btn btn-sm btn-link">
+                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                </button>
+                                <button title="Delete" id="deletebtn" wire:click='deleteItem({{ $list->ID }})'
+                                    wire:confirm="Are you sure you want to delete this?"
+                                    class="text-danger btn btn-sm btn-link">
+                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                </button>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

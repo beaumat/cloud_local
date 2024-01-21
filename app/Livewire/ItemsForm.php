@@ -249,7 +249,7 @@ class ItemsForm extends Component
 
                 $Message = 'Successfully created.';
             } else {
-
+            
                 $itemServices->Update(
                     $this->ID,
                     $this->CODE,

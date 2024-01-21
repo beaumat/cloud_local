@@ -55862,8 +55862,9 @@ a.text-muted:hover {
 }
 
 .bg-blue-crystal {
-/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#77cdfb+0,82b3f2+4,82b3f2+4,77cdfb+7,77cdfb+12,8cd5fc+12,6ca1f0+54,678feb+75,5e7be6+100 */
-background: linear-gradient(to bottom,  rgba(119,205,251,1) 0%,rgba(130,179,242,1) 4%,rgba(130,179,242,1) 4%,rgba(119,205,251,1) 7%,rgba(119,205,251,1) 12%,rgba(140,213,252,1) 12%,rgba(108,161,240,1) 54%,rgba(103,143,235,1) 75%,rgba(94,123,230,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#77cdfb+0,82b3f2+4,82b3f2+4,77cdfb+7,77cdfb+12,8cd5fc+12,6ca1f0+54,678feb+75,5e7be6+100 */
+    background: linear-gradient(to bottom, rgba(119, 205, 251, 1) 0%, rgba(130, 179, 242, 1) 4%, rgba(130, 179, 242, 1) 4%, rgba(119, 205, 251, 1) 7%, rgba(119, 205, 251, 1) 12%, rgba(140, 213, 252, 1) 12%, rgba(108, 161, 240, 1) 54%, rgba(103, 143, 235, 1) 75%, rgba(94, 123, 230, 1) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 
     color: white;
 }
@@ -55881,4 +55882,24 @@ background: linear-gradient(to bottom,  rgba(119,205,251,1) 0%,rgba(130,179,242,
 .select2-dropdown {
     font-size: 12px;
     /* Adjust the font size as needed */
+}
+
+.spinner {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid #3498db;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

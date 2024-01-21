@@ -4,29 +4,158 @@ namespace App\Livewire;
 
 use App\Models\Locations;
 use App\Models\UnitOfMeasures;
+use App\Services\ItemLocationUnitServices;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class ItemUnitLocationDefault extends Component
 {
-    public int $ITEM_ID;
-    public int $UNIT_LOCATION_ID;
-    public int $UNIT_PURCHASES_UNIT_ID;
-    public int $UNIT_SALES_UNIT_ID;
-    public int $UNIT_SHIPPING_UNIT_ID;
+    public int $itemId = 0;
+    public int $LOCATION_ID;
+    public int $PURCHASES_UNIT_ID;
+    public int $SALES_UNIT_ID;
+    public int $SHIPPING_UNIT_ID;
 
+    public bool $saveSuccess = false;
     public $locationList = [];
     public $unitList = [];
-    public function mount($ITEM_ID)
+    public $unitLocationList = [];
+    public $editItemId = null;
+
+    public int $newPURCHASES_UNIT_ID;
+    public int $newSALES_UNIT_ID;
+    public int $newSHIPPING_UNIT_ID;
+    public function dropDownload()
     {
-        $this->ITEM_ID = $ITEM_ID;
-        $this->locationList = Locations::where('INACTIVE','0')->get();
-        $this->unitList = UnitOfMeasures::where('INACTIVE','0')->get();
-    }   
-
-
-
-    public function render()
+        $this->locationList = Locations::where('INACTIVE', '0')->get();
+        $this->unitList = UnitOfMeasures::where('INACTIVE', '0')->get();
+    }
+    public function mount($itemId)
     {
+        $this->itemId = $itemId;
+        $this->dropDownload();
+    }
+
+    public function saveItem(ItemLocationUnitServices $itemLocationUnitServices)
+    {
+        $this->validate(
+            [
+                'LOCATION_ID' => [
+                    'required', 'not_in:0',
+                    Rule::unique('item_location_units', 'location_id')->where(function ($query) {
+                        return $query->where('location_id', $this->LOCATION_ID)->where('item_id', $this->itemId);
+                    }),
+                ],
+                'PURCHASES_UNIT_ID' => 'required|not_in:0',
+                'SALES_UNIT_ID' => 'required|not_in:0',
+                'SHIPPING_UNIT_ID' => 'required|not_in:0',
+            ],
+            [
+                'LOCATION_ID.required' => 'The location field is required.',
+                'LOCATION_ID.not_in' => 'The location field is required.',
+                'LOCATION_ID.unique' => 'The selected location already exists.',
+
+                'PURCHASES_UNIT_ID.required' => 'The Purchases Unit field is required.',
+                'PURCHASES_UNIT_ID.not_in' => 'The Purchases Unit field is required.',
+
+                'SALES_UNIT_ID.required' => 'The Sales Unit field is required.',
+                'SALES_UNIT_ID.not_in' => 'The Sales Unit field is required.',
+
+                'SHIPPING_UNIT_ID.required' => 'The Shipping Unit field is required.',
+                'SHIPPING_UNIT_ID.not_in' => 'The Shipping Unit field is required.',
+
+            ],
+            [
+                'LOCATION_ID' => 'Location',
+                'PURCHASES_UNIT_ID' => 'Purchases Unit',
+                'SALES_UNIT_ID' => 'Sales Unit',
+                'SHIPPING_UNIT_ID' => 'Shipping Unit'
+            ]
+        );
+        try {
+            $itemLocationUnitServices->Store(
+                $this->itemId,
+                $this->LOCATION_ID,
+                $this->PURCHASES_UNIT_ID,
+                $this->SALES_UNIT_ID,
+                $this->SHIPPING_UNIT_ID
+            );
+
+            $this->dropDownload();
+            $this->LOCATION_ID = 0;
+            $this->PURCHASES_UNIT_ID = 0;
+            $this->SALES_UNIT_ID = 0;
+            $this->SHIPPING_UNIT_ID = 0;
+
+            $this->saveSuccess = $this->saveSuccess ? false : true;
+            $this->unitLocationList = $itemLocationUnitServices->Search($this->itemId);
+
+
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function editItem(int $id, int $po_id, int $sale_id, int $ship_id): void
+    {
+        $this->newPURCHASES_UNIT_ID = $po_id;
+        $this->newSALES_UNIT_ID = $sale_id;
+        $this->newSHIPPING_UNIT_ID = $ship_id;
+        $this->editItemId = $id;
+    }
+    public function updateItem($id, ItemLocationUnitServices $itemLocationUnitServices): void
+    {
+
+        $this->validate(
+            [
+                'newPURCHASES_UNIT_ID' => 'required|not_in:0',
+                'newSALES_UNIT_ID' => 'required|not_in:0',
+                'newSHIPPING_UNIT_ID' => 'required|not_in:0',
+            ],
+            [
+                'newPURCHASES_UNIT_ID.required' => 'The Purchases Unit field is required.',
+                'newPURCHASES_UNIT_ID.not_in' => 'The Purchases Unit field is required.',
+
+                'newSALES_UNIT_ID.required' => 'The Sales Unit field is required.',
+                'newSALES_UNIT_ID.not_in' => 'The Sales Unit field is required.',
+
+                'newSHIPPING_UNIT_ID.required' => 'The Shipping Unit field is required.',
+                'newSHIPPING_UNIT_ID.not_in' => 'The Shpping Unit field is required.',
+            ],
+            [
+                'newPURCHASES_UNIT_ID' => 'Purchases Unit',
+                'newSALES_UNIT_ID' => 'Sales Unit',
+                'newSHIPPING_UNIT_ID' => 'Shipping Unit'
+            ]
+        );
+
+        try {
+            $itemLocationUnitServices->Update($id, $this->newPURCHASES_UNIT_ID, $this->newSALES_UNIT_ID, $this->newSHIPPING_UNIT_ID);
+            $this->editItemId = null;
+            $this->unitLocationList = $itemLocationUnitServices->Search($this->itemId);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function cancelItem(): void
+    {
+        $this->editItemId = null;
+    }
+    public function deleteItem(int $ID, ItemLocationUnitServices $itemLocationUnitServices): void
+    {
+        try {
+            $itemLocationUnitServices->Delete($ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+
+    public function render(ItemLocationUnitServices $itemLocationUnitServices)
+    {
+        $this->unitLocationList = $itemLocationUnitServices->Search($this->itemId);
+
         return view('livewire.item-unit-location-default');
     }
 }

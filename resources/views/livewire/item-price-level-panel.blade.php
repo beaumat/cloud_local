@@ -28,7 +28,7 @@
             <div class="col-md-12">
                 <div class="card bg-light">
                     <div class="card-body">
-                        <form wire:submit.prevent='saveItem'>
+                        <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
                             <div class="mb-1 row">
                                 <div class="col-md-6">
                                     @if ($saveSuccess)
@@ -44,12 +44,16 @@
                                 </div>
                                 <div class="col-md-4">
                                     <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price"
-                                        wire:model='CUSTOM_PRICE' :vertical="false"/>
+                                        wire:model='CUSTOM_PRICE' :vertical="false" />
                                 </div>
                                 <div class="col-md-2 text-right">
-                                    <button class="text-white btn bg-blue-sky btn-sm w-100" style="margin-top: 40px;">
+                                    <button type="submit" wire:loading.attr='hidden'
+                                        class="text-white btn bg-blue-sky btn-sm w-100" style="margin-top: 40px;">
                                         <i class="fas fa-plus"></i>
                                     </button>
+                                    <div wire:loading.delay>
+                                        <span class="spinner"></span>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -58,8 +62,8 @@
                             <thead class="text-xs bg-blue-sky">
                                 <tr>
                                     <th>Price Levels</th>
-                                    <th class="col-3">Custom Price</th>
-                                    <th class="col-3">Action</th>
+                                    <th class="col-3 text-right">Custom Price</th>
+                                    <th class="col-3 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="text-sm">
