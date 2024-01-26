@@ -3,7 +3,11 @@
 namespace App\Livewire;
 
 use App\Services\ItemSubClassServices;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
+
+#[Title('Item Sub-Class - List')]
 class ItemSubClassList extends Component
 {
 
@@ -34,4 +38,16 @@ class ItemSubClassList extends Component
     {
         return view('livewire.item-sub-class-list');
     }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
+
+
+
+
 }

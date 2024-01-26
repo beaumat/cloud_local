@@ -19,27 +19,14 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12">
-                    @if (session()->has('message'))
-                        <div class="pt-1 pb-1 text-sm alert alert-success">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-
-                    @if (session('error'))
-                        <div class="pt-1 pb-1 text-sm alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
-                </div>
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
                                     <input type="text" wire:model.live.debounce.150ms='search'
-                                        class="w-100 form-control form-control-sm" placeholder="Search" />
+                                        class="w-100 form-control form-control-sm mt-1 mb-1" placeholder="Search" />
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">

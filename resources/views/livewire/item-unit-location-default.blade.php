@@ -3,27 +3,7 @@
     <div class="card-body">
         <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
             <div class="row">
-                <div class="col-md-12">
-                    @if ($errors->any())
-                        <div class="text-sm alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    @if (session()->has('message'))
-                        <div class="pt-1 pb-1 text-sm alert alert-success">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="pt-1 pb-1 text-sm alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-                </div>
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '' , 'message' => session('message'), 'error' => session('error')])
             </div>
             <div class="mb-1 row">
                 <div class="col-md-4">
@@ -63,7 +43,7 @@
                     @endif
                 </div>
                 <div class="text-right col-md-2">
-                    <button type="submit" wire:loading.attr='hidden' class="text-white btn bg-light-blue btn-sm w-100" style="margin-top: 40px;">
+                    <button type="submit" wire:loading.attr='hidden' class="text-white btn btn-success btn-sm w-100" style="margin-top: 40px;">
                         <i class="fas fa-plus"></i>
                     </button>
                     <div wire:loading.delay>
@@ -73,7 +53,7 @@
             </div>
         </form>
         <table class="table table-sm table-bordered table-hover">
-            <thead class="text-xs bg-light-blue">
+            <thead class="text-xs bg-sky">
                 <tr>
                     <th>Location</th>
                     <th class="text-right col-2">Purchases Unit</th>

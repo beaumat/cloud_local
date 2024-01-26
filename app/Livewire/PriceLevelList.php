@@ -3,14 +3,13 @@
 namespace App\Livewire;
 
 use App\Services\PriceLevelServices;
-use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\Title;
 use Livewire\Component;
-
+#[Title('Price Level - List')]
 class PriceLevelList extends Component
 {
     public $priceLevels = [];
     public $search = '';
-
     public function updatedsearch(PriceLevelServices $priceLevelServices)
     {
         $this->priceLevels = $priceLevelServices->Search($this->search);

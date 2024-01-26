@@ -55903,3 +55903,9 @@ a.text-muted:hover {
         transform: rotate(360deg);
     }
 }
+
+
+#error-alert ul {
+    list-style-type: none;
+
+}

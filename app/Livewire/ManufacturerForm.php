@@ -6,7 +6,10 @@ use App\Models\Manufacturers;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use App\Services\ManufacturerServices;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 
+#[Title('Manufacturer - Form')]
 class ManufacturerForm extends Component
 {
     public int $ID;
@@ -40,6 +43,9 @@ class ManufacturerForm extends Component
         $this->validate([
             'CODE' => 'required|max:10|unique:manufacturer,code,' . $this->ID,
             'NAME' => 'required|max:50|unique:manufacturer,name,' . $this->ID
+        ],[],[
+            'CODE' => 'Code',
+            'Name' => 'Name'
         ]);
 
         try {
@@ -59,4 +65,14 @@ class ManufacturerForm extends Component
     {
         return view('livewire.manufacturer-form');
     }
+
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
+
 }

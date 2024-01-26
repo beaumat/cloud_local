@@ -2,8 +2,11 @@
 
 namespace App\Livewire;
 use App\Services\StockBinServices;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Stock Bin - List')]
 class StockBinList extends Component
 {
 
@@ -32,4 +35,15 @@ class StockBinList extends Component
     {
         return view('livewire.stock-bin-list');
     }
+
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
+
+
 }

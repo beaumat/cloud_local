@@ -3,9 +3,10 @@
 namespace App\Livewire;
 
 use App\Services\ItemClassServices;
+use Livewire\Attributes\Title;
 use Livewire\Component;
-use Illuminate\Support\Facades\Redirect;
 
+#[Title('Item Class List')]
 class ItemClassList extends Component
 {
     public $itemClass = [];

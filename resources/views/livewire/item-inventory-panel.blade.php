@@ -1,31 +1,11 @@
 <div class="card card-sm">
-    <div class="pt-1 pb-1 card-header bg-blue-dark">
+    <div class="pt-1 pb-1 card-header bg-sky">
         <h3 class="card-title">Order Preference</h3>
     </div>
 
     <div class="card-body">
         <div class="row" @if ($itemId === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-            <div class="col-md-12">
-                @if ($errors->any())
-                    <div class="text-sm alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                @if (session()->has('message'))
-                    <div class="pt-1 pb-1 text-sm alert alert-success">
-                        {{ session('message') }}
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div class="pt-1 pb-1 text-sm alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
-            </div>
+            @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '' , 'message' => session('message'), 'error' => session('error')])
             <div class="col-md-12">
                 <div class="card bg-light">
                     <div class="card-body">
@@ -73,7 +53,7 @@
                                     @endif
                                 </div>
                                 <div class="col-md-2">
-                                    <button style="margin-top:40px;" class="text-white btn bg-blue-dark btn-sm w-100">
+                                    <button style="margin-top:40px;" class="text-white btn btn-success btn-sm w-100">
                                         <i class="fas fa-plus"></i>
                                     </button>
 
@@ -83,7 +63,7 @@
                         </form>
 
                         <table class="table table-sm table-bordered table-hover">
-                            <thead class="text-xs bg-blue-dark">
+                            <thead class="text-xs bg-sky">
                                 <tr>
                                     <th>Location</th>
                                     <th class="text-right col-1">Point</th>

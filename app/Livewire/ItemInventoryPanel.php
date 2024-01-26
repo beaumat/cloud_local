@@ -6,6 +6,7 @@ use App\Models\Locations;
 use App\Models\StockBin;
 use App\Services\ItemPreferenceServices;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -58,14 +59,7 @@ class ItemInventoryPanel extends Component
                 ],
                 'ORDER_POINT' => 'required|not_in:0',
             ],
-            [
-                'LOCATION_ID.required' => 'The Location field is required.',
-                'LOCATION_ID.not_in' => 'The Location field is required.',
-                'LOCATION_ID.unique' => 'The selected Location already exists.',
-
-                'ORDER_POINT.required' => 'The Order Point field is required.',
-                'ORDER_POINT.not_in' => 'The Order Point field is required.',
-            ],
+            [],
             [
                 'LOCATION_ID' => 'Location',
                 'ORDER_POINT' => 'Order Point',
@@ -160,5 +154,13 @@ class ItemInventoryPanel extends Component
         $this->itemPreferenceList = $itemPreferenceServices->Search($this->itemId);
 
         return view('livewire.item-inventory-panel');
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
     }
 }

@@ -1,40 +1,19 @@
 <section class="content">
     <div class="container-fluid">
         <div class="card card-sm">
-            <div class="pt-1 pb-1 card-header bg-blue-crystal ">
+            <div class="pt-1 pb-1 card-header bg-sky ">
                 <h3 class="card-title">
                     {{ $itemTypeName }}
                 </h3>
             </div>
             <div class="card-body">
                 <div class="row" @if ($itemId === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                    <div class="col-md-12">
-                        @if ($errors->any())
-                            <div class="text-sm alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-                        @if (session()->has('message'))
-                            <div class="pt-1 pb-1 text-sm alert alert-success">
-                                {{ session('message') }}
-                            </div>
-                        @endif
-                        @if (session('error'))
-                            <div class="pt-1 pb-1 text-sm alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-                    </div>
+                    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                     <div class="col-md-12">
                         <div class="card bg-light">
                             <div class="card-body ">
                                 <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
                                     <div class="mb-1 row">
-
                                         <div class="col-md-6">
                                             @if ($saveSuccess)
                                                 @if ($codeBase)
@@ -71,7 +50,7 @@
 
                                         <div class="text-right col-md-2">
                                             <button type="submit" wire:loading.attr='hidden'
-                                                class="text-white btn bg-blue-crystal  btn-sm w-100"
+                                                class="text-white btn bg-sky btn-sm w-100"
                                                 style="margin-top: 40px;">
                                                 <i class="fas fa-plus"></i>
                                             </button>
@@ -92,7 +71,7 @@
                                     </div>
                                 </div>
                                 <table class="table table-sm table-bordered table-hover">
-                                    <thead class="text-xs bg-blue-crystal ">
+                                    <thead class="text-sm bg-sky">
                                         <tr>
                                             <th>Code</th>
                                             <th> Description</th>
@@ -124,23 +103,23 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @if ($editItemId === $list->ID)
-                                                        <button title="Update" id="updatebtn"
+                                                        <button  type="button" title="Update" id="updatebtn"
                                                             wire:click="updateItem({{ $list->ID }})"
                                                             class="text-success btn btn-sm btn-link">
                                                             <i class="fas fa-check" aria-hidden="true"></i>
                                                         </button>
-                                                        <button title="Cancel" id="cancelbtn" href="#"
+                                                        <button  type="button" title="Cancel" id="cancelbtn" href="#"
                                                             wire:click="cancelItem()"
                                                             class="text-warning btn btn-sm btn-link">
                                                             <i class="fas fa-ban" aria-hidden="true"></i>
                                                         </button>
                                                     @else
-                                                        <button title="Edit" id="editbtn"
+                                                        <button type="button" title="Edit" id="editbtn"
                                                             wire:click='editItem({{ $list->ID . ',' . $list->QUANTITY . ',' . $list->RATE }})'
                                                             class="text-info btn btn-sm btn-link">
                                                             <i class="fas fa-edit" aria-hidden="true"></i>
                                                         </button>
-                                                        <button title="Delete" id="deletebtn"
+                                                        <button  type="button" title="Delete" id="deletebtn"
                                                             wire:click='deleteItem({{ $list->ID }})'
                                                             wire:confirm="Are you sure you want to delete this?"
                                                             class="text-danger btn btn-sm btn-link">
@@ -160,3 +139,5 @@
         </div>
     </div>
 </section>
+
+

@@ -6,7 +6,9 @@ use App\Models\ItemClass;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use App\Services\ItemClassServices;
+use Livewire\Attributes\Title;
 
+#[Title('Item Class Form')]
 class ItemClassForm extends Component
 {
 

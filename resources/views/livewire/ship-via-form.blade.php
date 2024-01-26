@@ -18,27 +18,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-12">
-                    @if ($errors->any())
-                        <div class="text-sm alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    @if (session()->has('message'))
-                        <div class="pt-1 pb-1 text-sm alert alert-success">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="pt-1 pb-1 text-sm alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-                </div>   
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-md-12">
                     <div class="card card-sm">
                         <div class="pt-1 pb-1 card-header bg-sky">

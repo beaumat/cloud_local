@@ -18,24 +18,9 @@
     </div>
     <!-- Main content -->
     <section class="content">
-
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12">
-
-                    @if (session()->has('message'))
-                        <div class="pt-1 pb-1 text-sm alert alert-success">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-
-                    @if (session('error'))
-                        <div class="pt-1 pb-1 text-sm alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
-                </div>
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
@@ -69,8 +54,7 @@
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#"
-                                                    wire:click='delete({{ $list->ID }})'
+                                                <a href="#" wire:click='delete({{ $list->ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
                                                     class="btn-sm text-danger">
                                                     <i class="fas fa-times" aria-hidden="true"></i>

@@ -4,8 +4,10 @@ namespace App\Livewire;
 
 use App\Services\ShipViaServices;
 use Livewire\Component;
-use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 
+#[Title('Ship Via - List')]
 class ShipViaList extends Component
 {
 
@@ -38,4 +40,19 @@ class ShipViaList extends Component
     {
         return view('livewire.ship-via-list');
     }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
+
+
+
+
+
+
+
 }

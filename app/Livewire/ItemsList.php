@@ -3,9 +3,11 @@
 namespace App\Livewire;
 
 use App\Services\ItemServices;
-use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Item List')]
 class ItemsList extends Component
 {
 
@@ -34,5 +36,13 @@ class ItemsList extends Component
     public function render()
     {        
         return view('livewire.items-list');
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
     }
 }

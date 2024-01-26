@@ -5,9 +5,11 @@ namespace App\Livewire;
 use App\Models\ShipVia;
 use App\Services\ShipViaServices;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
-
+#[Title('ShipVia - Form')]
 class ShipViaForm extends Component
 {
 
@@ -37,13 +39,19 @@ class ShipViaForm extends Component
         $this->DESCRIPTION = '';
     }
 
-
     public function save(ShipViaServices $shipViaServices)
     {
-        $this->validate([
-            'CODE' => 'required|max:10|unique:ship_via,code,' . $this->ID,
-            'DESCRIPTION' => 'required|max:50|unique:ship_via,description,' . $this->ID
-        ]);
+        $this->validate(
+            [
+                'CODE' => 'required|max:10|unique:ship_via,code,' . $this->ID,
+                'DESCRIPTION' => 'required|max:50|unique:ship_via,description,' . $this->ID
+            ],
+            [],
+            [
+                'CODE' => 'Code',
+                'Description' => 'Description'
+            ]
+        );
 
         try {
             if ($this->ID === 0) {
@@ -62,4 +70,13 @@ class ShipViaForm extends Component
     {
         return view('livewire.ship-via-form');
     }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
+
 }

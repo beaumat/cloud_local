@@ -10,8 +10,11 @@ use App\Services\PriceLevelLineServices;
 use App\Services\PriceLevelServices;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Price Level - Form')]
 class PriceLevelForm extends Component
 {
 
@@ -83,6 +86,12 @@ class PriceLevelForm extends Component
                 'CODE' => 'required|max:10|unique:price_level,code,' . $this->ID,
                 'DESCRIPTION' => 'required|max:100|unique:price_level,description,' . $this->ID,
                 'TYPE' => 'required',
+            ],
+            [],
+            [
+                'CODE' => 'Code',
+                'DESCRIPTION' => 'Description',
+                'TYPE' => 'Type'
             ]
         );
 
@@ -99,8 +108,6 @@ class PriceLevelForm extends Component
                 $priceLevelServices->Update($this->ID, $this->CODE, $this->DESCRIPTION, $this->TYPE, $this->RATE, $this->ITEM_GROUP_ID, $this->INACTIVE);
                 $InfoMessage = 'Successfully updated.';
             }
-
-
             session()->flash('message', $InfoMessage);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -119,6 +126,11 @@ class PriceLevelForm extends Component
                     }),
                 ],
                 'CUSTOM_PRICE' => 'required|not_in:0,price_level_id',
+            ],
+            [],
+            [
+                'ITEM_ID' => 'Item',
+                'CUSTOM_PRICE' => 'Custom Price'
             ]
         );
 
@@ -160,4 +172,14 @@ class PriceLevelForm extends Component
         $this->priceLevelLines = $priceLevelLineServices->Search($this->search, $this->ID);
         return view('livewire.price-level-form');
     }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
+
+
 }

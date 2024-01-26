@@ -18,27 +18,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-12">
-                    @if ($errors->any())
-                        <div class="text-sm alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    @if (session()->has('message'))
-                        <div class="pt-1 pb-1 text-sm alert alert-success">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="pt-1 pb-1 text-sm alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-                </div>
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-md-12">
                     <div class="card card-sm">
                         <div class="pt-1 pb-1 card-header bg-sky">
@@ -50,8 +30,7 @@
                                     <div class="row">
 
                                         <div class="col-md-2">
-                                            <livewire:text-input name="CODE" titleName="Code"
-                                                wire:model='CODE'>
+                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE'>
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:text-input name="DESCRIPTION" titleName="Description"
@@ -59,16 +38,15 @@
                                         </div>
                                         <div class="col-md-4"
                                             @if ($ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <livewire:select-option name="TYPE" :options="$priceLevelType"
-                                                :zero="false" titleName="Type" wire:model.live='TYPE'
-                                                :key="$priceLevelType->pluck('ID')->join('_')">
+                                            <livewire:select-option name="TYPE" :options="$priceLevelType" :zero="false"
+                                                titleName="Type" wire:model.live='TYPE' :key="$priceLevelType->pluck('ID')->join('_')">
                                         </div>
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
                                                 wire:model='INACTIVE'>
                                         </div>
-                                 
-                                
+
+
                                     </div>
                                 </div>
                                 <div class="form-group" style="display: {{ $TYPE === 0 ? 'block' : 'none' }}">

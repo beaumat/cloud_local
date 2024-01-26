@@ -1,30 +1,10 @@
 <div class="card card-sm">
-    <div class="pt-1 pb-1 card-header bg-blue-sky">
+    <div class="pt-1 pb-1 card-header bg-sky">
         <h3 class="card-title">Price Level</h3>
     </div>
     <div class="card-body">
         <div class="row" @if ($itemId === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-            <div class="col-md-12">
-                @if ($errors->any())
-                    <div class="text-sm alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                @if (session()->has('message'))
-                    <div class="pt-1 pb-1 text-sm alert alert-success">
-                        {{ session('message') }}
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div class="pt-1 pb-1 text-sm alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
-            </div>
+            @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
             <div class="col-md-12">
                 <div class="card bg-light">
                     <div class="card-body">
@@ -40,7 +20,6 @@
                                             :options="$priceLevels" :zero="true" wire:model='PRICE_LEVEL_ID'
                                             :vertical="false" />
                                     @endif
-
                                 </div>
                                 <div class="col-md-4">
                                     <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price"
@@ -48,7 +27,7 @@
                                 </div>
                                 <div class="col-md-2 text-right">
                                     <button type="submit" wire:loading.attr='hidden'
-                                        class="text-white btn bg-blue-sky btn-sm w-100" style="margin-top: 40px;">
+                                        class="text-white btn btn-success btn-sm w-100" style="margin-top: 40px;">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                     <div wire:loading.delay>
@@ -59,7 +38,7 @@
                         </form>
 
                         <table class="table table-sm table-bordered table-hover">
-                            <thead class="text-xs bg-blue-sky">
+                            <thead class="text-xs bg-sky">
                                 <tr>
                                     <th>Price Levels</th>
                                     <th class="col-3 text-right">Custom Price</th>

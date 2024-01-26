@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\PriceLevels;
 use App\Services\PriceLevelLineServices;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -32,8 +33,6 @@ class ItemPriceLevelPanel extends Component
     {
         $this->priceLevels = PriceLevels::query()->select('ID', 'DESCRIPTION')->where('INACTIVE', '0')->get();
     }
-
-
     public function saveItem(PriceLevelLineServices $priceLevelLineServices)
     {
     
@@ -47,14 +46,7 @@ class ItemPriceLevelPanel extends Component
                 ],
                 'CUSTOM_PRICE' => 'required|not_in:0',
             ],
-            [
-                'PRICE_LEVEL_ID.required' => 'The Price Level field is required.',
-                'PRICE_LEVEL_ID.not_in' => 'The Price Level field is required.',
-                'PRICE_LEVEL_ID.unique' => 'The selected Price Level already exists.',
-
-                'CUSTOM_PRICE.required' => 'The Custom Price field is required.',
-                'CUSTOM_PRICE.not_in' => 'The Custom Price field is required.',
-            ],
+            [],
             [
                 'PRICE_LEVEL_ID' => 'Price Level',
                 'CUSTOM_PRICE' => 'Custom Price',
@@ -62,11 +54,6 @@ class ItemPriceLevelPanel extends Component
         );
 
         try {
-
-
-        
-
-
             $priceLevelLineServices->Store($this->PRICE_LEVEL_ID, $this->itemId, $this->CUSTOM_PRICE);
             $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
             $this->CUSTOM_PRICE = 0;
@@ -95,7 +82,7 @@ class ItemPriceLevelPanel extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function cancelItem()
+    public function cancelItem():void
     {
         $this->editItemId = null;
     }
@@ -114,5 +101,13 @@ class ItemPriceLevelPanel extends Component
     {
         $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
         return view('livewire.item-price-level-panel');
+    }
+
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
     }
 }

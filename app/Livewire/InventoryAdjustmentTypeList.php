@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Services\InventoryAdjustmentTypeServices;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Inventory Adjustment Type List')]
 class InventoryAdjustmentTypeList extends Component
 {
     public $inventoryAdjustmentType = [];

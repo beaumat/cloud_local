@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\UnitOfMeasures;
 use App\Services\ItemUnitServices;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -55,17 +56,7 @@ class ItemUnitRelatedUnit extends Component
                 'QUANTITY' => 'required|not_in:0,unit_id',
                 'RATE' => 'required|not_in:0,unit_id',
             ],
-            [
-                'UNIT_ID.required' => 'The Unit field is required.',
-                'UNIT_ID.not_in' => 'The Unit field is required.',
-                'UNIT_ID.unique' => 'The selected Unit already exists.',
-
-                'QUANTITY.required' => 'The Quantity field is required.',
-                'QUANTITY.not_in' => 'The Quantity field is required.',
-
-                'RATE.required' => 'The Rate field is required.',
-                'RATE.not_in' => 'The Rate field is required.',
-            ],
+            [],
             [
                 'UNIT_ID' => 'Unit',
                 'QUANTITY' => 'Quantity',
@@ -109,13 +100,7 @@ class ItemUnitRelatedUnit extends Component
                 'newQUANTITY' => 'required|not_in:0,unit_id',
                 'newRATE' => 'required|not_in:0,unit_id',
             ],
-            [
-                'newQUANTITY.required' => 'The Quantity field is required.',
-                'newQUANTITY.not_in' => 'The Quantity field is required.',
-
-                'newRATE.required' => 'The Rate field is required.',
-                'newRATE.not_in' => 'The Rate field is required.',
-            ],
+            [],
             [    
                 'newQUANTITY' => 'Quantity',
                 'newRATE' => 'Rate'
@@ -151,5 +136,13 @@ class ItemUnitRelatedUnit extends Component
         $this->unitRelatedList = $itemUnitServices->Search($this->itemId);
 
         return view('livewire.item-unit-related-unit');
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
     }
 }

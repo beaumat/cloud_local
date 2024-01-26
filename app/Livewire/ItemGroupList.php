@@ -4,7 +4,10 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Services\ItemGroupServices;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 
+#[Title('Items Group - List')]
 class ItemGroupList extends Component
 {
     public $itemGroup = [];
@@ -34,4 +37,15 @@ class ItemGroupList extends Component
         $this->itemGroup =  $itemGroupServices->Search($this->search);
         return view('livewire.item-group-list');
     }
+
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
+
+
 }

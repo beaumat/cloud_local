@@ -6,27 +6,9 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-12">
-                    @if ($errors->any())
-                        <div class="text-sm alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    @if (session()->has('message'))
-                        <div class="pt-1 pb-1 text-sm alert alert-success">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="pt-1 pb-1 text-sm alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-                </div>
+
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '' , 'message' => session('message'), 'error' => session('error')])
+
                 <div class="col-md-12">
                     <div class="card">
                         <div class="pt-1 pb-1 card-header bg-sky">
@@ -42,17 +24,16 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <livewire:text-input name="CODE" titleName="Code"
-                                                        wire:model='CODE' :vertical="true">
+                                                        wire:model='CODE' :vertical="true" />
                                                 </div>
                                                 <div class="col-md-6"
                                                     @if ($ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <livewire:select-option name="TYPE" :options="$itemType"
                                                         titleName="Type" :zero="false" wire:model.live='TYPE'
-                                                        :vertical="true">
+                                                        :vertical="true" />
                                                 </div>
                                             </div>
                                             <div class="row">
-
                                                 <div class="col-md-6">
                                                     <livewire:text-input name="DESCRIPTION" titleName="Description"
                                                         wire:model='DESCRIPTION' :vertical="true">
@@ -108,20 +89,21 @@
                                                                             :options="$vendors" :zero="true"
                                                                             titleName="Preferred Vendor"
                                                                             wire:model='PREFERRED_VENDOR_ID'
-                                                                            :vertical="true"/>
+                                                                            :vertical="true" />
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <livewire:select-option name="MANUFACTURER_ID"
                                                                             :options="$manufacturers" :zero="true"
                                                                             wire:model='MANUFACTURER_ID'
-                                                                            titleName="Manufacturer" :vertical="true"/>
+                                                                            titleName="Manufacturer"
+                                                                            :vertical="true" />
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <livewire:select-option name="COGS_ACCOUNT_ID"
                                                                             :options="$accounts" :zero="true"
                                                                             titleName="COGS Accounts"
                                                                             wire:model='COGS_ACCOUNT_ID'
-                                                                            :vertical="true"/>
+                                                                            :vertical="true" />
                                                                     </div>
                                                                 @endif
                                                             </div>

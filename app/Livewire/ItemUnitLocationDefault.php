@@ -6,6 +6,7 @@ use App\Models\Locations;
 use App\Models\UnitOfMeasures;
 use App\Services\ItemLocationUnitServices;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ItemUnitLocationDefault extends Component
@@ -50,21 +51,7 @@ class ItemUnitLocationDefault extends Component
                 'SALES_UNIT_ID' => 'required|not_in:0',
                 'SHIPPING_UNIT_ID' => 'required|not_in:0',
             ],
-            [
-                'LOCATION_ID.required' => 'The location field is required.',
-                'LOCATION_ID.not_in' => 'The location field is required.',
-                'LOCATION_ID.unique' => 'The selected location already exists.',
-
-                'PURCHASES_UNIT_ID.required' => 'The Purchases Unit field is required.',
-                'PURCHASES_UNIT_ID.not_in' => 'The Purchases Unit field is required.',
-
-                'SALES_UNIT_ID.required' => 'The Sales Unit field is required.',
-                'SALES_UNIT_ID.not_in' => 'The Sales Unit field is required.',
-
-                'SHIPPING_UNIT_ID.required' => 'The Shipping Unit field is required.',
-                'SHIPPING_UNIT_ID.not_in' => 'The Shipping Unit field is required.',
-
-            ],
+            [],
             [
                 'LOCATION_ID' => 'Location',
                 'PURCHASES_UNIT_ID' => 'Purchases Unit',
@@ -112,16 +99,7 @@ class ItemUnitLocationDefault extends Component
                 'newSALES_UNIT_ID' => 'required|not_in:0',
                 'newSHIPPING_UNIT_ID' => 'required|not_in:0',
             ],
-            [
-                'newPURCHASES_UNIT_ID.required' => 'The Purchases Unit field is required.',
-                'newPURCHASES_UNIT_ID.not_in' => 'The Purchases Unit field is required.',
-
-                'newSALES_UNIT_ID.required' => 'The Sales Unit field is required.',
-                'newSALES_UNIT_ID.not_in' => 'The Sales Unit field is required.',
-
-                'newSHIPPING_UNIT_ID.required' => 'The Shipping Unit field is required.',
-                'newSHIPPING_UNIT_ID.not_in' => 'The Shpping Unit field is required.',
-            ],
+            [],
             [
                 'newPURCHASES_UNIT_ID' => 'Purchases Unit',
                 'newSALES_UNIT_ID' => 'Sales Unit',
@@ -157,5 +135,13 @@ class ItemUnitLocationDefault extends Component
         $this->unitLocationList = $itemLocationUnitServices->Search($this->itemId);
 
         return view('livewire.item-unit-location-default');
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
     }
 }

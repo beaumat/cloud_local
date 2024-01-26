@@ -8,6 +8,7 @@ use Livewire\Component;
 class Header extends Component
 {
 
+    
     public function logout(Logout $logout): void
     {
         $logout();

@@ -1,5 +1,5 @@
 <div class="card card-sm">
-    <div class="pt-1 pb-1 card-header bg-light-blue">
+    <div class="pt-1 pb-1 card-header bg-sky">
         <h3 class="card-title">Units</h3>
     </div>
 

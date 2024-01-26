@@ -15,42 +15,20 @@
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div>
     </div>
-    <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+
                 <div class="col-md-12">
-                    @if ($errors->any())
-                        <div class="text-sm alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    @if (session()->has('message'))
-                        <div class="pt-1 pb-1 text-sm alert alert-success">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="pt-1 pb-1 text-sm alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-                </div>
-                <!-- left column -->
-                <div class="col-md-12">
-                    <!-- jquery validation -->
+
                     <div class="card card-sm">
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <h3 class="card-title"> {{ $ID === 0 ? 'Create' : 'Edit' }}</h3>
                         </div>
-                        <!-- /.card-header -->
-                        <!-- form start -->
+
                         <form id="quickForm" wire:submit.prevent='save'>
                             <div class="card-body">
                                 <div class="form-group">

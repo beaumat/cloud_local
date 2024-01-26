@@ -7,7 +7,10 @@ use App\Models\ItemSubClass;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use App\Services\ItemSubClassServices;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 
+#[Title('Item Sub-Class - Form')]
 class ItemSubClassForm extends Component
 {
     public $itemClass = [];
@@ -52,15 +55,17 @@ class ItemSubClassForm extends Component
                 'CLASS_ID' => 'required|not_in:0',
             ],
             [
-                'CLASS_ID.not_in' => 'The Item Class field is required.',
             ],
             [
+                'CODE' => 'Code',
+                'DESCRIPTION' => 'Description',
                 'CLASS_ID' => 'Item Class',
             ]
         );
         try {
 
             if ($this->ID === 0) {
+                
                 $this->ID = $itemSubClassServices->Store($this->CODE, $this->DESCRIPTION, $this->CLASS_ID);
                 session()->flash('message', 'Successfully created.');
             } else {
@@ -76,4 +81,16 @@ class ItemSubClassForm extends Component
     {
         return view('livewire.item-sub-class-form');
     }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
+
+
+
+
 }

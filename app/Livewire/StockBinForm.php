@@ -5,8 +5,11 @@ namespace App\Livewire;
 use App\Models\StockBin;
 use App\Services\StockBinServices;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Stock Bin - Form')]
 class StockBinForm extends Component
 {
 
@@ -40,10 +43,17 @@ class StockBinForm extends Component
 
     public function save(StockBinServices $stockBinServices)
     {
-        $this->validate([
-            'CODE' => 'required|max:10|unique:stock_bin,code,' . $this->ID,
-            'DESCRIPTION' => 'required|max:50|unique:stock_bin,description,' . $this->ID
-        ]);
+        $this->validate(
+            [
+                'CODE' => 'required|max:10|unique:stock_bin,code,' . $this->ID,
+                'DESCRIPTION' => 'required|max:50|unique:stock_bin,description,' . $this->ID
+            ],
+            [],
+            [
+                'CODE' => 'Code',
+                'DESCRIPTION' => 'Description'
+            ]
+        );
 
         try {
             if ($this->ID === 0) {
@@ -63,4 +73,15 @@ class StockBinForm extends Component
     {
         return view('livewire.stock-bin-form');
     }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
+
+
+
 }

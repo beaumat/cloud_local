@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Illuminate\Validation\Rule;
 use App\Models\Items;
 use App\Services\ItemComponentServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -49,11 +50,7 @@ class ItemComponentPanel extends Component
                 ],
                 'QUANTITY' => 'required|not_in:0',
             ],
-            [
-                'COMPONENT_ID.required' => 'The Item field is required.',
-                'COMPONENT_ID.not_in' => 'The Item field is required.',
-                'COMPONENT_ID.unique' => 'The selected Item already exists.',
-            ],
+            [],
             [
                 'COMPONENT_ID' => 'Item',
             ]
@@ -95,11 +92,7 @@ class ItemComponentPanel extends Component
             [
                 'newQty' => 'required|not_in:0'
             ],
-            [
-                'newQty.required' => 'The Quantity field is invalid.',
-                'newQty.not_in' => 'The Quantity field is invalid.'
-
-            ],
+            [],
             [
                 'newQty' => 'Quantity',
             ]
@@ -122,5 +115,13 @@ class ItemComponentPanel extends Component
     {
         $this->componentList = $itemComponentServices->Search($this->search, $this->itemId);
         return view('livewire.item-component-panel');
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
     }
 }

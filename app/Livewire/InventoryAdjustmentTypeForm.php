@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
 use App\Models\Accounts;
 use App\Models\InventoryAdjustmentType;
+use Livewire\Attributes\Title;
 
+#[Title('Inventory Adjustment Type Form')]
 class InventoryAdjustmentTypeForm extends Component
 {
     public $accounts = [];

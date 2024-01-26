@@ -78,17 +78,7 @@ class ItemUnitPriceLevelUnit extends Component
                 ],
                 'CUSTOM_PRICE' => 'required|not_in:0',
             ],
-            [
-                'UnitRelatedId.required' => 'The Related Unit field is required.',
-                'UnitRelatedId.not_in' => 'The Related Unit field is required.',
-
-                'PRICE_LEVEL_ID.required' => 'The Price Level field is required.',
-                'PRICE_LEVEL_ID.not_in' => 'The Price Level field is required.',
-                'PRICE_LEVEL_ID.unique' => 'The selected Price Level already exists.',
-
-                'CUSTOM_PRICE.required' => 'The Custom Price field is required.',
-                'CUSTOM_PRICE.not_in' => 'The Custom Price field is required.',
-            ],
+            [],
             [
                 'UnitRelatedId' => 'Related Unit',
                 'PRICE_LEVEL_ID' => 'Price Level',
@@ -130,7 +120,7 @@ class ItemUnitPriceLevelUnit extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function cancelItem()
+    public function cancelItem(): void
     {
         $this->editItemId = null;
     }
@@ -150,5 +140,13 @@ class ItemUnitPriceLevelUnit extends Component
     {
         $this->unitPriceLevels =  $itemUnitPriceLevelServices->Search($this->UnitRelatedId);
         return view('livewire.item-unit-price-level-unit');
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
     }
 }

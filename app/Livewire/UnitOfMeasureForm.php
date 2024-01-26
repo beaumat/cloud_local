@@ -6,16 +6,26 @@ use Livewire\Component;
 use App\Models\UnitOfMeasures;
 use App\Services\UnitOfMeasureServices;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 
+#[Title('Unit of Measure - Form')]
 class UnitOfMeasureForm extends Component
 {
-
 
     public int $ID;
     public string $NAME;
     public string $SYMBOL;
     public bool $INACTIVE;
 
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
     public function mount($id = null)
     {
         if (is_numeric($id)) {
@@ -46,11 +56,11 @@ class UnitOfMeasureForm extends Component
         $this->validate([
             'NAME' => 'required|max:20|unique:unit_of_measure,name,' . $this->ID,
             'SYMBOL' => 'required|max:15|unique:unit_of_measure,symbol,' . $this->ID
-        ]);
+        ], [], ['NAME' => 'Name', 'SYMBOL' => 'Symbol']);
 
         try {
             if ($this->ID === 0) {
-               $this->ID = $unitOfMeasureServices->Store($this->NAME, $this->SYMBOL, $this->INACTIVE);
+                $this->ID = $unitOfMeasureServices->Store($this->NAME, $this->SYMBOL, $this->INACTIVE);
                 session()->flash('message', 'Successfully created.');
             } else {
                 $unitOfMeasureServices->Update($this->ID, $this->NAME, $this->SYMBOL, $this->INACTIVE);

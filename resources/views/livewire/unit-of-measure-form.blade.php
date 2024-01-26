@@ -1,76 +1,43 @@
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
-            <div class="row ">
-                <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenanceinventoryunit_of_measure') }}"> Unit Of Measure </a>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">
-
-                        </li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
+         
         </div><!-- /.container-fluid -->
     </div>
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-
             <div class="row">
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-md-12">
-                    @if ($errors->any())
-                        <div class="text-sm alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    @if (session()->has('message'))
-                        <div class="pt-1 pb-1 text-sm alert alert-success">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="pt-1 pb-1 text-sm alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-                </div>
-                <!-- left column -->
-                <div class="col-md-12">
-                    <!-- jquery validation -->
                     <div class="card card-sm">
                         <div class="pt-1 pb-1 card-header bg-sky">
-                            <h3 class="card-title"> {{ $ID === 0 ? 'Create' : 'Edit' }}</h3>
+                            <h3 class="card-title"> {{ $ID === 0 ? 'Create' : 'Edit' }}  <a  class="text-light" href="{{ route('maintenanceinventoryunit_of_measure') }}"> Unit Of Measure </a></h3>
                         </div>
-                        <!-- /.card-header -->
-                        <!-- form start -->
                         <form id="quickForm" wire:submit.prevent='save'>
                             <div class="card-body">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <livewire:text-input name="SYMBOL" titleName="Symbol" wire:model='SYMBOL'>
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <livewire:text-input name="NAME" titleName="Name"
+                                                        wire:model='NAME'>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <livewire:text-input name="SYMBOL" titleName="Symbol"
+                                                        wire:model='SYMBOL'>
 
-                                        </div>
-                                        <div class="col-md-12">
-                                            <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
-                                            wire:model='INACTIVE'>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
+                                                        wire:model='INACTIVE'>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-
                                 </div>
-
                             </div>
-
                             <!-- /.card-body -->
                             <div class="card-footer">
                                 <div class="row">

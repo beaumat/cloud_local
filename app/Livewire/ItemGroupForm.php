@@ -7,8 +7,10 @@ use App\Models\ItemType;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use App\Services\ItemGroupServices;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 
-
+#[Title('Item Group - Form')]
 class ItemGroupForm extends Component
 {
 
@@ -52,10 +54,10 @@ class ItemGroupForm extends Component
                 'DESCRIPTION' => 'required|max:100|unique:item_group,description,' . $this->ID,
                 'ITEM_TYPE' => 'required',
             ],
+            [],
             [
-                'ITEM_TYPE.not_in' => 'The Item Type field is required.',
-            ],
-            [
+                'CODE' => 'Code',
+                'DESCRIPTION' => 'Description',
                 'ITEM_TYPE' => 'Item Type',
             ]
         );
@@ -79,5 +81,14 @@ class ItemGroupForm extends Component
     public function render()
     {
         return view('livewire.item-group-form');
+    }
+    
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
     }
 }
