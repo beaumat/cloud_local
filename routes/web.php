@@ -1,27 +1,27 @@
 <?php
 
+use App\Livewire\DashboardPage\Dashboard;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Dashboard;
-use App\Livewire\InventoryAdjustmentTypeForm;
-use App\Livewire\InventoryAdjustmentTypeList;
-use App\Livewire\ItemClassList;
-use App\Livewire\ItemClassForm;
-use App\Livewire\ItemGroupForm;
-use App\Livewire\ItemGroupList;
-use App\Livewire\ItemsForm;
-use App\Livewire\ItemsList;
-use App\Livewire\ItemSubClassForm;
-use App\Livewire\ItemSubClassList;
-use App\Livewire\ManufacturerForm;
-use App\Livewire\ManufacturerList;
-use App\Livewire\PriceLevelForm;
-use App\Livewire\PriceLevelList;
-use App\Livewire\ShipViaForm;
-use App\Livewire\ShipViaList;
-use App\Livewire\StockBinForm;
-use App\Livewire\StockBinList;
-use App\Livewire\UnitOfMeasureForm;
-use App\Livewire\UnitOfMeasureList;
+use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
+use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
+use App\Livewire\ItemClassPage\ItemClassForm;
+use App\Livewire\ItemClassPage\ItemClassList;
+use App\Livewire\ItemGroupPage\ItemGroupForm;
+use App\Livewire\ItemGroupPage\ItemGroupList;
+use App\Livewire\ItemPage\ItemsForm;
+use App\Livewire\ItemPage\ItemsList;
+use App\Livewire\ItemSubClassPage\ItemSubClassForm;
+use App\Livewire\ItemSubClassPage\ItemSubClassList;
+use App\Livewire\ManufacturerPage\ManufacturerForm;
+use App\Livewire\ManufacturerPage\ManufacturerList;
+use App\Livewire\PriceLevelPage\PriceLevelForm;
+use App\Livewire\PriceLevelPage\PriceLevelList;
+use App\Livewire\ShipViaPage\ShipViaForm;
+use App\Livewire\ShipViaPage\ShipViaList;
+use App\Livewire\StockBinPage\StockBinForm;
+use App\Livewire\StockBinPage\StockBinList;
+use App\Livewire\UnitOfMeasurePage\UnitOfMeasureForm;
+use App\Livewire\UnitOfMeasurePage\UnitOfMeasureList;
 
 /*
 |--------------------------------------------------------------------------

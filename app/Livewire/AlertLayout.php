@@ -27,7 +27,6 @@ class AlertLayout extends Component
 
     public function dismissAlert()
     {
-        // Any logic to clear or dismiss the alert
         $this->dispatch('clear-alert');
     }
 }

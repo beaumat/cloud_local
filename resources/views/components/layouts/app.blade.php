@@ -41,14 +41,14 @@
                 height="60" width="60">
         </div> --}}
 
-        @livewire('Header')
-        @livewire('MainSidebar')
+        @livewire('Layouts.Header')
+        @livewire('Layouts.MainSidebar')
 
         {{ $slot }}
         {{-- <aside class="control-sidebar control-sidebar-dark">
         </aside> --}}
 
-        @livewire('Footer')
+        @livewire('Layouts.Footer')
     </div>
 
 

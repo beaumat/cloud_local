@@ -4,7 +4,6 @@
             <div class="col-3">
                 <label for="{{ $name }}" class="text-sm"> {{ $titleName }}</label>
             </div>
-
             <div class="col-9">
                 <select wire:model='value' id="{{ $name }}" class="text-sm form-control form-control-sm">
                     @if ($zero)
