@@ -34,7 +34,6 @@ class ItemClassList extends Component
     }
     public function render()
     {
-
         return view('livewire.item-class.item-class-list');
     }
 }

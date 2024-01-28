@@ -31,7 +31,7 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
-                                                        wire:model='INACTIVE'>
+                                                        wire:model='INACTIVE'/>
                                                 </div>
                                             </div>
                                         </div>

@@ -17,7 +17,7 @@ class ItemType extends Model
         'DESCRIPTION',
         'NEXT_ID',
         'DIGIT_COUNT',
-        'FIRST_CHARACTER',
-        'INACTIVE'
+        'FIRST_CHARACTER'
+      
     ];
 }

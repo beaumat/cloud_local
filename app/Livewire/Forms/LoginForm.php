@@ -32,7 +32,7 @@ class LoginForm extends Form
         $this->ensureIsNotRateLimited();
 
         // Change 'email' to 'username' or 'name'
-        if (! Auth::attempt([$this->usernameFieldName() => $this->name, 'password' => $this->password], $this->remember)) {
+        if (!Auth::attempt([$this->usernameFieldName() => $this->name, 'password' => $this->password, 'inactive' => false], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -55,7 +55,7 @@ class LoginForm extends Form
      */
     protected function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -77,6 +77,6 @@ class LoginForm extends Form
     protected function throttleKey(): string
     {
         // Use 'username' or 'name' depending on your implementation
-        return Str::transliterate(Str::lower($this->name).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->name) . '|' . request()->ip());
     }
 }

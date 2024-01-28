@@ -77,7 +77,7 @@ class ItemsForm extends Component
         $this->itemSubClass = [];
         $this->itemGroup = ItemGroup::where('ITEM_TYPE', $this->TYPE)->get();
         $this->itemClass = ItemClass::all();
-        $this->itemType = ItemType::where('INACTIVE', '0')->get();
+        $this->itemType = ItemType::all();
         $this->stockType = StockType::all();
         $this->manufacturers = Manufacturers::all();
         $this->vendors = Contacts::query()->select(['ID', 'PRINT_NAME_AS as NAME'])->where('TYPE', '0')->where('INACTIVE', '0')->orderBy('PRINT_NAME_AS', 'asc')->get();

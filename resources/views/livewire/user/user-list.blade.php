@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenanceinventoryitem_class') }}"> Item Class </a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancesettingsusers') }}"> Users </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -14,14 +14,13 @@
             </div>
         </div>
     </div>
-    
+
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-12">
                     <div class="card">
-
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
@@ -32,21 +31,33 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-sm bg-sky">
                                     <tr>
-                                        <th>CODE</th>
-                                        <th>DESCRIPTION</th>
+                                        <th>Username</th>
+                                        <th>Employee</th>
+                                        <th>Inactive</th>
+
                                         <th class="text-center col-1">
-                                            <a href="{{ route('maintenanceinventoryitem_class_create') }}"
-                                                class="text-white"> <i class="fas fa-plus"></i></a>
+                                            <a href="{{ route('maintenancesettingsusers_create') }}" class="text-white">
+                                                <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm">
-                                    @foreach ($itemClass as $list)
+                                    @foreach ($users as $list)
                                         <tr>
-                                            <td> {{ $list->CODE }}</td>
-                                            <td> {{ $list->DESCRIPTION }}</td>
+                                            <td> {{ $list->name }}</td>
+                                            <td> {{ $list->employee }}</td>
+                                            <td>
+                                                @if ($list->inactive)
+                                                    <strong class="text-danger">Yes</strong>
+                                                @else                     
+                                                    <strong class="text-primary">No</strong>
+                                                @endif
+                                            </td>
                                             <td class="text-center">
-                                                <a href="{{ route('maintenanceinventoryitem_class_edit', ['id' => $list->ID]) }}"
+                                                 <a href="{{ route('maintenancesettingsusers_role', ['id' => $list->id]) }}" class="btn-sm text-primary" title="Permission">
+                                                    <i class="fa fa-shield" aria-hidden="true"></i>
+                                                 </a>
+                                                <a href="{{ route('maintenancesettingsusers_edit', ['id' => $list->id]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
