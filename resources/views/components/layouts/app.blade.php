@@ -4,12 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ asset('dist/img/favicon.ico') }}" type="image/x-icon">
 
     <title>
-        @if (isset($title))
-            {{ $title . ' - ' }}
-        @endif
         {{ config('app.name') }}
+        @if (isset($title))
+            {{ ' | ' . $title }}
+        @endif
+
     </title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -48,7 +50,7 @@
         {{-- <aside class="control-sidebar control-sidebar-dark">
         </aside> --}}
 
-        @livewire('Layouts.Footer')
+        {{-- @livewire('Layouts.Footer') --}}
     </div>
 
 

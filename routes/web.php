@@ -101,9 +101,9 @@ Route::middleware(['auth'])->group(function () {
             });
 
             Route::prefix('/inventory-adjustment-type')->group(function () {
-                Route::get('/', InventoryAdjustmentTypeList::class)->name('inventory_adjustment_type')->middleware(['permission:inventory-adjust-type.view']);
-                Route::get('/create', InventoryAdjustmentTypeForm::class)->name('inventory_adjustment_type_create')->middleware(['permission:inventory-adjust-type.create']);
-                Route::get('/{id}/edit', InventoryAdjustmentTypeForm::class)->name('inventory_adjustment_type_edit')->middleware(['permission:inventory-adjust-type.edit']);
+                Route::get('/', InventoryAdjustmentTypeList::class)->name('inventory_adjustment_type')->middleware(['permission:inventory-adjustment-type.view']);
+                Route::get('/create', InventoryAdjustmentTypeForm::class)->name('inventory_adjustment_type_create')->middleware(['permission:inventory-adjustment-type.create']);
+                Route::get('/{id}/edit', InventoryAdjustmentTypeForm::class)->name('inventory_adjustment_type_edit')->middleware(['permission:inventory-adjustment-type.edit']);
             });
 
             Route::prefix('/stock-bin')->group(function () {
