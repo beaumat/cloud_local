@@ -19,6 +19,11 @@ class MaintenanceSettingSeeder extends Seeder
         Permission::create(['name' => 'location.create']);
         Permission::create(['name' => 'location.edit']);
         Permission::create(['name' => 'location.delete']);
+        Permission::create(['name' => 'location-group.view']);
+        Permission::create(['name' => 'location-group.create']);
+        Permission::create(['name' => 'location-group.edit']);
+        Permission::create(['name' => 'location-group.delete']);
+
         Permission::create(['name' => 'option']);
     }
 }

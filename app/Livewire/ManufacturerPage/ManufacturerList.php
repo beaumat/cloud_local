@@ -30,10 +30,7 @@ class ManufacturerList extends Component
     {
         $this->manufacturer = $manufacturerServices->Search($this->search);
     }
-    public function render()
-    {
-        return view('livewire.manufacturer.manufacturer-list');
-    }
+ 
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -43,4 +40,8 @@ class ManufacturerList extends Component
         session()->forget('error');
     }
 
+    public function render()
+    {
+        return view('livewire.manufacturer.manufacturer-list');
+    }
 }

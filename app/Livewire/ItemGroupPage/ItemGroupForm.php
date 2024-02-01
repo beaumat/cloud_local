@@ -44,8 +44,6 @@ class ItemGroupForm extends Component
         $this->DESCRIPTION = '';
         $this->ITEM_TYPE = 0;
     }
-
-
     public function save(ItemGroupServices $itemGroupServices)
     {
         $this->validate(
@@ -72,17 +70,11 @@ class ItemGroupForm extends Component
                 $itemGroupServices->Update($this->ID, $this->CODE, $this->DESCRIPTION, $this->ITEM_TYPE);
                 session()->flash('message', 'Successfully updated.');
             }
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $$errorMessage);
         }
     }
-    public function render()
-    {
-        return view('livewire.item-group.item-group-form');
-    }
-    
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -91,4 +83,10 @@ class ItemGroupForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    public function render()
+    {
+        return view('livewire.item-group.item-group-form');
+    }
+    
+
 }

@@ -3,7 +3,8 @@
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancesettingslocation') }}"> Location </a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancesettingslocation_group') }}"> Location Group </a>
+                    </h5>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -30,22 +31,11 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE'>
-                                        </div>
+
                                         <div class="col-md-6">
                                             <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'>
                                         </div>
-                                        <div class="col-md-6">
-                                            <livewire:select-option name="PRICE_LEVEL_ID" :options="$priceLevels"
-                                                :zero="true" titleName="Price Level"
-                                                wire:model.live='PRICE_LEVEL_ID' :key="$priceLevels->pluck('ID')->join('_')">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <livewire:select-option name="GROUP_ID" :options="$locationGroups"
-                                                :zero="true" titleName="Group"
-                                                wire:model.live='GROUP_ID' :key="$locationGroups->pluck('ID')->join('_')">
-                                        </div>
+
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
                                                 wire:model='INACTIVE' />
@@ -62,7 +52,7 @@
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0)
                                             <a id="new" title="Create"
-                                                href="{{ route('maintenancesettingslocation_create') }}"
+                                                href="{{ route('maintenancesettingslocation_group_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i></a>
                                         @endif
 

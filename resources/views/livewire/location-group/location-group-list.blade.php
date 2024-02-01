@@ -3,7 +3,8 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancesettingslocation') }}"> Location </a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancesettingslocation_group') }}"> Location Group </a>
+                    </h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -30,32 +31,30 @@
                             </div>
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-sm bg-sky">
-                                    <tr>
-                                        <th>Code</th>
+                                    <tr>                  
                                         <th>Name</th>
                                         <th>Inactive</th>
-
                                         <th class="text-center col-1">
-                                            <a href="{{ route('maintenancesettingslocation_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+                                            <a href="{{ route('maintenancesettingslocation_group_create') }}"
+                                                class="text-white">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm">
-                                    @foreach ($locations as $list)
-                                        <tr>
-                                            <td> {{ $list->CODE }}</td>
+                                    @foreach ($locationGroup as $list)
+                                        <tr>                
                                             <td> {{ $list->NAME }}</td>
                                             <td>
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
-                                                @else                     
+                                                @else
                                                     <strong class="text-primary">No</strong>
                                                 @endif
                                             </td>
                                             <td class="text-center">
-                                       
-                                                <a href="{{ route('maintenancesettingslocation_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('maintenancesettingslocation_group_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>

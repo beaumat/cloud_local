@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\ChartOfAccount\ChartOfAccountForm;
+use App\Livewire\ChartOfAccount\ChartOfAccountList;
 use App\Livewire\DashboardPage\Dashboard;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
@@ -12,8 +14,16 @@ use App\Livewire\ItemPage\ItemsForm;
 use App\Livewire\ItemPage\ItemsList;
 use App\Livewire\ItemSubClassPage\ItemSubClassForm;
 use App\Livewire\ItemSubClassPage\ItemSubClassList;
+use App\Livewire\Location\LocationForm;
+use App\Livewire\Location\LocationList;
+use App\Livewire\LocationGroup\LocationGroupForm;
+use App\Livewire\LocationGroup\LocationGroupList;
 use App\Livewire\ManufacturerPage\ManufacturerForm;
 use App\Livewire\ManufacturerPage\ManufacturerList;
+use App\Livewire\PaymentMethod\PaymentMethodForm;
+use App\Livewire\PaymentMethod\PaymentMethodList;
+use App\Livewire\PaymentTerm\PaymentTermForm;
+use App\Livewire\PaymentTerm\PaymentTermList;
 use App\Livewire\PriceLevelPage\PriceLevelForm;
 use App\Livewire\PriceLevelPage\PriceLevelList;
 use App\Livewire\RolePermissionPage\RolePermissionConfig;
@@ -51,14 +61,31 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth'])->group(function () {
-
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
 
     Route::prefix('/maintenance')->name('maintenance')->group(function () {
+        Route::prefix('/financial')->name('financial')->group(function () {
+            Route::prefix('/chart-of-account')->group(function () {
+                Route::get('/', ChartOfAccountList::class)->name('coa');
+                Route::get('/create', ChartOfAccountForm::class)->name('coa_create');
+                Route::get('/{id}/edit', ChartOfAccountForm::class)->name('coa_edit');
+            });
+
+            Route::prefix('/payment-method')->group(function () {
+                Route::get('/', PaymentMethodList::class)->name('payment_method');
+                Route::get('/create', PaymentMethodForm::class)->name('payment_method_create');
+                Route::get('/{id}/edit', PaymentMethodForm::class)->name('payment_method_edit');
+            });
+
+            Route::prefix('/payment-term')->group(function () {
+                Route::get('/', PaymentTermList::class)->name('payment_term');
+                Route::get('/create', PaymentTermForm::class)->name('payment_term_create');
+                Route::get('/{id}/edit', PaymentTermForm::class)->name('payment_term_edit');
+            });
+        });
 
         Route::prefix('/inventory')->name('inventory')->group(function () {
-
             Route::prefix('/items')->group(function () {
                 Route::get('/', ItemsList::class)->name('item')->middleware(['permission:items.view']);
                 Route::get('/create', ItemsForm::class)->name('item_create')->middleware(['permission:items.create']);
@@ -69,31 +96,26 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/create', ItemClassForm::class)->name('item_class_create')->middleware(['permission:item-class.create']);
                 Route::get('/{id}/edit', ItemClassForm::class)->name('item_class_edit')->middleware(['permission:item-class.edit']);
             });
-
             Route::prefix('/item-sub-class')->group(function () {
                 Route::get('/', ItemSubClassList::class)->name('item_sub_class')->middleware(['permission:item-sub-class.view']);
                 Route::get('/create', ItemSubClassForm::class)->name('item_sub_class_create')->middleware(['permission:item-sub-class.create']);
                 Route::get('/{id}/edit', ItemSubClassForm::class)->name('item_sub_class_edit')->middleware(['permission:item-sub-class.edit']);
             });
-
             Route::prefix('/item-group')->group(function () {
                 Route::get('/', ItemGroupList::class)->name('item_group')->middleware(['permission:item-group.view']);
                 Route::get('/create', ItemGroupForm::class)->name('item_group_create')->middleware(['permission:item-group.create']);
                 Route::get('/{id}/edit', ItemGroupForm::class)->name('item_group_edit')->middleware(['permission:item-group.edit']);
             });
-
             Route::prefix('/manufacturers')->group(function () {
                 Route::get('/', ManufacturerList::class)->name('manufacturers')->middleware(['permission:manufacturer.view']);
                 Route::get('/create', ManufacturerForm::class)->name('manufacturers_create')->middleware(['permission:manufacturer.create']);
                 Route::get('/{id}/edit', ManufacturerForm::class)->name('manufacturers_edit')->middleware(['permission:manufacturer.edit']);
             });
-
             Route::prefix('/ship-via')->group(function () {
                 Route::get('/', ShipViaList::class)->name('ship_via')->middleware(['permission:ship-via.view']);
                 Route::get('/create', ShipViaForm::class)->name('ship_via_create')->middleware(['permission:ship-via.create']);
                 Route::get('/{id}/edit', ShipViaForm::class)->name('ship_via_edit')->middleware(['permission:ship-via.edit']);
             });
-
             Route::prefix('/unit-of-measure')->group(function () {
                 Route::get('/', UnitOfMeasureList::class)->name('unit_of_measure')->middleware(['permission:unit-of-measure.view']);
                 Route::get('/create', UnitOfMeasureForm::class)->name('unit_of_measure_create')->middleware(['permission:unit-of-measure.create']);
@@ -130,7 +152,17 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/rolespermission')->middleware(['permission:roles-and-permission'])->group(function () {
                 Route::get('/', RolePermissionList::class)->name('roles');
                 Route::get('/{id}/permission', RolePermissionConfig::class)->name('roles_permission');
-                // Route::get('/{id}/edit', UserForm::class)->name('users_edit');
+            });
+
+            Route::prefix('/location')->group(function () {
+                Route::get('/', LocationList::class)->name('location')->middleware(['permission:location.view']);
+                Route::get('/create', LocationForm::class)->name('location_create')->middleware(['permission:location.create']);
+                Route::get('/{id}/edit', LocationForm::class)->name('location_edit')->middleware(['permission:location.edit']);
+            });
+            Route::prefix('/location-group')->group(function () {
+                Route::get('/', LocationGroupList::class)->name('location_group')->middleware(['permission:location-group.view']);
+                Route::get('/create', LocationGroupForm::class)->name('location_group_create')->middleware(['permission:location-group.create']);
+                Route::get('/{id}/edit', LocationGroupForm::class)->name('location_group_edit')->middleware(['permission:location-group.edit']);
             });
         });
     });

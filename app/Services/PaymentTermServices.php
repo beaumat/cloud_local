@@ -1,0 +1,74 @@
+<?php
+namespace App\Services;
+
+use App\Models\PaymentTerms;
+
+class PaymentTermServices
+{
+    private $object;
+    public function __construct(ObjectServices $objectService)
+    {
+        $this->object = $objectService;
+    }
+
+    public function Store(string $CODE, string $DESCRIPTION, int $TYPE, int $NET_DUE, float $DISCOUNT_PCT, int $DISCOUNT_DUE,int $DATE_MONTH_PARAM, int $DATE_DAY_PARAM, int $DATE_MIN_DAYS, bool $INACTIVE) : int
+    {
+        $ID = $this->object->ObjectNextID('PAYMENT_TERMS');
+        PaymentTerms::create([
+            'ID'                =>  $ID,
+            'CODE'              =>  $CODE,
+            'DESCRIPTION'       =>  $DESCRIPTION,
+            'TYPE'              =>  $TYPE,
+            'NET_DUE'           =>  $NET_DUE,
+            'DISCOUNT_PCT'      =>  $DISCOUNT_PCT,
+            'DISCOUNT_DUE'      =>  $DISCOUNT_DUE,
+            'DATE_MONTH_PARAM'  =>  $DATE_MONTH_PARAM,
+            'DATE_DAY_PARAM'    =>  $DATE_DAY_PARAM,
+            'DATE_MIN_DAYS'     =>  $DATE_MIN_DAYS,
+            'INACTIVE'          =>  $INACTIVE
+
+        ]);
+        return $ID;
+    }
+
+    public function Update(int $ID, string $CODE, string $DESCRIPTION, int $TYPE, int $NET_DUE, float $DISCOUNT_PCT, int $DISCOUNT_DUE,int $DATE_MONTH_PARAM, int $DATE_DAY_PARAM, int $DATE_MIN_DAYS, bool $INACTIVE): void
+    {
+        PaymentTerms::where('ID', $ID)->update([
+            'CODE'              =>  $CODE,
+            'DESCRIPTION'       =>  $DESCRIPTION,
+            'TYPE'              =>  $TYPE,
+            'NET_DUE'           =>  $NET_DUE,
+            'DISCOUNT_PCT'      =>  $DISCOUNT_PCT,
+            'DISCOUNT_DUE'      =>  $DISCOUNT_DUE,
+            'DATE_MONTH_PARAM'  =>  $DATE_MONTH_PARAM,
+            'DATE_DAY_PARAM'    =>  $DATE_DAY_PARAM,
+            'DATE_MIN_DAYS'     =>  $DATE_MIN_DAYS,
+            'INACTIVE'          =>  $INACTIVE
+        ]);
+    }
+
+    public function Delete(int $ID): void
+    {
+        PaymentTerms::where('ID', $ID)->delete();
+    }
+    public function Search($search)
+    {
+        return PaymentTerms::query()
+            ->select([
+                'payment_terms.ID',
+                'payment_terms.CODE',
+                'payment_terms.DESCRIPTION',
+                't.DESCRIPTION as TYPE',
+                'payment_terms.INACTIVE'
+               
+            ])
+            ->join('payment_terms_type_map as t', 't.ID', '=', 'payment_terms.TYPE')
+            ->when($search, function ($query) use (&$search) {
+                $query->where('payment_terms.CODE', 'like', '%' . $search . '%')
+                    ->orWhere('payment_terms.DESCRIPTION', 'like', '%' . $search . '%');
+            })
+            ->orderBy('payment_terms.ID', 'desc')
+            ->get();
+    }
+
+}

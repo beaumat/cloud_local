@@ -40,13 +40,14 @@ class ItemClassServices
     }
     public function Search($search)
     {
-        if (!$search) {
-            return ItemClass::orderBy('ID', 'desc')->get();
-        } else {
-            return ItemClass::where('CODE', 'like', '%' . $search . '%')
-                ->orWhere('DESCRIPTION', 'like', '%' . $search . '%')
-                ->orderBy('ID', 'desc')
-                ->get();
-        }
+
+        return ItemClass::query()
+            ->when($search, function ($query) use (&$search) {
+                $query->where('CODE', 'like', '%' . $search . '%')
+                    ->orWhere('DESCRIPTION', 'like', '%' . $search . '%');
+            })
+
+            ->orderBy('ID', 'desc')
+            ->get();
     }
 }

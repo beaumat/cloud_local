@@ -3,18 +3,19 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancesettingslocation') }}"> Location </a></h5>
-                </div>
+                    <h5 class="m-0"><a href="{{ route('maintenancefinancialpayment_term') }}"> Payment Terms </a>
+                    </h5>
+                </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
                         </li>
                     </ol>
-                </div>
-            </div>
-        </div>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
-
+    <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -31,31 +32,32 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-sm bg-sky">
                                     <tr>
-                                        <th>Code</th>
-                                        <th>Name</th>
-                                        <th>Inactive</th>
-
+                                        <th>CODE</th>
+                                        <th>DESCRIPTION</th>
+                                        <th class="col-1">TYPE</th>
+                                        <th >INACTIVE</th>
                                         <th class="text-center col-1">
-                                            <a href="{{ route('maintenancesettingslocation_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+                                            <a href="{{ route('maintenancefinancialpayment_term_create') }}"
+                                                class="text-white btn-sm"> <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm">
-                                    @foreach ($locations as $list)
+                                    @foreach ($paymentTerms as $list)
                                         <tr>
                                             <td> {{ $list->CODE }}</td>
-                                            <td> {{ $list->NAME }}</td>
+                                            <td> {{ $list->DESCRIPTION }}</td>
+                                            <td> {{ $list->TYPE }} </td>
                                             <td>
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
-                                                @else                     
+                                                @else
                                                     <strong class="text-primary">No</strong>
                                                 @endif
                                             </td>
+                                 
                                             <td class="text-center">
-                                       
-                                                <a href="{{ route('maintenancesettingslocation_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('maintenancefinancialpayment_term_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
@@ -75,4 +77,8 @@
             </div>
         </div>
     </section>
+
+
+
+
 </div>

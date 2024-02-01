@@ -24,7 +24,6 @@ class ItemComponentServices
 
         return $ID;
     }
-
     public function Update(int $ID, float $QUANTITY, float $RATE): void
     {
         ItemComponents::where('ID', $ID)->update([
@@ -39,26 +38,16 @@ class ItemComponentServices
     }
     public function Search($search, int $itemId)
     {
-        if (!$search) {
-            return  ItemComponents::query()
-                ->select(['ITEM_COMPONENTS.ID', 'item.CODE', 'item.DESCRIPTION', 'ITEM_COMPONENTS.QUANTITY', 'ITEM_COMPONENTS.RATE'])
-                ->leftjoin('item', 'item.ID', '=', 'ITEM_COMPONENTS.COMPONENT_ID')
-                ->where('ITEM_COMPONENTS.ITEM_ID', $itemId)
-                ->where('item.INACTIVE', '0')
-                ->orderBy('ITEM_COMPONENTS.ID','asc')
-                ->get();
-        }
-
         return  ItemComponents::query()
             ->select(['ITEM_COMPONENTS.ID', 'item.CODE', 'item.DESCRIPTION', 'ITEM_COMPONENTS.QUANTITY', 'ITEM_COMPONENTS.RATE'])
             ->leftjoin('item', 'item.ID', '=', 'ITEM_COMPONENTS.COMPONENT_ID')
             ->where('ITEM_COMPONENTS.ITEM_ID', $itemId)
             ->where('item.INACTIVE', '0')
-            ->where(function ($query) use ($search) {
+            ->when($search, function ($query) use (&$search) {
                 $query->where('item.CODE', 'like', '%' . $search . '%')
                     ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%');
             })
-            ->orderBy('ITEM_COMPONENTS.ID','asc')
+            ->orderBy('ITEM_COMPONENTS.ID', 'asc')
             ->get();
     }
 }

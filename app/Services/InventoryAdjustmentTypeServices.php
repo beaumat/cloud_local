@@ -41,31 +41,21 @@ class InventoryAdjustmentTypeServices
     }
     public function Search($search)
     {
-        if (!$search) {
-            return InventoryAdjustmentType::query()
-                ->select([
-                    'inventory_adjustment_type.ID',
-                    'inventory_adjustment_type.CODE',
-                    'inventory_adjustment_type.DESCRIPTION',
-                    'account.NAME as ACCOUNT'
-                ])
-                ->join('account', 'account.ID', '=', 'inventory_adjustment_type.ACCOUNT_ID')
-                ->orderBy('ID', 'desc')
-                ->get();
-        } else {
-            return InventoryAdjustmentType::query()
-                ->select([
-                    'inventory_adjustment_type.ID',
-                    'inventory_adjustment_type.CODE',
-                    'inventory_adjustment_type.DESCRIPTION',
-                    'account.NAME as ACCOUNT'
-                ])
-                ->join('account', 'account.ID', '=', 'inventory_adjustment_type.ACCOUNT_ID')
-                ->where('inventory_adjustment_type.CODE', 'like', '%' . $search . '%')
-                ->orWhere('inventory_adjustment_type.DESCRIPTION', 'like', '%' . $search . '%')
-                ->orWhere('account.NAME', 'like', '%' . $search . '%')
-                ->orderBy('ID', 'desc')
-                ->get();
-        }
+
+        return InventoryAdjustmentType::query()
+            ->select([
+                'inventory_adjustment_type.ID',
+                'inventory_adjustment_type.CODE',
+                'inventory_adjustment_type.DESCRIPTION',
+                'account.NAME as ACCOUNT'
+            ])
+            ->join('account', 'account.ID', '=', 'inventory_adjustment_type.ACCOUNT_ID')
+            ->when($search, function ($query) use (&$search) {
+                $query->where('inventory_adjustment_type.CODE', 'like', '%' . $search . '%')
+                    ->orWhere('inventory_adjustment_type.DESCRIPTION', 'like', '%' . $search . '%')
+                    ->orWhere('account.NAME', 'like', '%' . $search . '%');
+            })
+            ->orderBy('ID', 'desc')
+            ->get();
     }
 }

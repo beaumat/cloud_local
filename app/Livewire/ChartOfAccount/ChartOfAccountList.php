@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Livewire\ChartOfAccount;
+
+use App\Services\AccountServices;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
+use Livewire\Component;
+
+
+#[Title('Chart Of Account')]
+class ChartOfAccountList extends Component
+{
+    public $accounts = [];
+    public $search = '';
+    public function updatedsearch(AccountServices $accountServices)
+    {
+        $this->accounts = $accountServices->Search($this->search);
+    }
+    public function delete($id, AccountServices $accountServices)
+    {
+        try {
+            $accountServices->Delete($id);
+            session()->flash('message', 'Successfully deleted.');
+            $this->accounts = $accountServices->Search($this->search);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function mount(AccountServices $accountServices)
+    {
+        $this->accounts = $accountServices->Search($this->search);
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
+    }
+    public function render()
+    {
+        return view('livewire.chart-of-account.chart-of-account-list');
+    }
+}

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Services;
-
 use App\Models\ItemGroup;
 
 class ItemGroupServices
@@ -11,11 +10,9 @@ class ItemGroupServices
     {
         $this->object = $objectService;
     }
-
     public function Store(string $CODE, string $DESCRIPTION, int $ITEM_TYPE): int
     {
         $ID = $this->object->ObjectNextID('ITEM_GROUP');
-
         ItemGroup::create([
             'ID' => $ID,
             'CODE' => $CODE,
@@ -28,44 +25,32 @@ class ItemGroupServices
 
     public function Update(int $ID, string $CODE, string $DESCRIPTION, int $ITEM_TYPE): void
     {
-
         ItemGroup::where('ID', $ID)->update([
             'CODE' => $CODE,
             'DESCRIPTION' => $DESCRIPTION,
             'ITEM_TYPE' =>  $ITEM_TYPE
         ]);
     }
-
     public function Delete(int $ID): void
     {
         ItemGroup::where('ID', $ID)->delete();
     }
-
     public function Search($search)
     {
-        if (!$search) {
-            return ItemGroup::query()->select([
+        return ItemGroup::query()
+            ->select([
                 'item_group.ID',
                 'item_group.CODE',
                 'item_group.DESCRIPTION',
                 'item_type_map.DESCRIPTION as ITEM_TYPE'
             ])
-                ->join('item_type_map', 'item_type_map.ID', '=', 'item_group.item_type')
-                ->orderBy('item_group.ID', 'desc')
-                ->get();
-        } else {
-            return ItemGroup::query()->select([
-                'item_group.ID',
-                'item_group.CODE',
-                'item_group.DESCRIPTION',
-                'item_type_map.DESCRIPTION as ITEM_TYPE'
-            ])
-                ->join('item_type_map', 'item_type_map.ID', '=', 'item_group.item_type')
-                ->where('item_group.CODE', 'like', '%' . $search . '%')
-                ->orWhere('item_group.DESCRIPTION', 'like', '%' . $search . '%')
-                ->orWhere('item_type_map.DESCRIPTION', 'like', '%' . $search . '%')
-                ->orderBy('item_group.ID', 'desc')
-                ->get();
-        }
+            ->join('item_type_map', 'item_type_map.ID', '=', 'item_group.item_type')
+            ->when($search, function ($query) use (&$search) {
+                $query->where('item_group.CODE', 'like', '%' . $search . '%')
+                    ->orWhere('item_group.DESCRIPTION', 'like', '%' . $search . '%')
+                    ->orWhere('item_type_map.DESCRIPTION', 'like', '%' . $search . '%');
+            })
+            ->orderBy('item_group.ID', 'desc')
+            ->get();
     }
 }

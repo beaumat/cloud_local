@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 use App\Models\Manufacturers;
 
 class ManufacturerServices
@@ -39,13 +40,13 @@ class ManufacturerServices
     }
     public function Search($search)
     {
-        if (!$search) {
-            return Manufacturers::orderBy('ID', 'desc')->get();
-        } else {
-            return Manufacturers::where('CODE', 'like', '%' . $search . '%')
-                ->orWhere('NAME', 'like', '%' . $search . '%')
-                ->orderBy('ID', 'desc')
-                ->get();
-        }
+
+        return Manufacturers::query()
+            ->when($search, function ($query) use (&$search) {
+                $query->where('CODE', 'like', '%' . $search . '%');
+                $query->orWhere('NAME', 'like', '%' . $search . '%');
+            })
+            ->orderBy('ID', 'desc')
+            ->get();
     }
 }

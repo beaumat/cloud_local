@@ -528,8 +528,9 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
+                    <li class="nav-item {{ request()->is('maintenance/financial*') ? 'menu-open' : '' }}">
+                        <a href="#"
+                            class="nav-link {{ request()->is('maintenance/financial*') ? 'active text-primary' : '' }}">
                             <i class="fa fa-pie-chart nav-icon"></i>
                             <p>
                                 Financial
@@ -538,7 +539,8 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="{{ route('maintenancefinancialcoa') }}"
+                                    class="nav-link {{ request()->is('maintenance/financial/chart-of-account*') ? 'active' : '' }}">
                                     <i class="fa fa-file nav-icon"></i>
                                     <p>Chart Of Account</p>
                                 </a>
@@ -550,13 +552,15 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="{{ route('maintenancefinancialpayment_method') }}"
+                                    class="nav-link {{ request()->is('maintenance/financial/payment-method*') ? 'active' : '' }}">
                                     <i class="fa fa-file nav-icon"></i>
                                     <p>Payment Methods</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="{{ route('maintenancefinancialpayment_term') }}"
+                                    class="nav-link {{ request()->is('maintenance/financial/payment-term*') ? 'active' : '' }}">
                                     <i class="fa fa-file nav-icon"></i>
                                     <p>Payment Terms</p>
                                 </a>
@@ -665,27 +669,38 @@
                         </a>
                         <ul class="nav nav-treeview">
                             @can('users')
-                            <li class="nav-item">
-                                <a href="{{ route('maintenancesettingsusers') }}"
-                                    class="nav-link {{ request()->is('maintenance/settings/user*') ? 'active' : '' }}">
-                                    <i class="fa fa-file nav-icon"></i>
-                                    <p>Users</p>
-                                </a>
-                            </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('maintenancesettingsusers') }}"
+                                        class="nav-link {{ request()->is('maintenance/settings/user*') ? 'active' : '' }}">
+                                        <i class="fa fa-file nav-icon"></i>
+                                        <p>Users</p>
+                                    </a>
+                                </li>
                             @endcan
                             <li class="nav-item">
-                                <a href="{{ route('maintenancesettingsroles') }}"   class="nav-link {{ request()->is('maintenance/settings/rolespermission*') ? 'active' : '' }}">
+                                <a href="{{ route('maintenancesettingsroles') }}"
+                                    class="nav-link {{ request()->is('maintenance/settings/rolespermission*') ? 'active' : '' }}">
                                     <i class="fa fa-file nav-icon"></i>
                                     <p>Roles & Permission</p>
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="{{ route('maintenancesettingslocation') }}"
+                                    class="nav-link {{ request()->is('maintenance/settings/location*') ? 'active' : '' }}">
                                     <i class="fa fa-file nav-icon"></i>
                                     <p>Location</p>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('maintenancesettingslocation_group') }}"
+                                    class="nav-link {{ request()->is('maintenance/settings/location-group*') ? 'active' : '' }}">
+                                    <i class="fa fa-file nav-icon"></i>
+                                    <p>Location Group</p>
+                                </a>
+                            </li>
+
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="fa fa-file nav-icon"></i>

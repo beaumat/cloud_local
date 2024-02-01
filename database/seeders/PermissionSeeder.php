@@ -13,12 +13,11 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        
         // Inventory
        
-        //Settings
-     
-
-
+        // Settings
+    
+        
     }
 }
