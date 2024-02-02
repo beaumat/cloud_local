@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancefinancialtax_list') }}"> Tax List </a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancecontactsupplier') }}"> Supplier </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -30,23 +30,26 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-sm bg-sky">
                                     <tr>
+                                        <th>No.</th>
                                         <th>Name</th>
-                                        <th>Type</th>
-                                        <th>Rate</th>          
+                                        <th>Address</th>
+                                        <th>Mobile No.</th>
+                                        <th>Email</th>          
                                         <th>Inactive</th>
                                         <th class="text-center col-1">
-                                            <a href="{{ route('maintenancefinancialtax_list_create') }}" class="text-white">
+                                            <a href="{{ route('maintenancecontactsupplier_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm">
-                                    @foreach ($taxList as $list)
+                                    @foreach ($contacts as $list)
                                         <tr>
+                                            <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
-                                            <td> {{ $list->TYPE }}</td>
-                                            <td> {{ $list->RATE }}</td>
-                                       
+                                            <td> {{ $list->POSTAL_ADDRESS }}</td>
+                                            <td> {{ $list->MOBILE_NO }}</td>
+                                            <td> {{ $list->EMAIL }}</td>
                                             <td>
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
@@ -56,7 +59,7 @@
                                                 
                                             </td>
                                             <td class="text-center">             
-                                                <a href="{{ route('maintenancefinancialtax_list_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('maintenancecontactsupplier_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>

@@ -32,6 +32,10 @@ use App\Livewire\ShipViaPage\ShipViaForm;
 use App\Livewire\ShipViaPage\ShipViaList;
 use App\Livewire\StockBinPage\StockBinForm;
 use App\Livewire\StockBinPage\StockBinList;
+use App\Livewire\Supplier\SupplierForm;
+use App\Livewire\Supplier\SupplierList;
+use App\Livewire\Tax\TaxForm;
+use App\Livewire\Tax\TaxList;
 use App\Livewire\UnitOfMeasurePage\UnitOfMeasureForm;
 use App\Livewire\UnitOfMeasurePage\UnitOfMeasureList;
 use App\Livewire\User\UserForm;
@@ -62,10 +66,21 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-
-
+    
     Route::prefix('/maintenance')->name('maintenance')->group(function () {
+
+        Route::prefix('/contact')->name('contact')->group(function () {
+
+            Route::prefix('/supplier')->group(function () {
+                Route::get('/', SupplierList::class)->name('supplier');
+                Route::get('/create', SupplierForm::class)->name('supplier_create');
+                Route::get('/{id}/edit', SupplierForm::class)->name('supplier_edit');
+            });
+
+        });
+
         Route::prefix('/financial')->name('financial')->group(function () {
+          
             Route::prefix('/chart-of-account')->group(function () {
                 Route::get('/', ChartOfAccountList::class)->name('coa');
                 Route::get('/create', ChartOfAccountForm::class)->name('coa_create');
@@ -82,6 +97,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', PaymentTermList::class)->name('payment_term');
                 Route::get('/create', PaymentTermForm::class)->name('payment_term_create');
                 Route::get('/{id}/edit', PaymentTermForm::class)->name('payment_term_edit');
+            });
+
+            Route::prefix('/tax-list')->group(function () {
+                Route::get('/', TaxList::class)->name('tax_list');
+                Route::get('/create', TaxForm::class)->name('tax_list_create');
+                Route::get('/{id}/edit', TaxForm::class)->name('tax_list_edit');
             });
         });
 

@@ -1,0 +1,240 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Contacts;
+
+class ContactServices
+{
+
+    private $object;
+    public function __construct(ObjectServices $objectService)
+    {
+        $this->object = $objectService;
+    }
+
+    public function Store(
+        int $TYPE,
+        string $NAME,
+        string $COMPANY_NAME,
+        string $SALUTATION,
+        string $FIRST_NAME,
+        string $MIDDLE_NAME,
+        string $LAST_NAME,
+        string $PRINT_NAME_AS,
+        string $POSTAL_ADDRESS,
+        string $CONTACT_PERSON,
+        string $TELEPHONE_NO,
+        string $FAX_NO,
+        string $MOBILE_NO,
+        string $ALT_TELEPHONE_NO,
+        string $ALT_CONTACT_PERSON,
+        string $EMAIL,
+        string $ACCOUNT_NO,
+        bool $INACTIVE,
+        int $GROUP_ID,
+        int $PAYMENT_TERMS_ID,
+        float $CREDIT_LIMIT,
+        int $PREF_PAYMENT_METHOD_ID,
+        string $CREDIT_CARD_NO,
+        string $CREDIT_CARD_EXPIRY_DATE,
+        int $SALES_REP_ID,
+        int $PRICE_LEVEL_ID,
+        string $TAXPAYER_ID,
+        int $TAX_ID,
+        int $EW_TAX_ID,
+        string $SSS_NO,
+        int $GENDER,
+        string $DATE_OF_BIRTH,
+        string $NICKNAME,
+        string $HIRE_DATE
+    ): int {
+
+
+        $ID = $this->object->ObjectNextID('CONTACT');
+        Contacts::create([
+            "ID"                        => $ID,
+            "TYPE"                      => $TYPE,
+            "NAME"                      => $NAME,
+            "COMPANY_NAME"              => $COMPANY_NAME,
+            "SALUTATION"                => $SALUTATION,
+            "FIRST_NAME"                => $FIRST_NAME,
+            "MIDDLE_NAME"               => $MIDDLE_NAME,
+            "LAST_NAME"                 => $LAST_NAME,
+            "PRINT_NAME_AS"             => $PRINT_NAME_AS,
+            "POSTAL_ADDRESS"            => $POSTAL_ADDRESS,
+            "CONTACT_PERSON"            => $CONTACT_PERSON,
+            "TELEPHONE_NO"              => $TELEPHONE_NO,
+            "FAX_NO"                    => $FAX_NO,
+            "MOBILE_NO"                 => $MOBILE_NO,
+            "ALT_TELEPHONE_NO"          => $ALT_TELEPHONE_NO,
+            "ALT_CONTACT_PERSON"        => $ALT_CONTACT_PERSON,
+            "EMAIL"                     => $EMAIL,
+            "ACCOUNT_NO"                => $ACCOUNT_NO,
+            "INACTIVE"                  => $INACTIVE,
+            "GROUP_ID"                  => $GROUP_ID > 0 ? $GROUP_ID  : null,
+            "PAYMENT_TERMS_ID"          => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,
+            "CREDIT_LIMIT"              => $CREDIT_LIMIT,
+            "PREF_PAYMENT_METHOD_ID"    => $PREF_PAYMENT_METHOD_ID > 0 ? $PREF_PAYMENT_METHOD_ID : null,
+            "CREDIT_CARD_NO"            => $CREDIT_CARD_NO,
+            "CREDIT_CARD_EXPIRY_DATE"   => $CREDIT_CARD_EXPIRY_DATE ? $CREDIT_CARD_EXPIRY_DATE : null,
+            "SALES_REP_ID"              => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+            "PRICE_LEVEL_ID"            => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+            "APPLY_FINANCE_CHARGE"      => null,
+            "TAXPAYER_ID"               => $TAXPAYER_ID,
+            "TAX_ID"                    => $TAX_ID > 0 ? $TAX_ID : null,
+            "EW_TAX_ID"                 => $EW_TAX_ID > 0 ? $EW_TAX_ID : null,
+            "SSS_NO"                    => $SSS_NO,
+            "GENDER"                    => $GENDER > 0 ? $GENDER : null,
+            "DATE_OF_BIRTH"             => $DATE_OF_BIRTH ? $DATE_OF_BIRTH : null,
+            "NICKNAME"                  => $NICKNAME,
+            "HIRE_DATE"                 => $HIRE_DATE ? $HIRE_DATE : null,
+            "CUSTOM_FIELD1"             => null,
+            "CUSTOM_FIELD2"             => null,
+            "CUSTOM_FIELD3"             => null,
+            "CUSTOM_FIELD4"             => null,
+            "CUSTOM_FIELD5"             => null,
+            "OTHER_CONTACT_ID"          => null,
+            "SALES_TARGET"              => null,
+            "DISCOUNT"                  => null,
+            "FIXED_PENALTY"             => null,
+            "RUNNING_PENALTY"           => null,
+            "LESS_DISCOUNT_PENALTY_ACTIVE" => null,
+            "REFERRAL_ID"               => null
+
+        ]);
+
+        return $ID;
+    }
+
+    public function Update(
+        int $ID,
+        int $TYPE,
+        string $NAME,
+        string $COMPANY_NAME,
+        string $SALUTATION,
+        string $FIRST_NAME,
+        string $MIDDLE_NAME,
+        string $LAST_NAME,
+        string $PRINT_NAME_AS,
+        string $POSTAL_ADDRESS,
+        string $CONTACT_PERSON,
+        string $TELEPHONE_NO,
+        string $FAX_NO,
+        string $MOBILE_NO,
+        string $ALT_TELEPHONE_NO,
+        string $ALT_CONTACT_PERSON,
+        string $EMAIL,
+        string $ACCOUNT_NO,
+        bool $INACTIVE,
+        int $GROUP_ID,
+        int $PAYMENT_TERMS_ID,
+        float $CREDIT_LIMIT,
+        int $PREF_PAYMENT_METHOD_ID,
+        string $CREDIT_CARD_NO,
+        string $CREDIT_CARD_EXPIRY_DATE,
+        int $SALES_REP_ID,
+        int $PRICE_LEVEL_ID,
+        string $TAXPAYER_ID,
+        int $TAX_ID,
+        int $EW_TAX_ID,
+        string $SSS_NO,
+        int $GENDER,
+        string $DATE_OF_BIRTH,
+        string $NICKNAME,
+        string $HIRE_DATE
+    ): void {
+
+        Contacts::where('ID', $ID)->where('TYPE', $TYPE)->update([
+            "NAME"                      => $NAME,
+            "COMPANY_NAME"              => $COMPANY_NAME,
+            "SALUTATION"                => $SALUTATION,
+            "FIRST_NAME"                => $FIRST_NAME,
+            "MIDDLE_NAME"               => $MIDDLE_NAME,
+            "LAST_NAME"                 => $LAST_NAME,
+            "PRINT_NAME_AS"             => $PRINT_NAME_AS,
+            "POSTAL_ADDRESS"            => $POSTAL_ADDRESS,
+            "CONTACT_PERSON"            => $CONTACT_PERSON,
+            "TELEPHONE_NO"              => $TELEPHONE_NO,
+            "FAX_NO"                    => $FAX_NO,
+            "MOBILE_NO"                 => $MOBILE_NO,
+            "ALT_TELEPHONE_NO"          => $ALT_TELEPHONE_NO,
+            "ALT_CONTACT_PERSON"        => $ALT_CONTACT_PERSON,
+            "EMAIL"                     => $EMAIL,
+            "ACCOUNT_NO"                => $ACCOUNT_NO,
+            "INACTIVE"                  => $INACTIVE,
+            "GROUP_ID"                  => $GROUP_ID > 0 ? $GROUP_ID  : null,
+            "PAYMENT_TERMS_ID"          => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,
+            "CREDIT_LIMIT"              => $CREDIT_LIMIT,
+            "PREF_PAYMENT_METHOD_ID"    => $PREF_PAYMENT_METHOD_ID > 0 ? $PREF_PAYMENT_METHOD_ID : null,
+            "CREDIT_CARD_NO"            => $CREDIT_CARD_NO,
+            "CREDIT_CARD_EXPIRY_DATE"   => $CREDIT_CARD_EXPIRY_DATE ? $CREDIT_CARD_EXPIRY_DATE : null,
+            "SALES_REP_ID"              => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+            "PRICE_LEVEL_ID"            => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+            "APPLY_FINANCE_CHARGE"      => null,
+            "TAXPAYER_ID"               => $TAXPAYER_ID,
+            "TAX_ID"                    => $TAX_ID > 0 ? $TAX_ID : null,
+            "EW_TAX_ID"                 => $EW_TAX_ID > 0 ? $EW_TAX_ID : null,
+            "SSS_NO"                    => $SSS_NO,
+            "GENDER"                    => $GENDER > 0 ? $GENDER : null,
+            "DATE_OF_BIRTH"             => $DATE_OF_BIRTH ? $DATE_OF_BIRTH : null,
+            "NICKNAME"                  => $NICKNAME,
+            "HIRE_DATE"                 => $HIRE_DATE ? $HIRE_DATE : null,
+            "CUSTOM_FIELD1"             => null,
+            "CUSTOM_FIELD2"             => null,
+            "CUSTOM_FIELD3"             => null,
+            "CUSTOM_FIELD4"             => null,
+            "CUSTOM_FIELD5"             => null,
+            "OTHER_CONTACT_ID"          => null,
+            "SALES_TARGET"              => null,
+            "DISCOUNT"                  => null,
+            "FIXED_PENALTY"             => null,
+            "RUNNING_PENALTY"           => null,
+            "LESS_DISCOUNT_PENALTY_ACTIVE" => null,
+            "REFERRAL_ID"               => null
+        ]);
+    }
+
+    public function Delete(int $ID): void
+    {
+        Contacts::where('ID', $ID)->delete();
+    }
+    public function Search($search, int $TYPE)
+    {
+        $result = Contacts::query()
+            ->select(
+                [
+                    "contact.ID",
+                    "contact.NAME",
+                    "contact.COMPANY_NAME",
+                    "contact.FIRST_NAME",
+                    "contact.LAST_NAME",
+                    "contact.PRINT_NAME_AS",
+                    "contact.MOBILE_NO",
+                    "contact.EMAIL",
+                    "contact.ACCOUNT_NO",
+                    "contact.POSTAL_ADDRESS",
+                    "contact.CONTACT_PERSON",
+                    "contact.INACTIVE",
+                ]
+            )
+            ->join('contact_type_map as t', function ($join) use (&$TYPE) {
+                $join->on('t.ID', '=', 'contact.TYPE')
+                    ->where('t.ID', '=', $TYPE);
+            })
+            ->when($search, function ($query) use (&$search) {
+                $query->where('contact.NAME', 'like', '%' . $search . '%');
+                $query->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%');
+                $query->orWhere('contact.COMPANY_NAME', 'like', '%' . $search . '%');
+                $query->orWhere('contact.FIRST_NAME', 'like', '%' . $search . '%');
+                $query->orWhere('contact.LAST_NAME', 'like', '%' . $search . '%');
+                $query->orWhere('contact.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                $query->orWhere('contact.MOBILE_NO', 'like', '%' . $search . '%');
+                $query->orWhere('contact.EMAIL', 'like', '%' . $search . '%');
+            })
+            ->orderBy('contact.ID', 'desc')
+            ->get();
+
+        return $result;
+    }
+}
