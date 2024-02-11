@@ -1,39 +1,6 @@
 <div class="card bg-light">
-    <h5 class="px-2 card-title">Related Units </h5>
     <div class="card-body ">
-        <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
-            @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '' , 'message' => session('message'), 'error' => session('error')])
-            <div class="mb-1 row">
-                <div class="col-md-3">
-                    @if ($saveSuccess)
-                        <livewire:select-option name="UNIT_ID1" titleName="Units" :options="$units" :zero="true"
-                            wire:model='UNIT_ID' :vertical="false" />
-                    @else
-                        <livewire:select-option name="UNIT_ID2" titleName="Units" :options="$units" :zero="true"
-                            wire:model='UNIT_ID' :vertical="false" />
-                    @endif
-                </div>
-                <div class="col-md-2">
-                    <livewire:number-input name="QUANTITY" titleName="Quantity" wire:model='QUANTITY'
-                        :vertical="false" />
-                </div>
-                <div class="col-md-2">
-                    <livewire:number-input name="RATE" titleName="Rate" wire:model='RATE' :vertical="false" />
-                </div>
-                <div class="col-md-3">
-                    <livewire:text-input name="BARCODE" titleName="Barcode" wire:model='BARCODE' :vertical="false" />
-                </div>
-                <div class="text-right col-md-2">
-                    <button type="submit" wire:loading.attr='hidden' class="text-white btn btn-success btn-sm w-100"
-                        style="margin-top: 40px;">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                    <div wire:loading.delay>
-                        <span class="spinner"></span>
-                    </div>
-                </div>
-            </div>
-        </form>
+        @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
 
         <table class="table table-sm table-bordered table-hover">
             <thead class="text-xs bg-sky">
@@ -101,6 +68,44 @@
                         </td>
                     </tr>
                 @endforeach
+                <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
+                    <tr>
+                        <td>
+                            @if ($saveSuccess)
+                                <livewire:select-option name="UNIT_ID1" titleName="Units" :options="$units"
+                                    :zero="true" wire:model='UNIT_ID' :vertical="false" :withLabel="false" />
+                            @else
+                                <livewire:select-option name="UNIT_ID2" titleName="Units" :options="$units"
+                                    :zero="true" wire:model='UNIT_ID' :vertical="false" :withLabel="false" />
+                            @endif
+                        </td>
+                        <td></td>
+                        <td>
+                            <livewire:number-input name="QUANTITY" titleName="Quantity" wire:model='QUANTITY'
+                                :vertical="false" :withLabel="false" />
+                        </td>
+                        <td>
+                            <livewire:number-input name="RATE" titleName="Rate" wire:model='RATE' :vertical="false"
+                                :withLabel="false" />
+                        </td>
+                        <td>
+                            <livewire:text-input name="BARCODE" titleName="Barcode" wire:model='BARCODE'
+                                :vertical="false" :withLabel="false" />
+                        </td>
+                        <td>
+                            <div class="mt-2">                            
+                                <button type="submit" wire:loading.attr='hidden'
+                                    class="text-white btn btn-success btn-sm w-100">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <div wire:loading.delay>
+                                    <span class="spinner"></span>
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                </form>
             </tbody>
         </table>
     </div>

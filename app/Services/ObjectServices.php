@@ -28,4 +28,8 @@ class ObjectServices
 
         return $Nxt_ID;
     }
+    public function RecordLimit(): int
+    {
+        return 1000;
+    }
 }

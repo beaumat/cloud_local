@@ -23,6 +23,8 @@ use Livewire\Attributes\Title;
 class ItemsForm extends Component
 {
 
+    public string $activeTab = 'gen';
+    
     public int  $ID;
     public string $CODE;
     public string $DESCRIPTION;
@@ -71,6 +73,12 @@ class ItemsForm extends Component
     public $accounts = [];
     public $rateType = [];
     public $units = [];
+    
+    public function SelectTab($tab)
+    {
+        $this->activeTab = $tab;
+    }
+
     public function LoadDropdown()
     {
 

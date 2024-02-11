@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Supplier;
+namespace App\Livewire\Vendor;
 
 use App\Models\ContactGroup;
 use App\Models\Contacts;
@@ -9,11 +9,9 @@ use App\Models\Tax;
 use App\Services\ContactServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Supplier')]
-class SupplierForm extends Component
+class VendorForm extends Component
 {
     public int $ID;
     public int $TYPE = 0;
@@ -50,15 +48,19 @@ class SupplierForm extends Component
     public string $DATE_OF_BIRTH;
     public string $NICKNAME;
     public string $HIRE_DATE;
-
     public $taxList = [];
     public $contactGroup = [];
-    public $paymentTermList =[];
+    public $paymentTermList = [];
+    public string $selectTab='gen';
+    public function SelectTab($tab)
+    {
+        $this->selectTab = $tab;
+    }
     public function mount($id = null)
     {
         $this->taxList = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', 3)->orderBy('ID', 'desc')->get();
         $this->contactGroup = ContactGroup::query()->where('TYPE', $this->TYPE)->get();
-        $this->paymentTermList = PaymentTerms::query()->select('ID','DESCRIPTION')->where('INACTIVE','0')->get();
+        $this->paymentTermList = PaymentTerms::query()->select('ID', 'DESCRIPTION')->where('INACTIVE', '0')->get();
         if (is_numeric($id)) {
 
             $contact = Contacts::where('ID', $id)->where('TYPE', $this->TYPE)->first();
@@ -103,7 +105,7 @@ class SupplierForm extends Component
             }
 
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('maintenancefinancialtax_list')->with('error', $errorMessage);
+            return Redirect::route('maintenancecontactvendor')->with('error', $errorMessage);
         }
 
         $this->ID                        = 0;
@@ -148,7 +150,21 @@ class SupplierForm extends Component
         $this->validate(
             [
                 'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
-                'ACCOUNT_NO' => 'required|max:50|unique:contact,account_no,' . $this->ID,
+                'ACCOUNT_NO' => [
+                    'required',
+                    'max:50',
+                    function ($attribute, $value, $fail) {
+                        $count = Contacts::query()
+                            ->where('account_no', $value)
+                            ->where('type', $this->TYPE)
+                            ->where('id', '<>', $this->ID)
+                            ->count();
+
+                        if ($count > 0) {
+                            $fail('The specified Account No. is not unique.');
+                        }
+                    },
+                ],
                 'PRINT_NAME_AS' => 'required|max:100'
 
             ],
@@ -253,9 +269,8 @@ class SupplierForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-
     public function render()
     {
-        return view('livewire.supplier.supplier-form');
+        return view('livewire.vendor.vendor-form');
     }
 }

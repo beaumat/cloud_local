@@ -9,7 +9,12 @@ class ItemUnitPanel extends Component
 {
     #[Reactive]
     public int $itemId = 0;
+    public string $unitTabSelect ='related';
 
+    public function tabSelect($tab)
+    {
+        $this->unitTabSelect = $tab;
+    }
     public function mount($itemId)
     {
         $this->itemId = $itemId;

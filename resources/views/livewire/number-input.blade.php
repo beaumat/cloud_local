@@ -3,18 +3,24 @@
     @if ($vertical)
         <div class="row">
             <div class="col-3">
-                <label for="{{ $name }}" class="text-sm">{{ $titleName }}</label>
+                @if ($withLabel)
+                    <label for="{{ $name }}" class="text-sm">{{ $titleName }}</label>
+                @endif
             </div>
             <div class="col-9">
-                <input type="number" step="any" type="text" id="decimalInput" 
-                    wire:model='value' class="text-sm text-right form-control form-control-sm" id="{{ $name }}"
-                    placeholder="Enter {{ Str::lower($titleName) }}">
+                <input type="number" step="any" type="text" id="decimalInput" wire:model='value'
+                    class="text-sm text-right form-control form-control-sm" id="{{ $name }}"
+                    @if ($withLabel) placeholder="Enter {{ Str::lower($titleName) }}" @endif
+                    @if ($isDisabled) disabled @endif />
             </div>
         </div>
     @else
-        <label for="{{ $name }}" class="text-sm">{{ $titleName }}</label>
-        <input type="number" step="any" type="text" id="decimalInput"
-            wire:model='value' class="text-sm text-right form-control form-control-sm" id="{{ $name }}"
-            placeholder="Enter {{ Str::lower($titleName) }}">
+        @if ($withLabel)
+            <label for="{{ $name }}" class="text-sm">{{ $titleName }}</label>
+        @endif
+        <input type="number" step="any" type="text" id="decimalInput" wire:model='value'
+            class="text-sm text-right form-control form-control-sm" id="{{ $name }}"
+            @if ($withLabel) placeholder="Enter {{ Str::lower($titleName) }}" @endif
+            @if ($isDisabled) disabled @endif />
     @endif
 </div>

@@ -62,7 +62,19 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        
                                         <div class="col-md-8"></div>
+                                        <div class="col-md-4">
+                                            <br />
+                                            <label for="pass" class="text-sm">Default Location</label>
+                                            <select class="form-control form-control-sm" name="employee"
+                                                wire:model='location_id'>
+                                                <option value="0"> </option>
+                                                @foreach ($locationList as $list)
+                                                    <option value="{{ $list->ID }}"> {{ $list->NAME }} </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="inactive" titleName="Inactive"
                                                 wire:model='inactive' />

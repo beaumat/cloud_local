@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Livewire\ItemPage;
+
 use App\Models\Locations;
 use App\Models\StockBin;
 use App\Services\ItemPreferenceServices;
@@ -147,12 +149,6 @@ class ItemInventoryPanel extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function render(ItemPreferenceServices $itemPreferenceServices)
-    {
-        $this->itemPreferenceList = $itemPreferenceServices->Search($this->itemId);
-
-        return view('livewire.item-page.item-inventory-panel');
-    }
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -160,5 +156,11 @@ class ItemInventoryPanel extends Component
         // Clear session message and error
         session()->forget('message');
         session()->forget('error');
+    }
+    public function render(ItemPreferenceServices $itemPreferenceServices)
+    {
+        $this->itemPreferenceList = $itemPreferenceServices->Search($this->itemId);
+
+        return view('livewire.item-page.item-inventory-panel');
     }
 }

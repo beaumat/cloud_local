@@ -16,15 +16,19 @@ class SelectOption extends Component
     public $options = [];
     public bool $zero;
     public bool $vertical;
-    public function mount($name, $options, $zero, $titleName, $vertical = false)
+    public bool $withLabel;
+    public bool $isDisabled;
+    public function mount($name, $options, $zero, $titleName, $vertical = false, $withLabel = true, $isDisabled = false)
     {
         $this->titleName = $titleName;
         $this->zero = $zero;
         $this->name = $name;
         $this->options = $options;
         $this->vertical = $vertical;
+        $this->withLabel = $withLabel;
+        $this->isDisabled = $isDisabled;
     }
-
+    
     public function render()
     {
         return view('livewire.select-option');

@@ -2443,6 +2443,10 @@ select.form-control:focus::-ms-value {
     padding-left: 0
 }
 
+.form-control-plaintext.form-control-sm2 {
+    padding-right: 0;
+    padding-left: 0
+}
 .form-control-sm {
     height: calc(1.8125rem + 2px);
     padding: .25rem .5rem;
@@ -2451,6 +2455,13 @@ select.form-control:focus::-ms-value {
     border-radius: .2rem
 }
 
+.form-control-sm2 {
+    height: calc(1.8125rem + 2px);
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem
+}
 .form-control-lg {
     height: calc(2.875rem + 2px);
     padding: .5rem 1rem;
@@ -37759,7 +37770,7 @@ body.iframe-mode-fullscreen .content-wrapper.iframe-mode {
 }
 
 select.form-control-sm~.select2-container--default {
-    font-size: 75%
+    font-size: 95%
 }
 
 .text-sm .select2-container--default .select2-selection--single,
@@ -55880,7 +55891,7 @@ a.text-muted:hover {
 
 /* Custom CSS to adjust dropdown font size */
 .select2-dropdown {
-    font-size: 12px;
+    font-size: 13px;
     /* Adjust the font size as needed */
 }
 

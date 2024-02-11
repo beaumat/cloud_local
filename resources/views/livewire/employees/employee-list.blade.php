@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancecontactsupplier') }}"> Supplier </a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancecontactemployees') }}"> Employees </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -30,14 +30,15 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-sm bg-sky">
                                     <tr>
-                                        <th>No.</th>
+                                        <th>Emp ID</th>
                                         <th>Name</th>
                                         <th>Address</th>
                                         <th>Mobile No.</th>
-                                        <th>Email</th>          
+                                        <th>Email</th>
                                         <th>Inactive</th>
                                         <th class="text-center col-1">
-                                            <a href="{{ route('maintenancecontactsupplier_create') }}" class="text-white">
+                                            <a href="{{ route('maintenancecontactemployees_create') }}"
+                                                class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
@@ -53,13 +54,13 @@
                                             <td>
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
-                                                @else                     
+                                                @else
                                                     <strong class="text-primary">No</strong>
                                                 @endif
-                                                
+
                                             </td>
-                                            <td class="text-center">             
-                                                <a href="{{ route('maintenancecontactsupplier_edit', ['id' => $list->ID]) }}"
+                                            <td class="text-center">
+                                                <a href="{{ route('maintenancecontactemployees_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>

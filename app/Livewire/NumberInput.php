@@ -12,11 +12,15 @@ class NumberInput extends Component
     public string $name;
     public string $titleName;
     public bool $vertical;
-    public function mount($name, $titleName, $vertical = false)
+    public bool $withLabel;
+    public bool $isDisabled;
+    public function mount($name, $titleName, $vertical = false, $withLabel = true, $isDisabled = false)
     {
         $this->titleName = $titleName;
         $this->name = $name;
         $this->vertical = $vertical;
+        $this->withLabel = $withLabel;
+        $this->isDisabled = $isDisabled;
     }
     public function render()
     {

@@ -33,6 +33,7 @@
                                     <tr>
                                         <th>Username</th>
                                         <th>Employee</th>
+                                        <th>Location</th>
                                         <th>Inactive</th>
 
                                         <th class="text-center col-1">
@@ -46,6 +47,7 @@
                                         <tr>
                                             <td> {{ $list->name }}</td>
                                             <td> {{ $list->employee }}</td>
+                                            <td> {{ $list->location }}</td>
                                             <td>
                                                 @if ($list->inactive)
                                                     <strong class="text-danger">Yes</strong>

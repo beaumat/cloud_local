@@ -3,6 +3,7 @@
 namespace App\Livewire\User;
 
 use App\Models\Contacts;
+use App\Models\Locations;
 use App\Models\User;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\Redirect;
@@ -19,7 +20,9 @@ class UserForm extends Component
     public string $password;
     public int $contact_id;
     public bool $inactive;
+    public int $location_id;
     public $employees = [];
+    public $locationList = [];
     public function mount($id = null)
     {
         $this->employees = Contacts::query()
@@ -28,6 +31,10 @@ class UserForm extends Component
             ->where('TYPE', '2')
             ->get();
 
+        $this->locationList = Locations::query()
+            ->select(['ID', 'NAME'])
+            ->where('INACTIVE', '0')
+            ->get();
 
         if (is_numeric($id)) {
 
@@ -39,7 +46,7 @@ class UserForm extends Component
                 $this->password = '';
                 $this->contact_id = $user->contact_id ? $user->contact_id : 0;
                 $this->inactive = $user->inactive;
-
+                $this->location_id = $user->location_id ? $user->location_id : 0;
                 return;
             }
 
@@ -52,6 +59,7 @@ class UserForm extends Component
         $this->password = '';
         $this->contact_id = 0;
         $this->inactive = false;
+        $this->location_id  = 0;
     }
 
 
@@ -107,10 +115,10 @@ class UserForm extends Component
 
         try {
             if ($this->id === 0) {
-                $this->id = $userServices->Store($this->name, $this->password, $this->contact_id, $this->inactive);
+                $this->id = $userServices->Store($this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id);
                 session()->flash('message', 'Successfully created.');
             } else {
-                $userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive);
+                $userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id);
                 session()->flash('message', 'Successfully updated.');
             }
         } catch (\Exception $e) {

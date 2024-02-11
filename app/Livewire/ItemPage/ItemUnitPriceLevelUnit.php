@@ -134,7 +134,8 @@ class ItemUnitPriceLevelUnit extends Component
 
     public function render(ItemUnitPriceLevelServices $itemUnitPriceLevelServices)
     {
-        $this->unitPriceLevels =  $itemUnitPriceLevelServices->Search($this->UnitRelatedId);
+       
+        $this->unitPriceLevels = $itemUnitPriceLevelServices->Search($this->UnitRelatedId);
         return view('livewire.item-page.item-unit-price-level-unit');
     }
     #[On('clear-alert')]

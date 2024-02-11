@@ -2,7 +2,11 @@
 
 use App\Livewire\ChartOfAccount\ChartOfAccountForm;
 use App\Livewire\ChartOfAccount\ChartOfAccountList;
+use App\Livewire\Customer\CustomerForm;
+use App\Livewire\Customer\CustomerList;
 use App\Livewire\DashboardPage\Dashboard;
+use App\Livewire\Employees\EmployeeForm;
+use App\Livewire\Employees\EmployeeList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
@@ -20,20 +24,22 @@ use App\Livewire\LocationGroup\LocationGroupForm;
 use App\Livewire\LocationGroup\LocationGroupList;
 use App\Livewire\ManufacturerPage\ManufacturerForm;
 use App\Livewire\ManufacturerPage\ManufacturerList;
+use App\Livewire\Patient\PatientForm;
+use App\Livewire\Patient\PatientList;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
 use App\Livewire\PaymentMethod\PaymentMethodList;
 use App\Livewire\PaymentTerm\PaymentTermForm;
 use App\Livewire\PaymentTerm\PaymentTermList;
 use App\Livewire\PriceLevelPage\PriceLevelForm;
 use App\Livewire\PriceLevelPage\PriceLevelList;
+use App\Livewire\PurchaseOrder\PurchaseOrderForm;
+use App\Livewire\PurchaseOrder\PurchaseOrderList;
 use App\Livewire\RolePermissionPage\RolePermissionConfig;
 use App\Livewire\RolePermissionPage\RolePermissionList;
 use App\Livewire\ShipViaPage\ShipViaForm;
 use App\Livewire\ShipViaPage\ShipViaList;
 use App\Livewire\StockBinPage\StockBinForm;
 use App\Livewire\StockBinPage\StockBinList;
-use App\Livewire\Supplier\SupplierForm;
-use App\Livewire\Supplier\SupplierList;
 use App\Livewire\Tax\TaxForm;
 use App\Livewire\Tax\TaxList;
 use App\Livewire\UnitOfMeasurePage\UnitOfMeasureForm;
@@ -41,6 +47,8 @@ use App\Livewire\UnitOfMeasurePage\UnitOfMeasureList;
 use App\Livewire\User\UserForm;
 use App\Livewire\User\UserList;
 use App\Livewire\User\UserRoles;
+use App\Livewire\Vendor\VendorForm;
+use App\Livewire\Vendor\VendorList;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,21 +74,47 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    
+
+    Route::prefix('/vendors')->name('vendors')->group(function () {
+        Route::prefix('/purchase-order')->group(function () {
+            Route::get('/', PurchaseOrderList::class)->name('purchase_order');
+            Route::get('/create', PurchaseOrderForm::class)->name('purchase_order_create');
+            Route::get('/{id}/edit', PurchaseOrderForm::class)->name('purchase_order_edit');
+        });
+        
+    });
+
     Route::prefix('/maintenance')->name('maintenance')->group(function () {
 
         Route::prefix('/contact')->name('contact')->group(function () {
 
-            Route::prefix('/supplier')->group(function () {
-                Route::get('/', SupplierList::class)->name('supplier');
-                Route::get('/create', SupplierForm::class)->name('supplier_create');
-                Route::get('/{id}/edit', SupplierForm::class)->name('supplier_edit');
+            Route::prefix('/customer')->group(function () {
+                Route::get('/', CustomerList::class)->name('customer');
+                Route::get('/create', CustomerForm::class)->name('customer_create');
+                Route::get('/{id}/edit', CustomerForm::class)->name('customer_edit');
             });
 
+            Route::prefix('/vendor')->group(function () {
+                Route::get('/', VendorList::class)->name('vendor');
+                Route::get('/create', VendorForm::class)->name('vendor_create');
+                Route::get('/{id}/edit', VendorForm::class)->name('vendor_edit');
+            });
+
+            Route::prefix('/employees')->group(function () {
+                Route::get('/', EmployeeList::class)->name('employees');
+                Route::get('/create', EmployeeForm::class)->name('employees_create');
+                Route::get('/{id}/edit', EmployeeForm::class)->name('employees_edit');
+            });
+
+            Route::prefix('/patients')->group(function () {
+                Route::get('/', PatientList::class)->name('patients');
+                Route::get('/create', PatientForm::class)->name('patients_create');
+                Route::get('/{id}/edit', PatientForm::class)->name('patients_edit');
+            });
         });
 
         Route::prefix('/financial')->name('financial')->group(function () {
-          
+
             Route::prefix('/chart-of-account')->group(function () {
                 Route::get('/', ChartOfAccountList::class)->name('coa');
                 Route::get('/create', ChartOfAccountForm::class)->name('coa_create');

@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class UserServices
 {
-    public function Store(string $Username, string $Password, int $Contact_id, bool $Inactive): int
+    public function Store(string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id): int
     {
 
         $user =  User::create([
@@ -19,6 +19,7 @@ class UserServices
             'remember_token' => Str::random(10),
             'contact_id' => $Contact_id ? $Contact_id :  null,
             'inactive' => $Inactive,
+            'location_id' => $Location_id > 0 ? $Location_id : 0
         ]);
 
         return $user->id;
@@ -27,7 +28,7 @@ class UserServices
 
     }
 
-    public function Update(int $id, string $Username, string $Password, int $Contact_id, bool $Inactive): void
+    public function Update(int $id, string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id): void
     {
         if ($Password) {
             User::where('id', $id)->update([
@@ -35,13 +36,17 @@ class UserServices
                 'password' => Hash::make($Password),
                 'contact_id' => $Contact_id ? $Contact_id :  null,
                 'inactive' => $Inactive,
+                'location_id' => $Location_id > 0 ? $Location_id : 0
             ]);
+
+            return;
         }
 
         User::where('id', $id)->update([
             'name' => $Username,
             'contact_id' => $Contact_id ? $Contact_id :  null,
             'inactive' => $Inactive,
+            'location_id' => $Location_id > 0 ? $Location_id : 0
         ]);
     }
 
@@ -58,10 +63,12 @@ class UserServices
                         'users.id',
                         'users.name',
                         'contact.name as employee',
-                        'users.inactive'
+                        'users.inactive',
+                        'l.NAME as location'
                     ]
                 )
                 ->leftJoin('contact', 'contact.id', '=', 'users.contact_id')
+                ->leftJoin('location as l','l.ID','=','users.location_id')
                 ->orderBy('users.id', 'asc')
                 ->get();
         } else {

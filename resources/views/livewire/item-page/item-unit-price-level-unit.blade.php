@@ -1,48 +1,30 @@
 <div class="card bg-light">
-    <h5 class="px-2 card-title">Unit Price Level </h5>
     <div class="card-body">
-        <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
-            <div class="row">
-                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '' , 'message' => session('message'), 'error' => session('error')])
+
+        <div class="row">
+            @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+        </div>
+        <div class="mb-1 row">
+
+            <div class="col-md-3">
+                @if ($newRelated)
+                    <livewire:select-option name="UnitRelatedId1" titleName="Related Unit" :options="$unitRelated"
+                        :zero="true" wire:model.live='UnitRelatedId' :vertical="false" />
+                @else
+                    <livewire:select-option name="UnitRelatedId2" titleName="Related Unit" :options="$unitRelated"
+                        :zero="true" wire:model.live='UnitRelatedId' :vertical="false" />
+                @endif
             </div>
-            <div class="mb-1 row">
-                <div class="col-md-12">
-                    @if ($newRelated)
-                        <livewire:select-option name="UnitRelatedId1" titleName="Related Unit" :options="$unitRelated"
-                            :zero="true" wire:model.live='UnitRelatedId' :vertical="true" />
-                    @else
-                        <livewire:select-option name="UnitRelatedId2" titleName="Related Unit" :options="$unitRelated"
-                            :zero="true" wire:model.live='UnitRelatedId' :vertical="true" />
-                    @endif
+            <div class="col-md-4">
 
-                </div>
-
-                <div class="col-md-6">
-                    @if ($saveSuccess)
-                        <livewire:select-option name="Unit_PRICE_LEVEL_ID1" titleName="Price Level" :options="$priceLevels"
-                            :zero="true" wire:model='PRICE_LEVEL_ID' :vertical="false" />
-                    @else
-                        <livewire:select-option name="Unit_PRICE_LEVEL_ID2" titleName="Price Level" :options="$priceLevels"
-                            :zero="true" wire:model='PRICE_LEVEL_ID' :vertical="false" />
-                    @endif
-                </div>
-
-                <div class="col-md-4">
-                    <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price" wire:model='CUSTOM_PRICE'
-                        :vertical="false">
-                </div>
-                <div class="text-right col-md-2">
-                    <button type="submit" wire:loading.attr='hidden' class="text-white btn btn-success btn-sm w-100"
-                        style="margin-top: 40px;">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                    <div wire:loading.delay>
-                        <span class="spinner"></span>
-                    </div>
-                </div>
             </div>
-        </form>
+            <div class="col-md-3">
 
+            </div>
+            <div class="text-right col-md-2">
+
+            </div>
+        </div>
         <table class="table table-sm table-bordered table-hover">
             <thead class="text-xs bg-sky">
                 <tr>
@@ -52,7 +34,6 @@
                 </tr>
             </thead>
             <tbody class="text-sm">
-
                 @foreach ($unitPriceLevels as $list)
                     <tr>
                         <td> {{ $list->DESCRIPTION }}</td>
@@ -89,6 +70,37 @@
                         </td>
                     </tr>
                 @endforeach
+                <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
+                    <tr>
+
+                        <td>
+                            @if ($saveSuccess)
+                                <livewire:select-option name="Unit_PRICE_LEVEL_ID1" titleName="Price Level"
+                                    :options="$priceLevels" :zero="true" wire:model='PRICE_LEVEL_ID' :vertical="false" :withLabel="false" />
+                            @else
+                                <livewire:select-option name="Unit_PRICE_LEVEL_ID2" titleName="Price Level"
+                                    :options="$priceLevels" :zero="true" wire:model='PRICE_LEVEL_ID'
+                                    :vertical="false" :withLabel="false" />
+                            @endif
+                        </td>
+                        <td>
+
+                            <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price"
+                                wire:model='CUSTOM_PRICE' :vertical="false" :withLabel="false"/>
+                        </td>
+                        <td>
+                            <div class="mt-2">
+                                <button type="submit" wire:loading.attr='hidden'
+                                    class="text-white btn btn-success btn-sm w-100">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <div wire:loading.delay>
+                                    <span class="spinner"></span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </form>
             </tbody>
         </table>
     </div>

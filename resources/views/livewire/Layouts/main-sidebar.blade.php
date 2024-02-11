@@ -101,17 +101,18 @@
 
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+                <li class="nav-item {{ request()->is('vendors*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('vendors*') ? 'active ' : '' }}">
                         <i class="nav-icon fas fa-shopping-cart"></i>
                         <p>
-                            Suppliers
+                            Vendors
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('vendorspurchase_order') }}"
+                                class="nav-link {{ request()->is('vendors/purchase-order*') ? 'active text-primary' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Purchase Order</p>
                             </a>
@@ -501,26 +502,36 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('maintenancecontactcustomer') }}"
+                                        class="nav-link {{ request()->is('maintenance/contact/customer*') ? 'active' : '' }}">
                                         <i class="fa fa-file nav-icon"></i>
-                                        <p>Patients</p>
+                                        <p>Customer</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('maintenancecontactsupplier') }}"
-                                    class="nav-link {{ request()->is('maintenance/contact/supplier*') ? 'active' : '' }}">
+                                    <a href="{{ route('maintenancecontactvendor') }}"
+                                        class="nav-link {{ request()->is('maintenance/contact/vendor*') ? 'active' : '' }}">
                                         <i class="fa fa-file nav-icon"></i>
-                                        <p>Suppliers</p>
+                                        <p>Vendor</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('maintenancecontactemployees') }}"
+                                        class="nav-link {{ request()->is('maintenance/contact/employees*') ? 'active' : '' }}">
                                         <i class="fa fa-file nav-icon"></i>
                                         <p>Employees</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('maintenancecontactpatients') }}"
+                                        class="nav-link {{ request()->is('maintenance/contact/patients*') ? 'active' : '' }}">
+                                        <i class="fa fa-file nav-icon"></i>
+                                        <p>Patients</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('maintenancecontactemployees') }}"
+                                        class="nav-link {{ request()->is('maintenance/contact/doctor*') ? 'active' : '' }}">
                                         <i class="fa fa-file nav-icon"></i>
                                         <p>Doctors</p>
                                     </a>
