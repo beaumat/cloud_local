@@ -713,7 +713,8 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('maintenancesettingsoption') }}"
+                                        class="nav-link {{ request()->is('maintenance/settings/option*') ? 'active' : '' }}">
                                         <i class="fa fa-file nav-icon"></i>
                                         <p>Options</p>
                                     </a>

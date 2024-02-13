@@ -35,7 +35,6 @@ class PurchaseOrderFormItems extends Component
     public bool $TAXABLE;
     public float $TAXABLE_AMOUNT;
     public float $TAX_AMOUNT;
-
     public $itemList = [];
     public $editItemId = null;
     public bool $codeBase = false;

@@ -7,6 +7,7 @@ use App\Livewire\Customer\CustomerList;
 use App\Livewire\DashboardPage\Dashboard;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
+use App\Livewire\Option\OptionSettings;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
@@ -218,6 +219,11 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', LocationGroupList::class)->name('location_group')->middleware(['permission:location-group.view']);
                 Route::get('/create', LocationGroupForm::class)->name('location_group_create')->middleware(['permission:location-group.create']);
                 Route::get('/{id}/edit', LocationGroupForm::class)->name('location_group_edit')->middleware(['permission:location-group.edit']);
+            });
+
+            Route::prefix('/option')->group(function () {
+                Route::get('/', OptionSettings::class)->name('option');
+        
             });
         });
     });
