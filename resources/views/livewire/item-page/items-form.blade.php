@@ -78,7 +78,6 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="tab-content text-sm" id="custom-tabs-three-tabContent">
-
                                         <div class="tab-pane fade @if ($activeTab == 'gen') show active @endif"
                                             id="custom-tabs-three-gen1" role="tabpanel"
                                             aria-labelledby="custom-tabs-three-gen1-tab">

@@ -259,6 +259,13 @@ class PurchaseOrderForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
+    }
     public function render()
     {
         return view('livewire.purchase-order.purchase-order-form');

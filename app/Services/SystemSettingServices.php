@@ -6,14 +6,19 @@ use App\Models\SystemSetting;
 
 class SystemSettingServices
 {
-    public function SetValue( string $NAME, string $VALUE)
+    public function SetValue(string $NAME, string $VALUE)
     {
-            return SystemSetting::where('NAME',$NAME)->update(['VALUE' => $VALUE]);
+        return SystemSetting::where('NAME', $NAME)->update(['VALUE' => $VALUE]);
     }
 
     public function GetValue(string $NAME): string
     {
-        return (string) SystemSetting::where('NAME', $NAME)->first()->VALUE;
+        $result = SystemSetting::query()->select('VALUE')->where('NAME', $NAME)->limit(1);
+        
+        if ($result) {
+            return $result->first()->VALUE ?? '';
+        }
+        return '';
     }
-     
+
 }

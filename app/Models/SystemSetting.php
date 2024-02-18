@@ -13,7 +13,6 @@ class SystemSetting extends Model
     public $timestamps = false;
     protected $fillable = [
         'NAME',
-        'DESCRIPTION',
         'VALUE'
     ];
 }

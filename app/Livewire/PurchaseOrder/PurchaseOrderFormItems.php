@@ -7,6 +7,7 @@ use App\Models\Tax;
 use App\Services\ComputeServices;
 use App\Services\PurchaseOrderServices;
 use App\Services\UnitOfMeasureServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -278,6 +279,13 @@ class PurchaseOrderFormItems extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
     }
     public function render(PurchaseOrderServices $purchaseOrderService, UnitOfMeasureServices $unitOfMeasureServices)
     {
