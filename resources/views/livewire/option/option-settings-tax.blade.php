@@ -1,16 +1,14 @@
 <div class="row">
     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-    <div class="col-md-6">
-        <label for="company_nane">Taxplayer ID No.</label>
-        <div class="input-group input-group-sm">
-            <input wire:model.live.debounce='CompanyTin' type="text" name="CompanyTin" id="CompanyTin"
-                class="form-control form-control-sm">
-            <span class="input-group-append">
-                <button wire:click="saveOn('CompanyTin','{{ $CompanyTin }}')" type="button"
-                    class="btn btn-sm btn-success btn-flat">
-                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                </button>
-            </span>
+    <div class="col-md-6 col-form-label-sm">
+        <div class="form-group row">
+            <label for="company_nane" class="col-md-4  col-form-label-sm text-right">Taxplayer ID No.</label>
+            <div class="col-md-8 input-group input-group-sm">
+                <div class="input-group input-group-sm">
+                    <input wire:model.live.debounce='CompanyTin' type="text" name="CompanyTin" id="CompanyTin"
+                        class="form-control form-control-sm">
+                </div>
+            </div>
         </div>
 
     </div>
@@ -26,13 +24,6 @@
                         <option value="{{ $list->ID }}">{{ $list->NAME }}</option>
                     @endforeach
                 </select>
-
-                <span class="input-group-append">
-                    <button wire:click="saveOn('OutputTaxId','{{ $OutputTaxId }}')" type="button"
-                        class="btn btn-sm btn-success">
-                        <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                    </button>
-                </span>
             </div>
         </div>
         <div class="form-group row">
@@ -46,15 +37,10 @@
                         <option value="{{ $list->ID }}">{{ $list->NAME }}</option>
                     @endforeach
                 </select>
-
-                <span class="input-group-append">
-                    <button wire:click="saveOn('InputTaxId','{{ $InputTaxId }}')" type="button"
-                        class="btn btn-sm btn-success">
-                        <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                    </button>
-                </span>
             </div>
         </div>
     </div>
-  
+    <div class="col-md-12 mt-2 text-right">
+        <button wire:click='save' class="btn btn-sm btn-success">Save</button>
+    </div>
 </div>

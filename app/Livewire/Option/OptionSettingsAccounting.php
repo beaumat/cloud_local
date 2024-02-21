@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Option;
 
+use App\Models\SystemSetting;
 use App\Services\SystemSettingServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -12,6 +13,7 @@ class OptionSettingsAccounting extends Component
 {
     #[Reactive]
     public $systemSetting = [];
+    public $localSetting = [];
     public bool $SkipJournalEntry = false;
     public int $DateWarningDaysPast;
     public int $DateWarningDaysFuture;
@@ -24,7 +26,36 @@ class OptionSettingsAccounting extends Component
         $this->DateWarningDaysPast = (int) $this->returnArray('DateWarningDaysPast');
         $this->DateWarningDaysFuture = (int) $this->returnArray('DateWarningDaysFuture');
         $this->ClosingDate = (string) $this->returnArray('ClosingDate');
-        $this->SmallestCurrencyValue = (string) $this->returnArray('SmallestCurrencyValue');
+        $this->SmallestCurrencyValue = (float) $this->returnArray('SmallestCurrencyValue');
+
+
+    }
+
+    public function save()
+    {
+
+        if ($this->SkipJournalEntry != (bool) $this->returnArray('SkipJournalEntry')) {
+            $this->saveOn('SkipJournalEntry', $this->SkipJournalEntry);
+        }
+        if ($this->DateWarningDaysPast != (int) $this->returnArray('DateWarningDaysPast')) {
+            $this->saveOn('DateWarningDaysPast', $this->DateWarningDaysPast);
+        }
+
+        if ($this->DateWarningDaysFuture != (int) $this->returnArray('DateWarningDaysFuture')) {
+            $this->saveOn('DateWarningDaysFuture', $this->DateWarningDaysFuture);
+        }
+
+        if ($this->ClosingDate != (string) $this->returnArray('ClosingDate')) {
+            $this->saveOn('ClosingDate', $this->ClosingDate);
+        }
+
+        if ($this->SmallestCurrencyValue != (float) $this->returnArray('SmallestCurrencyValue')) {
+
+            $this->saveOn('SmallestCurrencyValue', $this->SmallestCurrencyValue);
+        }
+
+        $this->dispatch('resetValue');
+        session()->flash('message', 'Save!');
     }
     public function returnArray($name): string
     {
@@ -35,10 +66,10 @@ class OptionSettingsAccounting extends Component
         }
         dd("record not found : " . $name);
     }
-    public function saveOn($name, $value, SystemSettingServices $systemSettingServices)
+    public function saveOn($name, $value)
     {
-        $systemSettingServices->SetValue($name, $value);
-        session()->flash('message', $name . ' HAS BEEN SAVE!');
+        SystemSetting::where('NAME', $name)->update(['VALUE' => $value]);
+
     }
     #[On('clear-alert')]
     public function clearAlert()

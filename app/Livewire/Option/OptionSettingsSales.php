@@ -4,6 +4,7 @@ namespace App\Livewire\Option;
 
 use App\Models\PaymentMethods;
 use App\Models\PaymentTerms;
+use App\Models\SystemSetting;
 use App\Services\SystemSettingServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -25,6 +26,7 @@ class OptionSettingsSales extends Component
     public function mount()
     {
         $this->LoadDropdown();
+
         $this->DefaultPaymentTermsId = (int) $this->returnArray('DefaultPaymentTermsId');
         $this->DefaultPaymentMethodId = (int) $this->returnArray('DefaultPaymentMethodId');
         $this->CreditLimitPolicy = (int) $this->returnArray('CreditLimitPolicy');
@@ -45,6 +47,65 @@ class OptionSettingsSales extends Component
         $this->CreateStatementWithZeroBalance = (bool) $this->returnArray('CreateStatementWithZeroBalance');
         $this->PrintDueDateOnStatement = (bool) $this->returnArray('PrintDueDateOnStatement');
         $this->ShowPostdatedTransactions = (bool) $this->returnArray('ShowPostdatedTransactions');
+    }
+    public function save()
+    {
+        if ($this->DefaultPaymentTermsId != (int) $this->returnArray('DefaultPaymentTermsId')) {
+            $this->saveOn("DefaultPaymentTermsId", $this->DefaultPaymentTermsId);
+        }
+        if ($this->DefaultPaymentMethodId != (int) $this->returnArray('DefaultPaymentMethodId')) {
+            $this->saveOn("DefaultPaymentMethodId", $this->DefaultPaymentMethodId);
+        }
+        if ($this->CreditLimitPolicy != (int) $this->returnArray('CreditLimitPolicy')) {
+            $this->saveOn("CreditLimitPolicy", $this->CreditLimitPolicy);
+        }
+        if ($this->ArAgingLimit != (int) $this->returnArray('ArAgingLimit')) {
+            $this->saveOn("ArAgingLimit", $this->ArAgingLimit);
+        }
+        if ($this->AutoApplyPayments != (bool) $this->returnArray('AutoApplyPayments')) {
+            $this->saveOn("AutoApplyPayments", $this->AutoApplyPayments);
+        }
+
+        if ($this->AutoCalcPayments != (bool) $this->returnArray('AutoCalcPayments')) {
+            $this->saveOn("AutoCalcPayments", $this->AutoCalcPayments);
+        }
+        if ($this->UseUndepositedFunds != (bool) $this->returnArray('UseUndepositedFunds')) {
+            $this->saveOn("UseUndepositedFunds", $this->UseUndepositedFunds);
+        }
+
+        if ($this->AllowPriceOverride != (bool) $this->returnArray('AllowPriceOverride')) {
+            $this->saveOn("AllowPriceOverride", $this->AllowPriceOverride);
+        }
+        if ($this->AllowPriceLevel != (bool) $this->returnArray('AllowPriceLevel')) {
+            $this->saveOn("AllowPriceLevel", $this->AllowPriceLevel);
+        }
+        if ($this->AllowBlankInSellingPrice != (bool) $this->returnArray('AllowBlankInSellingPrice')) {
+            $this->saveOn("AllowBlankInSellingPrice", $this->AllowBlankInSellingPrice);
+        }
+        if ($this->WarnWhenPriceBelowCost != (bool) $this->returnArray('WarnWhenPriceBelowCost')) {
+            $this->saveOn("WarnWhenPriceBelowCost", $this->WarnWhenPriceBelowCost);
+        }
+        if ($this->EnableBatchNumberInSalesOrder != (bool) $this->returnArray('EnableBatchNumberInSalesOrder')) {
+            $this->saveOn("EnableBatchNumberInSalesOrder", $this->EnableBatchNumberInSalesOrder);
+        }
+        if ($this->HideInactiveCustomer != (bool) $this->returnArray('HideInactiveCustomer')) {
+            $this->saveOn("HideInactiveCustomer", $this->HideInactiveCustomer);
+        }
+        if ($this->ShowInvoiceDetailsOnStatement != (bool) $this->returnArray('ShowInvoiceDetailsOnStatement')) {
+            $this->saveOn("ShowInvoiceDetailsOnStatement", $this->ShowInvoiceDetailsOnStatement);
+        }
+        if ($this->CreateStatementWithZeroBalance != (bool) $this->returnArray('CreateStatementWithZeroBalance')) {
+            $this->saveOn("CreateStatementWithZeroBalance", $this->CreateStatementWithZeroBalance);
+        }
+        if ($this->PrintDueDateOnStatement != (bool) $this->returnArray('PrintDueDateOnStatement')) {
+            $this->saveOn("PrintDueDateOnStatement", $this->PrintDueDateOnStatement);
+        }
+        if ($this->ShowPostdatedTransactions != (bool) $this->returnArray('ShowPostdatedTransactions')) {
+            $this->saveOn("ShowPostdatedTransactions", $this->ShowPostdatedTransactions);
+        }
+
+        $this->dispatch('resetValue');
+        session()->flash('message', 'Save!');
 
     }
     public function LoadDropdown()
@@ -69,10 +130,9 @@ class OptionSettingsSales extends Component
         }
         dd("record not found : " . $name);
     }
-    public function saveOn($name, $value, SystemSettingServices $systemSettingServices)
+    public function saveOn($name, $value)
     {
-        $systemSettingServices->SetValue($name, $value);
-        session()->flash('message', $name . ' HAS BEEN SAVE!');
+        SystemSetting::where('NAME', $name)->update(['VALUE' => $value]);
     }
     #[On('clear-alert')]
     public function clearAlert()

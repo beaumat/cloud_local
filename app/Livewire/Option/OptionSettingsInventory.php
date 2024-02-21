@@ -3,6 +3,7 @@
 namespace App\Livewire\Option;
 
 use App\Models\StockType;
+use App\Models\SystemSetting;
 use App\Services\SystemSettingServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -22,7 +23,7 @@ class OptionSettingsInventory extends Component
 
     public bool $ShowBatchNo, $ShowExpiryDate, $ShowLastPurchaseInfo, $ShowQtyOnSO, $ShowStockBin, $ShowUnitCost;
 
-    public bool $AllowZeroOnHand,$LockQtyNeededInBuildAssembly,$SkipInventoryEntry;
+    public bool $AllowZeroOnHand, $LockQtyNeededInBuildAssembly, $SkipInventoryEntry;
 
     public function mount()
     {
@@ -31,6 +32,7 @@ class OptionSettingsInventory extends Component
         $this->DefaultItemTaxable = (bool) $this->returnArray('DefaultItemTaxable');
 
         $this->forcastType = [['ID' => 0, 'NAME' => 'Weekly'], ['ID' => 1, 'NAME' => 'Monthly']];
+
         $this->DefaultForecastingType = (int) $this->returnArray('DefaultForecastingType');
         $this->SafetyStockPctLevel = (int) $this->returnArray('SafetyStockPctLevel');
 
@@ -39,12 +41,58 @@ class OptionSettingsInventory extends Component
         $this->ShowLastPurchaseInfo = (bool) $this->returnArray('ShowLastPurchaseInfo');
         $this->ShowQtyOnSO = (bool) $this->returnArray('ShowQtyOnSO');
         $this->ShowStockBin = (bool) $this->returnArray('ShowStockBin');
-        $this->ShowUnitCost = (bool) $this->returnArray('ShowUnitCost');    
+        $this->ShowUnitCost = (bool) $this->returnArray('ShowUnitCost');
 
-        $this->AllowZeroOnHand = (bool) $this->returnArray('AllowZeroOnHand');  
-        $this->LockQtyNeededInBuildAssembly = (bool) $this->returnArray('LockQtyNeededInBuildAssembly');  
-        $this->SkipInventoryEntry = (bool) $this->returnArray('SkipInventoryEntry');  
-        
+        $this->AllowZeroOnHand = (bool) $this->returnArray('AllowZeroOnHand');
+        $this->LockQtyNeededInBuildAssembly = (bool) $this->returnArray('LockQtyNeededInBuildAssembly');
+        $this->SkipInventoryEntry = (bool) $this->returnArray('SkipInventoryEntry');
+
+    }
+    public function save()
+    {
+
+        if ($this->DefaultItemStockType != (int) $this->returnArray('DefaultItemStockType')) {
+            $this->saveOn("DefaultItemStockType", $this->DefaultItemStockType);
+        }
+        if ($this->DefaultItemTaxable != (bool) $this->returnArray('DefaultItemTaxable')) {
+            $this->saveOn("DefaultItemTaxable", $this->DefaultItemTaxable);
+        }
+        if ($this->DefaultForecastingType != (int) $this->returnArray('DefaultForecastingType')) {
+            $this->saveOn("DefaultForecastingType", $this->DefaultForecastingType);
+        }
+        if ($this->SafetyStockPctLevel != (int) $this->returnArray('SafetyStockPctLevel')) {
+            $this->saveOn("SafetyStockPctLevel", $this->SafetyStockPctLevel);
+        }
+        if ($this->ShowBatchNo != (bool) $this->returnArray('ShowBatchNo')) {
+            $this->saveOn("ShowBatchNo", $this->ShowBatchNo);
+        }
+        if ($this->ShowExpiryDate != (bool) $this->returnArray('ShowExpiryDate')) {
+            $this->saveOn("ShowExpiryDate", $this->ShowExpiryDate);
+        }
+        if ($this->ShowLastPurchaseInfo != (bool) $this->returnArray('ShowLastPurchaseInfo')) {
+            $this->saveOn("ShowLastPurchaseInfo", $this->ShowLastPurchaseInfo);
+        }
+        if ($this->ShowQtyOnSO != (bool) $this->returnArray('ShowQtyOnSO')) {
+            $this->saveOn("ShowQtyOnSO", $this->ShowQtyOnSO);
+        }
+        if ($this->ShowStockBin != (bool) $this->returnArray('ShowStockBin')) {
+            $this->saveOn("ShowStockBin", $this->ShowStockBin);
+        }
+        if ($this->ShowUnitCost != (bool) $this->returnArray('ShowUnitCost')) {
+            $this->saveOn("ShowUnitCost", $this->ShowUnitCost);
+        }
+        if ($this->AllowZeroOnHand != (bool) $this->returnArray('AllowZeroOnHand')) {
+            $this->saveOn("AllowZeroOnHand", $this->AllowZeroOnHand);
+        }
+        if ($this->LockQtyNeededInBuildAssembly != (bool) $this->returnArray('LockQtyNeededInBuildAssembly')) {
+            $this->saveOn("LockQtyNeededInBuildAssembly", $this->LockQtyNeededInBuildAssembly);
+        }
+        if ($this->SkipInventoryEntry != (bool) $this->returnArray('SkipInventoryEntry')) {
+            $this->saveOn("SkipInventoryEntry", $this->SkipInventoryEntry);
+        }
+
+        $this->dispatch('resetValue');
+        session()->flash('message', 'Save!');
     }
     public function returnArray($name): string
     {
@@ -55,10 +103,9 @@ class OptionSettingsInventory extends Component
         }
         dd("record not found : " . $name);
     }
-    public function saveOn($name, $value, SystemSettingServices $systemSettingServices)
+    public function saveOn($name, $value)
     {
-        $systemSettingServices->SetValue($name, $value);
-        session()->flash('message', $name . ' HAS BEEN SAVE!');
+        SystemSetting::where('NAME', $name)->update(['VALUE' => $value]);
     }
     #[On('clear-alert')]
     public function clearAlert()

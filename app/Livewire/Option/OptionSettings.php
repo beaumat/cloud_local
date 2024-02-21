@@ -5,6 +5,7 @@ namespace App\Livewire\Option;
 use Illuminate\Support\Str;
 use App\Models\SystemSetting;
 use App\Services\SystemSettingServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -14,14 +15,14 @@ use Illuminate\Support\Facades\DB;
 class OptionSettings extends Component
 {
     public $systemSetting = [];
-
     public string $NAME;
     public string $VALUE;
+    public string $activeTab = 'com';
 
-    public string $activeTab='com';
+    #[On('resetValue')]
     public function mount()
     {
-        $this->systemSetting = DB::table('system_settings')->select(['NAME','VALUE'])->get();
+        $this->systemSetting = DB::table('system_settings')->select(['NAME', 'VALUE'])->get();
     }
     public function save(SystemSettingServices $systemSettingServices)
     {
@@ -35,7 +36,7 @@ class OptionSettings extends Component
     }
     public function returnArray($name): string
     {
-       
+
         foreach ($this->systemSetting as $list) {
             if (Str::lower($list->NAME) === Str::lower($name)) {
                 return $list->VALUE;

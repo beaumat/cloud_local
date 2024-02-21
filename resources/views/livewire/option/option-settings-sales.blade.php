@@ -19,12 +19,7 @@
                                         <option value="{{ $item->ID }}"> {{ $item->DESCRIPTION }}</option>
                                     @endforeach
                                 </select>
-                                <span class="input-group-append">
-                                    <button wire:click="saveOn('DefaultPaymentTermsId','{{ $DefaultPaymentTermsId }}')"
-                                        type="button" class="btn btn-sm btn-success btn-flat">
-                                        <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                    </button>
-                                </span>
+                               
                             </div>
                         </div>
                     </div>
@@ -40,13 +35,7 @@
                                         <option value="{{ $item->ID }}"> {{ $item->DESCRIPTION }}</option>
                                     @endforeach
                                 </select>
-                                <span class="input-group-append">
-                                    <button
-                                        wire:click="saveOn('DefaultPaymentMethodId','{{ $DefaultPaymentMethodId }}')"
-                                        type="button" class="btn btn-sm btn-success btn-flat">
-                                        <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                    </button>
-                                </span>
+                              
                             </div>
                         </div>
                     </div>
@@ -63,12 +52,7 @@
                                     @endforeach
                                 </select>
 
-                                <span class="input-group-append">
-                                    <button wire:click="saveOn('CreditLimitPolicy','{{ $CreditLimitPolicy }}')"
-                                        type="button" class="btn btn-sm btn-success btn-flat">
-                                        <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                    </button>
-                                </span>
+                              
                             </div>
                         </div>
                     </div>
@@ -82,13 +66,7 @@
                                     @foreach ($arAgingList as $item)
                                         <option value="{{ $item['ID'] }}"> {{ $item['NAME'] }}</option>
                                     @endforeach
-                                </select>
-                                <span class="input-group-append">
-                                    <button wire:click="saveOn('ArAgingLimit','{{ $ArAgingLimit }}')" type="button"
-                                        class="btn btn-sm btn-success btn-flat">
-                                        <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                    </button>
-                                </span>
+                                </select>                   
                             </div>
                         </div>
                     </div>
@@ -106,27 +84,18 @@
                     <div class="col-md-12 ">
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('AutoApplyPayments','{{ $AutoApplyPayments }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                             
                                 <input wire:model.live='AutoApplyPayments' type="checkbox">
                                 <label>Auto Apply Payment</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('AutoCalcPayments','{{ $AutoCalcPayments }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                               
                                 <input wire:model.live='AutoCalcPayments' type="checkbox">
                                 <label>Auto Calculate Payment</label>
                             </div>
 
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('UseUndepositedFunds','{{ $UseUndepositedFunds }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                              
                                 <input wire:model.live='UseUndepositedFunds' type="checkbox">
                                 <label>Use Undeposited Funds</label>
                             </div>
@@ -146,39 +115,23 @@
                     <div class="col-md-12 ">
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <button
-                                    wire:click="saveOn('ShowInvoiceDetailsOnStatement','{{ $ShowInvoiceDetailsOnStatement }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                                
                                 <input wire:model.live='ShowInvoiceDetailsOnStatement' type="checkbox">
                                 <label>Show invoice details on statement</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <button
-                                    wire:click="saveOn('CreateStatementWithZeroBalance','{{ $CreateStatementWithZeroBalance }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                            
                                 <input wire:model.live='CreateStatementWithZeroBalance' type="checkbox">
                                 <label>Create statement with zero balance</label>
                             </div>
 
                             <div class="custom-control custom-checkbox">
-                                <button
-                                    wire:click="saveOn('PrintDueDateOnStatement','{{ $PrintDueDateOnStatement }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                              
                                 <input wire:model.live='PrintDueDateOnStatement' type="checkbox">
                                 <label>Print due date on statement</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <button
-                                    wire:click="saveOn('ShowPostdatedTransactions','{{ $ShowPostdatedTransactions }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                             
                                 <input wire:model.live='ShowPostdatedTransactions' type="checkbox">
                                 <label>Show postdated transactions</label>
                             </div>
@@ -196,53 +149,33 @@
                     <div class="col-md-12 ">
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('AllowPriceOverride','{{ $AllowPriceOverride }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                      
                                 <input wire:model.live='AllowPriceOverride' type="checkbox">
                                 <label>Allow price override</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <button
-                                    wire:click="saveOn('AllowBlankInSellingPrice','{{ $AllowBlankInSellingPrice }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                              
                                 <input wire:model.live='AllowBlankInSellingPrice' type="checkbox">
                                 <label>Allow zero in selling price</label>
                             </div>
 
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('AllowPriceLevel','{{ $AllowPriceLevel }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                              
                                 <input wire:model.live='AllowPriceLevel' type="checkbox">
                                 <label>Allow price level</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('WarnWhenPriceBelowCost','{{ $WarnWhenPriceBelowCost }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                              
                                 <input wire:model.live='WarnWhenPriceBelowCost' type="checkbox">
                                 <label>Warning when selling price is below cost</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <button
-                                    wire:click="saveOn('EnableBatchNumberInSalesOrder','{{ $EnableBatchNumberInSalesOrder }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                              
                                 <input wire:model.live='EnableBatchNumberInSalesOrder' type="checkbox">
                                 <label>Enable Bath Number in sales order</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('HideInactiveCustomer','{{ $HideInactiveCustomer }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+                              
                                 <input wire:model.live='HideInactiveCustomer' type="checkbox">
                                 <label>Hide inactive customer</label>
                             </div>
@@ -252,5 +185,7 @@
             </div>
         </div>
     </div>
-
+    <div class="col-md-12 mt-2 text-right">
+        <button wire:click='save' class="btn btn-sm btn-success">Save</button>
+    </div>
 </div>

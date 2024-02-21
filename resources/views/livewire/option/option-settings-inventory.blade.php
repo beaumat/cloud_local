@@ -19,22 +19,14 @@
                                         <option value="{{ $list->ID }}">{{ $list->DESCRIPTION }}</option>
                                     @endforeach
                                 </select>
-                                <span class="input-group-append">
-                                    <button wire:click="saveOn('DefaultItemStockType','{{ $DefaultItemStockType }}')"
-                                        type="button" class="btn btn-sm btn-success">
-                                        <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                    </button>
-                                </span>
+
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('DefaultItemTaxable','{{ $DefaultItemTaxable }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+
                                 <input wire:model.live='DefaultItemTaxable' type="checkbox" id="IncRefNoByLocation1">
                                 <label>
                                     Taxable
@@ -70,13 +62,7 @@
                                     @endforeach
                                 </select>
 
-                                <span class="input-group-append">
-                                    <button
-                                        wire:click="saveOn('DefaultForecastingType','{{ $DefaultForecastingType }}')"
-                                        type="button" class="btn btn-sm btn-success">
-                                        <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                    </button>
-                                </span>
+
                             </div>
                         </div>
                     </div>
@@ -90,12 +76,7 @@
                                     <input wire:model.live.debounce='SafetyStockPctLevel' type="number"
                                         name="SafetyStockPctLevel" id="SafetyStockPctLevel"
                                         class="form-control form-control-sm text-right">
-                                    <span class="input-group-append">
-                                        <button wire:click="saveOn('SafetyStockPctLevel','{{ $SafetyStockPctLevel }}')"
-                                            type="button" class="btn btn-sm btn-success btn-flat">
-                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                        </button>
-                                    </span>
+
                                 </div>
                             </div>
                         </div>
@@ -114,10 +95,7 @@
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('ShowStockBin','{{ $ShowStockBin }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
+
                                 <input wire:model.live='ShowStockBin' type="checkbox" id="IncRefNoByLocation1">
                                 <label>
                                     Show stock bin
@@ -129,10 +107,6 @@
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('ShowBatchNo','{{ $ShowBatchNo }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
                                 <input wire:model.live='ShowBatchNo' type="checkbox" id="IncRefNoByLocation1">
                                 <label>
                                     Show batch number
@@ -144,10 +118,6 @@
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('ShowUnitCost','{{ $ShowUnitCost }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
                                 <input wire:model.live='ShowUnitCost' type="checkbox" id="IncRefNoByLocation1">
                                 <label>
                                     Show unit cost
@@ -159,10 +129,6 @@
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('ShowExpiryDate','{{ $ShowExpiryDate }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
                                 <input wire:model.live='ShowExpiryDate' type="checkbox" id="ShowExpiryDate">
                                 <label>
                                     Show expired date
@@ -174,12 +140,7 @@
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('ShowLastPurchaseInfo','{{ $ShowLastPurchaseInfo }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
-                                <input wire:model.live='ShowLastPurchaseInfo' type="checkbox"
-                                    id="ShowLastPurchaseInfo">
+                                <input wire:model.live='ShowLastPurchaseInfo' type="checkbox" id="ShowLastPurchaseInfo">
                                 <label>
                                     Show last purchase info
                                 </label>
@@ -190,10 +151,6 @@
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <button wire:click="saveOn('ShowQtyOnSO','{{ $ShowQtyOnSO }}')"
-                                    class="btn btn-sm btn-success mr-4">
-                                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                                </button>
                                 <input wire:model.live='ShowQtyOnSO' type="checkbox" id="ShowQtyOnSO">
                                 <label>
                                     Show sales order qty
@@ -209,10 +166,6 @@
     <div class="col-md-6">
         <div class="form-group">
             <div class="custom-control custom-checkbox">
-                <button wire:click="saveOn('SkipInventoryEntry','{{ $SkipInventoryEntry }}')"
-                    class="btn btn-sm btn-success mr-4">
-                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                </button>
                 <input wire:model.live='SkipInventoryEntry' type="checkbox" id="SkipInventoryEntry">
                 <label>
                     Skip Inventory Entry
@@ -222,10 +175,6 @@
         </div>
         <div class="form-group">
             <div class="custom-control custom-checkbox">
-                <button wire:click="saveOn('AllowZeroOnHand','{{ $AllowZeroOnHand }}')"
-                    class="btn btn-sm btn-success mr-4">
-                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                </button>
                 <input wire:model.live='AllowZeroOnHand' type="checkbox" id="AllowZeroOnHand">
                 <label>
                     Allow negative quantity
@@ -235,15 +184,15 @@
         </div>
         <div class="form-group">
             <div class="custom-control custom-checkbox">
-                <button wire:click="saveOn('LockQtyNeededInBuildAssembly','{{ $LockQtyNeededInBuildAssembly }}')"
-                    class="btn btn-sm btn-success mr-4">
-                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                </button>
-                <input wire:model.live='LockQtyNeededInBuildAssembly' type="checkbox" id="LockQtyNeededInBuildAssembly">
+                <input wire:model.live='LockQtyNeededInBuildAssembly' type="checkbox"
+                    id="LockQtyNeededInBuildAssembly">
                 <label>
                     Lock quantity needed in build assembly
                 </label>
             </div>
         </div>
+    </div>
+    <div class="col-md-12 mt-2 text-right">
+        <button wire:click='save' class="btn btn-sm btn-success">Save</button>
     </div>
 </div>

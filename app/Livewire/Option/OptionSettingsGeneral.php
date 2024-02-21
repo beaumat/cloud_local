@@ -3,6 +3,7 @@
 namespace App\Livewire\Option;
 
 use App\Models\Locations;
+use App\Models\SystemSetting;
 use App\Services\SystemSettingServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -39,10 +40,28 @@ class OptionSettingsGeneral extends Component
         }
         dd("record not found : " . $name);
     }
-    public function saveOn($name, $value, SystemSettingServices $systemSettingServices)
+    public function save()
     {
-        $systemSettingServices->SetValue($name, $value);
-        session()->flash('message', $name . ' HAS BEEN SAVE!');
+
+        if ($this->DefaultLocationId != $this->returnArray('DefaultLocationId')) {
+            $this->saveOn("DefaultLocationId", $this->DefaultLocationId);
+        }
+        if ($this->NewTransactionsDefaultDate != $this->returnArray('NewTransactionsDefaultDate')) {
+            $this->saveOn("NewTransactionsDefaultDate", $this->NewTransactionsDefaultDate);
+        }
+        if ($this->LockDefaultLocation != (bool) $this->returnArray('LockDefaultLocation')) {
+            $this->saveOn("LockDefaultLocation", $this->LockDefaultLocation);
+        }
+        if ($this->IncRefNoByLocation != (bool) $this->returnArray('IncRefNoByLocation')) {
+            $this->saveOn("IncRefNoByLocation", $this->IncRefNoByLocation);
+        }
+
+        $this->dispatch('resetValue');
+        session()->flash('message', 'Save!');
+    }
+    public function saveOn($name, $value)
+    {
+        SystemSetting::where('NAME', $name)->update(['VALUE' => $value]);
     }
     #[On('clear-alert')]
     public function clearAlert()

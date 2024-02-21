@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Option;
 
+use App\Models\SystemSetting;
 use App\Services\SystemSettingServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -13,7 +14,7 @@ class OptionSettingsCompany extends Component
 
     #[Reactive]
     public $systemSetting = [];
-   
+
     public string $CompanyName;
 
     public string $CompanyAddress;
@@ -40,7 +41,33 @@ class OptionSettingsCompany extends Component
         $this->CompanyPhoneNo = $this->returnArray('CompanyPhoneNo');
         $this->CompanyTin = $this->returnArray('CompanyTin');
     }
+    public function save()
+    {
+        if ($this->CompanyName != $this->returnArray('CompanyName')) {
+            $this->saveOn('CompanyName', $this->CompanyName);
+        }
+        if ($this->CompanyAddress != $this->returnArray('CompanyAddress')) {
+            $this->saveOn('CompanyAddress', $this->CompanyAddress);
+        }
+        if ($this->CompanyEmailAddress != $this->returnArray('CompanyEmailAddress')) {
+            $this->saveOn('CompanyEmailAddress', $this->CompanyEmailAddress);
+        }
+        if ($this->CompanyFaxNo != $this->returnArray('CompanyFaxNo')) {
+            $this->saveOn('CompanyFaxNo', $this->CompanyFaxNo);
+        }
+        if ($this->CompanyMobileNo != $this->returnArray('CompanyMobileNo')) {
+            $this->saveOn('CompanyMobileNo', $this->CompanyMobileNo);
+        }
+        if ($this->CompanyPhoneNo != $this->returnArray('CompanyPhoneNo')) {
+            $this->saveOn('CompanyPhoneNo', $this->CompanyPhoneNo);
+        }
+        if ($this->CompanyTin != $this->returnArray('CompanyTin')) {
+            $this->saveOn('CompanyTin', $this->CompanyTin);
+        }
 
+        $this->dispatch('resetValue');
+        session()->flash('message', 'Save!');
+    }
     public function returnArray($name): string
     {
 
@@ -55,10 +82,10 @@ class OptionSettingsCompany extends Component
         dd("record not found : " . $name);
 
     }
-    public function saveOn($name, $value, SystemSettingServices $systemSettingServices)
-    {   
-        $systemSettingServices->SetValue($name, $value);
-        session()->flash('message', $name . ' HAS BEEN SAVE!');
+    public function saveOn($name, $value)
+    {
+
+        SystemSetting::where('NAME', $name)->update(['VALUE' => $value]);
     }
 
     #[On('clear-alert')]

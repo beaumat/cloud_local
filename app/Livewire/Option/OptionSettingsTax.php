@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Option;
 
+use App\Models\SystemSetting;
 use App\Models\Tax;
 use App\Services\SystemSettingServices;
 use Livewire\Attributes\On;
@@ -24,6 +25,22 @@ class OptionSettingsTax extends Component
         $this->OutputTaxId = (int) $this->returnArray('OutputTaxId');
         $this->InputTaxId = (int) $this->returnArray('InputTaxId');
     }
+    public function save()
+    {
+
+        if ($this->CompanyTin != $this->returnArray('CompanyTin')) {
+            $this->saveOn("CompanyTin",$this->CompanyTin);
+        }
+        if ($this->OutputTaxId != (int) $this->returnArray('OutputTaxId')) {
+            $this->saveOn("OutputTaxId",$this->OutputTaxId);
+        }
+        if ($this->InputTaxId != (int) $this->returnArray('InputTaxId')) {
+            $this->saveOn("InputTaxId",$this->InputTaxId);
+        }
+
+        $this->dispatch('resetValue');
+        session()->flash('message', 'Save!');
+    }
     public function returnArray($name): string
     {
         foreach ($this->systemSetting as $list) {
@@ -33,10 +50,9 @@ class OptionSettingsTax extends Component
         }
         dd("record not found : " . $name);
     }
-    public function saveOn($name, $value, SystemSettingServices $systemSettingServices)
+    public function saveOn($name, $value)
     {
-        $systemSettingServices->SetValue($name, $value);
-        session()->flash('message', $name . ' HAS BEEN SAVE!');
+        SystemSetting::where('NAME', $name)->update(['VALUE' => $value]);
     }
     #[On('clear-alert')]
     public function clearAlert()

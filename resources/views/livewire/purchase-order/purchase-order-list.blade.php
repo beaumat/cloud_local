@@ -73,10 +73,10 @@
                                     @foreach ($poList as $list)
                                         <tr>
                                             <td> {{ $list->CODE }}</td>
-                                            <td> {{ $list->DATE }}</td>
+                                            <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
-                                            <td> {{ number_format($list->AMOUNT, 2) }}</td>
+                                            <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td> {{ $list->TAX_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
 

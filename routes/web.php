@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\Bills\BillingForm;
+use App\Livewire\Bills\BillingList;
 use App\Livewire\ChartOfAccount\ChartOfAccountForm;
 use App\Livewire\ChartOfAccount\ChartOfAccountList;
 use App\Livewire\Customer\CustomerForm;
@@ -83,6 +85,12 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', PurchaseOrderForm::class)->name('purchase_order_edit');
         });
         
+        Route::prefix('/bills')->group(function () {
+            Route::get('/', BillingList::class)->name('bills');
+            Route::get('/create', BillingForm::class)->name('bills_create');
+            Route::get('/{id}/edit', BillingForm::class)->name('bills_edit');
+        });
+
     });
 
     Route::prefix('/maintenance')->name('maintenance')->group(function () {

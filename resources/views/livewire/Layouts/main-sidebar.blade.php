@@ -19,7 +19,7 @@
         </div>
 
         <!-- SidebarSearch Form -->
-        {{-- <div class="form-inline">
+        <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
                 <input class="form-control form-control-sidebar" type="search" placeholder="Search"
                     aria-label="Search">
@@ -29,7 +29,7 @@
                     </button>
                 </div>
             </div>
-        </div> --}}
+        </div>
 
         <!-- Sidebar Menu -->
         <nav class="mt-1 text-xs">
@@ -53,48 +53,48 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    <ul class="nav nav-treeview bg-light">
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-receipt nav-icon"></i>
                                 <p>Sales Receipt</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-list nav-icon"></i>
                                 <p>Sales Order</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link ">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-file-invoice nav-icon"></i>
                                 <p>Invoices</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-money-bill-wave nav-icon"></i>
                                 <p>Payments</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-file-import nav-icon"></i>
                                 <p>Credit Memo</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-landmark nav-icon"></i>
                                 <p>Tax Credit</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-newspaper nav-icon"></i>
                                 <p>Statement of Account</p>
                             </a>
                         </li>
@@ -103,41 +103,43 @@
                 </li>
                 <li class="nav-item {{ request()->is('vendors*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('vendors*') ? 'active ' : '' }}">
-                        <i class="nav-icon fas fa-shopping-cart"></i>
+                        <i class="nav-icon fas fa-user-tie"></i>
                         <p>
                             Vendors
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    <ul class="nav nav-treeview bg-light">
                         <li class="nav-item">
                             <a href="{{ route('vendorspurchase_order') }}"
                                 class="nav-link {{ request()->is('vendors/purchase-order*') ? 'active text-primary' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-shopping-cart nav-icon"></i>
+
                                 <p>Purchase Order</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                            <a href="{{ route('vendorsbills') }}"
+                                class="nav-link {{ request()->is('vendors/bills*') ? 'active text-primary' : '' }}">
+                                <i class="fas fa-file-invoice nav-icon"></i>
                                 <p>Bills</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-money-bill nav-icon"></i>
                                 <p>Bill Payments</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-credit-card nav-icon"></i>
                                 <p>Bill Credits</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-balance-scale nav-icon"></i>
                                 <p>Withholding Tax</p>
                             </a>
                         </li>

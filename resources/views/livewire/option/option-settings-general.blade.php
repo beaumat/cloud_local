@@ -13,12 +13,7 @@
                         <option value="{{ $list->ID }}">{{ $list->NAME }}</option>
                     @endforeach
                 </select>
-                <span class="input-group-append">
-                    <button wire:click="saveOn('DefaultLocationId','{{ $DefaultLocationId }}')" type="button"
-                        class="btn btn-sm btn-success">
-                        <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                    </button>
-                </span>
+               
             </div>
         </div>
     </div>
@@ -34,12 +29,7 @@
                         <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
                     @endforeach
                 </select>
-                <span class="input-group-append">
-                    <button wire:click="saveOn('NewTransactionsDefaultDate','{{ $NewTransactionsDefaultDate }}')"
-                        type="button" class="btn btn-sm btn-success">
-                        <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                    </button>
-                </span>
+              
             </div>
         </div>
     </div>
@@ -48,10 +38,6 @@
         <!-- checkbox -->
         <div class="form-group">
             <div class="custom-control custom-checkbox">
-                <button wire:click="saveOn('LockDefaultLocation','{{ $LockDefaultLocation }}')"
-                    class="btn btn-sm btn-success mr-4">
-                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                </button>
                 <input wire:model.live='LockDefaultLocation' type="checkbox" id="LockDefaultLocation1">
                 <label>
                     Limit transaction to default location
@@ -60,15 +46,14 @@
         </div>
         <div class="form-group">
             <div class="custom-control custom-checkbox">
-                <button wire:click="saveOn('IncRefNoByLocation','{{ $IncRefNoByLocation }}')"
-                    class="btn btn-sm btn-success mr-4">
-                    <i class="fa fa-floppy-o text-sm" aria-hidden="true"></i>
-                </button>
                 <input wire:model.live='IncRefNoByLocation' type="checkbox" id="IncRefNoByLocation1">
                 <label>
                     Increment reference number by location
                 </label>
             </div>
         </div>
+    </div>
+    <div class="col-md-12 mt-2 text-right">
+        <button wire:click='save' class="btn btn-sm btn-success">Save</button>
     </div>
 </div>
