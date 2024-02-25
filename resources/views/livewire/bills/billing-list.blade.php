@@ -63,14 +63,14 @@
                                         <th>Status</th>
 
                                         <th class="text-center col-1">
-                                            <a href="{{ route('vendorspurchase_order_create') }}" class="text-white">
+                                            <a href="{{ route('vendorsbills_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm">
 
-                                    @foreach ($billList as $list)
+                                    @foreach ($dataList as $list)
                                         <tr>
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
@@ -81,7 +81,7 @@
                                             <td> {{ $list->STATUS }}</td>
 
                                             <td class="text-center">
-                                                <a href="{{ route('vendorspurchase_order_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('vendorsbills_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>

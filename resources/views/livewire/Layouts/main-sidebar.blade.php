@@ -599,7 +599,7 @@
                                 <li class="nav-item">
                                     <a href="{{ route('maintenanceinventoryitem') }}"
                                         class="nav-link {{ request()->is('maintenance/inventory/items*') ? 'active' : '' }}">
-                                        <i class="fa fa-file nav-icon"></i>
+                                        <i class="fa fa-cube nav-icon"></i>
                                         <p>Items</p>
                                     </a>
                                 </li>

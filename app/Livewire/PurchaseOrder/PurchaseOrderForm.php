@@ -2,16 +2,16 @@
 
 namespace App\Livewire\PurchaseOrder;
 
-use App\Models\Contacts;
-use App\Models\DocumentStatus;
-use App\Models\Locations;
-use App\Models\PaymentTerms;
-use App\Models\PurchaseOrder;
-use App\Models\ShipVia;
-use App\Models\Tax;
+use App\Services\ContactServices;
+use App\Services\DocumentStatusServices;
+use App\Services\LocationServices;
+use App\Services\PaymentTermServices;
 use App\Services\PurchaseOrderServices;
+use App\Services\ShipViaServices;
+use App\Services\SystemSettingServices;
+use App\Services\TaxServices;
+use App\Services\UserServices;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -36,7 +36,6 @@ class PurchaseOrderForm extends Component
     public float $INPUT_TAX_RATE;
     public int $INPUT_TAX_VAT_METHOD;
     public int $INPUT_TAX_ACCOUNT_ID;
-
     public float $INPUT_TAX_AMOUNT;
     public float $AMOUNT;
     public float $TAXABLE_AMOUNT;
@@ -47,17 +46,48 @@ class PurchaseOrderForm extends Component
     public $paymentTermList = [];
     public $taxList = [];
     public bool $Modify;
+    private $purchaseOrderServices;
+    private $locationServices;
+    private $contactServices;
+    private $shipViaServices;
+    private $paymentTermServices;
+    private $taxServices;
+    private $userServices;
+    private $documentStatusServices;
+    private $systemSettingServices;
+    public function boot(
+        PurchaseOrderServices $purchaseOrderServices,
+        LocationServices $locationServices,
+        ContactServices $contactServices,
+        ShipViaServices $shipViaServices,
+        PaymentTermServices $paymentTermServices,
+        TaxServices $taxServices,
+        UserServices $userServices,
+        DocumentStatusServices $documentStatusServices,
+        SystemSettingServices $systemSettingServices
+
+    ) {
+        $this->purchaseOrderServices = $purchaseOrderServices;
+        $this->locationServices = $locationServices;
+        $this->contactServices = $contactServices;
+        $this->shipViaServices = $shipViaServices;
+        $this->paymentTermServices = $paymentTermServices;
+        $this->taxServices = $taxServices;
+        $this->userServices = $userServices;
+        $this->documentStatusServices = $documentStatusServices;
+        $this->systemSettingServices = $systemSettingServices;
+    }
     public function LoadDropdown()
     {
-        $this->vendorList = Contacts::query()->select(['ID', 'NAME'])->where('TYPE', '0')->where('INACTIVE', '0')->get();
-        $this->locationList = Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
-        $this->shipViaList = ShipVia::all();
-        $this->paymentTermList = PaymentTerms::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->get();
-        $this->taxList = Tax::query()->select(['ID', 'NAME'])->where('TAX_TYPE', 3)->get();
+        $this->vendorList = $this->contactServices->getList(0);
+        $this->locationList = $this->locationServices->getList();
+        $this->shipViaList = $this->shipViaServices->getList();
+        $this->paymentTermList = $this->paymentTermServices->getList();
+        $this->taxList = $this->taxServices->getList();
     }
     public function getTax()
     {
-        $tax = Tax::where('ID', $this->INPUT_TAX_ID)->first();
+        $tax = $this->taxServices->get($this->INPUT_TAX_ID);
         if ($tax) {
             $this->INPUT_TAX_RATE = (float) $tax->INPUT_TAX_RATE;
             $this->INPUT_TAX_VAT_METHOD = (int) $tax->VAT_METHOD;
@@ -86,19 +116,19 @@ class PurchaseOrderForm extends Component
         $this->INPUT_TAX_ACCOUNT_ID = $PO->INPUT_TAX_ACCOUNT_ID ? $PO->INPUT_TAX_ACCOUNT_ID : 0;
         $this->TAXABLE_AMOUNT = $PO->TAXABLE_AMOUNT ? $PO->TAXABLE_AMOUNT : 0;
         $this->NONTAXABLE_AMOUNT = $PO->NONTAXABLE_AMOUNT ? $PO->NONTAXABLE_AMOUNT : 0;
-        $this->STATUS_DESCRIPTION = DocumentStatus::where('ID', $this->STATUS)->first()->DESCRIPTION;
+        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
     {
         $this->LoadDropdown();
+
         if (is_numeric($id)) {
-            $PO = PurchaseOrder::where('ID', $id)->first();
+            $PO = $this->purchaseOrderServices->get($id);
             if ($PO) {
                 $this->getInfo($PO);
                 $this->Modify = false;
                 return;
             }
-
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('vendorspurchase_order')->with('error', $errorMessage);
         }
@@ -109,15 +139,15 @@ class PurchaseOrderForm extends Component
         $currentDate = Carbon::now();
         $this->DATE = $currentDate->format('Y-m-d');
         $this->DATE_EXPECTED = '';
-        $this->LOCATION_ID = Auth::user()->location_id ?? Locations::first()->ID;
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->VENDOR_ID = 0;
-        $this->SHIP_VIA_ID = ShipVia::first()->ID;
+        $this->SHIP_VIA_ID = $this->shipViaServices->getFirst();
         $this->CLASS_ID = 0;
-        $this->PAYMENT_TERMS_ID = PaymentTerms::first()->ID;
+        $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
         $this->NOTES = '';
         $this->AMOUNT = 0;
-        $this->STATUS = DocumentStatus::where('DESCRIPTION', 'Draft')->first()->ID;
-        $this->INPUT_TAX_ID = Tax::where('TAX_TYPE', 3)->first()->ID;
+        $this->STATUS = 0;
+        $this->INPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('InputTaxId');
         $this->INPUT_TAX_RATE = 0;
         $this->INPUT_TAX_AMOUNT = 0;
         $this->INPUT_TAX_VAT_METHOD = 0;
@@ -131,12 +161,8 @@ class PurchaseOrderForm extends Component
     {
         $this->Modify = true;
     }
-    public function save(PurchaseOrderServices $purchaseOrderServices)
+    public function save()
     {
-
-
-
-
         try {
             if ($this->ID == 0) {
 
@@ -161,7 +187,7 @@ class PurchaseOrderForm extends Component
 
 
                 $this->getTax();
-                $this->ID = $purchaseOrderServices->Store($this->CODE, $this->DATE, $this->VENDOR_ID, $this->LOCATION_ID, $this->CLASS_ID, $this->DATE_EXPECTED, '', $this->SHIP_VIA_ID, $this->PAYMENT_TERMS_ID, $this->NOTES, $this->STATUS, $this->INPUT_TAX_ID, $this->INPUT_TAX_RATE, $this->INPUT_TAX_VAT_METHOD, $this->INPUT_TAX_ACCOUNT_ID);
+                $this->ID = $this->purchaseOrderServices->Store($this->CODE, $this->DATE, $this->VENDOR_ID, $this->LOCATION_ID, $this->CLASS_ID, $this->DATE_EXPECTED, '', $this->SHIP_VIA_ID, $this->PAYMENT_TERMS_ID, $this->NOTES, $this->STATUS, $this->INPUT_TAX_ID, $this->INPUT_TAX_RATE, $this->INPUT_TAX_VAT_METHOD, $this->INPUT_TAX_ACCOUNT_ID);
 
                 return Redirect::route('vendorspurchase_order_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
@@ -189,15 +215,15 @@ class PurchaseOrderForm extends Component
 
 
                 $this->getTax();
-                $purchaseOrderServices->Update($this->ID, $this->CODE, $this->DATE, $this->VENDOR_ID, $this->LOCATION_ID, $this->CLASS_ID, $this->DATE_EXPECTED, '', $this->SHIP_VIA_ID, $this->PAYMENT_TERMS_ID, $this->NOTES, $this->STATUS, $this->INPUT_TAX_ID, $this->INPUT_TAX_RATE, $this->INPUT_TAX_VAT_METHOD, $this->INPUT_TAX_ACCOUNT_ID);
-                $purchaseOrderServices->getUpdateTaxItem($this->ID, $this->INPUT_TAX_ID);
-                $getResult = $purchaseOrderServices->ReComputed($this->ID);
+                $this->purchaseOrderServices->Update($this->ID, $this->CODE, $this->DATE, $this->VENDOR_ID, $this->LOCATION_ID, $this->CLASS_ID, $this->DATE_EXPECTED, '', $this->SHIP_VIA_ID, $this->PAYMENT_TERMS_ID, $this->NOTES, $this->STATUS, $this->INPUT_TAX_ID, $this->INPUT_TAX_RATE, $this->INPUT_TAX_VAT_METHOD, $this->INPUT_TAX_ACCOUNT_ID);
+                $this->purchaseOrderServices->getUpdateTaxItem($this->ID, $this->INPUT_TAX_ID);
+                $getResult = $this->purchaseOrderServices->ReComputed($this->ID);
                 $this->getUpdateAmount($getResult);
                 session()->flash('message', 'Successfully updated');
 
 
             }
-            $PO = PurchaseOrder::where('ID', $this->ID)->first();
+            $PO = $this->purchaseOrderServices->get($this->ID);
             if ($PO) {
                 $this->getInfo($PO);
             }
@@ -219,17 +245,17 @@ class PurchaseOrderForm extends Component
     }
     public function updateCancel()
     {
-        $PO = PurchaseOrder::where('ID', $this->ID)->first();
+        $PO = $this->purchaseOrderServices->get($this->ID);
         if ($PO) {
             $this->getInfo($PO);
         }
         $this->Modify = false;
     }
-    public function getSubmit(PurchaseOrderServices $purchaseOrderServices)
+    public function getSubmit()
     {
         try {
-            $purchaseOrderServices->StatusUpdate($this->ID, 2);
-            $PO = PurchaseOrder::where('ID', $this->ID)->first();
+            $this->purchaseOrderServices->StatusUpdate($this->ID, 2);
+            $PO = $this->purchaseOrderServices->get($this->ID);
             if ($PO) {
                 $this->getInfo($PO);
                 $this->Modify = false;
@@ -242,12 +268,13 @@ class PurchaseOrderForm extends Component
         }
 
     }
-    public function getVoid(PurchaseOrderServices $purchaseOrderServices)
+    public function getVoid()
     {
         try {
 
-            $purchaseOrderServices->StatusUpdate($this->ID, 7);
-            $PO = PurchaseOrder::where('ID', $this->ID)->first();
+            $this->purchaseOrderServices->StatusUpdate($this->ID, 7);
+            $PO = $this->purchaseOrderServices->get($this->ID);
+
             if ($PO) {
                 $this->getInfo($PO);
                 $this->Modify = false;

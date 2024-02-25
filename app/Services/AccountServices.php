@@ -11,6 +11,17 @@ class AccountServices
     {
         $this->object = $objectService;
     }
+    public function get(int $ID)
+    {
+        return Accounts::where('ID', $ID)->first();
+    }
+    public function getAccount(bool $isCode)
+    {
+        if ($isCode) {
+            return Accounts::query()->select(['ID', 'TAG as CODE'])->where('INACTIVE', '0')->get();
+        }
+        return Accounts::query()->select(['ID', 'NAME as DESCRIPTION'])->where('INACTIVE', '0')->get();
+    }
 
     public function Store(string $NAME, int $GROUP_ACCOUNT_ID, int $TYPE, string $BANK_ACCOUNT_NO, bool $INACTIVE, string $TAG, int $LINE_NO): int
     {
@@ -63,11 +74,13 @@ class AccountServices
                     'account.TAG',
                     'account.LINE_NO',
                     'account_type_map.DESCRIPTION as ACCOUNT_TYPE',
-                    'g.NAME as GROUP_ACCOUNT'
+                    'g.NAME as GROUP_ACCOUNT',
+                    'c.NAME as CLASS_NAME'
                 ]
             )
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
             ->leftJoin('account as g', 'g.ID', '=', 'account.GROUP_ACCOUNT_ID')
+            ->leftJoin('class as c','c.ID','=','account.CLASS_ID')
             ->when($search, function ($query) use (&$search) {
                 $query->where('account.NAME', 'like', '%' . $search . '%')
                 ->orWhere('account.TAG', 'like', '%' . $search . '%');

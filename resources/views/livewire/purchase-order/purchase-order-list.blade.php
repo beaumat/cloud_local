@@ -30,8 +30,6 @@
                                                 <input type="text" wire:model.live.debounce.150ms='search'
                                                     class="w-100 form-control form-control-sm" placeholder="Search" />
                                             </div>
-
-
                                         </div>
                                         <div class="col-md-3">
                                             <div class="mt-0">
@@ -58,10 +56,8 @@
                                         <th>Vendor</th>
                                         <th>Location</th>
                                         <th>Amount</th>
-
                                         <th>Tax</th>
                                         <th>Status</th>
-
                                         <th class="text-center col-1">
                                             <a href="{{ route('vendorspurchase_order_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
@@ -69,8 +65,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm">
-
-                                    @foreach ($poList as $list)
+                                    @foreach ($dataList as $list)
                                         <tr>
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
@@ -79,7 +74,6 @@
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td> {{ $list->TAX_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
-
                                             <td class="text-center">
                                                 <a href="{{ route('vendorspurchase_order_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">

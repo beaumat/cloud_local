@@ -12,8 +12,7 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('vendorspurchase_order') }}"> Purchase
-                                        Order </a>
+                                    <a class="text-white" href="{{ route('vendorspurchase_order') }}"> Purchase Order </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)
@@ -28,11 +27,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             @if ($Modify)
-                                                <livewire:select-option name="VENDOR_ID" titleName="Vendor name"
+                                                <livewire:select-option name="VENDOR_ID" titleName="Vendor"
                                                     :options="$vendorList" :zero="true" :isDisabled=false
                                                     wire:model='VENDOR_ID' />
                                             @else
-                                                <livewire:select-option name="VENDOR_ID" titleName="Vendor name"
+                                                <livewire:select-option name="VENDOR_ID" titleName="Vendor"
                                                     :options="$vendorList" :zero="true" :isDisabled=true
                                                     wire:model='VENDOR_ID' />
                                             @endif

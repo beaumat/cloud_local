@@ -4,15 +4,15 @@
     <table class="table table-sm table-bordered table-hover">
         <thead class="text-sm bg-sky">
             <tr>
-                <th>Code</th>
-                <th>Description</th>
+                <th class="col-1">Code</th>
+                <th class="col-5">Description</th>
                 <th class="col-1">Qty</th>
                 <th class="col-1">U/M</th>
                 <th class="col-1">Cost</th>
-                <th class="col-2">Amount</th>
+                <th class="col-1">Amount</th>
                 <th class="col-1 text-center">Tax</th>
                 @if ($STATUS == $openStatus)
-                    <th class="text-center col-1">Action</th>
+                    <th class="text-center col-2">Action</th>
                 @endif
             </tr>
         </thead>
@@ -161,7 +161,7 @@
                         <td>
 
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
-                                name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" readonly />
+                                name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                         </td>
                         <td class="text-right">
                             <label class="mt-2">{{ number_format($AMOUNT, 2) }}</label>

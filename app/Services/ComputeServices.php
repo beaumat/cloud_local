@@ -7,7 +7,7 @@ class ComputeServices
     private function computeTax(float $initialAmount, float $taxRate, bool $vatInclusive = true)
     {
         // Calculate tax amount
-        $taxAmount = $initialAmount * $taxRate;
+        $taxAmount = floatval($initialAmount) * floatval($taxRate);
 
         if ($vatInclusive) {
             // VAT Inclusive: Calculate taxable amount
@@ -85,6 +85,81 @@ class ComputeServices
                 $nonTaxableAmount  += $item->AMOUNT;
             }
         }
+        $getResult = array(
+            [
+                'AMOUNT' => $amount,
+                'TAX_AMOUNT' => $taxAmount,
+                'TAXABLE_AMOUNT' => $taxableAmount,
+                'NONTAXABLE_AMOUNT' => $nonTaxableAmount
+            ]
+        );
+
+
+
+        return $getResult;
+    }
+
+    public function taxComputeWithExpenses($itemResult, $expensesResult, int $taxID): array
+    {
+        $amount = 0;
+        $taxAmount = 0;
+        $taxableAmount = 0;
+        $nonTaxableAmount = 0;
+
+        foreach ($itemResult as $item) {
+            if ($item->TAXABLE) {
+                switch ($taxID) {
+                    case  12:
+                        $amount +=  ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
+                        $taxAmount += $item->TAX_AMOUNT;
+                        $taxableAmount += $item->TAXABLE_AMOUNT;
+                        break;
+                    case 13:
+                        $amount += ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
+                        $taxAmount += $item->TAX_AMOUNT;
+                        $taxableAmount += $item->TAXABLE_AMOUNT;
+                        break;
+                    case 14:
+                        $amount += $item->AMOUNT;
+                        $taxAmount += 0;
+                        $nonTaxableAmount += $item->AMOUNT;
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                $amount += $item->AMOUNT;
+                $nonTaxableAmount  += $item->AMOUNT;
+            }
+        }
+
+        foreach ($expensesResult as $item) {
+            if ($item->TAXABLE) {
+                switch ($taxID) {
+                    case  12:
+                        $amount +=  ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
+                        $taxAmount += $item->TAX_AMOUNT;
+                        $taxableAmount += $item->TAXABLE_AMOUNT;
+                        break;
+                    case 13:
+                        $amount += ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
+                        $taxAmount += $item->TAX_AMOUNT;
+                        $taxableAmount += $item->TAXABLE_AMOUNT;
+                        break;
+                    case 14:
+                        $amount += $item->AMOUNT;
+                        $taxAmount += 0;
+                        $nonTaxableAmount += $item->AMOUNT;
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                $amount += $item->AMOUNT;
+                $nonTaxableAmount  += $item->AMOUNT;
+            }
+        }
+
         $getResult = array(
             [
                 'AMOUNT' => $amount,

@@ -2,10 +2,10 @@
 
 namespace App\Livewire\PurchaseOrder;
 
-use App\Models\Items;
-use App\Models\Tax;
 use App\Services\ComputeServices;
+use App\Services\ItemServices;
 use App\Services\PurchaseOrderServices;
+use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -53,23 +53,39 @@ class PurchaseOrderFormItems extends Component
     public float $lineTaxAmount;
     public $editUnitList = [];
     public int $lineItemId = 0;
-
-
+    private $purchaseOrderServices;
+    private $computeServices;
+    private $unitOfMeasureServices;
+    private $taxServices;
+    private $itemServices;
+    public function boot(
+        PurchaseOrderServices $purchaseOrderServices,
+        ComputeServices $computeServices,
+        UnitOfMeasureServices $unitOfMeasureServices,
+        TaxServices $taxServices,
+        ItemServices $itemServices,
+    ) {
+        $this->purchaseOrderServices = $purchaseOrderServices;
+        $this->computeServices = $computeServices;
+        $this->unitOfMeasureServices = $unitOfMeasureServices;
+        $this->taxServices = $taxServices;
+        $this->itemServices = $itemServices;
+    }
     public function updatedcodeBase()
     {
+       
         if ($this->codeBase) {
-            $this->itemCodeList = Items::query()->select(['ID', 'CODE'])->where('INACTIVE', '0')->where('TYPE', '0')
-                ->get();
+            $this->itemCodeList = $this->itemServices->getByVendor(true);
             return;
         }
-        $this->itemDescList = Items::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->where('TYPE', '0')
-            ->get();
+        $this->itemDescList = $this->itemServices->getByVendor(false);
+
     }
     public function getAmount(): void
     {
         try {
             if ($this->QUANTITY) {
-                $qty = $this->QUANTITY > 0  ? $this->QUANTITY : 1;
+                $qty = $this->QUANTITY > 0 ? $this->QUANTITY : 1;
                 $this->AMOUNT = $qty * $this->RATE;
             } else {
                 $this->QUANTITY = 1;
@@ -85,7 +101,7 @@ class PurchaseOrderFormItems extends Component
     }
     public function updatedrate()
     {
-        $this->getAmount();
+        $this->getAmount();   
     }
     public function updateditemid()
     {
@@ -103,7 +119,7 @@ class PurchaseOrderFormItems extends Component
         $this->CLOSED = false;
 
         if ($this->ITEM_ID > 0) {
-            $item = items::where('ID', $this->ITEM_ID)->first();
+            $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
                 $this->RATE = $item->COST;
                 $this->ITEM_CODE = $item->CODE;
@@ -113,6 +129,8 @@ class PurchaseOrderFormItems extends Component
                 $this->getAmount();
             }
         }
+
+   
     }
     public function mount()
     {
@@ -120,8 +138,9 @@ class PurchaseOrderFormItems extends Component
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
+       
     }
-    public function saveItem(PurchaseOrderServices $purchaseOrderServices, ComputeServices $computeServices)
+    public function saveItem()
     {
         $this->validate(
             [
@@ -138,15 +157,15 @@ class PurchaseOrderFormItems extends Component
         );
 
         try {
-            $taxRate = (float)Tax::where('ID', $this->TAX_ID)->first()->RATE;
-            $tax_result =  $computeServices->ItemComputeTax($this->AMOUNT, $this->TAXABLE, $this->TAX_ID,$taxRate);
+            $taxRate = $this->taxServices->getRate($this->TAX_ID);
+            $tax_result = $this->computeServices->ItemComputeTax($this->AMOUNT, $this->TAXABLE, $this->TAX_ID, $taxRate);
 
             if ($tax_result) {
                 $this->TAXABLE_AMOUNT = $tax_result['TAXABLE_AMOUNT'];
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
 
-            $purchaseOrderServices->ItemStore(
+            $this->purchaseOrderServices->ItemStore(
                 $this->PO_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
@@ -162,9 +181,9 @@ class PurchaseOrderFormItems extends Component
                 $this->TAX_AMOUNT
             );
 
-            $getResult = $purchaseOrderServices->ReComputed($this->PO_ID);
+            $getResult = $this->purchaseOrderServices->ReComputed($this->PO_ID);
             $this->dispatch('update-amount', result: $getResult);
-            $this->itemList = $purchaseOrderServices->ItemView($this->PO_ID);
+            // $this->itemList = $this->purchaseOrderServices->ItemView($this->PO_ID);
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
@@ -172,14 +191,17 @@ class PurchaseOrderFormItems extends Component
             $this->RATE = 0;
             $this->RATE_TYPE = 0;
             $this->AMOUNT = 0;
-            $this->RECEIVED_QTY  = 0;
+            $this->RECEIVED_QTY = 0;
             $this->CLOSED = false;
             $this->TAXABLE = false;
             $this->TAXABLE_AMOUNT = 0;
             $this->TAX_AMOUNT = 0;
             $this->ITEM_CODE = '';
             $this->ITEM_DESCRIPTION = '';
+           
             $this->saveSuccess = $this->saveSuccess ? false : true;
+            $this->updatedcodeBase();
+
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -190,6 +212,7 @@ class PurchaseOrderFormItems extends Component
     public function updatedlineqty()
     {
         $this->getEditAmount();
+   
     }
     public function updatedlinerate()
     {
@@ -199,7 +222,7 @@ class PurchaseOrderFormItems extends Component
     {
         try {
             if ($this->lineQty) {
-                $qty = $this->lineQty > 0  ? $this->lineQty : 1;
+                $qty = $this->lineQty > 0 ? $this->lineQty : 1;
                 $this->lineAmount = $qty * $this->lineRate;
             } else {
                 $this->lineQty = 1;
@@ -208,7 +231,7 @@ class PurchaseOrderFormItems extends Component
         } catch (\Throwable $th) {
         }
     }
-    public function editItem(int $lineId, float  $lineQty,  int   $lineUnitId, float  $lineRate, float $lineAmount, bool $lineTax, int $itemId)
+    public function editItem(int $lineId, float $lineQty, int $lineUnitId, float $lineRate, float $lineAmount, bool $lineTax, int $itemId)
     {
         $this->editItemId = $lineId;
         $this->lineQty = $lineQty;
@@ -218,18 +241,18 @@ class PurchaseOrderFormItems extends Component
         $this->lineTax = $lineTax;
         $this->lineItemId = $itemId;
     }
-    public function updateItem(int $Id, PurchaseOrderServices $purchaseOrderService, ComputeServices $computeServices)
+    public function updateItem(int $Id)
     {
 
         try {
-            $taxRate = (float)Tax::where('ID', $this->TAX_ID)->first()->RATE;
+            $taxRate = $this->taxServices->getRate($this->TAX_ID);
 
-            $tax_result =  $computeServices->ItemComputeTax($this->lineAmount, $this->lineTax, $this->TAX_ID, $taxRate);
+            $tax_result = $this->computeServices->ItemComputeTax($this->lineAmount, $this->lineTax, $this->TAX_ID, $taxRate);
             if ($tax_result) {
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
-            $purchaseOrderService->ItemUpdate(
+            $this->purchaseOrderServices->ItemUpdate(
                 $Id,
                 $this->PO_ID,
                 $this->lineItemId,
@@ -243,10 +266,9 @@ class PurchaseOrderFormItems extends Component
                 $this->lineTaxAmount
             );
 
-            $getResult = $purchaseOrderService->ReComputed($this->PO_ID);
+            $getResult = $this->purchaseOrderServices->ReComputed($this->PO_ID);
             $this->dispatch('update-amount', result: $getResult);
-
-            $this->itemList = $purchaseOrderService->ItemView($this->PO_ID);
+            $this->itemList = $this->purchaseOrderServices->ItemView($this->PO_ID);
             $this->editItemId = null;
             $this->lineQty = 0;
             $this->lineUnitId = 0;
@@ -254,6 +276,7 @@ class PurchaseOrderFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax = false;
             $this->lineItemId = 0;
+      
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -265,15 +288,15 @@ class PurchaseOrderFormItems extends Component
         $this->editItemId = null;
     }
 
-    public function deleteItem($Id, PurchaseOrderServices $purchaseOrderService)
+    public function deleteItem($Id)
     {
         try {
-            $purchaseOrderService->ItemDelete(
+            $this->purchaseOrderServices->ItemDelete(
                 $Id,
                 $this->PO_ID
             );
 
-            $getResult = $purchaseOrderService->ReComputed($this->PO_ID);
+            $getResult = $this->purchaseOrderServices->ReComputed($this->PO_ID);
             $this->dispatch('update-amount', result: $getResult);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -287,11 +310,17 @@ class PurchaseOrderFormItems extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function render(PurchaseOrderServices $purchaseOrderService, UnitOfMeasureServices $unitOfMeasureServices)
+    public function getReload()
     {
-        $this->editUnitList = $unitOfMeasureServices->ItemUnit($this->lineItemId);
-        $this->unitList = $unitOfMeasureServices->ItemUnit($this->ITEM_ID);
-        $this->itemList = $purchaseOrderService->ItemView($this->PO_ID);
+        $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
+        $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
+        $this->itemList = $this->purchaseOrderServices->ItemView($this->PO_ID);
+    }
+    public function render()
+    {
+
+        $this->getReload();
+
         return view('livewire.purchase-order.purchase-order-form-items');
     }
 }

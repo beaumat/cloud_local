@@ -3,13 +3,27 @@ namespace App\Services;
 
 use App\Models\ShipVia;
 
-class ShipViaServices {
+class ShipViaServices
+{
     private $object;
     public function __construct(ObjectServices $objectService)
     {
         $this->object = $objectService;
     }
+    public function getFirst()
+    {
+        try {
+            return ShipVia::first()->ID;
+        } catch (\Throwable $th) {
+            return 0;
+        }
 
+
+    }
+    public function getList(): object
+    {
+        return ShipVia::all();
+    }
     public function Store(string $CODE, string $DESCRIPTION): int
     {
         $ID = $this->object->ObjectNextID('SHIP_VIA');

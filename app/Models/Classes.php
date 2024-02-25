@@ -5,22 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BillExpenses extends Model
+class Classes extends Model
 {
     use HasFactory;
-    protected $table = 'bill_expenses';
+    protected $table = 'class';
     protected $primaryKey = 'ID';
     public $timestamps = false;
     protected $fillable = [
         'ID',
-        'BILL_ID',
-        'LINE_NO',
-        'ACCOUNT_ID',
-        'AMOUNT',
-        'TAXABLE',
-        'TAXABLE_AMOUNT',
-        'TAX_AMOUNT',
-        'PARTICULARS',
-        'CLASS_ID'
+        'NAME',
+        'INACTIVE'
     ];
 }

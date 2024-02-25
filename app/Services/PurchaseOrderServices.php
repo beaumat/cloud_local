@@ -18,7 +18,10 @@ class PurchaseOrderServices
         $this->compute = $computeServices;
         $this->locationReference = $locationReferenceServices;
     }
-
+    public function get(int $ID): object
+    {
+        return PurchaseOrder::where('ID', $ID)->first();
+    }
     public function Store(
         string $CODE,
         string $DATE,
@@ -112,7 +115,7 @@ class PurchaseOrderServices
         PurchaseOrder::where('ID', $ID)->delete();
     }
 
-    public function Search($search, int $LOCATION_ID)
+    public function Search($search, int $LOCATION_ID): object
     {
         $result = PurchaseOrder::query()
             ->select([
@@ -139,7 +142,9 @@ class PurchaseOrderServices
             ->when($search, function ($query) use (&$search) {
                 $query->where('purchase_order.CODE', 'like', '%' . $search . '%')
                     ->orWhere('purchase_order.AMOUNT', 'like', '%' . $search . '%')
-                    ->orWhere('purchase_order.NOTES', 'like', '%' . $search . '%');
+                    ->orWhere('purchase_order.NOTES', 'like', '%' . $search . '%')
+                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
             })
             ->orderBy('ID', 'desc')
             ->limit($this->object->RecordLimit())
@@ -150,8 +155,8 @@ class PurchaseOrderServices
 
     private function getLine($Id): int
     {
-        $LineID = (int) PurchaseOrderItems::where('PO_ID', $Id)->max('LINE_NO');
-        return $LineID;
+        return (int) PurchaseOrderItems::where('PO_ID', $Id)->max('LINE_NO');
+
     }
     public function ItemStore(int $PO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, float $RECEIVED_QTY, bool $CLOSED, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT): int
     {

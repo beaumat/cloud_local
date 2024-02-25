@@ -13,90 +13,107 @@ class ItemServices
     {
         $this->object = $objectService;
     }
-
-    public function Store(string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE, string $CUSTOM_FIELD1, string $CUSTOM_FIELD2, string $CUSTOM_FIELD3, string $CUSTOM_FIELD4, string $CUSTOM_FIELD5, bool $NON_PORFOLIO_COMPUTATION, bool $BUNDLE_SET, bool $NON_DISCOUNTED_ITEM,   string $PIC_FILENAME, bool $IS_EXPIRED): int
+    public function get($ID): object
+    {
+        return items::where('ID', $ID)->first();
+    }
+    public function getByVendor(bool $isCode)
+    {
+        if ($isCode) {
+            return Items::query()->select(['ID', 'CODE'])->where('INACTIVE', '0')->where('TYPE', 0)->get();
+        }
+        return Items::query()->select(['ID', 'PURCHASE_DESCRIPTION as DESCRIPTION'])->where('INACTIVE', '0')->where('TYPE', 0)->get();
+    }
+    public function getByCustomer(bool $isCode)
+    {
+        if ($isCode) {
+            return Items::query()->select(['ID', 'CODE'])->where('INACTIVE', '0')->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])->get();
+        }
+        return Items::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])->get();
+    }
+    public function Store(string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE, string $CUSTOM_FIELD1, string $CUSTOM_FIELD2, string $CUSTOM_FIELD3, string $CUSTOM_FIELD4, string $CUSTOM_FIELD5, bool $NON_PORFOLIO_COMPUTATION, bool $BUNDLE_SET, bool $NON_DISCOUNTED_ITEM, string $PIC_FILENAME, bool $IS_EXPIRED): int
     {
         $ID = $this->object->ObjectNextID('ITEM');
 
         Items::create([
-            'ID'                => $ID,
-            'CODE'              => $CODE,
-            'DESCRIPTION'       => $DESCRIPTION,
+            'ID' => $ID,
+            'CODE' => $CODE,
+            'DESCRIPTION' => $DESCRIPTION,
             'PURCHASE_DESCRIPTION' => $PURCHASE_DESCRIPTION,
-            'GROUP_ID'          => $GROUP_ID > 0 ? $GROUP_ID : null,
-            'SUB_CLASS_ID'      => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
-            'TYPE'              => $TYPE,
-            'STOCK_TYPE'        => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
-            'GL_ACCOUNT_ID'     => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
-            'COGS_ACCOUNT_ID'   => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
-            'ASSET_ACCOUNT_ID'  => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-            'TAXABLE'           => $TAXABLE,
+            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'SUB_CLASS_ID' => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
+            'TYPE' => $TYPE,
+            'STOCK_TYPE' => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
+            'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
+            'COGS_ACCOUNT_ID' => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
+            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'TAXABLE' => $TAXABLE,
             'PREFERRED_VENDOR_ID' => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
-            'MANUFACTURER_ID'   => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
-            'RATE'              => $RATE,
-            'COST'              => $COST > 0 ? $COST : null,
-            'RATE_TYPE'         => $RATE_TYPE,
+            'MANUFACTURER_ID' => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
+            'RATE' => $RATE,
+            'COST' => $COST > 0 ? $COST : null,
+            'RATE_TYPE' => $RATE_TYPE,
             'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'NOTES'             => $NOTES,
-            'BASE_UNIT_ID'      => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
+            'NOTES' => $NOTES,
+            'BASE_UNIT_ID' => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
             'PURCHASES_UNIT_ID' => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
-            'SHIPPING_UNIT_ID'  => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
-            'SALES_UNIT_ID'     => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
+            'SHIPPING_UNIT_ID' => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
+            'SALES_UNIT_ID' => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
             'PRINT_INDIVIDUAL_ITEMS' => $PRINT_INDIVIDUAL_ITEMS,
-            'INACTIVE'          => $INACTIVE,
-            'CUSTOM_FIELD1'     => $CUSTOM_FIELD1,
-            'CUSTOM_FIELD2'     => $CUSTOM_FIELD2,
-            'CUSTOM_FIELD3'     => $CUSTOM_FIELD3,
-            'CUSTOM_FIELD4'     => $CUSTOM_FIELD4,
-            'CUSTOM_FIELD5'     => $CUSTOM_FIELD5,
+            'INACTIVE' => $INACTIVE,
+            'CUSTOM_FIELD1' => $CUSTOM_FIELD1,
+            'CUSTOM_FIELD2' => $CUSTOM_FIELD2,
+            'CUSTOM_FIELD3' => $CUSTOM_FIELD3,
+            'CUSTOM_FIELD4' => $CUSTOM_FIELD4,
+            'CUSTOM_FIELD5' => $CUSTOM_FIELD5,
             'NON_PORFOLIO_COMPUTATION' => $NON_PORFOLIO_COMPUTATION,
-            'BUNDLE_SET'        => $BUNDLE_SET,
+            'BUNDLE_SET' => $BUNDLE_SET,
             'NON_DISCOUNTED_ITEM' => $NON_DISCOUNTED_ITEM,
-            'PIC_FILENAME'      => $PIC_FILENAME,
-            'IS_EXPIRED'        => $IS_EXPIRED
+            'PIC_FILENAME' => $PIC_FILENAME,
+            'IS_EXPIRED' => $IS_EXPIRED
         ]);
 
         return $ID;
     }
 
-    public function Update(int $ID, string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE, string $CUSTOM_FIELD1, string $CUSTOM_FIELD2, string $CUSTOM_FIELD3, string $CUSTOM_FIELD4, string $CUSTOM_FIELD5, bool $NON_PORFOLIO_COMPUTATION, bool $BUNDLE_SET, bool $NON_DISCOUNTED_ITEM,   string $PIC_FILENAME, bool $IS_EXPIRED): void
+    public function Update(int $ID, string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE, string $CUSTOM_FIELD1, string $CUSTOM_FIELD2, string $CUSTOM_FIELD3, string $CUSTOM_FIELD4, string $CUSTOM_FIELD5, bool $NON_PORFOLIO_COMPUTATION, bool $BUNDLE_SET, bool $NON_DISCOUNTED_ITEM, string $PIC_FILENAME, bool $IS_EXPIRED): void
     {
 
         Items::where('ID', $ID)->update([
-            'CODE'              => $CODE,
-            'DESCRIPTION'       => $DESCRIPTION,
+            'CODE' => $CODE,
+            'DESCRIPTION' => $DESCRIPTION,
             'PURCHASE_DESCRIPTION' => $PURCHASE_DESCRIPTION,
-            'GROUP_ID'          => $GROUP_ID > 0 ? $GROUP_ID : null,
-            'SUB_CLASS_ID'      => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
-            'TYPE'              => $TYPE,
-            'STOCK_TYPE'        => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
-            'GL_ACCOUNT_ID'     => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
-            'COGS_ACCOUNT_ID'   => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
-            'ASSET_ACCOUNT_ID'  => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-            'TAXABLE'           => $TAXABLE,
+            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'SUB_CLASS_ID' => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
+            'TYPE' => $TYPE,
+            'STOCK_TYPE' => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
+            'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
+            'COGS_ACCOUNT_ID' => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
+            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'TAXABLE' => $TAXABLE,
             'PREFERRED_VENDOR_ID' => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
-            'MANUFACTURER_ID'   => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
-            'RATE'              => $RATE,
-            'COST'              => $COST > 0 ? $COST : null,
-            'RATE_TYPE'         => $RATE_TYPE,
+            'MANUFACTURER_ID' => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
+            'RATE' => $RATE,
+            'COST' => $COST > 0 ? $COST : null,
+            'RATE_TYPE' => $RATE_TYPE,
             'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'NOTES'             => $NOTES,
-            'BASE_UNIT_ID'      => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
+            'NOTES' => $NOTES,
+            'BASE_UNIT_ID' => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
             'PURCHASES_UNIT_ID' => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
-            'SHIPPING_UNIT_ID'  => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
-            'SALES_UNIT_ID'     => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
+            'SHIPPING_UNIT_ID' => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
+            'SALES_UNIT_ID' => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
             'PRINT_INDIVIDUAL_ITEMS' => $PRINT_INDIVIDUAL_ITEMS,
-            'INACTIVE'          => $INACTIVE,
-            'CUSTOM_FIELD1'     => $CUSTOM_FIELD1,
-            'CUSTOM_FIELD2'     => $CUSTOM_FIELD2,
-            'CUSTOM_FIELD3'     => $CUSTOM_FIELD3,
-            'CUSTOM_FIELD4'     => $CUSTOM_FIELD4,
-            'CUSTOM_FIELD5'     => $CUSTOM_FIELD5,
+            'INACTIVE' => $INACTIVE,
+            'CUSTOM_FIELD1' => $CUSTOM_FIELD1,
+            'CUSTOM_FIELD2' => $CUSTOM_FIELD2,
+            'CUSTOM_FIELD3' => $CUSTOM_FIELD3,
+            'CUSTOM_FIELD4' => $CUSTOM_FIELD4,
+            'CUSTOM_FIELD5' => $CUSTOM_FIELD5,
             'NON_PORFOLIO_COMPUTATION' => $NON_PORFOLIO_COMPUTATION,
-            'BUNDLE_SET'        => $BUNDLE_SET,
+            'BUNDLE_SET' => $BUNDLE_SET,
             'NON_DISCOUNTED_ITEM' => $NON_DISCOUNTED_ITEM,
-            'PIC_FILENAME'      => $PIC_FILENAME,
-            'IS_EXPIRED'        => $IS_EXPIRED
+            'PIC_FILENAME' => $PIC_FILENAME,
+            'IS_EXPIRED' => $IS_EXPIRED
         ]);
     }
 

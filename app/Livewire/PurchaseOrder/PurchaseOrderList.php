@@ -2,49 +2,55 @@
 
 namespace App\Livewire\PurchaseOrder;
 
-use App\Models\Locations;
-use App\Services\PurchaseOrderServices;
-use Illuminate\Support\Facades\Auth;
+use App\Services\LocationServices;
+use App\Services\UserServices;
+use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
-use Livewire\Component;
+use App\Services\PurchaseOrderServices;
 
 #[Title('Purchase Order')]
 class PurchaseOrderList extends Component
 {
-    public $poList = [];
+    public $dataList = [];
     public $search = '';
     public int $locationid;
     public $locationList = [];
+    private $purchaseOrderServices;
+    private $locationServices;
+    private $userServices;
+    public function boot(PurchaseOrderServices $purchaseOrderServices, LocationServices $locationServices, UserServices $userServices)
+    {
+        $this->purchaseOrderServices = $purchaseOrderServices;
+        $this->locationServices = $locationServices;
+        $this->userServices = $userServices;
+    }
+    public function updatedlocationid()
+    {
+        $this->dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid);
+    }
+    public function updatedsearch()
+    {
+        $this->dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid);
+    }
 
-    public function updatedlocationid(PurchaseOrderServices $purchaseOrderServices)
+    public function mount()
     {
-        $this->poList = $purchaseOrderServices->Search($this->search, $this->locationid);
+        $this->locationList = $this->locationServices->getList();
+        $this->locationid = $this->userServices->getLocationDefault();
+        $this->dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid);
     }
-    public function updatedsearch(PurchaseOrderServices $purchaseOrderServices)
-    {
-        $this->poList = $purchaseOrderServices->Search($this->search, $this->locationid);
-    }
-    public function delete($id, PurchaseOrderServices $purchaseOrderServices)
+    public function delete($id)
     {
         try {
-            $purchaseOrderServices->Delete($id);
+            $this->purchaseOrderServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->poList = $purchaseOrderServices->Search($this->search, $this->locationid);
+            $this->dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
-    public function mount(PurchaseOrderServices $purchaseOrderServices)
-    {
-
-        $this->locationList = Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
-        $this->locationid =  Auth::user()->location_id ?? 0;
-        $this->poList = $purchaseOrderServices->Search($this->search, $this->locationid);
-    }
-
-
 
     #[On('clear-alert')]
     public function clearAlert()

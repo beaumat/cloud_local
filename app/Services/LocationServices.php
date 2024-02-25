@@ -11,7 +11,10 @@ class LocationServices
     {
         $this->object = $objectService;
     }
-
+    public function getList(): object
+    {
+        return Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
+    }
     public function Store(string $CODE, string $NAME, bool $INACTIVE, int $PRICE_LEVEL_ID, int $GROUP_ID): int
     {
         $ID = $this->object->ObjectNextID('LOCATION');
