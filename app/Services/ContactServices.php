@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Contacts;
+use Carbon\Carbon;
 
 class ContactServices
 {
@@ -15,6 +16,16 @@ class ContactServices
     public function getList(int $Type): object
     {
         return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();
+    }
+    public function calculateUserAge($dateString)
+    {
+        try {
+            $date = Carbon::parse($dateString);
+            return $date->age;
+        } catch (\Exception $e) {
+            // Handle invalid date string or other errors
+            return null;
+        }
     }
     public function Store(
         int $TYPE,
@@ -54,7 +65,30 @@ class ContactServices
     ): int {
 
 
-        $ID = $this->object->ObjectNextID('CONTACT');
+
+
+        $OBJECT_TYPE = 0;
+        switch ($TYPE) {
+            case 0:
+                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Vendor');
+                break;
+            case 1:
+                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Customer');
+                break;
+            case 2:
+                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Employee');
+                break;
+            case 3:
+                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Tax Agency');
+                break;
+            default:
+                # code...
+                dd("type not found");
+                break;
+        }
+
+        $ID = $this->object->ObjectNextIdByName('Contact');
+
         Contacts::create([
             "ID" => $ID,
             "TYPE" => $TYPE,
@@ -73,7 +107,7 @@ class ContactServices
             "ALT_TELEPHONE_NO" => $ALT_TELEPHONE_NO,
             "ALT_CONTACT_PERSON" => $ALT_CONTACT_PERSON,
             "EMAIL" => $EMAIL,
-            "ACCOUNT_NO" => $ACCOUNT_NO,
+            "ACCOUNT_NO" => $ACCOUNT_NO != '' ? $ACCOUNT_NO : $this->object->GetSequence($OBJECT_TYPE, NULL),
             "INACTIVE" => $INACTIVE,
             "GROUP_ID" => $GROUP_ID > 0 ? $GROUP_ID : null,
             "PAYMENT_TERMS_ID" => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,
@@ -97,13 +131,7 @@ class ContactServices
             "CUSTOM_FIELD3" => null,
             "CUSTOM_FIELD4" => null,
             "CUSTOM_FIELD5" => null,
-            "OTHER_CONTACT_ID" => null,
-            "SALES_TARGET" => null,
-            "DISCOUNT" => null,
-            "FIXED_PENALTY" => null,
-            "RUNNING_PENALTY" => null,
-            "LESS_DISCOUNT_PENALTY_ACTIVE" => null,
-            "REFERRAL_ID" => null
+
 
         ]);
 
@@ -188,13 +216,7 @@ class ContactServices
             "CUSTOM_FIELD3" => null,
             "CUSTOM_FIELD4" => null,
             "CUSTOM_FIELD5" => null,
-            "OTHER_CONTACT_ID" => null,
-            "SALES_TARGET" => null,
-            "DISCOUNT" => null,
-            "FIXED_PENALTY" => null,
-            "RUNNING_PENALTY" => null,
-            "LESS_DISCOUNT_PENALTY_ACTIVE" => null,
-            "REFERRAL_ID" => null
+
         ]);
     }
 

@@ -74,13 +74,12 @@ class AccountServices
                     'account.TAG',
                     'account.LINE_NO',
                     'account_type_map.DESCRIPTION as ACCOUNT_TYPE',
-                    'g.NAME as GROUP_ACCOUNT',
-                    'c.NAME as CLASS_NAME'
+                    'g.NAME as GROUP_ACCOUNT'
+               
                 ]
             )
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
             ->leftJoin('account as g', 'g.ID', '=', 'account.GROUP_ACCOUNT_ID')
-            ->leftJoin('class as c','c.ID','=','account.CLASS_ID')
             ->when($search, function ($query) use (&$search) {
                 $query->where('account.NAME', 'like', '%' . $search . '%')
                 ->orWhere('account.TAG', 'like', '%' . $search . '%');

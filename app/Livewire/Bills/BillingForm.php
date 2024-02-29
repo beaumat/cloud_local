@@ -263,10 +263,7 @@ class BillingForm extends Component
                 session()->flash('message', 'Successfully updated');
             }
 
-            // $BILL = $this->billingServices->get($this->ID);
-            // if ($BILL) {
-            //     $this->getInfo($BILL);
-            // }
+        
             $this->Modify = false;
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();

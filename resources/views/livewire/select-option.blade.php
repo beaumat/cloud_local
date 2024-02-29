@@ -11,11 +11,9 @@
                     @if ($isDisabled) disabled @endif>
                     @if ($zero)
                         <option value="0">
-                            @if ($withLabel)
-                                Choose {{ Str::lower($titleName) }}
-                            @else
-                                &nbsp;
-                            @endif
+
+                            &nbsp;
+
                         </option>
                     @endif
                     @foreach ($options as $option)
@@ -43,11 +41,9 @@
             @if ($isDisabled) disabled @endif>
             @if ($zero)
                 <option value="0">
-                    @if ($withLabel)
-                        Choose {{ Str::lower($titleName) }}
-                    @else
-                        &nbsp;
-                    @endif
+
+                    &nbsp;
+
                 </option>
             @endif
             @foreach ($options as $option)

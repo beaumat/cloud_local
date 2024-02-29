@@ -89,11 +89,6 @@
                                                         <div class="card-body">
                                                             <div class="form-group">
                                                                 <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <livewire:text-input name="CODE"
-                                                                            titleName="Code" wire:model='CODE'
-                                                                            :vertical="true" :withLabel="true" />
-                                                                    </div>
                                                                     <div class="col-md-6"
                                                                         @if ($ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                                         <livewire:select-option name="TYPE"
@@ -101,6 +96,12 @@
                                                                             :zero="false" wire:model.live='TYPE'
                                                                             :vertical="true" />
                                                                     </div>
+                                                                    <div class="col-md-6">
+                                                                        <livewire:text-input name="CODE"
+                                                                            titleName="Code" wire:model='CODE'
+                                                                            :vertical="true" :withLabel="true" />
+                                                                    </div>
+
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-md-6">
@@ -464,5 +465,3 @@
         </div>
     </section>
 </div>
-
-

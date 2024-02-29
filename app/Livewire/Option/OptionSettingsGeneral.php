@@ -21,6 +21,12 @@ class OptionSettingsGeneral extends Component
     public bool $LockDefaultLocation = false;
     public bool $IncRefNoByLocation = false;
 
+    private $systemSettingServices;
+    public function boot(SystemSettingServices $systemSettingServices)
+    {
+        $this->systemSettingServices = $systemSettingServices;
+    }
+
     public function mount()
     {
         $this->locationList = Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', 0)->get();
@@ -38,7 +44,9 @@ class OptionSettingsGeneral extends Component
                 return $list->VALUE;
             }
         }
+        $this->systemSettingServices->NewValue($name);
         dd("record not found : " . $name);
+        return '';
     }
     public function save()
     {

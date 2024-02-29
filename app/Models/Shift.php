@@ -5,20 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ObjectTypeMap extends Model
+class Shift extends Model
 {
     use HasFactory;
-
-    protected $table = 'object_type_map';
+    protected $table = 'shift';
     protected $primaryKey = 'ID';
     public $timestamps = false;
     protected $fillable = [
+        'ID',
         'NAME',
-        'TABLE_NAME',
-        'IS_DOCUMENT',
-        'DOCUMENT_TYPE',
-        'NEXT_ID',
-        'INCREMENT'
-
+        'LINE_NO'
     ];
 }

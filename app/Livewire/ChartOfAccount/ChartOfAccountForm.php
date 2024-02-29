@@ -23,6 +23,12 @@ class ChartOfAccountForm extends Component
     public int $LINE_NO;
     public $accountTypes = [];
     public $accountGroups = [];
+
+    private $accountServices;
+    public function boot(AccountServices $accountServices)
+    {
+        $this->accountServices = $accountServices;
+    }
     public function mount($id = null)
     {
         $this->accountTypes = AccountType::all();
@@ -58,7 +64,7 @@ class ChartOfAccountForm extends Component
         $this->TAG = '';
         $this->LINE_NO = 0;
     }
-    public function save(AccountServices $accountServices)
+    public function save()
     {
         $this->validate(
             [
@@ -74,10 +80,27 @@ class ChartOfAccountForm extends Component
 
         try {
             if ($this->ID === 0) {
-                $this->ID = $accountServices->Store($this->NAME,  $this->GROUP_ACCOUNT_ID, $this->TYPE, $this->BANK_ACCOUNT_NO, $this->INACTIVE, $this->TAG, $this->LINE_NO);
+                $this->ID = $this->accountServices->Store(
+                    $this->NAME,
+                    $this->GROUP_ACCOUNT_ID,
+                    $this->TYPE,
+                    $this->BANK_ACCOUNT_NO,
+                    $this->INACTIVE,
+                    $this->TAG,
+                    $this->LINE_NO
+                );
                 session()->flash('message', 'Successfully created');
             } else {
-                $accountServices->Update($this->ID, $this->NAME, $this->GROUP_ACCOUNT_ID, $this->TYPE, $this->BANK_ACCOUNT_NO, $this->INACTIVE, $this->TAG, $this->LINE_NO);
+                $this->accountServices->Update(
+                    $this->ID,
+                    $this->NAME,
+                    $this->GROUP_ACCOUNT_ID,
+                    $this->TYPE,
+                    $this->BANK_ACCOUNT_NO,
+                    $this->INACTIVE,
+                    $this->TAG,
+                    $this->LINE_NO
+                );
                 session()->flash('message', 'Successfully updated');
             }
         } catch (\Exception $e) {

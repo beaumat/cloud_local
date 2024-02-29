@@ -13,26 +13,30 @@ class PatientList extends Component
 
     public $contacts = [];
     public $search = '';
-    public function updatedsearch(ContactServices $contactServices)
+    private $contactServices;
+    public function boot(ContactServices $contactServices)
     {
-        $this->contacts = $contactServices->Search($this->search,3);
+        $this->contactServices = $contactServices;
     }
-    public function delete($id, ContactServices $contactServices)
+    public function updatedsearch()
+    {
+        $this->contacts = $this->contactServices->Search($this->search,3);
+    }
+    public function delete($id)
     {
         try {
-            $contactServices->Delete($id);
+            $this->contactServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->contacts = $contactServices->Search($this->search,3);
+            $this->contacts = $this->contactServices->Search($this->search,3);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
-    public function mount(ContactServices $contactServices)
+    public function mount()
     {
-        $this->contacts = $contactServices->Search($this->search,3);
+        $this->contacts = $this->contactServices->Search($this->search,3);
     }
-
     #[On('clear-alert')]
     public function clearAlert()
     {

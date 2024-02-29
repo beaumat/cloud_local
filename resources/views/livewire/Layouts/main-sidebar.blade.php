@@ -1,4 +1,4 @@
-<aside class="main-sidebar  sidebar-light-primary elevation-4">
+<aside class="main-sidebar  sidebar-light-primary elevation-4 text-xs">
     <!-- Brand Logo -->
     <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="" class="brand-image img-circle elevation-3"
@@ -6,33 +6,9 @@
         <span class="brand-text font-weight-light"><b>X</b>ONE</span>
     </a>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        <div class="pb-3 mt-3 mb-3 user-panel d-flex">
-            <div class="image">
-                <img src="{{ asset('dist/img/user2.jpg') }}" class="img-circle text-sm elevation-2" alt="User Image">
-            </div>
-            <div class="info text-sm">
-                <a href="#" class="d-block">{{ auth()->user()->name }}</a>
-            </div>
-        </div>
 
-        <!-- SidebarSearch Form -->
-        <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                    aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-sidebar">
-                        <i class="fas fa-search fa-fw"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sidebar Menu -->
-        <nav class="mt-1 text-xs">
+        <nav class="mt-1">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
 
@@ -483,6 +459,7 @@
                         </li>
                     </ul>
                 </li>
+
                 <li class="nav-item {{ request()->is('maintenance*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('maintenance*') ? 'active ' : '' }}">
                         <i class="nav-icon fa fa-cog"></i>
@@ -670,7 +647,25 @@
 
                             </ul>
                         </li>
-
+                        <li class="nav-item {{ request()->is('maintenance/others*') ? 'menu-open' : '' }}">
+                            <a href="#"
+                                class="nav-link {{ request()->is('maintenance/others*') ? 'active text-primary' : '' }}">
+                                <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
+                                <p>
+                                    Others
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('maintenanceothersshift') }}"
+                                        class="nav-link {{ request()->is('maintenance/others/shift*') ? 'active' : '' }}">
+                                        <i class="fa fa-file nav-icon"></i>
+                                        <p>Shift</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item {{ request()->is('maintenance/settings*') ? 'menu-open' : '' }}">
                             <a href="#"
                                 class="nav-link {{ request()->is('maintenance/settings*') ? 'active text-primary' : '' }}">
@@ -726,6 +721,7 @@
                         </li>
                     </ul>
                 </li>
+
             </ul>
         </nav>
 

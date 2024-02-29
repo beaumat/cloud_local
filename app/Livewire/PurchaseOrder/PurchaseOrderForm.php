@@ -106,7 +106,7 @@ class PurchaseOrderForm extends Component
         $this->SHIP_VIA_ID = $PO->SHIP_VIA_ID ? $PO->SHIP_VIA_ID : 0;
         $this->PAYMENT_TERMS_ID = $PO->PAYMENT_TERMS_ID ? $PO->PAYMENT_TERMS_ID : 0;
         $this->CLASS_ID = $PO->CLASS_ID ? $PO->CLASS_ID : 0;
-        $this->NOTES = $PO->NOTES;
+        $this->NOTES = $PO->NOTES ?? '';
         $this->AMOUNT = $PO->AMOUNT;
         $this->STATUS = $PO->STATUS;
         $this->INPUT_TAX_ID = $PO->INPUT_TAX_ID ? $PO->INPUT_TAX_ID : 0;

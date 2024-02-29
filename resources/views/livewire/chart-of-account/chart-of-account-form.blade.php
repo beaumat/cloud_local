@@ -44,7 +44,7 @@
                                                 wire:model.live='GROUP_ACCOUNT_ID' :key="$accountGroups->pluck('ID')->join('_')"/>
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:text-input name="BANK_ACCOUNT_NO" titleName="Back Account No." wire:model='BANK_ACCOUNT_NO'/>
+                                            <livewire:text-input name="BANK_ACCOUNT_NO" titleName="Bank Account No." wire:model='BANK_ACCOUNT_NO'/>
                                         </div>
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="INACTIVE" titleName="Inactive"

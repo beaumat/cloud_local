@@ -1,4 +1,4 @@
-<nav class="main-header navbar navbar-expand navbar-light">
+<nav class="main-header navbar navbar-expand navbar-light text-sm">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -15,11 +15,9 @@
                 <li><a href="#" class="dropdown-item">Petients </a></li>
                 <li><a href="#" class="dropdown-item">Suppliers</a></li>
                 <li><a href="#" class="dropdown-item">Doctors</a></li>
-
-                <!-- End Level two -->
             </ul>
         </li>
-       
+
 
     </ul>
 
@@ -136,16 +134,24 @@
                 <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a> --}}
             </div>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                <i class="fas fa-expand-arrows-alt"></i>
-            </a>
+        <li class="nav-item dropdown">
+            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                class="nav-link dropdown-toggle text-sm"><i class="fa fa-user-circle" aria-hidden="true"></i>
+                {{ auth()->user()->name }}</a>
+            <ul aria-labelledby="dropdownSubMenu1" class="border-0 shadow dropdown-menu">
+            
+                <li>  <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                    <i class="fas fa-expand-arrows-alt"></i> Fullscreen
+    
+                </a></li>
+                <li> <a class="nav-link" wire:click="logout" title="exit" data-slide="true" href="#"
+                        role="button" wire:confirm="Are you sure you want to logout?">
+                        <i class="fa fa-sign-out"></i> Logout
+                    </a>
+                </li>
+            </ul>
+
         </li>
-        <li class="nav-item">
-            <a class="nav-link" wire:click="logout" title="exit" data-slide="true" href="#" role="button"
-                wire:confirm="Are you sure you want to logout?">
-                <i class="fa fa-sign-out"></i>
-            </a>
-        </li>
+
     </ul>
 </nav>

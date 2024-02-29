@@ -20,11 +20,13 @@ class OptionSettingsInventory extends Component
     public int $DefaultItemStockType;
     public bool $DefaultItemTaxable;
     public int $SafetyStockPctLevel;
-
     public bool $ShowBatchNo, $ShowExpiryDate, $ShowLastPurchaseInfo, $ShowQtyOnSO, $ShowStockBin, $ShowUnitCost;
-
     public bool $AllowZeroOnHand, $LockQtyNeededInBuildAssembly, $SkipInventoryEntry;
-
+    private $systemSettingServices;
+    public function boot(SystemSettingServices $systemSettingServices)
+    {   
+        $this->systemSettingServices = $systemSettingServices;
+    }
     public function mount()
     {
         $this->stockTypeList = StockType::all();
@@ -101,7 +103,9 @@ class OptionSettingsInventory extends Component
                 return $list->VALUE;
             }
         }
+        $this->systemSettingServices->NewValue($name);
         dd("record not found : " . $name);
+        return '';
     }
     public function saveOn($name, $value)
     {

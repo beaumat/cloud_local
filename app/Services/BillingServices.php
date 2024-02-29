@@ -42,12 +42,12 @@ class BillingServices
     ): int {
 
         $ID = (int) $this->object->ObjectNextID('BILL');
-
+        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL');
         Bill::create([
             'ID' => $ID,
             'RECORDED_ON' => Carbon::now(),
             'DATE' => $DATE,
-            'CODE' => $CODE !== '' ? $CODE : $this->locationReference->NextReference($LOCATION_ID, 'BILL', 'BL'),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, NULL),
             'VENDOR_ID' => $VENDOR_ID,
             'LOCATION_ID' => $LOCATION_ID,
             'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : 0,
@@ -87,7 +87,7 @@ class BillingServices
         int $INPUT_TAX_ACCOUNT_ID
     ) {
 
-    
+
         Bill::where('ID', $ID)->update([
             'CODE' => $CODE,
             'VENDOR_ID' => $VENDOR_ID,
@@ -185,7 +185,7 @@ class BillingServices
             'ITEM_ID' => $ITEM_ID,
             'DESCRIPTION' => null,
             'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
             'RATE' => $RATE,
             'RATE_TYPE' => $RATE_TYPE,
@@ -215,7 +215,7 @@ class BillingServices
 
         BillItems::where('ID', $ID)->where('BILL_ID', $BILL_ID)->where('ITEM_ID', $ITEM_ID)->update([
             'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
             'RATE' => $RATE,
             'AMOUNT' => $AMOUNT,
@@ -282,7 +282,7 @@ class BillingServices
     public function ExpenseUpdate(
         int $ID,
         int $BILL_ID,
- 
+
         float $AMOUNT,
         bool $TAXABLE,
         float $TAXABLE_AMOUNT,

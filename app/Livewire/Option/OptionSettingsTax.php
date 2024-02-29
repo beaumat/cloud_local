@@ -18,6 +18,11 @@ class OptionSettingsTax extends Component
     public int $OutputTaxId;
     public int $InputTaxId;
     public $taxList = [];
+    private $systemSettingServices;
+    public function boot(SystemSettingServices $systemSettingServices)
+    {
+        $this->systemSettingServices = $systemSettingServices;
+    }
     public function mount()
     {
         $this->taxList = Tax::query()->select(['ID', 'NAME'])->where('TAX_TYPE', 3)->get();
@@ -29,13 +34,13 @@ class OptionSettingsTax extends Component
     {
 
         if ($this->CompanyTin != $this->returnArray('CompanyTin')) {
-            $this->saveOn("CompanyTin",$this->CompanyTin);
+            $this->saveOn("CompanyTin", $this->CompanyTin);
         }
         if ($this->OutputTaxId != (int) $this->returnArray('OutputTaxId')) {
-            $this->saveOn("OutputTaxId",$this->OutputTaxId);
+            $this->saveOn("OutputTaxId", $this->OutputTaxId);
         }
         if ($this->InputTaxId != (int) $this->returnArray('InputTaxId')) {
-            $this->saveOn("InputTaxId",$this->InputTaxId);
+            $this->saveOn("InputTaxId", $this->InputTaxId);
         }
 
         $this->dispatch('resetValue');
@@ -48,7 +53,10 @@ class OptionSettingsTax extends Component
                 return $list->VALUE;
             }
         }
+     
+        $this->systemSettingServices->NewValue($name);
         dd("record not found : " . $name);
+        return '';
     }
     public function saveOn($name, $value)
     {

@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}"> Patients </a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}"> Patients Profile</a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -28,13 +28,14 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' />
+                                            <livewire:text-input name="NAME" titleName="Patients Name"
+                                                wire:model='NAME' :isDisabled='true' />
                                         </div>
-                                        <div class="col-md-4">
-                                            <livewire:text-input name="ACCOUNT_NO" titleName="Account No."
+                                        <div class="col-md-2">
+                                            <livewire:text-input name="ACCOUNT_NO" titleName="Profile No."
                                                 wire:model='ACCOUNT_NO' />
                                         </div>
-                                        <div class="col-nd-2">
+                                        <div class="col-md-2">
                                             <div class="row">
                                                 <div class="col-md-12"><br /></div>
                                                 <div class="col-md-12 text-right">
@@ -85,54 +86,83 @@
                                                 aria-labelledby="custom-content-below-general-info-tab">
                                                 <div class="container-fluid">
                                                     <div class="row">
-                                                        <div class="col-md-12">
-                                                            <livewire:text-input name="NAME" titleName="Company Name"
-                                                                wire:model='COMPANY_NAME' />
-                                                        </div>
-                                                        <div class="col-md-2">
 
-                                                            <div class="mt-2">
-                                                                <label for="title" class="text-sm">Title</label>
-                                                                <select wire:model='SALUTATION'
-                                                                    class="form-control form-control-sm"
-                                                                    name="SALUTATION">
-                                                                    <option value=""></option>
-                                                                    <option value="Dr">Dr</option>
-                                                                    <option value="Miss">Miss</option>
-                                                                    <option value="Mr.">Mr.</option>
-                                                                    <option value="Mr.">Ms.</option>
-                                                                    <option value="Mr.">Prof</option>
-                                                                </select>
-                                                            </div>
-
-                                                        </div>
                                                         <div class="col-md-4">
                                                             <livewire:text-input name="FIRST_NAME"
-                                                                titleName="First Name" wire:model='FIRST_NAME' />
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <livewire:text-input name="MIDDLE_NAME" titleName="M.I"
-                                                                wire:model='MIDDLE_NAME' />
+                                                                titleName="First Name" wire:model.live='FIRST_NAME' />
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <livewire:text-input name="LAST_NAME"
-                                                                titleName="Last Name" wire:model='LAST_NAME' />
+                                                            <livewire:text-input name="LAST_NAME" titleName="Last Name"
+                                                                wire:model.live='LAST_NAME' />
                                                         </div>
-                                                        <div class="col-md-12">
-                                                            <livewire:text-input name="PRINT_NAME_AS"
-                                                                titleName="Print As" wire:model='PRINT_NAME_AS' />
+                                                        <div class="col-md-4">
+                                                            <livewire:text-input name="MIDDLE_NAME"
+                                                                titleName="Middle Name" wire:model.live='MIDDLE_NAME' />
                                                         </div>
+
                                                         <div class="col-md-12">
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-4">
+                                                                                    <div class="form-group mt-2">
+                                                                                        <label>Gender</label>
+                                                                                        <div class="form-check">
+
+                                                                                            <label
+                                                                                                class="form-check-label">
+                                                                                                <input
+                                                                                                    class="form-check-input"
+                                                                                                    type="radio"
+                                                                                                    wire:model="GENDER"
+                                                                                                    value="0" />
+                                                                                                Male
+                                                                                            </label>
+                                                                                        </div>
+
+                                                                                        <div class="form-check">
+
+                                                                                            <label
+                                                                                                class="form-check-label">
+                                                                                                <input
+                                                                                                    class="form-check-input"
+                                                                                                    type="radio"
+                                                                                                    wire:model="GENDER"
+                                                                                                    value="1" />
+                                                                                                Female
+                                                                                            </label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <livewire:date-input
+                                                                                        name="DATE_OF_BIRTH"
+                                                                                        titleName="Date of Birth"
+                                                                                        wire:model.live='DATE_OF_BIRTH' />
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <div class="form-group mt-2">
+                                                                                        <label
+                                                                                            class=" col-form-label ">Age</label>
+                                                                                        <div class="row">
+                                                                                            <label
+                                                                                                class="col-12 form-check-label">{{ $age }}</label>
+                                                                                        </div>
+
+
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                         <div class="col-md-12">
                                                                             <div class="mt-2">
                                                                                 <label for="postal-address"
                                                                                     class="text-sm">Postal
                                                                                     Address</label>
                                                                                 <textarea type="text" autocomplete="off" wire:model='POSTAL_ADDRESS' class="text-sm form-control form-control-sm"
-                                                                                    id="pos_tal_address" rows="7"></textarea>
+                                                                                    id="pos_tal_address" rows="3"></textarea>
                                                                             </div>
 
                                                                         </div>
@@ -146,6 +176,13 @@
                                                                 <div class="col-md-6">
                                                                     <div class="row">
                                                                         <div class="col-md-12">
+                                                                            <livewire:text-input name="TAXPAYER_ID"
+                                                                                titleName="PhilHealth ID Number"
+                                                                                wire:model='TAXPAYER_ID' />
+
+                                                                        </div>
+                                                                        <div class="col-md-12">
+
                                                                             <livewire:text-input name="CONTACT_PERSON"
                                                                                 titleName="Contact Person"
                                                                                 wire:model='CONTACT_PERSON' />
@@ -155,12 +192,7 @@
                                                                                 titleName="Telephone Number"
                                                                                 wire:model='TELEPHONE_NO' />
                                                                         </div>
-                                                                        <div class="col-md-12">
-                                                                            <livewire:text-input name="FAX_NO"
-                                                                                titleName="Fax Number"
-                                                                                wire:model='FAX_NO' />
 
-                                                                        </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="MOBILE_NO"
                                                                                 titleName="Mobile Number"
@@ -181,11 +213,9 @@
                                                 aria-labelledby="custom-content-below-tax-info-tab">
                                                 <div class="container-fluid">
                                                     <div class="row">
-                                                        <div class="col-md-3">
-                                                            <livewire:text-input name="TAXPAYER_ID"
-                                                                titleName="Taxpayer ID No."
-                                                                wire:model='TAXPAYER_ID' />
-                                                        </div>
+                                                        {{-- <div class="col-md-3">
+
+                                                        </div> --}}
                                                         <div class="col-md-4">
                                                             <livewire:select-option name="TAX_ID" :options="$taxList"
                                                                 :zero="true" titleName="Output Tax"

@@ -3,17 +3,19 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}"> Patients </a></h5>
-                </div>
+                    <h5 class="m-0"><a href="{{ route('maintenanceothersshift') }}"> Shift </a>
+                    </h5>
+                </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
                         </li>
                     </ol>
-                </div>
-            </div>
-        </div>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
+    <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -24,45 +26,29 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <input type="text" wire:model.live.debounce.150ms='search'
-                                        class="w-100 form-control form-control-sm" placeholder="Search" />
+                                        class="w-100 form-control form-control-sm mt-1 mb-1" placeholder="Search" />
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-sm bg-sky">
                                     <tr>
-                                        <th class="col-1">No.</th>
-                                        <th class="col-3">Name</th>
-                                        <th class="col-1">PHIC NO.</th>  
-                                        <th class="col-3">Address</th>
-                                        <th class="col-1">Mobile No.</th>
-                                      
-                                        <th class="col-1">Inactive</th>
+                                        <th>NAME</th>
+                                        <th>LINE NO.</th>
                                         <th class="text-center col-1">
-                                            <a href="{{ route('maintenancecontactpatients_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+                                            <a href="{{ route('maintenanceothersshift_create') }}"
+                                                class="text-white"> <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm">
-                                    @foreach ($contacts as $list)
+                                    @foreach ($shiftList as $list)
                                         <tr>
-                                            <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
-                                            <td> {{ $list->TAXPAYER_ID }}</td>
-                                            <td> {{ $list->MOBILE_NO }}</td>
-                                            <td> {{ $list->POSTAL_ADDRESS }}</td>
-                                     
-                                          
-                                            <td>
-                                                @if ($list->INACTIVE)
-                                                    <strong class="text-danger">Yes</strong>
-                                                @else                     
-                                                    <strong class="text-primary">No</strong>
-                                                @endif
-                                                
-                                            </td>
-                                            <td class="text-center">             
-                                                <a href="{{ route('maintenancecontactpatients_edit', ['id' => $list->ID]) }}"
+                                            <td> {{ $list->LINE_NO }}</td>
+                                  
+
+                                            <td class="text-center">
+                                                <a href="{{ route('maintenanceothersshift_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
@@ -82,4 +68,8 @@
             </div>
         </div>
     </section>
+
+
+
+
 </div>

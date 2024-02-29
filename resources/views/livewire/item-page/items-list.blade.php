@@ -3,8 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenanceinventoryitem') }}"> Items </a>
-                    </h5>
+               
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -24,13 +23,18 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-4">
                                     <input type="text" wire:model.live.debounce.150ms='search'
-                                        class="w-100 form-control form-control-sm" placeholder="Search" />
+                                        class="form-control form-control-sm text-xs mb-1 bg-light" placeholder="Search" />
+                                </div>
+                                <div class="col-md-8 text-right">
+                                    <h5 class="m-0">
+                                        <a href="{{ route('maintenanceinventoryitem') }}"> Items </a>
+                                    </h5>
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>CODE</th>
                                         <th>DESCRIPTION</th>
@@ -50,7 +54,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
+                                <tbody class="text-xs">
                                     @foreach ($items as $list)
                                         <tr>
                                             <td> {{ $list->CODE }}</td>
@@ -82,10 +86,12 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="col-6 col-md-6">
+                    {{ $items->links() }}
                 </div>
             </div>
         </div>

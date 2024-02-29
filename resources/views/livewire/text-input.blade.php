@@ -10,9 +10,7 @@
 
             <div class="col-9">
                 <input type="text" autocomplete="off" wire:model='value' class="text-sm form-control form-control-sm"
-                    id="{{ $name }}"
-                    @if ($withLabel) placeholder="Enter {{ Str::lower($titleName) }}" @endif
-                    @if ($isDisabled) disabled @endif />
+                    id="{{ $name }}" @if ($isDisabled) disabled @endif />
             </div>
         </div>
     @else
@@ -20,8 +18,6 @@
             <label for="{{ $name }}" class="text-sm">{{ $titleName }}</label>
         @endif
         <input type="text" autocomplete="off" wire:model='value' class="text-sm form-control form-control-sm"
-            id="{{ $name }}"
-            @if ($withLabel) placeholder="Enter {{ Str::lower($titleName) }}" @endif
-            @if ($isDisabled) disabled @endif />
+            id="{{ $name }}" @if ($isDisabled) disabled @endif />
     @endif
 </div>

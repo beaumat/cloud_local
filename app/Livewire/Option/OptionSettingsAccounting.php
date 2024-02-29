@@ -19,7 +19,11 @@ class OptionSettingsAccounting extends Component
     public int $DateWarningDaysFuture;
     public string $ClosingDate;
     public string $SmallestCurrencyValue;
-
+    private $systemSettingServices;
+    public function boot(SystemSettingServices $systemSettingServices)
+    {   
+        $this->systemSettingServices = $systemSettingServices;
+    }
     public function mount()
     {
         $this->SkipJournalEntry = (bool) $this->returnArray('SkipJournalEntry');
@@ -64,7 +68,9 @@ class OptionSettingsAccounting extends Component
                 return $list->VALUE;
             }
         }
+        $this->systemSettingServices->NewValue($name);
         dd("record not found : " . $name);
+        return '';
     }
     public function saveOn($name, $value)
     {

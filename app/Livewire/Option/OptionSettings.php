@@ -18,16 +18,20 @@ class OptionSettings extends Component
     public string $NAME;
     public string $VALUE;
     public string $activeTab = 'com';
-
+    private $systemSettingServices;
+    public function boot(SystemSettingServices $systemSettingServices)
+    {   
+        $this->systemSettingServices = $systemSettingServices;
+    }
     #[On('resetValue')]
     public function mount()
     {
         $this->systemSetting = DB::table('system_settings')->select(['NAME', 'VALUE'])->get();
     }
-    public function save(SystemSettingServices $systemSettingServices)
+    public function save()
     {
         try {
-            $systemSettingServices->SetValue($this->NAME, $this->VALUE);
+            $this->systemSettingServices->SetValue($this->NAME, $this->VALUE);
             $this->systemSetting = SystemSetting::all();
         } catch (\Exception $e) {
             //throw $th;

@@ -23,6 +23,12 @@ class OptionSettingsSales extends Component
     public bool $AutoApplyPayments, $AutoCalcPayments, $UseUndepositedFunds;
     public bool $AllowPriceOverride, $AllowPriceLevel, $AllowBlankInSellingPrice, $WarnWhenPriceBelowCost, $EnableBatchNumberInSalesOrder, $HideInactiveCustomer;
     public bool $ShowInvoiceDetailsOnStatement, $CreateStatementWithZeroBalance, $PrintDueDateOnStatement, $ShowPostdatedTransactions;
+
+    private $systemSettingServices;
+    public function boot(SystemSettingServices $systemSettingServices)
+    {   
+        $this->systemSettingServices = $systemSettingServices;
+    }
     public function mount()
     {
         $this->LoadDropdown();
@@ -128,7 +134,10 @@ class OptionSettingsSales extends Component
                 return $list->VALUE;
             }
         }
+     
+        $this->systemSettingServices->NewValue($name);
         dd("record not found : " . $name);
+        return '';
     }
     public function saveOn($name, $value)
     {

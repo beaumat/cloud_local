@@ -53,13 +53,6 @@ class Contacts extends Model
         "CUSTOM_FIELD2",
         "CUSTOM_FIELD3",
         "CUSTOM_FIELD4",
-        "CUSTOM_FIELD5",
-        "OTHER_CONTACT_ID",
-        "SALES_TARGET",
-        "DISCOUNT", 
-        "FIXED_PENALTY",
-        "RUNNING_PENALTY",
-        "LESS_DISCOUNT_PENALTY_ACTIVE",
-        "REFERRAL_ID"
+        "CUSTOM_FIELD5"
     ];
 }

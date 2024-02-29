@@ -13,24 +13,29 @@ class ChartOfAccountList extends Component
 {
     public $accounts = [];
     public $search = '';
-    public function updatedsearch(AccountServices $accountServices)
+    private $accountServices;
+    public function boot(AccountServices $accountServices)
     {
-        $this->accounts = $accountServices->Search($this->search);
+        $this->accountServices = $accountServices;
     }
-    public function delete($id, AccountServices $accountServices)
+    public function updatedsearch()
+    {
+        $this->accounts = $this->accountServices->Search($this->search);
+    }
+    public function delete($id)
     {
         try {
-            $accountServices->Delete($id);
+            $this->accountServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->accounts = $accountServices->Search($this->search);
+            $this->accounts = $this->accountServices->Search($this->search);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
-    public function mount(AccountServices $accountServices)
+    public function mount()
     {
-        $this->accounts = $accountServices->Search($this->search);
+        $this->accounts = $this->accountServices->Search($this->search);
     }
     #[On('clear-alert')]
     public function clearAlert()

@@ -15,9 +15,15 @@ class TaxServices
     {
         return (float) Tax::where('ID', $ID)->first()->RATE;
     }
-    public function get(int $ID): object
+    public function get(int $ID)
     {
-        return Tax::where('ID', $ID)->first();
+
+        $tax = Tax::where('ID', $ID)->first();
+        if ($tax) {
+            return $tax;
+        }
+
+        return null;
     }
     public function getByType(int $ID): int
     {

@@ -13,7 +13,11 @@ class OptionSettingsFinance extends Component
     #[Reactive]
     public $systemSetting = [];
     public $accountList = [];
-    
+    private $systemSettingServices;
+    public function boot(SystemSettingServices $systemSettingServices)
+    {   
+        $this->systemSettingServices = $systemSettingServices;
+    }
     public function mount()
     {
         
@@ -25,7 +29,9 @@ class OptionSettingsFinance extends Component
                 return $list->VALUE;
             }
         }
+        $this->systemSettingServices->NewValue($name);
         dd("record not found : " . $name);
+        return '';
     }
     public function saveOn($name, $value, SystemSettingServices $systemSettingServices)
     {

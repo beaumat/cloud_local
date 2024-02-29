@@ -73,7 +73,7 @@ class PurchaseOrderFormItems extends Component
     }
     public function updatedcodeBase()
     {
-       
+
         if ($this->codeBase) {
             $this->itemCodeList = $this->itemServices->getByVendor(true);
             return;
@@ -101,7 +101,7 @@ class PurchaseOrderFormItems extends Component
     }
     public function updatedrate()
     {
-        $this->getAmount();   
+        $this->getAmount();
     }
     public function updateditemid()
     {
@@ -121,16 +121,16 @@ class PurchaseOrderFormItems extends Component
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
-                $this->RATE = $item->COST;
+                $this->RATE = $item->COST ?? 0;
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->PURCHASE_DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
-                $this->UNIT_ID = $item->BASE_UNIT_ID;
+                $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
                 $this->getAmount();
             }
         }
 
-   
+
     }
     public function mount()
     {
@@ -138,7 +138,7 @@ class PurchaseOrderFormItems extends Component
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
-       
+
     }
     public function saveItem()
     {
@@ -198,7 +198,7 @@ class PurchaseOrderFormItems extends Component
             $this->TAX_AMOUNT = 0;
             $this->ITEM_CODE = '';
             $this->ITEM_DESCRIPTION = '';
-           
+
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
 
@@ -212,7 +212,7 @@ class PurchaseOrderFormItems extends Component
     public function updatedlineqty()
     {
         $this->getEditAmount();
-   
+
     }
     public function updatedlinerate()
     {
@@ -276,7 +276,7 @@ class PurchaseOrderFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax = false;
             $this->lineItemId = 0;
-      
+
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();

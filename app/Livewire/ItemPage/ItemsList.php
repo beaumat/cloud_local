@@ -2,40 +2,42 @@
 
 namespace App\Livewire\ItemPage;
 
+use App\Models\Items;
 use App\Services\ItemServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('Item List')]
 class ItemsList extends Component
 {
-
-    public $items =[];
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public function updatedsearch(ItemServices $itemServices)
+    public int $perPage = 20;
+    private $itemServices;
+    public function boot(ItemServices $itemServices)
     {
-        $this->items = $itemServices->Search($this->search);
+        $this->itemServices = $itemServices;
     }
-     public function delete($id,ItemServices $itemServices) {
-
+    public function delete($id)
+    {
         try {
-            $itemServices->Delete($id);
+            $this->itemServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->items = $itemServices->Search($this->search);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-         
-     }
-     public function mount(ItemServices $itemServices)
-     {
-        $this->items = $itemServices->Search($this->search);
-     }
+    }
+
+
     public function render()
-    {        
-        return view('livewire.item-page.items-list');
+    {
+
+        $items = $this->itemServices->Search($this->search, $this->perPage);
+        return view('livewire.item-page.items-list', ['items' => $items]);
     }
     #[On('clear-alert')]
     public function clearAlert()

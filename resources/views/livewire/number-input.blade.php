@@ -10,7 +10,7 @@
             <div class="col-9">
                 <input type="number" step="any" type="text" id="decimalInput" wire:model='value'
                     class="text-sm text-right form-control form-control-sm" id="{{ $name }}"
-                    @if ($withLabel) placeholder="Enter {{ Str::lower($titleName) }}" @endif
+                
                     @if ($isDisabled) disabled @endif />
             </div>
         </div>
@@ -20,7 +20,7 @@
         @endif
         <input type="number" step="any" type="text" id="decimalInput" wire:model='value'
             class="text-sm text-right form-control form-control-sm" id="{{ $name }}"
-            @if ($withLabel) placeholder="Enter {{ Str::lower($titleName) }}" @endif
+      
             @if ($isDisabled) disabled @endif />
     @endif
 </div>

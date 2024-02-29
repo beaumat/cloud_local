@@ -10,6 +10,8 @@ use App\Livewire\DashboardPage\Dashboard;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
 use App\Livewire\Option\OptionSettings;
+use App\Livewire\Shift\ShiftForm;
+use App\Livewire\Shift\ShiftList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
@@ -84,7 +86,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', PurchaseOrderForm::class)->name('purchase_order_create');
             Route::get('/{id}/edit', PurchaseOrderForm::class)->name('purchase_order_edit');
         });
-        
+
         Route::prefix('/bills')->group(function () {
             Route::get('/', BillingList::class)->name('bills');
             Route::get('/create', BillingForm::class)->name('bills_create');
@@ -204,7 +206,13 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/edit', PriceLevelForm::class)->name('price_level_edit')->middleware(['permission:price-level.edit']);
             });
         });
-
+        Route::prefix('/others')->name('others')->group(function () {
+            Route::prefix('/shift')->group(function () {
+                Route::get('/', ShiftList::class)->name('shift');
+                Route::get('/create', ShiftForm::class)->name('shift_create');
+                Route::get('/{id}/edit', ShiftForm::class)->name('shift_edit');
+            });
+        });
         Route::prefix('/settings')->name('settings')->group(function () {
             Route::prefix('/user')->middleware(['permission:users'])->group(function () {
                 Route::get('/', UserList::class)->name('users');
@@ -231,7 +239,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('/option')->group(function () {
                 Route::get('/', OptionSettings::class)->name('option');
-        
+
             });
         });
     });

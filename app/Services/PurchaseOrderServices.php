@@ -40,12 +40,13 @@ class PurchaseOrderServices
         int $INPUT_TAX_ACCOUNT_ID
 
     ): int {
-        $ID = $this->object->ObjectNextID('PURCHASE_ORDER');
+        $ID = (int) $this->object->ObjectNextID('PURCHASE_ORDER');
+        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PURCHASE_ORDER');
 
         PurchaseOrder::create([
             'ID' => $ID,
             'RECORDED_ON' => Carbon::now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->locationReference->NextReference($LOCATION_ID, 'PURCHASE_ORDER', 'PO'),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
             'DATE' => $DATE,
             'VENDOR_ID' => $VENDOR_ID,
             'LOCATION_ID' => $LOCATION_ID,
@@ -156,14 +157,12 @@ class PurchaseOrderServices
     private function getLine($Id): int
     {
         return (int) PurchaseOrderItems::where('PO_ID', $Id)->max('LINE_NO');
-
     }
     public function ItemStore(int $PO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, float $RECEIVED_QTY, bool $CLOSED, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT): int
-    {
-        $LINE_NO = $this->getLine($PO_ID);
-
-        $ID = $this->object->ObjectNextID('PURCHASE_ORDER_ITEMS');
-
+    {   
+       
+        $LINE_NO = $this->getLine($PO_ID) + 1;
+        $ID = $this->object->ObjectNextID('PURCHASE_ORDER_LINES');
         PurchaseOrderItems::create([
             'ID' => $ID,
             'PO_ID' => $PO_ID,
@@ -171,7 +170,7 @@ class PurchaseOrderServices
             'ITEM_ID' => $ITEM_ID,
             'DESCRIPTION' => null,
             'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
             'RATE' => $RATE,
             'RATE_TYPE' => $RATE_TYPE,
@@ -183,14 +182,24 @@ class PurchaseOrderServices
             'TAX_AMOUNT' => $TAX_AMOUNT,
 
         ]);
-
         return $ID;
     }
-    public function ItemUpdate(int $ID, int $PO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT)
-    {
+    public function ItemUpdate(
+        int $ID,
+        int $PO_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        float $UNIT_BASE_QUANTITY,
+        float $RATE,
+        float $AMOUNT,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT
+    ) {
         PurchaseOrderItems::where('ID', $ID)->where('PO_ID', $PO_ID)->where('ITEM_ID', $ITEM_ID)->update([
             'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
             'RATE' => $RATE,
             'AMOUNT' => $AMOUNT,

@@ -2,27 +2,82 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Str;
+use App\Models\ObjectCodeSequence;
 use App\Models\ObjectTypeMap;
 
 class ObjectServices
 {
 
+    public function ObjectTypeID(string $TABLE_NAME): int
+    {
+
+        try {
+            return ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first()->ID;
+        } catch (\Exception $e) {
+            //throw $th;
+            dd("$TABLE_NAME :" . $e->getMessage());
+        }
+    }
+    public function ObjectTypeIdByName(string $NAME): int
+    {
+
+        try {
+            return ObjectTypeMap::where('NAME', $NAME)->first()->ID;
+        } catch (\Exception $e) {
+            //throw $th;
+            dd("$NAME :" . $e->getMessage());
+        }
+    }
+    public function Store(int $ID, string $NAME, string $TABLE_NAME, bool $IS_DOCUMENT, $DOCUMENT_TYPE)
+    {
+        ObjectTypeMap::create([
+            'ID' => $ID,
+            'NAME' => $NAME,
+            'TABLE_NAME' => $TABLE_NAME,
+            'IS_DOCUMENT' => $IS_DOCUMENT,
+            'DOCUMENT_TYPE' => $DOCUMENT_TYPE,
+            'NEXT_ID' => 1,
+            'INCREMENT' => 1
+        ]);
+    }
     public function ObjectNextID(string $TABLE_NAME): int
+    {
+        $Nxt_ID = 0;
+        $result = ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first();
+
+        if ($result) {
+            $Nxt_ID = $result->NEXT_ID;
+            ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->update([
+                'NEXT_ID' => ($Nxt_ID + 1)
+            ]);
+            return $Nxt_ID;
+        } else {
+
+     
+            dd("$TABLE_NAME table not found . please try again");
+            
+            return 1;
+        }
+
+
+    }
+    public function ObjectNextIdByName(string $NAME): int
     {
         $Nxt_ID = 0;
 
         // Retrieving data from the database
-        $result = ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first();
+        $result = ObjectTypeMap::where('TABLE_NAME', $NAME)->first();
 
         if ($result) {
             $Nxt_ID = $result->NEXT_ID;
         } else {
             // Displaying a message if the table is not found
-            dd("$TABLE_NAME table not found");
+            dd("$NAME name not found");
         }
 
         // Updating the NEXT_ID in the database
-        ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->update([
+        ObjectTypeMap::where('NAME', $NAME)->update([
             'NEXT_ID' => ($Nxt_ID + 1)
         ]);
 
@@ -32,4 +87,50 @@ class ObjectServices
     {
         return 1000;
     }
+
+    public function GetSequence(int $Type, $LocationId): string
+    {
+        $data = ObjectCodeSequence::where('OBJECT_TYPE', $Type)->where('LOCATION_ID', $LocationId)->first();
+
+        if ($data) {
+            $this->SetSequence($data->ID, $data->NEXT_SEQUENCE, $data->INCREMENT);
+            return $this->codeFormat($LocationId, $data->NEXT_SEQUENCE, $data->WIDTH, $data->POSTFIX, $data->PREFIX);
+
+        }
+        $this->NewSequence(2, $Type, $LocationId, 1, null, null, 4);
+        return $this->codeFormat($LocationId, 1, 4, '', '');
+    }
+    public function SetSequence(int $ID, int $NEXT_SEQUENCE, int $INCREMENT)
+    {
+        ObjectCodeSequence::where('ID', $ID)->where('NEXT_SEQUENCE', $NEXT_SEQUENCE)->update(['NEXT_SEQUENCE' => $NEXT_SEQUENCE + $INCREMENT]);
+    }
+    public function NewSequence(
+        int $NEXT_SEQUENCE,
+        int $OBJECT_TYPE,
+        $LOCATION_ID,
+        int $INCREMENT,
+        $PREFIX,
+        $POSTFIX,
+        int $WIDTH
+    ) {
+
+        ObjectCodeSequence::create([
+            'NEXT_SEQUENCE' => $NEXT_SEQUENCE,
+            'OBJECT_TYPE' => $OBJECT_TYPE,
+            'LOCATION_ID' => $LOCATION_ID,
+            'INCREMENT' => $INCREMENT,
+            'PREFIX' => $PREFIX,
+            'POSTFIX' => $POSTFIX,
+            'WIDTH' => $WIDTH
+        ]);
+    }
+    public function codeFormat($LOCATION_ID, int $SEQUENCE, int $WIDTH, $POSTFIX, $PREFIX): string
+    {
+        if ($LOCATION_ID) {
+            return $LOCATION_ID . '-' . $POSTFIX ?? '' . Str::padLeft($SEQUENCE, $WIDTH, '0') . $PREFIX ?? '';
+        }
+        return $POSTFIX ?? '' . Str::padLeft($SEQUENCE, $WIDTH, '0') . $PREFIX ?? '';
+
+    }
+
 }

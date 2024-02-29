@@ -14,21 +14,18 @@ class OptionSettingsCompany extends Component
 
     #[Reactive]
     public $systemSetting = [];
-
     public string $CompanyName;
-
     public string $CompanyAddress;
-
     public string $CompanyEmailAddress;
-
     public string $CompanyFaxNo;
-
     public string $CompanyMobileNo;
-
     public string $CompanyPhoneNo;
-
     public string $CompanyTin;
-
+    private $systemSettingServices;
+    public function boot(SystemSettingServices $systemSettingServices)
+    {   
+        $this->systemSettingServices = $systemSettingServices;
+    }
 
     public function mount(SystemSettingServices $systemSettingServices)
     {
@@ -79,7 +76,9 @@ class OptionSettingsCompany extends Component
             }
         }
 
+        $this->systemSettingServices->NewValue($name);
         dd("record not found : " . $name);
+        return '';
 
     }
     public function saveOn($name, $value)

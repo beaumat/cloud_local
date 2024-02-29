@@ -10,11 +10,17 @@ class SystemSettingServices
     {
         return SystemSetting::where('NAME', $NAME)->update(['VALUE' => $VALUE]);
     }
-
+    public function NewValue(string $NAME)
+    {
+        SystemSetting::create([
+            'NAME' => $NAME,
+            'VALUE' => ''
+        ]);
+    }
     public function GetValue(string $NAME): string
     {
         $result = SystemSetting::query()->select('VALUE')->where('NAME', $NAME)->limit(1);
-        
+
         if ($result) {
             return $result->first()->VALUE ?? '';
         }
