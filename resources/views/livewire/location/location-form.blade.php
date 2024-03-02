@@ -30,9 +30,7 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE'>
-                                        </div>
+                                     
                                         <div class="col-md-6">
                                             <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'>
                                         </div>

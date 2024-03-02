@@ -10,6 +10,7 @@ use App\Livewire\DashboardPage\Dashboard;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
 use App\Livewire\Option\OptionSettings;
+use App\Livewire\Scheduler\SchedulerForm;
 use App\Livewire\Shift\ShiftForm;
 use App\Livewire\Shift\ShiftList;
 use Illuminate\Support\Facades\Route;
@@ -79,6 +80,13 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
+
+    Route::prefix('/transactions')->name('transactions')->group(function () {
+        Route::prefix('/schedules')->group(function () {
+            Route::get('/', SchedulerForm::class)->name('schedules');
+
+        });
+    });
 
     Route::prefix('/vendors')->name('vendors')->group(function () {
         Route::prefix('/purchase-order')->group(function () {

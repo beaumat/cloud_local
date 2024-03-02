@@ -30,23 +30,21 @@
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>NAME</th>
                                         <th>LINE NO.</th>
                                         <th class="text-center col-1">
-                                            <a href="{{ route('maintenanceothersshift_create') }}"
-                                                class="text-white"> <i class="fas fa-plus"></i></a>
+                                            <a href="{{ route('maintenanceothersshift_create') }}" class="text-white">
+                                                <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
+                                <tbody class="text-xs">
                                     @foreach ($shiftList as $list)
                                         <tr>
                                             <td> {{ $list->NAME }}</td>
                                             <td> {{ $list->LINE_NO }}</td>
-                                  
-
                                             <td class="text-center">
                                                 <a href="{{ route('maintenanceothersshift_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">

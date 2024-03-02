@@ -24,7 +24,7 @@
 
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('plugins/fullcalendar/main.css') }}">
     <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet">
 
     <!-- Latest compiled and minified CSS -->
@@ -75,13 +75,11 @@
     <script src="{{ asset('plugins/raphael/raphael.min.js') }}"></script>
     <script src="{{ asset('plugins/jquery-mapael/jquery.mapael.min.js') }}"></script>
     <script src="{{ asset('plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
-    <!-- ChartJS -->
+
     <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    {{-- <script src="{{ asset('dist/bootstrap-select/js/bootstrap-select.min.js') }}"></script> --}}
+
 
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-
     <script>
         $(function() {
             bsCustomFileInput.init();

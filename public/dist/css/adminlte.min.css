@@ -2465,7 +2465,7 @@ select.form-control:focus::-ms-value {
 .form-control-sm2 {
     height: calc(1.8125rem + 2px);
     padding: .25rem .5rem;
-    font-size: .875rem;
+    font-size: .800rem;
     line-height: 1.5;
     border-radius: .2rem
 }
@@ -55925,5 +55925,7 @@ a.text-muted:hover {
 
 #error-alert ul {
     list-style-type: none;
+ 
 
 }
+

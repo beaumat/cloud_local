@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Locations extends Model
+class ScheduleStatus extends Model
 {
     use HasFactory;
-    protected $table = 'location';
+    protected $table = 'schedule_status';
     protected $primaryKey = 'ID';
     public $timestamps = false;
     protected $fillable = [
         'ID',
-        'NAME',
-        'INACTIVE',
-        'PRICE_LEVEL_ID',
-        'GROUP_ID'
+        'DESCRIPTION'
     ];
 }

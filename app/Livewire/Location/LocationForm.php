@@ -14,7 +14,6 @@ use Livewire\Component;
 class LocationForm extends Component
 {
     public int $ID;
-    public string $CODE;
     public string $NAME;
     public bool $INACTIVE;
     public int $PRICE_LEVEL_ID;
@@ -35,7 +34,6 @@ class LocationForm extends Component
 
             if ($location) {
                 $this->ID = $location->ID;
-                $this->CODE = $location->CODE;
                 $this->NAME = $location->NAME;
                 $this->INACTIVE = $location->INACTIVE;
                 $this->PRICE_LEVEL_ID = $location->PRICE_LEVEL_ID ? $location->PRICE_LEVEL_ID : 0;
@@ -47,7 +45,6 @@ class LocationForm extends Component
             return Redirect::route('maintenancesettingslocation')->with('error', $errorMessage);
         }
         $this->ID = 0;
-        $this->CODE = '';
         $this->NAME = '';
         $this->PRICE_LEVEL_ID = 0;
         $this->GROUP_ID = 0;
@@ -58,19 +55,19 @@ class LocationForm extends Component
     public function save(LocationServices $locationServices)
     {
         $this->validate([
-            'CODE' => 'required|max:10|unique:location,code,' . $this->ID,
+  
             'NAME' => 'required|max:50|unique:location,name,' . $this->ID
         ], [], [
-            'CODE' => 'Code',
+      
             'NAME' => 'Name'
         ]);
 
         try {
             if ($this->ID === 0) {
-                $this->ID = $locationServices->Store($this->CODE, $this->NAME, $this->INACTIVE, $this->PRICE_LEVEL_ID, $this->GROUP_ID);
+                $this->ID = $locationServices->Store($this->NAME, $this->INACTIVE, $this->PRICE_LEVEL_ID, $this->GROUP_ID);
                 session()->flash('message', 'Successfully created');
             } else {
-                $locationServices->Update($this->ID, $this->CODE, $this->NAME, $this->INACTIVE, $this->PRICE_LEVEL_ID, $this->GROUP_ID);
+                $locationServices->Update($this->ID, $this->NAME, $this->INACTIVE, $this->PRICE_LEVEL_ID, $this->GROUP_ID);
                 session()->flash('message', 'Successfully updated');
             }
         } catch (\Exception $e) {

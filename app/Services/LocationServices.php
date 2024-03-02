@@ -15,13 +15,12 @@ class LocationServices
     {
         return Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
     }
-    public function Store(string $CODE, string $NAME, bool $INACTIVE, int $PRICE_LEVEL_ID, int $GROUP_ID): int
+    public function Store(string $NAME, bool $INACTIVE, int $PRICE_LEVEL_ID, int $GROUP_ID): int
     {
         $ID = $this->object->ObjectNextID('LOCATION');
 
         Locations::create([
             'ID' => $ID,
-            'CODE' => $CODE,
             'NAME' => $NAME,
             'INACTIVE' => $INACTIVE,
             'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
@@ -31,11 +30,10 @@ class LocationServices
         return $ID;
     }
 
-    public function Update(int $ID, string $CODE, string $NAME, bool $INACTIVE, int $PRICE_LEVEL_ID, int $GROUP_ID): void
+    public function Update(int $ID, string $NAME, bool $INACTIVE, int $PRICE_LEVEL_ID, int $GROUP_ID): void
     {
 
         Locations::where('ID', $ID)->update([
-            'CODE' => $CODE,
             'NAME' => $NAME,
             'INACTIVE' => $INACTIVE,
             'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
@@ -53,7 +51,6 @@ class LocationServices
             ->select(
                 [
                     'location.ID',
-                    'location.CODE',
                     'location.NAME',
                     'location.INACTIVE',
                     'location.PRICE_LEVEL_ID',
@@ -65,8 +62,7 @@ class LocationServices
             ->leftJoin('price_level', 'price_level.ID', '=', 'location.PRICE_LEVEL_ID')
             ->leftJoin('item_group', 'item_group.ID', '=', 'location.GROUP_ID')
             ->when($search, function ($query) use (&$search) {
-                $query->where('location.CODE', 'like', '%' . $search . '%')
-                    ->orWhere('location.NAME', 'like', '%' . $search . '%');
+                $query->where('location.NAME', 'like', '%' . $search . '%');
             })
             ->orderBy('location.ID', 'desc')
             ->get();

@@ -31,10 +31,9 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-sm bg-sky">
                                     <tr>
-                                        <th>Code</th>
+                                
                                         <th>Name</th>
                                         <th>Inactive</th>
-
                                         <th class="text-center col-1">
                                             <a href="{{ route('maintenancesettingslocation_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
@@ -44,7 +43,6 @@
                                 <tbody class="text-sm">
                                     @foreach ($locations as $list)
                                         <tr>
-                                            <td> {{ $list->CODE }}</td>
                                             <td> {{ $list->NAME }}</td>
                                             <td>
                                                 @if ($list->INACTIVE)

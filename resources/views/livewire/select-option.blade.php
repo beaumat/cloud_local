@@ -3,11 +3,11 @@
         <div class="row">
             <div class="col-3">
                 @if ($withLabel)
-                    <label for="{{ $name }}" class="text-sm"> {{ $titleName }}</label>
+                    <label for="{{ $name }}" class="text-xs"> {{ $titleName }}</label>
                 @endif
             </div>
             <div class="col-9">
-                <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm"
+                <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm text-xs"
                     @if ($isDisabled) disabled @endif>
                     @if ($zero)
                         <option value="0">
@@ -35,14 +35,13 @@
         </div>
     @else
         @if ($withLabel)
-            <label for="{{ $name }}" class="text-sm"> {{ $titleName }}</label>
+            <label for="{{ $name }}" class="text-xs"> {{ $titleName }}</label>
         @endif
-        <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm"
+        <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm text-xs"
             @if ($isDisabled) disabled @endif>
             @if ($zero)
                 <option value="0">
-
-                    &nbsp;
+                     &nbsp;
 
                 </option>
             @endif

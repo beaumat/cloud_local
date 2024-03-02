@@ -21,15 +21,23 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+                <li class="nav-item {{ request()->is('transactions*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('transactions*') ? 'active ' : '' }}">
                         <i class="nav-icon fas fa-users "></i>
                         <p>
-                            Patients
+                            Transaction
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+
                     <ul class="nav nav-treeview bg-light">
+                        <li class="nav-item">
+                            <a href="{{ route('transactionsschedules') }}"
+                                class="nav-link {{ request()->is('transactions/schedules*') ? 'active text-primary' : '' }}">
+                                <i class="fas fa-calendar nav-icon"></i>
+                                <p>Schedules</p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-receipt nav-icon"></i>

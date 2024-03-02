@@ -110,7 +110,6 @@
                                                                                     <div class="form-group mt-2">
                                                                                         <label>Gender</label>
                                                                                         <div class="form-check">
-
                                                                                             <label
                                                                                                 class="form-check-label">
                                                                                                 <input
