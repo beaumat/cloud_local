@@ -9,8 +9,13 @@ use App\Livewire\Customer\CustomerList;
 use App\Livewire\DashboardPage\Dashboard;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
+use App\Livewire\Invoice\InvoiceForm;
+use App\Livewire\Invoice\InvoiceList;
 use App\Livewire\Option\OptionSettings;
 use App\Livewire\Scheduler\SchedulerForm;
+use App\Livewire\Scheduler\SchedulerList;
+use App\Livewire\ServiceCharge\ServiceChargeForm;
+use App\Livewire\ServiceCharge\ServiceChargeList;
 use App\Livewire\Shift\ShiftForm;
 use App\Livewire\Shift\ShiftList;
 use Illuminate\Support\Facades\Route;
@@ -82,9 +87,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
     Route::prefix('/transactions')->name('transactions')->group(function () {
-        Route::prefix('/schedules')->group(function () {
-            Route::get('/', SchedulerForm::class)->name('schedules');
 
+        Route::prefix('/schedules')->group(function () {
+            Route::get('/', SchedulerList::class)->name('schedules');
+            Route::get('/setup', SchedulerForm::class)->name('schedules_setup');
+        });
+
+        Route::prefix('/service-charges')->group(function () {
+            Route::get('/', ServiceChargeList::class)->name('service_charges');
+            Route::get('/create', ServiceChargeForm::class)->name('service_charges_create');
+            Route::get('/{id}/edit', ServiceChargeForm::class)->name('service_charges_edit');
         });
     });
 

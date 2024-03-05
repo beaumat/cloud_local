@@ -29,9 +29,6 @@ class ItemInventoryPanel extends Component
     public int $NEW_ORDER_LEADTIME = 0;
     public float $NEW_ONHAND_MAX_LIMIT = 0;
     public int $NEW_STOCK_BIN_ID = 0;
-
-
-
     public $locationList = [];
     public $stockBinList = [];
     public $saveSuccess = false;

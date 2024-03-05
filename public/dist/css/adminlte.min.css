@@ -37777,7 +37777,7 @@ body.iframe-mode-fullscreen .content-wrapper.iframe-mode {
 }
 
 select.form-control-sm~.select2-container--default {
-    font-size: 95%
+    font-size: 75%
 }
 
 .text-sm .select2-container--default .select2-selection--single,
@@ -55901,7 +55901,9 @@ a.text-muted:hover {
     font-size: 13px;
     /* Adjust the font size as needed */
 }
-
+.select2 {
+    font-size: 13px;
+}
 .spinner {
     display: inline-block;
     width: 30px;

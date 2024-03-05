@@ -2,45 +2,41 @@
 
 namespace App\Livewire\Scheduler;
 
-use App\Models\Shift;
 use Carbon\Carbon;
 use Livewire\Component;
 
-class Calendar extends Component
+class CalendarList extends Component
 {
-
-
     public $today;
     public int $year;
-
     public int $month;
-    public $shiftList = [];
     public Carbon $currentDate;
     public $startDayOfWeek;
     public $daysInMonth;
     public $daysInPreviousMonth;
     public int $dayCounter = 1;
-
-    public int $CONTACT_ID;
     public int $LOCATION_ID;
     public string $contactName;
-    public int $SHIFT_ID = 0;
-    public function mount(int $year, int $month, $contactid = null, $locationid = null)
+    public function mount(int $year, int $month, $locationid = null)
     {
         $this->year = $year;
         $this->month = $month;
-        $this->CONTACT_ID = $contactid ? $contactid : 0;
         $this->LOCATION_ID = $locationid ? $locationid : 0;
 
     }
- 
+    public function getsched($date)
+    {
+        $Dt = Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d');
+      
+        $this->dispatch('back-load', Date: $Dt);
+
+    }
     private function reloadData()
     {
         $this->currentDate = Carbon::create($this->year, $this->month, 1);
         $this->startDayOfWeek = $this->currentDate->startOfMonth()->dayOfWeek;
         $this->daysInMonth = $this->currentDate->daysInMonth;
         $this->daysInPreviousMonth = $this->currentDate->copy()->subMonth()->daysInMonth;
-        $this->shiftList = Shift::all();
     }
     public function updatedyear()
     {
@@ -51,6 +47,7 @@ class Calendar extends Component
         $this->reloadData();
 
     }
+
     public function updatedmonth()
     {
         $this->reloadData();
@@ -60,6 +57,6 @@ class Calendar extends Component
         $this->today = Carbon::now()->format('Y-m-d');
         $this->reloadData();
 
-        return view('livewire.scheduler.calendar');
+        return view('livewire.scheduler.calendar-list');
     }
 }

@@ -29,52 +29,39 @@
                                         <h4 class="card-title">Schedules</h4>
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <a href="{{ route('transactionsschedules') }}"
-                                            class="btn btn-primary btn-sm"> List</a>
+                                        <a href="{{ route('transactionsschedules_setup') }}"
+                                            class="btn btn-primary btn-sm"> Setup</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <!-- the events -->
-                                <livewire:select-option name="CONTACT_ID" :options="$contactList" :zero="true"
-                                    titleName="Patient :" wire:model.live='CONTACT_ID' :key="$contactList->pluck('ID')->join('_')" />
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Date Schedule</h3>
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-sm text-xs"> 
-                                    <thead>
+                                <h4>{{ $DATE->format('m/d/Y') }}</h4>
+                                <table class="table table-sm">
+                                    <thead class="text-xs">
                                         <tr>
                                             <th>Shift</th>
-                                            <th>Date</th>
+                                            <th>Patient</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @foreach ($scheduleList as $list)
+                                    <tbody class="text-xs">
+                                        @foreach ($schedContact as $list)
                                             <tr>
-                                                <td>{{ $list->SHIFT }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($list->SCHED_DATE)->format('m/d/Y') }}</td>
+                                                <td> {{ $list->SHIFT }}</td>
+                                                <td>{{ $list->CONTACT_NAME }}</td>
                                                 <td>{{ $list->STATUS }}</td>
-                                                <td></td>
                                             </tr>
                                         @endforeach
-
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- /.col -->
+
                 <div class="col-md-9">
                     <div class="card card-primary">
-                        <div class="card-body">
+                        <div class="card-body bg-white">
                             <!-- THE CALENDAR -->
                             <div id="calendar">
                                 <div>
@@ -108,7 +95,7 @@
                                         </div>
                                     </div>
 
-                                    <livewire:scheduler.calendar :year="$year" :month="$month" :contactid="$CONTACT_ID"
+                                    <livewire:scheduler.calendar-list :year="$year" :month="$month"
                                         :locationid="$LOCATION_ID" :key="$refreshComponent" />
                                 </div>
                             </div>

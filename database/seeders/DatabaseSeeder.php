@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
         $this->call(MaintenanceSettingSeeder::class);
         $this->call(PermissionSeeder::class);
         $this->call(SuperAdminSeeder::class);
-
+        $this->call(CreateShiftObjectSeeder::class);
+        $this->call(ScheduleStatusSeeder::class);
 
     }
 }

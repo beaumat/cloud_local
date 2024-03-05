@@ -37,6 +37,7 @@ class OptionSettingsTax extends Component
             $this->saveOn("CompanyTin", $this->CompanyTin);
         }
         if ($this->OutputTaxId != (int) $this->returnArray('OutputTaxId')) {
+  
             $this->saveOn("OutputTaxId", $this->OutputTaxId);
         }
         if ($this->InputTaxId != (int) $this->returnArray('InputTaxId')) {

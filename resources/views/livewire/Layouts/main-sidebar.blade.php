@@ -38,22 +38,23 @@
                                 <p>Schedules</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-receipt nav-icon"></i>
                                 <p>Sales Receipt</p>
                             </a>
-                        </li>
-                        <li class="nav-item">
+                        </li> --}}
+                        {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-list nav-icon"></i>
                                 <p>Sales Order</p>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
-                            <a href="#" class="nav-link ">
+                            <a href="{{ route('transactionsservice_charges') }}"
+                                class="nav-link {{ request()->is('transactions/service-charges*') ? 'active text-primary' : '' }}">
                                 <i class="fas fa-file-invoice nav-icon"></i>
-                                <p>Invoices</p>
+                                <p>Service Charge</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -62,19 +63,19 @@
                                 <p>Payments</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-file-import nav-icon"></i>
                                 <p>Credit Memo</p>
                             </a>
-                        </li>
+                        </li> --}}
 
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-landmark nav-icon"></i>
                                 <p>Tax Credit</p>
                             </a>
-                        </li>
+                        </li> --}}
 
                         <li class="nav-item">
                             <a href="#" class="nav-link">

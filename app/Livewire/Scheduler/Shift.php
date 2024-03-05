@@ -48,6 +48,7 @@ class Shift extends Component
                 } elseif ($shift_id != 0) {
                     $this->scheduleServices->Store($shift_id, $this->CONTACT_ID, $date, 0, null, $this->LOCATION_ID);
                 }
+                $this->dispatch('load-schedule-by-contact');
             } catch (\Exception $e) {
                 dd($e->getMessage());
             }

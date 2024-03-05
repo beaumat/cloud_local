@@ -15,6 +15,16 @@ class AccountServices
     {
         return Accounts::where('ID', $ID)->first();
     }
+    public function getByName(string $NAME): int
+    {
+        $data = Accounts::where('NAME', $NAME)->first();
+        if ($data) {
+            return $data->ID;
+        }
+
+        return 0;
+
+    }
     public function getAccount(bool $isCode)
     {
         if ($isCode) {
@@ -30,11 +40,11 @@ class AccountServices
         Accounts::create([
             'ID' => $ID,
             'NAME' => $NAME,
-            'GROUP_ACCOUNT_ID' => $GROUP_ACCOUNT_ID  > 0 ? $GROUP_ACCOUNT_ID : null,
-            'TYPE' =>  $TYPE,
+            'GROUP_ACCOUNT_ID' => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
+            'TYPE' => $TYPE,
             'BANK_ACCOUNT_NO' => $BANK_ACCOUNT_NO,
             'INACTIVE' => $INACTIVE,
-            'TAG' =>  $TAG,
+            'TAG' => $TAG,
             'LINE_NO' => $LINE_NO
 
         ]);
@@ -46,13 +56,13 @@ class AccountServices
     {
 
         Accounts::where('ID', $ID)->update([
-            'NAME'               => $NAME,
-            'GROUP_ACCOUNT_ID'   => $GROUP_ACCOUNT_ID  > 0 ? $GROUP_ACCOUNT_ID : null,
-            'TYPE'               =>  $TYPE,
-            'BANK_ACCOUNT_NO'    => $BANK_ACCOUNT_NO,
-            'INACTIVE'           => $INACTIVE,
-            'TAG'                =>  $TAG,
-            'LINE_NO'            => $LINE_NO
+            'NAME' => $NAME,
+            'GROUP_ACCOUNT_ID' => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
+            'TYPE' => $TYPE,
+            'BANK_ACCOUNT_NO' => $BANK_ACCOUNT_NO,
+            'INACTIVE' => $INACTIVE,
+            'TAG' => $TAG,
+            'LINE_NO' => $LINE_NO
         ]);
     }
 
@@ -75,14 +85,14 @@ class AccountServices
                     'account.LINE_NO',
                     'account_type_map.DESCRIPTION as ACCOUNT_TYPE',
                     'g.NAME as GROUP_ACCOUNT'
-               
+
                 ]
             )
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
             ->leftJoin('account as g', 'g.ID', '=', 'account.GROUP_ACCOUNT_ID')
             ->when($search, function ($query) use (&$search) {
                 $query->where('account.NAME', 'like', '%' . $search . '%')
-                ->orWhere('account.TAG', 'like', '%' . $search . '%');
+                    ->orWhere('account.TAG', 'like', '%' . $search . '%');
             })
             ->orderBy('account.ID', 'desc')
             ->get();

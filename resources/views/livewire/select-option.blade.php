@@ -42,7 +42,6 @@
             @if ($zero)
                 <option value="0">
                      &nbsp;
-
                 </option>
             @endif
             @foreach ($options as $option)

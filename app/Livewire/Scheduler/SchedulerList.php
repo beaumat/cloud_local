@@ -2,66 +2,70 @@
 
 namespace App\Livewire\Scheduler;
 
-
-use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\ScheduleServices;
 use App\Services\UserServices;
 use Carbon\Carbon;
+use DateTime;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Title('Schedules')]
-class SchedulerForm extends Component
+class SchedulerList extends Component
 {
     public $month;
     public $year;
+    public $schedContact = [];
     public $contactList = [];
     public $refreshComponent = false;
     protected $listeners = ['reloadComponent'];
-    public $CONTACT_ID;
     public $LOCATION_ID;
     public $locationList = [];
     private $locationServices;
-    private $contactServices;
+
     private $userServices;
     private $dateServices;
     private $scheduleServices;
     public $monthList = [];
     public $scheduleList = [];
-
+    public $DATE;
 
     public function boot(
         LocationServices $locationServices,
-        ContactServices $contactServices,
         UserServices $userServices,
         DateServices $dateServices,
         ScheduleServices $scheduleServices
     ) {
         $this->locationServices = $locationServices;
-        $this->contactServices = $contactServices;
         $this->userServices = $userServices;
         $this->dateServices = $dateServices;
         $this->scheduleServices = $scheduleServices;
     }
-    #[On('load-schedule-by-contact')]
-    public function loadScheduleByContact()
-    {
-        $this->scheduleList = $this->scheduleServices->ContactSchedule($this->CONTACT_ID ?? 0, $this->LOCATION_ID ?? 0);
-    }
-    public function updatedcontactid()
-    {
-        $this->reloadComponent();
-        $this->loadScheduleByContact();
-
-    }
+    // #[On('load-schedule-by-contact')]
+    // public function loadScheduleByContact()
+    // {
+    //     $this->scheduleList = $this->scheduleServices->ContactSchedule(0, $this->LOCATION_ID ?? 0);
+    // }
     public function updatedlocationid()
     {
         $this->reloadComponent();
         $this->loadScheduleByContact();
 
+    }
+    #[On('back-load')]
+    public function DateSet($Date)
+    {
+        $this->reloadContactList($Date);
+    }
+    public function reloadContactList($Date)
+    {   
+        
+        $date = Carbon::createFromFormat('Y-m-d', $Date);
+        $this->schedContact = $this->scheduleServices->scheduleList($date, $this->LOCATION_ID);
+        $this->DATE = $date;
+        $this->reloadComponent();
     }
     public function reloadComponent()
     {
@@ -78,23 +82,20 @@ class SchedulerForm extends Component
     {
         $this->reloadComponent();
     }
-    private function resetDate()
-    {
-        $this->month = Carbon::now()->month;
-        $this->year = Carbon::now()->year;
-    }
     public function mount()
     {
-
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->monthList = $this->dateServices->MonthList();
-        $this->resetDate();
+        $this->todayMonth();
+        $this->reloadContactList(Carbon::now()->format('Y-m-d'));
     }
-
     public function todayMonth()
     {
-        $this->resetDate();
+        $this->year = Carbon::now()->year;
+        $this->month = Carbon::now()->month;
         $this->reloadComponent();
+        $this->dispatch('back-load', Date: Carbon::now()->format('Y-m-d'));
+
     }
     public function nextMonth()
     {
@@ -112,11 +113,9 @@ class SchedulerForm extends Component
     public function render()
     {
 
-        $this->contactList = $this->contactServices->getList(3);
+
         $this->locationList = $this->locationServices->getList();
-        $this->loadScheduleByContact();
-        return view('livewire.scheduler.scheduler-form');
+
+        return view('livewire.scheduler.scheduler-list');
     }
-
 }
-

@@ -12,8 +12,11 @@ class PurchaseOrderServices
     private $object;
     private $compute;
     private $locationReference;
-    public function __construct(ObjectServices $objectService, ComputeServices $computeServices, LocationReferenceServices $locationReferenceServices)
-    {
+    public function __construct(
+        ObjectServices $objectService,
+        ComputeServices $computeServices,
+        LocationReferenceServices $locationReferenceServices
+    ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
         $this->locationReference = $locationReferenceServices;
@@ -158,9 +161,22 @@ class PurchaseOrderServices
     {
         return (int) PurchaseOrderItems::where('PO_ID', $Id)->max('LINE_NO');
     }
-    public function ItemStore(int $PO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, float $RECEIVED_QTY, bool $CLOSED, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT): int
-    {   
-       
+    public function ItemStore(
+        int $PO_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        float $UNIT_BASE_QUANTITY,
+        float $RATE,
+        int $RATE_TYPE,
+        float $AMOUNT,
+        float $RECEIVED_QTY,
+        bool $CLOSED,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT
+    ): int {
+
         $LINE_NO = $this->getLine($PO_ID) + 1;
         $ID = $this->object->ObjectNextID('PURCHASE_ORDER_LINES');
         PurchaseOrderItems::create([

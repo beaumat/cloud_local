@@ -17,6 +17,7 @@ class CreateShiftObjectSeeder extends Seeder
         if ($got) {
             return;
         }
+        
         $MAXID = (int) ObjectTypeMap::max('ID') + 1;
         
         ObjectTypeMap::create([
