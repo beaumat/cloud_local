@@ -10,6 +10,7 @@ class CalendarList extends Component
     public $today;
     public int $year;
     public int $month;
+    public $date;
     public Carbon $currentDate;
     public $startDayOfWeek;
     public $daysInMonth;
@@ -17,17 +18,18 @@ class CalendarList extends Component
     public int $dayCounter = 1;
     public int $LOCATION_ID;
     public string $contactName;
-    public function mount(int $year, int $month, $locationid = null)
+    public function mount(int $year, int $month, $locationid = null, $date = null)
     {
         $this->year = $year;
         $this->month = $month;
         $this->LOCATION_ID = $locationid ? $locationid : 0;
-
+        $this->date = $date;
     }
     public function getsched($date)
     {
+        $this->date = $date;
         $Dt = Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d');
-      
+
         $this->dispatch('back-load', Date: $Dt);
 
     }

@@ -1,34 +1,33 @@
 <?php
 
-namespace App\Livewire\Invoice;
+namespace App\Livewire\Payment;
 
-use App\Services\InvoiceServices;
 use App\Services\LocationServices;
+use App\Services\PaymentServices;
 use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title('Invoice')]
-class InvoiceList extends Component
+#[Title('Payments')]
+class PaymentList extends Component
 {
-    
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
     public int $perPage = 20;
-
-
-
     public int $locationid;
     public $locationList = [];
-    private $invoiceServices;
+    private $paymentServices;
     private $locationServices;
     private $userServices;
-    public function boot(InvoiceServices $invoiceServices, LocationServices $locationServices, UserServices $userServices)
-    {
-        $this->invoiceServices = $invoiceServices;
+    public function boot(
+        PaymentServices $paymentServices,
+        LocationServices $locationServices,
+        UserServices $userServices
+    ) {
+        $this->paymentServices = $paymentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
@@ -36,14 +35,13 @@ class InvoiceList extends Component
     {
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
-        // $this->dataList = $this->invoiceServices->Search($this->search, $this->locationid);
     }
     public function delete($id)
     {
         try {
-            $this->invoiceServices->Delete($id);
+            $this->paymentServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-       
+
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -59,7 +57,7 @@ class InvoiceList extends Component
     }
     public function render()
     {
-        $data = $this->invoiceServices->Search($this->search, $this->locationid, $this->perPage);
-        return view('livewire.invoice.invoice-list',['dataList' => $data]);
+        $dataList = $this->paymentServices->Search($this->search, $this->locationid, $this->perPage);
+        return view('livewire.payment.payment-list', ['dataList' => $dataList]);
     }
 }

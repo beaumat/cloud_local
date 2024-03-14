@@ -38,18 +38,6 @@
                                 <p>Schedules</p>
                             </a>
                         </li>
-                        {{-- <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-receipt nav-icon"></i>
-                                <p>Sales Receipt</p>
-                            </a>
-                        </li> --}}
-                        {{-- <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-list nav-icon"></i>
-                                <p>Sales Order</p>
-                            </a>
-                        </li> --}}
                         <li class="nav-item">
                             <a href="{{ route('transactionsservice_charges') }}"
                                 class="nav-link {{ request()->is('transactions/service-charges*') ? 'active text-primary' : '' }}">
@@ -58,7 +46,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('transactionshemo') }}"
+                                class="nav-link {{ request()->is('transactions/hemodialysis-treatment*') ? 'active text-primary' : '' }}">
+                                <i class="fas fa-medkit nav-icon"></i>
+                                <p>Hemodialysis Treatment</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('transactionspayment') }}"
+                                class="nav-link {{ request()->is('transactions/payments*') ? 'active text-primary' : '' }}">
                                 <i class="fas fa-money-bill-wave nav-icon"></i>
                                 <p>Payments</p>
                             </a>

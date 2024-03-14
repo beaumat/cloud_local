@@ -2,20 +2,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
-            {{-- <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Schedules</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Schedulers</li>
-                    </ol>
-                </div>
-            </div> --}}
         </div><!-- /.container-fluid -->
     </section>
-
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -26,40 +14,48 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h4 class="card-title">Schedules</h4>
+                                        <h4 class="card-title">Schedules Setup</h4>
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <a href="{{ route('transactionsschedules') }}"
-                                            class="btn btn-primary btn-sm"> List</a>
+                                        <a href="{{ route('transactionsschedules') }}" class="btn btn-info btn-sm">
+                                            <i class="fa fa-table" aria-hidden="true"></i>
+                                            List</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <!-- the events -->
-                                <livewire:select-option name="CONTACT_ID" :options="$contactList" :zero="true"
-                                    titleName="Patient :" wire:model.live='CONTACT_ID' :key="$contactList->pluck('ID')->join('_')" />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a href="{{ route('maintenancecontactpatients') }}"> Patients</a>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <livewire:select-option name="CONTACT_ID" :options="$contactList" :zero="true"
+                                            titleName="" wire:model.live='CONTACT_ID' :key="$contactList->pluck('ID')->join('_')" />
+                                        </div>
+                                    </div>
+                     
+                            
                             </div>
-                            <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Date Schedule</h3>
+                                <h6 class="card-title text-primary">Infomation</h6>
                             </div>
                             <div class="card-body">
-                                <table class="table table-sm text-xs"> 
-                                    <thead>
+                                <table class="table table-sm text-xs">
+                                    <thead class="bg-sky text-xs">
                                         <tr>
-                                            <th>Shift</th>
                                             <th>Date</th>
+                                            <th>Shift</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($scheduleList as $list)
                                             <tr>
-                                                <td>{{ $list->SHIFT }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($list->SCHED_DATE)->format('m/d/Y') }}</td>
+                                                <td>{{ $list->SHIFT }}</td>
                                                 <td>{{ $list->STATUS }}</td>
                                                 <td></td>
                                             </tr>

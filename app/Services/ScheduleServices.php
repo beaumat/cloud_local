@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Schedules;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleServices
 {
@@ -83,6 +84,24 @@ class ScheduleServices
             ->get();
 
         return $result;
+    }
+    public function DailyContactSchedule($Date, $LOCATION_ID)
+    {
+        return Schedules::query()
+            ->select([
+                'schedules.SHIFT_ID',
+                DB::raw('IF(schedules.SCHED_STATUS = 0, COUNT(*), 0) AS W'),
+                DB::raw('IF(schedules.SCHED_STATUS = 1, COUNT(*), 0) AS P'),
+                DB::raw('IF(schedules.SCHED_STATUS = 2, COUNT(*), 0) AS A'),
+                DB::raw('IF(schedules.SCHED_STATUS = 3, COUNT(*), 0) AS C')
+            ])
+            ->join('contact AS c', 'c.ID', '=', 'schedules.CONTACT_ID')
+            ->join('shift AS s', 's.ID', '=', 'schedules.SHIFT_ID')
+            ->where('c.TYPE', 3)
+            ->whereDate('schedules.SCHED_DATE', $Date)
+            ->where('schedules.LOCATION_ID', $LOCATION_ID)
+            ->groupBy(['schedules.SHIFT_ID', 'schedules.SCHED_STATUS'])
+            ->get();
     }
 
 }

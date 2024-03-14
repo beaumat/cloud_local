@@ -298,6 +298,7 @@ class ServiceChargeForm extends Component
     {
         foreach ($result as $list) {
             $this->AMOUNT = $list['AMOUNT'];
+            $this->BALANCE_DUE = $list['BALANCE_DUE'];
             $this->OUTPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
             $this->TAXABLE_AMOUNT = $list['TAXABLE_AMOUNT'];
             $this->NONTAXABLE_AMOUNT = $list['NONTAXABLE_AMOUNT'];
@@ -305,23 +306,22 @@ class ServiceChargeForm extends Component
     }
     public function updateCancel()
     {
-        $PO = $this->invoiceServices->get($this->ID);
-        if ($PO) {
-            $this->getInfo($PO);
+        $data = $this->invoiceServices->get($this->ID);
+        if ($data) {
+            $this->getInfo($data);
         }
         $this->Modify = false;
     }
     public function getSubmit()
     {
         try {
-            $this->invoiceServices->StatusUpdate($this->ID, 2);
-            $PO = $this->invoiceServices->get($this->ID);
-            if ($PO) {
-                $this->getInfo($PO);
+            $this->invoiceServices->StatusUpdate($this->ID, 15);
+            $data = $this->invoiceServices->get($this->ID);
+            if ($data) {
+                $this->getInfo($data);
                 $this->Modify = false;
                 return;
             }
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -333,10 +333,10 @@ class ServiceChargeForm extends Component
         try {
 
             $this->invoiceServices->StatusUpdate($this->ID, 7);
-            $PO = $this->invoiceServices->get($this->ID);
+            $data = $this->invoiceServices->get($this->ID);
 
-            if ($PO) {
-                $this->getInfo($PO);
+            if ($data) {
+                $this->getInfo($data);
                 $this->Modify = false;
                 return;
             }

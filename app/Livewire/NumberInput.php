@@ -14,6 +14,9 @@ class NumberInput extends Component
     public bool $vertical;
     public bool $withLabel;
     public bool $isDisabled;
+
+    public $isFocused = false;
+    
     public function mount($name, $titleName, $vertical = false, $withLabel = true, $isDisabled = false)
     {
         $this->titleName = $titleName;

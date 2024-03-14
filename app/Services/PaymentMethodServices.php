@@ -12,15 +12,24 @@ class PaymentMethodServices
         $this->object = $objectService;
     }
 
+    public function get($id)
+    {
+        return PaymentMethods::where('ID', $id)->first();
+    }
+    public function getList()
+    {
+        return PaymentMethods::query()->select(['ID', 'DESCRIPTION'])->get();
+    }
     public function Store(string $CODE, string $DESCRIPTION, int $PAYMENT_TYPE, int $GL_ACCOUNT_ID): int
     {
         $ID = $this->object->ObjectNextID('PAYMENT_METHOD');
+
         PaymentMethods::create([
-            'ID' =>             $ID,
-            'CODE' =>           $CODE,
-            'DESCRIPTION' =>    $DESCRIPTION,
-            'PAYMENT_TYPE' =>   $PAYMENT_TYPE,
-            'GL_ACCOUNT_ID' =>  $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
+            'ID' => $ID,
+            'CODE' => $CODE,
+            'DESCRIPTION' => $DESCRIPTION,
+            'PAYMENT_TYPE' => $PAYMENT_TYPE,
+            'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
         ]);
         return $ID;
     }
@@ -28,10 +37,10 @@ class PaymentMethodServices
     public function Update(int $ID, string $CODE, string $DESCRIPTION, int $PAYMENT_TYPE, int $GL_ACCOUNT_ID): void
     {
         PaymentMethods::where('ID', $ID)->update([
-            'CODE' =>           $CODE,
-            'DESCRIPTION' =>    $DESCRIPTION,
-            'PAYMENT_TYPE' =>   $PAYMENT_TYPE,
-            'GL_ACCOUNT_ID' =>  $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
+            'CODE' => $CODE,
+            'DESCRIPTION' => $DESCRIPTION,
+            'PAYMENT_TYPE' => $PAYMENT_TYPE,
+            'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
         ]);
     }
 

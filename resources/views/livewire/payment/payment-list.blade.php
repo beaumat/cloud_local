@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('transactionsinvoice') }}"> Services Charges </a></h5>
+                    <h5 class="m-0"><a href="{{ route('transactionspayment') }}"> Payments </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -49,33 +49,33 @@
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>Ref No.</th>
-                                        <th>Date</th>
-                                        <th>Petients</th>
-                                        <th>Location</th>
-                                        <th>Amount</th>
-                                        <th>Tax</th>
-                                        <th>Status</th>
-                                        <th class="text-center col-1">
-                                            <a href="{{ route('transactionsinvoice_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+                                        <th class="col-1">Ref No.</th>
+                                        <th class="col-1">Date</th>
+                                        <th>Patients</th>
+                                        <th class="col-1">Location</th>
+                                        <th class="col-1">Amount Applied</th>
+                                        <th class="col-1">Status</th>
+                                        <th class="text-center col-1 bg-success">
+                                            <a href="{{ route('transactionspayment_create') }}"
+                                                class="text-white btn btn-xs w-100">
+                                                <i class="fas fa-plus"></i> New
+                                        </a>
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
+                                <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
-                                            <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
-                                            <td> {{ $list->TAX_NAME }}</td>
+                                            <td class="text-right"> {{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('transactionsinvoice_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('transactionspayment_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>

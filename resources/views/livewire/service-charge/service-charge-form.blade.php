@@ -12,7 +12,8 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('transactionsservice_charges') }}"> Service Charges </a>
+                                    <a class="text-white" href="{{ route('transactionsservice_charges') }}"> Service
+                                        Charges </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)
@@ -60,7 +61,7 @@
                                                     @endif
 
                                                 </div>
-                                              
+
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -145,7 +146,7 @@
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 0)
                                             <a id="new" title="Create"
-                                                href="{{ route('vendorspurchase_order_create') }}"
+                                                href="{{ route('transactionsservice_charges_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
                                     </div>
@@ -158,73 +159,83 @@
             </div>
         </div>
     </section>
-    <section class="content">
-        <div class="container-fluid bg-light">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary card-outline card-outline-tabs">
-                        <div class="card-header p-0 border-bottom-0">
-                            <ul class="nav text-sm nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
-                                        href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tab-content" id="custom-tabs-four-tabContent">
-                                <div class="tab-pane fade show active " id="custom-tabs-four-item" role="tabpanel"
-                                    aria-labelledby="custom-tabs-four-item-tab">
-                                    <div class="row"
-                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        <div class="col-md-12"
-                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('ServiceCharge.ServiceChargeFormItems', ['INVOICE_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID])
+    @if ($ID > 0)
+        <section class="content">
+            <div class="container-fluid bg-light">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-header p-0 border-bottom-0">
+                                <ul class="nav text-sm nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
+                                            href="#custom-tabs-four-item" role="tab"
+                                            aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade show active " id="custom-tabs-four-item"
+                                        role="tabpanel" aria-labelledby="custom-tabs-four-item-tab">
+                                        <div class="row"
+                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            <div class="col-md-12"
+                                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                @livewire('ServiceCharge.ServiceChargeFormItems', ['INVOICE_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID])
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-md-6 text-left">
-                                    @if ($STATUS == 0)
-                                        <button class="btn btn-sm btn-success" wire:click='getSubmit'
-                                            wire:confirm="Are you sure you want to submit?"
-                                            @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            Submit
-                                        </button>
-                                    @endif
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-md-6 text-left">
+                                        @if ($STATUS == 0)
+                                            <button class="btn btn-sm btn-success" wire:click='getSubmit'
+                                                wire:confirm="Are you sure you want to submit?"
+                                                @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                Submit
+                                            </button>
+                                        @endif
 
-                                    @if ($STATUS == 2)
-                                        <button class="btn btn-sm btn-danger" wire:click='getVoid'
-                                            wire:confirm="Are you sure you want to void?">
-                                            Void
-                                        </button>
-                                    @endif
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-8 text-right">
-                                            <label class="text-sm">Input Tax:</label>
-                                            <label
-                                                class="text-info text-lg">{{ number_format($OUTPUT_TAX_AMOUNT, 2) }}</label>
-                                        </div>
-                                        <div class="col-md-4 text-right">
-                                            <label class="text-sm">Total:</label>
-                                            <label class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
+                                        @if ($STATUS == 2)
+                                            <button class="btn btn-sm btn-danger" wire:click='getVoid'
+                                                wire:confirm="Are you sure you want to void?">
+                                                Void
+                                            </button>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4 text-right">
+                                                <label class="text-sm">Input Tax:</label>
+                                                <label
+                                                    class="text-info text-lg">{{ number_format($OUTPUT_TAX_AMOUNT, 2) }}</label>
+                                            </div>
+                                            <div class="col-md-4 text-right">
+                                                <label class="text-sm">Total:</label>
+                                                <label
+                                                    class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
 
+                                            </div>
+                                            <div class="col-md-4 text-right">
+                                                <label class="text-sm">Balance:</label>
+                                                <label
+                                                    class="text-danger text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
+
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 </div>
+

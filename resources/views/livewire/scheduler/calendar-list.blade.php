@@ -28,7 +28,7 @@
                                 {{ $currentDay }}
                             </b>
 
-                            @livewire('Scheduler.shift-list', ['date' => $year . '-' . $month . '-' . $currentDay, 'location_id' => $LOCATION_ID])
+                            @livewire('Scheduler.shift-list', ['date' => $year . '-' . $month . '-' . $currentDay, 'location_id' => $LOCATION_ID, 'select_date' => $date])
 
                         </td>
                     @elseif ($currentDay <= 0)
@@ -36,29 +36,30 @@
                             <td wire:click="getsched('{{ $year - 1 . '-' . $month + 11 . '-' . $daysInPreviousMonth + $currentDay }}')"
                                 style="background-color: whitesmoke;">
                                 <b class="text-sm">{{ $daysInPreviousMonth + $currentDay }}</b>
-                                @livewire('Scheduler.shift-list', ['date' => $year - 1 . '-' . $month + 11 . '-' . $daysInPreviousMonth + $currentDay, 'location_id' => $LOCATION_ID])
+                                @livewire('Scheduler.shift-list', ['date' => $year - 1 . '-' . $month + 11 . '-' . $daysInPreviousMonth + $currentDay, 'location_id' => $LOCATION_ID, 'select_date' => $date])
 
                             </td>
                         @else
                             <td wire:click="getsched('{{ $year . '-' . $month - 1 . '-' . $daysInPreviousMonth + $currentDay }}')"
                                 style="background-color: whitesmoke;">
                                 <b class="text-sm">{{ $daysInPreviousMonth + $currentDay }}</b>
-                                @livewire('Scheduler.shift-list', ['date' => $year . '-' . $month - 1 . '-' . $daysInPreviousMonth + $currentDay, 'location_id' => $LOCATION_ID])
+                                @livewire('Scheduler.shift-list', ['date' => $year . '-' . $month - 1 . '-' . $daysInPreviousMonth + $currentDay, 'location_id' => $LOCATION_ID, 'select_date' => $date])
                             </td>
                         @endif
                     @elseif ($isExtraDay)
                         @if ($month == 12)
-                        <td  wire:click="getsched('{{ $year + 1 . '-' . $month - 11 . '-' . $dayCounter  }}')" style="background-color: whitesmoke;">
-                            <b class="text-sm"> {{ $dayCounter++ }}</b>
-                            @livewire('Scheduler.shift-list', ['date' => $year + 1 . '-' . $month - 11 . '-' . $dayCounter - 1, 'location_id' => $LOCATION_ID])
+                            <td wire:click="getsched('{{ $year + 1 . '-' . $month - 11 . '-' . $dayCounter }}')"
+                                style="background-color: whitesmoke;">
+                                <b class="text-sm"> {{ $dayCounter++ }}</b>
+                                @livewire('Scheduler.shift-list', ['date' => $year + 1 . '-' . $month - 11 . '-' . $dayCounter - 1, 'location_id' => $LOCATION_ID, 'select_date' => $date])
                             </td>
                         @else
-                        <td  wire:click="getsched('{{ $year . '-' . $month + 1 . '-' . $dayCounter  }}')" style="background-color: whitesmoke;">
-                            <b class="text-sm"> {{ $dayCounter++ }}</b>
-                            @livewire('Scheduler.shift-list', ['date' => $year . '-' . $month + 1 . '-' . $dayCounter - 1, 'location_id' => $LOCATION_ID])
+                            <td wire:click="getsched('{{ $year . '-' . $month + 1 . '-' . $dayCounter }}')"
+                                style="background-color: whitesmoke;">
+                                <b class="text-sm"> {{ $dayCounter++ }}</b>
+                                @livewire('Scheduler.shift-list', ['date' => $year . '-' . $month + 1 . '-' . $dayCounter - 1, 'location_id' => $LOCATION_ID, 'select_date' => $date])
                             </td>
                         @endif
-                   
                     @else
                         <td></td>
                     @endif

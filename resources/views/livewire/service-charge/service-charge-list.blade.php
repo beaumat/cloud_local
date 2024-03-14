@@ -53,16 +53,17 @@
                                     <tr>
                                         <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
-                                        <th>Petients</th>
+                                        <th>Patients</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Amount</th>
+                                        <th class="col-1">Balance</th>
                                         <th class="col-1">Tax</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('transactionsservice_charges_create') }}"
                                                 class="text-white btn btn-xs w-100">
                                                 <i class="fas fa-plus"></i> New
-                                        </a>
+                                            </a>
                                         </th>
                                     </tr>
                                 </thead>
@@ -74,6 +75,7 @@
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
+                                            <td class="text-right"> {{ number_format($list->BALANCE_DUE, 2) }}</td>
                                             <td> {{ $list->TAX_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
@@ -93,6 +95,9 @@
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="col-6 col-md-6">
+                    {{ $dataList->links() }}
                 </div>
             </div>
         </div>

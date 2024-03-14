@@ -8,12 +8,15 @@ use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('Service Charges')]
 class ServiceChargeList extends Component
 {
-    public $dataList = [];
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search = '';
+    public int $perPage = 20;
     public int $locationid;
     public $locationList = [];
     private $invoiceServices;
@@ -25,27 +28,18 @@ class ServiceChargeList extends Component
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
-    public function updatedlocationid()
-    {
-        $this->dataList = $this->invoiceServices->Search($this->search, $this->locationid);
-    }
-    public function updatedsearch()
-    {
-        $this->dataList = $this->invoiceServices->Search($this->search, $this->locationid);
-    }
-
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
-        $this->dataList = $this->invoiceServices->Search($this->search, $this->locationid);
+
     }
     public function delete($id)
     {
         try {
             $this->invoiceServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->dataList = $this->invoiceServices->Search($this->search, $this->locationid);
+
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -61,6 +55,7 @@ class ServiceChargeList extends Component
     }
     public function render()
     {
-        return view('livewire.service-charge.service-charge-list');
+        $dataList = $this->invoiceServices->Search($this->search, $this->locationid, $this->perPage);
+        return view('livewire.service-charge.service-charge-list', ['dataList' => $dataList]);
     }
 }

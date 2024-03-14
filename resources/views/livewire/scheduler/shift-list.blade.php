@@ -1,6 +1,6 @@
 <table class="text-xs">
     <thead class="text-xs">
-        <tr class="bg-info">
+        <tr @if ($select_date && $select_date->format('Y-m-d') == $Date->format('Y-m-d')) class="bg-success" @else class="bg-info" @endif>
             <th>S</th>
             <th>W</th>
             <th>P</th>

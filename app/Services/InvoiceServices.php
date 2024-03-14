@@ -4,23 +4,54 @@ namespace App\Services;
 
 use App\Models\Invoice;
 use App\Models\InvoiceItems;
+use App\Models\PaymentInvoices;
 use App\Models\Tax;
 use Carbon\Carbon;
+use Livewire\WithPagination;
 
 class InvoiceServices
 {
-
+    use WithPagination;
     private $object;
     private $compute;
     private $locationReference;
+
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
-        LocationReferenceServices $locationReferenceServices
+        LocationReferenceServices $locationReferenceServices,
+
     ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
         $this->locationReference = $locationReferenceServices;
+
+    }
+    public function getBalance(int $INVOICE_ID): float
+    {
+        return (float) Invoice::where('ID', $INVOICE_ID)->first()->BALANCE_DUE;
+    }
+    public function getInvoiceList(int $CUSTOMER_ID, int $LOCATION_ID, int $PAYMENT_ID)
+    {
+        return Invoice::query()
+            ->select([
+                'invoice.ID',
+                'invoice.DATE',
+                'invoice.CODE',
+                'invoice.AMOUNT',
+                'invoice.BALANCE_DUE'
+            ])
+            ->whereNotExists(function ($query) use (&$PAYMENT_ID) {
+                $query->select(\DB::raw(1))
+                    ->from('payment_invoices as p')
+                    ->whereRaw('p.INVOICE_ID = invoice.ID')
+                    ->where('p.PAYMENT_ID', '=', $PAYMENT_ID);
+            })
+            ->where('invoice.CUSTOMER_ID', $CUSTOMER_ID)
+            ->where('invoice.LOCATION_ID', $LOCATION_ID)
+            ->where('invoice.BALANCE_DUE', '>', 0)
+            ->where('invoice.STATUS', '>', 0)
+            ->get();
     }
     public function get(int $ID): object
     {
@@ -149,14 +180,15 @@ class InvoiceServices
         Invoice::where('ID', $ID)->delete();
     }
 
-    public function Search($search, int $LOCATION_ID): object
+    public function Search($search, int $locationId, int $perPage)
     {
-        $result = Invoice::query()
+        return Invoice::query()
             ->select([
                 'invoice.ID',
                 'invoice.CODE',
                 'invoice.DATE',
                 'invoice.AMOUNT',
+                'invoice.BALANCE_DUE',
                 'invoice.OUTPUT_TAX_RATE',
                 'invoice.NOTES',
                 'c.NAME as CONTACT_NAME',
@@ -165,10 +197,10 @@ class InvoiceServices
                 's.DESCRIPTION as STATUS'
             ])
             ->join('contact as c', 'c.ID', '=', 'invoice.CUSTOMER_ID')
-            ->join('location as l', function ($join) use (&$LOCATION_ID) {
+            ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'invoice.LOCATION_ID');
-                if ($LOCATION_ID > 0) {
-                    $join->where('l.ID', $LOCATION_ID);
+                if ($locationId > 0) {
+                    $join->where('l.ID', $locationId);
                 }
             })
             ->join('document_status_map as s', 's.ID', '=', 'invoice.STATUS')
@@ -181,10 +213,9 @@ class InvoiceServices
                     ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
             })
             ->orderBy('invoice.ID', 'desc')
-            ->limit($this->object->RecordLimit())
-            ->get();
+            ->paginate($perPage);
 
-        return $result;
+
     }
 
     private function getLine($Id): int
@@ -325,24 +356,76 @@ class InvoiceServices
                 ->orderBy('invoice_items.LINE_NO', 'asc')
                 ->get();
 
-            $result = $this->compute->taxCompute($itemResult, $TAX_ID);
+            $data = $this->compute->taxCompute($itemResult, $TAX_ID);
 
-            foreach ($result as $list) {
+            foreach ($data as $list) {
+                $originalAmount = (float) $list['AMOUNT'];
+                $balance = (float) $originalAmount - $this->paymentServices->GetPaymentAppliedViaInvoice($ID);
                 Invoice::where('ID', $ID)->update([
-                    'AMOUNT' => $list['AMOUNT'],
+                    'AMOUNT' => $originalAmount,
+                    'BALANCE_DUE' => $balance,
                     'OUTPUT_TAX_AMOUNT' => $list['TAX_AMOUNT'],
                     'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
                     'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                 ]);
+
+
+                $result = array(
+                    [
+                        'AMOUNT' => $originalAmount,
+                        'BALANCE_DUE' => $balance,
+                        'TAX_AMOUNT' => $list['TAX_AMOUNT'],
+                        'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
+                        'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
+                    ]
+                );
+                return $result;
             }
-
-
-            return $result;
         }
-
         return [];
     }
 
+    public function GetPaymentAppliedViaInvoice(int $INVOICE_ID): float
+    {
+        $paymentSum = PaymentInvoices::query()
+            ->select(\DB::raw('IFNULL(SUM(payment_invoices.AMOUNT_APPLIED), 0) AS pay'))
+            ->where('payment_invoices.INVOICE_ID', '=', $INVOICE_ID)
+            ->whereNull('payment_invoices.ACCOUNTS_RECEIVABLE_ID')
+            ->first();
+
+        return $paymentSum->pay;
+
+    }
+
+    public function updateInvoiceBalance(int $INVOICE_ID)
+    {
+        $data = Invoice::where('ID', $INVOICE_ID)->first();
+        if ($data) {
+            $amount = (float) $data->AMOUNT;
+            $payment = (float) $this->GetPaymentAppliedViaInvoice($INVOICE_ID);
+            $balance = $amount - $payment;
+            if ($data->STATUS == 0) {
+                return;
+            }
+            $status = 0;
+            if ($payment == 0) {
+                // poste    d
+                $status = 15;
+            } elseif ($balance <= 0) {
+                //paid
+                $status = 11;
+            } else {
+                // Unpaid
+                $status = 13;
+            }
+
+            Invoice::where('ID', $INVOICE_ID)->update([
+                'BALANCE_DUE' => $balance,
+                'STATUS' => $status,
+                'STATUS_DATE' => Carbon::now()->format('Y-m-d')
+            ]);
+        }
+    }
     public function getUpdateTaxItem(int $INVOICE_ID, int $TAX_ID)
     {
         $items = InvoiceItems::query()

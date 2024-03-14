@@ -57,11 +57,12 @@ class SchedulerList extends Component
     #[On('back-load')]
     public function DateSet($Date)
     {
+        $this->DATE = $Date;
         $this->reloadContactList($Date);
     }
     public function reloadContactList($Date)
-    {   
-        
+    {
+
         $date = Carbon::createFromFormat('Y-m-d', $Date);
         $this->schedContact = $this->scheduleServices->scheduleList($date, $this->LOCATION_ID);
         $this->DATE = $date;
@@ -99,15 +100,19 @@ class SchedulerList extends Component
     }
     public function nextMonth()
     {
+        $this->DATE = null;
         $this->month = $this->month == 12 ? 1 : $this->month + 1;
         $this->year = $this->month == 1 ? $this->year + 1 : $this->year;
         $this->reloadComponent();
+      
     }
     public function previousMonth()
-    {
+    {     $this->DATE = null;
         $this->month = $this->month == 1 ? 12 : $this->month - 1;
         $this->year = $this->month == 12 ? $this->year - 1 : $this->year;
         $this->reloadComponent();
+      
+ 
     }
 
     public function render()

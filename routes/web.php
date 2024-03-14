@@ -9,9 +9,13 @@ use App\Livewire\Customer\CustomerList;
 use App\Livewire\DashboardPage\Dashboard;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
+use App\Livewire\Hemodialysis\HemoForm;
+use App\Livewire\Hemodialysis\HemoList;
 use App\Livewire\Invoice\InvoiceForm;
 use App\Livewire\Invoice\InvoiceList;
 use App\Livewire\Option\OptionSettings;
+use App\Livewire\Payment\PaymentForm;
+use App\Livewire\Payment\PaymentList;
 use App\Livewire\Scheduler\SchedulerForm;
 use App\Livewire\Scheduler\SchedulerList;
 use App\Livewire\ServiceCharge\ServiceChargeForm;
@@ -85,9 +89,8 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-
+    
     Route::prefix('/transactions')->name('transactions')->group(function () {
-
         Route::prefix('/schedules')->group(function () {
             Route::get('/', SchedulerList::class)->name('schedules');
             Route::get('/setup', SchedulerForm::class)->name('schedules_setup');
@@ -98,6 +101,20 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', ServiceChargeForm::class)->name('service_charges_create');
             Route::get('/{id}/edit', ServiceChargeForm::class)->name('service_charges_edit');
         });
+
+        Route::prefix('/hemodialysis-treatment')->group(function () {
+            Route::get('/', HemoList::class)->name('hemo');
+            Route::get('/create', HemoForm::class)->name('hemo_create');
+            Route::get('/{id}/edit', HemoForm::class)->name('hemo_edit');
+        });
+
+        Route::prefix('/payments')->group(function () {
+            Route::get('/', PaymentList::class)->name('payment');
+            Route::get('/create', PaymentForm::class)->name('payment_create');
+            Route::get('/{id}/edit', PaymentForm::class)->name('payment_edit');
+        });
+
+   
     });
 
     Route::prefix('/vendors')->name('vendors')->group(function () {

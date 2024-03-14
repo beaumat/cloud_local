@@ -14,6 +14,7 @@ class ItemsList extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
+    protected $queryString = ['search' => ['except' => '']];
     public $search = '';
     public int $perPage = 20;
     private $itemServices;

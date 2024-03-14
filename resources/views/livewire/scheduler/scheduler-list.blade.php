@@ -2,17 +2,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
-            {{-- <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Schedules</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Schedulers</li>
-                    </ol>
-                </div>
-            </div> --}}
+
         </div><!-- /.container-fluid -->
     </section>
 
@@ -30,14 +20,19 @@
                                     </div>
                                     <div class="col-md-6 text-right">
                                         <a href="{{ route('transactionsschedules_setup') }}"
-                                            class="btn btn-primary btn-sm"> Setup</a>
+                                            class="btn btn-info btn-sm">
+                                            <i class="fa fa-cog" aria-hidden="true"></i> Setup</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <h4>{{ $DATE->format('m/d/Y') }}</h4>
+                                <h5 class="text-primary card-title"> Patient List on <b class="text-success">
+                                        @if ($schedContact && count($schedContact) > 0)
+                                            {{ $DATE->format('m/d/Y') }}
+                                        @endif
+                                    </b></h5>
                                 <table class="table table-sm">
-                                    <thead class="text-xs">
+                                    <thead class="text-xs bg-sky">
                                         <tr>
                                             <th>Shift</th>
                                             <th>Patient</th>
@@ -45,6 +40,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="text-xs">
+
                                         @foreach ($schedContact as $list)
                                             <tr>
                                                 <td> {{ $list->SHIFT }}</td>
@@ -96,7 +92,7 @@
                                     </div>
 
                                     <livewire:scheduler.calendar-list :year="$year" :month="$month"
-                                        :locationid="$LOCATION_ID" :key="$refreshComponent" />
+                                        :locationid="$LOCATION_ID" :key="$refreshComponent" :date="$DATE" />
                                 </div>
                             </div>
                         </div>
