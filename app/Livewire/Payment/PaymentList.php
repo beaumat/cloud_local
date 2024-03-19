@@ -19,9 +19,11 @@ class PaymentList extends Component
     public int $perPage = 20;
     public int $locationid;
     public $locationList = [];
+
     private $paymentServices;
     private $locationServices;
     private $userServices;
+
     public function boot(
         PaymentServices $paymentServices,
         LocationServices $locationServices,

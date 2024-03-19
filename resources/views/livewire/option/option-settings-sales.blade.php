@@ -81,7 +81,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12 ">
+                    
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
                              
@@ -126,12 +126,10 @@
                             </div>
 
                             <div class="custom-control custom-checkbox">
-                              
                                 <input wire:model.live='PrintDueDateOnStatement' type="checkbox">
                                 <label>Print due date on statement</label>
                             </div>
-                            <div class="custom-control custom-checkbox">
-                             
+                            <div class="custom-control custom-checkbox">              
                                 <input wire:model.live='ShowPostdatedTransactions' type="checkbox">
                                 <label>Show postdated transactions</label>
                             </div>

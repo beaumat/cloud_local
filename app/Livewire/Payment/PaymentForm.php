@@ -50,11 +50,9 @@ class PaymentForm extends Component
     private $accountServices;
     private $paymentMethodServices;
     private $contactServices;
-
     public bool $Modify = true;
     public bool $showCardNo = false;
     public bool $showCardDateExpire = false;
-
     public bool $showReceiptNo = false;
     public bool $showReceiptDate = false;
 

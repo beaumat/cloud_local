@@ -2,7 +2,7 @@
 
 namespace App\Livewire\ItemPage;
 
-use App\Models\Items;
+
 use App\Services\ItemServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -32,8 +32,6 @@ class ItemsList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
-
     public function render()
     {
 

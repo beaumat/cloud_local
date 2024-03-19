@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Hemodialysis;
+use Carbon\Carbon;
+
+class HemoServices
+{
+
+    private $object;
+    private $user;
+    public function __construct(ObjectServices $objectService, UserServices $userServices)
+    {
+        $this->object = $objectService;
+        $this->user = $userServices;
+    }
+    public function Get(int $ID)
+    {
+        return Hemodialysis::where('ID', $ID)->first();
+    }
+
+
+    public function updateNumber(int $ID, string $COLUMN, float $Value)
+    {
+        Hemodialysis::where('ID', $ID)->update([$COLUMN => $Value ?? 0]);
+    }
+    public function updateText(int $ID, string $COLUMN, string $Value)
+    {
+        Hemodialysis::where('ID', $ID)->update([$COLUMN => $Value ?? 0]);
+    }
+    public function PreSave(string $DATE, string $CODE, int $CUSTOMER_ID, int $LOCATION_ID)
+    {
+        $ID = (int) $this->object->ObjectNextID('HEMODIALYSIS');
+        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('HEMODIALYSIS');
+
+        Hemodialysis::create([
+            'ID' => $ID,
+            'RECORDED_ON' => Carbon::now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
+            'DATE' => $DATE,
+            'CUSTOMER_ID' => $CUSTOMER_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+            'STATUS' => 0,
+            'STATUS_DATE' => Carbon::now()->format('Y-m-d'),
+            'USER_ID' => $this->user->UserId()
+        ]);
+
+        return $ID;
+
+    }
+    public function PreUpdate(int $ID, string $DATE, string $CODE, int $CUSTOMER_ID, int $LOCATION_ID)
+    {
+        Hemodialysis::where('ID', $ID)->update([
+            'CODE' => $CODE,
+            'DATE' => $DATE,
+            'CUSTOMER_ID' => $CUSTOMER_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+        ]);
+
+    }
+    public function Store()
+    {
+
+    }
+    public function Update()
+    {
+
+    }
+    public function Delete(int $id)
+    {
+        Hemodialysis::where('ID', $id)->delete();
+    }
+    public function Search($search, int $LOCATION_ID, int $perPage)
+    {
+        return Hemodialysis::query()
+            ->select([
+                'hemodialysis.ID',
+                'hemodialysis.CODE',
+                'hemodialysis.DATE',
+                'c.NAME as CONTACT_NAME',
+                'l.NAME as LOCATION_NAME'
+            ])
+            ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
+            ->join('location as l', function ($join) use (&$LOCATION_ID) {
+                $join->on('l.ID', '=', 'hemodialysis.LOCATION_ID');
+                if ($LOCATION_ID > 0) {
+                    $join->where('l.ID', $LOCATION_ID);
+                }
+            })
+            ->when($search, function ($query) use (&$search) {
+                $query->where('hemodialysis.CODE', 'like', '%' . $search . '%')
+                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+            })
+            ->orderBy('ID', 'desc')
+            ->orderBy('hemodialysis.ID', 'desc')
+            ->paginate($perPage);
+    }
+
+
+}
