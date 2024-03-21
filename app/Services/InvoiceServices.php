@@ -15,7 +15,6 @@ class InvoiceServices
     private $object;
     private $compute;
     private $locationReference;
-
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
@@ -360,7 +359,7 @@ class InvoiceServices
 
             foreach ($data as $list) {
                 $originalAmount = (float) $list['AMOUNT'];
-                $balance = (float) $originalAmount - $this->paymentServices->GetPaymentAppliedViaInvoice($ID);
+                $balance = (float) $originalAmount - $this->GetPaymentAppliedViaInvoice($ID);
                 Invoice::where('ID', $ID)->update([
                     'AMOUNT' => $originalAmount,
                     'BALANCE_DUE' => $balance,

@@ -161,7 +161,7 @@
                                         @if ($ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('Hemodialysis.Access')
+                                            @livewire('Hemodialysis.Access', ['ID' => $ID])
                                         </div>
                                     </div>
                                 </div>
@@ -171,7 +171,7 @@
                                         @if ($ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('Hemodialysis.Assessment')
+                                            @livewire('Hemodialysis.Assessment', ['ID' => $ID])
                                         </div>
                                     </div>
                                 </div>
@@ -195,7 +195,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <button class="btn btn-sm btn-success">Submit</button>
+                    <button class="btn btn-sm btn-primary" wire:click='update_all'>Save</button>
                 </div>
             </div>
         </div>

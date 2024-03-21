@@ -19,8 +19,15 @@ class HemoServices
     {
         return Hemodialysis::where('ID', $ID)->first();
     }
+    public function Update(int $ID, $Object)
+    {
+        Hemodialysis::where('ID', $ID)->update($Object);
+    }
 
-
+    public function updateBoolean(int $ID, string $COLUMN, bool $Value)
+    {
+        Hemodialysis::where('ID', $ID)->update([$COLUMN => $Value]);
+    }
     public function updateNumber(int $ID, string $COLUMN, float $Value)
     {
         Hemodialysis::where('ID', $ID)->update([$COLUMN => $Value ?? 0]);
@@ -60,10 +67,6 @@ class HemoServices
 
     }
     public function Store()
-    {
-
-    }
-    public function Update()
     {
 
     }

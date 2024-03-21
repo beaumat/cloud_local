@@ -72,7 +72,13 @@ class HemoForm extends Component
         $this->CUSTOMER_ID = 0;
         $this->CODE = '';
     }
-
+    public function update_all()
+    {
+        $this->dispatch('treatment-save');
+        $this->dispatch('access-save');
+        $this->dispatch('assessment-save');
+        session()->flash('message', 'Successfully save');
+    }
     public function getModify()
     {
         $this->Modify = true;
