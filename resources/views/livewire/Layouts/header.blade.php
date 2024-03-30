@@ -12,9 +12,9 @@
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                 class="nav-link dropdown-toggle">Contacts</a>
             <ul aria-labelledby="dropdownSubMenu1" class="border-0 shadow dropdown-menu">
-                <li><a href="#" class="dropdown-item">Petients </a></li>
-                <li><a href="#" class="dropdown-item">Suppliers</a></li>
-                <li><a href="#" class="dropdown-item">Doctors</a></li>
+                <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a></li>
+                <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Suppliers</a></li>
+                <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Nurses & Staff</a></li>
             </ul>
         </li>
 
@@ -139,11 +139,11 @@
                 class="nav-link dropdown-toggle text-sm"><i class="fa fa-user-circle" aria-hidden="true"></i>
                 {{ auth()->user()->name }}</a>
             <ul aria-labelledby="dropdownSubMenu1" class="border-0 shadow dropdown-menu">
-            
-                <li>  <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                    <i class="fas fa-expand-arrows-alt"></i> Fullscreen
-    
-                </a></li>
+
+                <li> <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i> Fullscreen
+
+                    </a></li>
                 <li> <a class="nav-link" wire:click="logout" title="exit" data-slide="true" href="#"
                         role="button" wire:confirm="Are you sure you want to logout?">
                         <i class="fa fa-sign-out"></i> Logout

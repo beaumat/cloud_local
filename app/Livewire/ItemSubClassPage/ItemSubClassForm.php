@@ -48,26 +48,39 @@ class ItemSubClassForm extends Component
     public function save(ItemSubClassServices $itemSubClassServices)
     {
 
-        $this->validate(
-            [
-                'CODE' => 'required|max:10|unique:item_sub_class,code,' . $this->ID,
-                'DESCRIPTION' => 'required|max:100|unique:item_sub_class,description,' . $this->ID,
-                'CLASS_ID' => 'required|not_in:0',
-            ],
-            [
-            ],
-            [
-                'CODE' => 'Code',
-                'DESCRIPTION' => 'Description',
-                'CLASS_ID' => 'Item Class',
-            ]
-        );
+        if ($this->ID === 0) {
+            $this->validate(
+                [
+                    'DESCRIPTION' => 'required|max:100|unique:item_sub_class,description,' . $this->ID,
+                    'CLASS_ID' => 'required|not_in:0',
+                ],
+                [],
+                [
+                    'DESCRIPTION' => 'Description',
+                    'CLASS_ID' => 'Item Class',
+                ]
+            );
+        } else {
+            $this->validate(
+                [
+                    'CODE' => 'required|max:10|unique:item_sub_class,code,' . $this->ID,
+                    'DESCRIPTION' => 'required|max:100|unique:item_sub_class,description,' . $this->ID,
+                    'CLASS_ID' => 'required|not_in:0',
+                ],
+                [],
+                [
+                    'CODE' => 'Code',
+                    'DESCRIPTION' => 'Description',
+                    'CLASS_ID' => 'Item Class',
+                ]
+            );
+        }
+
         try {
 
             if ($this->ID === 0) {
-                
                 $this->ID = $itemSubClassServices->Store($this->CODE, $this->DESCRIPTION, $this->CLASS_ID);
-                session()->flash('message', 'Successfully created.');
+                return Redirect::route('maintenanceinventoryitem_sub_class_edit', ['id' => $this->ID])->with('message', 'Successfully created.');
             } else {
                 $itemSubClassServices->Update($this->ID, $this->CODE, $this->DESCRIPTION, $this->CLASS_ID);
                 session()->flash('message', 'Successfully updated.');

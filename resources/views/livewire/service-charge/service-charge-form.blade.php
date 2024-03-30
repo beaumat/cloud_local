@@ -36,20 +36,18 @@
                                                     :options="$patientList" :zero="true" :isDisabled=true
                                                     wire:model='CUSTOMER_ID' />
                                             @endif
-
                                             <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 class">
                                                     @if ($Modify)
                                                         <livewire:select-option name="PAYMENT_TERMS_ID"
                                                             :isDisabled=false titleName="Payment Terms"
                                                             :options="$paymentTermList" :zero="false"
-                                                            wire:model='PAYMENT_TERMS_ID' />
+                                                            wire:model.live='PAYMENT_TERMS_ID' />
                                                     @else
                                                         <livewire:select-option name="PAYMENT_TERMS_ID" :isDisabled=true
                                                             titleName="Payment Terms" :options="$paymentTermList"
-                                                            :zero="false" wire:model='PAYMENT_TERMS_ID' />
+                                                            :zero="false" wire:model.live='PAYMENT_TERMS_ID' />
                                                     @endif
-
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify)
@@ -59,9 +57,7 @@
                                                         <livewire:date-input name="DUE_DATE" :isDisabled=true
                                                             titleName="Due Date" wire:model='DUE_DATE' />
                                                     @endif
-
                                                 </div>
-
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -166,18 +162,27 @@
                     <div class="col-md-12">
                         <div class="card card-primary card-outline card-outline-tabs">
                             <div class="card-header p-0 border-bottom-0">
-                                <ul class="nav text-sm nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
+
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
-                                            href="#custom-tabs-four-item" role="tab"
+                                        <a class="nav-link @if ($tab == 'item') active @endif"
+                                            id="custom-tabs-four-item-tab" wire:click="SelectTab('item')"
+                                            data-toggle="pill" href="#custom-tabs-four-item" role="tab"
                                             aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @if ($tab == 'payment') active @endif"
+                                            id="custom-tabs-four-payment-tab" wire:click="SelectTab('payment')"
+                                            data-toggle="pill" href="#custom-tabs-four-payment" role="tab"
+                                            aria-controls="custom-tabs-four-payment" aria-selected="true">Payments</a>
                                     </li>
                                 </ul>
                             </div>
                             <div class="card-body">
                                 <div class="tab-content" id="custom-tabs-four-tabContent">
-                                    <div class="tab-pane fade show active " id="custom-tabs-four-item"
-                                        role="tabpanel" aria-labelledby="custom-tabs-four-item-tab">
+                                    <div class="tab-pane fade @if ($tab == 'item') show active @endif"
+                                        id="custom-tabs-four-item" role="tabpanel"
+                                        aria-labelledby="custom-tabs-four-item-tab">
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
@@ -186,56 +191,68 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="tab-pane fade @if ($tab == 'payment') show active @endif"
+                                        id="custom-tabs-four-payment" role="tabpanel"
+                                        aria-labelledby="custom-tabs-four-payment-tab">
+                                        <div class="row"
+                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            <div class="col-md-12">
+                                                @livewire('ServiceCharge.Payments', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-footer">
                                 <div class="row">
-                                    <div class="col-md-6 text-left">
-                                        @if ($STATUS == 0)
+                                    <div class="col-md-4 text-left">
+                                        {{-- @if ($STATUS == 0)
                                             <button class="btn btn-sm btn-success" wire:click='getSubmit'
                                                 wire:confirm="Are you sure you want to submit?"
                                                 @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                 Submit
                                             </button>
-                                        @endif
+                                        @endif --}}
 
-                                        @if ($STATUS == 2)
+                                        {{-- @if ($STATUS == 2)
                                             <button class="btn btn-sm btn-danger" wire:click='getVoid'
                                                 wire:confirm="Are you sure you want to void?">
                                                 Void
                                             </button>
-                                        @endif
+                                        @endif --}}
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
                                         <div class="row">
-                                            <div class="col-md-4 text-right">
-                                                <label class="text-sm">Input Tax:</label>
+                                            <div class="col-md-3 text-right">
+                                                <label class="text-sm">Tax:</label>
                                                 <label
                                                     class="text-info text-lg">{{ number_format($OUTPUT_TAX_AMOUNT, 2) }}</label>
                                             </div>
-                                            <div class="col-md-4 text-right">
+                                            <div class="col-md-3 text-right">
                                                 <label class="text-sm">Total:</label>
                                                 <label
                                                     class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
+                                            </div>
+                                            <div class="col-md-3 text-right">
+                                                <label class="text-sm">Payment:</label>
+                                                <label
+                                                    class="text-success text-lg">{{ number_format($AMOUNT - $BALANCE_DUE, 2) }}</label>
 
                                             </div>
-                                            <div class="col-md-4 text-right">
+                                            <div class="col-md-3 text-right">
                                                 <label class="text-sm">Balance:</label>
                                                 <label
                                                     class="text-danger text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
-
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
     @endif
 </div>
-

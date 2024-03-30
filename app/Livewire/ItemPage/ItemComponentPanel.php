@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire\ItemPage;
+
 use Illuminate\Validation\Rule;
 use App\Models\Items;
 use App\Services\ItemComponentServices;
@@ -12,7 +13,7 @@ class ItemComponentPanel extends Component
 {
     #[Reactive]
     public int $itemId = 0;
-    public string  $itemTypeName;
+    public string $itemTypeName;
     public bool $saveSuccess = false;
     public bool $codeBase = false;
     public int $COMPONENT_ID;
@@ -22,10 +23,15 @@ class ItemComponentPanel extends Component
     public $itemCodeList = [];
     public string $search = '';
     public $componentList = [];
-    public  $editItemId = null;
+    public $editItemId = null;
     public float $newQty;
     public float $newRate;
 
+    private $itemComponentServices;
+    public function boot(ItemComponentServices $itemComponentServices)
+    {
+        $this->itemComponentServices = $itemComponentServices;
+    }
     public function updatedcodeBase()
     {
         if ($this->codeBase) {
@@ -37,12 +43,13 @@ class ItemComponentPanel extends Component
             ->get();
     }
 
-    public function saveItem(ItemComponentServices $itemComponentServices)
+    public function saveItem()
     {
         $this->validate(
             [
                 'COMPONENT_ID' => [
-                    'required', 'not_in:0',
+                    'required',
+                    'not_in:0',
                     Rule::unique('item_components', 'component_id')->where(function ($query) {
                         return $query->where('item_id', $this->itemId);
                     }),
@@ -56,13 +63,13 @@ class ItemComponentPanel extends Component
         );
 
         try {
-            $itemComponentServices->Store(
+            $this->itemComponentServices->Store(
                 $this->COMPONENT_ID,
                 $this->itemId,
                 $this->QUANTITY ? $this->QUANTITY : 0,
                 $this->RATE ? $this->RATE : 0
             );
-            $this->componentList =  $itemComponentServices->Search($this->search, $this->itemId);
+            $this->componentList = $this->itemComponentServices->Search($this->search, $this->itemId);
             $this->COMPONENT_ID = 0;
             $this->RATE = 0;
             $this->QUANTITY = 1;
@@ -108,7 +115,7 @@ class ItemComponentPanel extends Component
     public function deleteItem($id, ItemComponentServices $itemComponentServices)
     {
         $itemComponentServices->Delete($id);
-        $this->componentList =  $itemComponentServices->Search($this->search, $this->itemId);
+        $this->componentList = $itemComponentServices->Search($this->search, $this->itemId);
     }
     public function render(ItemComponentServices $itemComponentServices)
     {

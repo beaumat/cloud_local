@@ -11,15 +11,23 @@ class ItemClassServices
     {
         $this->object = $objectService;
     }
+    public function GetDesc($ID)
+    {
 
+        if ($ID) {
+            return ItemClass::where('ID', $ID)->first()->DESCRIPTION;
+        }
+        return '';
+    }
     public function Store(string $CODE, string $DESCRIPTION): int
     {
         $ID = $this->object->ObjectNextID('ITEM_CLASS');
+        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('ITEM_CLASS');
 
         ItemClass::create([
-            'ID' =>             $ID,
-            'CODE' =>           $CODE,
-            'DESCRIPTION' =>    $DESCRIPTION
+            'ID' => $ID,
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
+            'DESCRIPTION' => $DESCRIPTION
         ]);
 
         return $ID;
@@ -29,8 +37,8 @@ class ItemClassServices
     {
 
         ItemClass::where('ID', $ID)->update([
-            'CODE' =>           $CODE,
-            'DESCRIPTION' =>    $DESCRIPTION
+            'CODE' => $CODE,
+            'DESCRIPTION' => $DESCRIPTION
         ]);
     }
 

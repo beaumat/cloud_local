@@ -44,12 +44,6 @@ class Items extends Model
         'CUSTOM_FIELD2',
         'CUSTOM_FIELD3',
         'CUSTOM_FIELD4',
-        'CUSTOM_FIELD5',
-        'NON_PORFOLIO_COMPUTATION',
-        'BUNDLE_SET',
-        'NON_DISCOUNTED_ITEM',
-        'PIC_FILENAME',
-        'IS_EXPIRED'
-
+        'CUSTOM_FIELD5'
     ];
 }

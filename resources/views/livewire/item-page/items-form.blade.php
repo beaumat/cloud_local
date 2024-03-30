@@ -198,18 +198,20 @@
                                                                         @endif
                                                                     @endif
 
-                                                                    @if ($TYPE <= 4 || $TYPE === 7)
+                                                                    @if ($TYPE <= 4 || $TYPE == 7 || $TYPE == 6)
                                                                         <div class="col-md-6">
                                                                             <div class="row">
-                                                                                <div class="col-md-12">
-                                                                                    <livewire:number-input
-                                                                                        name="RATE"
-                                                                                        titleName="Rate"
-                                                                                        wire:model='RATE'
-                                                                                        :vertical="true">
-                                                                                </div>
+                                                                                @if ($TYPE != 6)
+                                                                                    <div class="col-md-12">
+                                                                                        <livewire:number-input
+                                                                                            name="RATE"
+                                                                                            titleName="Rate"
+                                                                                            wire:model='RATE'
+                                                                                            :vertical="true">
+                                                                                    </div>
+                                                                                @endif
 
-                                                                                @if ($TYPE < 4)
+                                                                                @if ($TYPE < 4 || $TYPE == 6)
                                                                                     <div class="col-md-12">
                                                                                         <livewire:select-option
                                                                                             name="CLASS_ID"
@@ -220,8 +222,9 @@
                                                                                             :key="$itemClass
                                                                                                 ->pluck('ID')
                                                                                                 ->join('_')"
-                                                                                            :vertical="true">
+                                                                                            :vertical="true" />
                                                                                     </div>
+
                                                                                     <div class="col-md-12">
                                                                                         @if ($itemSubClass)
                                                                                             <livewire:select-option
@@ -233,50 +236,51 @@
                                                                                                 :key="$itemSubClass
                                                                                                     ->pluck('ID')
                                                                                                     ->join('_')"
+                                                                                                :vertical="true" />
+                                                                                        @else
+                                                                                            <livewire:select-option
+                                                                                                name="SUB_CLASS_ID"
+                                                                                                titleName="Item Sub-class"
+                                                                                                :options="[]"
+                                                                                                :zero="true"
+                                                                                                wire:model='SUB_CLASS_ID'
                                                                                                 :vertical="true">
-                                                                                            @else
-                                                                                                <livewire:select-option
-                                                                                                    name="SUB_CLASS_ID"
-                                                                                                    titleName="Item Sub-class"
-                                                                                                    :options="[]"
-                                                                                                    :zero="true"
-                                                                                                    wire:model='SUB_CLASS_ID'
-                                                                                                    :vertical="true">
                                                                                         @endif
                                                                                     </div>
                                                                                 @endif
 
-                                                                                <div class="col-md-12">
-
-                                                                                    @if ($TYPE < 2)
-                                                                                        <livewire:select-option
-                                                                                            name="GL_ACCOUNT_ID"
-                                                                                            :options="$accounts"
-                                                                                            :zero="true"
-                                                                                            titleName="Income Accounts"
-                                                                                            wire:model='GL_ACCOUNT_ID'
-                                                                                            :vertical="true">
-                                                                                        @else
+                                                                                @if ($TYPE != 6)
+                                                                                    <div class="col-md-12">
+                                                                                        @if ($TYPE < 2)
                                                                                             <livewire:select-option
                                                                                                 name="GL_ACCOUNT_ID"
                                                                                                 :options="$accounts"
                                                                                                 :zero="true"
-                                                                                                titleName="GL Accounts"
+                                                                                                titleName="Income Accounts"
                                                                                                 wire:model='GL_ACCOUNT_ID'
                                                                                                 :vertical="true">
-                                                                                    @endif
+                                                                                            @else
+                                                                                                <livewire:select-option
+                                                                                                    name="GL_ACCOUNT_ID"
+                                                                                                    :options="$accounts"
+                                                                                                    :zero="true"
+                                                                                                    titleName="GL Accounts"
+                                                                                                    wire:model='GL_ACCOUNT_ID'
+                                                                                                    :vertical="true">
+                                                                                        @endif
 
-                                                                                </div>
+                                                                                    </div>
 
-                                                                                <div class="col-md-12">
-                                                                                    <livewire:custom-check-box
-                                                                                        name="TAXABLE"
-                                                                                        titleName="Taxable"
-                                                                                        wire:model='TAXABLE'>
-                                                                                </div>
-
+                                                                                    <div class="col-md-12">
+                                                                                        <livewire:custom-check-box
+                                                                                            name="TAXABLE"
+                                                                                            titleName="Taxable"
+                                                                                            wire:model='TAXABLE'>
+                                                                                    </div>
+                                                                                @endif
                                                                             </div>
                                                                         </div>
+
                                                                     @endif
                                                                     @if ($TYPE === 4 || $TYPE === 7)
                                                                         <div class="col-md-6">
@@ -414,26 +418,21 @@
                                                 </div>
                                             </div>
                                         @endif
+
                                         @if ($TYPE < 2)
                                             <div class="tab-pane fade @if ($activeTab == 'inv') show active @endif"
                                                 id="custom-tabs-three-inventory" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-inventory-tab">
-
                                                 <div class="row">
-
                                                     <div class="col-md-12 mt-2">
                                                         @livewire('ItemPage.ItemInventoryPanel', ['itemId' => $ID])
-
                                                     </div>
                                                 </div>
-
                                             </div>
                                             <div class="tab-pane fade @if ($activeTab == 'unit') show active @endif"
                                                 id="custom-tabs-three-unit" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-unit-tab">
-
                                                 <div class="row">
-
                                                     <div class="col-md-12 mt-2 mb-2">
                                                         @livewire('ItemPage.ItemUnitPanel', ['itemId' => $ID])
                                                     </div>

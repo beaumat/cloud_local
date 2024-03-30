@@ -10,8 +10,6 @@ class Assessment extends Component
 {
     public int $ID;
     private $hemoServices;
-
-
     public bool $PRE_ASSIST_AMBULATORY;
     public bool $PRE_ASSIST_AMBULATORY_W_ASSIST;
     public bool $PRE_ASSIST_WHEEL_CHAIR;

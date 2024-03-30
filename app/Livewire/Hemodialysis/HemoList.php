@@ -47,7 +47,6 @@ class HemoList extends Component
     }
     public function render()
     {
-
         $dataList = $this->hemoServices->Search($this->search, $this->locationid, $this->perPage);
         return view('livewire.hemodialysis.hemo-list', ['dataList' => $dataList]);
 

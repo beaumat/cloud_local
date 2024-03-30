@@ -24,12 +24,12 @@ class ItemsForm extends Component
 {
 
     public string $activeTab = 'gen';
-    
-    public int  $ID;
+
+    public int $ID;
     public string $CODE;
     public string $DESCRIPTION;
     public string $PURCHASE_DESCRIPTION;
-    public int  $GROUP_ID;
+    public int $GROUP_ID;
     public int $SUB_CLASS_ID;
     public int $TYPE = 0;
     public int $STOCK_TYPE;
@@ -55,37 +55,35 @@ class ItemsForm extends Component
     public string $CUSTOM_FIELD3;
     public string $CUSTOM_FIELD4;
     public string $CUSTOM_FIELD5;
-    public bool $NON_PORFOLIO_COMPUTATION;
-    public bool $BUNDLE_SET;
-    public bool $NON_DISCOUNTED_ITEM;
-    public string $PIC_FILENAME;
-    public bool $IS_EXPIRED;
     public $itemType = [];
     public $stockType = [];
     public $itemGroup = [];
-
     public $CLASS_ID;
     public $itemClass = [];
+    public $itemClass2 = [];
     public $itemSubClass = [];
-
     public $vendors = [];
     public $manufacturers = [];
     public $accounts = [];
     public $rateType = [];
     public $units = [];
-    
+
+    private $itemServices;
+    public function boot(ItemServices $itemServices)
+    {
+        $this->itemServices = $itemServices;
+    }
     public function SelectTab($tab)
     {
         $this->activeTab = $tab;
     }
-
     public function LoadDropdown()
     {
-
         $this->itemSubClass = [];
         $this->itemGroup = ItemGroup::where('ITEM_TYPE', $this->TYPE)->get();
         $this->itemClass = ItemClass::all();
-        $this->itemType = ItemType::all();
+        $this->itemClass2 = $this->itemClass;
+        $this->itemType = ItemType::whereIn('ID', ['0', '1', '2', '4', '6', '7'])->get();
         $this->stockType = StockType::all();
         $this->manufacturers = Manufacturers::all();
         $this->vendors = Contacts::query()->select(['ID', 'PRINT_NAME_AS as NAME'])->where('TYPE', '0')->where('INACTIVE', '0')->orderBy('PRINT_NAME_AS', 'asc')->get();
@@ -125,17 +123,12 @@ class ItemsForm extends Component
         $this->CUSTOM_FIELD3 = "";
         $this->CUSTOM_FIELD4 = "";
         $this->CUSTOM_FIELD5 = "";
-        $this->NON_PORFOLIO_COMPUTATION = false;
-        $this->BUNDLE_SET = false;
-        $this->NON_DISCOUNTED_ITEM = false;
-        $this->PIC_FILENAME = "";
-        $this->IS_EXPIRED = false;
+
     }
     public function mount($id = null)
     {
 
         $this->LoadDropdown();
-        $this->ClearField();
 
         if (is_numeric($id)) {
 
@@ -146,37 +139,32 @@ class ItemsForm extends Component
                 $this->CODE = $item->CODE;
                 $this->DESCRIPTION = $item->DESCRIPTION ? $item->DESCRIPTION : '';
                 $this->PURCHASE_DESCRIPTION = $item->PURCHASE_DESCRIPTION ? $item->PURCHASE_DESCRIPTION : '';
-                $this->GROUP_ID =  $item->GROUP_ID ? $item->GROUP_ID : 0;
+                $this->GROUP_ID = $item->GROUP_ID ? $item->GROUP_ID : 0;
                 $this->SUB_CLASS_ID = $item->SUB_CLASS_ID ? $item->SUB_CLASS_ID : 0;
                 $this->TYPE = $item->TYPE;
                 $this->STOCK_TYPE = $item->STOCK_TYPE ? $item->STOCK_TYPE : 0;
                 $this->GL_ACCOUNT_ID = $item->GL_ACCOUNT_ID ? $item->GL_ACCOUNT_ID : 0;
                 $this->COGS_ACCOUNT_ID = $item->COGS_ACCOUNT_ID ? $item->COGS_ACCOUNT_ID : 0;
-                $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?  $item->ASSET_ACCOUNT_ID : 0;
+                $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ? $item->ASSET_ACCOUNT_ID : 0;
                 $this->TAXABLE = $item->TAXABLE ? $item->TAXABLE : false;
                 $this->PREFERRED_VENDOR_ID = $item->PREFERRED_VENDOR_ID ? $item->PREFERRED_VENDOR_ID : 0;
                 $this->MANUFACTURER_ID = $item->MANUFACTURER_ID ? $item->MANUFACTURER_ID : 0;
                 $this->RATE = $item->RATE ? $item->RATE : 0;
-                $this->COST = $item->COST ?  $item->COST : 0;
+                $this->COST = $item->COST ? $item->COST : 0;
                 $this->RATE_TYPE = $item->RATE_TYPE ? $item->RATE_TYPE : 0;
                 $this->PAYMENT_METHOD_ID = $item->PAYMENT_METHOD_ID ? $item->PAYMENT_METHOD_ID : 0;
                 $this->NOTES = $item->NOTES ? $item->NOTES : '';
                 $this->BASE_UNIT_ID = $item->BASE_UNIT_ID ? $item->BASE_UNIT_ID : 0;
                 $this->PURCHASES_UNIT_ID = $item->PURCHASES_UNIT_ID ? $item->PURCHASES_UNIT_ID : 0;
-                $this->SHIPPING_UNIT_ID = $item->SHIPPING_UNIT_ID ?  $item->SHIPPING_UNIT_ID : 0;
+                $this->SHIPPING_UNIT_ID = $item->SHIPPING_UNIT_ID ? $item->SHIPPING_UNIT_ID : 0;
                 $this->SALES_UNIT_ID = $item->SALES_UNIT_ID ? $item->SALES_UNIT_ID : 0;
-                $this->PRINT_INDIVIDUAL_ITEMS = $item->PRINT_INDIVIDUAL_ITEMS ? $item->PRINT_INDIVIDUAL_ITEMS :  false;
+                $this->PRINT_INDIVIDUAL_ITEMS = $item->PRINT_INDIVIDUAL_ITEMS ? $item->PRINT_INDIVIDUAL_ITEMS : false;
                 $this->INACTIVE = $item->INACTIVE;
                 $this->CUSTOM_FIELD1 = $item->CUSTOM_FIELD1 ? $item->CUSTOM_FIELD1 : '';
                 $this->CUSTOM_FIELD2 = $item->CUSTOM_FIELD2 ? $item->CUSTOM_FIELD2 : '';
                 $this->CUSTOM_FIELD3 = $item->CUSTOM_FIELD3 ? $item->CUSTOM_FIELD3 : '';
                 $this->CUSTOM_FIELD4 = $item->CUSTOM_FIELD4 ? $item->CUSTOM_FIELD4 : '';
                 $this->CUSTOM_FIELD5 = $item->CUSTOM_FIELD5 ? $item->CUSTOM_FIELD5 : '';
-                $this->NON_PORFOLIO_COMPUTATION = $item->NON_PORFOLIO_COMPUTATION ? $item->NON_PORFOLIO_COMPUTATION :  false;
-                $this->BUNDLE_SET = $item->BUNDLE_SET  ? $item->BUNDLE_SET : false;
-                $this->NON_DISCOUNTED_ITEM = $item->NON_DISCOUNTED_ITEM ? $item->NON_DISCOUNTED_ITEM : false;
-                $this->PIC_FILENAME = $item->PIC_FILENAME ? $item->PIC_FILENAME : '';
-                $this->IS_EXPIRED = $item->IS_EXPIRED ? $item->IS_EXPIRED : false;
 
                 $getSubClass = ItemSubClass::where('ID', $this->SUB_CLASS_ID)->first();
 
@@ -197,6 +185,7 @@ class ItemsForm extends Component
     public function updatedTYPE()
     {
         $this->itemGroup = ItemGroup::where('ITEM_TYPE', $this->TYPE)->get();
+
     }
     public function updatedCLASSID()
     {
@@ -211,27 +200,44 @@ class ItemsForm extends Component
             $this->itemSubClass = [];
         }
     }
-    public function save(ItemServices $itemServices)
+    public function save()
     {
+        if ($this->ID == 0) {
 
-        $this->validate(
-            [
-                'CODE' => 'required|max:10|unique:item,code,' . $this->ID,
-                'DESCRIPTION' => 'required|max:100|unique:item,description,' . $this->ID,
-                'TYPE' => 'required'
-            ],
-            [],
-            [
-                'CODE' => 'Code',
-                'DESCRIPTION' => 'Description',
-                'TYPE' => 'Type'
-            ]
-        );
+            $this->validate(
+                [
+                    'DESCRIPTION' => 'required|max:100|unique:item,description,' . $this->ID,
+                    'TYPE' => 'required'
+                ],
+                [],
+                [
+                    'DESCRIPTION' => 'Description',
+                    'TYPE' => 'Type'
+                ]
+            );
+        } else {
+
+            $this->validate(
+                [
+                    'CODE' => 'required|max:10|unique:item,code,' . $this->ID,
+                    'DESCRIPTION' => 'required|max:100|unique:item,description,' . $this->ID,
+                    'TYPE' => 'required'
+                ],
+                [],
+                [
+                    'CODE' => 'Code',
+                    'DESCRIPTION' => 'Description',
+                    'TYPE' => 'Type'
+                ]
+            );
+        }
+
 
         try {
             $Message = '';
-            if ($this->ID === 0) {
-                $this->ID =  $itemServices->Store(
+            if ($this->ID == 0) {
+
+                $this->ID = $this->itemServices->Store(
                     $this->CODE,
                     $this->DESCRIPTION,
                     $this->PURCHASE_DESCRIPTION,
@@ -260,18 +266,14 @@ class ItemsForm extends Component
                     $this->CUSTOM_FIELD2,
                     $this->CUSTOM_FIELD3,
                     $this->CUSTOM_FIELD4,
-                    $this->CUSTOM_FIELD5,
-                    $this->NON_PORFOLIO_COMPUTATION,
-                    $this->BUNDLE_SET,
-                    $this->NON_DISCOUNTED_ITEM,
-                    $this->PIC_FILENAME,
-                    $this->IS_EXPIRED
+                    $this->CUSTOM_FIELD5
                 );
 
                 $Message = 'Successfully created.';
+                return Redirect::route('maintenanceinventoryitem_edit', ['id' => $this->ID])->with('message', $Message);
             } else {
 
-                $itemServices->Update(
+                $this->itemServices->Update(
                     $this->ID,
                     $this->CODE,
                     $this->DESCRIPTION,
@@ -301,16 +303,11 @@ class ItemsForm extends Component
                     $this->CUSTOM_FIELD2,
                     $this->CUSTOM_FIELD3,
                     $this->CUSTOM_FIELD4,
-                    $this->CUSTOM_FIELD5,
-                    $this->NON_PORFOLIO_COMPUTATION,
-                    $this->BUNDLE_SET,
-                    $this->NON_DISCOUNTED_ITEM,
-                    $this->PIC_FILENAME,
-                    $this->IS_EXPIRED
+                    $this->CUSTOM_FIELD5
                 );
                 $Message = 'Successfully updated.';
             }
-            session()->flash('message',  $Message);
+            session()->flash('message', $Message);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);

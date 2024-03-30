@@ -55,6 +55,7 @@
                                     <div class="col-md-6">
                                         <input type="number" wire:model='PRE_WEIGHT'
                                             class="text-xs w-100 text-right" />
+
                                     </div>
                                     <div class="col-md-6">
                                         <input type="number" wire:model='POST_WEIGHT'
@@ -217,24 +218,16 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" wire:model='SC_MACHINE_TEST'
-                                                    name="SC_MACHINE_TEST" />
-                                                <label class="px-1">MACHINE TEST</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" wire:model='SC_SECURED_CONNECTION'
-                                                    name="SC_SECURED_CONNECTION" />
-                                                <label class="px-1">SECURED CONNECTION</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" wire:model='SC_SALINE_LINE_DOUBLE_CLAMP'
-                                                    name="SC_SALINE_LINE_DOUBLE_CLAMP" />
-                                                <label class="px-1">SALINE LINE DOUBLE CAMP</label>
-                                            </div>
+
+                                        <div class="container">
+                                            <livewire:checkbox-input name="SC_MACHINE_TEST" titleName="MACHINE TEST" wire:model='SC_MACHINE_TEST' />
+                                            <livewire:checkbox-input name="SC_SECURED_CONNECTION" titleName="SECURED CONNECTION" wire:model='SC_SECURED_CONNECTION' />
+                                            <livewire:checkbox-input name="SC_SALINE_LINE_DOUBLE_CLAMP" titleName="SALINE LINE DOUBLE CAMP" wire:model='SC_SALINE_LINE_DOUBLE_CLAMP' />
+                                    
                                         </div>
+                                      
                                         <div class="form-group">
+                                            
                                             <div class="row">
                                                 <label class="col-md-4">CONNECTIVITY</label>
                                                 <div class="col-md-8">
@@ -251,13 +244,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox">
-                                                RESIDUAL TEST :
-                                                <input type="checkbox" wire:model='SC_RESIDUAL_TEST_NIGATIVE'
-                                                    name="SC_RESIDUAL_TEST_NIGATIVE" />
-                                                <label class="px-1">NIGATIVE</label>
-                                            </div>
+                                        RESIDUAL TEST :
+                                        <div class="container">                           
+                                            <livewire:checkbox-input name="SC_RESIDUAL_TEST_NIGATIVE" titleName="NIGATIVE" wire:model='SC_RESIDUAL_TEST_NIGATIVE' />
                                         </div>
                                     </div>
                                 </div>
@@ -267,16 +256,9 @@
                                     <label class="col-md-12 text-center text-info">DIAIYSATE BATH</label>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" wire:model='DB_STANDARD_HCOA'
-                                                name="DB_STANDARD_HCOA" />
-                                            <label class="px-1">STANDARD HC03</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" wire:model='DB_ACID' name="DB_ACID" />
-                                            <label class="px-1">ACID</label>
-                                        </div>
+                                    <div class="container">
+                                        <livewire:checkbox-input name="DB_STANDARD_HCOA" titleName="STANDARD HC03" wire:model='DB_STANDARD_HCOA' />
+                                        <livewire:checkbox-input name="DB_ACID" titleName="ACID" wire:model='DB_ACID' />             
                                     </div>
                                 </div>
                                 <div class="row">

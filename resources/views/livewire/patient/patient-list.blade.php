@@ -32,13 +32,17 @@
                                     <tr>
                                         <th class="col-1">No.</th>
                                         <th class="col-3">Name</th>
-                                        <th class="col-1">PHIC NO.</th>  
+                                        <th>Sex</th>
+                                        <th class="col-1">D.O.B</th>
+                                        <th>Age</th>
+                                        <th class="col-1">PHIC NO.</th>
                                         <th class="col-3">Address</th>
                                         <th class="col-1">Mobile No.</th>
-                                      
-                                        <th class="col-1">Inactive</th>
+
+                                        <th>Inactive</th>
                                         <th class="text-center col-1">
-                                            <a href="{{ route('maintenancecontactpatients_create') }}" class="text-white">
+                                            <a href="{{ route('maintenancecontactpatients_create') }}"
+                                                class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
@@ -48,20 +52,23 @@
                                         <tr>
                                             <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
-                                            <td> {{ $list->TAXPAYER_ID }}</td>
-                                            <td> {{ $list->MOBILE_NO }}</td>
+                                            <td> {{ $list->GENDER }}</td>
+                                            <td> {{ $list->DATE_OF_BIRTH }}</td>
+                                            <td> {{ $list->AGE }}</td>
+                                            <td> {{ $list->TAXPAYER_ID }}</td>          
                                             <td> {{ $list->POSTAL_ADDRESS }}</td>
-                                     
-                                          
+                                            <td> {{ $list->MOBILE_NO }}</td>
+
+
                                             <td>
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
-                                                @else                     
+                                                @else
                                                     <strong class="text-primary">No</strong>
                                                 @endif
-                                                
+
                                             </td>
-                                            <td class="text-center">             
+                                            <td class="text-center">
                                                 <a href="{{ route('maintenancecontactpatients_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>

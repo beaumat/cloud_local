@@ -241,12 +241,17 @@ class ContactServices
                     "contact.POSTAL_ADDRESS",
                     "contact.CONTACT_PERSON",
                     "contact.INACTIVE",
+                    'contact.TAXPAYER_ID',
+                    'gender_map.DESCRIPTION as GENDER',
+                    'contact.DATE_OF_BIRTH',
+                    \DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH, CURDATE()) AS AGE')
                 ]
             )
             ->join('contact_type_map as t', function ($join) use (&$TYPE) {
                 $join->on('t.ID', '=', 'contact.TYPE')
                     ->where('t.ID', '=', $TYPE);
             })
+            ->leftJoin('gender_map', 'gender_map.ID', '=', 'contact.GENDER')
             ->when($search, function ($query) use (&$search) {
                 $query->where('contact.NAME', 'like', '%' . $search . '%');
                 $query->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%');

@@ -1,194 +1,197 @@
 <div>
     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
     <table class="table table-sm table-bordered table-hover">
-        <thead class="text-sm bg-sky">
+        <thead class="text-xs bg-sky">
             <tr>
-                <th class="col-1">Code</th>
-                <th class="col-5">Description</th>
-                <th class="col-1">Qty</th>
-                <th class="col-1">U/M</th>
-                <th class="col-1">Cost</th>
-                <th class="col-1">Amount</th>
-                <th class="col-1 text-center">Tax</th>
-                @if ($STATUS == $openStatus)
-                    <th class="text-center col-2">Action</th>
-                @endif
+                <th>TIME</th>
+                <th class="1">BP</th>
+                <th>HR</th>
+                <th>BFR</th>
+                <th>AP</th>
+                <th>VP</th>
+                <th>TFR</th>
+                <th>TMP</th>
+                <th>HARAPIN</th>
+                <th>FLUSHING</th>
+                <th class="col-3">NURSES NOTES</th>
+                <th class="text-center col-sm-1 col-2">Action</th>
             </tr>
         </thead>
-        <tbody class="text-sm">
-            @foreach ($itemList as $list)
+        <tbody class="text-xs">
+            @foreach ($data as $list)
                 <tr>
-                    <td>{{ $list->CODE }}</td>
-                    <td>{{ $list->PURCHASE_DESCRIPTION }}</td>
-                    <td class="text-right">
-                        @if ($editItemId === $list->ID)
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
-                                name="lineQty" wire:model.live.debounce.1000ms='lineQty' wire:blur="getEditAmount" />
+                    <td>
+                        @if ($EDIT_ID == $list->ID)
+                            <input type="time" class="form-control" name="TIME" wire:model='EDIT_TIME' />
                         @else
-                            {{ number_format($list->QUANTITY, 0) }}
+                            {{ $list->TIME }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($EDIT_ID == $list->ID)
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control form-control-sm text-xs" name="EDIT_BP_1"
+                                        wire:model='EDIT_BP_1' />
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control form-control-sm text-xs" name="EDIT_BP_2"
+                                        wire:model='EDIT_BP_2' />
+                                </div>
+                            </div>
+                        @else
+                            {{ $list->BP_1 }}/{{ $list->BP_2 }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($EDIT_ID == $list->ID)
+                            <input type="number" class="form-control form-control-sm" name="EDIT_HR"
+                                wire:model='EDIT_HR' />
+                        @else
+                            {{ $list->HR }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($EDIT_ID == $list->ID)
+                            <input type="number" class="form-control form-control-sm" name="EDIT_BFR"
+                                wire:model='EDIT_BFR' />
+                        @else
+                            {{ $list->BFR }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($EDIT_ID == $list->ID)
+                            <input type="number" class="form-control form-control-sm" name="EDIT_AP"
+                                wire:model='EDIT_AP' />
+                        @else
+                            {{ $list->AP }}
                         @endif
 
                     </td>
                     <td>
-                        @if ($editItemId === $list->ID)
-                            <select wire:model='lineUnitId' name="lineUnitId"
-                                class="text-sm form-control form-control-sm mt-2">
-                                @foreach ($editUnitList as $listitem)
-                                    <option value="{{ $listitem->ID }}">{{ $listitem->SYMBOL }}</option>
-                                @endforeach
-                            </select>
+                        @if ($EDIT_ID == $list->ID)
+                            <input type="number" class="form-control form-control-sm" name="EDIT_VP"
+                                wire:model='EDIT_VP' />
                         @else
-                            {{ $list->SYMBOL }}
+                            {{ $list->VP }}
                         @endif
-
                     </td>
-                    <td class="text-right">
-                        @if ($editItemId === $list->ID)
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
-                                name="lineRate" wire:model.live.debounce.1000ms='lineRate' wire:blur="getEditAmount"
-                                readonly />
+                    <td>
+                        @if ($EDIT_ID == $list->ID)
+                            <input type="number" class="form-control form-control-sm" name="EDIT_TFR"
+                                wire:model='EDIT_TFR' />
                         @else
-                            {{ number_format($list->RATE, 2) }}
+                            {{ $list->TFR }}
                         @endif
-
                     </td>
-                    <td class="text-right">
-                        @if ($editItemId === $list->ID)
-                            <label class="mt-2">{{ number_format($lineAmount, 2) }}</label>
+                    <td>
+                        @if ($EDIT_ID == $list->ID)
+                            <input type="number" class="form-control form-control-sm" name="EDIT_TMP"
+                                wire:model='EDIT_TMP' />
                         @else
-                            {{ number_format($list->AMOUNT, 2) }}
+                            {{ $list->TMP }}
                         @endif
-
-
+                    </td>
+                    <td>
+                        @if ($EDIT_ID == $list->ID)
+                            <input type="number" class="form-control form-control-sm" name="EDIT_HEPARIN"
+                                wire:model='EDIT_HEPARIN' />
+                        @else
+                            {{ $list->HEPARIN }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($EDIT_ID == $list->ID)
+                            <input type="number" class="form-control form-control-sm" name="EDIT_FLUSHING"
+                                wire:model='EDIT_FLUSHING' />
+                        @else
+                            {{ $list->FLUSHING }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($EDIT_ID == $list->ID)
+                            <input type="text" class="form-control form-control-sm" name="EDIT_NOTES"
+                                wire:model='EDIT_NOTES' />
+                        @else
+                            {{ $list->NOTES }}
+                        @endif
                     </td>
                     <td class="text-center">
-                        @if ($editItemId === $list->ID)
-                            <input type="checkbox" class="text-lg mt-2" wire:model='lineTax' name="lineTax" />
+                        @if ($EDIT_ID == $list->ID)
+                            <button wire:click='updateData()' name="UPDATE" title="Update"
+                                class="btn btn-primary btn-sm">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                            </button>
+                            <button wire:click='cancel()' name="CANCLED" title="Cancel" class="btn btn-warning btn-sm">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                            </button>
                         @else
-                            @if ($list->TAXABLE)
-                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                            @endif
+                            <button
+                                wire:click="editData({{ $list->ID }}, '{{ $list->TIME }}', {{ $list->BP_1 }}, {{ $list->BP_2 }}, {{ $list->HR }}, {{ $list->BFR }}, {{ $list->AP }}, {{ $list->VP }}, {{ $list->TFR }}, {{ $list->TMP }}, {{ $list->HEPARIN }}, {{ $list->FLUSHING }}, '{{ $list->NOTES }}')"
+                                name="EDIT" title="Edit" class="btn btn-info btn-sm"><i class="fa fa-pencil"
+                                    aria-hidden="true"></i></button>
+                            <button wire:click='delete({{ $list->ID }})' name="DELETE" title="Delete"
+                                class="btn btn-danger btn-sm"> <i class="fa fa-minus-circle"
+                                    aria-hidden="true"></i></button>
                         @endif
-
-
                     </td>
-                    @if ($STATUS == $openStatus)
-                        <td class="text-center">
-                            @if ($editItemId === $list->ID)
-                                <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
-                                    class="text-success btn btn-sm btn-link">
-                                    <i class="fas fa-check" aria-hidden="true"></i>
-                                </button>
-                                <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
-                                    class="text-warning btn btn-sm btn-link">
-                                    <i class="fas fa-ban" aria-hidden="true"></i>
-                                </button>
-                            @else
-                                <button title="Edit" id="editbtn"
-                                    wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
-                                    class="text-info btn btn-sm btn-link">
-                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                </button>
-                                <button title="Delete" id="deletebtn" wire:click='deleteItem({{ $list->ID }})'
-                                    wire:confirm="Are you sure you want to delete this?"
-                                    class="text-danger btn btn-sm btn-link">
-                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                </button>
-                            @endif
-                        </td>
-                    @endif
                 </tr>
             @endforeach
-
-            {{-- INSERT FORM --}}
-            @if ($STATUS == $openStatus)
-                <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
-                    <tr>
-                        <td>
-                            @if ($saveSuccess)
-                                @if ($codeBase)
-                                    <livewire:select-option name="ITEM_ID1" titleName="Item Code" :options="$itemCodeList"
-                                        :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
-                                @else
-                                    <label class="mt-2"> {{ $ITEM_CODE }}</label>
-                                @endif
-                            @else
-                                @if ($codeBase)
-                                    <livewire:select-option name="ITEM_ID2" titleName="Item Code" :options="$itemCodeList"
-                                        :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
-                                @else
-                                    <label class="mt-2"> {{ $ITEM_CODE }}</label>
-                                @endif
-                            @endif
-                        </td>
-                        <td>
-                            @if ($saveSuccess)
-                                @if (!$codeBase)
-                                    <livewire:select-option name="ITEM_ID3" titleName="Item Description"
-                                        :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
-                                @else
-                                    <label class="mt-2"> {{ $ITEM_DESCRIPTION }}</label>
-                                @endif
-                            @else
-                                @if (!$codeBase)
-                                    <livewire:select-option name="ITEM_ID4" titleName="Item Description"
-                                        :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID'
-                                        :vertical="false" :withLabel="false" />
-                                @else
-                                    <label class="mt-2"> {{ $ITEM_DESCRIPTION }}</label>
-                                @endif
-                            @endif
-                        </td>
-                        <td>
-
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
-                                name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
-                                @if ($ITEM_ID == 0) readonly @endif />
-                        </td>
-                        <td>
-                            <select wire:model='UNIT_ID' name="UNIT_ID"
-                                class="text-sm form-control form-control-sm mt-2"
-                                @if ($ITEM_ID == 0) readonly @endif>
-                                @foreach ($unitList as $list)
-                                    <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
-                                name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount"rca />
-                        </td>
-                        <td class="text-right">
-                            <label class="mt-2">{{ number_format($AMOUNT, 2) }}</label>
-                        </td>
-                        <td class="text-center">
-                            <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
-                                @if ($ITEM_ID == 0) disabled @endif />
-                        </td>
-                        <td>
-                            <div class="mt-2">
-                                <button type="submit" wire:loading.attr='hidden'
-                                    @if ($ITEM_ID == 0) disabled @endif
-                                    class="text-white btn bg-sky btn-sm w-100">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <div wire:loading.delay>
-                                    <span class="spinner"></span>
-                                </div>
+            <tr>
+                <form id="quickForm" wire:submit.prevent='save'>
+                    <td><input type="time" class="form-control" name="TIME" wire:model='TIME' /> </td>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="number" class="form-control form-control-sm" name="BP_1"
+                                    wire:model='BP_1' />
                             </div>
-                        </td>
-
-                    </tr>
-
+                            <div class="col-md-6">
+                                <input type="number" class="form-control form-control-sm" name="BP_2"
+                                    wire:model='BP_2' />
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm" name="HR" wire:model='HR' />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm" name="BFR"
+                            wire:model='BFR' />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm" name="AP" wire:model='AP' />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm" name="VP" wire:model='VP' />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm" name="TFR"
+                            wire:model='TFR' />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm" name="TMP"
+                            wire:model='TMP' />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm" name="HEPARIN"
+                            wire:model='HEPARIN' />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm" name="FLUSHING"
+                            wire:model='FLUSHING' />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm" name="NOTES"
+                            wire:model='NOTES' />
+                    </td>
+                    <td class="text-center">
+                        <button type="submit" class="btn btn-success btn-sm w-50">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </td>
                 </form>
-            @endif
-
+            </tr>
         </tbody>
-
     </table>
-
 </div>

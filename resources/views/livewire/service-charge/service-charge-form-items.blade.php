@@ -1,26 +1,27 @@
 <div>
     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-
     <table class="table table-sm table-bordered table-hover">
-        <thead class="text-sm bg-sky">
+        <thead class="text-xs bg-sky">
             <tr>
                 <th class="col-1">Code</th>
                 <th class="col-5">Description</th>
+                <th class="col-1">Category</th>
                 <th class="col-1">Qty</th>
-                <th class="col-1">U/M</th>
-                <th class="col-1">Price</th>
+                <th class="col-1">Unit</th>
+                <th class="col-1">Rate</th>
                 <th class="col-1">Amount</th>
-                <th class="col-1 text-center">Tax</th>
+                <th class="text-center">Tax</th>
                 @if ($STATUS == $openStatus)
                     <th class="text-center col-2">Action</th>
                 @endif
             </tr>
         </thead>
-        <tbody class="text-sm">
+        <tbody class="text-xs">
             @foreach ($itemList as $list)
                 <tr>
                     <td>{{ $list->CODE }}</td>
                     <td>{{ $list->DESCRIPTION }}</td>
+                    <td> {{ $list->CLASS_DESCRIPTION }}</td>
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
@@ -59,8 +60,6 @@
                         @else
                             {{ number_format($list->AMOUNT, 2) }}
                         @endif
-
-
                     </td>
                     <td class="text-center">
                         @if ($editItemId === $list->ID)
@@ -143,6 +142,7 @@
                                 @endif
                             @endif
                         </td>
+                        <td class="text-sm"> <label class="mt-2"> {{ $CLASS_DESCRIPTION }}</label></td>
                         <td>
 
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"

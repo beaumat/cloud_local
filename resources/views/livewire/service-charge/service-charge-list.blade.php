@@ -83,11 +83,18 @@
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+
+                                                @if ($list->AMOUNT == $list->BALANCE_DUE)
+                                                    <a href="#" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn-sm text-danger">
+                                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                                    </a>
+                                                @else
+                                                    <a href="#" class="btn-sm text-secondary">
+                                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

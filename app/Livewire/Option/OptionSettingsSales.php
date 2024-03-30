@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class OptionSettingsSales extends Component
 {
-    #[Reactive]
+
     public $systemSetting = [];
     public $paymentMethodList = [];
     public $paymentTermList = [];
@@ -30,9 +30,11 @@ class OptionSettingsSales extends Component
         $this->systemSettingServices = $systemSettingServices;
     }
     public function mount()
-    {
-        $this->LoadDropdown();
+    {   
+        // $this->systemSetting = $this->systemSettingServices->GetList();
 
+
+        $this->LoadDropdown();
         $this->DefaultPaymentTermsId = (int) $this->returnArray('DefaultPaymentTermsId');
         $this->DefaultPaymentMethodId = (int) $this->returnArray('DefaultPaymentMethodId');
         $this->CreditLimitPolicy = (int) $this->returnArray('CreditLimitPolicy');

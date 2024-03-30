@@ -41,14 +41,22 @@ class ItemClassForm extends Component
 
     public function save(ItemClassServices $itemClassServices)
     {
-        $this->validate([
-            'CODE' => 'required|max:10|unique:item_class,code,' . $this->ID,
-            'DESCRIPTION' => 'required|max:100|unique:item_class,description,' . $this->ID
-        ]);
+        if ($this->ID === 0) {
+            $this->validate([
+                'DESCRIPTION' => 'required|max:100|unique:item_class,description,' . $this->ID
+            ]);
+
+        } else {
+            $this->validate([
+                'CODE' => 'required|max:10|unique:item_class,code,' . $this->ID,
+                'DESCRIPTION' => 'required|max:100|unique:item_class,description,' . $this->ID
+            ]);
+        }
+
         try {
             if ($this->ID === 0) {
                 $this->ID = $itemClassServices->Store($this->CODE, $this->DESCRIPTION);
-                session()->flash('message', 'Successfully created.');
+                return Redirect::route('maintenanceinventoryitem_class_edit', ['id' => $this->ID])->with('message', 'Successfully created.');
             } else {
                 $itemClassServices->Update($this->ID, $this->CODE, $this->DESCRIPTION);
                 session()->flash('message', 'Successfully updated.');

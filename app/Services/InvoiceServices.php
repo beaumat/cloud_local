@@ -49,7 +49,6 @@ class InvoiceServices
             ->where('invoice.CUSTOMER_ID', $CUSTOMER_ID)
             ->where('invoice.LOCATION_ID', $LOCATION_ID)
             ->where('invoice.BALANCE_DUE', '>', 0)
-            ->where('invoice.STATUS', '>', 0)
             ->get();
     }
     public function get(int $ID): object
@@ -175,7 +174,7 @@ class InvoiceServices
 
     public function Delete(int $ID): void
     {
-        InvoiceItems::where('PO_ID', $ID)->delete();
+        InvoiceItems::where('INVOICE_ID', $ID)->delete();
         Invoice::where('ID', $ID)->delete();
     }
 
@@ -301,8 +300,8 @@ class InvoiceServices
             'TAXABLE' => $TAXABLE,
             'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
             'TAX_AMOUNT' => $TAX_AMOUNT,
-            'BATCH_ID' => $BATCH_ID,
-            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID
+            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
         ]);
     }
     public function ItemDelete(int $ID, int $INVOICE_ID)
@@ -325,10 +324,13 @@ class InvoiceServices
                 'i.CODE',
                 'i.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
-                'u.SYMBOL'
+                'u.SYMBOL',
+                'c.DESCRIPTION as CLASS_DESCRIPTION'
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'invoice_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'invoice_items.UNIT_ID')
+            ->leftJoin('item_sub_class as sl', 'sl.ID', '=', 'i.SUB_CLASS_ID')
+            ->leftJoin('item_class as c', 'c.ID', '=', 'sl.CLASS_ID')
             ->where('invoice_items.INVOICE_ID', $INVOICE_ID)
             ->orderBy('invoice_items.LINE_NO', 'asc')
             ->get();
@@ -351,7 +353,7 @@ class InvoiceServices
                 )
                 ->join('item', 'item.ID', '=', 'invoice_items.ITEM_ID')
                 ->where('invoice_items.INVOICE_ID', $ID)
-                ->where('item.TYPE', 0)
+                ->whereIn('item.TYPE', [0, 1, 2, 3, 4, 5, 6, 7])
                 ->orderBy('invoice_items.LINE_NO', 'asc')
                 ->get();
 
@@ -368,7 +370,6 @@ class InvoiceServices
                     'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                 ]);
 
-
                 $result = array(
                     [
                         'AMOUNT' => $originalAmount,
@@ -378,6 +379,7 @@ class InvoiceServices
                         'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                     ]
                 );
+
                 return $result;
             }
         }
@@ -399,32 +401,36 @@ class InvoiceServices
     public function updateInvoiceBalance(int $INVOICE_ID)
     {
         $data = Invoice::where('ID', $INVOICE_ID)->first();
+
         if ($data) {
-            $amount = (float) $data->AMOUNT;
-            $payment = (float) $this->GetPaymentAppliedViaInvoice($INVOICE_ID);
-            $balance = $amount - $payment;
-            if ($data->STATUS == 0) {
-                return;
-            }
-            $status = 0;
-            if ($payment == 0) {
+            $AMOUNT = (float) $data->AMOUNT;
+            $PAYMENT = (float) $this->GetPaymentAppliedViaInvoice($INVOICE_ID);
+            $BALANCE = $AMOUNT - $PAYMENT;
+        
+            $STATUS = 0;
+
+            if ($PAYMENT == 0) {
                 // poste    d
-                $status = 15;
-            } elseif ($balance <= 0) {
+                $STATUS = 0;
+            } elseif ($BALANCE <= 0) {
                 //paid
-                $status = 11;
+                $STATUS = 11;
             } else {
                 // Unpaid
-                $status = 13;
+                $STATUS = 2;
             }
 
             Invoice::where('ID', $INVOICE_ID)->update([
-                'BALANCE_DUE' => $balance,
-                'STATUS' => $status,
+                'BALANCE_DUE' => $BALANCE,
+                'STATUS' => $STATUS,
                 'STATUS_DATE' => Carbon::now()->format('Y-m-d')
             ]);
+
+
         }
     }
+
+
     public function getUpdateTaxItem(int $INVOICE_ID, int $TAX_ID)
     {
         $items = InvoiceItems::query()

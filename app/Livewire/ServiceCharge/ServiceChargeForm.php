@@ -61,6 +61,11 @@ class ServiceChargeForm extends Component
     private $documentStatusServices;
     private $systemSettingServices;
     private $accountServices;
+    public string $tab = "item";
+    public function SelectTab(string $select)
+    {
+        $this->tab = $select;
+    }
     public function boot(
         InvoiceServices $invoiceServices,
         LocationServices $locationServices,
@@ -129,6 +134,10 @@ class ServiceChargeForm extends Component
         $this->NONTAXABLE_AMOUNT = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
+    public function updatedPAYMENTTERMSID()
+    {
+        $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID);
+    }
     public function mount($id = null)
     {
         $this->LoadDropdown();
@@ -143,19 +152,18 @@ class ServiceChargeForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('vendorspurchase_order')->with('error', $errorMessage);
         }
-
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
         $currentDate = Carbon::now();
         $this->DATE = $currentDate->format('Y-m-d');
-        $this->DUE_DATE = null;
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->CUSTOMER_ID = 0;
         $this->SALES_REP_ID = 0;
         $this->SHIP_VIA_ID = $this->shipViaServices->getFirst();
         $this->CLASS_ID = 0;
         $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
+        $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID);
         $this->NOTES = '';
         $this->AMOUNT = 0;
         $this->BALANCE_DUE = 0;
@@ -201,6 +209,7 @@ class ServiceChargeForm extends Component
 
 
                 $this->getTax();
+
                 $this->ID = $this->invoiceServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -276,12 +285,11 @@ class ServiceChargeForm extends Component
                     $this->OUTPUT_TAX_VAT_METHOD,
                     $this->OUTPUT_TAX_ACCOUNT_ID
                 );
+
                 $this->invoiceServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
                 $getResult = $this->invoiceServices->ReComputed($this->ID);
                 $this->getUpdateAmount($getResult);
                 session()->flash('message', 'Successfully updated');
-
-
             }
             $PO = $this->invoiceServices->get($this->ID);
             if ($PO) {
@@ -302,6 +310,14 @@ class ServiceChargeForm extends Component
             $this->OUTPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
             $this->TAXABLE_AMOUNT = $list['TAXABLE_AMOUNT'];
             $this->NONTAXABLE_AMOUNT = $list['NONTAXABLE_AMOUNT'];
+        }
+    }
+    #[On('update-status')]
+    public function updateStatus()
+    {
+        $data = $this->invoiceServices->get($this->ID);
+        if ($data) {
+            $this->getInfo($data);
         }
     }
     public function updateCancel()

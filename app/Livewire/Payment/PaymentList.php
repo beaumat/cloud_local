@@ -9,6 +9,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Storage;
 
 #[Title('Payments')]
 class PaymentList extends Component
@@ -41,8 +42,21 @@ class PaymentList extends Component
     public function delete($id)
     {
         try {
-            $this->paymentServices->Delete($id);
-            session()->flash('message', 'Successfully deleted.');
+
+            $data = $this->paymentServices->get($id);
+
+            if ($data) {
+
+                if (Storage::disk('public')->exists($data->FILE_PATH)) {
+                    Storage::disk('public')->delete($data->FILE_PATH);
+                    // File has been successfully deleted
+                }
+
+                $this->paymentServices->Delete($data->ID);
+                session()->flash('message', 'Successfully deleted.');
+
+            }
+
 
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();

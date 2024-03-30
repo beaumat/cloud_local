@@ -38,7 +38,7 @@
                                         <th>CODE</th>
                                         <th>DESCRIPTION</th>
                                         <th>CLASS</th>
-                                        <th class="text-center col-1">
+                                        <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenanceinventoryitem_sub_class_create') }}"
                                                 class="text-white btn-sm"> <i class="fas fa-plus"></i></a>
                                         </th>

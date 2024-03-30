@@ -34,7 +34,7 @@
                                     <tr>
                                         <th>CODE</th>
                                         <th>DESCRIPTION</th>
-                                        <th class="text-center col-1">
+                                        <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenanceinventoryitem_class_create') }}"
                                                 class="text-white"> <i class="fas fa-plus"></i></a>
                                         </th>

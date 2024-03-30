@@ -48,7 +48,7 @@
                                         <th class="text-right">RATE</th>
                                         <th class="text-right">COST</th>
                                         <th class="text-center">INACTIVE</th>
-                                        <th class="text-center col-1">
+                                        <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenanceinventoryitem_create') }}"
                                                 class="text-white btn-sm"> <i class="fas fa-plus"></i></a>
                                         </th>

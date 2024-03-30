@@ -181,7 +181,7 @@
                                         @if ($ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-
+                                            @livewire('Hemodialysis.NursesNotes', ['ID' => $ID])
                                         </div>
                                     </div>
                                 </div>

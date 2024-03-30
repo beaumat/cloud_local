@@ -11,8 +11,6 @@ class PaymentServices
 
     use WithPagination;
     private $object;
-
-
     public function __construct(ObjectServices $objectService)
     {
         $this->object = $objectService;
@@ -61,12 +59,11 @@ class PaymentServices
             'NOTES' => $NOTES,
             'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
             'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-            'STATUS' => 0,
+            'STATUS' => 2,
             'STATUS_DATE' => Carbon::now()->format('Y-m-d'),
             'DEPOSITED' => $DEPOSITED,
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID
         ]);
-
         return $ID;
     }
     public function Update(
@@ -88,8 +85,6 @@ class PaymentServices
         bool $DEPOSITED,
         int $ACCOUNTS_RECEIVABLE_ID
     ) {
-
-
         Payment::where('ID', $ID)->update([
             'CODE' => $CODE,
             'DATE' => $DATE,
@@ -130,11 +125,15 @@ class PaymentServices
                 'payment.ID',
                 'payment.CODE',
                 'payment.DATE',
+                'payment.AMOUNT',
                 'payment.AMOUNT_APPLIED',
                 'payment.NOTES',
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
-                's.DESCRIPTION as STATUS'
+                's.DESCRIPTION as STATUS',
+                'pm.DESCRIPTION as PAYMENT_METHOD',
+                'payment.FILE_PATH'
+
             ])
             ->join('contact as c', 'c.ID', '=', 'payment.CUSTOMER_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -144,6 +143,7 @@ class PaymentServices
                 }
             })
             ->join('document_status_map as s', 's.ID', '=', 'payment.STATUS')
+            ->join('payment_method as pm', 'pm.ID', '=', 'payment.PAYMENT_METHOD_ID')
             ->when($search, function ($query) use (&$search) {
                 $query->where('payment.CODE', 'like', '%' . $search . '%')
                     ->orWhere('payment.AMOUNT_APPLIED', 'like', '%' . $search . '%')
@@ -174,10 +174,15 @@ class PaymentServices
             'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
         ]);
-
-
-
         return $ID;
+    }
+
+    public function UpdateFile(int $ID, $FILE_NAME, $FILE_PATH)
+    {
+        Payment::where('ID', $ID)->update([
+            'FILE_NAME' => $FILE_NAME,
+            'FILE_PATH' => $FILE_PATH
+        ]);
     }
     public function PaymentInvoiceExist(int $PAYMENT_ID, int $INVOICE_ID): int
     {
@@ -194,14 +199,10 @@ class PaymentServices
             'DISCOUNT' => $DISCOUNT,
             'AMOUNT_APPLIED' => $AMOUNT_APPLIED
         ]);
-
-
-
     }
     public function PaymentInvoiceDelete(int $ID, int $PAYMENT_ID, int $INVOICE_ID)
     {
         PaymentInvoices::where('ID', $ID)->where('PAYMENT_ID', $PAYMENT_ID)->where('INVOICE_ID', $INVOICE_ID)->delete();
-
     }
     public function PaymentInvoiceList(int $PAYMENT_ID)
     {
@@ -222,7 +223,6 @@ class PaymentServices
 
     public function UpdatePaymentApplied(int $PAYMENT_ID): float
     {
-
         $pay = PaymentInvoices::query()
             ->select(\DB::raw('IFNULL(SUM(payment_invoices.AMOUNT_APPLIED), 0) as pay'))
             ->where('payment_invoices.PAYMENT_ID', '=', $PAYMENT_ID)
@@ -231,7 +231,50 @@ class PaymentServices
 
         Payment::where('ID', $PAYMENT_ID)->update(['AMOUNT_APPLIED' => $pay]);
         return $pay;
+    }
+    public function InvoicePaymentList(int $INVOICE_ID, int $CUSTOMER_ID)
+    {
+        return Payment::query()
+            ->select([
+                'payment_invoices.ID',
+                'payment_invoices.PAYMENT_ID',
+                'payment.CODE',
+                'payment.DATE',
+                'payment.AMOUNT',
+                'payment_method.DESCRIPTION as PAYMENT_METHOD',
+                'payment_invoices.AMOUNT_APPLIED',
+                'payment.FILE_PATH'
+            ])
+            ->join('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
+            ->join('payment_invoices', 'payment_invoices.PAYMENT_ID', '=', 'payment.ID')
+            ->where('payment_invoices.INVOICE_ID', $INVOICE_ID)
+            ->where('payment.CUSTOMER_ID', $CUSTOMER_ID)
+            ->get();
+    }
+    public function PaymentAvailableList(int $CUSTOMER_ID, int $LOCATION_ID)
+    {
+        $result = Payment::query()
+            ->select([
+                'payment.ID',
+                'payment.CODE',
+                'payment.DATE',
+                'payment_method.DESCRIPTION as PAYMENT_METHOD',
+                'payment.AMOUNT',
+                'payment.AMOUNT_APPLIED'
+            ])
+            ->join('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
+            ->where('payment.CUSTOMER_ID', $CUSTOMER_ID)
+            ->where('payment.LOCATION_ID', $LOCATION_ID)
+            ->where('payment.AMOUNT_APPLIED', 'payment.AMOUNT')
+            ->get();
 
+        return $result;
+    }
+    public function GetPaymentRemaining(int $PAYMENT_ID): float
+    {
+        $result = Payment::where('ID', $PAYMENT_ID)->first();
+
+        return (float) $result->AMOUNT - (float) $result->AMOUNT_APPLIED;
     }
 
 

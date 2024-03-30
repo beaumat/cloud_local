@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Payment;
 
+use App\Models\Payment;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
@@ -15,10 +16,15 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 #[Title('Payments')]
 class PaymentForm extends Component
 {
+    use WithFileUploads;
+    public $PDF;
     public int $ID;
     public string $CODE;
     public $DATE;
@@ -55,8 +61,9 @@ class PaymentForm extends Component
     public bool $showCardDateExpire = false;
     public bool $showReceiptNo = false;
     public bool $showReceiptDate = false;
-
-
+    public bool $showFileName = false;
+    public string $FILE_NAME;
+    public string $FILE_PATH;
 
     public function boot(
         PaymentServices $paymentServices,
@@ -98,6 +105,8 @@ class PaymentForm extends Component
         $this->STATUS = $data->STATUS ?? 0;
         $this->STATUS_DATE = $data->STATUS_DATE ?? null;
         $this->DEPOSITED = $data->DEPOSITED ?? null;
+        $this->FILE_NAME = $data->FILE_NAME ?? '';
+        $this->FILE_PATH = $data->FILE_PATH ?? '';
         $this->updatedpaymentmethodid();
         $this->Modify = false;
     }
@@ -140,37 +149,67 @@ class PaymentForm extends Component
         $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
         $this->OVERPAYMENT_ACCOUNT_ID = 0;
         $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
-        ;
+        $this->PDF = null;
         $this->STATUS = 0;
         $this->DEPOSITED = 0;
         $this->Modify = true;
+        $this->FILE_NAME = '';
+        $this->FILE_PATH = '';
         $this->updatedpaymentmethodid();
+    }
+    public function updatedPdf()
+    {
+        $this->validate([
+            'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
+        ]);
     }
     public function save()
     {
 
+        $getType = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
+        $PAYMENT_TYPE = (int) $getType->PAYMENT_TYPE;
 
-        $this->validate(
-            [
-                'CUSTOMER_ID' => 'required|not_in:0',
-                'DATE' => 'required',
-                'LOCATION_ID' => 'required',
-                'PAYMENT_METHOD_ID' => 'required',
-                'AMOUNT' => 'required|not_in:0',
-            ],
-            [],
-            [
-                'CUSTOMER_ID' => 'Patient',
-                'DATE' => 'Date',
-                'LOCATION_ID' => 'Location',
-                'PAYMENT_METHOD_ID' => 'Payment method',
-                'AMOUNT' => 'Amount',
-            ]
-        );
+        if ($PAYMENT_TYPE == 10 && $this->ID == 0) {
+            $this->validate(
+                [
+                    'CUSTOMER_ID' => 'required|not_in:0',
+                    'DATE' => 'required',
+                    'PDF' => 'required',
+                    'LOCATION_ID' => 'required',
+                    'AMOUNT' => 'required|not_in:0',
+                ],
+                [],
+                [
+                    'CUSTOMER_ID' => 'Patient',
+                    'DATE' => 'Date',
+                    'PDF' => 'Pdf document file',
+                    'LOCATION_ID' => 'Location',
+                    'AMOUNT' => 'Amount',
+                ]
+            );
+
+        } else {
+            $this->validate(
+                [
+                    'CUSTOMER_ID' => 'required|not_in:0',
+                    'DATE' => 'required',
+                    'LOCATION_ID' => 'required',
+                    'AMOUNT' => 'required|not_in:0',
+                ],
+                [],
+                [
+                    'CUSTOMER_ID' => 'Patient',
+                    'DATE' => 'Date',
+                    'LOCATION_ID' => 'Location',
+                    'AMOUNT' => 'Amount',
+                ]
+            );
+        }
 
         try {
 
             if ($this->ID == 0) {
+
                 $this->ID = $this->paymentServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -188,9 +227,11 @@ class PaymentForm extends Component
                     $this->OVERPAYMENT_ACCOUNT_ID,
                     0,
                     $this->ACCOUNTS_RECEIVABLE_ID
-
-
                 );
+
+                if ($PAYMENT_TYPE == 10) {
+                    $this->getDocumentProccess();
+                }
 
                 return Redirect::route('transactionspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
@@ -215,18 +256,49 @@ class PaymentForm extends Component
                     0,
                     $this->ACCOUNTS_RECEIVABLE_ID
                 );
+
+                if ($this->PDF) {
+                    if ($PAYMENT_TYPE == 10) {
+                        if (Storage::disk('public')->exists($this->FILE_PATH)) {
+                            Storage::disk('public')->delete($this->FILE_PATH);
+                        }
+
+                        $this->getDocumentProccess();
+
+                        $data = $this->paymentServices->get($this->ID);
+                        if ($data) {
+                            $this->getInfo($data);
+                        }
+
+                    }
+
+                }
                 $this->Modify = false;
                 session()->flash('message', 'Successfully updated');
             }
-
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
+    public function getDocumentProccess()
+    {
+        //Remove First
+        $tempPath = $this->PDF->store('public/temp', 'public');
+        // Generate a random filename
+        $randomFilename = Str::random(40); // Generate a random string of 40 characters             
+        // Get the file extension
+        $extension = $this->PDF->extension();
+        // Construct the new file path with the random filename and original extension
+        $newPath = 'payment/' . $randomFilename . '.' . $extension;
+        // Move the temporary file to the new path
+        Storage::disk('public')->move($tempPath, $newPath);
+        // Update the database record with the new filename
+        $this->paymentServices->UpdateFile($this->ID, $randomFilename . '.' . $extension, $newPath);
+    }
     public function getModify()
     {
+        $this->PDF = null;
         $this->Modify = true;
     }
     public function updateCancel()
@@ -250,18 +322,21 @@ class PaymentForm extends Component
                     $this->showCardDateExpire = false;
                     $this->showReceiptNo = false;
                     $this->showReceiptDate = false;
+                    $this->showFileName = false;
                     break;
                 case 1:
                     $this->showCardNo = false;
                     $this->showCardDateExpire = false;
                     $this->showReceiptNo = true;
                     $this->showReceiptDate = true;
+                    $this->showFileName = false;
                     break;
                 case 4:
                     $this->showCardNo = true;
                     $this->showCardDateExpire = true;
                     $this->showReceiptNo = true;
                     $this->showReceiptDate = false;
+                    $this->showFileName = false;
                     break;
 
 
@@ -270,16 +345,30 @@ class PaymentForm extends Component
                     $this->showCardDateExpire = true;
                     $this->showReceiptNo = true;
                     $this->showReceiptDate = false;
+                    $this->showFileName = false;
                     break;
 
                 case 8:
-                    $this->showCardNo = true;
-                    $this->showCardDateExpire = true;
-                    $this->showReceiptNo = true;
+                    $this->showCardNo = false;
+                    $this->showCardDateExpire = false;
+                    $this->showReceiptNo = false;
                     $this->showReceiptDate = false;
+                    $this->showFileName = false;
+                    break;
+                case 9:
+                    $this->showCardNo = false;
+                    $this->showCardDateExpire = false;
+                    $this->showReceiptNo = false;
+                    $this->showReceiptDate = false;
+                    $this->showFileName = false;
                     break;
                 default:
                     # code...
+                    $this->showCardNo = false;
+                    $this->showCardDateExpire = false;
+                    $this->showReceiptNo = false;
+                    $this->showReceiptDate = false;
+                    $this->showFileName = true;
                     break;
             }
         }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Hemodialysis;
+use App\Models\NursesNotes;
 use Carbon\Carbon;
 
 class HemoServices
@@ -23,7 +24,6 @@ class HemoServices
     {
         Hemodialysis::where('ID', $ID)->update($Object);
     }
-
     public function updateBoolean(int $ID, string $COLUMN, bool $Value)
     {
         Hemodialysis::where('ID', $ID)->update([$COLUMN => $Value]);
@@ -72,6 +72,7 @@ class HemoServices
     }
     public function Delete(int $id)
     {
+        NursesNotes::where('HEMO_ID', $id)->delete();
         Hemodialysis::where('ID', $id)->delete();
     }
     public function Search($search, int $LOCATION_ID, int $perPage)

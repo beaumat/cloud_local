@@ -20,14 +20,14 @@ class PatientList extends Component
     }
     public function updatedsearch()
     {
-        $this->contacts = $this->contactServices->Search($this->search,3);
+        $this->contacts = $this->contactServices->Search($this->search, 3);
     }
     public function delete($id)
     {
         try {
             $this->contactServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->contacts = $this->contactServices->Search($this->search,3);
+            $this->contacts = $this->contactServices->Search($this->search, 3);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -35,7 +35,7 @@ class PatientList extends Component
     }
     public function mount()
     {
-        $this->contacts = $this->contactServices->Search($this->search,3);
+        $this->contacts = $this->contactServices->Search($this->search, 3);
     }
     #[On('clear-alert')]
     public function clearAlert()

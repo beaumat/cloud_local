@@ -111,6 +111,7 @@
                                             id="custom-tabs-three-sales" role="tabpanel"
                                             aria-labelledby="custom-tabs-three-sales-tab">
                                             @livewire('Option.OptionSettingsSales', ['systemSetting' => $systemSetting])
+                                        
                                         </div>
                                         <div class="tab-pane fade @if ($activeTab == 'fin') show active @endif"
                                             id="custom-tabs-three-fin" role="tabpanel"
@@ -120,7 +121,9 @@
                                         <div class="tab-pane fade @if ($activeTab == 'inv') show active @endif"
                                             id="custom-tabs-three-inv" role="tabpanel"
                                             aria-labelledby="custom-tabs-three-inv-tab">
+
                                             @livewire('Option.OptionSettingsInventory', ['systemSetting' => $systemSetting])
+                                           
                                         </div>
                                         <div class="tab-pane fade @if ($activeTab == 'tax') show active @endif"
                                             id="custom-tabs-three-tax" role="tabpanel"

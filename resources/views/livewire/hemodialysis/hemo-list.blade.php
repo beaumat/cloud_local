@@ -69,8 +69,7 @@
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
-                                            <td> {{ $list->LOCATION_NAME }}</td>  
-                                                  
+                                            <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('transactionshemo_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">

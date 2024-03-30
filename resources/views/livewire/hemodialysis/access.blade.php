@@ -23,97 +23,100 @@
                     <tr>
                         <td>ACCESS TYPE</td>
                         <td>
-                            <input type="checkbox" wire:model='ACCESS_TYPE_FISTUAL' name="ACCESS_TYPE_FISTUAL" />
-                            <label>FISTULA</label>
+                            <livewire:checkbox-input name="ACCESS_TYPE_FISTUAL" titleName="FISTULA"
+                                wire:model='ACCESS_TYPE_FISTUAL' />
                         </td>
                         <td>
-                            <input type="checkbox" wire:model='ACCESS_TYPE_GRAFT' name="ACCESS_TYPE_GRAFT" />
-                            <label>GRAFT</label>
+                            <livewire:checkbox-input name="ACCESS_TYPE_GRAFT" titleName="GRAFT"
+                                wire:model='ACCESS_TYPE_GRAFT' />
                         </td>
                         <td>
-                            <input type="checkbox" wire:model='ACCESS_TYPE_R' name="ACCESS_TYPE_R" />
-                            <label>R</label>
-                            <input type="checkbox" wire:model='ACCESS_TYPE_L' name="ACCESS_TYPE_L" />
-                            <label>L</label>
+                            <div class="row">
+                                <div class="col-md-6 col-6 text-right">
+                                    <livewire:checkbox-input name="ACCESS_TYPE_R" titleName="R"
+                                        wire:model='ACCESS_TYPE_R' />
+                               
+                                </div>
+                                <div class="col-md-6 col-6 pl-4">
+                                    <livewire:checkbox-input name="ACCESS_TYPE_L" titleName="L"
+                                    wire:model='ACCESS_TYPE_L' />
+                                </div>
+                            </div>
+
+
+
+
                         </td>
                     </tr>
                     <tr>
                         <td>BRUIT</td>
                         <td>
-                            <input type="checkbox" wire:model='BRUIT_STRONG' name="BRUIT_STRONG" />
-                            <label>STRONG</label>
+
+                            <livewire:checkbox-input name="BRUIT_STRONG" titleName="STRONG" wire:model='BRUIT_STRONG' />
                         </td>
                         <td>
-                            <input type="checkbox" wire:model='BRUIT_WEAK' name="BRUIT_WEAK" />
-                            <label>WEAK</label>
+                            <livewire:checkbox-input name="BRUIT_WEAK" titleName="WEAK" wire:model='BRUIT_WEAK' />
                         </td>
                         <td>
-                            <input type="checkbox" wire:model='BRUIT_ABSENT' name="BRUIT_ABSENT" />
-                            <label>ABSENT</label>
+                            <livewire:checkbox-input name="BRUIT_ABSENT" titleName="ABSENT" wire:model='BRUIT_ABSENT' />
                         </td>
                     </tr>
                     <tr>
                         <td>THRILL</td>
                         <td>
-                            <input type="checkbox" wire:model='THRILL_STRONG' name="THRILL_STRONG" />
-                            <label>STRONG</label>
+                            <livewire:checkbox-input name="THRILL_STRONG" titleName="STRONG"
+                                wire:model='THRILL_STRONG' />
                         </td>
                         <td>
-                            <input type="checkbox" wire:model='THRILL_WEAK' name="THRILL_WEAK" />
-                            <label>WEAK</label>
-                        </td>
-                        <td>
-                            <input type="checkbox" wire:model='THRILL_ABSENT' name="THRILL_ABSENT" />
-                            <label>ABSENT</label>
 
+                            <livewire:checkbox-input name="THRILL_WEAK" titleName="WEAK" wire:model='THRILL_WEAK' />
+                        </td>
+                        <td>
+                            <livewire:checkbox-input name="THRILL_ABSENT" titleName="ABSENT"
+                                wire:model='THRILL_ABSENT' />
                         </td>
                     </tr>
                     <tr>
                         <td>HEMOTAMA</td>
                         <td>
-                            <input type="checkbox" wire:model='HEMOTOMA_PRESENT' name="HEMOTOMA_PRESENT" />
-                            <label>PRESENT</label>
+                            <livewire:checkbox-input name="HEMOTOMA_PRESENT" titleName="PRESENT"
+                                wire:model='HEMOTOMA_PRESENT' />
                         </td>
                         <td>
-                            <input type="checkbox" wire:model='HEMOTOMA_ABSENT' name="HEMOTOMA_ABSENT" />
-                            <label>ABSENT</label>
+                            <livewire:checkbox-input name="HEMOTOMA_ABSENT" titleName="ABSENT"
+                                wire:model='HEMOTOMA_ABSENT' />
                         </td>
-                        <td>
-
-
-                        </td>
-                    </tr>
-                    <tr>
                         <td>
                             <label> Others:</label>
-                            <input type="text" class="form-control form-control-sm" wire:model='ACCESS_OTHERS'
+                            <input type="text" class="" wire:model='ACCESS_OTHERS'
                                 name="ACCESS_OTHERS" />
+
                         </td>
                     </tr>
+               
                 </tbody>
 
             </table>
 
 
             <label class="col-md-12 text-center text-primary text-xs">CVC ACCESS</label>
-            <table class="table table-sm ">
-                <tbody class="text-xs">
+            
+            <table class="table table-sm">
+                <tbody class="text-xs ">
                     <tr>
                         <td>
-                            <input type="checkbox" wire:model='CVC_SUBCATH' name="CVC_SUBCATH" />
-                            <label>SUBCATH</label>
+                            <livewire:checkbox-input name="CVC_SUBCATH" titleName="SUBCATH" wire:model='CVC_SUBCATH' />
                         </td>
                         <td>
-                            <input type="checkbox" wire:model='CVC_JUGCATH' name="CVC_JUGCATH" />
-                            <label>JUGCATH</label>
+
+                            <livewire:checkbox-input name="CVC_JUGCATH" titleName="JUGCATH" wire:model='CVC_JUGCATH' />
                         </td>
                         <td>
-                            <input type="checkbox" wire:model='CVC_FEMCATH' name="CVC_FEMCATH" />
-                            <label>FEMCATH</label>
+                            <livewire:checkbox-input name="CVC_FEMCATH" titleName="FEMCATH" wire:model='CVC_FEMCATH' />
                         </td>
                         <td>
-                            <input type="checkbox" wire:model='CVC_PERMCATH' name="CVC_PERMCATH" />
-                            <label>PERMCATH</label>
+                            <livewire:checkbox-input name="CVC_PERMCATH" titleName="PERMCATH"
+                                wire:model='CVC_PERMCATH' />
                         </td>
                     </tr>
                     <tr>
@@ -121,15 +124,23 @@
                             Location:
                         </td>
                         <td>
-                            <input type="checkbox" wire:model='CVC_LOCATION_R' name="CVC_LOCATION_R" />
-                            <label>R</label>
-                            <input type="checkbox" wire:model='CVC_LOCATION_L' name="CVC_LOCATION_L" />
-                            <label>L</label>
+                            <div class="row">
+                                <div class="col-md-6 col-6">
+                                    <livewire:checkbox-input name="CVC_LOCATION_R" titleName="R"
+                                        wire:model='CVC_LOCATION_R' />
+                                </div>
+                                <div class="col-md-6 col-6">
+                                    <livewire:checkbox-input name="CVC_LOCATION_L" titleName="L"
+                                        wire:model='CVC_LOCATION_L' />
+                                </div>
+                            </div>
+
                         </td>
                     </tr>
                 </tbody>
 
             </table>
+
             <table class="table table-sm table-bordered">
                 <thead class="text-xs">
                     <tr>

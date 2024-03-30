@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\PaymentTerms;
+use Carbon\Carbon;
 
 class PaymentTermServices
 {
@@ -10,7 +11,14 @@ class PaymentTermServices
     {
         $this->object = $objectService;
     }
-
+    public function getDueDate(int $ID)
+    {
+        $currentDate = Carbon::now();
+        $NET_DUE = PaymentTerms::where('INACTIVE', '0')->where('ID', $ID)->first()->NET_DUE;
+      
+        $netDueDate = $currentDate->addDays($NET_DUE);
+        return $netDueDate->format('Y-m-d');
+    }
     public function getList()
     {
         return PaymentTerms::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->get();

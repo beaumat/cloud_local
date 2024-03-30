@@ -49,14 +49,15 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     @if ($Modify)
-                                                        <livewire:select-option name="PAYMENT_METHOD_ID"
+                                                        <livewire:dropdown-option name="PAYMENT_METHOD_ID"
                                                             :isDisabled=false titleName="Payment Method"
-                                                            :options="$paymentMethodList" :zero="true"
+                                                            :options="$paymentMethodList" :zero="false"
                                                             wire:model.live='PAYMENT_METHOD_ID' />
                                                     @else
-                                                        <livewire:select-option name="PAYMENT_METHOD_ID"
-                                                            :isDisabled=true titleName="Payment Method" :options="$paymentMethodList"
-                                                            :zero="true" wire:model.live='PAYMENT_METHOD_ID' />
+                                                        <livewire:dropdown-option name="PAYMENT_METHOD_ID"
+                                                            :isDisabled=true titleName="Payment Method"
+                                                            :options="$paymentMethodList" :zero="false"
+                                                            wire:model.live='PAYMENT_METHOD_ID' />
                                                     @endif
 
                                                 </div>
@@ -160,6 +161,35 @@
                                                             :isDisabled=true wire:model='NOTES' :vertical="false" />
                                                     @endif
                                                 </div>
+                                                @if ($showFileName && $Modify)
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="fileUpload" class="text-xs">PDF document file
+                                                                @if ($PDF)
+                                                                    <i class="fa fa-check-circle text-success"
+                                                                        aria-hidden="true"></i>
+                                                                @endif
+                                                            </label>
+                                                            <div class="input-group input-group-sm">
+                                                                <div class="custom-file text-xs">
+                                                                    <input type="file"
+                                                                        class="custom-file-input text-xs"
+                                                                        id="fileUpload" wire:model='PDF'>
+                                                                    <label class="custom-file-label text-xs"
+                                                                        for="fileUpload">
+                                                                        @if ($PDF)
+                                                                            {{ $PDF->getClientOriginalName() }}
+                                                                        @else
+                                                                            Choose file
+                                                                        @endif
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -168,25 +198,32 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-6 col-6">
-                                        @if ($STATUS == 0)
-                                            @if ($Modify)
-                                                <button type="submit" class="btn btn-sm btn-primary"> <i
-                                                        class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
+                                        @if ($Modify)
+                                            <button type="submit" class="btn btn-sm btn-primary"> <i
+                                                    class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
-                                                @if ($ID > 0)
-                                                    <button type="button" wire:click='updateCancel'
-                                                        class="btn btn-sm btn-danger"><i class="fa fa-ban"
-                                                            aria-hidden="true"></i> Cancel</button>
-                                                @endif
-                                            @else
+                                            @if ($ID > 0)
+                                                <button type="button" wire:click='updateCancel'
+                                                    class="btn btn-sm btn-danger"><i class="fa fa-ban"
+                                                        aria-hidden="true"></i> Cancel</button>
+                                            @endif
+                                        @else
+                                            @if ($AMOUNT_APPLIED == 0)
                                                 <button type="button" wire:click='getModify()'
-                                                    class="btn btn-sm btn-info"
-                                                    @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                    class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
                                             @endif
+
+                                            @if ($showFileName)
+                                                <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Preview
+                                                </a>
+                                            @endif
                                         @endif
+
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 0)
@@ -214,7 +251,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
                                         href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true">Service Charges</a> 
+                                        aria-controls="custom-tabs-four-item" aria-selected="true">Service Charges</a>
                                 </li>
                             </ul>
                         </div>
@@ -235,19 +272,19 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-6 text-left">
-                                    @if ($STATUS == 0)
+                                    {{-- @if ($STATUS == 0)
                                         <button class="btn btn-sm btn-success" wire:click='getSubmit'
                                             wire:confirm="Are you sure you want to submit?"
                                             @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             Submit
                                         </button>
-                                    @endif
-                                    @if ($STATUS == 2)
+                                    @endif --}}
+                                    {{-- @if ($STATUS == 2)
                                         <button class="btn btn-sm btn-danger" wire:click='getVoid'
                                             wire:confirm="Are you sure you want to void?">
                                             Void
                                         </button>
-                                    @endif
+                                    @endif --}}
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">

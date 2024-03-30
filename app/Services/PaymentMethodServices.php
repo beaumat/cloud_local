@@ -18,15 +18,17 @@ class PaymentMethodServices
     }
     public function getList()
     {
-        return PaymentMethods::query()->select(['ID', 'DESCRIPTION'])->get();
+        $result = PaymentMethods::query()->select(['ID', 'DESCRIPTION'])->get();
+    
+        return $result;
     }
     public function Store(string $CODE, string $DESCRIPTION, int $PAYMENT_TYPE, int $GL_ACCOUNT_ID): int
     {
         $ID = $this->object->ObjectNextID('PAYMENT_METHOD');
-
+        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PAYMENT_METHOD');
         PaymentMethods::create([
             'ID' => $ID,
-            'CODE' => $CODE,
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
             'DESCRIPTION' => $DESCRIPTION,
             'PAYMENT_TYPE' => $PAYMENT_TYPE,
             'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,

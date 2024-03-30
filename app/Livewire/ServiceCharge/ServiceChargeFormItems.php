@@ -5,6 +5,7 @@ namespace App\Livewire\ServiceCharge;
 use App\Services\ComputeServices;
 use App\Services\InvoiceServices;
 use App\Services\ItemServices;
+use App\Services\ItemSubClassServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
 use Livewire\Attributes\On;
@@ -67,18 +68,23 @@ class ServiceChargeFormItems extends Component
     private $unitOfMeasureServices;
     private $taxServices;
     private $itemServices;
+
+    public $CLASS_DESCRIPTION;
+    private $itemSubClassServices;
     public function boot(
         InvoiceServices $invoiceServices,
         ComputeServices $computeServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         TaxServices $taxServices,
         ItemServices $itemServices,
+        ItemSubClassServices $itemSubClassServices
     ) {
         $this->invoiceServices = $invoiceServices;
         $this->computeServices = $computeServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->taxServices = $taxServices;
         $this->itemServices = $itemServices;
+        $this->itemSubClassServices = $itemSubClassServices;
     }
     public function updatedcodeBase()
     {
@@ -123,19 +129,19 @@ class ServiceChargeFormItems extends Component
         $this->TAXABLE = false;
         $this->AMOUNT = 0;
         $this->unitList = [];
-        $this->RATE_TYPE = 0;
-
+        $this->RATE_TYPE = 0; 
+        $this->CLASS_DESCRIPTION = '';
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
-                $this->RATE = $item->RATE ?? 0;
+                $this->RATE = $item->TYPE == 6 ? $this->getGroupPrice($item->ID) : $item->RATE ?? 0;
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
                 $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
-                $this->INCOME_ACCOUNT_ID = $item->GL_ACCOUNT_ID;
-                $this->COGS_ACCOUNT_ID = $item->COGS_ACCOUNT_ID;
-                $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID;
+                $this->INCOME_ACCOUNT_ID = $item->GL_ACCOUNT_ID ?? 0;
+                $this->COGS_ACCOUNT_ID = $item->COGS_ACCOUNT_ID ?? 0;
+                $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
                 $this->REF_LINE_ID = 0;
                 $this->BATCH_ID = 0;
                 $this->GROUP_LINE_ID = false;
@@ -143,11 +149,26 @@ class ServiceChargeFormItems extends Component
                 $this->DEPOSITED = false;
                 $this->PRICE_LEVEL_ID = 0;
                 $this->getAmount();
-
+                $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);    
             }
         }
 
 
+
+    }
+    public function getGroupPrice(int $item_id)
+    {
+        try {
+            $totalSum = \DB::table('item_components')
+                ->select(\DB::raw('SUM(RATE * QUANTITY) as total'))
+                ->where('ITEM_ID', $item_id)
+                ->first();
+
+            return $totalSum->total;
+
+        } catch (\Throwable $th) {
+            return 0;
+        }
     }
     public function mount()
     {
@@ -220,7 +241,7 @@ class ServiceChargeFormItems extends Component
             $this->TAX_AMOUNT = 0;
             $this->ITEM_CODE = '';
             $this->ITEM_DESCRIPTION = '';
-
+            $this->CLASS_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
 
@@ -262,7 +283,10 @@ class ServiceChargeFormItems extends Component
         $this->lineAmount = $lineAmount;
         $this->lineTax = $lineTax;
         $this->lineItemId = $itemId;
+        $this->lineBatchId = 0;
+        $this->linePriceLevelId = 0;
     }
+
     public function updateItem(int $Id)
     {
 

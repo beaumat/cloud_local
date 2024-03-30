@@ -6,6 +6,11 @@ use App\Models\SystemSetting;
 
 class SystemSettingServices
 {
+    public function GetList()
+    {
+        return \DB::table('system_settings')->select(['NAME', 'VALUE'])->get();
+  
+    }
     public function SetValue(string $NAME, string $VALUE)
     {
         return SystemSetting::where('NAME', $NAME)->update(['VALUE' => $VALUE]);

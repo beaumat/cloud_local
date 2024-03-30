@@ -9,8 +9,6 @@ use Livewire\Component;
 class Access extends Component
 {
     public int $ID;
-
-
     public string $NEPHROLOGIST;
     public string $SPECIAL_ENDORSEMENT;
     public string $DIAGNOSIS;

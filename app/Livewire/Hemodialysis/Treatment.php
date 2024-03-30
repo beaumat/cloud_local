@@ -73,18 +73,14 @@ class Treatment extends Component
                 $this->RE_USE_NO = $data->RE_USE_NO ?? 0;
                 $this->HERAPIN = $data->HERAPIN ?? '';
                 $this->FLUSHING = $data->FLUSHING ?? '';
-
                 $this->SC_MACHINE_TEST = $data->SC_MACHINE_TEST;
                 $this->SC_SECURED_CONNECTION = $data->SC_SECURED_CONNECTION;
                 $this->SC_SALINE_LINE_DOUBLE_CLAMP = $data->SC_SALINE_LINE_DOUBLE_CLAMP;
-
                 $this->SC_CONDUCTIVITY = $data->SC_CONDUCTIVITY ?? 0;
                 $this->SC_DIALYATE_TEMP = $data->SC_DIALYATE_TEMP ?? 0;
                 $this->SC_RESIDUAL_TEST_NIGATIVE = $data->SC_RESIDUAL_TEST_NIGATIVE;
-
                 $this->DB_STANDARD_HCOA = $data->DB_STANDARD_HCOA;
                 $this->DB_ACID = $data->DB_ACID;
-
                 $this->DB_NA_MEG_L = $data->DB_NA_MEG_L ?? 0;
                 $this->DB_KPLUS_MEG_L = $data->DB_KPLUS_MEG_L ?? 0;
                 $this->DB_CAPPLS_MEG_L = $data->DB_CAPPLS_MEG_L ?? 0;

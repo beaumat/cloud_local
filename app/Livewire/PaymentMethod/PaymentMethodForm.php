@@ -53,13 +53,13 @@ class PaymentMethodForm extends Component
     {
         $this->validate(
             [
-                'CODE' => 'required|max:10|unique:payment_method,code,' . $this->ID,
+              
                 'DESCRIPTION' => 'required|max:100|unique:payment_method,description,' . $this->ID,
                 'PAYMENT_TYPE' => 'required',
             ],
             [],
             [
-                'CODE' => 'Code',
+              
                 'DESCRIPTION' => 'Description',
                 'PAYMENT_TYPE' => 'Payment Type',
             ]
@@ -70,7 +70,8 @@ class PaymentMethodForm extends Component
 
             if ($this->ID === 0) {
                 $this->ID = $paymentMethodServices->Store($this->CODE, $this->DESCRIPTION, $this->PAYMENT_TYPE, $this->GL_ACCOUNT_ID);
-                session()->flash('message', 'Successfully created.');
+                return Redirect::route('maintenancefinancialpayment_method_edit',['id'=> $this->ID])->with('message', 'Successfully created');
+            
             } else {
                 $paymentMethodServices->Update($this->ID, $this->CODE, $this->DESCRIPTION, $this->PAYMENT_TYPE, $this->GL_ACCOUNT_ID);
                 session()->flash('message', 'Successfully updated.');

@@ -32,13 +32,43 @@ class ItemServices
         }
         return Items::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])->get();
     }
-    public function Store(string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE, string $CUSTOM_FIELD1, string $CUSTOM_FIELD2, string $CUSTOM_FIELD3, string $CUSTOM_FIELD4, string $CUSTOM_FIELD5, bool $NON_PORFOLIO_COMPUTATION, bool $BUNDLE_SET, bool $NON_DISCOUNTED_ITEM, string $PIC_FILENAME, bool $IS_EXPIRED): int
-    {
+    public function Store(
+        string $CODE,
+        string $DESCRIPTION,
+        string $PURCHASE_DESCRIPTION,
+        int $GROUP_ID,
+        int $SUB_CLASS_ID,
+        int $TYPE,
+        int $STOCK_TYPE,
+        int $GL_ACCOUNT_ID,
+        int $COGS_ACCOUNT_ID,
+        int $ASSET_ACCOUNT_ID,
+        bool $TAXABLE,
+        int $PREFERRED_VENDOR_ID,
+        int $MANUFACTURER_ID,
+        float $RATE,
+        float $COST,
+        int $RATE_TYPE,
+        int $PAYMENT_METHOD_ID,
+        string $NOTES,
+        int $BASE_UNIT_ID,
+        int $PURCHASES_UNIT_ID,
+        int $SHIPPING_UNIT_ID,
+        int $SALES_UNIT_ID,
+        bool $PRINT_INDIVIDUAL_ITEMS,
+        bool $INACTIVE,
+        string $CUSTOM_FIELD1,
+        string $CUSTOM_FIELD2,
+        string $CUSTOM_FIELD3,
+        string $CUSTOM_FIELD4,
+        string $CUSTOM_FIELD5
+    ): int {
         $ID = $this->object->ObjectNextID('ITEM');
+        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('ITEM');
 
         Items::create([
             'ID' => $ID,
-            'CODE' => $CODE,
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
             'DESCRIPTION' => $DESCRIPTION,
             'PURCHASE_DESCRIPTION' => $PURCHASE_DESCRIPTION,
             'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
@@ -66,19 +96,44 @@ class ItemServices
             'CUSTOM_FIELD2' => $CUSTOM_FIELD2,
             'CUSTOM_FIELD3' => $CUSTOM_FIELD3,
             'CUSTOM_FIELD4' => $CUSTOM_FIELD4,
-            'CUSTOM_FIELD5' => $CUSTOM_FIELD5,
-            'NON_PORFOLIO_COMPUTATION' => $NON_PORFOLIO_COMPUTATION,
-            'BUNDLE_SET' => $BUNDLE_SET,
-            'NON_DISCOUNTED_ITEM' => $NON_DISCOUNTED_ITEM,
-            'PIC_FILENAME' => $PIC_FILENAME,
-            'IS_EXPIRED' => $IS_EXPIRED
+            'CUSTOM_FIELD5' => $CUSTOM_FIELD5
         ]);
 
         return $ID;
     }
 
-    public function Update(int $ID, string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE, string $CUSTOM_FIELD1, string $CUSTOM_FIELD2, string $CUSTOM_FIELD3, string $CUSTOM_FIELD4, string $CUSTOM_FIELD5, bool $NON_PORFOLIO_COMPUTATION, bool $BUNDLE_SET, bool $NON_DISCOUNTED_ITEM, string $PIC_FILENAME, bool $IS_EXPIRED): void
-    {
+    public function Update(
+        int $ID,
+        string $CODE,
+        string $DESCRIPTION,
+        string $PURCHASE_DESCRIPTION,
+        int $GROUP_ID,
+        int $SUB_CLASS_ID,
+        int $TYPE,
+        int $STOCK_TYPE,
+        int $GL_ACCOUNT_ID,
+        int $COGS_ACCOUNT_ID,
+        int $ASSET_ACCOUNT_ID,
+        bool $TAXABLE,
+        int $PREFERRED_VENDOR_ID,
+        int $MANUFACTURER_ID,
+        float $RATE,
+        float $COST,
+        int $RATE_TYPE,
+        int $PAYMENT_METHOD_ID,
+        string $NOTES,
+        int $BASE_UNIT_ID,
+        int $PURCHASES_UNIT_ID,
+        int $SHIPPING_UNIT_ID,
+        int $SALES_UNIT_ID,
+        bool $PRINT_INDIVIDUAL_ITEMS,
+        bool $INACTIVE,
+        string $CUSTOM_FIELD1,
+        string $CUSTOM_FIELD2,
+        string $CUSTOM_FIELD3,
+        string $CUSTOM_FIELD4,
+        string $CUSTOM_FIELD5
+    ): void {
 
         Items::where('ID', $ID)->update([
             'CODE' => $CODE,
@@ -109,12 +164,7 @@ class ItemServices
             'CUSTOM_FIELD2' => $CUSTOM_FIELD2,
             'CUSTOM_FIELD3' => $CUSTOM_FIELD3,
             'CUSTOM_FIELD4' => $CUSTOM_FIELD4,
-            'CUSTOM_FIELD5' => $CUSTOM_FIELD5,
-            'NON_PORFOLIO_COMPUTATION' => $NON_PORFOLIO_COMPUTATION,
-            'BUNDLE_SET' => $BUNDLE_SET,
-            'NON_DISCOUNTED_ITEM' => $NON_DISCOUNTED_ITEM,
-            'PIC_FILENAME' => $PIC_FILENAME,
-            'IS_EXPIRED' => $IS_EXPIRED
+            'CUSTOM_FIELD5' => $CUSTOM_FIELD5
         ]);
     }
 
@@ -131,7 +181,9 @@ class ItemServices
                 'item.CODE',
                 'item.DESCRIPTION',
                 'item.TAXABLE',
-                'item.RATE',
+                \DB::raw("(CASE WHEN item.TYPE = 6 THEN (SELECT sum(c.RATE * c.QUANTITY) FROM item_components as c WHERE c.ITEM_ID = item.ID) ELSE item.RATE END) as RATE"),
+                'item.COST',
+                'item.INACTIVE',
                 'item.COST',
                 'item.INACTIVE',
                 'item_type_map.DESCRIPTION as ITEM_TYPE',

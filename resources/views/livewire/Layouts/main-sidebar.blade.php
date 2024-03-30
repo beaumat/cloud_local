@@ -5,9 +5,7 @@
             style="opacity: .8">
         <span class="brand-text font-weight-light"><b>X</b>ONE</span>
     </a>
-
     <div class="sidebar">
-
         <nav class="mt-1">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
@@ -82,7 +80,7 @@
 
                     </ul>
                 </li>
-                <li class="nav-item {{ request()->is('vendors*') ? 'menu-open' : '' }}">
+                <li class="d-none nav-item {{ request()->is('vendors*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('vendors*') ? 'active ' : '' }}">
                         <i class="nav-icon fas fa-user-tie"></i>
                         <p>
@@ -126,7 +124,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
+                <li class="d-none nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-building"></i>
                         <p>
@@ -162,7 +160,7 @@
 
                     </ul>
                 </li>
-                <li class="nav-item">
+                <li class="d-none nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-university"></i>
                         <p>
@@ -192,7 +190,7 @@
 
                     </ul>
                 </li>
-                <li class="nav-item">
+                <li class="d-none nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-line-chart"></i>
                         <p>
@@ -464,7 +462,6 @@
                         </li>
                     </ul>
                 </li>
-
                 <li class="nav-item {{ request()->is('maintenance*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('maintenance*') ? 'active ' : '' }}">
                         <i class="nav-icon fa fa-cog"></i>

@@ -65,7 +65,6 @@ class ServiceChargeModal extends Component
         } else {
             $mustPay = $newPay;
         }
-
         $this->paymentAmounts[$id] = $mustPay;
     }
     public function openModal()
@@ -124,7 +123,7 @@ class ServiceChargeModal extends Component
 
             }
         }
-
+        
         $this->showModal = false;
         $this->selectedCharges = [];
         $this->paymentAmounts = [];
