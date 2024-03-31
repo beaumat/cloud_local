@@ -22,15 +22,27 @@
                                         <a href="{{ route('transactionsschedules_setup') }}"
                                             class="btn btn-info btn-sm">
                                             <i class="fa fa-cog" aria-hidden="true"></i> Setup</a>
+
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <h5 class="text-primary card-title"> Patient List on <b class="text-success">
-                                        @if ($schedContact && count($schedContact) > 0)
-                                            {{ $DATE->format('m/d/Y') }}
-                                        @endif
-                                    </b></h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="text-primary card-title"> Patient List on <b class="text-success">
+                                                @if ($schedContact && count($schedContact) > 0)
+                                                    {{ $DATE->format('m/d/Y') }}
+                                                @endif
+                                            </b></h5>
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <button class="btn btn-sm btn-warning  mb-1">
+                                            <i class="fa fa-print" aria-hidden="true"></i> Print</button>
+                                    </div>
+                                </div>
+
+
+
                                 <table class="table table-sm">
                                     <thead class="text-xs bg-sky">
                                         <tr>

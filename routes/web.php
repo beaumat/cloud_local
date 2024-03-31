@@ -11,8 +11,8 @@ use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
 use App\Livewire\Hemodialysis\HemoForm;
 use App\Livewire\Hemodialysis\HemoList;
-use App\Livewire\Invoice\InvoiceForm;
-use App\Livewire\Invoice\InvoiceList;
+use App\Livewire\HemodialysisMachine\HemoMachineForm;
+use App\Livewire\HemodialysisMachine\HemoMachineList;
 use App\Livewire\Option\OptionSettings;
 use App\Livewire\Payment\PaymentForm;
 use App\Livewire\Payment\PaymentList;
@@ -89,7 +89,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    
+
     Route::prefix('/transactions')->name('transactions')->group(function () {
         Route::prefix('/schedules')->group(function () {
             Route::get('/', SchedulerList::class)->name('schedules');
@@ -114,7 +114,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', PaymentForm::class)->name('payment_edit');
         });
 
-   
+
     });
 
     Route::prefix('/vendors')->name('vendors')->group(function () {
@@ -248,6 +248,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', ShiftList::class)->name('shift');
                 Route::get('/create', ShiftForm::class)->name('shift_create');
                 Route::get('/{id}/edit', ShiftForm::class)->name('shift_edit');
+            });
+
+            Route::prefix('/hemodialysis-machine')->group(function () {
+                Route::get('/', HemoMachineList::class)->name('hemo_machine');
+                Route::get('/create', HemoMachineForm::class)->name('hemo_machine_create');
+                Route::get('/{id}/edit', HemoMachineForm::class)->name('hemo_machine_edit');
             });
         });
         Route::prefix('/settings')->name('settings')->group(function () {

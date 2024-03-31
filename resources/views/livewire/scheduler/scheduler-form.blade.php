@@ -14,7 +14,7 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h4 class="card-title">Schedules Setup</h4>
+                                        <h4 class="card-title">{{ __('Schedules Setup') }}</h4>
                                     </div>
                                     <div class="col-md-6 text-right">
                                         <a href="{{ route('transactionsschedules') }}" class="btn btn-info btn-sm">
@@ -24,23 +24,33 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <a href="{{ route('maintenancecontactpatients') }}"> Patients</a>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <livewire:select-option name="CONTACT_ID" :options="$contactList" :zero="true"
-                                            titleName="" wire:model.live='CONTACT_ID' :key="$contactList->pluck('ID')->join('_')" />
-                                        </div>
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <livewire:select-option name="CONTACT_ID" :options="$contactList" :zero="true"
+                                            titleName="Patient :" wire:model.live='CONTACT_ID' :key="$contactList->pluck('ID')->join('_')" />
                                     </div>
-                     
-                            
+                                </div>
                             </div>
                         </div>
                         <!-- /.card -->
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="card-title text-primary">Infomation</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-sm btn-info"
+                                            @if ($CONTACT_ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                                            Generate Schedule
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <button class="btn btn-sm btn-warning"
+                                            @if ($CONTACT_ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            <i class="fa fa-print" aria-hidden="true"></i> Print</button>
+
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <table class="table table-sm text-xs">

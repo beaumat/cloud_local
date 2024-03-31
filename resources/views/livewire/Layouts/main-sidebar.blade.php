@@ -666,6 +666,13 @@
                                         <p>Shift</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('maintenanceothershemo_machine') }}"
+                                        class="nav-link {{ request()->is('maintenance/others/hemodialysis-machine*') ? 'active' : '' }}">
+                                        <i class="fa fa-sort-numeric-asc nav-icon"></i>
+                                        <p>Hemodialysis Machine</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li class="nav-item {{ request()->is('maintenance/settings*') ? 'menu-open' : '' }}">
