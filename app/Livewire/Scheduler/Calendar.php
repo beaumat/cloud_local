@@ -23,17 +23,19 @@ class Calendar extends Component
 
     public int $CONTACT_ID;
     public int $LOCATION_ID;
+    public int $HEMO_MACHINE_ID;
+
     public string $contactName;
     public int $SHIFT_ID = 0;
-    public function mount(int $year, int $month, $contactid = null, $locationid = null)
+    public function mount(int $year, int $month, $contactid = null, $locationid = null, $hemomachineid = null)
     {
         $this->year = $year;
         $this->month = $month;
         $this->CONTACT_ID = $contactid ? $contactid : 0;
         $this->LOCATION_ID = $locationid ? $locationid : 0;
-
+        $this->HEMO_MACHINE_ID = $hemomachineid ? $hemomachineid : 0;
     }
- 
+
     private function reloadData()
     {
         $this->currentDate = Carbon::create($this->year, $this->month, 1);

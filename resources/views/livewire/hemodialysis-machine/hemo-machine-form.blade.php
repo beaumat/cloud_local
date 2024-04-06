@@ -41,6 +41,10 @@
                                                         :options="$locationList" :zero="false" :isDisabled=false
                                                         wire:model='LOCATION_ID' />
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <livewire:number-input name="CAPACITY" titleName="Capacity"
+                                                    wire:model='CAPACITY' /> 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -38,16 +38,16 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button class="btn btn-sm btn-info"
+                                        {{-- <button class="btn btn-sm btn-info"
                                             @if ($CONTACT_ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
                                             Generate Schedule
-                                        </button>
+                                        </button> --}}
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <button class="btn btn-sm btn-warning"
+                                        {{-- <button class="btn btn-sm btn-warning"
                                             @if ($CONTACT_ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <i class="fa fa-print" aria-hidden="true"></i> Print</button>
+                                            <i class="fa fa-print" aria-hidden="true"></i> Print</button> --}}
 
                                     </div>
                                 </div>
@@ -115,7 +115,7 @@
                                     </div>
 
                                     <livewire:scheduler.calendar :year="$year" :month="$month" :contactid="$CONTACT_ID"
-                                        :locationid="$LOCATION_ID" :key="$refreshComponent" />
+                                        :locationid="$LOCATION_ID" :hemomachineid="$HEMO_MACHINE_ID" :key="$refreshComponent" />
                                 </div>
                             </div>
                         </div>

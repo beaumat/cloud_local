@@ -2,7 +2,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
-
+            @livewire('Scheduler.GenerateModal', ['LOCATION_ID' => $LOCATION_ID, 'YEAR' => $year, 'MONTH' => $month])
         </div><!-- /.container-fluid -->
     </section>
 
@@ -28,22 +28,26 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <h5 class="text-primary card-title"> Patient List on <b class="text-success">
+                                    <div class="col-md-12 mb-2">
+                                        <h5 class="text-primary card-title">Date on <b class="text-success">
                                                 @if ($schedContact && count($schedContact) > 0)
                                                     {{ $DATE->format('m/d/Y') }}
                                                 @endif
-                                            </b></h5>
+                                            </b>
+                                        </h5>
                                     </div>
+
+
+
                                     <div class="col-md-6 text-right">
-                                        <button class="btn btn-sm btn-warning  mb-1">
-                                            <i class="fa fa-print" aria-hidden="true"></i> Print</button>
+                                        {{-- <button class="btn btn-sm btn-warning text-xs">
+                                            <i class="fa fa-print" aria-hidden="true"></i> Print
+                                        </button> --}}
                                     </div>
                                 </div>
 
 
-
-                                <table class="table table-sm">
+                                <table class="table table-sm mt-2">
                                     <thead class="text-xs bg-sky">
                                         <tr>
                                             <th>Shift</th>

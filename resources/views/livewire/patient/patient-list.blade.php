@@ -28,18 +28,19 @@
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">No.</th>
-                                        <th class="col-3">Name</th>
+                                        <th>No.</th>
+                                  
+                                        <th class="col-2">Name</th>
                                         <th>Sex</th>
-                                        <th class="col-1">D.O.B</th>
+                                        <th>Date Birth</th>
                                         <th>Age</th>
-                                        <th class="col-1">PHIC NO.</th>
+                                        <th class="col-1">Phic No.</th>
                                         <th class="col-3">Address</th>
                                         <th class="col-1">Mobile No.</th>
-
-                                        <th>Inactive</th>
+                                        <th>Admission</th>
+                                        <th class="text-center">Inactive</th>
                                         <th class="text-center col-1">
                                             <a href="{{ route('maintenancecontactpatients_create') }}"
                                                 class="text-white">
@@ -47,20 +48,20 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
+                                <tbody class="text-xs">
                                     @foreach ($contacts as $list)
                                         <tr>
                                             <td> {{ $list->ACCOUNT_NO }}</td>
+                                          
                                             <td> {{ $list->NAME }}</td>
                                             <td> {{ $list->GENDER }}</td>
-                                            <td> {{ $list->DATE_OF_BIRTH }}</td>
+                                            <td> {{ \Carbon\Carbon::parse($list->DATE_OF_BIRTH)->format('M/d/Y') }}</td>
                                             <td> {{ $list->AGE }}</td>
-                                            <td> {{ $list->TAXPAYER_ID }}</td>          
+                                            <td> {{ $list->TAXPAYER_ID }}</td>
                                             <td> {{ $list->POSTAL_ADDRESS }}</td>
                                             <td> {{ $list->MOBILE_NO }}</td>
-
-
-                                            <td>
+                                            <td> {{ \Carbon\Carbon::parse($list->DATE_ADMISSION)->format('M/d/Y') }}</td>
+                                            <td class="text-center">
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
                                                 @else

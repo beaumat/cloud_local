@@ -36,8 +36,10 @@
                                         <th>TYPE</th>
                                         <th>DESCRIPTION</th>
                                         <th>LOCATION</th>
+                                        <th>CAPACITY</th>
                                         <th class="text-center col-1 bg-success">
-                                            <a href="{{ route('maintenanceothershemo_machine_create') }}" class="text-white">
+                                            <a href="{{ route('maintenanceothershemo_machine_create') }}"
+                                                class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
@@ -49,6 +51,7 @@
                                             <td> {{ $list->TYPE }}</td>
                                             <td> {{ $list->DESCRIPTION }}</td>
                                             <td> {{ $list->LOCATION }}</td>
+                                            <td>{{ $list->CAPACITY }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('maintenanceothershemo_machine_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">

@@ -31,6 +31,10 @@ class HemoForm extends Component
     public int $LOCATION_ID;
     public string $tab = '1st';
 
+    public function print()
+    {
+        $this->dispatch('print');
+    }
     public function boot(HemoServices $hemoServices, ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
     {
         $this->hemoServices = $hemoServices;
@@ -122,7 +126,7 @@ class HemoForm extends Component
         try {
 
             if ($this->ID == 0) {
-                $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);         
+                $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
                 return Redirect::route('transactionshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 $this->hemoServices->PreUpdate($this->ID, $this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);

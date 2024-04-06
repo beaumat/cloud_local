@@ -4,11 +4,17 @@ namespace App\Livewire\Patient;
 
 use App\Models\ContactGroup;
 use App\Models\Contacts;
+use App\Models\HemodialysisMachines;
+use App\Models\PatientStatus;
 use App\Models\PaymentMethods;
 use App\Models\PaymentTerms;
 use App\Models\PriceLevels;
+use App\Models\ScheduleType;
 use App\Models\Tax;
 use App\Services\ContactServices;
+use App\Services\LocationServices;
+use App\Services\UserServices;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -17,7 +23,6 @@ use Livewire\Component;
 #[Title('Patients')]
 class PatientForm extends Component
 {
-
     public int $ID;
     public int $TYPE = 3;
     public string $NAME;
@@ -61,6 +66,35 @@ class PatientForm extends Component
     public $paymentMethod = [];
     public $priceLevels = [];
     public $age = null;
+
+    public string $CUSTOM_FIELD1;
+    public string $CUSTOM_FIELD2;
+    public bool $FIX_MON;
+    public bool $FIX_TUE;
+    public bool $FIX_WEN;
+    public bool $FIX_THU;
+    public bool $FIX_FRI;
+    public bool $FIX_SAT;
+    public bool $FIX_SUN;
+    public int $LOCATION_ID;
+    public int $SCHEDULE_TYPE;
+    public $scheduleTypeList = [];
+    public $locationList = [];
+
+    public int $PATIENT_TYPE_ID;
+    public int $PATIENT_STATUS_ID;
+    public bool $ADMITTED;
+    public bool $LONG_HRS_DURATION;
+    public function updatedscheduleType()
+    {
+        $this->FIX_MON = false;
+        $this->FIX_TUE = false;
+        $this->FIX_WEN = false;
+        $this->FIX_THU = false;
+        $this->FIX_FRI = false;
+        $this->FIX_SAT = false;
+        $this->FIX_SUN = false;
+    }
     public function updateddateofbirth()
     {
         $this->age = $this->contactServices->calculateUserAge($this->DATE_OF_BIRTH);
@@ -73,9 +107,16 @@ class PatientForm extends Component
     }
 
     private $contactServices;
-    public function boot(ContactServices $contactServices)
+    private $locationServices;
+    private $userServices;
+    public $patientTypeList = [];
+    public $patientStatusList = [];
+    public string $DATE_ADMISSION;
+    public function boot(ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
     {
         $this->contactServices = $contactServices;
+        $this->locationServices = $locationServices;
+        $this->userServices = $userServices;
     }
 
     public function mount($id = null)
@@ -86,7 +127,10 @@ class PatientForm extends Component
         $this->paymentTermList = PaymentTerms::query()->select('ID', 'DESCRIPTION')->where('INACTIVE', '0')->get();
         $this->paymentMethod = PaymentMethods::query()->select("ID", 'DESCRIPTION')->get();
         $this->priceLevels = PriceLevels::query()->select('ID', 'DESCRIPTION')->where('INACTIVE', '0')->get();
-
+        $this->locationList = $this->locationServices->getList();
+        $this->scheduleTypeList = ScheduleType::all();
+        $this->patientTypeList = HemodialysisMachines::select(['ID', 'DESCRIPTION'])->get();
+        $this->patientStatusList = PatientStatus::all();
         if (is_numeric($id)) {
 
             $contact = Contacts::where('ID', $id)->where('TYPE', $this->TYPE)->first();
@@ -126,6 +170,23 @@ class PatientForm extends Component
                 $this->DATE_OF_BIRTH = $contact->DATE_OF_BIRTH ? $contact->DATE_OF_BIRTH : '';
                 $this->NICKNAME = $contact->NICKNAME ? $contact->NICKNAME : '';
                 $this->HIRE_DATE = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
+                $this->CUSTOM_FIELD1 = $contact->CUSTOM_FIELD1 ? $contact->CUSTOM_FIELD1 : '';
+                $this->CUSTOM_FIELD2 = $contact->CUSTOM_FIELD2 ? $contact->CUSTOM_FIELD2 : '';
+                $this->SCHEDULE_TYPE = $contact->SCHEDULE_TYPE ? $contact->SCHEDULE_TYPE : 0;
+                $this->FIX_MON = $contact->FIX_MON ? $contact->FIX_MON : false;
+                $this->FIX_TUE = $contact->FIX_TUE ? $contact->FIX_TUE : false;
+                $this->FIX_WEN = $contact->FIX_WEN ? $contact->FIX_WEN : false;
+                $this->FIX_THU = $contact->FIX_THU ? $contact->FIX_THU : false;
+                $this->FIX_FRI = $contact->FIX_FRI ? $contact->FIX_FRI : false;
+                $this->FIX_SAT = $contact->FIX_SAT ? $contact->FIX_SAT : false;
+                $this->FIX_SUN = $contact->FIX_SUN ? $contact->FIX_SUN : false;
+                $this->LOCATION_ID = $contact->LOCATION_ID ?? 0;
+                $this->PATIENT_TYPE_ID = $contact->PATIENT_TYPE_ID ?? 0;
+                $this->PATIENT_STATUS_ID = $contact->PATIENT_STATUS_ID ?? 0;
+
+                $this->ADMITTED = $contact->ADMITTED ? $contact->ADMITTED : false;
+                $this->LONG_HRS_DURATION = $contact->LONG_HRS_DURATION ? $contact->LONG_HRS_DURATION : false;
+                $this->DATE_ADMISSION = $contact->DATE_ADMISSION ? $contact->DATE_ADMISSION : '';
                 $this->updateddateofbirth();
                 return;
             }
@@ -169,8 +230,32 @@ class PatientForm extends Component
         $this->NICKNAME = '';
         $this->HIRE_DATE = '';
         $this->age = null;
-    }
+        $this->CUSTOM_FIELD1 = '';
+        $this->CUSTOM_FIELD2 = '';
 
+        $this->SCHEDULE_TYPE = 0;
+        $this->FIX_MON = false;
+        $this->FIX_TUE = false;
+        $this->FIX_WEN = false;
+        $this->FIX_THU = false;
+        $this->FIX_FRI = false;
+        $this->FIX_SAT = false;
+        $this->FIX_SUN = false;
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->PATIENT_TYPE_ID = 1;
+        $this->PATIENT_STATUS_ID = 1;
+        $this->ADMITTED = false;
+        $this->LONG_HRS_DURATION = false;
+        $this->DATE_ADMISSION = Carbon::now()->format('Y-m-d');
+    }
+    public function updatedADMITTED()
+    {
+        $this->LONG_HRS_DURATION = false;
+    }
+    public function updatedLONGHRSDURATION()
+    {
+        $this->ADMITTED = false;
+    }
     public function FullName()
     {
         if ($this->MIDDLE_NAME) {
@@ -196,9 +281,59 @@ class PatientForm extends Component
     {
         $this->FullName();
     }
+
+    private function dayWeekCount(): int
+    {
+        $dayCount = 0;
+        if ($this->FIX_MON) {
+            $dayCount++;
+        }
+        if ($this->FIX_TUE) {
+            $dayCount++;
+        }
+        if ($this->FIX_WEN) {
+            $dayCount++;
+        }
+        if ($this->FIX_THU) {
+            $dayCount++;
+        }
+        if ($this->FIX_FRI) {
+            $dayCount++;
+        }
+        if ($this->FIX_SAT) {
+            $dayCount++;
+        }
+        if ($this->FIX_SUN) {
+            $dayCount++;
+        }
+
+        return $dayCount;
+    }
+    private function FollowUpUpdate()
+    {
+        Contacts::where('ID', $this->ID)->where('TYPE', $this->TYPE)->update([
+            'SCHEDULE_TYPE' => $this->SCHEDULE_TYPE > 0 ? $this->SCHEDULE_TYPE : null,
+            'FIX_MON' => $this->FIX_MON,
+            'FIX_TUE' => $this->FIX_TUE,
+            'FIX_WEN' => $this->FIX_WEN,
+            'FIX_THU' => $this->FIX_THU,
+            'FIX_FRI' => $this->FIX_FRI,
+            'FIX_SAT' => $this->FIX_SAT,
+            'FIX_SUN' => $this->FIX_SUN,
+            'LOCATION_ID' => $this->LOCATION_ID > 0 ? $this->LOCATION_ID : null,
+            'PATIENT_TYPE_ID' => $this->PATIENT_TYPE_ID > 0 ? $this->PATIENT_TYPE_ID : null,
+            'PATIENT_STATUS_ID' => $this->PATIENT_STATUS_ID > 0 ? $this->PATIENT_STATUS_ID : null,
+            'ADMITTED' => $this->ADMITTED,
+            'LONG_HRS_DURATION' => $this->LONG_HRS_DURATION,
+            'DATE_ADMISSION' => $this->DATE_ADMISSION
+
+        ]);
+    }
     public function save()
     {
+
         if ($this->TAXPAYER_ID) {
+
             $this->validate(
                 [
                     'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
@@ -231,9 +366,36 @@ class PatientForm extends Component
                     'FIRST_NAME' => 'Firstname',
                     'LAST_NAME' => 'Lastname',
                     'DATE_OF_BIRTH' => 'Date of Birth',
-
                 ]
             );
+        }
+
+
+        switch ($this->SCHEDULE_TYPE) {
+            case 1:
+                # code...
+                if ($this->dayWeekCount() != 1) {
+                    session()->flash('error', 'Invalid once`s a week setup');
+                    return;
+                }
+
+                break;
+            case 2:
+                if ($this->dayWeekCount() != 2) {
+                    session()->flash('error', 'Invalid twice`s a week setup');
+                    return;
+                }
+                break;
+            case 3:
+                if ($this->dayWeekCount() != 3) {
+                    session()->flash('error', 'Invalid three times a week setup');
+                    return;
+                }
+                break;
+            default:
+
+                break;
+
         }
 
 
@@ -273,10 +435,15 @@ class PatientForm extends Component
                     $this->GENDER,
                     $this->DATE_OF_BIRTH,
                     $this->NICKNAME,
-                    $this->HIRE_DATE
+                    $this->HIRE_DATE,
+                    $this->CUSTOM_FIELD1,
+                    $this->CUSTOM_FIELD2
                 );
-                $this->mount($this->ID);
+
+                $this->FollowUpUpdate();
+                Redirect::route('maintenancecontactpatients_edit', ['id' => $this->ID])->with('message', 'Successfully created');
                 session()->flash('message', 'Successfully created');
+
             } else {
                 $this->contactServices->Update(
                     $this->ID,
@@ -313,8 +480,12 @@ class PatientForm extends Component
                     $this->GENDER,
                     $this->DATE_OF_BIRTH,
                     $this->NICKNAME,
-                    $this->HIRE_DATE
+                    $this->HIRE_DATE,
+                    $this->CUSTOM_FIELD1,
+                    $this->CUSTOM_FIELD2
                 );
+
+                $this->FollowUpUpdate();
                 session()->flash('message', 'Successfully updated');
             }
         } catch (\Exception $e) {

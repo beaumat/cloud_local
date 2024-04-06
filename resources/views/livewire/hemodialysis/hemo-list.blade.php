@@ -51,10 +51,15 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">Reference No.</th>
-                                        <th class="col-1">Date</th>
-                                        <th>Patients</th>
-                                        <th class="col-1">Location</th>
+                                        <th>REF NO.</th>
+                                        <th>DATE</th>
+                                        <th class="col-md-4">PATIENT NAME</th>
+                                        <th class="text-center">W</th>
+                                        <th class="text-center">B.P</th>
+                                        <th class="text-center">H.R</th>
+                                        <th class="text-center">O2(S)</th>
+                                        <th class="text-center">TMP</th>
+                                        <th class="col-2">Location</th>
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('transactionshemo_create') }}"
                                                 class="text-white btn btn-xs w-100">
@@ -69,8 +74,23 @@
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
-                                            <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center">
+                                                {{ $list->PRE_WEIGHT }} | {{ $list->POST_WEIGHT }}
+                                            </td>
+                                            <td class="text-center"> {{ $list->PRE_BLOOD_PRESSURE }} |
+                                                {{ $list->POST_BLOOD_PRESSURE }}</td>
+                                            <td class="text-center"> {{ $list->PRE_HEART_RATE }} |
+                                                {{ $list->POST_HEART_RATE }}</td>
+                                            <td class="text-center"> {{ $list->PRE_O2_SATURATION }} |
+                                                {{ $list->POST_O2_SATURATION }}</td>
+                                            <td class="text-center"> {{ $list->PRE_TEMPERATURE }} |
+                                                {{ $list->POST_TEMPERATURE }}</td>
+                                            <td> {{ $list->LOCATION_NAME }} </td>
+
+                                            <td class="text-center">
+                                                <a href="#" class="btn-sm text-primary">
+                                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                                </a>
                                                 <a href="{{ route('transactionshemo_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
@@ -80,6 +100,7 @@
                                                     class="btn-sm text-danger">
                                                     <i class="fas fa-times" aria-hidden="true"></i>
                                                 </a>
+
                                             </td>
                                         </tr>
                                     @endforeach

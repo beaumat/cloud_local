@@ -23,6 +23,7 @@ class SchedulerForm extends Component
     protected $listeners = ['reloadComponent'];
     public $CONTACT_ID;
     public $LOCATION_ID;
+    public $HEMO_MACHINE_ID;
     public $locationList = [];
     private $locationServices;
     private $contactServices;
@@ -31,7 +32,6 @@ class SchedulerForm extends Component
     private $scheduleServices;
     public $monthList = [];
     public $scheduleList = [];
-
 
     public function boot(
         LocationServices $locationServices,
@@ -56,6 +56,12 @@ class SchedulerForm extends Component
         $this->reloadComponent();
         $this->loadScheduleByContact();
 
+        $data = $this->contactServices->get($this->CONTACT_ID, 3);
+        if ($data) {
+            $this->HEMO_MACHINE_ID = $data->PATIENT_TYPE_ID;
+            return;
+        }
+        $this->HEMO_MACHINE_ID = 0;
     }
     public function updatedlocationid()
     {
@@ -85,12 +91,10 @@ class SchedulerForm extends Component
     }
     public function mount()
     {
-
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->monthList = $this->dateServices->MonthList();
         $this->resetDate();
     }
-
     public function todayMonth()
     {
         $this->resetDate();

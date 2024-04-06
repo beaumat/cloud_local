@@ -10,6 +10,12 @@ class PaymentServices
 {
 
     use WithPagination;
+    public int $PAYMENT_INVOICE_ID;
+    public int $INVOICE_ID;
+    public float $DISCOUNT;
+    public float $AMOUNT_APPLIED;
+    public int $DISCOUNT_ACCOUNT_ID;
+    public int $ACCOUNTS_RECEIVABLE_ID;
     private $object;
     public function __construct(ObjectServices $objectService)
     {
@@ -119,7 +125,6 @@ class PaymentServices
     }
     public function Search($search, int $locationId, int $perPage)
     {
-
         return Payment::query()
             ->select([
                 'payment.ID',
@@ -154,15 +159,16 @@ class PaymentServices
             ->orderBy('payment.ID', 'desc')
             ->paginate($perPage);
     }
-    public int $PAYMENT_INVOICE_ID;
-    public int $INVOICE_ID;
-    public float $DISCOUNT;
-    public float $AMOUNT_APPLIED;
-    public int $DISCOUNT_ACCOUNT_ID;
-    public int $ACCOUNTS_RECEIVABLE_ID;
 
-    public function PaymentInvoiceStore(int $PAYMENT_ID, int $INVOICE_ID, float $DISCOUNT, float $AMOUNT_APPLIED, int $DISCOUNT_ACCOUNT_ID, int $ACCOUNTS_RECEIVABLE_ID): int
-    {
+
+    public function PaymentInvoiceStore(
+        int $PAYMENT_ID,
+        int $INVOICE_ID,
+        float $DISCOUNT,
+        float $AMOUNT_APPLIED,
+        int $DISCOUNT_ACCOUNT_ID,
+        int $ACCOUNTS_RECEIVABLE_ID
+    ): int {
         $ID = $this->object->ObjectNextID('PAYMENT_INVOICES');
 
         PaymentInvoices::create([
@@ -253,6 +259,7 @@ class PaymentServices
     }
     public function PaymentAvailableList(int $CUSTOMER_ID, int $LOCATION_ID)
     {
+
         $result = Payment::query()
             ->select([
                 'payment.ID',
@@ -262,10 +269,10 @@ class PaymentServices
                 'payment.AMOUNT',
                 'payment.AMOUNT_APPLIED'
             ])
-            ->join('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
+            ->leftJoin('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
             ->where('payment.CUSTOMER_ID', $CUSTOMER_ID)
             ->where('payment.LOCATION_ID', $LOCATION_ID)
-            ->where('payment.AMOUNT_APPLIED', 'payment.AMOUNT')
+            ->where('payment.AMOUNT_APPLIED', '<>', 'payment.AMOUNT')
             ->get();
 
         return $result;

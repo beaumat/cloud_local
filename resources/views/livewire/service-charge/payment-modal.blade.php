@@ -46,7 +46,6 @@
                                         id="custom-tabs-four-new" role="tabpanel"
                                         aria-labelledby="custom-tabs-four-new-tab">
                                         @livewire('ServiceCharge.PaymentModalNewEntry', ['CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'INVOICE_ID' => $INVOICE_ID])
-
                                     </div>
                                 </div>
                             </div>

@@ -44,33 +44,33 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('transactionshemo') }}"
-                                class="nav-link {{ request()->is('transactions/hemodialysis-treatment*') ? 'active text-primary' : '' }}">
-                                <i class="fas fa-medkit nav-icon"></i>
-                                <p>Hemodialysis Treatment</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="{{ route('transactionspayment') }}"
                                 class="nav-link {{ request()->is('transactions/payments*') ? 'active text-primary' : '' }}">
                                 <i class="fas fa-money-bill-wave nav-icon"></i>
                                 <p>Payments</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('transactionshemo') }}"
+                                class="nav-link {{ request()->is('transactions/hemodialysis-treatment*') ? 'active text-primary' : '' }}">
+                                <i class="fas fa-medkit nav-icon"></i>
+                                <p>Treatment</p>
+                            </a>
+                        </li>
+                   
                         {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-file-import nav-icon"></i>
                                 <p>Credit Memo</p>
                             </a>
                         </li> --}}
-
                         {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-landmark nav-icon"></i>
                                 <p>Tax Credit</p>
                             </a>
                         </li> --}}
-
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-newspaper nav-icon"></i>

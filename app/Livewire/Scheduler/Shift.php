@@ -13,23 +13,25 @@ class Shift extends Component
     public int $SHIFT_ID = 0;
     private $scheduleServices;
     public int $LOCATION_ID;
+    public int $HEMO_MACHINE_ID;
     public int $STATUS_ID;
     public function boot(ScheduleServices $scheduleServices)
     {
         $this->scheduleServices = $scheduleServices;
     }
-    public function mount($id, $contact_id, $shiftList, $location_id)
+    public function mount($id, $contact_id, $shiftList, $location_id, $hemo_machine_id)
     {
         $this->ID = $id; // is date
         $this->CONTACT_ID = $contact_id;
         $this->$shiftList = $shiftList;
         $this->LOCATION_ID = $location_id;
+        $this->HEMO_MACHINE_ID = $hemo_machine_id;
         $schedule = $this->scheduleServices->get($this->CONTACT_ID, $id, $this->LOCATION_ID);
-        if($schedule) {
+        if ($schedule) {
             $this->SHIFT_ID = $schedule->SHIFT_ID;
             $this->STATUS_ID = $schedule->SCHED_STATUS;
         }
-       
+
     }
 
     public function save(int $shift_id, $date)
@@ -39,14 +41,14 @@ class Shift extends Component
             try {
                 $schedule = $this->scheduleServices->get($this->CONTACT_ID, $date, $this->LOCATION_ID);
                 if ($schedule) {
-                
+
                     if ($shift_id == 0) {
-                        $this->scheduleServices->Delete($schedule->id, $this->LOCATION_ID);
+                        $this->scheduleServices->Delete($schedule->ID, $this->LOCATION_ID);
                     } else {
-                        $this->scheduleServices->Update($this->CONTACT_ID, $date, $shift_id, $schedule->SCHED_STATUS, $schedule->STATUS_LOG, $this->LOCATION_ID);
+                        $this->scheduleServices->Update($this->CONTACT_ID, $date, $shift_id, $schedule->SCHED_STATUS, $schedule->STATUS_LOG, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);
                     }
                 } elseif ($shift_id != 0) {
-                    $this->scheduleServices->Store($shift_id, $this->CONTACT_ID, $date, 0, null, $this->LOCATION_ID);
+                    $this->scheduleServices->Store($shift_id, $this->CONTACT_ID, $date, 0, null, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);
                 }
                 $this->dispatch('load-schedule-by-contact');
             } catch (\Exception $e) {

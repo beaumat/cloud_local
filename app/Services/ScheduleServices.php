@@ -2,11 +2,30 @@
 
 namespace App\Services;
 
+use App\Models\Contacts;
+use App\Models\HemodialysisMachines;
 use App\Models\Schedules;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ScheduleServices
 {
+
+    private bool $MON;
+    private bool $TUE;
+    private bool $WEN;
+    private bool $THU;
+    private bool $FRI;
+    private bool $SAT;
+    private bool $SUN;
+
+
+
+    private $object;
+    public function __construct(ObjectServices $objectService)
+    {
+        $this->object = $objectService;
+    }
     public function scheduleList($Date, int $LOCATION_ID)
     {
         return Schedules::query()
@@ -40,34 +59,39 @@ class ScheduleServices
     }
     public function Delete(int $ID, int $LOCATION_ID)
     {
-        Schedules::where('id', $ID)->where('LOCATION_ID', $LOCATION_ID)->delete();
+        Schedules::where('ID', $ID)->where('LOCATION_ID', $LOCATION_ID)->delete();
     }
-    public function Update(int $CONTACT_ID, string $date, int $SHIFT_ID, int $STATUS, $LOG, int $LOCATION_ID)
+    public function Update(int $CONTACT_ID, string $DATE, int $SHIFT_ID, int $STATUS, $LOG, int $LOCATION_ID, int $HEMO_MACHINE_ID)
     {
         Schedules::where('CONTACT_ID', $CONTACT_ID)
-            ->where('SCHED_DATE', $date)
+            ->where('SCHED_DATE', $DATE)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->update([
                 'SHIFT_ID' => $SHIFT_ID,
                 'SCHED_STATUS' => $STATUS,
-                'STATUS_LOG' => $LOG
+                'STATUS_LOG' => $LOG,
+                'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID
             ]);
     }
-    public function Store(int $SHIFT_ID, int $CONTACT_ID, string $Date, int $STATUS, $LOG, int $LOCATION_ID)
+    public function Store(int $SHIFT_ID, int $CONTACT_ID, string $DATE, int $STATUS, $LOG, int $LOCATION_ID, int $HEMO_MACHINE_ID)
     {
+
+        $ID = (int) $this->object->ObjectNextID('SCHEDULES');
+
         Schedules::create([
+            'ID' => $ID,
             'SHIFT_ID' => $SHIFT_ID,
             'CONTACT_ID' => $CONTACT_ID,
-            'SCHED_DATE' => $Date,
+            'SCHED_DATE' => $DATE,
             'SCHED_STATUS' => $STATUS,
             'STATUS_LOG' => $LOG,
-            'LOCATION_ID' => $LOCATION_ID
+            'LOCATION_ID' => $LOCATION_ID,
+            'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID
         ]);
     }
 
     public function ContactSchedule(int $CONTACT_ID, int $LOCATION_ID)
     {
-
         $result = Schedules::query()
             ->select([
                 'schedules.SCHED_DATE',
@@ -104,4 +128,174 @@ class ScheduleServices
             ->get();
     }
 
+
+    public function AutoGenerateSchedule(int $PATIENT_ID, int $LOCATION_ID, int $YEAR, int $MONTH, array $weekDate = [], $shiftList)
+    {
+        $contact = Contacts::where('ID', $PATIENT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('TYPE', 3)
+            ->whereNull('HIRE_DATE')
+            ->where('INACTIVE', 0)
+            ->first();
+
+        if ($contact) {
+            // Assuming $contact->FIX_MON, $contact->FIX_TUE, etc. are boolean attributes
+            $this->MON = (bool) $contact->FIX_MON;
+            $this->TUE = (bool) $contact->FIX_TUE;
+            $this->WEN = (bool) $contact->FIX_WEN;
+            $this->THU = (bool) $contact->FIX_THU;
+            $this->FRI = (bool) $contact->FIX_FRI;
+            $this->SAT = (bool) $contact->FIX_SAT;
+            $this->SUN = (bool) $contact->FIX_SUN;
+
+            $patientType = HemodialysisMachines::where('ID', $contact->PATIENT_TYPE_ID)
+                ->where('LOCATION_ID', $contact->LOCATION_ID)
+                ->first();
+
+            if ($patientType) {
+                $this->AutoProcess($PATIENT_ID, $LOCATION_ID, $weekDate, $patientType, $shiftList);
+            }
+        }
+    }
+
+    private function scheduleSet($shiftList, int $PATIENT_ID, int $LOCATION_ID, int $PATIENT_TYPE_ID, int $CAPACITY, $DATE)
+    {
+        //Check if Exists
+        $data = Schedules::where('CONTACT_ID', $PATIENT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('HEMO_MACHINE_ID', $PATIENT_TYPE_ID)
+            ->where('SCHED_DATE', $DATE)
+            ->first();
+
+        if ($data) {
+            return;
+        }
+
+        foreach ($shiftList as $list) {
+            //Check if maximum base on capacity
+            $count = Schedules::select(DB::raw('COUNT(*) as CAPACITY'))
+                ->where('LOCATION_ID', $LOCATION_ID)
+                ->where('HEMO_MACHINE_ID', $PATIENT_TYPE_ID)
+                ->where('SCHED_DATE', $DATE)
+                ->where('SHIFT_ID', $list->ID)
+                ->first();
+
+            if ($count && $count->CAPACITY <= $CAPACITY) {
+                //Insert
+                $this->Store($list->ID, $PATIENT_ID, $DATE, 0, null, $LOCATION_ID, $PATIENT_TYPE_ID);
+                return;
+            }
+        }
+    }
+
+    private function AutoProcess(int $PATIENT_ID, int $LOCATION_ID, array $weekDate = [], $patientType, $shiftList)
+    {
+
+
+        $capacity = (int) $patientType->CAPACITY;
+        $patient_type_id = (int) $patientType->ID;
+
+
+        foreach ($weekDate as $date) {
+            $weekDateFormatted = (string) Carbon::parse($date)->format('Y-m-d');
+            switch (Carbon::parse($date)->format('l')) {
+                case 'Monday':
+                    if ($this->MON) {
+                        $this->scheduleSet($shiftList, $PATIENT_ID, $LOCATION_ID, $patient_type_id, $capacity, $weekDateFormatted);
+                    }
+                    break;
+                case 'Tuesday':
+                    if ($this->TUE) {
+                        $this->scheduleSet($shiftList, $PATIENT_ID, $LOCATION_ID, $patient_type_id, $capacity, $weekDateFormatted);
+                    }
+                    break;
+                case 'Wednesday':
+                    if ($this->WEN) {
+                        $this->scheduleSet($shiftList, $PATIENT_ID, $LOCATION_ID, $patient_type_id, $capacity, $weekDateFormatted);
+                    }
+                    break;
+                case 'Thursday':
+                    if ($this->THU) {
+                        $this->scheduleSet($shiftList, $PATIENT_ID, $LOCATION_ID, $patient_type_id, $capacity, $weekDateFormatted);
+                    }
+                    break;
+                case 'Friday':
+                    if ($this->FRI) {
+                        $this->scheduleSet($shiftList, $PATIENT_ID, $LOCATION_ID, $patient_type_id, $capacity, $weekDateFormatted);
+                    }
+                    break;
+                case 'Saturday':
+                    if ($this->SAT) {
+                        $this->scheduleSet($shiftList, $PATIENT_ID, $LOCATION_ID, $patient_type_id, $capacity, $weekDateFormatted);
+                    }
+                    break;
+                case 'Sunday':
+                    if ($this->SUN) {
+                        $this->scheduleSet($shiftList, $PATIENT_ID, $LOCATION_ID, $patient_type_id, $capacity, $weekDateFormatted);
+                    }
+                    break;
+                default:
+                    // Handle unexpected day
+                    break;
+            }
+
+
+        }
+    }
+    public function PatientWeeklySchedule($SHIFT_ID, $DATE, $LOCATION_ID)
+    {
+        $demandOutput = [];
+        $res = HemodialysisMachines::where('LOCATION_ID', $LOCATION_ID)->get();
+        $run = 1;
+        foreach ($res as $list) {
+
+            for ($z = 1; $z <= $list->CAPACITY; $z++) {
+                $demandOutput[] = ['ID' => $run, 'PATIENT_NAME' => '', 'TYPE_ID' => $list->ID];
+                $run++;
+            }
+
+
+        }
+
+    
+
+        $result = Schedules::query()
+            ->select([
+
+                'hm.DESCRIPTION as PATIENT_TYPE',
+                'hm.CAPACITY',
+                'hm.ID as TYPE_ID',
+                'c.LAST_NAME as PATIENT_NAME',
+                'c.LONG_HRS_DURATION',
+                'c.ADMITTED',
+                'c.ID as PATIENT_ID',
+            ])
+            ->join('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
+            ->join('hemodialysis_machine as hm', 'hm.ID', '=', 'schedules.HEMO_MACHINE_ID')
+            ->join('patient_status as ps', 'ps.ID', '=', 'c.PATIENT_STATUS_ID')
+            ->where('schedules.SHIFT_ID', $SHIFT_ID)
+            ->where('schedules.LOCATION_ID', $LOCATION_ID)
+            ->where('hm.LOCATION_ID', $LOCATION_ID)
+            ->where('schedules.SCHED_DATE', $DATE)
+            ->orderBy('hm.ID')
+            ->orderBy('c.DATE_ADMISSION')
+            ->get();
+
+
+
+        foreach ($result as $list) {
+
+            foreach ($demandOutput as &$item) {
+                if ($item['TYPE_ID'] == $list->TYPE_ID) {
+                    if ($item['PATIENT_NAME'] == '') {
+                        $item['PATIENT_NAME'] = $list->PATIENT_NAME;
+                        break; // Assuming each ID is unique, you can break out of the loop once the update is done
+                    }
+                }
+            }
+        }
+
+
+        return $demandOutput;
+    }
 }

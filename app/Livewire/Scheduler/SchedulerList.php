@@ -7,7 +7,6 @@ use App\Services\LocationServices;
 use App\Services\ScheduleServices;
 use App\Services\UserServices;
 use Carbon\Carbon;
-use DateTime;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -44,10 +43,10 @@ class SchedulerList extends Component
         $this->scheduleServices = $scheduleServices;
     }
     // #[On('load-schedule-by-contact')]
-    // public function loadScheduleByContact()
-    // {
-    //     $this->scheduleList = $this->scheduleServices->ContactSchedule(0, $this->LOCATION_ID ?? 0);
-    // }
+    public function loadScheduleByContact()
+    {
+        $this->scheduleList = $this->scheduleServices->ContactSchedule(0, $this->LOCATION_ID ?? 0);
+    }
     public function updatedlocationid()
     {
         $this->reloadComponent();
@@ -90,6 +89,8 @@ class SchedulerList extends Component
         $this->todayMonth();
         $this->reloadContactList(Carbon::now()->format('Y-m-d'));
     }
+
+  
     public function todayMonth()
     {
         $this->year = Carbon::now()->year;
@@ -104,23 +105,19 @@ class SchedulerList extends Component
         $this->month = $this->month == 12 ? 1 : $this->month + 1;
         $this->year = $this->month == 1 ? $this->year + 1 : $this->year;
         $this->reloadComponent();
-      
+
     }
     public function previousMonth()
-    {     $this->DATE = null;
+    {
+        $this->DATE = null;
         $this->month = $this->month == 1 ? 12 : $this->month - 1;
         $this->year = $this->month == 12 ? $this->year - 1 : $this->year;
         $this->reloadComponent();
-      
- 
     }
 
     public function render()
     {
-
-
         $this->locationList = $this->locationServices->getList();
-
         return view('livewire.scheduler.scheduler-list');
     }
 }

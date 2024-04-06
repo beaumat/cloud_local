@@ -153,6 +153,7 @@ class PaymentModalAvailable extends Component
     {
 
         $this->data = $this->paymentServices->PaymentAvailableList($this->CUSTOMER_ID, $this->LOCATION_ID);
+
         return view('livewire.service-charge.payment-modal-available');
     }
 }

@@ -11,6 +11,7 @@ use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
 use App\Livewire\Hemodialysis\HemoForm;
 use App\Livewire\Hemodialysis\HemoList;
+use App\Livewire\Hemodialysis\PrintForm;
 use App\Livewire\HemodialysisMachine\HemoMachineForm;
 use App\Livewire\HemodialysisMachine\HemoMachineList;
 use App\Livewire\Option\OptionSettings;
@@ -106,6 +107,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', HemoList::class)->name('hemo');
             Route::get('/create', HemoForm::class)->name('hemo_create');
             Route::get('/{id}/edit', HemoForm::class)->name('hemo_edit');
+            Route::get('/{id}/print', PrintForm::class)->name('hemo_print');
         });
 
         Route::prefix('/payments')->group(function () {

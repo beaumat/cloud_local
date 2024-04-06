@@ -16,6 +16,7 @@ class HemodialysisMachines extends Model
         'CODE',
         'TYPE',
         'DESCRIPTION',
-        'LOCATION_ID'
+        'LOCATION_ID',
+        'CAPACITY'
     ];
 }

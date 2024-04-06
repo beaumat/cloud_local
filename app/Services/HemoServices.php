@@ -83,7 +83,17 @@ class HemoServices
                 'hemodialysis.CODE',
                 'hemodialysis.DATE',
                 'c.NAME as CONTACT_NAME',
-                'l.NAME as LOCATION_NAME'
+                'l.NAME as LOCATION_NAME',
+                'hemodialysis.PRE_WEIGHT',
+                'hemodialysis.PRE_BLOOD_PRESSURE',
+                'hemodialysis.PRE_HEART_RATE',
+                'hemodialysis.PRE_O2_SATURATION',
+                'hemodialysis.PRE_TEMPERATURE',
+                'hemodialysis.POST_WEIGHT',
+                'hemodialysis.POST_BLOOD_PRESSURE',
+                'hemodialysis.POST_HEART_RATE',
+                'hemodialysis.POST_O2_SATURATION',
+                'hemodialysis.POST_TEMPERATURE',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {

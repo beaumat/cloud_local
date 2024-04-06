@@ -18,7 +18,7 @@ class HemodialysisMachineServices
     {
         return HemodialysisMachines::where('ID', $ID)->first();
     }
-    public function Store(string $CODE, int $TYPE, string $DESCRIPTION, int $LOCATION_ID): int
+    public function Store(string $CODE, int $TYPE, string $DESCRIPTION, int $LOCATION_ID ,int $CAPACITY): int
     {
         $ID = $this->object->ObjectNextID('HEMODIALYSIS_MACHINE');
 
@@ -27,19 +27,21 @@ class HemodialysisMachineServices
             'CODE' => $CODE,
             'TYPE' => $TYPE,
             'DESCRIPTION' => $DESCRIPTION,
-            'LOCATION_ID' => $LOCATION_ID
+            'LOCATION_ID' => $LOCATION_ID,
+            'CAPACITY' => $CAPACITY
         ]);
 
         return $ID;
     }
-    public function Update(int $ID, string $CODE, int $TYPE, string $DESCRIPTION, int $LOCATION_ID)
+    public function Update(int $ID, string $CODE, int $TYPE, string $DESCRIPTION, int $LOCATION_ID, int $CAPACITY)
     {
 
         HemodialysisMachines::where('ID', $ID)->update([
             'CODE' => $CODE,
             'TYPE' => $TYPE,
             'DESCRIPTION' => $DESCRIPTION,
-            'LOCATION_ID' => $LOCATION_ID
+            'LOCATION_ID' => $LOCATION_ID,
+            'CAPACITY' => $CAPACITY
         ]);
     }
     public function Delete(int $ID)
@@ -54,7 +56,8 @@ class HemodialysisMachineServices
                 'hemodialysis_machine.CODE',
                 'hemodialysis_machine.DESCRIPTION',
                 'machine_type.DESCRIPTION as TYPE',
-                'location.NAME as LOCATION'
+                'location.NAME as LOCATION',
+                'hemodialysis_machine.CAPACITY'
             ])
             ->join('machine_type', 'machine_type.ID', '=', 'hemodialysis_machine.TYPE')
             ->join('location', 'location.ID', '=', 'hemodialysis_machine.LOCATION_ID')

@@ -18,6 +18,86 @@ class DateServices
         ];
     }
 
+    public function WeeklyLevel(): array
+    {
+        return [
+            ['ID' => 1, 'DESCRIPTION' => '1st week'],
+            ['ID' => 2, 'DESCRIPTION' => '2nd week'],
+            ['ID' => 3, 'DESCRIPTION' => '3rd week'],
+            ['ID' => 4, 'DESCRIPTION' => '4th week'],
+            ['ID' => 5, 'DESCRIPTION' => '5th week']
+
+        ];
+    }
+    function Get7Days(int $yr, int $m, int $wk_selected)
+    {
+        $month = $m;
+        $year = $yr;
+        $selectedWeek = $wk_selected;
+
+        // Get the day of the week for the first day of the month
+        $firstDayOfWeek = date('N', strtotime("$year-$month-01"));
+
+        // Calculate the start date of the first week based on the day of the week
+        $startOfWeek = 1 - $firstDayOfWeek + 1; // Adjust for Monday being the start of the week
+
+        // Get the number of days in the month
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        // If the start of the week is greater than 1, then it's actually the last week of the previous month
+        if ($startOfWeek > 1) {
+            $month--;
+            if ($month == 0) {
+                $month = 12;
+                $year--;
+            }
+            // Recalculate the start of the week
+            $firstDayOfWeek = date('N', strtotime("$year-$month-01"));
+            $startOfWeek = 1 - $firstDayOfWeek + 1;
+        }
+
+        // Calculate the start and end dates for the selected week
+        $startDate = $startOfWeek + ($selectedWeek - 1) * 7;
+        $endDate = min($startDate + 6, $daysInMonth);
+
+        $selectedDates = [];
+
+        // Generate dates for the selected week
+        for ($day = $startDate; $day <= $endDate; $day++) {
+            if ($day < 1) {
+                // If the day is from the previous month, calculate the day accordingly
+                $prevMonth = $month - 1;
+                $prevYear = $year;
+                if ($prevMonth == 0) {
+                    $prevMonth = 12;
+                    $prevYear--;
+                }
+                $selectedDates[] = sprintf('%04d-%02d-%02d', $prevYear, $prevMonth, $day + cal_days_in_month(CAL_GREGORIAN, $prevMonth, $prevYear));
+            } elseif ($day > $daysInMonth) {
+                // If the day is from the next month, calculate the day accordingly
+                $nextMonth = $month + 1;
+                $nextYear = $year;
+                if ($nextMonth == 13) {
+                    $nextMonth = 1;
+                    $nextYear++;
+                }
+                $selectedDates[] = sprintf('%04d-%02d-%02d', $nextYear, $nextMonth, $day - $daysInMonth);
+            } else {
+                $selectedDates[] = sprintf('%04d-%02d-%02d', $year, $month, $day);
+            }
+        }
+
+        if (count($selectedDates) < 6) {
+
+            return [];
+        }
+        return $selectedDates;
+    }
+
+
+
+
+
     public function SemiMonthly(): array
     {
         return [

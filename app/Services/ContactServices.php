@@ -13,6 +13,10 @@ class ContactServices
     {
         $this->object = $objectService;
     }
+    public function get(int $ID, int $TYPE)
+    {
+        return contacts::where('ID', $ID)->where('TYPE', $TYPE)->first();
+    }
     public function getList(int $Type): object
     {
         return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();
@@ -61,7 +65,12 @@ class ContactServices
         int $GENDER,
         string $DATE_OF_BIRTH,
         string $NICKNAME,
-        string $HIRE_DATE
+        string $HIRE_DATE,
+        string $CUSTOM_FIELD1 = '',
+        string $CUSTOM_FIELD2 = '',
+        string $CUSTOM_FIELD3 = '',
+        string $CUSTOM_FIELD4 = '',
+        string $CUSTOM_FIELD5 = ''
     ): int {
 
 
@@ -126,11 +135,11 @@ class ContactServices
             "DATE_OF_BIRTH" => $DATE_OF_BIRTH ? $DATE_OF_BIRTH : null,
             "NICKNAME" => $NICKNAME,
             "HIRE_DATE" => $HIRE_DATE ? $HIRE_DATE : null,
-            "CUSTOM_FIELD1" => null,
-            "CUSTOM_FIELD2" => null,
-            "CUSTOM_FIELD3" => null,
-            "CUSTOM_FIELD4" => null,
-            "CUSTOM_FIELD5" => null,
+            "CUSTOM_FIELD1" => $CUSTOM_FIELD1,
+            "CUSTOM_FIELD2" => $CUSTOM_FIELD2,
+            "CUSTOM_FIELD3" => $CUSTOM_FIELD3,
+            "CUSTOM_FIELD4" => $CUSTOM_FIELD4,
+            "CUSTOM_FIELD5" => $CUSTOM_FIELD5,
 
 
         ]);
@@ -173,7 +182,12 @@ class ContactServices
         int $GENDER,
         string $DATE_OF_BIRTH,
         string $NICKNAME,
-        string $HIRE_DATE
+        string $HIRE_DATE,
+        string $CUSTOM_FIELD1 = '',
+        string $CUSTOM_FIELD2 = '',
+        string $CUSTOM_FIELD3 = '',
+        string $CUSTOM_FIELD4 = '',
+        string $CUSTOM_FIELD5 = ''
     ): void {
 
         Contacts::where('ID', $ID)->where('TYPE', $TYPE)->update([
@@ -211,11 +225,11 @@ class ContactServices
             "DATE_OF_BIRTH" => $DATE_OF_BIRTH ? $DATE_OF_BIRTH : null,
             "NICKNAME" => $NICKNAME,
             "HIRE_DATE" => $HIRE_DATE ? $HIRE_DATE : null,
-            "CUSTOM_FIELD1" => null,
-            "CUSTOM_FIELD2" => null,
-            "CUSTOM_FIELD3" => null,
-            "CUSTOM_FIELD4" => null,
-            "CUSTOM_FIELD5" => null,
+            "CUSTOM_FIELD1" => $CUSTOM_FIELD1,
+            "CUSTOM_FIELD2" => $CUSTOM_FIELD2,
+            "CUSTOM_FIELD3" => $CUSTOM_FIELD3,
+            "CUSTOM_FIELD4" => $CUSTOM_FIELD4,
+            "CUSTOM_FIELD5" => $CUSTOM_FIELD5,
 
         ]);
     }
@@ -244,6 +258,7 @@ class ContactServices
                     'contact.TAXPAYER_ID',
                     'gender_map.DESCRIPTION as GENDER',
                     'contact.DATE_OF_BIRTH',
+                    'contact.DATE_ADMISSION',
                     \DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH, CURDATE()) AS AGE')
                 ]
             )

@@ -12,7 +12,8 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('transactionshemo') }}"> Hemodialysis Treatment
+                                    <a class="text-white" href="{{ route('transactionshemo') }}"> Hemodialysis
+                                        Treatment
                                     </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
@@ -196,6 +197,8 @@
                 </div>
                 <div class="col-md-12">
                     <button class="btn btn-sm btn-primary" wire:click='update_all'>Save</button>
+                    <a target="_blank" href="{{ route('transactionshemo_print', ['id' => $ID]) }}"
+                        class="btn btn-sm btn-success">Print</a>
                 </div>
             </div>
         </div>
