@@ -20,6 +20,26 @@ class HemoServices
     {
         return Hemodialysis::where('ID', $ID)->first();
     }
+    public function GetFirst(int $ID)
+    {
+        return Hemodialysis::query()
+        ->select([
+            'hemodialysis.ID',
+            'hemodialysis.CODE',
+            'hemodialysis.DATE',
+            'c.NAME as CONTACT_NAME',
+            'c.DATE_OF_BIRTH',
+            'c.TAXPAYER_ID as PHIC_NO',
+            'hemodialysis.PRE_WEIGHT',
+            'hemodialysis.PRE_BLOOD_PRESSURE',
+            'hemodialysis.PRE_HEART_RATE',
+            'hemodialysis.PRE_O2_SATURATION',
+            'hemodialysis.PRE_TEMPERATURE'           
+        ])
+        ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
+        ->where('hemodialysis.ID',$ID)
+        ->first();
+    }
     public function Update(int $ID, $Object)
     {
         Hemodialysis::where('ID', $ID)->update($Object);

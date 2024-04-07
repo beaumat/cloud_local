@@ -55932,7 +55932,7 @@ a.text-muted:hover {
 }
 
 #firstfloor div {
-    padding-top: 30px;
+    padding-top: 10px;
 }
 
 .blackbox {
@@ -55960,22 +55960,51 @@ a.text-muted:hover {
 .bottom-line {
     border-bottom: 2px solid black;
 }
+
 .bottom-line-hide {
     border-bottom: 2px solid white;
 }
+
 .down-space {
     margin-bottom: 10px;
 }
+
 .up-space {
     margin-top: 10px;
 }
 
 @media print {
-    /* Adjust margins for printing */
+
     @page {
-        margin-left: 0mm; /* You can adjust the size of the margins here */
-        margin-right: 0mm; /* You can adjust the size of the margins here */
-        padding-left: 0mm; /* You can adjust the size of the margins here */
-        padding-right: 0mm; /* You can adjust the size of the margins here */
+        margin-left: 5px;
+        margin-right: 5px;
+
     }
+
+    .page-break {
+        page-break-before: always;
+    }
+}
+
+.print-title {
+    height: 100px;
+    font-size: 20px;
+    position: absolute;
+    text-align: center;
+    top: -30px;
+    left: 36%;
+    padding-top:20px;
+}
+
+.print-logo {
+    width: 550px;
+    text-align: center;
+
+}
+
+.print-address {
+    position: absolute;
+    top: 40px;
+    left: 40%;
+    font-size: 15px;
 }

@@ -1,33 +1,37 @@
 <div>
-
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 text-center">
-                    <h1>LOGO</h1>
-                </div>
-                <div class="col-12 text-center">
-                    <h5>HEMODIALYSIS TREATMENT SHEET</h5>
-                </div>
-                <div class="col-6">
-                    ID NO.: ___________________
-                </div>
-                <div class="col-6 text-right">
-                    PHIC NO. __________________
-                </div>
-                <div class="col-12 blackbox">
-                    <div class="row" id="firstfloor">
-                        <div class="col-4">NAME:</div>
-                        <div class="col-1">AGE:</div>
-                        <div class="col-3">NO. OF TREATMENT:</div>
-                        <div class="col-2">MACHINE NO. :</div>
-                        <div class="col-2">DATE:</div>
+                <div class="col-12 text-center mb-4">
+                    <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
+                    <div class="print-address">
+                        <b>RDL Building F. Torres Street, Davao City</b>
                     </div>
                 </div>
-                <div class="col-12 ubox">
+                <div class="col-12 text-center">
+                    <b class="print-title">HEMODIALYSIS TREATMENT SHEET</b>
+                </div>
+                <div class="col-6">
+                    <b>ID NO.:</b> <u class="text-primary font-weight-bold">{{ $CODE }}</u>
+                </div>
+
+                <div class="col-6 text-right">
+                    <b>PHIC NO.:</b> <u class="text-primary font-weight-bold">{{ $PHIC_NO }}</u>
+                </div>
+                <div class="col-12 top-line left-line right-line">
+                    <div class="row font-weight-bold" id="firstfloor">
+                        <div class="col-4">NAME: <label class="text-primary font-weight-bold h5">{{ $FULL_NAME }}</label></div>
+                        <div class="col-1">AGE: <label class="text-primary font-weight-bold">{{ $AGE }}</label></div>
+                        <div class="col-3">NO. OF TREATMENT:</div>
+                        <div class="col-2">MACHINE NO. :</div>
+                        <div class="col-2">DATE: <label class="text-primary font-weight-bold">{{ \Carbon\Carbon::parse($DATE)->format('m/d/Y') }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 left-line bottom-line top-line">
                     <div class="row">
                         <div class="col-2" id="empty">
-                            <div class="row text-center">
+                            <div class="row text-center font-weight-bold">
                                 <div class="col-12 bottom-line-hide">
                                     <p class="up-space down-space"> &nbsp; </p>
                                 </div>
@@ -55,10 +59,10 @@
                             <div class="row">
                                 <div class="col-12 bottom-line text-center">
 
-                                    <p class="up-space down-space"> LAST TREATMENT</p>
+                                    <p class="up-space down-space font-weight-bold"> LAST TREATMENT</p>
                                 </div>
                                 <div class="col-12 bottom-line">
-                                    <div class="row text-center up-space">
+                                    <div class="row text-center up-space font-weight-bold">
                                         <div class="col-6">
                                             PRE
                                         </div>
@@ -123,10 +127,10 @@
                         <div class="col-2 left-line">
                             <div class="row">
                                 <div class="col-12 bottom-line text-center">
-                                    <p class="up-space down-space"> TODAYS TREATMENT </p>
+                                    <p class="up-space down-space font-weight-bold"> TODAYS TREATMENT </p>
                                 </div>
                                 <div class="col-12 bottom-line">
-                                    <div class="row text-center up-space">
+                                    <div class="row text-center up-space font-weight-bold">
                                         <div class="col-6">
                                             PRE
                                         </div>
@@ -188,13 +192,13 @@
                             </div>
 
                         </div>
-                        <div class="col-6 left-line">
+                        <div class="col-6 left-line right-line ">
                             <div class="row">
                                 <div class="col-12 bottom-line">
                                     <p class="up-space down-space"> <b>UF GOAL</b></p>
                                 </div>
-                                <div class="col-4">
-                                    <div class="row pb-2">
+                                <div class="col-4 ">
+                                    <div class="row pb-2 font-weight-bold">
                                         <div class="col-12 bottom-line-hide">
                                             <div class="row up-space">
                                                 <div class="col-7">
@@ -295,42 +299,43 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 left-line right-line top-line bottom-line mt-1">
+                <div class="col-12 left-line bottom-line ">
                     <div class="row">
                         <div class="col-4 ">
-                            <label>NEPHOLOGIEST:</label>
+                            <label class="text-sm">NEPHROLOGIST:</label>
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
-                                        SPECIAL ENDORSEMENT
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
+                                        <b> SPECIAL ENDORSEMENT</b>
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
 
                                 </div>
@@ -338,46 +343,47 @@
                             </div>
                         </div>
                         <div class="col-4 left-line">
-                            <label>DIAGNOSIS:</label>
+                            <label class="text-sm">DIAGNOSIS:</label>
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
-                                        STANDING ORDER
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
+                                        <b>STANDING ORDER</b>
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
-                                    <div class="col-md-12 mx-1 text-center">
-                                        _________________________________________________
+                                    <div class="col-12  text-center">
+                                        ______________________________________________
                                     </div>
 
                                 </div>
 
                             </div>
                         </div>
-                        <div class="col-4 text-center left-line">
+                        <div class="col-4 text-center left-line right-line">
                             <div class="row bottom-line">
                                 <div class="col-12">
                                     <label>FISTULA / GRAFT ACCESS</label>
@@ -460,7 +466,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 left-line right-line top-line bottom-line mt-1">
+                <div class="col-12 left-line right-line bottom-line">
                     <div class="row">
                         <div class="col-6">
                             <div class="row">
@@ -469,7 +475,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="row">
-                                        <div class="col-12 text-center">
+                                        <div class="col-12 text-center font-weight-bold">
                                             MOBILIZATION
                                         </div>
                                         <div class="col-12">
@@ -486,7 +492,7 @@
                                 </div>
                                 <div class="col-2">
                                     <div class="row">
-                                        <div class="col-12 text-center">
+                                        <div class="col-12 text-center font-weight-bold">
                                             LUNGS
                                         </div>
                                         <div class="col-12">
@@ -500,7 +506,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="row">
-                                        <div class="col-12 text-center">
+                                        <div class="col-12 text-center font-weight-bold">
                                             FLUID STATUS
                                         </div>
                                         <div class="col-12">
@@ -515,7 +521,7 @@
                                 </div>
                                 <div class="col-2">
                                     <div class="row">
-                                        <div class="col-12 text-center">
+                                        <div class="col-12 text-center font-weight-bold">
                                             HEART
                                         </div>
                                         <div class="col-12">
@@ -537,7 +543,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="row">
-                                        <div class="col-12 text-center">
+                                        <div class="col-12 text-center font-weight-bold">
                                             MOBILIZATION
                                         </div>
                                         <div class="col-12">
@@ -554,7 +560,7 @@
                                 </div>
                                 <div class="col-2">
                                     <div class="row">
-                                        <div class="col-12 text-center">
+                                        <div class="col-12 text-center font-weight-bold">
                                             LUNGS
                                         </div>
                                         <div class="col-12">
@@ -568,7 +574,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="row">
-                                        <div class="col-12 text-center">
+                                        <div class="col-12 text-center font-weight-bold">
                                             FLUID STATUS
                                         </div>
                                         <div class="col-12">
@@ -583,7 +589,7 @@
                                 </div>
                                 <div class="col-2">
                                     <div class="row">
-                                        <div class="col-12 text-center">
+                                        <div class="col-12 text-center font-weight-bold">
                                             HEART
                                         </div>
                                         <div class="col-12">
@@ -600,15 +606,14 @@
                         </div>
                     </div>
                 </div>
-
-                <table width="100%" class="col-12 left-line right-line top-line bottom-line mt-1">
+                <table width="100%" class="col-12 left-line right-line bottom-line">
                     <thead>
                         <tr class="text-center">
                             <th class="col-1">TIME</th>
                             <th class="col-1 left-line">BP</th>
                             <th class="col-1 left-line">HR</th>
                             <th class="col-1 left-line">BFR</th>
-                            <th class="col-1 left-line">AP|VP</th>
+                            <th class="col-1 left-line">AP | VP</th>
                             <th class="col-1 left-line">TFR</th>
                             <th class="col-1 left-line">TMP</th>
                             <th class="col-1 left-line">HEPARIN | <br /> FLUSHING</th>
@@ -631,28 +636,37 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="col-12 left-line right-line top-line bottom-line mt-1">
+                <div class="col-12 left-line right-line bottom-line">
                     <div class="row mt-2">
                         <div class="col-4">
-                            <div class="text-sm text-right">CANNULATED BY: ______________________________________</div>
-                            <div class="text-sm text-right">NO OF ATTEMPT:&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                                ARTERIAL: _________ G: ___________</div>
-                            <div class="text-sm text-right"> VENOUS: _________ G: ___________</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="text-sm text-left">PRIMED BY: ______________________________________</div>
-                            <div class="text-sm text-left">INITIATED BY: ______________________________________</div>
-                            <div class="text-sm text-left">TERMINATED BY: ______________________________________</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="text-sm text-left">RML: ___________________________________________________
+                            <div class="text-sm text-left"><b>CANNULATED BY:</b>______________________________________
                             </div>
-                            <div class="text-sm text-left">HEPA PROFILE: ________________________________________</div>
+                            <div class="text-sm text-right"><b>NO OF ATTEMPT:</b>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                                <b>ARTERIAL:</b> ________ <b>G:</b> __________
+                            </div>
+                            <div class="text-sm text-right"><b>VENOUS:</b> ________ <b>G:</b> __________</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-sm text-left">
+                                <b>PRIMED BY:</b> ______________________________________
+                            </div>
+                            <div class="text-sm text-left"><b>INITIATED BY:</b> ______________________________________
+                            </div>
+                            <div class="text-sm text-left"><b>TERMINATED BY:</b> ______________________________________
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-sm text-left"><b>RML:</b>
+                                __________________________________________________
+                            </div>
+                            <div class="text-sm text-left"><b>HEPA PROFILE:</b>
+                                ________________________________________</div>
                         </div>
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="text-sm text-left">EPO GIVEN: [&nbsp;&nbsp;] NO [&nbsp;&nbsp;] YES
+                                    <div class="text-sm text-left"><b>EPO GIVEN:</b> [&nbsp;&nbsp;] <b>NO</b>
+                                        [&nbsp;&nbsp;] <b>YES</b>
                                         ___________________________________________________</div>
                                 </div>
                                 <div class="col-6">
@@ -666,4 +680,5 @@
             </div>
         </div>
     </section>
+
 </div>

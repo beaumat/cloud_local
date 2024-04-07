@@ -31,10 +31,6 @@ class HemoForm extends Component
     public int $LOCATION_ID;
     public string $tab = '1st';
 
-    public function print()
-    {
-        $this->dispatch('print');
-    }
     public function boot(HemoServices $hemoServices, ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
     {
         $this->hemoServices = $hemoServices;

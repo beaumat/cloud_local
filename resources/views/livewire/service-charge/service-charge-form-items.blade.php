@@ -52,7 +52,6 @@
                         @else
                             {{ number_format($list->RATE, 2) }}
                         @endif
-
                     </td>
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
@@ -69,8 +68,6 @@
                                 <i class="fa fa-check-square-o" aria-hidden="true"></i>
                             @endif
                         @endif
-
-
                     </td>
                     @if ($STATUS == $openStatus)
                         <td class="text-center">

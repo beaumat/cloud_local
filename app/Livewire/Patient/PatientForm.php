@@ -58,7 +58,6 @@ class PatientForm extends Component
     public string $DATE_OF_BIRTH;
     public string $NICKNAME;
     public string $HIRE_DATE;
-
     public $taxList = [];
     public $contactGroup = [];
     public $paymentTermList = [];
@@ -99,7 +98,6 @@ class PatientForm extends Component
     {
         $this->age = $this->contactServices->calculateUserAge($this->DATE_OF_BIRTH);
     }
-
     public string $selectTab = 'gen';
     public function SelectTab($tab)
     {
