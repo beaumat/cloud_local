@@ -108,7 +108,7 @@
                                                         titleName="Date Discharged" wire:model='DATE_DISCHARGED'
                                                         :isDisabled="false" />
                                                 </div>
-                                             
+
 
                                                 <div class="col-md-3">
                                                     <livewire:time-input name="TIME_DISCHARGED"
@@ -189,13 +189,7 @@
                         <div class="card card-primary card-outline card-outline-tabs">
                             <div class="card-header p-0 border-bottom-0">
                                 <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link @if ($tab == 'treatment') active @endif"
-                                            id="custom-tabs-four-treatment-tab" wire:click="SelectTab('treatment')"
-                                            data-toggle="pill" href="#custom-tabs-four-treatment" role="tab"
-                                            aria-controls="custom-tabs-four-treatment" aria-selected="true">Treatment
-                                            Summary</a>
-                                    </li>
+
                                     <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'soa') active @endif"
                                             id="custom-tabs-four-soa-tab" wire:click="SelectTab('soa')"
@@ -203,6 +197,13 @@
                                             aria-controls="custom-tabs-four-soa" aria-selected="true">
                                             Statement of Accounts
                                         </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @if ($tab == 'treatment') active @endif"
+                                            id="custom-tabs-four-treatment-tab" wire:click="SelectTab('treatment')"
+                                            data-toggle="pill" href="#custom-tabs-four-treatment" role="tab"
+                                            aria-controls="custom-tabs-four-treatment" aria-selected="true">Treatment
+                                            Summary</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'csf') active @endif"
@@ -220,6 +221,17 @@
                             </div>
                             <div class="card-body">
                                 <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade @if ($tab == 'soa') show active @endif"
+                                        id="custom-tabs-four-soa" role="tabpanel"
+                                        aria-labelledby="custom-tabs-four-soa-tab">
+                                        <div class="row"
+                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            <div class="col-md-12">
+                                                @livewire('PhilHealth.StatementOfAccount', ['ID' => $ID])
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="tab-pane fade @if ($tab == 'treatment') show active @endif"
                                         id="custom-tabs-four-treatment" role="tabpanel"
                                         aria-labelledby="custom-tabs-four-treatment-tab">
@@ -228,29 +240,17 @@
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
 
-
+                                                @livewire('PhilHealth.TreatmentSummary')
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="tab-pane fade @if ($tab == 'soa') show active @endif"
-                                        id="custom-tabs-four-soa" role="tabpanel"
-                                        aria-labelledby="custom-tabs-four-soa-tab">
-                                        <div class="row"
-                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <div class="col-md-12">
-
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div class="tab-pane fade @if ($tab == 'csf') show active @endif"
                                         id="custom-tabs-four-csf" role="tabpanel"
                                         aria-labelledby="custom-tabs-four-csf-tab">
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-
+                                                @livewire('PhilHealth.CsfForm')
                                             </div>
                                         </div>
                                     </div>
@@ -262,6 +262,7 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
 
+                                                @livewire('PhilHealth.Cf1Form')
                                             </div>
                                         </div>
                                     </div>

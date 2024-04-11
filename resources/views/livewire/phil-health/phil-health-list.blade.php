@@ -53,8 +53,8 @@
                                         <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
                                         <th class="col-3">Patients</th>
-                                        <th class="col-1">Admitted</th>
-                                        <th class="col-1">Discharges</th>
+                                        <th class="col-1">Admitted On</th>
+                                        <th class="col-1">Discharges ON</th>
                                         <th class="col-1">No. of Treatment </th>
                                         <th class="col-1">Total Charge</th>
                                         <th class="col-1">Location</th>
@@ -73,11 +73,11 @@
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
-                                            <td> {{ date('m/d/Y', strtotime($list->DATE_TIME_ADMITTED)) }}</td>
-                                            <td> {{ date('m/d/Y', strtotime($list->DATE_TIME_DISCHARGED)) }}</td>
-                                            <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
-                                            <td> {{ $list->LOCATION_NAME }}</td>
+                                            <td> {{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
+                                            <td> {{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
+                                            <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>                 
                                             <td class="text-right"> {{ number_format($list->TOTAL_CHARGE, 2) }}</td>
+                                            <td> {{ $list->LOCATION_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
                                                 {{-- @if ($list->FILE_PATH)
