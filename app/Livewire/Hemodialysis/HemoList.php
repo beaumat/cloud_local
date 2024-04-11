@@ -5,6 +5,7 @@ namespace App\Livewire\Hemodialysis;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -45,6 +46,7 @@ class HemoList extends Component
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
+    #[On('refresh-list')]
     public function render()
     {
         $dataList = $this->hemoServices->Search($this->search, $this->locationid, $this->perPage);

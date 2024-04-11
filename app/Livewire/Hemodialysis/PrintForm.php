@@ -9,19 +9,17 @@ use Livewire\Component;
 #[Title('Hemodialysis Treatment - Print Form')]
 class PrintForm extends Component
 {
+
     
-    public $HEMO_ID = []; 
+    public $HEMO_ID = [];
     public function mount($id)
-    {   
+    {
         if (!$id) {
             $this->HEMO_ID = [];
             return;
         }
 
-        $this->HEMO_ID = [$id];
-
-      
-
+        $this->HEMO_ID = explode(',', $id);
         $this->dispatch('preview_print');
     }
     #[On('preview_print')]

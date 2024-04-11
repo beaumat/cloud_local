@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="col-6 text-right">
-                    <b>PHIC NO.:</b> <u class="text-primary font-weight-bold">{{ $PHIC_NO }}</u>
+                    <b>PHIC NO.:</b> <u class="text-primary font-weight-bold"> @if($PHIC_NO){{ $PHIC_NO }}@else &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @endif</u>
                 </div>
                 <div class="col-12 top-line left-line right-line">
                     <div class="row font-weight-bold" id="firstfloor">
@@ -431,7 +431,7 @@
                                     <div class="text-xs">[&nbsp;&nbsp;] FEMCATH </div>
                                 </div>
                                 <div class="col-3">
-                                    <div class="text-xs">[{{ '  ' }}] PERMCATH</div>
+                                    <div class="text-xs">[&nbsp;&nbsp;]PERMCATH</div>
                                 </div>
                                 <div class="col-3">
                                     <div class="text-xs"> LOCATION : </div>
@@ -525,8 +525,8 @@
                                             HEART
                                         </div>
                                         <div class="col-12">
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] REGULAR</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] IRREGULAR</div>
+                                            <div class="text-xs text-left">[&nbsp;&nbsp;] REGULAR</div>
+                                            <div class="text-xs text-left float-left">[&nbsp;&nbsp;]IRREGULAR</div>
                                         </div>
                                     </div>
                                 </div>
@@ -593,8 +593,8 @@
                                             HEART
                                         </div>
                                         <div class="col-12">
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] REGULAR</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] IRREGULAR</div>
+                                            <div class="text-xs text-left">[&nbsp;&nbsp;] REGULAR</div>
+                                            <div class="text-xs text-left float-left">[&nbsp;&nbsp;]IRREGULAR</div>
                                         </div>
                                     </div>
                                 </div>

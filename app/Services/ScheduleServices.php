@@ -26,6 +26,10 @@ class ScheduleServices
     {
         $this->object = $objectService;
     }
+    public function getInfo(int $Id)
+    {
+        return Schedules::where('ID', $Id)->first();
+    }
     public function scheduleList($Date, int $LOCATION_ID)
     {
         return Schedules::query()
@@ -254,10 +258,7 @@ class ScheduleServices
                 $run++;
             }
 
-
         }
-
-    
 
         $result = Schedules::query()
             ->select([
@@ -297,5 +298,44 @@ class ScheduleServices
 
 
         return $demandOutput;
+    }
+
+    public function GetScheduleList($DATE, int $LOCATION_ID, int $SHIFT_ID)
+    {
+        $result = Schedules::query()
+            ->select([
+                'schedules.ID',
+                'hm.DESCRIPTION as PATIENT_TYPE',
+                'hm.CAPACITY',
+                'hm.ID as TYPE_ID',
+                'c.NAME as PATIENT_NAME',
+                'c.LONG_HRS_DURATION',
+                'c.ADMITTED',
+                'c.ID as PATIENT_ID',
+                's.NAME as SHIFT'
+            ])
+            ->join('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
+            ->join('shift AS s', 's.ID', '=', 'schedules.SHIFT_ID')
+            ->join('hemodialysis_machine as hm', 'hm.ID', '=', 'schedules.HEMO_MACHINE_ID')
+            ->join('patient_status as ps', 'ps.ID', '=', 'c.PATIENT_STATUS_ID')
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('hemodialysis as h')
+                    ->whereRaw('h.`DATE` = schedules.`SCHED_DATE`')
+                    ->whereRaw('h.`CUSTOMER_ID` = schedules.`CONTACT_ID`')
+                    ->whereRaw('h.`LOCATION_ID`= schedules.`LOCATION_ID`');
+            })
+            ->where('schedules.LOCATION_ID', $LOCATION_ID)
+            ->where('hm.LOCATION_ID', $LOCATION_ID)
+            ->where('schedules.SCHED_DATE', $DATE)
+            ->when($SHIFT_ID > 0, function ($query) use (&$SHIFT_ID) {
+                $query->where('schedules.SHIFT_ID', $SHIFT_ID);
+            })
+            ->orderBy('c.DATE_ADMISSION')
+            ->orderBy('hm.ID')
+            ->orderBy('s.ID')
+            ->get();
+
+        return $result;
     }
 }

@@ -17,12 +17,15 @@ use App\Livewire\HemodialysisMachine\HemoMachineList;
 use App\Livewire\Option\OptionSettings;
 use App\Livewire\Payment\PaymentForm;
 use App\Livewire\Payment\PaymentList;
+use App\Livewire\PhilHealth\PhilHealthForm;
+use App\Livewire\PhilHealth\PhilHealthList;
 use App\Livewire\Scheduler\SchedulerForm;
 use App\Livewire\Scheduler\SchedulerList;
 use App\Livewire\ServiceCharge\ServiceChargeForm;
 use App\Livewire\ServiceCharge\ServiceChargeList;
 use App\Livewire\Shift\ShiftForm;
 use App\Livewire\Shift\ShiftList;
+use App\Livewire\StatementOfAccount\SoaModule;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
@@ -115,6 +118,20 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', PaymentForm::class)->name('payment_create');
             Route::get('/{id}/edit', PaymentForm::class)->name('payment_edit');
         });
+
+        Route::prefix('/phil-health')->group(function () {
+            Route::get('/', PhilHealthList::class)->name('phic');
+            Route::get('/create', PhilHealthForm::class)->name('phic_create');
+            Route::get('/{id}/edit', PhilHealthForm::class)->name('phic_edit');
+        });
+
+
+
+        Route::prefix('/statement-of-account')->group(function () {
+            Route::get('/', SoaModule::class)->name('soa');
+         
+        });
+
 
 
     });

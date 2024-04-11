@@ -145,7 +145,6 @@ class PaymentModalAvailable extends Component
         $this->dispatch('update-status');
         $this->paymentSelected = [];
         $this->paymentAmounts = [];
-
         $this->dispatch('payment-modal-close');
 
     }

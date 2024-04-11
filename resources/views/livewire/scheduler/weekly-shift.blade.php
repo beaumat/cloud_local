@@ -1,4 +1,4 @@
-<div style="width: 100%; height:500px; overflow: auto;">
+<div >
     <table class="table table-sm table-bordered">
         <thead class="text-xs bg-sky">
             @if ($weekdays)

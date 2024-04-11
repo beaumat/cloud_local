@@ -8,7 +8,6 @@
         @livewire('Hemodialysis.PrintContent', ['HEMO_ID' => $ID])
     @endforeach
 
-
 </div>
 
 @script
@@ -19,6 +18,20 @@
             document.body.innerHTML = printContents;
             window.print();
             document.body.innerHTML = originalContents;
+
+
+
+        });
+
+        function printPageAndClose() {
+            window.print();
+            setTimeout(function() {
+                window.close();
+            }, 100);
+        }
+
+        window.addEventListener('beforeprint', function() {
+            printPageAndClose();
         });
     </script>
 @endscript

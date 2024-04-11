@@ -20,7 +20,6 @@ class PaymentServices
     public function __construct(ObjectServices $objectService)
     {
         $this->object = $objectService;
-        // $this->invoiceServices = $invoiceServices;
     }
     public function get($ID)
     {

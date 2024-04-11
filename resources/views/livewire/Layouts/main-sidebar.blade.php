@@ -9,7 +9,6 @@
         <nav class="mt-1">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}"
                         class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
@@ -27,7 +26,6 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-
                     <ul class="nav nav-treeview bg-light">
                         <li class="nav-item">
                             <a href="{{ route('transactionsschedules') }}"
@@ -58,7 +56,7 @@
                                 <p>Treatment</p>
                             </a>
                         </li>
-                   
+
                         {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-file-import nav-icon"></i>
@@ -72,7 +70,15 @@
                             </a>
                         </li> --}}
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('transactionsphic') }}"
+                                class="nav-link {{ request()->is('transactions/phil-health*') ? 'active text-primary' : '' }}">
+                                <i class="fas fa-newspaper nav-icon"></i>
+                                <p>PhilHealth</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('transactionssoa') }}"
+                                class="nav-link {{ request()->is('transactions/statement-of-account*') ? 'active text-primary' : '' }}">
                                 <i class="fas fa-newspaper nav-icon"></i>
                                 <p>Statement of Account</p>
                             </a>
@@ -471,7 +477,6 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-
                         <li class="nav-item {{ request()->is('maintenance/contact*') ? 'menu-open' : '' }}">
                             <a href="#"
                                 class="nav-link {{ request()->is('maintenance/contact*') ? 'active text-primary' : '' }}">

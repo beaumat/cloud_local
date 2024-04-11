@@ -6,7 +6,7 @@
 
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="card card-primary card-outline card-outline-tabs">
@@ -51,7 +51,7 @@
                                     <div class="tab-pane fade @if ($tab == 'active') show active @endif"
                                         id="custom-tabs-four-active" role="tabpanel"
                                         aria-labelledby="custom-tabs-four-active-tab">
-                                        <div class="form-group" style="width: 100%; height:400px; overflow: auto;">
+                                        <div class="form-group">
                                             <table class="table table-sm table-bordered">
                                                 <thead class="text-xs bg-sky">
                                                     <tr>

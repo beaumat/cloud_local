@@ -2,18 +2,14 @@
     <div class="content-header">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-6">
-                    <h5 class="m-0"><a href="{{ route('transactionshemo') }}"> Treatment </a></h5>
+                <div class="col-sm-6">
+                    <h5 class="m-0"><a href="{{ route('transactionsphic') }}"> Phil-Health </a></h5>
                 </div>
-                <div class="col-6 text-right">
-                    <div style="float: right;" class="row">
-                        <div class="col-6 text-right">
-                            @livewire('Hemodialysis.ScheduleModal', ['LOCATION_ID' => $locationid])
-                        </div>
-                        <div class="col-6">
-                            @livewire('Hemodialysis.PrintListModal', ['LOCATION_ID' => $locationid])
-                        </div>
-                    </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item active">
+                        </li>
+                    </ol>
                 </div>
             </div>
         </div>
@@ -47,7 +43,6 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -55,20 +50,17 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>REF NO.</th>
-                                        <th>DATE</th>
-                                        <th class="col-md-4">PATIENT NAME</th>
-                                        <th class="text-center">W</th>
-                                        <th class="text-center">B.P</th>
-                                        <th class="text-center">H.R</th>
-                                        <th class="text-center">O2(S)</th>
-                                        <th class="text-center">TMP</th>
-                                        <th class="text-center">Start</th>
-                                        <th class="text-center">End</th>
+                                        <th class="col-1">Ref No.</th>
+                                        <th class="col-1">Date</th>
+                                        <th class="col-3">Patients</th>
+                                        <th class="col-1">Admitted</th>
+                                        <th class="col-1">Discharges</th>
+                                        <th class="col-1">No. of Treatment </th>
+                                        <th class="col-1">Total Charge</th>
                                         <th class="col-1">Location</th>
-                                        <th> Status</th>
+                                        <th class="col-1">Status</th>
                                         <th class="text-center col-1 bg-success">
-                                            <a href="{{ route('transactionshemo_create') }}"
+                                            <a href="{{ route('transactionsphic_create') }}"
                                                 class="text-white btn btn-xs w-100">
                                                 <i class="fas fa-plus"></i> New
                                             </a>
@@ -81,36 +73,24 @@
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
+                                            <td> {{ date('m/d/Y', strtotime($list->DATE_TIME_ADMITTED)) }}</td>
+                                            <td> {{ date('m/d/Y', strtotime($list->DATE_TIME_DISCHARGED)) }}</td>
+                                            <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
+                                            <td> {{ $list->LOCATION_NAME }}</td>
+                                            <td class="text-right"> {{ number_format($list->TOTAL_CHARGE, 2) }}</td>
+                                            <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
-                                                {{ $list->PRE_WEIGHT }} | {{ $list->POST_WEIGHT }}
-                                            </td>
-                                            <td class="text-center"> {{ $list->PRE_BLOOD_PRESSURE }} |
-                                                {{ $list->POST_BLOOD_PRESSURE }}</td>
-                                            <td class="text-center"> {{ $list->PRE_HEART_RATE }} |
-                                                {{ $list->POST_HEART_RATE }}</td>
-                                            <td class="text-center"> {{ $list->PRE_O2_SATURATION }} |
-                                                {{ $list->POST_O2_SATURATION }}</td>
-                                            <td class="text-center"> {{ $list->PRE_TEMPERATURE }} |
-                                                {{ $list->POST_TEMPERATURE }}</td>
-                                            <td class="text-center">
-                                                @if ($list->TIME_START)
-                                                    {{ \Carbon\Carbon::parse($list->TIME_START)->format('h:i A') }}
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                @if ($list->TIME_END)
-                                                    {{ \Carbon\Carbon::parse($list->TIME_END)->format('h:i A') }}
-                                                @endif
-                                            </td>
-                                            <td> {{ $list->LOCATION_NAME }} </td>
-                                            <td> {{ $list->STATUS }} </td>
-                                            <td class="text-center">
-                                                <a target="_blank"
-                                                    href="{{ route('transactionshemo_print', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-primary">
-                                                    <i class="fa fa-print" aria-hidden="true"></i>
-                                                </a>
-                                                <a href="{{ route('transactionshemo_edit', ['id' => $list->ID]) }}"
+                                                {{-- @if ($list->FILE_PATH)
+                                                    <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
+                                                        target="_blank" class="btn-sm text-danger">
+                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                    </a>
+                                                @else
+                                                    <a href="#" class="btn-sm text-secondary">
+                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                    </a>
+                                                @endif --}}
+                                                <a href="{{ route('transactionsphic_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
@@ -119,10 +99,10 @@
                                                     class="btn-sm text-danger">
                                                     <i class="fas fa-times" aria-hidden="true"></i>
                                                 </a>
-
                                             </td>
                                         </tr>
                                     @endforeach
+
                                 </tbody>
                             </table>
                         </div>

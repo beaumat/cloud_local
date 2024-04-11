@@ -15,16 +15,17 @@ class PaymentModal extends Component
     #[Reactive]
     public int $INVOICE_ID;
     public string $tab = 'available';
-    public bool $showModal;
+ 
     public function SelectTab(string $select)
     {
         $this->tab = $select;
     }
+    public bool $showModal;
     public function openModal()
     {
         $this->showModal = true;
     }
-    #[On('payment-modal-close')]
+    #[On('modal-close')]
     public function closeModal()
     {
         $this->showModal = false;

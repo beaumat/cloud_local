@@ -15,7 +15,10 @@ class ShiftServices
     {
         return Shift::where('ID', $id)->first();
     }
-
+    public function List()
+    {
+        return Shift::all();
+    }
     public function Store(string $NAME, int $LINE_NO): int
     {
         $ID = $this->object->ObjectNextID('SHIFT');

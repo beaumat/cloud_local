@@ -29,7 +29,20 @@ class HemoForm extends Component
     public string $DATE;
     public string $CODE;
     public int $LOCATION_ID;
-    public string $tab = '1st';
+
+    public string $PRE_WEIGHT;
+    public string $PRE_BLOOD_PRESSURE;
+    public string $PRE_HEART_RATE;
+    public string $PRE_O2_SATURATION;
+    public string $PRE_TEMPERATURE;
+    public string $POST_WEIGHT;
+    public string $POST_BLOOD_PRESSURE;
+    public string $POST_HEART_RATE;
+    public string $POST_O2_SATURATION;
+    public string $POST_TEMPERATURE;
+
+    public string $TIME_START;
+    public string $TIME_END;
 
     public function boot(HemoServices $hemoServices, ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
     {
@@ -39,9 +52,29 @@ class HemoForm extends Component
         $this->userServices = $userServices;
 
     }
-    public function SelectTab($tab)
+
+    public function reloadData($data)
     {
-        $this->tab = $tab;
+        $this->ID = $data->ID;
+        $this->DATE = $data->DATE;
+        $this->LOCATION_ID = $data->LOCATION_ID;
+        $this->CUSTOMER_ID = $data->CUSTOMER_ID;
+        $this->CODE = $data->CODE;
+        $this->Modify = false;
+
+        $this->PRE_WEIGHT = $data->PRE_WEIGHT ?? "";
+        $this->PRE_BLOOD_PRESSURE = $data->PRE_BLOOD_PRESSURE ?? "";
+        $this->PRE_HEART_RATE = $data->PRE_HEART_RATE ?? "";
+        $this->PRE_O2_SATURATION = $data->PRE_O2_SATURATION ?? "";
+        $this->PRE_TEMPERATURE = $data->PRE_TEMPERATURE ?? "";
+        $this->POST_WEIGHT = $data->POST_WEIGHT ?? "";
+        $this->POST_BLOOD_PRESSURE = $data->POST_BLOOD_PRESSURE ?? "";
+        $this->POST_HEART_RATE = $data->POST_HEART_RATE ?? "";
+        $this->POST_O2_SATURATION = $data->POST_O2_SATURATION ?? "";
+        $this->POST_TEMPERATURE = $data->POST_TEMPERATURE ?? "";
+
+        $this->TIME_START = $data->TIME_START ?? "";
+        $this->TIME_END = $data->TIME_END ?? "";
     }
     public function mount($id = null)
     {
@@ -52,12 +85,7 @@ class HemoForm extends Component
         if (is_numeric($id)) {
             $data = $this->hemoServices->Get($id);
             if ($data) {
-                $this->ID = $data->ID;
-                $this->DATE = $data->DATE;
-                $this->LOCATION_ID = $data->LOCATION_ID;
-                $this->CUSTOMER_ID = $data->CUSTOMER_ID;
-                $this->CODE = $data->CODE;
-                $this->Modify = false;
+                $this->reloadData($data);
                 return;
             }
 
@@ -71,12 +99,37 @@ class HemoForm extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->CUSTOMER_ID = 0;
         $this->CODE = '';
+
+        $this->PRE_WEIGHT = "";
+        $this->PRE_BLOOD_PRESSURE = "";
+        $this->PRE_HEART_RATE = "";
+        $this->PRE_O2_SATURATION = "";
+        $this->PRE_TEMPERATURE = "";
+        $this->POST_WEIGHT = "";
+        $this->POST_BLOOD_PRESSURE = "";
+        $this->POST_HEART_RATE = "";
+        $this->POST_O2_SATURATION = "";
+        $this->POST_TEMPERATURE = "";
     }
     public function update_all()
     {
-        $this->dispatch('treatment-save');
-        $this->dispatch('access-save');
-        $this->dispatch('assessment-save');
+
+        $this->hemoServices->Update(
+            $this->ID,
+            $this->PRE_WEIGHT,
+            $this->PRE_BLOOD_PRESSURE,
+            $this->PRE_HEART_RATE,
+            $this->PRE_O2_SATURATION,
+            $this->PRE_TEMPERATURE,
+            $this->POST_WEIGHT,
+            $this->POST_BLOOD_PRESSURE,
+            $this->POST_HEART_RATE,
+            $this->POST_O2_SATURATION,
+            $this->POST_TEMPERATURE,
+            $this->TIME_START,
+            $this->TIME_END
+        );
+
         session()->flash('message', 'Successfully save');
     }
     public function getModify()
@@ -87,10 +140,7 @@ class HemoForm extends Component
     {
         $data = $this->hemoServices->Get($this->ID);
         if ($data) {
-            $this->DATE = $data->DATE;
-            $this->LOCATION_ID = $data->LOCATION_ID;
-            $this->CUSTOMER_ID = $data->CUSTOMER_ID;
-            $this->CODE = $data->CODE;
+            $this->reloadData($data);
             $this->Modify = false;
             return;
         }
