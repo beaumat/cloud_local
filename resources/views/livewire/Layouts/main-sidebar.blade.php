@@ -72,7 +72,7 @@
                         <li class="nav-item">
                             <a href="{{ route('transactionsphic') }}"
                                 class="nav-link {{ request()->is('transactions/phil-health*') ? 'active text-primary' : '' }}">
-                                <i class="fas fa-newspaper nav-icon"></i>
+                                <i class="fas fa-hospital-o nav-icon"></i>
                                 <p>PhilHealth</p>
                             </a>
                         </li>

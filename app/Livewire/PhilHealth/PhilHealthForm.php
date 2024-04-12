@@ -61,6 +61,27 @@ class PhilHealthForm extends Component
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
+    public function UpdatedContactId()
+    {
+
+        $data = $this->hemoServices->getDateTime($this->CONTACT_ID, $this->LOCATION_ID);
+      
+        if ($data) {
+            
+            $this->DATE_ADMITTED = $data['FIRST_DATE'];
+            $this->TIME_ADMITTED = $data['FIRST_TIME'];
+            $this->DATE_DISCHARGED = $data['LAST_DATE'];
+            $this->TIME_DISCHARGED = $data['LAST_TIME'];
+
+            return;
+        }
+        $this->DATE_ADMITTED = '';
+        $this->TIME_ADMITTED = '';
+        $this->DATE_DISCHARGED = '';
+        $this->TIME_DISCHARGED = '';
+
+
+    }
     public function mount($id = null)
     {
         $this->locationList = $this->locationServices->getList();
@@ -112,6 +133,10 @@ class PhilHealthForm extends Component
 
     }
 
+    public function updateCancel()
+    {
+        return Redirect::route('transactionsphic_edit', ['id' => $this->ID]);
+    }
     public function save()
     {
 
@@ -147,7 +172,7 @@ class PhilHealthForm extends Component
                 $this->DATE_ADMITTED,
                 $this->TIME_ADMITTED,
                 $this->DATE_DISCHARGED,
-                $this->TIME_ADMITTED,
+                $this->TIME_DISCHARGED,
                 $this->FINAL_DIAGNOSIS,
                 $this->OTHER_DIAGNOSIS,
                 $this->FIRST_CASE_RATE,
@@ -167,23 +192,23 @@ class PhilHealthForm extends Component
                 $this->DATE_ADMITTED,
                 $this->TIME_ADMITTED,
                 $this->DATE_DISCHARGED,
-                $this->TIME_ADMITTED,
+                $this->TIME_DISCHARGED,
                 $this->FINAL_DIAGNOSIS,
                 $this->OTHER_DIAGNOSIS,
                 $this->FIRST_CASE_RATE,
                 $this->SECOND_CASE_RATE
             );
-
+            $this->philHealthServices->DefaultEntry($this->ID);
             $this->Modify = false;
-            session()->flash('message', 'Successfully updated');
+
+            return Redirect::route('transactionsphic_edit', ['id' => $this->ID])->with('message', 'Successfully updated');
         }
 
-
-
-
     }
-
-
+    public function getModify()
+    {
+        $this->Modify = true;
+    }
     public function render()
     {
         return view('livewire.phil-health.phil-health-form');

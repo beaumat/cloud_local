@@ -33,11 +33,11 @@
                                                     @if ($Modify)
                                                         <livewire:select-option name="CONTACT_ID" titleName="Patient"
                                                             :options="$patientList" :zero="true" :isDisabled=false
-                                                            wire:model='CONTACT_ID' />
+                                                            wire:model.live='CONTACT_ID' />
                                                     @else
                                                         <livewire:select-option name="CONTACT_ID" titleName="Patient"
                                                             :options="$patientList" :zero="true" :isDisabled=true
-                                                            wire:model='CONTACT_ID' />
+                                                            wire:model.live='CONTACT_ID' />
                                                     @endif
 
                                                 </div>
@@ -96,24 +96,50 @@
 
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <livewire:date-input name="DATE_ADMITTED" titleName="Date Admitted"
-                                                        wire:model='DATE_ADMITTED' :isDisabled="false" />
+                                                    @if ($Modify)
+                                                        <livewire:date-input name="DATE_ADMITTED"
+                                                            titleName="Date Admitted" wire:model='DATE_ADMITTED'
+                                                            :isDisabled="false" />
+                                                    @else
+                                                        <livewire:date-input name="DATE_ADMITTED"
+                                                            titleName="Date Admitted" wire:model='DATE_ADMITTED'
+                                                            :isDisabled="true" />
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <livewire:time-input name="TIME_ADMITTED" titleName="Time Admitted"
-                                                        wire:model='TIME_ADMITTED' :isDisabled="false" />
+                                                    @if ($Modify)
+                                                        <livewire:time-input name="TIME_ADMITTED"
+                                                            titleName="Time Admitted" wire:model='TIME_ADMITTED'
+                                                            :isDisabled="false" />
+                                                    @else
+                                                        <livewire:time-input name="TIME_ADMITTED"
+                                                            titleName="Time Admitted" wire:model='TIME_ADMITTED'
+                                                            :isDisabled="true" />
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <livewire:date-input name="DATE_DISCHARGED"
-                                                        titleName="Date Discharged" wire:model='DATE_DISCHARGED'
-                                                        :isDisabled="false" />
+                                                    @if ($Modify)
+                                                        <livewire:date-input name="DATE_DISCHARGED"
+                                                            titleName="Date Discharged" wire:model='DATE_DISCHARGED'
+                                                            :isDisabled="false" />
+                                                    @else
+                                                        <livewire:date-input name="DATE_DISCHARGED"
+                                                            titleName="Date Discharged" wire:model='DATE_DISCHARGED'
+                                                            :isDisabled="true" />
+                                                    @endif
                                                 </div>
 
 
                                                 <div class="col-md-3">
-                                                    <livewire:time-input name="TIME_DISCHARGED"
-                                                        titleName="Time Discharged" wire:model='TIME_DISCHARGED'
-                                                        :isDisabled="false" />
+                                                    @if ($Modify)
+                                                        <livewire:time-input name="TIME_DISCHARGED"
+                                                            titleName="Time Discharged" wire:model='TIME_DISCHARGED'
+                                                            :isDisabled="false" />
+                                                    @else
+                                                        <livewire:time-input name="TIME_DISCHARGED"
+                                                            titleName="Time Discharged" wire:model='TIME_DISCHARGED'
+                                                            :isDisabled="true" />
+                                                    @endif
                                                 </div>
                                                 <div class="col-6">
                                                     @if ($Modify)

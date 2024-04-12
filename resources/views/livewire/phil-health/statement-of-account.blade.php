@@ -18,12 +18,12 @@
                     </th>
                     <th style="width: 10%;" class="bg-warning">First Case Rate Amount</th>
                     <th style="width: 10%;" class="bg-warning">Second Case Rate Amount</th>
-                    <th style="width: 10%;" class="bg-secondary">Out OF Pocket of Patients</th>
+                    <th style="width: 10%;" class="bg-secondary">Out of Pocket of Patients</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="text-center font-weight-bold text-md"><label>HCI Fee</label></td>
+                    <td class="text-center font-weight-bold"><label class="text-sm">HCI Fee</label></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -49,19 +49,20 @@
                     </td>
 
                     <td>
-                        <livewire:number name='P1_ROOM_N_BOARD' wire:model.live.lazy='P1_ROOM_N_BOARD' />
+                        {{-- <livewire:number name='P1_ROOM_N_BOARD' wire:model.live.lazy='P1_ROOM_N_BOARD' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='P2_ROOM_N_BOARD' wire:model.live.lazy='P2_ROOM_N_BOARD' />
+                        {{-- <livewire:number name='P2_ROOM_N_BOARD' wire:model.live.lazy='P2_ROOM_N_BOARD' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='OP_ROOM_N_BOARD' wire:model.live.lazy='OP_ROOM_N_BOARD' />
+                        {{-- <livewire:number name='OP_ROOM_N_BOARD' wire:model.live.lazy='OP_ROOM_N_BOARD' /> --}}
                     </td>
                 </tr>
                 <tr>
                     <td class="text-left">Drug & Medicines</td>
                     <td>
-                        <livewire:number name='CHARGES_DRUG_N_MEDICINE' wire:model.live.lazy='CHARGES_DRUG_N_MEDICINE' />
+                        <livewire:number name='CHARGES_DRUG_N_MEDICINE'
+                            wire:model.live.lazy='CHARGES_DRUG_N_MEDICINE' />
                     </td>
                     <td>
                         <livewire:number name='VAT_DRUG_N_MEDICINE' wire:model.live.lazy='VAT_DRUG_N_MEDICINE' />
@@ -73,19 +74,20 @@
                         <livewire:number name='GOV_DRUG_N_MEDICINE' wire:model.live.lazy='GOV_DRUG_N_MEDICINE' />
                     </td>
                     <td>
-                        <livewire:number name='P1_DRUG_N_MEDICINE' wire:model.live.lazy='P1_DRUG_N_MEDICINE' />
+                        {{-- <livewire:number name='P1_DRUG_N_MEDICINE' wire:model.live.lazy='P1_DRUG_N_MEDICINE' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='P2_DRUG_N_MEDICINE' wire:model.live.lazy='P2_DRUG_N_MEDICINE' />
+                        {{-- <livewire:number name='P2_DRUG_N_MEDICINE' wire:model.live.lazy='P2_DRUG_N_MEDICINE' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='OP_DRUG_N_MEDICINE' wire:model.live.lazy='OP_DRUG_N_MEDICINE' />
+                        {{-- <livewire:number name='OP_DRUG_N_MEDICINE' wire:model.live.lazy='OP_DRUG_N_MEDICINE' /> --}}
                     </td>
                 </tr>
                 <tr>
                     <td class="text-left">Laboratory & Diagnostics</td>
                     <td>
-                        <livewire:number name='CHARGES_LAB_N_DIAGNOSTICS' wire:model.live.lazy='CHARGES_LAB_N_DIAGNOSTICS' />
+                        <livewire:number name='CHARGES_LAB_N_DIAGNOSTICS'
+                            wire:model.live.lazy='CHARGES_LAB_N_DIAGNOSTICS' />
                     </td>
                     <td>
                         <livewire:number name='VAT_LAB_N_DIAGNOSTICS' wire:model.live.lazy='VAT_LAB_N_DIAGNOSTICS' />
@@ -97,13 +99,13 @@
                         <livewire:number name='GOV_LAB_N_DIAGNOSTICS' wire:model.live.lazy='GOV_LAB_N_DIAGNOSTICS' />
                     </td>
                     <td>
-                        <livewire:number name='P1_LAB_N_DIAGNOSTICS' wire:model.live.lazy='P1_LAB_N_DIAGNOSTICS' />
+                        {{-- <livewire:number name='P1_LAB_N_DIAGNOSTICS' wire:model.live.lazy='P1_LAB_N_DIAGNOSTICS' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='P2_LAB_N_DIAGNOSTICS' wire:model.live.lazy='P2_LAB_N_DIAGNOSTICS' />
+                        {{-- <livewire:number name='P2_LAB_N_DIAGNOSTICS' wire:model.live.lazy='P2_LAB_N_DIAGNOSTICS' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='OP_LAB_N_DIAGNOSTICS' wire:model.live.lazy='OP_LAB_N_DIAGNOSTICS' />
+                        {{-- <livewire:number name='OP_LAB_N_DIAGNOSTICS' wire:model.live.lazy='OP_LAB_N_DIAGNOSTICS' /> --}}
                     </td>
 
                 </tr>
@@ -123,13 +125,13 @@
                         <livewire:number name='GOV_OPERATING_ROOM_FEE' wire:model.live.lazy='GOV_OPERATING_ROOM_FEE' />
                     </td>
                     <td>
-                        <livewire:number name='P1_OPERATING_ROOM_FEE' wire:model.live.lazy='P1_OPERATING_ROOM_FEE' />
+                        {{-- <livewire:number name='P1_OPERATING_ROOM_FEE' wire:model.live.lazy='P1_OPERATING_ROOM_FEE' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='P2_OPERATING_ROOM_FEE' wire:model.live.lazy='P2_OPERATING_ROOM_FEE' />
+                        {{-- <livewire:number name='P2_OPERATING_ROOM_FEE' wire:model.live.lazy='P2_OPERATING_ROOM_FEE' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='OP_OPERATING_ROOM_FEE' wire:model.live.lazy='OP_OPERATING_ROOM_FEE' />
+                        {{-- <livewire:number name='OP_OPERATING_ROOM_FEE' wire:model.live.lazy='OP_OPERATING_ROOM_FEE' /> --}}
                     </td>
 
                 </tr>
@@ -148,13 +150,13 @@
                         <livewire:number name='GOV_SUPPLIES' wire:model.live.lazy='GOV_SUPPLIES' />
                     </td>
                     <td>
-                        <livewire:number name='P1_SUPPLIES' wire:model.live.lazy='P1_SUPPLIES' />
+                        {{-- <livewire:number name='P1_SUPPLIES' wire:model.live.lazy='P1_SUPPLIES' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='P2_SUPPLIES' wire:model.live.lazy='P2_SUPPLIES' />
+                        {{-- <livewire:number name='P2_SUPPLIES' wire:model.live.lazy='P2_SUPPLIES' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='OP_SUPPLIES' wire:model.live.lazy='OP_SUPPLIES' />
+                        {{-- <livewire:number name='OP_SUPPLIES' wire:model.live.lazy='OP_SUPPLIES' /> --}}
                     </td>
 
                 </tr>
@@ -174,17 +176,17 @@
                         <livewire:number name='GOV_OTHERS' wire:model.live.lazy='GOV_OTHERS' />
                     </td>
                     <td>
-                        <livewire:number name='P1_OTHERS' wire:model.live.lazy='P1_OTHERS' />
+                        {{-- <livewire:number name='P1_OTHERS' wire:model.live.lazy='P1_OTHERS' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='P2_OTHERS' wire:model.live.lazy='P2_OTHERS' />
+                        {{-- <livewire:number name='P2_OTHERS' wire:model.live.lazy='P2_OTHERS' /> --}}
                     </td>
                     <td>
-                        <livewire:number name='OP_OTHERS' wire:model.live.lazy='OP_OTHERS' />
+                        {{-- <livewire:number name='OP_OTHERS' wire:model.live.lazy='OP_OTHERS' /> --}}
                     </td>
                 </tr>
                 <tr class="text-md">
-                    <td class="text-left"><label>SUBTOTAL</label></td>
+                    <td class="text-left"><label class="text-sm">SUBTOTAL</label></td>
                     <td class="text-right font-weight-bold ">
                         @if ($CHARGES_SUB_TOTAL > 0)
                             {{ number_format($CHARGES_SUB_TOTAL, 2) }}
@@ -223,7 +225,43 @@
 
                 </tr>
 
+                @if ($feeList)
+                    <tr>
+                        <td class="text-sm text-info">Professional Fee/s</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
 
+                    @foreach ($feeList as $list)
+                        @php
+                            $i++;
+                        @endphp
+                        <tr>
+                            <td>{{ $i . '.)' }} {{ $list->NAME }} </td>
+                            <td class="text-right font-weight-bold text-sm ">
+                                @if ($list->AMOUNT > 0)
+                                    {{ number_format($list->AMOUNT, 2) }}
+                                @endif
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right font-weight-bold text-sm ">
+                                @if ($list->AMOUNT > 0)
+                                    {{ number_format($list->AMOUNT, 2) }}
+                                @endif
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endforeach
+
+
+                @endif
 
                 <tr>
                     <td class="text-left">
@@ -290,8 +328,6 @@
                     </td>
 
                 </tr>
-
-
             </tbody>
         </table>
     </div>
