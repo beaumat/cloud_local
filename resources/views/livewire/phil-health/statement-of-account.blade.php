@@ -323,7 +323,7 @@
                     </td>
                     <td class="text-right font-weight-bold">
                         @if ($OP_TOTAL > 0)
-                            {{ number_format($OP_TOTAL, 2) }}
+                            {{ number_format($CHARGE_TOTAL - $P1_TOTAL, 2) }}
                         @endif
                     </td>
 

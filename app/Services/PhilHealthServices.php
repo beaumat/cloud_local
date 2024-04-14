@@ -140,7 +140,7 @@ class PhilHealthServices
         string $OTHER_DIAGNOSIS,
         string $FIRST_CASE_RATE,
         string $SECOND_CASE_RATE
-    ) {
+    ): int {
         $ID = $this->object->ObjectNextID('PHILHEALTH');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PHILHEALTH');
 
@@ -160,8 +160,10 @@ class PhilHealthServices
             'FIRST_CASE_RATE' => $FIRST_CASE_RATE,
             'SECOND_CASE_RATE' => $SECOND_CASE_RATE,
             'STATUS_ID' => 1,
-            'STATUS_DATETIME' => Carbon::now()
+            'STATUS_DATETIME' => Carbon::now(),
         ]);
+
+        return $ID;
     }
     public function Update(
         int $ID,
@@ -299,30 +301,31 @@ class PhilHealthServices
             'OP_TOTAL' => $OP_TOTAL,
             'PREPARED_BY_ID' => $PREPARED_BY_ID == 0 ? null : $PREPARED_BY_ID,
             'DATE_SIGNED' => $DATE_SIGNED == '' ? null : $DATE_SIGNED,
-            'OTHER_NAME' => $OTHER_NAME
+            'OTHER_NAME' => $OTHER_NAME ?? null,
         ]);
 
     }
     public function Delete($ID)
     {
-        PhilHealth::where('ID')->delete();
+        PhilHealthProfFee::where('PHIC_ID', $ID)->delete();
+        PhilHealth::where('ID', $ID)->delete();
     }
     public function Search($search, int $locationId, int $perPage)
     {
         return PhilHealth::query()
             ->select([
-                    'philhealth.ID',
-                    'philhealth.CODE',
-                    'philhealth.DATE',
-                    'philhealth.DATE_ADMITTED',
-                    'philhealth.DATE_DISCHARGED',
-                    'philhealth.CHARGE_TOTAL',
-                    'c.NAME as CONTACT_NAME',
-                    'l.NAME as LOCATION_NAME',
-                    's.DESCRIPTION as STATUS',
-                    \DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 1 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL ')
+                'philhealth.ID',
+                'philhealth.CODE',
+                'philhealth.DATE',
+                'philhealth.DATE_ADMITTED',
+                'philhealth.DATE_DISCHARGED',
+                'philhealth.CHARGE_TOTAL',
+                'c.NAME as CONTACT_NAME',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+                \DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 1 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL ')
 
-                ])
+            ])
             ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'philhealth.LOCATION_ID');
@@ -379,8 +382,8 @@ class PhilHealthServices
     {
         PhilHealthProfFee::where('ID', $ID)
             ->update([
-                    'AMOUNT' => $AMOUNT
-                ]);
+                'AMOUNT' => $AMOUNT
+            ]);
     }
 
     public function DeleteProfFee(int $ID)

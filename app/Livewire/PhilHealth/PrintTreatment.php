@@ -2,16 +2,35 @@
 
 namespace App\Livewire\PhilHealth;
 
-
+use App\Services\ContactServices;
+use App\Services\HemoServices;
 use App\Services\PhilHealthServices;
+use Illuminate\Support\Carbon;
 
 use Livewire\Component;
 
-class StatementOfAccount extends Component
+class PrintTreatment extends Component
 {
 
-    public $i = 0;
-    public int $ID;
+    public int $PRINT_ID;
+    public int $LOCATION_ID;
+    public int $CONTACT_ID;
+    public int $AGE;
+    public string $PATIENT_NAME;
+    public string $PATIENT_CONTACT;
+    public string $USER_CONTACT;
+    public string $USER_NAME;
+    public string $CODE;
+    public $DATE;
+    public $DATE_ADMITTED;
+    public $TIME_ADMITTED;
+    public $DATE_DISCHARGED;
+    public $TIME_DISCHARGED;
+    public string $FINAL_DIAGNOSIS;
+    public string $OTHER_DIAGNOSIS;
+    public string $FIRST_CASE_RATE;
+    public string $SECOND_CASE_RATE;
+
     public float $CHARGES_ROOM_N_BOARD;
     public float $CHARGES_DRUG_N_MEDICINE;
     public float $CHARGES_LAB_N_DIAGNOSTICS;
@@ -66,57 +85,48 @@ class StatementOfAccount extends Component
     public int $PREPARED_BY_ID;
     public string $DATE_SIGNED;
     public string $OTHER_NAME;
+    public string $ADDRESS;
 
     private $philHealthServices;
-    public $feeList = [];
-    public function ComputeTotal()
-    {
-        try {
-            $this->CHARGES_SUB_TOTAL = $this->CHARGES_ROOM_N_BOARD + $this->CHARGES_DRUG_N_MEDICINE + $this->CHARGES_LAB_N_DIAGNOSTICS + $this->CHARGES_OPERATING_ROOM_FEE + $this->CHARGES_SUPPLIES + $this->CHARGES_OTHERS;
-            $this->VAT_SUB_TOTAL = $this->VAT_ROOM_N_BOARD + $this->VAT_DRUG_N_MEDICINE + $this->VAT_LAB_N_DIAGNOSTICS + $this->VAT_OPERATING_ROOM_FEE + $this->VAT_SUPPLIES + $this->VAT_OTHERS;
-            $this->SP_SUB_TOTAL = $this->SP_ROOM_N_BOARD + $this->SP_DRUG_N_MEDICINE + $this->SP_LAB_N_DIAGNOSTICS + $this->SP_OPERATING_ROOM_FEE + $this->SP_SUPPLIES + $this->SP_OTHERS;
-            $this->GOV_SUB_TOTAL = $this->GOV_ROOM_N_BOARD + $this->GOV_DRUG_N_MEDICINE + $this->GOV_LAB_N_DIAGNOSTICS + $this->GOV_OPERATING_ROOM_FEE + $this->GOV_SUPPLIES + $this->GOV_OTHERS;
-
-            // $sub_total_discount = (float) $this->VAT_SUB_TOTAL + $this->SP_SUB_TOTAL + $this->GOV_SUB_TOTAL;
-
-
-            // $this->P1_SUB_TOTAL = $this->P1_ROOM_N_BOARD + $this->P1_DRUG_N_MEDICINE + $this->P1_LAB_N_DIAGNOSTICS + $this->P1_OPERATING_ROOM_FEE + $this->P1_SUPPLIES + $this->P1_OTHERS + $this->P1_PHIC_AMOUNT;
-            // $this->P2_SUB_TOTAL = $this->P2_ROOM_N_BOARD + $this->P2_DRUG_N_MEDICINE + $this->P2_LAB_N_DIAGNOSTICS + $this->P2_OPERATING_ROOM_FEE + $this->P2_SUPPLIES + $this->P2_OTHERS;
-            // $sub_total_benefits = (float) $this->P1_SUB_TOTAL + $this->P2_SUB_TOTAL;
-
-            // $otherTotal = (float) $this->OP_ROOM_N_BOARD + $this->OP_DRUG_N_MEDICINE + $this->OP_LAB_N_DIAGNOSTICS + $this->OP_OPERATING_ROOM_FEE + $this->OP_SUPPLIES + $this->OP_OTHERS;
-            // $this->OP_SUB_TOTAL = ($this->CHARGES_SUB_TOTAL - $sub_total_discount) - $sub_total_benefits;
-
-            $this->CHARGE_TOTAL = $this->CHARGES_SUB_TOTAL + $this->PROFESSIONAL_FEE_SUB_TOTAL;
-            $this->VAT_TOTAL = $this->VAT_SUB_TOTAL;
-            $this->SP_TOTAL = $this->SP_SUB_TOTAL;
-            $this->GOV_TOTAL = $this->GOV_SUB_TOTAL;
-            $this->P1_TOTAL = $this->P1_SUB_TOTAL + $this->PROFESSIONAL_FEE_SUB_TOTAL;
-            $this->P2_TOTAL = $this->P2_SUB_TOTAL;
-
-            $total_discount = (float) $this->VAT_TOTAL + $this->SP_TOTAL + $this->GOV_TOTAL;
-            $total_benefits = (float) $this->P1_TOTAL + $this->P2_TOTAL;
-
-            $this->OP_TOTAL = ($this->CHARGE_TOTAL - $total_discount) - $total_benefits;
-
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-
-
-    }
-
-    public function boot(PhilHealthServices $philHealthServices)
+    private $contactServices;
+    private $hemoServices;
+    public $hemoList = [];
+    public $i;
+    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, HemoServices $hemoServices)
     {
         $this->philHealthServices = $philHealthServices;
-
+        $this->contactServices = $contactServices;
+        $this->hemoServices = $hemoServices;
     }
 
+
+    public function getSumamry()
+    {
+        $this->i = 0;
+        $this->hemoList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED, $this->DATE_DISCHARGED);
+    }
+    public function mount($PRINT_ID)
+    {
+        $this->PreLoad($PRINT_ID);
+        $this->getSumamry();
+    }
     public function PreLoad($ID)
     {
         if (is_numeric($ID)) {
             $data = $this->philHealthServices->get($ID);
             if ($data) {
+                $this->LOCATION_ID = $data->LOCATION_ID;
+                $this->CONTACT_ID = $data->CONTACT_ID;
+                $this->CODE = $data->CODE;
+                $this->DATE_ADMITTED = $data->DATE_ADMITTED;
+                $this->TIME_ADMITTED = $data->TIME_ADMITTED;
+                $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
+                $this->TIME_DISCHARGED = $data->TIME_DISCHARGED;
+                $this->FINAL_DIAGNOSIS = $data->FINAL_DIAGNOSIS;
+                $this->OTHER_DIAGNOSIS = $data->OTHER_DIAGNOSIS;
+                $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE;
+                $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE;
+
                 $this->CHARGES_ROOM_N_BOARD = $data->CHARGES_ROOM_N_BOARD;
                 $this->CHARGES_DRUG_N_MEDICINE = $data->CHARGES_DRUG_N_MEDICINE;
                 $this->CHARGES_LAB_N_DIAGNOSTICS = $data->CHARGES_LAB_N_DIAGNOSTICS;
@@ -124,7 +134,7 @@ class StatementOfAccount extends Component
                 $this->CHARGES_SUPPLIES = $data->CHARGES_SUPPLIES;
                 $this->CHARGES_OTHERS = $data->CHARGES_OTHERS;
                 $this->CHARGES_SUB_TOTAL = $data->CHARGES_SUB_TOTAL;
-                // $this->OTHER_SPECIFY = $data->OTHER_SPECIFY;
+                $this->OTHER_SPECIFY = $data->OTHER_SPECIFY ?? '';
                 $this->VAT_ROOM_N_BOARD = $data->VAT_ROOM_N_BOARD;
                 $this->VAT_DRUG_N_MEDICINE = $data->VAT_DRUG_N_MEDICINE;
                 $this->VAT_LAB_N_DIAGNOSTICS = $data->VAT_LAB_N_DIAGNOSTICS;
@@ -182,107 +192,31 @@ class StatementOfAccount extends Component
                 $this->OP_TOTAL = $data->OP_TOTAL;
                 $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
                 $this->DATE_SIGNED = $data->DATE_SIGNED ?? '';
-                // $this->OTHER_NAME = $data->OTHER_NAME;
+                $this->OTHER_NAME = $data->OTHER_NAME ?? '';
+
+                $contact = $this->contactServices->get($this->CONTACT_ID, 3);
+                if ($contact) {
+                    $this->PATIENT_NAME = $contact->NAME;
+                    $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
+                    $this->ADDRESS = $contact->POSTAL_ADDRESS;
+                    $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
+                }
+                $conUser = $this->contactServices->get(\Auth::user()->contact_id, 2);
+                if ($conUser) {
+                    $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
+                    $this->USER_NAME = $conUser->NAME ?? '';
+                }
+
+                $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
                 return;
             }
 
 
         }
-        $this->CHARGES_ROOM_N_BOARD = 0;
-        $this->CHARGES_DRUG_N_MEDICINE = $this->DRUG_N_MEDINE_AMOUNT;
-        $this->CHARGES_LAB_N_DIAGNOSTICS = 0;
-        $this->CHARGES_OPERATING_ROOM_FEE = $this->OPERATING_ROOM_FEE_AMOUNT;
-        $this->CHARGES_SUPPLIES = $this->SUPPLIES;
-        $this->CHARGES_OTHERS = 0;
-        $this->CHARGES_SUB_TOTAL = 0;
-        $this->OTHER_SPECIFY = '';
-        $this->VAT_ROOM_N_BOARD = 0;
-        $this->VAT_DRUG_N_MEDICINE = 0;
-        $this->VAT_LAB_N_DIAGNOSTICS = 0;
-        $this->VAT_OPERATING_ROOM_FEE = 0;
-        $this->VAT_SUPPLIES = 0;
-        $this->VAT_OTHERS = 0;
-        $this->VAT_SUB_TOTAL = 0;
-        $this->SP_ROOM_N_BOARD = 0;
-        $this->SP_DRUG_N_MEDICINE = 0;
-        $this->SP_LAB_N_DIAGNOSTICS = 0;
-        $this->SP_OPERATING_ROOM_FEE = 0;
-        $this->SP_SUPPLIES = 0;
-        $this->SP_OTHERS = 0;
-        $this->SP_SUB_TOTAL = 0;
-        $this->GOV_ROOM_N_BOARD = 0;
-        $this->GOV_DRUG_N_MEDICINE = 0;
-        $this->GOV_LAB_N_DIAGNOSTICS = 0;
-        $this->GOV_OPERATING_ROOM_FEE = 0;
-        $this->GOV_SUPPLIES = 0;
-        $this->GOV_OTHERS = 0;
-        $this->GOV_SUB_TOTAL = 0;
-        $this->GOV_PCSO = false;
-        $this->GOV_DSWD = false;
-        $this->GOV_DOH = false;
-        $this->GOV_HMO = false;
-        $this->GOV_LINGAP = false;
-        $this->P1_ROOM_N_BOARD = 0;
-        $this->P1_DRUG_N_MEDICINE = 0;
-        $this->P1_LAB_N_DIAGNOSTICS = 0;
-        $this->P1_OPERATING_ROOM_FEE = 0;
-        $this->P1_SUPPLIES = 0;
-        $this->P1_OTHERS = 0;
-        $this->P1_SUB_TOTAL = 0;
-        $this->P2_ROOM_N_BOARD = 0;
-        $this->P2_DRUG_N_MEDICINE = 0;
-        $this->P2_LAB_N_DIAGNOSTICS = 0;
-        $this->P2_OPERATING_ROOM_FEE = 0;
-        $this->P2_SUPPLIES = 0;
-        $this->P2_OTHERS = 0;
-        $this->P2_SUB_TOTAL = 0;
-        $this->OP_ROOM_N_BOARD = 0;
-        $this->OP_DRUG_N_MEDICINE = 0;
-        $this->OP_LAB_N_DIAGNOSTICS = 0;
-        $this->OP_OPERATING_ROOM_FEE = 0;
-        $this->OP_SUPPLIES = 0;
-        $this->OP_OTHERS = 0;
-        $this->OP_SUB_TOTAL = 0;
-        $this->PROFESSIONAL_FEE_SUB_TOTAL = 0;
-        $this->CHARGE_TOTAL = 0;
-        $this->VAT_TOTAL = 0;
-        $this->SP_TOTAL = 0;
-        $this->GOV_TOTAL = 0;
-        $this->P1_TOTAL = 0;
-        $this->P2_TOTAL = 0;
-        $this->OP_TOTAL = 0;
-        $this->PREPARED_BY_ID = 0;
-        $this->DATE_SIGNED = '';
-        $this->OTHER_NAME = '';
-    }
-    public function UpdatedID()
-    {
-
-        $this->PreLoad($this->ID);
-    }
-
-    public function mount($ID)
-    {
-        $this->P1_PHIC_AMOUNT = $this->philHealthServices->P1_PHIC_AMOUNT;
-        $this->DRUG_N_MEDINE_AMOUNT = $this->philHealthServices->DRUG_N_MEDINE_AMOUNT;
-        $this->OPERATING_ROOM_FEE_AMOUNT = $this->philHealthServices->OPERATING_ROOM_FEE_AMOUNT;
-        $this->SUPPLIES = $this->philHealthServices->SUPPLIES;
-        $this->PROF_FEE_AMOUNT = $this->philHealthServices->PROF_FEE_AMOUNT;
-
-
-
-        $this->profFeeList($ID);
-    }
-    public function profFeeList($PHIC_ID)
-    {
-        $this->i = 0;
-        $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
 
     }
     public function render()
     {
-        $this->ComputeTotal();
-        $this->PreLoad($this->ID);
-        return view('livewire.phil-health.statement-of-account');
+        return view('livewire.phil-health.print-treatment');
     }
 }

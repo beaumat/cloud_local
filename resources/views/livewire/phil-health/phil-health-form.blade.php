@@ -192,6 +192,11 @@
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
+                                        @if ($ID > 0)
+                                            <a target="_BLANK"
+                                                href="{{ route('transactionsphic_print', ['id' => $ID]) }}"
+                                                class="btn btn-sm btn-primary"> Print </a>
+                                        @endif
                                         @if ($ID > 0 && $STATUS > 0)
                                             <a id="new" title="Create"
                                                 href="{{ route('transactionsphic_create') }}"
@@ -221,7 +226,7 @@
                                             id="custom-tabs-four-soa-tab" wire:click="SelectTab('soa')"
                                             data-toggle="pill" href="#custom-tabs-four-soa" role="tab"
                                             aria-controls="custom-tabs-four-soa" aria-selected="true">
-                                            Statement of Accounts
+                                            Summary of Fees
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -266,7 +271,7 @@
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
 
-                                                @livewire('PhilHealth.TreatmentSummary')
+                                                @livewire('PhilHealth.TreatmentSummary', ['CONTACT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE_ADMITTED' => $DATE_ADMITTED, 'DATE_DISCHARGED' => $DATE_DISCHARGED])
                                             </div>
                                         </div>
                                     </div>

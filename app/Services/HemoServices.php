@@ -49,6 +49,18 @@ class HemoServices
 
 
     }
+    public function GetSummary(int $CONTACT_ID, int $LOCATION_ID, string $DATE_START, string $DATE_END)
+    {
+        $dataList = Hemodialysis::query()
+            ->select(['ID', 'DATE'])
+            ->where('CUSTOMER_ID', $CONTACT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('STATUS_ID', '2')
+            ->whereBetween('DATE', [$DATE_START, $DATE_END])
+            ->get();
+
+        return $dataList;
+    }
     public function getDateTime(int $CONTACT_ID, int $LOCATION_ID)
     {
         $dates = Hemodialysis::query()
@@ -74,12 +86,8 @@ class HemoServices
                     'LAST_TIME' => $lastTime
                 ];
             }
-         
+
         }
-
-
-
-
 
 
         return [

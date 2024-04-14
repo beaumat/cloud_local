@@ -24,8 +24,8 @@ class PhilHealthForm extends Component
     public string $tab = "soa";
     public $locationList = [];
     public $patientList = [];
-    public int $LOCATION_ID = 9;
-    public int $CONTACT_ID = 0;
+    public int $LOCATION_ID;
+    public int $CONTACT_ID;
     public string $CODE;
     public $DATE;
     public $DATE_ADMITTED;
@@ -37,7 +37,6 @@ class PhilHealthForm extends Component
     public string $FIRST_CASE_RATE;
     public string $SECOND_CASE_RATE;
     public int $STATUS_ID;
-
     private $philHealthServices;
     private $hemoServices;
     private $contactServices;
@@ -65,9 +64,9 @@ class PhilHealthForm extends Component
     {
 
         $data = $this->hemoServices->getDateTime($this->CONTACT_ID, $this->LOCATION_ID);
-      
+
         if ($data) {
-            
+
             $this->DATE_ADMITTED = $data['FIRST_DATE'];
             $this->TIME_ADMITTED = $data['FIRST_TIME'];
             $this->DATE_DISCHARGED = $data['LAST_DATE'];
@@ -164,7 +163,7 @@ class PhilHealthForm extends Component
 
         if ($this->ID == 0) {
 
-            $this->philHealthServices->preSave(
+            $this->ID = $this->philHealthServices->preSave(
                 $this->CODE,
                 $this->DATE,
                 $this->LOCATION_ID,
@@ -178,6 +177,10 @@ class PhilHealthForm extends Component
                 $this->FIRST_CASE_RATE,
                 $this->SECOND_CASE_RATE
             );
+
+
+            $this->philHealthServices->DefaultEntry($this->ID);
+            $this->Modify = false;
 
             return Redirect::route('transactionsphic_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
@@ -208,6 +211,10 @@ class PhilHealthForm extends Component
     public function getModify()
     {
         $this->Modify = true;
+    }
+    public function print()
+    {
+
     }
     public function render()
     {

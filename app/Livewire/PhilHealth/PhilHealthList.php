@@ -33,6 +33,11 @@ class PhilHealthList extends Component
     {   $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
+    public function delete($id)
+    {
+        $this->philHealthServices->Delete($id);
+    }
+    
     public function render()
     {
         $dataList = $this->philHealthServices->Search($this->search, $this->locationid, $this->perPage);
