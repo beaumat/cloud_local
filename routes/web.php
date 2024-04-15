@@ -20,6 +20,7 @@ use App\Livewire\Payment\PaymentList;
 use App\Livewire\PhilHealth\PhilHealthForm;
 use App\Livewire\PhilHealth\PhilHealthList;
 use App\Livewire\PhilHealth\PhilHealthPrint;
+use App\Livewire\PhilHealth\PhilHealthPrintForm;
 use App\Livewire\Scheduler\SchedulerForm;
 use App\Livewire\Scheduler\SchedulerList;
 use App\Livewire\ServiceCharge\ServiceChargeForm;
@@ -125,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', PhilHealthForm::class)->name('phic_create');
             Route::get('/{id}/edit', PhilHealthForm::class)->name('phic_edit');
             Route::get('/{id}/print', PhilHealthPrint::class)->name('phic_print');
+            Route::get('/{id}/print-form', PhilHealthPrintForm::class)->name('phic_print_form');
         });
 
 

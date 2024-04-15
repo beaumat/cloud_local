@@ -17,7 +17,7 @@
     </style>
     <div class="row">
         <div class="col-12 blackbox2">
-            <div class="row" style="height: 150px;">
+            <div class="row" style="height: 180px;">
                 <div class="col-3 text-center">
                     <img class="print-logo" style="width:220px;position:relative;top:25px;"
                         src="{{ asset('dist/logo/philhealth_logo.png') }}" />
@@ -43,53 +43,57 @@
                         This form may be reproduced and
                         <br /> is NOT FOR SALE<br />
                         <b class="text-center noto font-weight-bold"
-                            style="font-size: 65px;top:25px;position:absolute;right:60px;">CSF</b><br />
+                            style="font-size: 65px;top:25px;position:absolute;right:60px;">CF-1</b><br />
                         <b class="text-center noto font-weight-bold"
-                            style="font-size:20px; top:100px;position: absolute;right:5px;">
-                            (Claim Signature Form)</b> <br />
+                            style="font-size:22px; top:100px;position: absolute;right:42px;">
+                            (Claim Form 1)</b> <br />
                         <p class="text-center text-sm" style="top:130px;position: absolute;right:40px;">Revised
                             September 2018</p>
+                            <br/>
+                     
                     </div>
-                    
+             
+              
+                </div>
+
+                <div class="float-right mt-2">
+                    <div class="row" style="position: absolute;right:1px;width:310px; bottom:-15px">
+                        <p class="mt-2"> Series#&nbsp;</p>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 ubox2 font-weight-light" style="height: 90px;">
+        <div class="col-12 ubox2 font-weight-light" style="height: 140px;">
             <p style="font-size:14.4px; line-height: 1.3;" class="float-left mt-2">
                 <b class="font-weight-bold">IMPORTANT REMINDERS:</b>
                 <br />
                 PLEASE WRITE IN CAPITAL <b class="font-weight-bold">LETTERS</b> AND <b class="font-weight-bold">TICK</b>
                 THE APPROPRIATE BOXES.<br />
-                All information required in this form are necessary. Claim forms with incomplete information
-                shall not be processed.<br />
-                <b class="font-weight-bold">FALSE/INCORRECT INFORMATION OF MISINTERPRETATION SHALL BE SUBJECT TO
-                    CRIMINAL, CIVIL OR
-                    ADMINISTRATIVE
-                    LIABILITIES.</b>
+                For <b class="font-weight-bold">local availment,</b> this form together with other PhilHealth claim forms and other supporting documents should be filed within 60 days from date of discharge<br />
+                For <b class="font-weight-bold">availment of benefits abroad,</b> this form together with other supporting documents should be filed within 180 days from date of discharge. <br/>
+                Representative of the Health Care Institutions (HCI) shall assist the member/authorized representative in filling out this form.<br/>
+                All information required in this form are necessary. Claim forms with incomplete information shall not be processed.<br/>
+                <b class="font-weight-bold">FALSE/INCORRECT INFORMATION OF MISINTERPRETATION SHALL BE SUBJECT TO CRIMINAL, CIVIL OR ADMINISTRATIVE LIABILITIES.</b>
             </p>
-            <div class="float-right mt-2">
-                <div class="row" style="position: absolute;right:1px;width:310px;">
-                    <p class="mt-2"> Series#&nbsp;</p>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                </div>
-            </div>
+      
 
         </div>
         <div class="col-12 text-center font-weight-light bgBlack">
             <b class="text-white arial font-weight-bold" style="font-size: 19px">
-                PART I - MEMBER AND PATIENT INFORMATION AND CERTIFICATION
+                PART I - MEMBER INFORMATION
             </b>
         </div>
         <div class="col-12 ubox2 font-weight-light">

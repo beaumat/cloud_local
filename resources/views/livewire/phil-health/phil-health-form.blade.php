@@ -195,7 +195,11 @@
                                         @if ($ID > 0)
                                             <a target="_BLANK"
                                                 href="{{ route('transactionsphic_print', ['id' => $ID]) }}"
-                                                class="btn btn-sm btn-primary"> Print </a>
+                                                class="btn btn-sm btn-primary"> Print SOA </a>
+
+                                            <a target="_BLANK"
+                                                href="{{ route('transactionsphic_print_form', ['id' => $ID]) }}"
+                                                class="btn btn-sm btn-primary"> Print Form </a>
                                         @endif
                                         @if ($ID > 0 && $STATUS > 0)
                                             <a id="new" title="Create"

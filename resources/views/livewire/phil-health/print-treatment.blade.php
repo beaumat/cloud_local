@@ -1,4 +1,6 @@
 <div>
+  
+    </style>
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -99,10 +101,10 @@
                                         {{ $USER_NAME }}</strong>
                                 </div>
                                 <div class="col-7 text-center"><i>PHIC IN-Charge</i></div>
-        
+
                             </div>
-        
-                   
+
+
                             <div class="form-group row  mt-4">
                                 <div class="col-12">Noted by:</div>
                                 <div class="col-7 text-center"><strong class="bottom-line">
@@ -113,8 +115,8 @@
                             </div>
                         </div>
                         <div class="col-4">
-                           
-        
+
+
                         </div>
                         <div class="col-4 text-right">
                             <div class="form-group row  mt-4">
