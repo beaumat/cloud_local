@@ -16,6 +16,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
 :root {
     --blue: #007bff;
     --indigo: #6610f2;
@@ -55945,10 +55947,22 @@ a.text-muted:hover {
     border-bottom: 2px solid black;
 }
 
+.ubox2 {
+    border-left: 4px solid black;
+    border-right: 4px solid black;
+    border-bottom: 4px solid black;
+}
+
+.blackbox2 {
+    border: 4px solid black;
+}
+
 .top-line {
     border-top: 2px solid black;
 }
-
+.top-line2{
+    border-top: 1px solid black;
+}
 .right-line {
     border-right: 2px solid black;
 }
@@ -55960,7 +55974,9 @@ a.text-muted:hover {
 .bottom-line {
     border-bottom: 2px solid black;
 }
-
+.bottom-line2 {
+    border-bottom: 1px solid black;
+}
 .bottom-line-hide {
     border-bottom: 2px solid white;
 }
@@ -55983,6 +55999,12 @@ a.text-muted:hover {
 
     .page-break {
         page-break-before: always;
+    }
+
+    .bgBlack {
+        background-color: black;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 }
 
@@ -56021,3 +56043,38 @@ a.text-muted:hover {
     height: 500px;
     overflow: auto;
 }
+.times-new-roman {
+    font-family: 'Times New Roman', Times, serif;
+}
+.courier-new {
+    font-family: 'Courier New',Times, serif;
+}
+.arial {
+    font-family: 'Arial',Times, serif;
+}
+.ubunto-bold{
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.small-box {
+    width: 26px;
+    height: 30px;
+    border: 2px solid green;
+
+}
+
+.box {
+    display: inline-block; /* Display boxes in a horizontal line */
+    width: 22px; /* Automatically adjust the width according to content */
+    height: 25px; /* Set height of the boxes */
+    padding: 0px; /* Add some padding inside the boxes */
+    margin-right:-4px; /* Add some spacing between the boxes */
+    margin-left:0px;
+    background-color:white; /* Set background color of the boxes */
+    border: 1px solid green; /* Add a border around the boxes */
+    text-align: center; /* Center the text inside the boxes */
+    margin-top:4px;
+}
+

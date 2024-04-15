@@ -27,7 +27,6 @@ class PrintSoa extends Component
     public string $OTHER_DIAGNOSIS;
     public string $FIRST_CASE_RATE;
     public string $SECOND_CASE_RATE;
-
     public float $CHARGES_ROOM_N_BOARD;
     public float $CHARGES_DRUG_N_MEDICINE;
     public float $CHARGES_LAB_N_DIAGNOSTICS;
