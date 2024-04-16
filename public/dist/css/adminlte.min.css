@@ -56062,12 +56062,6 @@ a.text-muted:hover {
     font-style: normal;
 }
 
-.small-box {
-    width: 26px;
-    height: 30px;
-    border: 2px solid green;
-
-}
 
 .box {
     display: inline-block; /* Display boxes in a horizontal line */
@@ -56077,7 +56071,7 @@ a.text-muted:hover {
     margin-right:-4px; /* Add some spacing between the boxes */
     margin-left:0px;
     background-color:white; /* Set background color of the boxes */
-    border: 1px solid green; /* Add a border around the boxes */
+    border: 1px solid darkgreen; /* Add a border around the boxes */
     text-align: center; /* Center the text inside the boxes */
     margin-top:4px;
 }

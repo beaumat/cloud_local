@@ -50,7 +50,7 @@
                         <p class="text-center text-sm" style="top:130px;position: absolute;right:40px;">Revised
                             September 2018</p>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -426,7 +426,7 @@
 
                                 </div>
                                 <div class="col-5">
-                                    <div class="blackbox text-primary courier-new font-weight-bold2 w-100">
+                                    <div class="blackbox text-primary courier-new font-weight-bold2 w-75">
                                         <br />
                                         <br />
                                         <br />
@@ -527,7 +527,8 @@
                                         class="float-left bottom-line2 w-100 mt-1">
                                         <b class="h5 text-primary courier-new font-weight-bold "> ERIC G. CANUBAS</b>
                                     </div>
-                                    <p class="mt-3 text-sm"> Business Name of Employer</p>
+                                    
+                                    <p class="text-sm pt-4"> Business Name of Employer</p>
                                 </div>
                             </div>
                         </div>
@@ -695,7 +696,7 @@
 
                                 </div>
                                 <div class="col-5">
-                                    <div class="blackbox text-primary courier-new font-weight-bold2 w-100">
+                                    <div class="blackbox text-primary courier-new font-weight-bold2 w-75">
                                         <br />
                                         <br />
                                         <br />
@@ -920,17 +921,58 @@
                         PART V - PROVIDER INFORMATION AND CERTIFICATION
                     </b>
                 </div>
-                <div class="col-12">
+                <div class="col-12 mt-1">
                     <div class="row">
                         <div class="col-12">
-                            <label>1. PhilHealth Benefits:</label>
+                            <div class="row">
+                                <div class="col-2">
+                                    <label style="position: absolute;">1. PhilHealth Benefits:</label>
+                                </div>
+                                <div class="col-2 text-right">
+                                    <label class="text-sm">ICD 10 or RVS Code:</label>
+                                </div>
+                                <div class="col-4 text-left">
+                                    
+                                    <div class="row text-sm">
+                                        <div class="col-3">
+                                            <div style="position: absolute;width:300px;">
+                                                1. First Case Rate:
+                                            </div>
+                                      
+                                        </div>
+                                        <div class="col-9">
+                                            <div  style="left:55px; position: absolute;"
+                                                class="bottom-line2 w-75 ">
+                                                <b class="h5 text-primary courier-new font-weight-bold text-sm "> RVS 90935 × _____  </b> 
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-4 text-left">
+                                    <div class="row text-sm">
+                                        <div class="col-3">
+                                            <div style="position: absolute;width:300px;">
+                                                2. Second Case Rate:
+                                            </div>
+                                      
+                                        </div>
+                                        <div class="col-9">
+                                            <div  style="left:55px; position: absolute;"
+                                                class="bottom-line2 w-75 ">
+                                                <b class="h5 text-primary courier-new font-weight-bold text-sm "> &nbsp; </b> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-12 text-sm" style="top:-10px;">
-                            <b><i>
+                        <div class="col-12 text-sm text-center" >
+                            <label><i>
                                     I certify that services rendered were recorded in the patient’s chart and health
                                     care institution records and that the herein information given are true and correct.
-
-                                </i></b>
+                                </i>
+                            </label>
                         </div>
                         <div class="col-12" style="top:-10px;">
                             <div class="row">
