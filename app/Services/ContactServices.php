@@ -4,10 +4,12 @@ namespace App\Services;
 
 use App\Models\Contacts;
 use Carbon\Carbon;
+use Livewire\WithPagination;
 
 class ContactServices
 {
 
+    use WithPagination;
     private $object;
     public function __construct(ObjectServices $objectService)
     {
@@ -17,6 +19,7 @@ class ContactServices
     {
         return contacts::where('ID', $ID)->where('TYPE', $TYPE)->first();
     }
+
     public function getList(int $Type): object
     {
         return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();
@@ -66,11 +69,11 @@ class ContactServices
         string $DATE_OF_BIRTH,
         string $NICKNAME,
         string $HIRE_DATE,
-        string $CUSTOM_FIELD1 = '',
-        string $CUSTOM_FIELD2 = '',
-        string $CUSTOM_FIELD3 = '',
-        string $CUSTOM_FIELD4 = '',
-        string $CUSTOM_FIELD5 = ''
+        $CUSTOM_FIELD1 = null,
+        $CUSTOM_FIELD2 = null,
+        $CUSTOM_FIELD3 = null,
+        $CUSTOM_FIELD4 = null,
+        $CUSTOM_FIELD5 = null
     ): int {
 
 
@@ -89,6 +92,9 @@ class ContactServices
                 break;
             case 3:
                 $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Tax Agency');
+                break;
+            case 4:
+                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Other Contact');
                 break;
             default:
                 # code...
@@ -139,7 +145,7 @@ class ContactServices
             "CUSTOM_FIELD2" => $CUSTOM_FIELD2,
             "CUSTOM_FIELD3" => $CUSTOM_FIELD3,
             "CUSTOM_FIELD4" => $CUSTOM_FIELD4,
-            "CUSTOM_FIELD5" => $CUSTOM_FIELD5,
+            "CUSTOM_FIELD5" => $CUSTOM_FIELD5
 
 
         ]);
@@ -183,11 +189,11 @@ class ContactServices
         string $DATE_OF_BIRTH,
         string $NICKNAME,
         string $HIRE_DATE,
-        string $CUSTOM_FIELD1 = '',
-        string $CUSTOM_FIELD2 = '',
-        string $CUSTOM_FIELD3 = '',
-        string $CUSTOM_FIELD4 = '',
-        string $CUSTOM_FIELD5 = ''
+        $CUSTOM_FIELD1 = null,
+        $CUSTOM_FIELD2 = null,
+        $CUSTOM_FIELD3 = null,
+        $CUSTOM_FIELD4 = null,
+        $CUSTOM_FIELD5 = null
     ): void {
 
         Contacts::where('ID', $ID)->where('TYPE', $TYPE)->update([
@@ -229,7 +235,7 @@ class ContactServices
             "CUSTOM_FIELD2" => $CUSTOM_FIELD2,
             "CUSTOM_FIELD3" => $CUSTOM_FIELD3,
             "CUSTOM_FIELD4" => $CUSTOM_FIELD4,
-            "CUSTOM_FIELD5" => $CUSTOM_FIELD5,
+            "CUSTOM_FIELD5" => $CUSTOM_FIELD5
 
         ]);
     }
@@ -238,7 +244,7 @@ class ContactServices
     {
         Contacts::where('ID', $ID)->delete();
     }
-    public function Search($search, int $TYPE)
+    public function Search($search, int $TYPE, int $perPage, int $locationId = 0)
     {
         $result = Contacts::query()
             ->select(
@@ -255,11 +261,9 @@ class ContactServices
                     "contact.POSTAL_ADDRESS",
                     "contact.CONTACT_PERSON",
                     "contact.INACTIVE",
-                    'contact.TAXPAYER_ID',
+                    'contact.PIN',
                     'gender_map.DESCRIPTION as GENDER',
-                    'contact.DATE_OF_BIRTH',
-                    'contact.DATE_ADMISSION',
-                    \DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH, CURDATE()) AS AGE')
+                    'l.NAME as LOCATION'
                 ]
             )
             ->join('contact_type_map as t', function ($join) use (&$TYPE) {
@@ -267,6 +271,7 @@ class ContactServices
                     ->where('t.ID', '=', $TYPE);
             })
             ->leftJoin('gender_map', 'gender_map.ID', '=', 'contact.GENDER')
+            ->leftJoin('location as l', 'l.ID', '=', 'contact.LOCATION_ID')
             ->when($search, function ($query) use (&$search) {
                 $query->where('contact.NAME', 'like', '%' . $search . '%');
                 $query->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%');
@@ -277,8 +282,63 @@ class ContactServices
                 $query->orWhere('contact.MOBILE_NO', 'like', '%' . $search . '%');
                 $query->orWhere('contact.EMAIL', 'like', '%' . $search . '%');
             })
+            ->when($locationId > 0, function ($query) use (&$locationId) {
+                $query->where('contact.LOCATION_ID', $locationId);
+            })
             ->orderBy('contact.ID', 'desc')
-            ->get();
+            ->paginate($perPage);
+
+        return $result;
+    }
+    public function SearchPatient($search, int $perPage, int $locationId)
+    {
+        $TYPE = 3;
+
+        $result = Contacts::query()
+            ->select(
+                [
+                    "contact.ID",
+                    "contact.NAME",
+                    "contact.COMPANY_NAME",
+                    "contact.FIRST_NAME",
+                    "contact.LAST_NAME",
+                    "contact.PRINT_NAME_AS",
+                    "contact.MOBILE_NO",
+                    "contact.EMAIL",
+                    "contact.ACCOUNT_NO",
+                    "contact.POSTAL_ADDRESS",
+                    "contact.CONTACT_PERSON",
+                    "contact.INACTIVE",
+                    'contact.PIN',
+                    'gender_map.DESCRIPTION as GENDER',
+                    'contact.DATE_OF_BIRTH',
+                    'contact.DATE_ADMISSION',
+                    \DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH, CURDATE()) AS AGE'),
+                    'l.NAME as LOCATION_NAME'
+                ]
+            )
+            ->join('contact_type_map as t', function ($join) use (&$TYPE) {
+                $join->on('t.ID', '=', 'contact.TYPE')
+                    ->where('t.ID', '=', $TYPE);
+            })
+            ->leftJoin('gender_map', 'gender_map.ID', '=', 'contact.GENDER')
+            ->leftJoin('location as l', 'l.ID', '=', 'contact.LOCATION_ID')
+            ->when($search, function ($query) use (&$search) {
+                $query->where('contact.NAME', 'like', '%' . $search . '%');
+                $query->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%');
+                $query->orWhere('contact.COMPANY_NAME', 'like', '%' . $search . '%');
+                $query->orWhere('contact.FIRST_NAME', 'like', '%' . $search . '%');
+                $query->orWhere('contact.LAST_NAME', 'like', '%' . $search . '%');
+                $query->orWhere('contact.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                $query->orWhere('contact.MOBILE_NO', 'like', '%' . $search . '%');
+                $query->orWhere('contact.EMAIL', 'like', '%' . $search . '%');
+            })
+            ->when($locationId > 0, function ($query) use (&$locationId) {
+                $query->where('contact.LOCATION_ID', $locationId);
+            })
+            ->orderBy('contact.ID', 'desc')
+            ->paginate($perPage);
+
 
         return $result;
     }

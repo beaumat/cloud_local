@@ -49,21 +49,24 @@ class PhilHealthServices
         }
         return 0;
     }
+    public function getNumberOfTreatment(int $CONTACT_ID, int $LOCATION_ID, string $DATE_ADMITTED, string $DATE_DISCHARGED): int
+    {
+        $hemoCount = Hemodialysis::query()
+            ->where('CUSTOMER_ID', $CONTACT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('STATUS_ID', '2')
+            ->whereBetween('DATE', [$DATE_ADMITTED, $DATE_DISCHARGED])
+            ->count();
+
+        return $hemoCount;
+    }
     public function DefaultEntry(int $ID)
     {
-        $data = PhilHealth::where('ID', $ID)->first();
+        $data = $this->get($ID);
 
         if ($data) {
 
-            $hemoCount = Hemodialysis::query()
-                ->where('CUSTOMER_ID', $data->CONTACT_ID)
-                ->where('LOCATION_ID', $data->LOCATION_ID)
-                ->where('STATUS_ID', '2')
-                ->whereBetween('DATE', [$data->DATE_ADMITTED, $data->DATE_DISCHARGED])
-                ->count();
-
-            $NO_OF_TREATMENT = $hemoCount;
-
+            $NO_OF_TREATMENT = $this->getNumberOfTreatment($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
             $DRUG_MED = (float) $this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT;
             $OPERATE_FEE = (float) ($this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT) + ($this->ROOM_FEE * $NO_OF_TREATMENT);
             $SUP = (float) $this->SUPPLIES * $NO_OF_TREATMENT;

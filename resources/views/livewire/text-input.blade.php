@@ -1,7 +1,6 @@
 <div class="mt-2">
     @if ($vertical)
         <div class="row">
-
             <div class="col-3">
                 @if ($withLabel)
                     <label for="{{ $name }}" class="text-xs">{{ $titleName }}</label>
@@ -15,7 +14,7 @@
         </div>
     @else
         @if ($withLabel)
-            <label for="{{ $name }}" class="text-xs">{{ $titleName }}</label>
+            <label for="{{ $name }}" class="text-xs" style="width: 300px;">{{ $titleName }}</label>
         @endif
         <input type="text" autocomplete="off" wire:model='value' class="text-xs form-control form-control-sm2"
             id="{{ $name }}" @if ($isDisabled) disabled @endif />

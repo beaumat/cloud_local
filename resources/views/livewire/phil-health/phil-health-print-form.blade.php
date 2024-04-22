@@ -1,4 +1,20 @@
 <div class="content-wrapper" id="printableContent">
+    <style>
+        @media print {
+
+            @page {
+                size: legal; /* Sets the paper size to Legal */
+                /* Custom long size: width 8.5in (letter width), length 14in */
+                /* margin: 0.5in; */
+                /* Adjust margins as desired */
+                margin-left: 14px;
+                margin-right: 14px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+
+        }
+    </style>
     <div class="content-header">
         <div class="container-fluid">
         </div>

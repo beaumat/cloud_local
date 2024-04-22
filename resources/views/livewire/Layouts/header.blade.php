@@ -13,8 +13,9 @@
                 class="nav-link dropdown-toggle">Contacts</a>
             <ul aria-labelledby="dropdownSubMenu1" class="border-0 shadow dropdown-menu">
                 <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a></li>
+                <li><a href="{{ route('maintenancecontactdoctors') }}" class="dropdown-item"> Doctors</a></li>
                 <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Suppliers</a></li>
-                <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Nurses & Staff</a></li>
+                <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
             </ul>
         </li>
 

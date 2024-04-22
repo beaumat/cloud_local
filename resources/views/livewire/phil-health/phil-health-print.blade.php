@@ -1,10 +1,13 @@
 <div class="content-wrapper" id="printableContent">
+
     <div class="content-header">
         <div class="container-fluid">
         </div>
     </div>
 
     @foreach ($PRINT_ID as $ID)
+        @livewire('PhilHealth.PrintComputation', ['PRINT_ID' => $ID])
+        <div class="page-break"></div>
         @livewire('PhilHealth.PrintSoa', ['PRINT_ID' => $ID])
         <div class="page-break"></div>
         @livewire('PhilHealth.PrintTreatment', ['PRINT_ID' => $ID])

@@ -65,39 +65,73 @@ class PatientForm extends Component
     public $paymentMethod = [];
     public $priceLevels = [];
     public $age = null;
+    public $memberage = null;
 
-    public string $CUSTOM_FIELD1;
-    public string $CUSTOM_FIELD2;
-    public bool $FIX_MON;
-    public bool $FIX_TUE;
-    public bool $FIX_WEN;
-    public bool $FIX_THU;
-    public bool $FIX_FRI;
-    public bool $FIX_SAT;
-    public bool $FIX_SUN;
     public int $LOCATION_ID;
     public int $SCHEDULE_TYPE;
     public $scheduleTypeList = [];
     public $locationList = [];
-
     public int $PATIENT_TYPE_ID;
     public int $PATIENT_STATUS_ID;
     public bool $ADMITTED;
     public bool $LONG_HRS_DURATION;
-    public function updatedscheduleType()
-    {
-        $this->FIX_MON = false;
-        $this->FIX_TUE = false;
-        $this->FIX_WEN = false;
-        $this->FIX_THU = false;
-        $this->FIX_FRI = false;
-        $this->FIX_SAT = false;
-        $this->FIX_SUN = false;
-    }
+    public string $ADDRESS_UNIT_ROOM_FLOOR;
+    public string $ADDRESS_BUILDING_NAME;
+    public string $ADDRESS_LOT_BLK_HOUSE_BLDG;
+    public string $ADDRESS_STREET;
+    public string $ADDRESS_SUB_VALL;
+    public string $ADDRESS_BRGY;
+    public string $ADDRESS_CITY_MUNI;
+    public string $ADDRESS_PROVINCE;
+    public string $ADDRESS_COUNTRY;
+    public string $ADDRESS_ZIP_CODE;
+
+    public string $PIN = '';
+    public string $PEN = '';
+
+    public bool $IS_PATIENT = true;
+    public string $MEMBER_TEL_NO;
+    public string $MEMBER_MOBILE;
+    public string $MEMBER_EMAIL;
+    public string $MEMBER_FIRST_NAME;
+    public string $MEMBER_LAST_NAME;
+    public string $MEMBER_MIDDLE_NAME;
+    public string $MEMBER_EXTENSION;
+    public $MEMBER_BIRTH_DATE;
+    public int $MEMBER_GENDER;
+    public string $MEMBER_UNIT_ROOM_FLOOR;
+    public string $MEMBER_BUILDING_NAME;
+    public string $MEMBER_LOT_BLK_HOUSE_BLDG;
+    public string $MEMBER_STREET;
+    public string $MEMBER_SUB_VALL;
+    public string $MEMBER_BRGY;
+    public string $MEMBER_CITY_MUNI;
+    public string $MEMBER_PROVINCE;
+    public string $MEMBER_COUNTRY;
+    public string $MEMBER_ZIP_CODE;
+    public bool $IS_REPRESENTATIVE;
+    public bool $MEMBER_IS_CHILD;
+    public bool $MEMBER_IS_PARENT;
+    public bool $MEMBER_IS_SPOUSE;
+
+
+    public string $PEN_CONTACT;
+    public string $FIRST_CASE_RATE;
+    public string $SECOND_CASE_RATE;
+    public string $FINAL_DIAGNOSIS;
+    public string $OTHER_DIAGNOSIS;
+
+
+
     public function updateddateofbirth()
     {
         $this->age = $this->contactServices->calculateUserAge($this->DATE_OF_BIRTH);
     }
+    public function updatedMEMBERBIRTHDATE()
+    {
+        $this->memberage = $this->contactServices->calculateUserAge($this->MEMBER_BIRTH_DATE);
+    }
+
     public string $selectTab = 'gen';
     public function SelectTab($tab)
     {
@@ -116,7 +150,7 @@ class PatientForm extends Component
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
-
+   
     public function mount($id = null)
     {
         $this->taxList = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', 3)->orderBy('ID', 'desc')->get();
@@ -129,10 +163,9 @@ class PatientForm extends Component
         $this->scheduleTypeList = ScheduleType::all();
         $this->patientTypeList = HemodialysisMachines::select(['ID', 'DESCRIPTION'])->get();
         $this->patientStatusList = PatientStatus::all();
+
         if (is_numeric($id)) {
-
-            $contact = Contacts::where('ID', $id)->where('TYPE', $this->TYPE)->first();
-
+            $contact = $this->contactServices->get($id, $this->TYPE);
             if ($contact) {
                 $this->ID = $contact->ID;
                 $this->NAME = $contact->NAME;
@@ -168,24 +201,64 @@ class PatientForm extends Component
                 $this->DATE_OF_BIRTH = $contact->DATE_OF_BIRTH ? $contact->DATE_OF_BIRTH : '';
                 $this->NICKNAME = $contact->NICKNAME ? $contact->NICKNAME : '';
                 $this->HIRE_DATE = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
-                $this->CUSTOM_FIELD1 = $contact->CUSTOM_FIELD1 ? $contact->CUSTOM_FIELD1 : '';
-                $this->CUSTOM_FIELD2 = $contact->CUSTOM_FIELD2 ? $contact->CUSTOM_FIELD2 : '';
-                $this->SCHEDULE_TYPE = $contact->SCHEDULE_TYPE ? $contact->SCHEDULE_TYPE : 0;
-                $this->FIX_MON = $contact->FIX_MON ? $contact->FIX_MON : false;
-                $this->FIX_TUE = $contact->FIX_TUE ? $contact->FIX_TUE : false;
-                $this->FIX_WEN = $contact->FIX_WEN ? $contact->FIX_WEN : false;
-                $this->FIX_THU = $contact->FIX_THU ? $contact->FIX_THU : false;
-                $this->FIX_FRI = $contact->FIX_FRI ? $contact->FIX_FRI : false;
-                $this->FIX_SAT = $contact->FIX_SAT ? $contact->FIX_SAT : false;
-                $this->FIX_SUN = $contact->FIX_SUN ? $contact->FIX_SUN : false;
+
+
                 $this->LOCATION_ID = $contact->LOCATION_ID ?? 0;
                 $this->PATIENT_TYPE_ID = $contact->PATIENT_TYPE_ID ?? 0;
                 $this->PATIENT_STATUS_ID = $contact->PATIENT_STATUS_ID ?? 0;
-
                 $this->ADMITTED = $contact->ADMITTED ? $contact->ADMITTED : false;
                 $this->LONG_HRS_DURATION = $contact->LONG_HRS_DURATION ? $contact->LONG_HRS_DURATION : false;
                 $this->DATE_ADMISSION = $contact->DATE_ADMISSION ? $contact->DATE_ADMISSION : '';
+
+                $this->ADDRESS_UNIT_ROOM_FLOOR = $contact->ADDRESS_UNIT_ROOM_FLOOR ?? '';
+                $this->ADDRESS_BUILDING_NAME = $contact->ADDRESS_BUILDING_NAME ?? '';
+                $this->ADDRESS_LOT_BLK_HOUSE_BLDG = $contact->ADDRESS_LOT_BLK_HOUSE_BLDG ?? '';
+                $this->ADDRESS_STREET = $contact->ADDRESS_STREET ?? '';
+                $this->ADDRESS_SUB_VALL = $contact->ADDRESS_SUB_VALL ?? '';
+                $this->ADDRESS_BRGY = $contact->ADDRESS_BRGY ?? '';
+                $this->ADDRESS_CITY_MUNI = $contact->ADDRESS_CITY_MUNI ?? '';
+                $this->ADDRESS_PROVINCE = $contact->ADDRESS_PROVINCE ?? '';
+                $this->ADDRESS_COUNTRY = $contact->ADDRESS_COUNTRY ?? '';
+                $this->ADDRESS_ZIP_CODE = $contact->ADDRESS_ZIP_CODE ?? '';
+                $this->PIN = $contact->PIN ?? '';
+                $this->PEN = $contact->PEN ?? '';
+                $this->IS_PATIENT = $contact->IS_PATIENT ?? true;
+
+                $this->MEMBER_TEL_NO = $contact->MEMBER_TEL_NO ?? '';
+                $this->MEMBER_MOBILE = $contact->MEMBER_MOBILE ?? '';
+                $this->MEMBER_EMAIL = $contact->MEMBER_EMAIL ?? '';
+                $this->MEMBER_FIRST_NAME = $contact->MEMBER_FIRST_NAME ?? '';
+                $this->MEMBER_LAST_NAME = $contact->MEMBER_LAST_NAME ?? '';
+                $this->MEMBER_MIDDLE_NAME = $contact->MEMBER_MIDDLE_NAME ?? '';
+                $this->MEMBER_EXTENSION = $contact->MEMBER_EXTENSION ?? '';
+                $this->MEMBER_BIRTH_DATE = $contact->MEMBER_BIRTH_DATE ?? null;
+                $this->MEMBER_GENDER = $contact->MEMBER_GENDER ?? 0;
+
+
+                $this->MEMBER_UNIT_ROOM_FLOOR = $contact->MEMBER_UNIT_ROOM_FLOOR ?? '';
+                $this->MEMBER_BUILDING_NAME = $contact->MEMBER_BUILDING_NAME ?? '';
+                $this->MEMBER_LOT_BLK_HOUSE_BLDG = $contact->MEMBER_LOT_BLK_HOUSE_BLDG ?? '';
+                $this->MEMBER_STREET = $contact->MEMBER_STREET ?? '';
+                $this->MEMBER_SUB_VALL = $contact->MEMBER_SUB_VALL ?? '';
+                $this->MEMBER_BRGY = $contact->MEMBER_BRGY ?? '';
+                $this->MEMBER_CITY_MUNI = $contact->MEMBER_CITY_MUNI ?? '';
+                $this->MEMBER_PROVINCE = $contact->MEMBER_PROVINCE ?? '';
+                $this->MEMBER_COUNTRY = $contact->MEMBER_COUNTRY ?? '';
+                $this->MEMBER_ZIP_CODE = $contact->MEMBER_ZIP_CODE ?? '';
+
+                $this->IS_REPRESENTATIVE = $contact->IS_REPRESENTATIVE ?? false;
+                $this->MEMBER_IS_CHILD = $contact->MEMBER_IS_CHILD ?? false;
+                $this->MEMBER_IS_PARENT = $contact->MEMBER_IS_PARENT ?? false;
+                $this->MEMBER_IS_SPOUSE = $contact->MEMBER_IS_SPOUSE ?? false;
+
+                $this->PEN_CONTACT = $contact->PEN_CONTACT ?? '';
+                $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
+                $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
+                $this->FINAL_DIAGNOSIS = $contact->FINAL_DIAGNOSIS ?? '';
+                $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
+
                 $this->updateddateofbirth();
+                $this->updatedMEMBERBIRTHDATE();
                 return;
             }
 
@@ -228,23 +301,73 @@ class PatientForm extends Component
         $this->NICKNAME = '';
         $this->HIRE_DATE = '';
         $this->age = null;
-        $this->CUSTOM_FIELD1 = '';
-        $this->CUSTOM_FIELD2 = '';
+
 
         $this->SCHEDULE_TYPE = 0;
-        $this->FIX_MON = false;
-        $this->FIX_TUE = false;
-        $this->FIX_WEN = false;
-        $this->FIX_THU = false;
-        $this->FIX_FRI = false;
-        $this->FIX_SAT = false;
-        $this->FIX_SUN = false;
+ 
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->PATIENT_TYPE_ID = 1;
         $this->PATIENT_STATUS_ID = 1;
         $this->ADMITTED = false;
         $this->LONG_HRS_DURATION = false;
         $this->DATE_ADMISSION = Carbon::now()->format('Y-m-d');
+
+
+
+        $this->ADDRESS_UNIT_ROOM_FLOOR = '';
+        $this->ADDRESS_BUILDING_NAME = '';
+        $this->ADDRESS_LOT_BLK_HOUSE_BLDG = '';
+        $this->ADDRESS_STREET = '';
+        $this->ADDRESS_SUB_VALL = '';
+        $this->ADDRESS_BRGY = '';
+        $this->ADDRESS_CITY_MUNI = '';
+        $this->ADDRESS_PROVINCE = '';
+        $this->ADDRESS_COUNTRY = '';
+        $this->ADDRESS_ZIP_CODE = '';
+        $this->PIN = '';
+        $this->PEN = '';
+        $this->IS_PATIENT = true;
+
+        $this->MEMBER_TEL_NO = '';
+        $this->MEMBER_MOBILE = '';
+        $this->MEMBER_EMAIL = '';
+        $this->MEMBER_FIRST_NAME = '';
+        $this->MEMBER_LAST_NAME = '';
+        $this->MEMBER_MIDDLE_NAME = '';
+        $this->MEMBER_EXTENSION = '';
+        $this->MEMBER_BIRTH_DATE = null;
+        $this->MEMBER_GENDER = 0;
+
+
+        $this->MEMBER_UNIT_ROOM_FLOOR = '';
+        $this->MEMBER_BUILDING_NAME = '';
+        $this->MEMBER_LOT_BLK_HOUSE_BLDG = '';
+        $this->MEMBER_STREET = '';
+        $this->MEMBER_SUB_VALL = '';
+        $this->MEMBER_BRGY = '';
+        $this->MEMBER_CITY_MUNI = '';
+        $this->MEMBER_PROVINCE = '';
+        $this->MEMBER_COUNTRY = '';
+        $this->MEMBER_ZIP_CODE = '';
+
+        $this->IS_REPRESENTATIVE = false;
+        $this->MEMBER_IS_CHILD = false;
+        $this->MEMBER_IS_PARENT = false;
+        $this->MEMBER_IS_SPOUSE = false;
+
+        $this->PEN_CONTACT = '';
+        $this->FIRST_CASE_RATE = '';
+        $this->SECOND_CASE_RATE = '';
+        $this->FINAL_DIAGNOSIS = '';
+        $this->OTHER_DIAGNOSIS = '';
+
+
+    }
+    public function updatedISPATIENT()
+    {
+        $this->MEMBER_IS_CHILD = false;
+        $this->MEMBER_IS_PARENT = false;
+        $this->MEMBER_IS_SPOUSE = false;
     }
     public function updatedADMITTED()
     {
@@ -280,57 +403,58 @@ class PatientForm extends Component
         $this->FullName();
     }
 
-    private function dayWeekCount(): int
-    {
-        $dayCount = 0;
-        if ($this->FIX_MON) {
-            $dayCount++;
-        }
-        if ($this->FIX_TUE) {
-            $dayCount++;
-        }
-        if ($this->FIX_WEN) {
-            $dayCount++;
-        }
-        if ($this->FIX_THU) {
-            $dayCount++;
-        }
-        if ($this->FIX_FRI) {
-            $dayCount++;
-        }
-        if ($this->FIX_SAT) {
-            $dayCount++;
-        }
-        if ($this->FIX_SUN) {
-            $dayCount++;
-        }
 
-        return $dayCount;
-    }
     private function FollowUpUpdate()
     {
         Contacts::where('ID', $this->ID)->where('TYPE', $this->TYPE)->update([
-            'SCHEDULE_TYPE' => $this->SCHEDULE_TYPE > 0 ? $this->SCHEDULE_TYPE : null,
-            'FIX_MON' => $this->FIX_MON,
-            'FIX_TUE' => $this->FIX_TUE,
-            'FIX_WEN' => $this->FIX_WEN,
-            'FIX_THU' => $this->FIX_THU,
-            'FIX_FRI' => $this->FIX_FRI,
-            'FIX_SAT' => $this->FIX_SAT,
-            'FIX_SUN' => $this->FIX_SUN,
-            'LOCATION_ID' => $this->LOCATION_ID > 0 ? $this->LOCATION_ID : null,
-            'PATIENT_TYPE_ID' => $this->PATIENT_TYPE_ID > 0 ? $this->PATIENT_TYPE_ID : null,
-            'PATIENT_STATUS_ID' => $this->PATIENT_STATUS_ID > 0 ? $this->PATIENT_STATUS_ID : null,
-            'ADMITTED' => $this->ADMITTED,
-            'LONG_HRS_DURATION' => $this->LONG_HRS_DURATION,
-            'DATE_ADMISSION' => $this->DATE_ADMISSION
+            'ADDRESS_UNIT_ROOM_FLOOR' => $this->ADDRESS_UNIT_ROOM_FLOOR,
+            'ADDRESS_BUILDING_NAME' => $this->ADDRESS_BUILDING_NAME,
+            'ADDRESS_LOT_BLK_HOUSE_BLDG' => $this->ADDRESS_LOT_BLK_HOUSE_BLDG,
+            'ADDRESS_STREET' => $this->ADDRESS_STREET,
+            'ADDRESS_SUB_VALL' => $this->ADDRESS_SUB_VALL,
+            'ADDRESS_BRGY' => $this->ADDRESS_BRGY,
+            'ADDRESS_CITY_MUNI' => $this->ADDRESS_CITY_MUNI,
+            'ADDRESS_PROVINCE' => $this->ADDRESS_PROVINCE,
+            'ADDRESS_COUNTRY' => $this->ADDRESS_COUNTRY,
+            'ADDRESS_ZIP_CODE' => $this->ADDRESS_ZIP_CODE,
+            'MEMBER_TEL_NO' => $this->MEMBER_TEL_NO,
+            'MEMBER_MOBILE' => $this->MEMBER_MOBILE,
+            'MEMBER_EMAIL' => $this->MEMBER_EMAIL,
+            'IS_PATIENT' => $this->IS_PATIENT,
+            'MEMBER_IS_CHILD' => $this->MEMBER_IS_CHILD,
+            'MEMBER_IS_PARENT' => $this->MEMBER_IS_PARENT,
+            'MEMBER_IS_SPOUSE' => $this->MEMBER_IS_SPOUSE,
+            'IS_REPRESENTATIVE' => $this->IS_REPRESENTATIVE,
+            'MEMBER_FIRST_NAME' => $this->MEMBER_FIRST_NAME,
+            'MEMBER_LAST_NAME' => $this->MEMBER_LAST_NAME,
+            'MEMBER_MIDDLE_NAME' => $this->MEMBER_MIDDLE_NAME,
+            'MEMBER_EXTENSION' => $this->MEMBER_EXTENSION,
+            'MEMBER_BIRTH_DATE' => $this->MEMBER_BIRTH_DATE ?? null,
+            'MEMBER_GENDER' => $this->MEMBER_GENDER,
+            'PIN' => $this->PIN,
+            'PEN' => $this->PEN,
+            'PEN_CONTACT' => $this->PEN_CONTACT,
+            'FIRST_CASE_RATE' => $this->FIRST_CASE_RATE,
+            'SECOND_CASE_RATE' => $this->SECOND_CASE_RATE,
+            'FINAL_DIAGNOSIS' => $this->FINAL_DIAGNOSIS,
+            'OTHER_DIAGNOSIS' => $this->OTHER_DIAGNOSIS,
+            'MEMBER_UNIT_ROOM_FLOOR' => $this->MEMBER_UNIT_ROOM_FLOOR,
+            'MEMBER_BUILDING_NAME' => $this->MEMBER_BUILDING_NAME,
+            'MEMBER_LOT_BLK_HOUSE_BLDG' => $this->MEMBER_LOT_BLK_HOUSE_BLDG,
+            'MEMBER_STREET' => $this->MEMBER_STREET,
+            'MEMBER_SUB_VALL' => $this->MEMBER_SUB_VALL,
+            'MEMBER_BRGY' => $this->MEMBER_BRGY,
+            'MEMBER_CITY_MUNI' => $this->MEMBER_CITY_MUNI,
+            'MEMBER_PROVINCE' => $this->MEMBER_PROVINCE,
+            'MEMBER_COUNTRY' => $this->MEMBER_COUNTRY,
+            'MEMBER_ZIP_CODE' => $this->MEMBER_ZIP_CODE
 
         ]);
     }
     public function save()
     {
 
-        if ($this->TAXPAYER_ID) {
+        if ($this->PIN) {
 
             $this->validate(
                 [
@@ -369,32 +493,6 @@ class PatientForm extends Component
         }
 
 
-        switch ($this->SCHEDULE_TYPE) {
-            case 1:
-                # code...
-                if ($this->dayWeekCount() != 1) {
-                    session()->flash('error', 'Invalid once`s a week setup');
-                    return;
-                }
-
-                break;
-            case 2:
-                if ($this->dayWeekCount() != 2) {
-                    session()->flash('error', 'Invalid twice`s a week setup');
-                    return;
-                }
-                break;
-            case 3:
-                if ($this->dayWeekCount() != 3) {
-                    session()->flash('error', 'Invalid three times a week setup');
-                    return;
-                }
-                break;
-            default:
-
-                break;
-
-        }
 
 
         try {
@@ -434,13 +532,13 @@ class PatientForm extends Component
                     $this->DATE_OF_BIRTH,
                     $this->NICKNAME,
                     $this->HIRE_DATE,
-                    $this->CUSTOM_FIELD1,
-                    $this->CUSTOM_FIELD2
+                    null,
+                    null
                 );
 
                 $this->FollowUpUpdate();
                 Redirect::route('maintenancecontactpatients_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-                session()->flash('message', 'Successfully created');
+               
 
             } else {
                 $this->contactServices->Update(
@@ -479,8 +577,8 @@ class PatientForm extends Component
                     $this->DATE_OF_BIRTH,
                     $this->NICKNAME,
                     $this->HIRE_DATE,
-                    $this->CUSTOM_FIELD1,
-                    $this->CUSTOM_FIELD2
+                    null,
+                    null
                 );
 
                 $this->FollowUpUpdate();

@@ -7,6 +7,8 @@ use App\Livewire\ChartOfAccount\ChartOfAccountList;
 use App\Livewire\Customer\CustomerForm;
 use App\Livewire\Customer\CustomerList;
 use App\Livewire\DashboardPage\Dashboard;
+use App\Livewire\Doctor\DoctorForm;
+use App\Livewire\Doctor\DoctorList;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
 use App\Livewire\Hemodialysis\HemoForm;
@@ -133,11 +135,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('/statement-of-account')->group(function () {
             Route::get('/', SoaModule::class)->name('soa');
-         
         });
-
-
-
     });
 
     Route::prefix('/vendors')->name('vendors')->group(function () {
@@ -152,7 +150,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', BillingForm::class)->name('bills_create');
             Route::get('/{id}/edit', BillingForm::class)->name('bills_edit');
         });
-
     });
 
     Route::prefix('/maintenance')->name('maintenance')->group(function () {
@@ -181,6 +178,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', PatientList::class)->name('patients');
                 Route::get('/create', PatientForm::class)->name('patients_create');
                 Route::get('/{id}/edit', PatientForm::class)->name('patients_edit');
+            });
+
+            Route::prefix('/doctors')->group(function () {
+                Route::get('/', DoctorList::class)->name('doctors');
+                Route::get('/create', DoctorForm::class)->name('doctors_create');
+                Route::get('/{id}/edit', DoctorForm::class)->name('doctors_edit');
             });
         });
 
@@ -305,7 +308,6 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('/option')->group(function () {
                 Route::get('/', OptionSettings::class)->name('option');
-
             });
         });
     });

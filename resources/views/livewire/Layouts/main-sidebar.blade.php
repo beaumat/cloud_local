@@ -516,8 +516,8 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('maintenancecontactemployees') }}"
-                                        class="nav-link {{ request()->is('maintenance/contact/doctor*') ? 'active' : '' }}">
+                                    <a href="{{ route('maintenancecontactdoctors') }}"
+                                        class="nav-link {{ request()->is('maintenance/contact/doctors*') ? 'active' : '' }}">
                                         <i class="fa fa-file nav-icon"></i>
                                         <p>Doctors</p>
                                     </a>

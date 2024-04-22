@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Employees;
+namespace App\Livewire\Doctor;
 
 use App\Models\Contacts;
 use App\Models\Gender;
@@ -10,11 +10,11 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Employees')]
-class EmployeeForm extends Component
+#[Title('Doctor')]
+class DoctorForm extends Component
 {
     public int $ID;
-    public int $TYPE = 2;
+    public int $TYPE = 4;
     public string $NAME;
     public string $COMPANY_NAME;
     public string $SALUTATION;
@@ -50,21 +50,17 @@ class EmployeeForm extends Component
     public string $HIRE_DATE;
     public $taxList = [];
     public $genders = [];
-    public $locationList = [];
-    public int $LOCATION_ID;
+
 
     public string $selectTab = 'gen';
 
     private $contactServices;
-    // private $locationServices;
-    // private $userServices;
 
     public function boot(
         ContactServices $contactServices
-
     ) {
         $this->contactServices = $contactServices;
-   
+
     }
     public function SelectTab($tab)
     {
@@ -73,7 +69,7 @@ class EmployeeForm extends Component
 
     public function mount($id = null)
     {
-        // $this->locationList = $this->locationServices->getList();
+   
         $this->genders = Gender::all();
 
         if (is_numeric($id)) {
@@ -115,7 +111,7 @@ class EmployeeForm extends Component
                 $this->DATE_OF_BIRTH = $contact->DATE_OF_BIRTH ? $contact->DATE_OF_BIRTH : '';
                 $this->NICKNAME = $contact->NICKNAME ? $contact->NICKNAME : '';
                 $this->HIRE_DATE = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
-                $this->LOCATION_ID = $contact->LOCATION_ID ?? 0;
+              
               
                 return;
             }
@@ -158,7 +154,7 @@ class EmployeeForm extends Component
         $this->DATE_OF_BIRTH = '';
         $this->NICKNAME = '';
         $this->HIRE_DATE = '';
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+ 
     }
 
     public function save()
@@ -171,12 +167,12 @@ class EmployeeForm extends Component
                     'max:50',
                     function ($attribute, $value, $fail) {
                         $count = Contacts::query()
-                            ->where('account_no', $value)
-                            ->where('type', $this->TYPE)
-                            ->where('id', '<>', $this->ID)
+                            ->where('ACCOUNT_NO', $value)
+                            ->where('TYPE', $this->TYPE)
+                            ->where('ID', '<>', $this->ID)
                             ->count();
                         if ($count > 0) {
-                            $fail('The specified Employee ID is not unique.');
+                            $fail('The specified Doctor ID is not unique.');
                         }
                     },
                 ],
@@ -186,7 +182,7 @@ class EmployeeForm extends Component
             [],
             [
                 'NAME' => 'Name',
-                'ACCOUNT_NO' => 'Emp ID',
+                'ACCOUNT_NO' => 'Doctor ID',
                 'PRINT_NAME_AS' => 'Print As',
             ]
         );
@@ -229,8 +225,8 @@ class EmployeeForm extends Component
                     $this->NICKNAME,
                     $this->HIRE_DATE
                 );
-               
-                Redirect::route('maintenancecontactemployees_edit',['id' => $this->ID])->with('message', 'Successfully created');
+             
+                Redirect::route('maintenancecontactdoctors_edit',['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 $this->contactServices->Update(
                     $this->ID,
@@ -289,6 +285,6 @@ class EmployeeForm extends Component
     }
     public function render()
     {
-        return view('livewire.employees.employee-form');
+        return view('livewire.doctor.doctor-form');
     }
 }

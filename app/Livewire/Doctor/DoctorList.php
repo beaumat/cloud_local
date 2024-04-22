@@ -1,40 +1,28 @@
 <?php
 
-namespace App\Livewire\Patient;
+namespace App\Livewire\Doctor;
 
 use App\Services\ContactServices;
-use App\Services\LocationServices;
-use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title('Patients')]
-class PatientList extends Component
+#[Title('Doctors')]
+class DoctorList extends Component
 {
-    public $contacts = [];
-
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
     public int $perPage = 15;
-    public $locationList = [];
-    public int $locationid;
+    public int $locationid = 0;
     private $contactServices;
-    private $locationServices;
-    private $userServices;
-
-    public function boot(ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
-    {
+   
+    public function boot(
+        ContactServices $contactServices
+    ) {
         $this->contactServices = $contactServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
-    }
-    public function mount()
-    {
-        $this->locationList = $this->locationServices->getList();
-        $this->locationid = $this->userServices->getLocationDefault();
+   
     }
     public function delete($id)
     {
@@ -46,7 +34,11 @@ class PatientList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
+    public function mount()
+    {
+     
+        $this->locationid = 0;
+    }
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -56,9 +48,7 @@ class PatientList extends Component
     }
     public function render()
     {
-
-        $dataList = $this->contactServices->SearchPatient($this->search, $this->perPage, $this->locationid);
-
-        return view('livewire.patient.patient-list', ['dataList' => $dataList]);
+        $dataList =  $this->contactServices->Search($this->search, 4, 15, $this->locationid);
+        return view('livewire.doctor.doctor-list', ['dataList' => $dataList]);
     }
 }

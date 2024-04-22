@@ -3,35 +3,47 @@
 namespace App\Livewire\Employees;
 
 use App\Services\ContactServices;
+use App\Services\LocationServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('Employees')]
 class EmployeeList extends Component
-{   
-    public $contacts = [];
+{
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public function updatedsearch(ContactServices $contactServices)
-    {
-        $this->contacts = $contactServices->Search($this->search,2);
+    public int $perPage = 15;
+    public $locationList = [];
+    public int $locationid = 0;
+    private $contactServices;
+    private $locationServices;
+    public function boot(
+        ContactServices $contactServices,
+        LocationServices $locationServices
+    ) {
+        $this->contactServices = $contactServices;
+        $this->locationServices = $locationServices;
+       
     }
-    public function delete($id, ContactServices $contactServices)
+    public function delete($id)
     {
         try {
-            $contactServices->Delete($id);
+            $this->contactServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->contacts = $contactServices->Search($this->search,2);
+
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
-    public function mount(ContactServices $contactServices)
+    public function mount()
     {
-        $this->contacts = $contactServices->Search($this->search,2);
+        $this->locationList = $this->locationServices->getList();
+        $this->locationid = 0;
     }
-
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -41,6 +53,7 @@ class EmployeeList extends Component
     }
     public function render()
     {
-        return view('livewire.employees.employee-list');
+        $dataList = $this->contactServices->Search($this->search, 2, 15, $this->locationid);
+        return view('livewire.employees.employee-list', ['dataList' => $dataList]);
     }
 }

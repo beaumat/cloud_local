@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancecontactemployees') }}"> Employees </a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancecontactemployees') }}"> Employees List </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -21,14 +21,31 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row mb-1">
                                 <div class="col-md-12">
-                                    <input type="text" wire:model.live.debounce.150ms='search'
-                                        class="w-100 form-control form-control-sm" placeholder="Search" />
+                                    <div class="mt-0">
+                                        <label class="text-sm">Search:</label>
+                                        <input type="text" wire:model.live.debounce.150ms='search'
+                                            class="w-100 form-control form-control-sm" placeholder="Search" />
+                                    </div>
                                 </div>
+                                {{-- <div class="col-md-3">
+                                    <div class="mt-0">
+                                        <label class="text-sm">Location:</label>
+                                        <select name="location" wire:model.live='locationid'
+                                            class="form-control form-control-sm">
+                                            <option value="0"> All Location</option>
+                                            @foreach ($locationList as $item)
+                                                <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                </div> --}}
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>Emp ID</th>
                                         <th>Name</th>
@@ -36,15 +53,15 @@
                                         <th>Mobile No.</th>
                                         <th>Email</th>
                                         <th>Inactive</th>
-                                        <th class="text-center col-1">
+                                        <th class="text-center bg-success col-1">
                                             <a href="{{ route('maintenancecontactemployees_create') }}"
                                                 class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
-                                    @foreach ($contacts as $list)
+                                <tbody class="text-xs">
+                                    @foreach ($dataList as $list)
                                         <tr>
                                             <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
@@ -76,6 +93,9 @@
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="col-6 col-md-6">
+                    {{ $dataList->links() }}
                 </div>
             </div>
         </div>

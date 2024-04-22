@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}"> Patients </a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancecontactdoctors') }}"> Doctor List </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -22,14 +22,14 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-1">
-                                <div class="col-md-9">
+                                <div class="col-md-12">
                                     <div class="mt-0">
                                         <label class="text-sm">Search:</label>
                                         <input type="text" wire:model.live.debounce.150ms='search'
                                             class="w-100 form-control form-control-sm" placeholder="Search" />
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                {{-- <div class="col-md-3">
                                     <div class="mt-0">
                                         <label class="text-sm">Location:</label>
                                         <select name="location" wire:model.live='locationid'
@@ -42,24 +42,19 @@
                                         </select>
                                     </div>
 
-                                </div>
+                                </div> --}}
                             </div>
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>ID</th>       
-                                        <th class="col-2">PATIENT NAME</th>
-                                        <th>SEX</th>
-                                        <th class="col-1">Date Birth</th>
-                                        <th>Age</th>
-                                        <th class="col-1">PIN</th>
-                                 
-                                        <th class="col-1">Mobile No.</th>
-                                        <th class="col-1">Admission</th>
-                                        <th class="col-1">LOCATION</th>
-                                        <th class="text-center">Inactive</th>
-                                        <th class="text-center col-1">
-                                            <a href="{{ route('maintenancecontactpatients_create') }}"
+                                        <th>Doctor ID</th>
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>Mobile No.</th>
+                                        <th>Email</th>
+                                        <th>Inactive</th>
+                                        <th class="text-center bg-success col-1">
+                                            <a href="{{ route('maintenancecontactdoctors_create') }}"
                                                 class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
@@ -70,25 +65,18 @@
                                         <tr>
                                             <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
-                                            <td> {{ $list->GENDER }}</td>
-                                            <td> {{ \Carbon\Carbon::parse($list->DATE_OF_BIRTH)->format('M/d/Y') }}</td>
-                                            <td> {{ $list->AGE }}</td>
-                                            <td> {{ $list->PIN }}</td>
-                                   
+                                            <td> {{ $list->POSTAL_ADDRESS }}</td>
                                             <td> {{ $list->MOBILE_NO }}</td>
-                                            <td> {{ \Carbon\Carbon::parse($list->DATE_ADMISSION)->format('M/d/Y') }}</td>
-                                            <td> {{ $list->LOCATION_NAME }}</td>
-                                            <td class="text-center">
-                                                
+                                            <td> {{ $list->EMAIL }}</td>
+                                            <td>
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
                                                 @else
                                                     <strong class="text-primary">No</strong>
                                                 @endif
-
                                             </td>
                                             <td class="text-center">
-                                                <a href="{{ route('maintenancecontactpatients_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('maintenancecontactdoctors_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
@@ -102,7 +90,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>

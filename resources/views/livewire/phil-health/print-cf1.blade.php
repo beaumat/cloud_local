@@ -1,20 +1,4 @@
 <div class="font-weight-light p-3">
-    <style>
-        @media print {
-
-            @page {
-                size: 8.5in 14in;
-                /* Custom long size: width 8.5in (letter width), length 14in */
-                /* margin: 0.5in; */
-                /* Adjust margins as desired */
-                margin-left: 34px;
-                margin-right: 34px;
-                margin-top: 0px;
-                margin-bottom: 0px;
-            }
-
-        }
-    </style>
     <div class="row">
         <div class="col-12 blackbox2">
             <div class="row" style="height: 180px;">
