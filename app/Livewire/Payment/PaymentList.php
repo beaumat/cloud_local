@@ -42,28 +42,21 @@ class PaymentList extends Component
     public function delete($id)
     {
         try {
-
             $data = $this->paymentServices->get($id);
-
             if ($data) {
-
                 if (Storage::disk('public')->exists($data->FILE_PATH)) {
                     Storage::disk('public')->delete($data->FILE_PATH);
                     // File has been successfully deleted
                 }
-
                 $this->paymentServices->Delete($data->ID);
                 session()->flash('message', 'Successfully deleted.');
-
             }
-
 
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
-
     #[On('clear-alert')]
     public function clearAlert()
     {

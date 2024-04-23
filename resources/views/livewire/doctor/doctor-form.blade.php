@@ -34,10 +34,10 @@
                                             <livewire:text-input name="ACCOUNT_NO" titleName="Doctor ID"
                                                 wire:model='ACCOUNT_NO' />
                                         </div>
-                                        {{-- <div class="col-md-2">
-                                            <livewire:select-option name="LOCATION_ID" :options="$locationList"
-                                                :zero="true" titleName="Branch" wire:model='LOCATION_ID' />
-                                        </div> --}}
+                                        <div class="col-md-2">
+                                            <livewire:text-input name="PIN" titleName="Accreditation No."
+                                                wire:model='PIN' />
+                                        </div>
                                         <div class="col-nd-2">
                                             <div class="row">
                                                 <div class="col-md-12"><br /></div>

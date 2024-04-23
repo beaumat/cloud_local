@@ -39,19 +39,14 @@ class PaymentModalAvailable extends Component
             return;
         }
         $myBalance = $this->balance;
-
         foreach ($this->paymentSelected as $paymentId => $isSelected) {
 
             if ($isSelected) {
                 try {
                     $CurrentRemain = $this->paymentServices->GetPaymentRemaining($paymentId);
-
                     if ($CurrentRemain == $myBalance) {
                         $this->paymentAmounts[$paymentId] = $CurrentRemain;
-
-
                     } else {
-
                         if ($myBalance <= $CurrentRemain) {
                             $this->paymentAmounts[$paymentId] = $myBalance;
                         } else {
@@ -67,15 +62,6 @@ class PaymentModalAvailable extends Component
                 }
             }
         }
-
-        // $newPay = $CurrentAmount - $CollectAmount;
-        // if ($this->balance <= $newPay) {
-        //     $mustPay = $this->balance;
-        // } else {
-        //     $mustPay = $newPay;
-        // }
-
-        // $this->paymentAmounts[$id] = $mustPay;
     }
     public function save()
     {
@@ -91,22 +77,17 @@ class PaymentModalAvailable extends Component
                     $CollectAmount = 0;
                 }
             }
-
             if ($CollectAmount == 0) {
                 session()->flash('error', 'Please enter payment applied.');
-                $isNoSelected = true;
-                return;
+                break;
+            } else {
+                if ($CollectAmount > $this->paymentServices->GetPaymentRemaining($paymentId)) {
+                    session()->flash('error', 'Invalid amount');
+                    break;
+                } else {
+                    $isNoSelected = false;
+                }
             }
-
-            $CurrentAmount = $this->paymentServices->GetPaymentRemaining($paymentId);
-
-            if ($CollectAmount > $CurrentAmount) {
-                session()->flash('error', 'Invalid amount');
-                $isNoSelected = true;
-                return;
-            }
-
-            $isNoSelected = false;
         }
 
 
@@ -125,13 +106,14 @@ class PaymentModalAvailable extends Component
                     $appliedAmount = 0;
                 }
 
-                if ($appliedAmount) {
+                if ($appliedAmount > 0) {
                     $ID = (int) $this->paymentServices->PaymentInvoiceExist($paymentId, $this->INVOICE_ID);
                     if ($ID > 0) {
                         $this->paymentServices->PaymentInvoiceUpdate($ID, $paymentId, $this->INVOICE_ID, 0, $appliedAmount);
                     } else {
                         $this->paymentServices->PaymentInvoiceStore($paymentId, $this->INVOICE_ID, 0, $appliedAmount, 0, 0);
                     }
+                    
                     $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
                     $this->paymentServices->UpdatePaymentApplied($paymentId);
 

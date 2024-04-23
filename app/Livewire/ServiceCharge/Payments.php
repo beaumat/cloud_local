@@ -29,8 +29,11 @@ class Payments extends Component
     public function delete(int $ID, int $PAYMENT_ID)
     {
         $this->paymentServices->PaymentInvoiceDelete($ID, $PAYMENT_ID, $this->INVOICE_ID);
+        
         $this->paymentServices->UpdatePaymentApplied($PAYMENT_ID);
+        
         $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
+
         $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
         $this->dispatch('update-amount', result: $getResult);
         $this->dispatch('update-status');

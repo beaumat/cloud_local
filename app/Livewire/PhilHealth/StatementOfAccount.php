@@ -1,10 +1,6 @@
 <?php
-
 namespace App\Livewire\PhilHealth;
-
-
 use App\Services\PhilHealthServices;
-
 use Livewire\Component;
 
 class StatementOfAccount extends Component
@@ -222,19 +218,19 @@ class StatementOfAccount extends Component
         $this->GOV_DOH = false;
         $this->GOV_HMO = false;
         $this->GOV_LINGAP = false;
-        $this->P1_ROOM_N_BOARD = 0;
-        $this->P1_DRUG_N_MEDICINE = 0;
-        $this->P1_LAB_N_DIAGNOSTICS = 0;
-        $this->P1_OPERATING_ROOM_FEE = 0;
-        $this->P1_SUPPLIES = 0;
-        $this->P1_OTHERS = 0;
+        // $this->P1_ROOM_N_BOARD = 0;
+        // $this->P1_DRUG_N_MEDICINE = 0;
+        // $this->P1_LAB_N_DIAGNOSTICS = 0;
+        // $this->P1_OPERATING_ROOM_FEE = 0;
+        // $this->P1_SUPPLIES = 0;
+        // $this->P1_OTHERS = 0;
         $this->P1_SUB_TOTAL = 0;
-        $this->P2_ROOM_N_BOARD = 0;
-        $this->P2_DRUG_N_MEDICINE = 0;
-        $this->P2_LAB_N_DIAGNOSTICS = 0;
-        $this->P2_OPERATING_ROOM_FEE = 0;
-        $this->P2_SUPPLIES = 0;
-        $this->P2_OTHERS = 0;
+        // $this->P2_ROOM_N_BOARD = 0;
+        // $this->P2_DRUG_N_MEDICINE = 0;
+        // $this->P2_LAB_N_DIAGNOSTICS = 0;
+        // $this->P2_OPERATING_ROOM_FEE = 0;
+        // $this->P2_SUPPLIES = 0;
+        // $this->P2_OTHERS = 0;
         $this->P2_SUB_TOTAL = 0;
         $this->OP_ROOM_N_BOARD = 0;
         $this->OP_DRUG_N_MEDICINE = 0;
@@ -263,13 +259,11 @@ class StatementOfAccount extends Component
 
     public function mount($ID)
     {
-        $this->P1_PHIC_AMOUNT = $this->philHealthServices->P1_PHIC_AMOUNT;
-        $this->DRUG_N_MEDINE_AMOUNT = $this->philHealthServices->DRUG_N_MEDINE_AMOUNT;
-        $this->OPERATING_ROOM_FEE_AMOUNT = $this->philHealthServices->OPERATING_ROOM_FEE_AMOUNT;
-        $this->SUPPLIES = $this->philHealthServices->SUPPLIES;
-        $this->PROF_FEE_AMOUNT = $this->philHealthServices->PROF_FEE_AMOUNT;
-
-
+        // $this->P1_PHIC_AMOUNT = $this->philHealthServices->P1_PHIC_AMOUNT;
+        // $this->DRUG_N_MEDINE_AMOUNT = $this->philHealthServices->DRUG_N_MEDINE_AMOUNT;
+        // $this->OPERATING_ROOM_FEE_AMOUNT = $this->philHealthServices->OPERATING_ROOM_FEE_AMOUNT;
+        // $this->SUPPLIES = $this->philHealthServices->SUPPLIES;
+        // $this->PROF_FEE_AMOUNT = $this->philHealthServices->PROF_FEE_AMOUNT;
 
         $this->profFeeList($ID);
     }

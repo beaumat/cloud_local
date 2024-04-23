@@ -4,34 +4,31 @@
         <thead class="text-xs bg-sky">
             <tr>
                 <th class="col-2">Accreditation No</th>
-                <th class="col-8">Doctor Name</th>
-                <th class="col-2 text-center">Action </th>
+                <th class="col-9">Doctor Name</th>
+                <th class="col-1 text-center">Action </th>
             </tr>
         </thead>
         <tbody class="text-xs">
-
             @foreach ($dataList as $list)
                 <tr>
-                    <td></td>
-                    <td><label class="text-lg text-info">{{ $list->NAME }}</label> </td>
+                    <td><label class="text-sm text-dark">{{ $list->PIN }}</label></td>
+                    <td><label class="text-sm text-dark">{{ $list->NAME }}</label> </td>
                     <td>
                         <button type="button" wire:click='delete({{ $list->ID }})'
-                            wire:confirm="Are you sure you want to delete this?" class="btn btn-sm btn-danger w-100 ">
+                            wire:confirm="Are you sure you want to delete this?" class="btn btn-sm text-xs btn-danger w-100 ">
                             <i class="fas fa-times" aria-hidden="true"></i>
-                            </a>
+                        </button>
                     </td>
                 </tr>
             @endforeach
-
             <tr>
-
                 <td></td>
                 <td>
                     @if ($saveSuccess)
-                        <livewire:select-option name="DOCTOR_ID" titleName="" :options="$contactList" :zero="true"
+                        <livewire:select-option name="DOCTOR_ID1" titleName="" :options="$contactList" :zero="true"
                             wire:model.live='DOCTOR_ID' :vertical="false" :withLabel="false" />
                     @else
-                        <livewire:select-option name="DOCTOR_ID" titleName="" :options="$contactList" :zero="true"
+                        <livewire:select-option name="DOCTOR_ID2" titleName="" :options="$contactList" :zero="true"
                             wire:model.live='DOCTOR_ID' :vertical="false" :withLabel="false" />
                     @endif
                 </td>

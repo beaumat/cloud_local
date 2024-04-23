@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Contacts;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 class ContactServices
@@ -14,6 +15,20 @@ class ContactServices
     public function __construct(ObjectServices $objectService)
     {
         $this->object = $objectService;
+    }
+    public function is12CharRequired(string $value): bool
+    {
+        if ($value == "" || $value == null) {
+            return false;
+        }
+
+        if (strlen($value) == 12) {
+
+            return false;
+        }
+
+
+        return true;
     }
     public function get(int $ID, int $TYPE)
     {
@@ -313,7 +328,7 @@ class ContactServices
                     'gender_map.DESCRIPTION as GENDER',
                     'contact.DATE_OF_BIRTH',
                     'contact.DATE_ADMISSION',
-                    \DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH, CURDATE()) AS AGE'),
+                    DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH, CURDATE()) AS AGE'),
                     'l.NAME as LOCATION_NAME'
                 ]
             )

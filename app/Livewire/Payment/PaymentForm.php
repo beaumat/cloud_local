@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Payment;
 
-use App\Models\Payment;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
@@ -210,6 +209,11 @@ class PaymentForm extends Component
 
             if ($this->ID == 0) {
 
+                if ($this->paymentServices->HaveRemainingPaymentBalance($this->CUSTOMER_ID, $this->LOCATION_ID)) {
+                    session()->flash('error', 'Invalid create. Patient have existing balance.');
+                    return;
+                }
+
                 $this->ID = $this->paymentServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -244,7 +248,6 @@ class PaymentForm extends Component
                     $this->CUSTOMER_ID,
                     $this->LOCATION_ID,
                     $this->AMOUNT,
-                    $this->AMOUNT_APPLIED,
                     $this->PAYMENT_METHOD_ID,
                     $this->CARD_NO,
                     $this->CARD_EXPIRY_DATE,

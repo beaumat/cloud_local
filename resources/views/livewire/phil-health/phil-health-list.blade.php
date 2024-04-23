@@ -3,13 +3,10 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('transactionsphic') }}"> Phil-Health </a></h5>
+                    <h5 class="m-0"><a href="{{ route('transactionsphic') }}"> PhilHealth </a></h5>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">
-                        </li>
-                    </ol>
+                <div class="col-sm-6 text-right">
+                    @livewire('PhilHealth.QuickCreate')
                 </div>
             </div>
         </div>
@@ -75,8 +72,8 @@
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
-                                            <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>                 
-                                            <td class="text-right"> {{ number_format($list->TOTAL_CHARGE, 2) }}</td>
+                                            <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
+                                            <td class="text-right"> {{ number_format($list->CHARGE_TOTAL, 2) }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">

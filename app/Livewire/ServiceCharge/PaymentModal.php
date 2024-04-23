@@ -25,11 +25,10 @@ class PaymentModal extends Component
     {
         $this->showModal = true;
     }
-    #[On('modal-close')]
+    #[On('payment-modal-close')]
     public function closeModal()
     {
         $this->showModal = false;
-
     }
     #[On('clear-alert')]
     public function clearAlert()

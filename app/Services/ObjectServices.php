@@ -21,7 +21,6 @@ class ObjectServices
     }
     public function ObjectTypeIdByName(string $NAME): int
     {
-
         try {
             return ObjectTypeMap::where('NAME', $NAME)->first()->ID;
         } catch (\Exception $e) {

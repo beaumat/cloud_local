@@ -41,7 +41,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-
                                 </div> --}}
                             </div>
                             <table class="table table-sm table-bordered table-hover">
@@ -49,7 +48,7 @@
                                     <tr>
                                         <th>Doctor ID</th>
                                         <th>Name</th>
-                                        <th>Address</th>
+                                        <th>Accreditation No.</th>
                                         <th>Mobile No.</th>
                                         <th>Email</th>
                                         <th>Inactive</th>
@@ -65,7 +64,7 @@
                                         <tr>
                                             <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
-                                            <td> {{ $list->POSTAL_ADDRESS }}</td>
+                                            <td> {{ $list->PIN }}</td>
                                             <td> {{ $list->MOBILE_NO }}</td>
                                             <td> {{ $list->EMAIL }}</td>
                                             <td>

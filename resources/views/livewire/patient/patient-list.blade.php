@@ -58,7 +58,7 @@
                                         <th class="col-1">Admission</th>
                                         <th class="col-1">LOCATION</th>
                                         <th class="text-center">Inactive</th>
-                                        <th class="text-center col-1">
+                                        <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenancecontactpatients_create') }}"
                                                 class="text-white">
                                                 <i class="fas fa-plus"></i></a>

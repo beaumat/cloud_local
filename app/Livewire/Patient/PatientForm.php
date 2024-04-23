@@ -150,7 +150,7 @@ class PatientForm extends Component
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
-   
+
     public function mount($id = null)
     {
         $this->taxList = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', 3)->orderBy('ID', 'desc')->get();
@@ -304,7 +304,7 @@ class PatientForm extends Component
 
 
         $this->SCHEDULE_TYPE = 0;
- 
+
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->PATIENT_TYPE_ID = 1;
         $this->PATIENT_STATUS_ID = 1;
@@ -360,8 +360,6 @@ class PatientForm extends Component
         $this->SECOND_CASE_RATE = '';
         $this->FINAL_DIAGNOSIS = '';
         $this->OTHER_DIAGNOSIS = '';
-
-
     }
     public function updatedISPATIENT()
     {
@@ -402,8 +400,6 @@ class PatientForm extends Component
     {
         $this->FullName();
     }
-
-
     private function FollowUpUpdate()
     {
         Contacts::where('ID', $this->ID)->where('TYPE', $this->TYPE)->update([
@@ -492,8 +488,15 @@ class PatientForm extends Component
             );
         }
 
+        if ($this->contactServices->is12CharRequired($this->PIN)) {
+            session()->flash('error', 'Invalid (PIN). must 12 character only.');
+            return;
+        }
 
-
+        if ($this->contactServices->is12CharRequired($this->PEN)) {
+            session()->flash('error', 'Invalid (PEN). must 12 character only.');
+            return;
+        }
 
         try {
             if ($this->ID === 0) {
@@ -538,8 +541,6 @@ class PatientForm extends Component
 
                 $this->FollowUpUpdate();
                 Redirect::route('maintenancecontactpatients_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-               
-
             } else {
                 $this->contactServices->Update(
                     $this->ID,

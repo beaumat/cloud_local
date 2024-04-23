@@ -95,7 +95,6 @@ class PaymentModalNewEntry extends Component
     public function save()
     {
 
-
         $getType = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
         $this->PAYMENT_TYPE = (int) $getType->PAYMENT_TYPE;
         if ($this->PAYMENT_TYPE == 10) {
@@ -129,6 +128,10 @@ class PaymentModalNewEntry extends Component
             );
         }
 
+        if ($this->paymentServices->HaveRemainingPaymentBalance($this->CUSTOMER_ID, $this->LOCATION_ID)) {
+            session()->flash('error', 'Invalid create. Patient have existing balance.');
+            return;
+        }
 
         if ($this->AMOUNT < $this->AMOUNT_APPLIED) {
             session()->flash('error', 'Invalid amount applied');

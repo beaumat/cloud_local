@@ -50,7 +50,7 @@ class DoctorForm extends Component
     public string $HIRE_DATE;
     public $taxList = [];
     public $genders = [];
-
+    public string $PIN;
 
     public string $selectTab = 'gen';
 
@@ -60,7 +60,6 @@ class DoctorForm extends Component
         ContactServices $contactServices
     ) {
         $this->contactServices = $contactServices;
-
     }
     public function SelectTab($tab)
     {
@@ -69,7 +68,7 @@ class DoctorForm extends Component
 
     public function mount($id = null)
     {
-   
+
         $this->genders = Gender::all();
 
         if (is_numeric($id)) {
@@ -111,8 +110,8 @@ class DoctorForm extends Component
                 $this->DATE_OF_BIRTH = $contact->DATE_OF_BIRTH ? $contact->DATE_OF_BIRTH : '';
                 $this->NICKNAME = $contact->NICKNAME ? $contact->NICKNAME : '';
                 $this->HIRE_DATE = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
-              
-              
+                $this->PIN = $contact->PIN ?? '';
+
                 return;
             }
 
@@ -154,9 +153,12 @@ class DoctorForm extends Component
         $this->DATE_OF_BIRTH = '';
         $this->NICKNAME = '';
         $this->HIRE_DATE = '';
- 
+        $this->PIN = '';
     }
-
+    private function getOtherUpdate()
+    {
+        Contacts::where('ID', $this->ID)->update(['PIN' => $this->PIN]);
+    }
     public function save()
     {
         $this->validate(
@@ -186,6 +188,11 @@ class DoctorForm extends Component
                 'PRINT_NAME_AS' => 'Print As',
             ]
         );
+
+        if ($this->contactServices->is12CharRequired($this->PIN)) {
+            session()->flash('error', 'Invalid Accreditation No. must 12 character only.');
+            return;
+        }
 
         try {
             if ($this->ID === 0) {
@@ -225,8 +232,8 @@ class DoctorForm extends Component
                     $this->NICKNAME,
                     $this->HIRE_DATE
                 );
-             
-                Redirect::route('maintenancecontactdoctors_edit',['id' => $this->ID])->with('message', 'Successfully created');
+                $this->getOtherUpdate();
+                Redirect::route('maintenancecontactdoctors_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 $this->contactServices->Update(
                     $this->ID,
@@ -266,7 +273,7 @@ class DoctorForm extends Component
                     $this->HIRE_DATE
                 );
 
-              
+                $this->getOtherUpdate();
                 session()->flash('message', 'Successfully updated');
             }
         } catch (\Exception $e) {
@@ -274,7 +281,7 @@ class DoctorForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
+   
     #[On('clear-alert')]
     public function clearAlert()
     {

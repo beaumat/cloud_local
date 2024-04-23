@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Contacts;
 use App\Models\Hemodialysis;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class HemoServices
 {
@@ -19,7 +21,7 @@ class HemoServices
     {
         return Hemodialysis::where('ID', $ID)->first();
     }
-    private function getTime(bool $isStart, string $DATE, int $CONTACT_ID, int $LOCATION): string
+    private function getTime(bool $isStart, string $DATE, int $CONTACT_ID, int $LOCATION_ID): string
     {
 
         try {
@@ -27,7 +29,7 @@ class HemoServices
                 return Hemodialysis::query()
                     ->select('hemodialysis.TIME_START')
                     ->where('CUSTOMER_ID', $CONTACT_ID)
-                    ->where('LOCATION_ID', $LOCATION)
+                    ->where('LOCATION_ID', $LOCATION_ID)
                     ->where('DATE', $DATE)
                     ->where('STATUS_ID', '2')
                     ->first()
@@ -37,7 +39,7 @@ class HemoServices
             return Hemodialysis::query()
                 ->select('hemodialysis.TIME_END')
                 ->where('CUSTOMER_ID', $CONTACT_ID)
-                ->where('LOCATION_ID', $LOCATION)
+                ->where('LOCATION_ID', $LOCATION_ID)
                 ->where('DATE', $DATE)
                 ->where('STATUS_ID', '2')
                 ->first()
@@ -45,9 +47,6 @@ class HemoServices
         } catch (\Throwable $th) {
             return '';
         }
-
-
-
     }
     public function GetSummary(int $CONTACT_ID, int $LOCATION_ID, string $DATE_START, string $DATE_END)
     {
@@ -64,7 +63,7 @@ class HemoServices
     public function getDateTime(int $CONTACT_ID, int $LOCATION_ID)
     {
         $dates = Hemodialysis::query()
-            ->select(\DB::raw('MIN(DATE) AS first_date, MAX(DATE) AS last_date'))
+            ->select(DB::raw('MIN(DATE) AS first_date, MAX(DATE) AS last_date'))
             ->where('CUSTOMER_ID', $CONTACT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('STATUS_ID', '2')
@@ -86,7 +85,6 @@ class HemoServices
                     'LAST_TIME' => $lastTime
                 ];
             }
-
         }
 
 
@@ -96,8 +94,6 @@ class HemoServices
             'LAST_DATE' => '',
             'LAST_TIME' => ''
         ];
-
-
     }
 
     public function GetFirst(int $ID)
@@ -109,7 +105,7 @@ class HemoServices
                 'hemodialysis.DATE',
                 'c.NAME as CONTACT_NAME',
                 'c.DATE_OF_BIRTH',
-                'c.TAXPAYER_ID as PHIC_NO',
+                'c.PIN as PHIC_NO',
                 'hemodialysis.PRE_WEIGHT',
                 'hemodialysis.PRE_BLOOD_PRESSURE',
                 'hemodialysis.PRE_HEART_RATE',
@@ -142,7 +138,6 @@ class HemoServices
         ]);
 
         return $ID;
-
     }
     public function PreUpdate(int $ID, string $DATE, string $CODE, int $CUSTOMER_ID, int $LOCATION_ID)
     {
@@ -152,7 +147,6 @@ class HemoServices
             'CUSTOMER_ID' => $CUSTOMER_ID,
             'LOCATION_ID' => $LOCATION_ID,
         ]);
-
     }
     public function Update(
         int $ID,
@@ -202,9 +196,6 @@ class HemoServices
                 'STATUS_DATE' => Carbon::now(),
             ]);
         }
-
-
-
     }
     public function Delete(int $id)
     {
@@ -277,6 +268,33 @@ class HemoServices
             ->orderBy('hemodialysis.ID', 'desc')
             ->paginate($perPage);
     }
+    public function QuickFilterByDateRange(string $DATE_FORM, string $DATE_TO, $LOCATION_ID)
+    {
+        $result =  Contacts::query()
+            ->select(
+                'contact.ID',
+                'contact.NAME as PATIENT',
+                'contact.PIN',
+                'p.NAME as PHYSICIAN',
+                DB::raw('count(h.ID) as TOTAL_HEMO')
+            )
+            ->join('hemodialysis as h', 'h.CUSTOMER_ID', '=', 'contact.ID')
+            ->leftJoin('contact as p', 'p.ID', '=', 'contact.SALES_REP_ID')
+            ->where('h.LOCATION_ID', $LOCATION_ID)
+            ->where('h.STATUS_ID', 2)
+            ->whereBetween('h.DATE', [$DATE_FORM, $DATE_TO])
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('philhealth as l')
+                    ->whereColumn('l.CONTACT_ID', 'h.CUSTOMER_ID')
+                    ->whereColumn('l.LOCATION_ID', 'h.LOCATION_ID')
+                    ->where('l.DATE', '>', 'h.DATE');
+            })
+            ->groupBy(['contact.ID', 'contact.NAME', 'contact.PIN', 'p.NAME'])
+            ->get();
 
 
+
+        return $result;
+    }
 }

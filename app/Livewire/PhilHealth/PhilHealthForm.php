@@ -8,9 +8,10 @@ use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use App\Services\UserServices;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Redirect;
+
 
 #[Title('Philhealth')]
 
@@ -22,8 +23,8 @@ class PhilHealthForm extends Component
     public int $STATUS;
     public int $ID = 0;
     public string $tab = "soa";
-    public $locationList = [];
     public $patientList = [];
+    public $locationList = [];
     public int $LOCATION_ID;
     public int $CONTACT_ID;
     public string $CODE;

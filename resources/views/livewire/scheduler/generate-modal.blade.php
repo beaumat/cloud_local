@@ -99,7 +99,7 @@
                                                             </td>
                                                             <td class="text-center"><a target="_blank"
                                                                     class="text-primary"
-                                                                    href='{{ route('maintenancecontactpatients_edit', ['id' => $list->ID]) }}'>View</a>
+                                                                    href='{{ route(' maintenancecontactpatients_edit', ['id' => $list->ID]) }}'>View</a>
                                                             </td>
                                                         </tr>
                                                     @endforeach

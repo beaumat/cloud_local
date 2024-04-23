@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Payment;
 use App\Models\PaymentInvoices;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 class PaymentServices
@@ -78,7 +80,6 @@ class PaymentServices
         int $CUSTOMER_ID,
         int $LOCATION_ID,
         float $AMOUNT,
-        float $AMOUNT_APPLIED,
         int $PAYMENT_METHOD_ID,
         string $CARD_NO,
         $CARD_EXPIRY_DATE,
@@ -107,8 +108,6 @@ class PaymentServices
             'DEPOSITED' => $DEPOSITED,
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID
         ]);
-
-
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
@@ -229,7 +228,7 @@ class PaymentServices
     public function UpdatePaymentApplied(int $PAYMENT_ID): float
     {
         $pay = PaymentInvoices::query()
-            ->select(\DB::raw('IFNULL(SUM(payment_invoices.AMOUNT_APPLIED), 0) as pay'))
+            ->select(DB::raw('IFNULL(SUM(payment_invoices.AMOUNT_APPLIED), 0) as pay'))
             ->where('payment_invoices.PAYMENT_ID', '=', $PAYMENT_ID)
             ->first()
             ->pay;
@@ -271,7 +270,7 @@ class PaymentServices
             ->leftJoin('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
             ->where('payment.CUSTOMER_ID', $CUSTOMER_ID)
             ->where('payment.LOCATION_ID', $LOCATION_ID)
-            ->where('payment.AMOUNT_APPLIED', '<>', 'payment.AMOUNT')
+            ->whereRaw('(payment.AMOUNT - payment.AMOUNT_APPLIED) > 0')
             ->get();
 
         return $result;
@@ -279,9 +278,22 @@ class PaymentServices
     public function GetPaymentRemaining(int $PAYMENT_ID): float
     {
         $result = Payment::where('ID', $PAYMENT_ID)->first();
-
         return (float) $result->AMOUNT - (float) $result->AMOUNT_APPLIED;
     }
 
+    public function HaveRemainingPaymentBalance(int $CUSTOMER_ID, int $LOCATION_ID): bool
+    {
+        $total = (float) Payment::query()
+            ->select(DB::raw('IFNULL(SUM(AMOUNT-AMOUNT_APPLIED), 0) AS TOTAL'))
+            ->where('CUSTOMER_ID', $CUSTOMER_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->first()
+            ->TOTAL;
 
+        if ($total > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }
