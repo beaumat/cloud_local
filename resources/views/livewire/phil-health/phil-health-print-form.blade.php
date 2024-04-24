@@ -3,7 +3,8 @@
         @media print {
 
             @page {
-                size: legal; /* Sets the paper size to Legal */
+                size: legal;
+                /* Sets the paper size to Legal */
                 /* Custom long size: width 8.5in (letter width), length 14in */
                 /* margin: 0.5in; */
                 /* Adjust margins as desired */
@@ -21,6 +22,8 @@
     </div>
 
     @foreach ($PRINT_ID as $ID)
+        @livewire('PhilHealth.PrintCf4')
+        <div class="page-break"></div>
         @livewire('PhilHealth.PrintCf1')
         <div class="page-break"></div>
         @livewire('PhilHealth.PrintCsf')
