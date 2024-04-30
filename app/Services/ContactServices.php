@@ -325,6 +325,7 @@ class ContactServices
                     "contact.CONTACT_PERSON",
                     "contact.INACTIVE",
                     'contact.PIN',
+                    'contact.IS_COMPLETE',
                     'gender_map.DESCRIPTION as GENDER',
                     'contact.DATE_OF_BIRTH',
                     'contact.DATE_ADMISSION',
@@ -356,5 +357,14 @@ class ContactServices
 
 
         return $result;
+    }
+
+    public function UpdateIsCompleted(int $CONTACT_ID, bool $VALUE)
+    {
+        Contacts::where('ID', $CONTACT_ID)->update(
+            [
+                'IS_COMPLETE' => $VALUE
+            ]
+        );
     }
 }

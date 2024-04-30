@@ -30,6 +30,21 @@ class ScheduleServices
     {
         return Schedules::where('ID', $Id)->first();
     }
+
+    public function ContactListFromSchedules($Date, int $LOCATION_ID)
+    {
+        return Schedules::query()
+        ->select([
+            'schedules.CONTACT_ID as ID',
+            'c.NAME'
+        ])
+        ->leftJoin('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
+        ->where('c.TYPE', 3)
+        ->whereDate('schedules.SCHED_DATE', $Date)
+        ->where('schedules.LOCATION_ID', $LOCATION_ID)
+        ->orderBy('schedules.SHIFT_ID')
+        ->get();
+    }
     public function scheduleList($Date, int $LOCATION_ID)
     {
         return Schedules::query()

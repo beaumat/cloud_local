@@ -58,6 +58,7 @@
                                         <th class="col-1">Admission</th>
                                         <th class="col-1">LOCATION</th>
                                         <th class="text-center">Inactive</th>
+                                        <th class="text-center">Requirement</th>
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenancecontactpatients_create') }}"
                                                 class="text-white">
@@ -67,23 +68,31 @@
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
-                                        <tr>
+                                        <tr class="@if(!$list->IS_COMPLETE) text-secondary  @endif">
                                             <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
                                             <td> {{ $list->GENDER }}</td>
                                             <td> {{ \Carbon\Carbon::parse($list->DATE_OF_BIRTH)->format('M/d/Y') }}</td>
                                             <td> {{ $list->AGE }}</td>
                                             <td> {{ $list->PIN }}</td>
-                                   
                                             <td> {{ $list->MOBILE_NO }}</td>
                                             <td> {{ \Carbon\Carbon::parse($list->DATE_ADMISSION)->format('M/d/Y') }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center">
-                                                
+                                               
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
                                                 @else
                                                     <strong class="text-primary">No</strong>
+                                                @endif
+
+                                            </td>
+                                            <td class="text-center">
+                                               
+                                                @if ($list->IS_COMPLETE)
+                                                    <strong class="text-success">Completed</strong>
+                                                @else
+                                                    <strong class="text-secondary">Uncompleted</strong>
                                                 @endif
 
                                             </td>

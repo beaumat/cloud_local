@@ -8,6 +8,7 @@ use App\Services\DocumentStatusServices;
 use App\Services\InvoiceServices;
 use App\Services\LocationServices;
 use App\Services\PaymentTermServices;
+use App\Services\ScheduleServices;
 use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
@@ -61,6 +62,7 @@ class ServiceChargeForm extends Component
     private $documentStatusServices;
     private $systemSettingServices;
     private $accountServices;
+    private $scheduleServices;
     public string $tab = "item";
     public function SelectTab(string $select)
     {
@@ -76,7 +78,8 @@ class ServiceChargeForm extends Component
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
-        AccountServices $accountServices
+        AccountServices $accountServices,
+        ScheduleServices $scheduleServices
 
     ) {
         $this->invoiceServices = $invoiceServices;
@@ -89,10 +92,16 @@ class ServiceChargeForm extends Component
         $this->documentStatusServices = $documentStatusServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
+        $this->scheduleServices = $scheduleServices;
     }
-    public function LoadDropdown()
+    public function LoadDropdown(bool $isAllContact)
     {
-        $this->patientList = $this->contactServices->getList(3);
+        if ($isAllContact) {
+            $this->patientList = $this->contactServices->getList(3);
+        } else {
+            $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID);
+        }
+
         $this->locationList = $this->locationServices->getList();
         $this->shipViaList = $this->shipViaServices->getList();
         $this->paymentTermList = $this->paymentTermServices->getList();
@@ -140,9 +149,12 @@ class ServiceChargeForm extends Component
     }
     public function mount($id = null)
     {
-        $this->LoadDropdown();
+        $currentDate = Carbon::now();
+        $this->DATE = $currentDate->format('Y-m-d');
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
 
         if (is_numeric($id)) {
+            $this->LoadDropdown(true);
             $data = $this->invoiceServices->get($id);
             if ($data) {
                 $this->getInfo($data);
@@ -152,12 +164,11 @@ class ServiceChargeForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('vendorspurchase_order')->with('error', $errorMessage);
         }
+
+        $this->LoadDropdown(false);
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
-        $currentDate = Carbon::now();
-        $this->DATE = $currentDate->format('Y-m-d');
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->CUSTOMER_ID = 0;
         $this->SALES_REP_ID = 0;
         $this->SHIP_VIA_ID = $this->shipViaServices->getFirst();
@@ -369,8 +380,18 @@ class ServiceChargeForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    public function updatedDate()
+    {
+        $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID);
+    }
+    public function updatedLocation()
+    {
+        $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID);
+    }
     public function render()
     {
+
+
         return view('livewire.service-charge.service-charge-form');
     }
 }

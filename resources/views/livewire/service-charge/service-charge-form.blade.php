@@ -64,7 +64,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <livewire:date-input name="DATE" titleName="Date"
-                                                        wire:model='DATE' :isDisabled="true" />
+                                                        wire:model.live='DATE' :isDisabled="true" />
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify)
@@ -80,11 +80,11 @@
                                                     @if ($Modify && $AMOUNT == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
-                                                            wire:model='LOCATION_ID' />
+                                                            wire:model.iive='LOCATION_ID' />
                                                     @else
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=true
-                                                            wire:model='LOCATION_ID' />
+                                                            wire:model.live='LOCATION_ID' />
                                                     @endif
                                                 </div>
 

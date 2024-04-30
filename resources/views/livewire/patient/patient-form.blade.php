@@ -56,7 +56,6 @@
                                         <div class="col-md-2">
                                             <livewire:date-input name="HIRE_DATE" titleName="Date of Death"
                                                 wire:model.live='HIRE_DATE' />
-
                                         </div>
                                     </div>
                                 </div>
@@ -91,7 +90,7 @@
                                                     href="#custom-content-below-doctor-info" role="tab"
                                                     aria-controls="custom-content-below-doctor-info"
                                                     aria-selected="false">
-                                                    Doctors
+                                                    Nephro & Diagnosis
                                                 </a>
                                             </li>
                                             <li class="nav-item">
@@ -126,12 +125,15 @@
                                                                 titleName="Middle Name" wire:model='MIDDLE_NAME' />
                                                         </div>
 
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-2">
                                                             <livewire:text-input name="SALUTATION"
                                                                 titleName="Extension (ex. JR,SR,III)"
                                                                 wire:model='SALUTATION' />
                                                         </div>
-
+                                                        <div class="col-md-1">
+                                                            <livewire:number-input name="HEIGHT"
+                                                                titleName="Height (cm)" wire:model='HEIGHT' />
+                                                        </div>
                                                         <div class="col-md-1">
                                                             <div class="form-group mt-2">
                                                                 <label>Gender</label>
@@ -160,7 +162,7 @@
 
                                                         <div class="col-md-1">
                                                             <div class="form-group mt-2">
-                                                                <label class=" col-form-label ">Age</label>
+                                                                <label class=" col-form-label">Age</label>
                                                                 <div class="row">
                                                                     <label
                                                                         class="col-12 form-check-label">{{ $age }}</label>
@@ -184,22 +186,9 @@
                                                             <livewire:text-input name="MOBILE_NO"
                                                                 titleName="Mobile No." wire:model='MOBILE_NO' />
                                                         </div>
-                                                        <div class="col-md-4">
-                                                            <livewire:select-option name="SALES_REP_ID"
-                                                                :options="$salesMan" :zero="true"
-                                                                titleName="Physician" wire:model='SALES_REP_ID' />
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <livewire:text-input name="FINAL_DIAGNOSIS"
-                                                                titleName="Final Diagnosis"
-                                                                wire:model='FINAL_DIAGNOSIS' />
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <livewire:text-input name="OTHER_DIAGNOSIS"
-                                                                titleName="Other Diagnosis"
-                                                                wire:model='OTHER_DIAGNOSIS' />
-                                                        </div>
-                                                        <div class="col-md-12 border mt-4">
+
+
+                                                        <div class="col-md-12 border pt-2 pb-2">
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <label class="text-info text-xs">Patient
@@ -258,10 +247,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
-
-
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -285,13 +270,27 @@
                                                                 titleName="Second Case Rate"
                                                                 wire:model='SECOND_CASE_RATE' />
                                                         </div>
-                                                        <div class="col-md-12">
-
+                                                        <div class="col-md-3">
                                                             <livewire:custom-check-box name="IS_PATIENT"
                                                                 titleName="Patient is the member?"
                                                                 wire:model.live='IS_PATIENT' />
                                                         </div>
+                                                        <div class="col-md-2"></div>
+                                                        <div class="col-md-2">
+                                                            @if ($IS_PATIENT == false)
+                                                                <livewire:custom-check-box name="IS_DEPENDENT"
+                                                                    titleName="Patient is dependent?"
+                                                                    wire:model.live='IS_DEPENDENT' />
+                                                            @endif
+                                                        </div>
 
+                                                        <div class="col-md-2">
+                                                            @if ($IS_PATIENT == false && $IS_DEPENDENT == true)
+                                                                <livewire:text-input name="PIN_DEPENDENT"
+                                                                    titleName="PhilHealth Identification Number (PIN) of Dependent"
+                                                                    wire:model='PIN_DEPENDENT' :isDisabled='false' />
+                                                            @endif
+                                                        </div>
                                                         @if (!$IS_PATIENT)
                                                             <div class="col-md-12 p-1 mt-2 border-top ">
                                                                 <label class="text-info text-xs">
@@ -517,18 +516,31 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div class="tab-pane fade @if ($selectTab == 'doctor') show active @endif"
                                                 id="custom-content-below-doctor-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-doctor-info-tab">
                                                 <div class="container-fluid">
                                                     @livewire('Patient.DoctorPanel', ['ID' => $ID])
+                                                    <div class="form-group row">
+                                                        <div class="col-md-6">
+                                                            <livewire:text-input name="FINAL_DIAGNOSIS"
+                                                                titleName="Final Diagnosis"
+                                                                wire:model='FINAL_DIAGNOSIS' />
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <livewire:text-input name="OTHER_DIAGNOSIS"
+                                                                titleName="Other Diagnosis"
+                                                                wire:model='OTHER_DIAGNOSIS' />
+                                                        </div>
+                                                    </div>
                                                 </div>
+
                                             </div>
                                             <div class="tab-pane fade @if ($selectTab == 'requirements') show active @endif"
                                                 id="custom-content-below-requirements-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-requirements-info-tab">
                                                 <div class="container-fluid">
+                                                    @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID])
                                                 </div>
                                             </div>
 

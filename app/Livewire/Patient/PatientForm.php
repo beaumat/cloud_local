@@ -11,6 +11,7 @@ use App\Models\PaymentTerms;
 use App\Models\PriceLevels;
 use App\Models\ScheduleType;
 use App\Models\Tax;
+use App\Services\ContactRequirementServices;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
@@ -66,7 +67,6 @@ class PatientForm extends Component
     public $priceLevels = [];
     public $age = null;
     public $memberage = null;
-
     public int $LOCATION_ID;
     public int $SCHEDULE_TYPE;
     public $scheduleTypeList = [];
@@ -113,16 +113,14 @@ class PatientForm extends Component
     public bool $MEMBER_IS_CHILD;
     public bool $MEMBER_IS_PARENT;
     public bool $MEMBER_IS_SPOUSE;
-
-
     public string $PEN_CONTACT;
     public string $FIRST_CASE_RATE;
     public string $SECOND_CASE_RATE;
     public string $FINAL_DIAGNOSIS;
     public string $OTHER_DIAGNOSIS;
-
-
-
+    public string $PIN_DEPENDENT;
+    public bool $IS_DEPENDENT;
+    public float $HEIGHT;
     public function updateddateofbirth()
     {
         $this->age = $this->contactServices->calculateUserAge($this->DATE_OF_BIRTH);
@@ -137,18 +135,24 @@ class PatientForm extends Component
     {
         $this->selectTab = $tab;
     }
-
     private $contactServices;
     private $locationServices;
     private $userServices;
+    private $contactRequirementServices;
     public $patientTypeList = [];
     public $patientStatusList = [];
     public string $DATE_ADMISSION;
-    public function boot(ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
-    {
+
+    public function boot(
+        ContactServices $contactServices,
+        LocationServices $locationServices,
+        UserServices $userServices,
+        ContactRequirementServices $contactRequirementServices
+    ) {
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
+        $this->contactRequirementServices = $contactRequirementServices;
     }
 
     public function mount($id = null)
@@ -223,7 +227,6 @@ class PatientForm extends Component
                 $this->PIN = $contact->PIN ?? '';
                 $this->PEN = $contact->PEN ?? '';
                 $this->IS_PATIENT = $contact->IS_PATIENT ?? true;
-
                 $this->MEMBER_TEL_NO = $contact->MEMBER_TEL_NO ?? '';
                 $this->MEMBER_MOBILE = $contact->MEMBER_MOBILE ?? '';
                 $this->MEMBER_EMAIL = $contact->MEMBER_EMAIL ?? '';
@@ -233,7 +236,6 @@ class PatientForm extends Component
                 $this->MEMBER_EXTENSION = $contact->MEMBER_EXTENSION ?? '';
                 $this->MEMBER_BIRTH_DATE = $contact->MEMBER_BIRTH_DATE ?? null;
                 $this->MEMBER_GENDER = $contact->MEMBER_GENDER ?? 0;
-
 
                 $this->MEMBER_UNIT_ROOM_FLOOR = $contact->MEMBER_UNIT_ROOM_FLOOR ?? '';
                 $this->MEMBER_BUILDING_NAME = $contact->MEMBER_BUILDING_NAME ?? '';
@@ -257,6 +259,10 @@ class PatientForm extends Component
                 $this->FINAL_DIAGNOSIS = $contact->FINAL_DIAGNOSIS ?? '';
                 $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
 
+                $this->PIN_DEPENDENT = $contact->PIN_DEPENDENT ?? '';
+                $this->IS_DEPENDENT = $contact->IS_DEPENDENT ?? false;
+
+                $this->HEIGHT = $contact->HEIGHT ?? 0;
                 $this->updateddateofbirth();
                 $this->updatedMEMBERBIRTHDATE();
                 return;
@@ -312,8 +318,6 @@ class PatientForm extends Component
         $this->LONG_HRS_DURATION = false;
         $this->DATE_ADMISSION = Carbon::now()->format('Y-m-d');
 
-
-
         $this->ADDRESS_UNIT_ROOM_FLOOR = '';
         $this->ADDRESS_BUILDING_NAME = '';
         $this->ADDRESS_LOT_BLK_HOUSE_BLDG = '';
@@ -360,12 +364,20 @@ class PatientForm extends Component
         $this->SECOND_CASE_RATE = '';
         $this->FINAL_DIAGNOSIS = '';
         $this->OTHER_DIAGNOSIS = '';
+
+        $this->PIN_DEPENDENT = '';
+        $this->IS_DEPENDENT = false;
+        $this->HEIGHT = 0;
     }
     public function updatedISPATIENT()
     {
         $this->MEMBER_IS_CHILD = false;
         $this->MEMBER_IS_PARENT = false;
         $this->MEMBER_IS_SPOUSE = false;
+
+        $this->IS_DEPENDENT = false;
+        $this->PIN_DEPENDENT = '';
+
     }
     public function updatedADMITTED()
     {
@@ -381,7 +393,6 @@ class PatientForm extends Component
             $firstLetter = substr($this->MIDDLE_NAME, 0, 1); // Get the first character of the middle name
             $fullname = $this->FIRST_NAME . ' ' . $firstLetter . '. ' . $this->LAST_NAME;
         } else {
-            // Handle case where middle name is empty
             $fullname = $this->FIRST_NAME . ' ' . $this->MIDDLE_NAME . ' ' . $this->LAST_NAME;
         }
 
@@ -403,6 +414,7 @@ class PatientForm extends Component
     private function FollowUpUpdate()
     {
         Contacts::where('ID', $this->ID)->where('TYPE', $this->TYPE)->update([
+            'LOCATION_ID' => $this->LOCATION_ID,
             'ADDRESS_UNIT_ROOM_FLOOR' => $this->ADDRESS_UNIT_ROOM_FLOOR,
             'ADDRESS_BUILDING_NAME' => $this->ADDRESS_BUILDING_NAME,
             'ADDRESS_LOT_BLK_HOUSE_BLDG' => $this->ADDRESS_LOT_BLK_HOUSE_BLDG,
@@ -443,8 +455,10 @@ class PatientForm extends Component
             'MEMBER_CITY_MUNI' => $this->MEMBER_CITY_MUNI,
             'MEMBER_PROVINCE' => $this->MEMBER_PROVINCE,
             'MEMBER_COUNTRY' => $this->MEMBER_COUNTRY,
-            'MEMBER_ZIP_CODE' => $this->MEMBER_ZIP_CODE
-
+            'MEMBER_ZIP_CODE' => $this->MEMBER_ZIP_CODE,
+            'PIN_DEPENDENT' => $this->PIN_DEPENDENT,
+            'IS_DEPENDENT' => $this->IS_DEPENDENT,
+            'HEIGHT' => $this->HEIGHT
         ]);
     }
     public function save()
@@ -459,14 +473,20 @@ class PatientForm extends Component
                     'LAST_NAME' => 'required',
                     'TAXPAYER_ID' => 'required|max:100|unique:contact,taxpayer_id,' . $this->ID,
                     'DATE_OF_BIRTH' => 'required',
+                    'HEIGHT' => 'required|not_in:0'
+
+
                 ],
-                [],
+                [
+                    'HEIGHT' => 'Height is required'
+                ],
                 [
                     'NAME' => 'Name',
                     'FIRST_NAME' => 'Firstname',
                     'LAST_NAME' => 'Lastname',
                     'TAXPAYER_ID' => 'Philhealth No.',
                     'DATE_OF_BIRTH' => 'Date of Birth',
+                    'HEIGHT' => 'Height'
                 ]
             );
         } else {
@@ -477,13 +497,17 @@ class PatientForm extends Component
                     'FIRST_NAME' => 'required',
                     'LAST_NAME' => 'required',
                     'DATE_OF_BIRTH' => 'required',
+                    'HEIGHT' => 'required|not_in:0'
                 ],
-                [],
+                [
+                    'HEIGHT' => 'Height is required'
+                ],
                 [
                     'NAME' => 'Name',
                     'FIRST_NAME' => 'Firstname',
                     'LAST_NAME' => 'Lastname',
                     'DATE_OF_BIRTH' => 'Date of Birth',
+                    'HEIGHT' => 'Height'
                 ]
             );
         }
@@ -496,6 +520,14 @@ class PatientForm extends Component
         if ($this->contactServices->is12CharRequired($this->PEN)) {
             session()->flash('error', 'Invalid (PEN). must 12 character only.');
             return;
+        }
+
+        if ($this->IS_DEPENDENT) {
+            if ($this->contactServices->is12CharRequired($this->PIN_DEPENDENT)) {
+                session()->flash('error', 'Invalid (PIN Dependent). must 12 character only.');
+                return;
+            }
+
         }
 
         try {
@@ -540,6 +572,7 @@ class PatientForm extends Component
                 );
 
                 $this->FollowUpUpdate();
+                $this->contactRequirementServices->AutoCreateList($this->ID);
                 Redirect::route('maintenancecontactpatients_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 $this->contactServices->Update(

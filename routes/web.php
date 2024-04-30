@@ -23,6 +23,8 @@ use App\Livewire\PhilHealth\PhilHealthForm;
 use App\Livewire\PhilHealth\PhilHealthList;
 use App\Livewire\PhilHealth\PhilHealthPrint;
 use App\Livewire\PhilHealth\PhilHealthPrintForm;
+use App\Livewire\Requirement\RequirementForm;
+use App\Livewire\Requirement\RequirementList;
 use App\Livewire\Scheduler\SchedulerForm;
 use App\Livewire\Scheduler\SchedulerList;
 use App\Livewire\ServiceCharge\ServiceChargeForm;
@@ -281,6 +283,13 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/create', HemoMachineForm::class)->name('hemo_machine_create');
                 Route::get('/{id}/edit', HemoMachineForm::class)->name('hemo_machine_edit');
             });
+
+            Route::prefix('/requirement')->group(function () {
+                Route::get('/', RequirementList::class)->name('requirement');
+                Route::get('/create', RequirementForm::class)->name('requirement_create');
+                Route::get('/{id}/edit', RequirementForm::class)->name('requirement_edit');
+            });
+
         });
         Route::prefix('/settings')->name('settings')->group(function () {
             Route::prefix('/user')->middleware(['permission:users'])->group(function () {

@@ -22,11 +22,13 @@
     </div>
 
     @foreach ($PRINT_ID as $ID)
-        @livewire('PhilHealth.PrintCf4')
+        {{-- @livewire('PhilHealth.PrintCf1') --}}
+
+        @livewire('PhilHealth.PrintCsf', ['id' => $ID])
         <div class="page-break"></div>
-        @livewire('PhilHealth.PrintCf1')
+        @livewire('PhilHealth.PrintCf4', ['id' => $ID])
         <div class="page-break"></div>
-        @livewire('PhilHealth.PrintCsf')
+        @livewire('PhilHealth.PrintCf4Back',['id'=> $ID])
     @endforeach
 
 </div>

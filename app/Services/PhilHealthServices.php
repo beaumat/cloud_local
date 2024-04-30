@@ -355,7 +355,8 @@ class PhilHealthServices
             'philhealth_prof_fee.ID',
             'philhealth_prof_fee.CONTACT_ID',
             'philhealth_prof_fee.AMOUNT',
-            'c.NAME'
+            'c.NAME',
+            'c.PIN'
         ])
             ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
             ->where('PHIC_ID', $ID)

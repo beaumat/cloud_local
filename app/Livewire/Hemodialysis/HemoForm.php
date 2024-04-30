@@ -32,11 +32,13 @@ class HemoForm extends Component
 
     public string $PRE_WEIGHT;
     public string $PRE_BLOOD_PRESSURE;
+    public string $PRE_BLOOD_PRESSURE2;
     public string $PRE_HEART_RATE;
     public string $PRE_O2_SATURATION;
     public string $PRE_TEMPERATURE;
     public string $POST_WEIGHT;
     public string $POST_BLOOD_PRESSURE;
+    public string $POST_BLOOD_PRESSURE2;
     public string $POST_HEART_RATE;
     public string $POST_O2_SATURATION;
     public string $POST_TEMPERATURE;
@@ -44,8 +46,12 @@ class HemoForm extends Component
     public string $TIME_START;
     public string $TIME_END;
 
-    public function boot(HemoServices $hemoServices, ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
-    {
+    public function boot(
+        HemoServices $hemoServices,
+        ContactServices $contactServices,
+        LocationServices $locationServices,
+        UserServices $userServices
+    ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
@@ -64,11 +70,13 @@ class HemoForm extends Component
 
         $this->PRE_WEIGHT = $data->PRE_WEIGHT ?? "";
         $this->PRE_BLOOD_PRESSURE = $data->PRE_BLOOD_PRESSURE ?? "";
+        $this->PRE_BLOOD_PRESSURE2 = $data->PRE_BLOOD_PRESSURE2 ?? "";
         $this->PRE_HEART_RATE = $data->PRE_HEART_RATE ?? "";
         $this->PRE_O2_SATURATION = $data->PRE_O2_SATURATION ?? "";
         $this->PRE_TEMPERATURE = $data->PRE_TEMPERATURE ?? "";
         $this->POST_WEIGHT = $data->POST_WEIGHT ?? "";
         $this->POST_BLOOD_PRESSURE = $data->POST_BLOOD_PRESSURE ?? "";
+        $this->POST_BLOOD_PRESSURE2 = $data->POST_BLOOD_PRESSURE2 ?? "";
         $this->POST_HEART_RATE = $data->POST_HEART_RATE ?? "";
         $this->POST_O2_SATURATION = $data->POST_O2_SATURATION ?? "";
         $this->POST_TEMPERATURE = $data->POST_TEMPERATURE ?? "";
@@ -102,11 +110,13 @@ class HemoForm extends Component
 
         $this->PRE_WEIGHT = "";
         $this->PRE_BLOOD_PRESSURE = "";
+        $this->PRE_BLOOD_PRESSURE2 = "";
         $this->PRE_HEART_RATE = "";
         $this->PRE_O2_SATURATION = "";
         $this->PRE_TEMPERATURE = "";
         $this->POST_WEIGHT = "";
         $this->POST_BLOOD_PRESSURE = "";
+        $this->POST_BLOOD_PRESSURE2 = "";
         $this->POST_HEART_RATE = "";
         $this->POST_O2_SATURATION = "";
         $this->POST_TEMPERATURE = "";
@@ -118,11 +128,13 @@ class HemoForm extends Component
             $this->ID,
             $this->PRE_WEIGHT,
             $this->PRE_BLOOD_PRESSURE,
+            $this->PRE_BLOOD_PRESSURE2,
             $this->PRE_HEART_RATE,
             $this->PRE_O2_SATURATION,
             $this->PRE_TEMPERATURE,
             $this->POST_WEIGHT,
             $this->POST_BLOOD_PRESSURE,
+            $this->POST_BLOOD_PRESSURE2,
             $this->POST_HEART_RATE,
             $this->POST_O2_SATURATION,
             $this->POST_TEMPERATURE,

@@ -1,0 +1,29 @@
+<div>
+    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+    <div class="row">
+        <div class="col-md-6 col-12">
+            <table class="table table-sm table-bordered table-hover">
+                <thead class="text-xs bg-sky">
+                    <tr>
+                        <th class="col-8 col-md-6 text-left">Description</th>
+                        <th class="col-2 col-md-3 text-center">Completed</th>
+                        <th class="col-2 col-md-3 text-center">Not-Applicable</th>
+                    </tr>
+                </thead>
+                <tbody class="text-xs">
+                    @foreach ($dataList as $list)
+                        <tr>
+                            <td>{{ $list->DESCRIPTION }}</td>
+                            <td class="text-center">
+                                @livewire('Patient.RequirementPanelComplete', ['ID' => $list->ID, 'VALUE' => $list->IS_COMPLETE, 'CONTACT_ID' => $CONTACT_ID], key('complete-' . $list->ID))
+                            </td>
+                            <td class="text-center">
+                                @livewire('Patient.RequirementPanelNa', ['ID' => $list->ID, 'VALUE' => $list->NOT_APPLICABLE, 'CONTACT_ID' => $CONTACT_ID], key('na-' . $list->ID))
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

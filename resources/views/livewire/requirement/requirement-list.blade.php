@@ -3,17 +3,19 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancecontactvendor') }}"> Vendor </a></h5>
-                </div>
+                    <h5 class="m-0"><a href="{{ route('maintenanceothersrequirement') }}"> Requirements </a>
+                    </h5>
+                </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
                         </li>
                     </ol>
-                </div>
-            </div>
-        </div>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
+    <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -24,20 +26,16 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <input type="text" wire:model.live.debounce.150ms='search'
-                                        class="w-100 form-control form-control-sm" placeholder="Search" />
+                                        class="w-100 form-control form-control-sm mt-1 mb-1" placeholder="Search" />
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>No.</th>
-                                        <th>Name</th>
-                                        <th>Address</th>
-                                        <th>Mobile No.</th>
-                                        <th>Email</th>          
-                                        <th>Inactive</th>
+                                        <th>NAME</th>
+                                        <th>INACTIVE</th>
                                         <th class="text-center col-1">
-                                            <a href="{{ route('maintenancecontactvendor_create') }}" class="text-white">
+                                            <a href="{{ route('maintenanceothersrequirement_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
@@ -45,21 +43,10 @@
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ $list->ACCOUNT_NO }}</td>
-                                            <td> {{ $list->NAME }}</td>
-                                            <td> {{ $list->POSTAL_ADDRESS }}</td>
-                                            <td> {{ $list->MOBILE_NO }}</td>
-                                            <td> {{ $list->EMAIL }}</td>
-                                            <td>
-                                                @if ($list->INACTIVE)
-                                                    <strong class="text-danger">Yes</strong>
-                                                @else                     
-                                                    <strong class="text-primary">No</strong>
-                                                @endif
-                                                
-                                            </td>
-                                            <td class="text-center">             
-                                                <a href="{{ route('maintenancecontactvendor_edit', ['id' => $list->ID]) }}"
+                                            <td> {{ $list->DESCRIPTION }}</td>
+                                            <td> {{ $list->INACTIVE }}</td>
+                                            <td class="text-center">
+                                                <a href="{{ route('maintenanceothersrequirement_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
@@ -76,10 +63,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-6 col-md-6">
                     {{ $dataList->links() }}
                 </div>
             </div>
         </div>
     </section>
+
+
+
+
 </div>

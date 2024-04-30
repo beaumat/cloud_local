@@ -118,7 +118,7 @@
                     @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
 
                     <div class="form-group row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <table class="table table-sm table-bordered">
                                 <thead class="text-xs">
                                     <tr>
@@ -185,22 +185,44 @@
                                         <td>
                                             <div class="row" id="LAST">
                                                 <div class="col-md-6 text-center">
-                                                    0.00
+                                                    00 | 0
                                                 </div>
                                                 <div class="col-md-6 text-center">
-                                                    0.00
+                                                    0 | 0
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="row" id="TODAY">
                                                 <div class="col-md-6">
-                                                    <input wire:model='PRE_BLOOD_PRESSURE' type="text"
-                                                        class="text-xs w-100 text-right" />
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <input wire:model='PRE_BLOOD_PRESSURE' type="text"
+                                                                class="text-xs w-100 text-right" />
+                                                        </div>
+                                          
+                                                        <div class="col-sm-6">
+                                                            <input wire:model='PRE_BLOOD_PRESSURE2' type="text"
+                                                                class="text-xs w-100 text-right" />
+                                                        </div>
+                                                    </div>
+
+
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input wire:model='POST_BLOOD_PRESSURE' type="text"
-                                                        class="text-xs w-100 text-right" />
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <input wire:model='POST_BLOOD_PRESSURE' type="text"
+                                                            class="text-xs w-100 text-right" />
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input wire:model='POST_BLOOD_PRESSURE2' type="text"
+                                                            class="text-xs w-100 text-right" />
+                                                        </div>
+                                                    </div>
+                                                  
+                                               
+
                                                 </div>
                                             </div>
                                         </td>
@@ -285,7 +307,7 @@
                             </table>
                         </div>
                         <div class="col-md-4">
-                            <div class="row form-group mt-4">
+                            <div class="row form-group mt-4 text-right">
                                 <div class="col-md-6">
                                     <label class="text-sm">TIME START NOTES</label>
                                 </div>
@@ -295,7 +317,7 @@
                                 </div>
                             </div>
 
-                            <div class="row form-group mt-4">
+                            <div class="row form-group mt-4 text-right">
                                 <div class="col-md-6">
                                     <label class="text-sm">TIME END NOTES</label>
                                 </div>

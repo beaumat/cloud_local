@@ -21,6 +21,14 @@ class HemoServices
     {
         return Hemodialysis::where('ID', $ID)->first();
     }
+    public function GetPost(int $CONTACT_ID, int $LOCATION_ID, string $DATE)
+    {
+       return  Hemodialysis::where('CUSTOMER_ID', $CONTACT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('DATE', $DATE)
+            ->where('STATUS_ID', 2)
+            ->first();
+    }
     private function getTime(bool $isStart, string $DATE, int $CONTACT_ID, int $LOCATION_ID): string
     {
 
@@ -108,6 +116,7 @@ class HemoServices
                 'c.PIN as PHIC_NO',
                 'hemodialysis.PRE_WEIGHT',
                 'hemodialysis.PRE_BLOOD_PRESSURE',
+                'hemodialysis.PRE_BLOOD_PRESSURE2',
                 'hemodialysis.PRE_HEART_RATE',
                 'hemodialysis.PRE_O2_SATURATION',
                 'hemodialysis.PRE_TEMPERATURE'
@@ -152,11 +161,13 @@ class HemoServices
         int $ID,
         string $PRE_WEIGHT,
         string $PRE_BLOOD_PRESSURE,
+        string $PRE_BLOOD_PRESSURE2,
         string $PRE_HEART_RATE,
         string $PRE_O2_SATURATION,
         string $PRE_TEMPERATURE,
         string $POST_WEIGHT,
         string $POST_BLOOD_PRESSURE,
+        string $POST_BLOOD_PRESSURE2,
         string $POST_HEART_RATE,
         string $POST_O2_SATURATION,
         string $POST_TEMPERATURE,
@@ -168,11 +179,13 @@ class HemoServices
 
             'PRE_WEIGHT' => $PRE_WEIGHT,
             'PRE_BLOOD_PRESSURE' => $PRE_BLOOD_PRESSURE,
+            'PRE_BLOOD_PRESSURE2' => $PRE_BLOOD_PRESSURE,
             'PRE_HEART_RATE' => $PRE_HEART_RATE,
             'PRE_O2_SATURATION' => $PRE_O2_SATURATION,
             'PRE_TEMPERATURE' => $PRE_TEMPERATURE,
             'POST_WEIGHT' => $POST_WEIGHT,
             'POST_BLOOD_PRESSURE' => $POST_BLOOD_PRESSURE,
+            'POST_BLOOD_PRESSURE2' => $POST_BLOOD_PRESSURE2,
             'POST_HEART_RATE' => $POST_HEART_RATE,
             'POST_O2_SATURATION' => $POST_O2_SATURATION,
             'POST_TEMPERATURE' => $POST_TEMPERATURE,
@@ -239,11 +252,13 @@ class HemoServices
                 'l.NAME as LOCATION_NAME',
                 'hemodialysis.PRE_WEIGHT',
                 'hemodialysis.PRE_BLOOD_PRESSURE',
+                'hemodialysis.PRE_BLOOD_PRESSURE2',
                 'hemodialysis.PRE_HEART_RATE',
                 'hemodialysis.PRE_O2_SATURATION',
                 'hemodialysis.PRE_TEMPERATURE',
                 'hemodialysis.POST_WEIGHT',
                 'hemodialysis.POST_BLOOD_PRESSURE',
+                'hemodialysis.POST_BLOOD_PRESSURE2',
                 'hemodialysis.POST_HEART_RATE',
                 'hemodialysis.POST_O2_SATURATION',
                 'hemodialysis.POST_TEMPERATURE',
@@ -270,7 +285,7 @@ class HemoServices
     }
     public function QuickFilterByDateRange(string $DATE_FORM, string $DATE_TO, $LOCATION_ID)
     {
-        $result =  Contacts::query()
+        $result = Contacts::query()
             ->select(
                 'contact.ID',
                 'contact.NAME as PATIENT',

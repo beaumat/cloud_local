@@ -56087,6 +56087,7 @@ a.text-muted:hover {
     padding: 0px; /* Add some padding inside the boxes */
     margin-right:-4px; /* Add some spacing between the boxes */
     margin-left:0px;
+    padding-top: 2px;
     background-color:white; /* Set background color of the boxes */
     border: 1px solid darkgreen; /* Add a border around the boxes */
     text-align: center; /* Center the text inside the boxes */

@@ -487,13 +487,13 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="{{ route('maintenancecontactcustomer') }}"
                                         class="nav-link {{ request()->is('maintenance/contact/customer*') ? 'active' : '' }}">
                                         <i class="fa fa-file nav-icon"></i>
                                         <p>Customer</p>
                                     </a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item">
                                     <a href="{{ route('maintenancecontactvendor') }}"
                                         class="nav-link {{ request()->is('maintenance/contact/vendor*') ? 'active' : '' }}">
@@ -676,6 +676,13 @@
                                         class="nav-link {{ request()->is('maintenance/others/hemodialysis-machine*') ? 'active' : '' }}">
                                         <i class="fa fa-sort-numeric-asc nav-icon"></i>
                                         <p>Hemodialysis Machine</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('maintenanceothersrequirement') }}"
+                                        class="nav-link {{ request()->is('maintenance/others/requirement*') ? 'active' : '' }}">
+                                        <i class="fa fa-sort-numeric-asc nav-icon"></i>
+                                        <p>Rquirements</p>
                                     </a>
                                 </li>
                             </ul>

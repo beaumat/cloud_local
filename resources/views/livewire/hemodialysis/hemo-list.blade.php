@@ -55,19 +55,19 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>REF NO.</th>
+                                        <th class="col-1">REF NO.</th>
                                         <th>DATE</th>
-                                        <th class="col-md-4">PATIENT NAME</th>
-                                        <th class="text-center">W</th>
-                                        <th class="text-center">B.P</th>
-                                        <th class="text-center">H.R</th>
-                                        <th class="text-center">O2(S)</th>
-                                        <th class="text-center">TMP</th>
-                                        <th class="text-center">Start</th>
-                                        <th class="text-center">End</th>
+                                        <th class="col-md-2">PATIENT NAME</th>
+                                        <th class="text-center col-1">W</th>
+                                        <th class="text-center col-1">B.P</th>
+                                        <th class="text-center col-1">H.R</th>
+                                        <th class="text-center col-1">O2(S)</th>
+                                        <th class="text-center col-1">TMP</th>
+                                        <th class="text-center col-1">Start</th>
+                                        <th class="text-center col-1">End</th>
                                         <th class="col-1">Location</th>
                                         <th> Status</th>
-                                        <th class="text-center col-1 bg-success">
+                                        <th class="text-center col-3 bg-success">
                                             <a href="{{ route('transactionshemo_create') }}"
                                                 class="text-white btn btn-xs w-100">
                                                 <i class="fas fa-plus"></i> New
@@ -84,8 +84,8 @@
                                             <td class="text-center">
                                                 {{ $list->PRE_WEIGHT }} | {{ $list->POST_WEIGHT }}
                                             </td>
-                                            <td class="text-center"> {{ $list->PRE_BLOOD_PRESSURE }} |
-                                                {{ $list->POST_BLOOD_PRESSURE }}</td>
+                                            <td class="text-center"> {{ $list->PRE_BLOOD_PRESSURE }}/{{ $list->PRE_BLOOD_PRESSURE2 }} |
+                                                {{ $list->POST_BLOOD_PRESSURE }}/{{ $list->POST_BLOOD_PRESSURE2 }}</td>
                                             <td class="text-center"> {{ $list->PRE_HEART_RATE }} |
                                                 {{ $list->POST_HEART_RATE }}</td>
                                             <td class="text-center"> {{ $list->PRE_O2_SATURATION }} |

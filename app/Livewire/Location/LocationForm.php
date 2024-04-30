@@ -5,6 +5,7 @@ namespace App\Livewire\Location;
 use App\Models\LocationGroup;
 use App\Models\Locations;
 use App\Models\PriceLevels;
+use App\Services\ContactServices;
 use App\Services\LocationServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Title;
@@ -21,13 +22,40 @@ class LocationForm extends Component
     public $priceLevels = [];
     public $locationGroups = [];
 
+    public int $HCI_MANAGER_ID;
+    public int $PHIC_INCHARGE_ID;
+    public string $NAME_OF_BUSINESS;
+    public string $ACCREDITATION_NO;
+    public string $BLDG_NAME_LOT_BLOCK;
+    public string $STREET_SUB_VALL;
+    public string $BRGY_CITY_MUNI;
+    public string $PROVINCE;
+    public string $ZIP_CODE;
+
+    public $managerList = [];
+    public $inchargeList = [];
+    public $physicianList = [];
+
+    private $locationServices;
+    private $contactServices;
+    public function boot(LocationServices $locationServices, ContactServices $contactServices)
+    {
+        $this->locationServices = $locationServices;
+        $this->contactServices = $contactServices;
+
+    }
     public function loadDropDown()
     {
         $this->priceLevels = PriceLevels::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->where('TYPE', '0')->get();
         $this->locationGroups = LocationGroup::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
+        $contactList = $this->contactServices->getList(2);
+        $this->managerList = $contactList;
+        $this->inchargeList = $contactList;
+        $this->physicianList = $contactList;
     }
     public function mount($id = null)
     {
+
         $this->loadDropDown();
         if (is_numeric($id)) {
             $location = Locations::where('ID', $id)->first();
@@ -38,6 +66,15 @@ class LocationForm extends Component
                 $this->INACTIVE = $location->INACTIVE;
                 $this->PRICE_LEVEL_ID = $location->PRICE_LEVEL_ID ? $location->PRICE_LEVEL_ID : 0;
                 $this->GROUP_ID = $location->GROUP_ID ? $location->GROUP_ID : 0;
+                $this->HCI_MANAGER_ID = $location->HCI_MANAGER_ID ?? 0;
+                $this->PHIC_INCHARGE_ID = $location->PHIC_INCHARGE_ID ?? 0;
+                $this->NAME_OF_BUSINESS = $location->NAME_OF_BUSINESS ?? '';
+                $this->ACCREDITATION_NO = $location->ACCREDITATION_NO ?? '';
+                $this->BLDG_NAME_LOT_BLOCK = $location->BLDG_NAME_LOT_BLOCK ?? '';
+                $this->STREET_SUB_VALL = $location->STREET_SUB_VALL ?? '';
+                $this->BRGY_CITY_MUNI = $location->BRGY_CITY_MUNI ?? '';
+                $this->PROVINCE = $location->PROVINCE ?? '';
+                $this->ZIP_CODE = $location->ZIP_CODE ?? '';
                 return;
             }
 
@@ -49,25 +86,63 @@ class LocationForm extends Component
         $this->PRICE_LEVEL_ID = 0;
         $this->GROUP_ID = 0;
         $this->INACTIVE = false;
+        $this->HCI_MANAGER_ID = 0;
+        $this->PHIC_INCHARGE_ID = 0;
+        $this->NAME_OF_BUSINESS = '';
+        $this->ACCREDITATION_NO = '';
+        $this->BLDG_NAME_LOT_BLOCK = '';
+        $this->STREET_SUB_VALL = '';
+        $this->BRGY_CITY_MUNI = '';
+        $this->PROVINCE = '';
+        $this->ZIP_CODE = '';
     }
 
 
-    public function save(LocationServices $locationServices)
+    public function save()
     {
         $this->validate([
-  
             'NAME' => 'required|max:50|unique:location,name,' . $this->ID
         ], [], [
-      
             'NAME' => 'Name'
         ]);
 
         try {
             if ($this->ID === 0) {
-                $this->ID = $locationServices->Store($this->NAME, $this->INACTIVE, $this->PRICE_LEVEL_ID, $this->GROUP_ID);
-                session()->flash('message', 'Successfully created');
+                $this->ID = $this->locationServices->Store(
+                    $this->NAME,
+                    $this->INACTIVE,
+                    $this->PRICE_LEVEL_ID,
+                    $this->GROUP_ID,
+                    $this->HCI_MANAGER_ID,
+                    $this->PHIC_INCHARGE_ID,
+                    $this->NAME_OF_BUSINESS,
+                    $this->ACCREDITATION_NO,
+                    $this->BLDG_NAME_LOT_BLOCK,
+                    $this->STREET_SUB_VALL,
+                    $this->BRGY_CITY_MUNI,
+                    $this->PROVINCE,
+                    $this->ZIP_CODE
+                );
+
+                Redirect::route('maintenancesettingslocation_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+
             } else {
-                $locationServices->Update($this->ID, $this->NAME, $this->INACTIVE, $this->PRICE_LEVEL_ID, $this->GROUP_ID);
+                $this->locationServices->Update(
+                    $this->ID,
+                    $this->NAME,
+                    $this->INACTIVE,
+                    $this->PRICE_LEVEL_ID,
+                    $this->GROUP_ID,
+                    $this->HCI_MANAGER_ID,
+                    $this->PHIC_INCHARGE_ID,
+                    $this->NAME_OF_BUSINESS,
+                    $this->ACCREDITATION_NO,
+                    $this->BLDG_NAME_LOT_BLOCK,
+                    $this->STREET_SUB_VALL,
+                    $this->BRGY_CITY_MUNI,
+                    $this->PROVINCE,
+                    $this->ZIP_CODE
+                );
                 session()->flash('message', 'Successfully updated');
             }
         } catch (\Exception $e) {

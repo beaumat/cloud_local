@@ -16,6 +16,17 @@ class Locations extends Model
         'NAME',
         'INACTIVE',
         'PRICE_LEVEL_ID',
-        'GROUP_ID'
+        'GROUP_ID',
+        'HCI_MANAGER_ID',
+        'PHIC_INCHARGE_ID',
+        'PRIMARY_LOGO',
+        'SECONDARY_LOGO',
+        'NAME_OF_BUSINESS',
+        'ACCREDITATION_NO',
+        'BLDG_NAME_LOT_BLOCK',
+        'STREET_SUB_VALL',
+        'BRGY_CITY_MUNI',
+        'PROVINCE',        
+        'ZIP_CODE'
     ];
 }

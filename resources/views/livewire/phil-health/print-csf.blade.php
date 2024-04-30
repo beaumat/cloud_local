@@ -1,5 +1,4 @@
 <div class="font-weight-light p-3">
-  
     <div class="row">
         <div class="col-12 blackbox2">
             <div class="row" style="height: 150px;">
@@ -18,10 +17,8 @@
                             Call Center (02) 441-7442 &#8226; Trunkline (02) 441-7444<br />
                             www.philhealth.gov.ph <br />
                             email: actioncenter@philhealth.gov.ph <br />
-
                         </p>
                     </div>
-
                 </div>
                 <div class="col-3">
                     <div class=" float-right text-sm text-center mt-1 text-xs" style="padding-right:2px;">
@@ -81,20 +78,92 @@
             <div class="row">
                 <div class="col-12" style="height: 30px;">
                     <label> 1. PhilHealth Identification Number (PIN) of Member: </label>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 0, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 1, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
                     <label class="px-1">&nbsp;-</label>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 2, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 3, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 4, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 5, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 6, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 7, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 8, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 9, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 10, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
                     <label class="px-1">&nbsp;-</label>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN)
+                            {{ substr($PIN, 11, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
                 </div>
                 <div class="col-12" style="line-height: 1.2;">
                     <div class="row">
@@ -102,24 +171,28 @@
                             <label> 2. Name of Member:</label>
                             <div class="row">
                                 <div class="col-3 text-center">
-                                    <b class="text-primary courier-new font-weight-bold h5">CANUBAS</b>
+                                    <b
+                                        class="text-primary courier-new font-weight-bold h5">{{ $MEMBER_LAST_NAME }}&nbsp;</b>
                                     <div class="w-100 top-line2 "></div>
                                     Last Name
                                 </div>
                                 <div class="col-3 text-center">
-                                    <b class="text-primary courier-new font-weight-bold h5">ERIC</b>
+                                    <b
+                                        class="text-primary courier-new font-weight-bold h5">{{ $MEMBER_FIRST_NAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     First Name
                                 </div>
                                 <div class="col-2 text-center">
-                                    <b class="text-primary courier-new font-weight-bold h5">III</b>
+                                    <b
+                                        class="text-primary courier-new font-weight-bold h5">{{ $MEMBER_EXTENSION }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Name Extension </br>
                                     (JR/SR/III)
 
                                 </div>
                                 <div class="col-4 text-center">
-                                    <b class="text-primary courier-new font-weight-bold h5">GEPIGA</b>
+                                    <b
+                                        class="text-primary courier-new font-weight-bold h5">{{ $MEMBER_MIDDLE_NAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Middle Name<br />
                                     (ex: DELA CRUZ JUAN JR SIPAG)
@@ -132,16 +205,32 @@
                             <div style="position: absolute;left:0px; width:300px;">
                                 <label> 3. Member's Date of Birth: </label>
                                 <div class="form-group">
-                                    <div class="box text-primary courier-new font-weight-bold">0</div>
-                                    <div class="box text-primary courier-new font-weight-bold">5</div><label
-                                        class="px-1">&nbsp;-</label>
-                                    <div class="box text-primary courier-new font-weight-bold">3</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div><label
-                                        class="px-1">&nbsp;-</label>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">9</div>
-                                    <div class="box text-primary courier-new font-weight-bold">7</div>
-                                    <div class="box text-primary courier-new font-weight-bold">9</div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($MEMBER_BIRTH_DATE, 5, 1) }}
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($MEMBER_BIRTH_DATE, 6, 1) }}
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($MEMBER_BIRTH_DATE, 8, 1) }}
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($MEMBER_BIRTH_DATE, 9, 1) }}
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($MEMBER_BIRTH_DATE, 0, 1) }}
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($MEMBER_BIRTH_DATE, 1, 1) }}
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($MEMBER_BIRTH_DATE, 2, 1) }}
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($MEMBER_BIRTH_DATE, 3, 1) }}
+                                    </div>
                                     <br>
                                     <p style="position: absolute;top:57px;">month &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -156,20 +245,92 @@
                 </div>
                 <div class="col-12" style="height: 30px;">
                     <label> 4. PhilHealth Identification Number (PIN) of Dependent: </label>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div><label
-                        class="px-1">&nbsp;-</label>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                    <div class="box text-primary courier-new font-weight-bold">1</div><label
-                        class="px-1">&nbsp;-</label>
-                    <div class="box text-primary courier-new font-weight-bold">1</div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 0, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 1, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <label class="px-1">&nbsp;-</label>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 2, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 3, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 4, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 5, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 6, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 7, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 8, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 9, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 10, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <label class="px-1">&nbsp;-</label>
+                    <div class="box text-primary courier-new font-weight-bold">
+                        @if ($PIN_DEPENDENT)
+                            {{ substr($PIN_DEPENDENT, 11, 1) }}
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
                 </div>
                 <div class="col-12 " style="line-height: 1.2;">
                     <div class="row">
@@ -177,24 +338,28 @@
                             <label> 5. Name of Patient:</label>
                             <div class="row">
                                 <div class="col-3 text-center">
-                                    <b class="text-primary courier-new font-weight-bold h5">CANUBAS</b>
+                                    <b
+                                        class="text-primary courier-new font-weight-bold h5">{{ $PATIENT_LASTNAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Last Name
                                 </div>
                                 <div class="col-3 text-center">
-                                    <b class="text-primary courier-new font-weight-bold h5">ERIC</b>
+                                    <b
+                                        class="text-primary courier-new font-weight-bold h5">{{ $PATIENT_FIRSTNAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     First Name
                                 </div>
                                 <div class="col-2 text-center">
-                                    <b class="text-primary courier-new font-weight-bold h5">III</b>
+                                    <b
+                                        class="text-primary courier-new font-weight-bold h5">{{ $PATIENT_EXTENSION }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Name Extension </br>
                                     (JR/SR/III)
 
                                 </div>
                                 <div class="col-4 text-center">
-                                    <b class="text-primary courier-new font-weight-bold h5">GEPIGA</b>
+                                    <b
+                                        class="text-primary courier-new font-weight-bold h5">{{ $PATIENT_MIDDLENAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Middle Name<br />
                                     (ex: DELA CRUZ JUAN JR SIPAG)
@@ -207,12 +372,29 @@
                             <div style="position: absolute;left:0px; width:300px;">
                                 <label> 6. Relationship to Member: </label>
                                 <div class="form-group">
-
-                                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($MEMBER_IS_CHILD)
+                                            &#10004;
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
                                     &nbsp;&nbsp;child
-                                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($MEMBER_IS_PARENT)
+                                            &#10004;
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
                                     &nbsp;&nbsp;parent
-                                    <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($MEMBER_IS_SPOUSE)
+                                            &#10004;
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
                                     &nbsp;&nbsp;spouse
 
                                 </div>
@@ -237,16 +419,32 @@
                                         </div>
                                         <div class="col-8">
                                             <div class="form-group">
-                                                <div class="box text-primary courier-new font-weight-bold">0</div>
-                                                <div class="box text-primary courier-new font-weight-bold">5</div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_ADMITTED, 5, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_ADMITTED, 6, 1) }}
+                                                </div>
                                                 <label class="px-1">&nbsp;-</label>
-                                                <div class="box text-primary courier-new font-weight-bold">3</div>
-                                                <div class="box text-primary courier-new font-weight-bold">1</div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_ADMITTED, 8, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_ADMITTED, 9, 1) }}
+                                                </div>
                                                 <label class="px-1">&nbsp;-</label>
-                                                <div class="box text-primary courier-new font-weight-bold">1</div>
-                                                <div class="box text-primary courier-new font-weight-bold">9</div>
-                                                <div class="box text-primary courier-new font-weight-bold">7</div>
-                                                <div class="box text-primary courier-new font-weight-bold">9</div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_ADMITTED, 0, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_ADMITTED, 1, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_ADMITTED, 2, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_ADMITTED, 3, 1) }}
+                                                </div>
                                                 <br>
                                                 <p style="position: absolute;top:27px;">month
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
@@ -267,16 +465,32 @@
                                         <div class="col-8">
                                             <div class="form-group">
 
-                                                <div class="box text-primary courier-new font-weight-bold">0</div>
-                                                <div class="box text-primary courier-new font-weight-bold">5</div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 5, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 6, 1) }}
+                                                </div>
                                                 <label class="px-1">&nbsp;-</label>
-                                                <div class="box text-primary courier-new font-weight-bold">3</div>
-                                                <div class="box text-primary courier-new font-weight-bold">1</div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 8, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 9, 1) }}
+                                                </div>
                                                 <label class="px-1">&nbsp;-</label>
-                                                <div class="box text-primary courier-new font-weight-bold">1</div>
-                                                <div class="box text-primary courier-new font-weight-bold">9</div>
-                                                <div class="box text-primary courier-new font-weight-bold">7</div>
-                                                <div class="box text-primary courier-new font-weight-bold">9</div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 0, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 1, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 2, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 3, 1) }}
+                                                </div>
                                                 <br>
                                                 <p style="position: absolute;top:27px;">month
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
@@ -293,16 +507,32 @@
                             <div style="position: absolute;left:0px; width:300px;">
                                 <label> 8. Patient`s Date of Birth: </label>
                                 <div class="form-group">
-                                    <div class="box text-primary courier-new font-weight-bold">0</div>
-                                    <div class="box text-primary courier-new font-weight-bold">5</div><label
-                                        class="px-1">&nbsp;-</label>
-                                    <div class="box text-primary courier-new font-weight-bold">3</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div><label
-                                        class="px-1">&nbsp;-</label>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">9</div>
-                                    <div class="box text-primary courier-new font-weight-bold">7</div>
-                                    <div class="box text-primary courier-new font-weight-bold">9</div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($PATIENT_BIRTH_DATE, 5, 1) }}
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($PATIENT_BIRTH_DATE, 6, 1) }}
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($PATIENT_BIRTH_DATE, 8, 1) }}
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($PATIENT_BIRTH_DATE, 9, 1) }}
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($PATIENT_BIRTH_DATE, 0, 1) }}
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($PATIENT_BIRTH_DATE, 1, 1) }}
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($PATIENT_BIRTH_DATE, 2, 1) }}
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        {{ substr($PATIENT_BIRTH_DATE, 3, 1) }}
+                                    </div>
                                     <br>
                                     <p style="position: absolute;top:57px;">month &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -325,7 +555,12 @@
                         </div>
                         <div class="col-1"></div>
                         <div class="col-4 text-center text-sm">
-                            <b class="h5 text-primary courier-new font-weight-bold"> ERIC G. CANUBAS</b>
+                            <b class="h5 text-primary courier-new font-weight-bold">
+                                {{ $MEMBER_FIRST_NAME }}
+                                @if ($this->MEMBER_MIDDLE_NAME)
+                                    {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
+                                @endif {{ $MEMBER_LAST_NAME }} &nbsp;
+                            </b>
                             <div class="top-line2"></div>
                             Signature Over Printed Name of Member
                             <div class="row ">
@@ -337,16 +572,16 @@
                                 <div class="col-8 text-left">
                                     <div class="form-group text-md">
 
-                                        <div class="box text-primary courier-new font-weight-bold">0</div>
-                                        <div class="box text-primary courier-new font-weight-bold">5</div><label
+                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div><label
                                             class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">3</div>
-                                        <div class="box text-primary courier-new font-weight-bold">1</div><label
+                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div><label
                                             class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">1</div>
-                                        <div class="box text-primary courier-new font-weight-bold">9</div>
-                                        <div class="box text-primary courier-new font-weight-bold">7</div>
-                                        <div class="box text-primary courier-new font-weight-bold">9</div>
+                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
                                         <br>
                                         <p style="position: absolute;top:27px;">month &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -358,7 +593,8 @@
                         <div class="col-2">
                         </div>
                         <div class="col-5 text-center text-sm text-secondary">
-                            <b class="h5 text-primary courier-new font-weight-bold"> ERIC G. CANUBAS</b>
+                            <b class="h5 text-primary courier-new font-weight-bold">
+                                {{ $NAME_REPRESENTATIVE }}&nbsp;</b>
                             <div class="top-line2 " style="width: 95%"></div>
                             Signature Over Printed Name of Member’s Representative
                             <div class="row">
@@ -470,20 +706,92 @@
                     <div class="row">
                         <div class="col-7">
                             <label> 1. PhilHealth Employer Number (PEN): </label>
-                            <div class="box text-primary courier-new font-weight-bold">1</div>
-                            <div class="box text-primary courier-new font-weight-bold">1</div><label
-                                class="px-1">&nbsp;-</label>
-                            <div class="box text-primary courier-new font-weight-bold">1</div>
-                            <div class="box text-primary courier-new font-weight-bold">1</div>
-                            <div class="box text-primary courier-new font-weight-bold">1</div>
-                            <div class="box text-primary courier-new font-weight-bold">1</div>
-                            <div class="box text-primary courier-new font-weight-bold">1</div>
-                            <div class="box text-primary courier-new font-weight-bold">1</div>
-                            <div class="box text-primary courier-new font-weight-bold">1</div>
-                            <div class="box text-primary courier-new font-weight-bold">1</div>
-                            <div class="box text-primary courier-new font-weight-bold">1</div><label
-                                class="px-1">&nbsp;-</label>
-                            <div class="box text-primary courier-new font-weight-bold">1</div>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 0, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 1, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <label class="px-1">&nbsp;-</label>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 2, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 3, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 4, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 5, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 6, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 7, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 8, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 9, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 10, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
+                            <label class="px-1">&nbsp;-</label>
+                            <div class="box text-primary courier-new font-weight-bold">
+                                @if ($PEN)
+                                    {{ substr($PEN, 11, 1) }}
+                                @else
+                                    &nbsp;
+                                @endif
+                            </div>
                         </div>
                         <div class="col-5">
                             <div class="row">
@@ -493,7 +801,8 @@
                                 <div class="col-8">
                                     <div style="right: 30px; position: absolute; "
                                         class="float-left bottom-line2 w-100 ">
-                                        <b class="h5 text-primary courier-new font-weight-bold "> 0998-212121</b>
+                                        <b class="h5 text-primary courier-new font-weight-bold ">
+                                            {{ $PEN_CONTACT }}&nbsp;</b>
                                     </div>
                                 </div>
                             </div>
@@ -510,9 +819,10 @@
 
                                     <div style="right: 30px; position: absolute; top:-8px;"
                                         class="float-left bottom-line2 w-100 mt-1">
-                                        <b class="h5 text-primary courier-new font-weight-bold "> ERIC G. CANUBAS</b>
+                                        <b class="h5 text-primary courier-new font-weight-bold ">{{ $COMPANY_NAME }}
+                                            &nbsp;</b>
                                     </div>
-                                    
+
                                     <p class="text-sm pt-4"> Business Name of Employer</p>
                                 </div>
                             </div>
@@ -537,17 +847,16 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-5 text-sm text-center">
-                                            <b class="h5 text-primary courier-new font-weight-bold "> ERIC G.
-                                                CANUBAS</b>
+                                            <b class="h5 text-primary courier-new font-weight-bold "> &nbsp;</b>
                                             <div class="top-line2"></div>
                                             Signature Over Printed Name of Employer/Authorized Representative
                                         </div>
                                         <div class="col-3 text-sm text-center">
-                                            <b class="h5 text-primary courier-new font-weight-bold "> Developer</b>
+                                            <b class="h5 text-primary courier-new font-weight-bold "> &nbsp;</b>
                                             <div class="top-line2"></div>
                                             Official Capacity/Designation
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-4 mb-2">
                                             <div class="row">
                                                 <div class="col-4 text-md">
                                                     <div class="form-group mt-2 text-sm  text-right"
@@ -556,7 +865,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-8">
-                                                    <div class="form-group">
+                                                    <div class="form-group ">
 
                                                         <div class="box text-primary courier-new font-weight-bold">
                                                             &nbsp;</div>
@@ -589,7 +898,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 text-center bgBlack text-white pt-1">
+                <div class="col-12 text-center bgBlack text-white pt-1 mt-1">
                     <b class="arial font-weight-bold" style="font-size: 19px">
                         PART III - CONSENT TO ACCESS PATIENT RECORD/S
                     </b>
@@ -624,7 +933,12 @@
                     <div class="row">
                         <div class="col-1"></div>
                         <div class="col-6 text-center text-sm">
-                            <b class="h5 text-primary courier-new font-weight-bold "> ERIC G. CANUBAS</b>
+                            <b class="h5 text-primary courier-new font-weight-bold ">
+                                {{ $MEMBER_FIRST_NAME }}
+                                @if ($this->MEMBER_MIDDLE_NAME)
+                                    {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
+                                @endif {{ $MEMBER_LAST_NAME }} &nbsp;
+                            </b>
                             <div class="top-line2"></div>
                             Signature Over Printed Name of Member/Patient/Authorized Representative
                         </div>
@@ -654,7 +968,6 @@
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             year</p>
-
                                     </div>
                                 </div>
                             </div>
@@ -741,23 +1054,97 @@
                             <div class="row">
                                 <div class="col-5 text-sm">
                                     Accreditation No.
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div><label
-                                        class="px-1">&nbsp;-</label>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div><label
-                                        class="px-1">&nbsp;-</label>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 0, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 1, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 2, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 3, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 4, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 5, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 6, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 7, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 8, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 9, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 10, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_1_AN)
+                                            {{ substr($HCP_1_AN, 11, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="col-3 text-center">
-                                    <b class="h6 text-primary courier-new font-weight-bold"> ERIC G. CANUBAS</b>
+                                    <b class="h6 text-primary courier-new font-weight-bold">
+                                        {{ $HCP_1_NAME }}&nbsp;
+                                    </b>
                                     <div class="top-line2"></div>
                                     Signature Over Printed Name
                                 </div>
@@ -795,23 +1182,97 @@
                             <div class="row">
                                 <div class="col-5 text-sm">
                                     Accreditation No.
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div><label
-                                        class="px-1">&nbsp;-</label>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div><label
-                                        class="px-1">&nbsp;-</label>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 0, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 1, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 2, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 3, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 4, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 5, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 6, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 7, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 8, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 9, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 10, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_2_AN)
+                                            {{ substr($HCP_2_AN, 11, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="col-3 text-center">
-                                    <b class="h6 text-primary courier-new font-weight-bold"> ERIC G. CANUBAS</b>
+                                    <b class="h6 text-primary courier-new font-weight-bold">
+                                        {{ $HCP_2_NAME }}&nbsp;
+                                    </b>
                                     <div class="top-line2"></div>
                                     Signature Over Printed Name
                                 </div>
@@ -849,23 +1310,97 @@
                             <div class="row">
                                 <div class="col-5 text-sm">
                                     Accreditation No.
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div><label
-                                        class="px-1">&nbsp;-</label>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div><label
-                                        class="px-1">&nbsp;-</label>
-                                    <div class="box text-primary courier-new font-weight-bold">1</div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 0, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 1, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 2, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 3, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 4, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 5, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 6, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 7, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 8, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 9, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 10, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($HCP_3_AN)
+                                            {{ substr($HCP_3_AN, 11, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="col-3 text-center">
-                                    <b class="h6 text-primary courier-new font-weight-bold"> ERIC G. CANUBAS</b>
+                                    <b class="h6 text-primary courier-new font-weight-bold"> '
+                                        {{ $HCP_3_NAME }}&nbsp;
+                                    </b>
                                     <div class="top-line2"></div>
                                     Signature Over Printed Name
                                 </div>
@@ -917,18 +1452,18 @@
                                     <label class="text-sm">ICD 10 or RVS Code:</label>
                                 </div>
                                 <div class="col-4 text-left">
-                                    
+
                                     <div class="row text-sm">
                                         <div class="col-3">
                                             <div style="position: absolute;width:300px;">
                                                 1. First Case Rate:
                                             </div>
-                                      
+
                                         </div>
                                         <div class="col-9">
-                                            <div  style="left:55px; position: absolute;"
-                                                class="bottom-line2 w-75 ">
-                                                <b class="h5 text-primary courier-new font-weight-bold text-sm "> RVS 90935 × _____  </b> 
+                                            <div style="left:55px; position: absolute;" class="bottom-line2 w-75 ">
+                                                <b class="h5 text-primary courier-new font-weight-bold text-sm "> RVS
+                                                    90935 × _____ </b>
                                             </div>
                                         </div>
                                     </div>
@@ -940,19 +1475,19 @@
                                             <div style="position: absolute;width:300px;">
                                                 2. Second Case Rate:
                                             </div>
-                                      
+
                                         </div>
                                         <div class="col-9">
-                                            <div  style="left:55px; position: absolute;"
-                                                class="bottom-line2 w-75 ">
-                                                <b class="h5 text-primary courier-new font-weight-bold text-sm "> &nbsp; </b> 
+                                            <div style="left:55px; position: absolute;" class="bottom-line2 w-75 ">
+                                                <b class="h5 text-primary courier-new font-weight-bold text-sm ">
+                                                    &nbsp; </b>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 text-sm text-center" >
+                        <div class="col-12 text-sm text-center">
                             <label><i>
                                     I certify that services rendered were recorded in the patient’s chart and health
                                     care institution records and that the herein information given are true and correct.
@@ -962,12 +1497,14 @@
                         <div class="col-12" style="top:-10px;">
                             <div class="row">
                                 <div class="col-5 text-sm text-center">
-                                    <b class="h5 text-primary courier-new font-weight-bold"> MILAGROS B. PEÑANO</b>
+                                    <b class="h5 text-primary courier-new font-weight-bold">
+                                        {{ $HCI_NAME }}&nbsp; </b>
                                     <div class="top-line2"></div>
                                     Signature Over Printed Name of Authorized HCI Representative
                                 </div>
                                 <div class="col-3 text-sm text-center">
-                                    <b class="h5 text-primary courier-new font-weight-bold">ADMINISTRATOR</b>
+                                    <b
+                                        class="h5 text-primary courier-new font-weight-bold">{{ $HCI_POSITION }}&nbsp;</b>
                                     <div class="top-line2"></div>
                                     Official Capacity/Designation
                                 </div>
@@ -990,7 +1527,7 @@
                                                 <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
                                                 <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
                                                 <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                                <br>
+                                                <br/>
                                                 <p style="position: absolute;top:27px;">month
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

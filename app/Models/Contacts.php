@@ -109,5 +109,9 @@ class Contacts extends Model
         'MEMBER_PROVINCE',
         'MEMBER_COUNTRY',
         'MEMBER_ZIP_CODE',
+        'PIN_DEPENDENT',
+        'IS_DEPENDENT',
+        'HEIGHT',
+        'IS_COMPLETE'
     ];
 }

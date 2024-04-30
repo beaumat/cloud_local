@@ -7,7 +7,7 @@
                 @endif
             </div>
             <div class="col-9">
-                <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm text-xs"
+                <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm "
                     @if ($isDisabled) disabled @endif>
                     @if ($zero)
                         <option value="0">
@@ -37,7 +37,7 @@
         @if ($withLabel)
             <label for="{{ $name }}" class="text-xs"> {{ $titleName }}</label>
         @endif
-        <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm text-xs"
+        <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm"
             @if ($isDisabled) disabled @endif>
             @if ($zero)
                 <option value="0">

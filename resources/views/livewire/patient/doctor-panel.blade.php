@@ -8,7 +8,7 @@
                 <th class="col-1 text-center">Action </th>
             </tr>
         </thead>
-        <tbody class="text-xs">
+        <tbody >
             @foreach ($dataList as $list)
                 <tr>
                     <td><label class="text-sm text-dark">{{ $list->PIN }}</label></td>
@@ -21,7 +21,7 @@
                     </td>
                 </tr>
             @endforeach
-            <tr>
+            <tr class="text-lg">
                 <td></td>
                 <td>
                     @if ($saveSuccess)

@@ -15,29 +15,92 @@ class LocationServices
     {
         return Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
     }
-    public function Store(string $NAME, bool $INACTIVE, int $PRICE_LEVEL_ID, int $GROUP_ID): int
+    public function getPesonel($LOC_ID)
     {
+        return Locations::query()
+            ->select([
+                'location.ID',
+                'm.PRINT_NAME_AS as MANAGER_NAME',
+                'm.NICKNAME as MANAGER_POSITION',
+                'p.PRINT_NAME_AS as PHIC_NAME',
+                'p.NICKNAME as PHIC_POSITION'
+            ])
+            ->leftJoin('contact as m', 'm.ID', '=', 'location.HCI_MANAGER_ID')
+            ->leftJoin('contact as p', 'p.ID', '=', 'location.PHIC_INCHARGE_ID')
+            ->where('location.ID', $LOC_ID)
+            ->first();
+    }
+    public function get($LOC_ID)
+    {
+        return Locations::where('ID', $LOC_ID)->first();
+    }
+    public function Store(
+        string $NAME,
+        bool $INACTIVE,
+        int $PRICE_LEVEL_ID,
+        int $GROUP_ID,
+        int $HCI_MANAGER_ID,
+        int $PHIC_INCHARGE_ID,
+        string $NAME_OF_BUSINESS,
+        string $ACCREDITATION_NO,
+        string $BLDG_NAME_LOT_BLOCK,
+        string $STREET_SUB_VALL,
+        string $BRGY_CITY_MUNI,
+        string $PROVINCE,
+        string $ZIP_CODE
+    ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
-
         Locations::create([
             'ID' => $ID,
             'NAME' => $NAME,
             'INACTIVE' => $INACTIVE,
             'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null
+            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'HCI_MANAGER_ID' => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
+            'PHIC_INCHARGE_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
+            'NAME_OF_BUSINESS' => $NAME_OF_BUSINESS,
+            'ACCREDITATION_NO' => $ACCREDITATION_NO,
+            'BLDG_NAME_LOT_BLOCK' => $BLDG_NAME_LOT_BLOCK,
+            'STREET_SUB_VALL' => $STREET_SUB_VALL,
+            'BRGY_CITY_MUNI' => $BRGY_CITY_MUNI,
+            'PROVINCE' => $PROVINCE,
+            'ZIP_CODE' => $ZIP_CODE
         ]);
 
         return $ID;
     }
 
-    public function Update(int $ID, string $NAME, bool $INACTIVE, int $PRICE_LEVEL_ID, int $GROUP_ID): void
-    {
+    public function Update(
+        int $ID,
+        string $NAME,
+        bool $INACTIVE,
+        int $PRICE_LEVEL_ID,
+        int $GROUP_ID,
+        int $HCI_MANAGER_ID,
+        int $PHIC_INCHARGE_ID,
+        string $NAME_OF_BUSINESS,
+        string $ACCREDITATION_NO,
+        string $BLDG_NAME_LOT_BLOCK,
+        string $STREET_SUB_VALL,
+        string $BRGY_CITY_MUNI,
+        string $PROVINCE,
+        string $ZIP_CODE
+    ): void {
 
         Locations::where('ID', $ID)->update([
             'NAME' => $NAME,
             'INACTIVE' => $INACTIVE,
             'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null
+            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'HCI_MANAGER_ID' => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
+            'PHIC_INCHARGE_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
+            'NAME_OF_BUSINESS' => $NAME_OF_BUSINESS,
+            'ACCREDITATION_NO' => $ACCREDITATION_NO,
+            'BLDG_NAME_LOT_BLOCK' => $BLDG_NAME_LOT_BLOCK,
+            'STREET_SUB_VALL' => $STREET_SUB_VALL,
+            'BRGY_CITY_MUNI' => $BRGY_CITY_MUNI,
+            'PROVINCE' => $PROVINCE,
+            'ZIP_CODE' => $ZIP_CODE
         ]);
     }
 

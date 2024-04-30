@@ -198,7 +198,7 @@
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="Nickname"
-                                                                                titleName="Nickname"
+                                                                                titleName="Position"
                                                                                 wire:model='NICKNAME' />
                                                                         </div>
                                                                     </div>
