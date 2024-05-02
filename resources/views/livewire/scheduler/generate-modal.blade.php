@@ -1,4 +1,4 @@
-<div>
+<div class="col-md-3">
 
     <button wire:click="openModal" class="btn btn-success btn-sm text-xs">
         <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Generate Schedule

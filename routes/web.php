@@ -25,6 +25,7 @@ use App\Livewire\PhilHealth\PhilHealthPrint;
 use App\Livewire\PhilHealth\PhilHealthPrintForm;
 use App\Livewire\Requirement\RequirementForm;
 use App\Livewire\Requirement\RequirementList;
+use App\Livewire\Scheduler\PrintSchedulesPrintOut;
 use App\Livewire\Scheduler\SchedulerForm;
 use App\Livewire\Scheduler\SchedulerList;
 use App\Livewire\ServiceCharge\ServiceChargeForm;
@@ -104,6 +105,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/schedules')->group(function () {
             Route::get('/', SchedulerList::class)->name('schedules');
             Route::get('/setup', SchedulerForm::class)->name('schedules_setup');
+            Route::get('/{year}/{month}/{week}/{location}/{shift}/print-form', PrintSchedulesPrintOut::class)->name('schedules_print');
         });
 
         Route::prefix('/service-charges')->group(function () {

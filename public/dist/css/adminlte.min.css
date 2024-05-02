@@ -56016,6 +56016,21 @@ a.text-muted:hover {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
+     .bgRed {
+        background-color: red;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .bgYellow {
+        background-color: var(--yellow);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .bgOrange {
+        background-color:var(--orange);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
 }
 
 .print-title {

@@ -18,10 +18,9 @@ class HemodialysisMachineServices
     {
         return HemodialysisMachines::where('ID', $ID)->first();
     }
-    public function Store(string $CODE, int $TYPE, string $DESCRIPTION, int $LOCATION_ID ,int $CAPACITY): int
+    public function Store(string $CODE, int $TYPE, string $DESCRIPTION, int $LOCATION_ID, int $CAPACITY): int
     {
         $ID = $this->object->ObjectNextID('HEMODIALYSIS_MACHINE');
-
         HemodialysisMachines::create([
             'ID' => $ID,
             'CODE' => $CODE,
@@ -47,6 +46,14 @@ class HemodialysisMachineServices
     public function Delete(int $ID)
     {
         HemodialysisMachines::where('ID', $ID)->delete();
+    }
+    public function GetList(int $LOCATION_ID)
+    {
+        return HemodialysisMachines::where('LOCATION_ID', $LOCATION_ID)->get();
+    }
+    public function GetCapacity(int $HEMO_ID): int
+    {
+        return (int) HemodialysisMachines::where('ID', $HEMO_ID)->first()->CAPCITY;
     }
     public function Search($search)
     {

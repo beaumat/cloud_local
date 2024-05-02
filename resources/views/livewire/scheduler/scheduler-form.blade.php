@@ -1,9 +1,20 @@
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
+    <div class="content-header">
         <div class="container-fluid">
-        </div><!-- /.container-fluid -->
-    </section>
+            <div class="row ">
+                <div class="col-sm-6">
+                    <h5 class="m-0"><a href="{{ route('transactionsschedules') }}"> Schedules Setup</a></h5>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item active">
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -14,9 +25,10 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h4 class="card-title">{{ __('Schedules Setup') }}</h4>
+                                        {{-- <h4 class="card-title">{{ __('Schedules Setup') }}</h4> --}}
                                     </div>
                                     <div class="col-md-6 text-right">
+                                            
                                         <a href="{{ route('transactionsschedules') }}" class="btn btn-info btn-sm">
                                             <i class="fa fa-table" aria-hidden="true"></i>
                                             List</a>

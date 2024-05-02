@@ -34,16 +34,16 @@ class ScheduleServices
     public function ContactListFromSchedules($Date, int $LOCATION_ID)
     {
         return Schedules::query()
-        ->select([
-            'schedules.CONTACT_ID as ID',
-            'c.NAME'
-        ])
-        ->leftJoin('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
-        ->where('c.TYPE', 3)
-        ->whereDate('schedules.SCHED_DATE', $Date)
-        ->where('schedules.LOCATION_ID', $LOCATION_ID)
-        ->orderBy('schedules.SHIFT_ID')
-        ->get();
+            ->select([
+                'schedules.CONTACT_ID as ID',
+                'c.NAME'
+            ])
+            ->leftJoin('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
+            ->where('c.TYPE', 3)
+            ->whereDate('schedules.SCHED_DATE', $Date)
+            ->where('schedules.LOCATION_ID', $LOCATION_ID)
+            ->orderBy('schedules.SHIFT_ID')
+            ->get();
     }
     public function scheduleList($Date, int $LOCATION_ID)
     {
@@ -61,6 +61,24 @@ class ScheduleServices
             ->whereDate('schedules.SCHED_DATE', $Date)
             ->where('schedules.LOCATION_ID', $LOCATION_ID)
             ->orderBy('schedules.SHIFT_ID')
+            ->get();
+    }
+    public function scheduleListByShift($Date, int $LOCATION_ID, int $shiftId, int $hemoId)
+    {
+        return Schedules::query()
+            ->select([
+                'schedules.CONTACT_ID',
+                'c.LAST_NAME aS CONTACT_NAME',
+                't.DESCRIPTION as STATUS'
+            ])
+            ->leftJoin('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
+            ->leftJoin('schedule_status as t', 't.ID', '=', 'schedules.SCHED_STATUS')
+            ->where('c.TYPE', 3)
+            ->whereDate('schedules.SCHED_DATE', $Date)
+            ->where('schedules.LOCATION_ID', $LOCATION_ID)
+            ->where('schedules.SHIFT_ID', $shiftId)
+            ->where('schedules.HEMO_MACHINE_ID', $hemoId)
+            ->orderBy('c.DATE_ADMISSION')
             ->get();
     }
     public function get($ContactId, $Date, int $LOCATION_ID)
@@ -91,6 +109,19 @@ class ScheduleServices
                 'STATUS_LOG' => $LOG,
                 'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID
             ]);
+    }
+    public function CheckingType(int $SHIFT_ID, int $CONTACT_ID, string $DATE, int $LOCATION_ID, int $HEMO_MACHINE_ID): int
+    {
+        $totalCount = Schedules::where('SHIFT_ID', $SHIFT_ID)
+            ->where('SCHED_DATE', $DATE)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('HEMO_MACHINE_ID', $HEMO_MACHINE_ID)
+            ->where('CONTACT_ID', '<>', $CONTACT_ID)
+            ->count();
+
+            
+        return $totalCount;
+
     }
     public function Store(int $SHIFT_ID, int $CONTACT_ID, string $DATE, int $STATUS, $LOG, int $LOCATION_ID, int $HEMO_MACHINE_ID)
     {

@@ -1,11 +1,23 @@
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <div class="container-fluid">
-            @livewire('Scheduler.GenerateModal', ['LOCATION_ID' => $LOCATION_ID, 'YEAR' => $year, 'MONTH' => $month])
-        </div><!-- /.container-fluid -->
-    </section>
 
+
+
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-sm-6">
+                    <h5 class="m-0"><a href="{{ route('transactionsschedules') }}"> Schedules</a></h5>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item active">
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    @livewire('Scheduler.PrintSchedules', ['MONTH' => $month, 'YEAR' => $year, 'LOCATION_ID' => $LOCATION_ID])
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -15,15 +27,19 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <h4 class="card-title">Schedules</h4>
-                                    </div>
-                                    <div class="col-md-6 text-right">
+                                    <div class="col-md-12">
+
                                         <a href="{{ route('transactionsschedules_setup') }}"
                                             class="btn btn-info btn-sm">
                                             <i class="fa fa-cog" aria-hidden="true"></i> Setup</a>
 
+
+                                        <button wire:click="openModalPrint" class="btn btn-success btn-sm">
+                                            <i class="fa fa-print" aria-hidden="true"></i> Print
+                                        </button>
                                     </div>
+
+
                                 </div>
                             </div>
                             <div class="card-body">

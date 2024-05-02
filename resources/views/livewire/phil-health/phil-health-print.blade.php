@@ -5,12 +5,12 @@
         </div>
     </div>
 
-    @foreach ($PRINT_ID as $ID)
-        @livewire('PhilHealth.PrintComputation', ['PRINT_ID' => $ID])
-        <div class="page-break"></div>
+    @foreach ($PRINT_ID as $ID)   
         @livewire('PhilHealth.PrintSoa', ['PRINT_ID' => $ID])
         <div class="page-break"></div>
         @livewire('PhilHealth.PrintTreatment', ['PRINT_ID' => $ID])
+        <div class="page-break"></div>
+        @livewire('PhilHealth.PrintComputation', ['PRINT_ID' => $ID])
     @endforeach
 
 </div>

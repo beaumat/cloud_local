@@ -115,6 +115,10 @@ class SchedulerList extends Component
         $this->reloadComponent();
     }
 
+    public function openModalPrint()
+    {
+        $this->dispatch('print-modal');
+    }
     public function render()
     {
         $this->locationList = $this->locationServices->getList();
