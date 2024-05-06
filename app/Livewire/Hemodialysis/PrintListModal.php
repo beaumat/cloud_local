@@ -52,9 +52,9 @@ class PrintListModal extends Component
             return;
         }
         // 
-        // return Redirect::to(route('transactionshemo_print', ['id' => $this->id]));
+        // return Redirect::to(route('patientshemo_print', ['id' => $this->id]));
 
-        $url = route('transactionshemo_print', ['id' => $this->id]);
+        $url = route('patientshemo_print', ['id' => $this->id]);
         $this->dispatch('openNewTab', data: $url);
         $this->closeModal();
 

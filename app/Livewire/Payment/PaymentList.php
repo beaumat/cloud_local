@@ -4,12 +4,12 @@ namespace App\Livewire\Payment;
 
 use App\Services\LocationServices;
 use App\Services\PaymentServices;
+use App\Services\UploadServices;
 use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Storage;
 
 #[Title('Payments')]
 class PaymentList extends Component
@@ -17,22 +17,23 @@ class PaymentList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public int $perPage = 20;
+    public int $perPage = 15;
     public int $locationid;
     public $locationList = [];
-    
     private $paymentServices;
     private $locationServices;
     private $userServices;
-
+    private $uploadServices;
     public function boot(
         PaymentServices $paymentServices,
         LocationServices $locationServices,
-        UserServices $userServices
+        UserServices $userServices,
+        UploadServices $uploadServices
     ) {
         $this->paymentServices = $paymentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
+        $this->uploadServices = $uploadServices;
     }
     public function mount()
     {
@@ -44,10 +45,8 @@ class PaymentList extends Component
         try {
             $data = $this->paymentServices->get($id);
             if ($data) {
-                if (Storage::disk('public')->exists($data->FILE_PATH)) {
-                    Storage::disk('public')->delete($data->FILE_PATH);
-                    // File has been successfully deleted
-                }
+
+                $this->uploadServices->RemoveIfExists($data->FILE_PATH);
                 $this->paymentServices->Delete($data->ID);
                 session()->flash('message', 'Successfully deleted.');
             }
@@ -63,6 +62,11 @@ class PaymentList extends Component
         $this->resetErrorBag();
         session()->forget('message');
         session()->forget('error');
+    }
+    public function getConfirm($id)
+    {
+        $this->paymentServices->ConfirmProccess($id);
+       
     }
     public function render()
     {

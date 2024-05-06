@@ -4,24 +4,19 @@ namespace App\Services;
 
 use App\Models\Payment;
 use App\Models\PaymentInvoices;
-use Carbon\Carbon;
+
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 class PaymentServices
 {
-
     use WithPagination;
-    public int $PAYMENT_INVOICE_ID;
-    public int $INVOICE_ID;
-    public float $DISCOUNT;
-    public float $AMOUNT_APPLIED;
-    public int $DISCOUNT_ACCOUNT_ID;
-    public int $ACCOUNTS_RECEIVABLE_ID;
     private $object;
-    public function __construct(ObjectServices $objectService)
+    private $dateServices;
+    public function __construct(ObjectServices $objectService, DateServices $dateServices)
     {
         $this->object = $objectService;
+        $this->dateServices = $dateServices;
     }
     public function get($ID)
     {
@@ -45,13 +40,14 @@ class PaymentServices
         int $OVERPAYMENT_ACCOUNT_ID,
         bool $DEPOSITED,
         int $ACCOUNTS_RECEIVABLE_ID
+
     ): int {
 
         $ID = (int) $this->object->ObjectNextID('PAYMENT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PAYMENT');
         Payment::create([
             'ID' => $ID,
-            'RECORDED_ON' => Carbon::now(),
+            'RECORDED_ON' => $this->dateServices->Now(),
             'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
             'DATE' => $DATE,
             'CUSTOMER_ID' => $CUSTOMER_ID,
@@ -67,7 +63,7 @@ class PaymentServices
             'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
             'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
             'STATUS' => 2,
-            'STATUS_DATE' => Carbon::now()->format('Y-m-d'),
+            'STATUS_DATE' => $this->dateServices->NowDate(),
             'DEPOSITED' => $DEPOSITED,
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID
         ]);
@@ -113,7 +109,21 @@ class PaymentServices
     {
         Payment::where('ID', $ID)->update([
             'STATUS' => $STATUS,
-            'STATUS_DATE' => Carbon::now()->format('Y-m-d')
+            'STATUS_DATE' => $this->dateServices->NowDate()
+        ]);
+    }
+    public function ConfirmProccess(int $ID)
+    {
+        Payment::where('ID', $ID)->update([
+            'IS_CONFIRM' => true,
+            'DATE_CONFIRM' => $this->dateServices->NowDate()
+        ]);
+    }
+    public function UnConfirmProccess(int $ID)
+    {
+        Payment::where('ID', $ID)->update([
+            'IS_CONFIRM' => false,
+            'DATE_CONFIRM' => null
         ]);
     }
     public function Delete(int $ID)
@@ -135,7 +145,8 @@ class PaymentServices
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
                 'pm.DESCRIPTION as PAYMENT_METHOD',
-                'payment.FILE_PATH'
+                'payment.FILE_PATH',
+                'payment.IS_CONFIRM'
 
             ])
             ->join('contact as c', 'c.ID', '=', 'payment.CUSTOMER_ID')
@@ -157,8 +168,6 @@ class PaymentServices
             ->orderBy('payment.ID', 'desc')
             ->paginate($perPage);
     }
-
-
     public function PaymentInvoiceStore(
         int $PAYMENT_ID,
         int $INVOICE_ID,
@@ -168,7 +177,6 @@ class PaymentServices
         int $ACCOUNTS_RECEIVABLE_ID
     ): int {
         $ID = $this->object->ObjectNextID('PAYMENT_INVOICES');
-
         PaymentInvoices::create([
             'ID' => $ID,
             'PAYMENT_ID' => $PAYMENT_ID,
@@ -234,6 +242,7 @@ class PaymentServices
             ->pay;
 
         Payment::where('ID', $PAYMENT_ID)->update(['AMOUNT_APPLIED' => $pay]);
+
         return $pay;
     }
     public function InvoicePaymentList(int $INVOICE_ID, int $CUSTOMER_ID)
@@ -247,7 +256,8 @@ class PaymentServices
                 'payment.AMOUNT',
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
                 'payment_invoices.AMOUNT_APPLIED',
-                'payment.FILE_PATH'
+                'payment.FILE_PATH',
+                'payment.IS_CONFIRM'
             ])
             ->join('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
             ->join('payment_invoices', 'payment_invoices.PAYMENT_ID', '=', 'payment.ID')

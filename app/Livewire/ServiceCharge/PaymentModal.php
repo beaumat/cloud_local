@@ -9,11 +9,11 @@ use Livewire\Component;
 class PaymentModal extends Component
 {
     #[Reactive]
-    public int $CUSTOMER_ID;
+    public int $PATIENT_ID;
     #[Reactive]
     public int $LOCATION_ID;
     #[Reactive]
-    public int $INVOICE_ID;
+    public int $SERVICE_CHARGES_ID;
     public string $tab = 'available';
  
     public function SelectTab(string $select)

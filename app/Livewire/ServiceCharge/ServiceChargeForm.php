@@ -4,16 +4,16 @@ namespace App\Livewire\ServiceCharge;
 
 use App\Services\AccountServices;
 use App\Services\ContactServices;
+use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
-use App\Services\InvoiceServices;
 use App\Services\LocationServices;
 use App\Services\PaymentTermServices;
 use App\Services\ScheduleServices;
+use App\Services\ServiceChargeServices;
 use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -22,9 +22,8 @@ use Livewire\Component;
 #[Title('Service Charge')]
 class ServiceChargeForm extends Component
 {
-
     public int $ID;
-    public int $CUSTOMER_ID;
+    public int $PATIENT_ID;
     public int $SALES_REP_ID;
     public string $DATE;
     public string $CODE;
@@ -52,7 +51,6 @@ class ServiceChargeForm extends Component
     public $paymentTermList = [];
     public $taxList = [];
     public bool $Modify;
-    private $invoiceServices;
     private $locationServices;
     private $contactServices;
     private $shipViaServices;
@@ -63,13 +61,15 @@ class ServiceChargeForm extends Component
     private $systemSettingServices;
     private $accountServices;
     private $scheduleServices;
+    private $serviceChargeServices;
+    private $dateServices;
     public string $tab = "item";
     public function SelectTab(string $select)
     {
         $this->tab = $select;
     }
     public function boot(
-        InvoiceServices $invoiceServices,
+        ServiceChargeServices $serviceChargeServices,
         LocationServices $locationServices,
         ContactServices $contactServices,
         ShipViaServices $shipViaServices,
@@ -79,10 +79,11 @@ class ServiceChargeForm extends Component
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
         AccountServices $accountServices,
-        ScheduleServices $scheduleServices
+        ScheduleServices $scheduleServices,
+        DateServices $dateServices
 
     ) {
-        $this->invoiceServices = $invoiceServices;
+        $this->serviceChargeServices = $serviceChargeServices;
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
         $this->shipViaServices = $shipViaServices;
@@ -93,7 +94,9 @@ class ServiceChargeForm extends Component
         $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
         $this->scheduleServices = $scheduleServices;
+        $this->dateServices = $dateServices;
     }
+
     public function LoadDropdown(bool $isAllContact)
     {
         if ($isAllContact) {
@@ -124,7 +127,7 @@ class ServiceChargeForm extends Component
         $this->DATE = $Data->DATE;
         $this->DUE_DATE = $Data->DUE_DATE ?? null;
         $this->LOCATION_ID = $Data->LOCATION_ID;
-        $this->CUSTOMER_ID = $Data->CUSTOMER_ID;
+        $this->PATIENT_ID = $Data->PATIENT_ID;
         $this->SALES_REP_ID = $Data->SALES_REP_ID ?? 0;
         $this->SHIP_VIA_ID = $Data->SHIP_VIA_ID ?? 0;
         $this->PAYMENT_TERMS_ID = $Data->PAYMENT_TERMS_ID ? $Data->PAYMENT_TERMS_ID : 0;
@@ -149,27 +152,27 @@ class ServiceChargeForm extends Component
     }
     public function mount($id = null)
     {
-        $currentDate = Carbon::now();
+        $currentDate = $this->dateServices->Now();
         $this->DATE = $currentDate->format('Y-m-d');
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
 
         if (is_numeric($id)) {
             $this->LoadDropdown(true);
-            $data = $this->invoiceServices->get($id);
+            $data = $this->serviceChargeServices->get($id);
             if ($data) {
                 $this->getInfo($data);
                 $this->Modify = false;
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('vendorspurchase_order')->with('error', $errorMessage);
+            return Redirect::route('patientsservice_charges')->with('error', $errorMessage);
         }
 
         $this->LoadDropdown(false);
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
-        $this->CUSTOMER_ID = 0;
+        $this->PATIENT_ID = 0;
         $this->SALES_REP_ID = 0;
         $this->SHIP_VIA_ID = $this->shipViaServices->getFirst();
         $this->CLASS_ID = 0;
@@ -201,7 +204,7 @@ class ServiceChargeForm extends Component
 
                 $this->validate(
                     [
-                        'CUSTOMER_ID' => 'required|not_in:0',
+                        'PATIENT_ID' => 'required|not_in:0',
                         'OUTPUT_TAX_ID' => 'required|not_in:0',
                         'DATE' => 'required',
                         'LOCATION_ID' => 'required',
@@ -209,7 +212,7 @@ class ServiceChargeForm extends Component
                     ],
                     [],
                     [
-                        'CUSTOMER_ID' => 'Patient',
+                        'PATIENT_ID' => 'Patient',
                         'OUTPUT_TAX_ID' => 'Tax',
                         'DATE' => 'Date',
                         'LOCATION_ID' => 'Location',
@@ -217,25 +220,12 @@ class ServiceChargeForm extends Component
                     ]
                 );
 
-
-
                 $this->getTax();
-
-                $this->ID = $this->invoiceServices->Store(
+                $this->ID = (int) $this->serviceChargeServices->Store(
                     $this->CODE,
                     $this->DATE,
-                    $this->CUSTOMER_ID,
+                    $this->PATIENT_ID,
                     $this->LOCATION_ID,
-                    $this->CLASS_ID,
-                    $this->SALES_REP_ID,
-                    '',
-                    '',
-                    $this->SHIP_VIA_ID,
-                    null,
-                    $this->PAYMENT_TERMS_ID,
-                    $this->DUE_DATE,
-                    null,
-                    0,
                     $this->NOTES,
                     $this->ACCOUNTS_RECEIVABLE_ID,
                     $this->STATUS,
@@ -244,14 +234,12 @@ class ServiceChargeForm extends Component
                     $this->OUTPUT_TAX_VAT_METHOD,
                     $this->OUTPUT_TAX_ACCOUNT_ID
                 );
-
-                return Redirect::route('transactionsservice_charges_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
+                return Redirect::route('patientsservice_charges_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
                 $this->validate(
                     [
-                        'CUSTOMER_ID' => 'required|not_in:0',
+                        'PATIENT_ID' => 'required|not_in:0',
                         'CODE' => 'required|max:20|unique:invoice,code,' . $this->ID,
                         'OUTPUT_TAX_ID' => 'required|not_in:0',
                         'DATE' => 'required',
@@ -260,7 +248,7 @@ class ServiceChargeForm extends Component
                     ],
                     [],
                     [
-                        'CUSTOMER_ID' => 'Petient',
+                        'PATIENT_ID' => 'Petient',
                         'CODE' => 'Reference No.',
                         'OUTPUT_TAX_ID' => 'Tax',
                         'DATE' => 'Date',
@@ -269,25 +257,13 @@ class ServiceChargeForm extends Component
                     ]
                 );
 
-
                 $this->getTax();
-                $this->invoiceServices->Update(
+                $this->serviceChargeServices->Update(
                     $this->ID,
                     $this->CODE,
                     $this->DATE,
-                    $this->CUSTOMER_ID,
+                    $this->PATIENT_ID,
                     $this->LOCATION_ID,
-                    $this->CLASS_ID,
-                    $this->SALES_REP_ID,
-                    '',
-                    '',
-                    $this->SHIP_VIA_ID,
-                    null,
-                    $this->PAYMENT_TERMS_ID,
-                    $this->DUE_DATE,
-                    null
-                    ,
-                    0,
                     $this->NOTES,
                     $this->ACCOUNTS_RECEIVABLE_ID,
                     $this->STATUS,
@@ -297,15 +273,21 @@ class ServiceChargeForm extends Component
                     $this->OUTPUT_TAX_ACCOUNT_ID
                 );
 
-                $this->invoiceServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
-                $getResult = $this->invoiceServices->ReComputed($this->ID);
+                $this->serviceChargeServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
+
+                $getResult = $this->serviceChargeServices->ReComputed($this->ID);
+                
                 $this->getUpdateAmount($getResult);
+                
                 session()->flash('message', 'Successfully updated');
             }
-            $PO = $this->invoiceServices->get($this->ID);
-            if ($PO) {
-                $this->getInfo($PO);
+
+            $data = $this->serviceChargeServices->get($this->ID);
+            
+            if ($data) {
+                $this->getInfo($data);
             }
+            
             $this->Modify = false;
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -326,53 +308,20 @@ class ServiceChargeForm extends Component
     #[On('update-status')]
     public function updateStatus()
     {
-        $data = $this->invoiceServices->get($this->ID);
+        $data = $this->serviceChargeServices->get($this->ID);
         if ($data) {
             $this->getInfo($data);
         }
     }
     public function updateCancel()
     {
-        $data = $this->invoiceServices->get($this->ID);
+        $data = $this->serviceChargeServices->get($this->ID);
         if ($data) {
             $this->getInfo($data);
         }
         $this->Modify = false;
     }
-    public function getSubmit()
-    {
-        try {
-            $this->invoiceServices->StatusUpdate($this->ID, 15);
-            $data = $this->invoiceServices->get($this->ID);
-            if ($data) {
-                $this->getInfo($data);
-                $this->Modify = false;
-                return;
-            }
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-        }
 
-    }
-    public function getVoid()
-    {
-        try {
-
-            $this->invoiceServices->StatusUpdate($this->ID, 7);
-            $data = $this->invoiceServices->get($this->ID);
-
-            if ($data) {
-                $this->getInfo($data);
-                $this->Modify = false;
-                return;
-            }
-
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-        }
-    }
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -390,8 +339,6 @@ class ServiceChargeForm extends Component
     }
     public function render()
     {
-
-
         return view('livewire.service-charge.service-charge-form');
     }
 }

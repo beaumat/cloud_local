@@ -4,25 +4,28 @@ namespace App\Livewire\Payment;
 
 use App\Services\AccountServices;
 use App\Services\ContactServices;
+use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\PaymentMethodServices;
 use App\Services\PaymentServices;
 use App\Services\SystemSettingServices;
+use App\Services\UploadServices;
 use App\Services\UserServices;
-use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 #[Title('Payments')]
 class PaymentForm extends Component
 {
     use WithFileUploads;
+    public string $FILE_NAME;
+    public string $FILE_PATH;
+    public bool $IS_CONFIRM;
+    public string $DATE_CONFIRM;
     public $PDF;
     public int $ID;
     public string $CODE;
@@ -61,9 +64,8 @@ class PaymentForm extends Component
     public bool $showReceiptNo = false;
     public bool $showReceiptDate = false;
     public bool $showFileName = false;
-    public string $FILE_NAME;
-    public string $FILE_PATH;
-
+    private $uploadServices;
+    private $dateServices;
     public function boot(
         PaymentServices $paymentServices,
         LocationServices $locationServices,
@@ -72,7 +74,9 @@ class PaymentForm extends Component
         SystemSettingServices $systemSettingServices,
         AccountServices $accountServices,
         PaymentMethodServices $paymentMethodServices,
-        ContactServices $contactServices
+        ContactServices $contactServices,
+        UploadServices $uploadServices,
+        DateServices $dateServices
     ) {
         $this->paymentServices = $paymentServices;
         $this->locationServices = $locationServices;
@@ -82,6 +86,9 @@ class PaymentForm extends Component
         $this->accountServices = $accountServices;
         $this->paymentMethodServices = $paymentMethodServices;
         $this->contactServices = $contactServices;
+        $this->uploadServices = $uploadServices;
+        $this->dateServices = $dateServices;
+
     }
     public function getInfo($data)
     {
@@ -106,6 +113,8 @@ class PaymentForm extends Component
         $this->DEPOSITED = $data->DEPOSITED ?? null;
         $this->FILE_NAME = $data->FILE_NAME ?? '';
         $this->FILE_PATH = $data->FILE_PATH ?? '';
+        $this->IS_CONFIRM = $data->IS_CONFIRM ?? false;
+        $this->DATE_CONFIRM = $data->DATE_CONFIRM ?? '';
         $this->updatedpaymentmethodid();
         $this->Modify = false;
     }
@@ -133,7 +142,7 @@ class PaymentForm extends Component
 
 
         $this->ID = 0;
-        $this->DATE = Carbon::now()->format('Y-m-d');
+        $this->DATE = $this->dateServices->NowDate();
         $this->CODE = '';
         $this->CUSTOMER_ID = 0;
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
@@ -148,12 +157,14 @@ class PaymentForm extends Component
         $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
         $this->OVERPAYMENT_ACCOUNT_ID = 0;
         $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
-        $this->PDF = null;
         $this->STATUS = 0;
         $this->DEPOSITED = 0;
         $this->Modify = true;
+        $this->PDF = null;
         $this->FILE_NAME = '';
         $this->FILE_PATH = '';
+        $this->IS_CONFIRM = false;
+        $this->DATE_CONFIRM = '';
         $this->updatedpaymentmethodid();
     }
     public function updatedPdf()
@@ -162,12 +173,16 @@ class PaymentForm extends Component
             'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
         ]);
     }
+    public function getConfirm()
+    {
+        $this->paymentServices->ConfirmProccess($this->ID);
+        return Redirect::route('transactionspayment_edit', ['id' => $this->ID])->with('message', 'Successfully confirm');
+    }
     public function save()
     {
 
         $getType = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
         $PAYMENT_TYPE = (int) $getType->PAYMENT_TYPE;
-
         if ($PAYMENT_TYPE == 10 && $this->ID == 0) {
             $this->validate(
                 [
@@ -188,6 +203,7 @@ class PaymentForm extends Component
             );
 
         } else {
+
             $this->validate(
                 [
                     'CUSTOMER_ID' => 'required|not_in:0',
@@ -209,10 +225,10 @@ class PaymentForm extends Component
 
             if ($this->ID == 0) {
 
-                if ($this->paymentServices->HaveRemainingPaymentBalance($this->CUSTOMER_ID, $this->LOCATION_ID)) {
-                    session()->flash('error', 'Invalid create. Patient have existing balance.');
-                    return;
-                }
+                // if ($this->paymentServices->HaveRemainingPaymentBalance($this->CUSTOMER_ID, $this->LOCATION_ID)) {
+                //     session()->flash('error', 'Invalid create. Patient have existing balance.');
+                //     return;
+                // }
 
                 $this->ID = $this->paymentServices->Store(
                     $this->CODE,
@@ -234,6 +250,7 @@ class PaymentForm extends Component
                 );
 
                 if ($PAYMENT_TYPE == 10) {
+
                     $this->getDocumentProccess();
                 }
 
@@ -262,19 +279,15 @@ class PaymentForm extends Component
 
                 if ($this->PDF) {
                     if ($PAYMENT_TYPE == 10) {
-                        if (Storage::disk('public')->exists($this->FILE_PATH)) {
-                            Storage::disk('public')->delete($this->FILE_PATH);
-                        }
 
+                        $this->uploadServices->RemoveIfExists($this->FILE_PATH);
                         $this->getDocumentProccess();
 
                         $data = $this->paymentServices->get($this->ID);
                         if ($data) {
                             $this->getInfo($data);
                         }
-
                     }
-
                 }
                 $this->Modify = false;
                 session()->flash('message', 'Successfully updated');
@@ -286,18 +299,8 @@ class PaymentForm extends Component
     }
     public function getDocumentProccess()
     {
-        //Remove First
-        $tempPath = $this->PDF->store('public/temp', 'public');
-        // Generate a random filename
-        $randomFilename = Str::random(40); // Generate a random string of 40 characters             
-        // Get the file extension
-        $extension = $this->PDF->extension();
-        // Construct the new file path with the random filename and original extension
-        $newPath = 'payment/' . $randomFilename . '.' . $extension;
-        // Move the temporary file to the new path
-        Storage::disk('public')->move($tempPath, $newPath);
-        // Update the database record with the new filename
-        $this->paymentServices->UpdateFile($this->ID, $randomFilename . '.' . $extension, $newPath);
+        $returnData = $this->uploadServices->Payment($this->PDF);
+        $this->paymentServices->UpdateFile($this->ID, $returnData['filename'] . '.' . $returnData['extension'], $returnData['new_path']);
     }
     public function getModify()
     {
@@ -315,8 +318,8 @@ class PaymentForm extends Component
     }
     public function updatedpaymentmethodid()
     {
-
         $paymentMethod = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
+
         if ($paymentMethod) {
 
             switch ($paymentMethod->PAYMENT_TYPE) {
@@ -369,8 +372,8 @@ class PaymentForm extends Component
                     # code...
                     $this->showCardNo = false;
                     $this->showCardDateExpire = false;
-                    $this->showReceiptNo = false;
-                    $this->showReceiptDate = false;
+                    $this->showReceiptNo = true;
+                    $this->showReceiptDate = true;
                     $this->showFileName = true;
                     break;
             }
@@ -378,10 +381,8 @@ class PaymentForm extends Component
 
 
     }
-
     public function render()
     {
-
         return view('livewire.payment.payment-form');
     }
 }

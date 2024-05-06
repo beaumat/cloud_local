@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('transactionsservice_charges') }}"> Service Charges </a></h5>
+                    <h5 class="m-0"><a href="{{ route('patientsservice_charges') }}"> Service Charges </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -60,7 +60,7 @@
                                         <th class="col-1">Tax</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center col-1 bg-success">
-                                            <a href="{{ route('transactionsservice_charges_create') }}"
+                                            <a href="{{ route('patientsservice_charges_create') }}"
                                                 class="text-white btn btn-xs w-100">
                                                 <i class="fas fa-plus"></i> New
                                             </a>
@@ -70,7 +70,12 @@
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ $list->CODE }}</td>
+                                            <td>
+                                                <a href="{{ route('patientsservice_charges_edit', ['id' => $list->ID]) }}"
+                                                    class="text-primary">
+                                                    {{ $list->CODE }}
+                                                </a>
+                                            </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
@@ -79,11 +84,10 @@
                                             <td> {{ $list->TAX_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('transactionsservice_charges_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('patientsservice_charges_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
-
                                                 @if ($list->AMOUNT == $list->BALANCE_DUE)
                                                     <a href="#" wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"

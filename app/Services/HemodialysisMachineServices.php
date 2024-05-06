@@ -53,7 +53,7 @@ class HemodialysisMachineServices
     }
     public function GetCapacity(int $HEMO_ID): int
     {
-        return (int) HemodialysisMachines::where('ID', $HEMO_ID)->first()->CAPCITY;
+        return (int) HemodialysisMachines::where('ID', $HEMO_ID)->first()->CAPACITY;
     }
     public function Search($search)
     {

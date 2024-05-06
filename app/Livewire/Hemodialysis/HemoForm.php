@@ -5,15 +5,21 @@ namespace App\Livewire\Hemodialysis;
 use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
+use App\Services\UploadServices;
 use App\Services\UserServices;
 use Carbon\Carbon;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\WithFileUploads;
 
 #[Title('Hemodialysis Treatment')]
 class HemoForm extends Component
 {
+    use WithFileUploads;
+    public string $FILE_NAME;
+    public string $FILE_PATH;
+    public $PDF = null;
     public $data;
     public int $ID;
     public bool $Modify;
@@ -29,7 +35,6 @@ class HemoForm extends Component
     public string $DATE;
     public string $CODE;
     public int $LOCATION_ID;
-
     public string $PRE_WEIGHT;
     public string $PRE_BLOOD_PRESSURE;
     public string $PRE_BLOOD_PRESSURE2;
@@ -42,21 +47,23 @@ class HemoForm extends Component
     public string $POST_HEART_RATE;
     public string $POST_O2_SATURATION;
     public string $POST_TEMPERATURE;
-
     public string $TIME_START;
     public string $TIME_END;
+
+    private $uploadServices;
 
     public function boot(
         HemoServices $hemoServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
-        UserServices $userServices
+        UserServices $userServices,
+        UploadServices $uploadServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
         $this->userServices = $userServices;
-
+        $this->uploadServices = $uploadServices;
     }
 
     public function reloadData($data)
@@ -83,6 +90,9 @@ class HemoForm extends Component
 
         $this->TIME_START = $data->TIME_START ?? "";
         $this->TIME_END = $data->TIME_END ?? "";
+
+        $this->FILE_NAME = $data->FILE_NAME ?? "";
+        $this->FILE_PATH = $data->FILE_PATH ?? "";
     }
     public function mount($id = null)
     {
@@ -96,9 +106,8 @@ class HemoForm extends Component
                 $this->reloadData($data);
                 return;
             }
-
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('transactionshemo')->with('error', $errorMessage);
+            return Redirect::route('patientshemo')->with('error', $errorMessage);
 
         }
 
@@ -120,6 +129,10 @@ class HemoForm extends Component
         $this->POST_HEART_RATE = "";
         $this->POST_O2_SATURATION = "";
         $this->POST_TEMPERATURE = "";
+
+        $this->PDF = null;
+        $this->FILE_NAME = '';
+        $this->FILE_PATH = '';
     }
     public function update_all()
     {
@@ -141,6 +154,15 @@ class HemoForm extends Component
             $this->TIME_START,
             $this->TIME_END
         );
+
+        if ($this->PDF != null) {
+
+            $this->uploadServices->RemoveIfExists($this->FILE_PATH);
+
+            $returnData = $this->uploadServices->Treatment($this->PDF);
+
+            $this->hemoServices->UpdateFile($this->ID, $returnData['filename'] . '.' . $returnData['extension'], $returnData['new_path']);
+        }
 
         session()->flash('message', 'Successfully save');
     }
@@ -185,7 +207,7 @@ class HemoForm extends Component
 
             if ($this->ID == 0) {
                 $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
-                return Redirect::route('transactionshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+                return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 $this->hemoServices->PreUpdate($this->ID, $this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
             }
@@ -198,7 +220,12 @@ class HemoForm extends Component
         $this->Modify = false;
 
     }
-
+    public function updatedPdf()
+    {
+        $this->validate([
+            'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
+        ]);
+    }
 
     public function render()
     {

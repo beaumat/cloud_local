@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-6">
-                    <h5 class="m-0"><a href="{{ route('transactionshemo') }}"> Treatment </a></h5>
+                    <h5 class="m-0"><a href="{{ route('patientshemo') }}"> Treatment </a></h5>
                 </div>
                 <div class="col-6 text-right">
                     <div style="float: right;" class="row">
@@ -55,9 +55,9 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">REF NO.</th>
+                                        <th>NO.</th>
                                         <th>DATE</th>
-                                        <th class="col-md-2">PATIENT NAME</th>
+                                        <th class="col-2">PATIENT NAME</th>
                                         <th class="text-center col-1">W</th>
                                         <th class="text-center col-1">B.P</th>
                                         <th class="text-center col-1">H.R</th>
@@ -67,8 +67,8 @@
                                         <th class="text-center col-1">End</th>
                                         <th class="col-1">Location</th>
                                         <th> Status</th>
-                                        <th class="text-center col-3 bg-success">
-                                            <a href="{{ route('transactionshemo_create') }}"
+                                        <th class="text-center col-4 bg-success">
+                                            <a href="{{ route('patientshemo_create') }}"
                                                 class="text-white btn btn-xs w-100">
                                                 <i class="fas fa-plus"></i> New
                                             </a>
@@ -78,14 +78,21 @@
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ $list->CODE }}</td>
+                                            <td> 
+                                                <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
+                                                    class="text-primary">
+                                                    {{ $list->CODE }}
+                                                </a>
+                                               </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td class="text-center">
                                                 {{ $list->PRE_WEIGHT }} | {{ $list->POST_WEIGHT }}
                                             </td>
-                                            <td class="text-center"> {{ $list->PRE_BLOOD_PRESSURE }}/{{ $list->PRE_BLOOD_PRESSURE2 }} |
-                                                {{ $list->POST_BLOOD_PRESSURE }}/{{ $list->POST_BLOOD_PRESSURE2 }}</td>
+                                            <td class="text-center">
+                                                {{ $list->PRE_BLOOD_PRESSURE }}/{{ $list->PRE_BLOOD_PRESSURE2 }} |
+                                                {{ $list->POST_BLOOD_PRESSURE }}/{{ $list->POST_BLOOD_PRESSURE2 }}
+                                            </td>
                                             <td class="text-center"> {{ $list->PRE_HEART_RATE }} |
                                                 {{ $list->POST_HEART_RATE }}</td>
                                             <td class="text-center"> {{ $list->PRE_O2_SATURATION }} |
@@ -106,11 +113,21 @@
                                             <td> {{ $list->STATUS }} </td>
                                             <td class="text-center">
                                                 <a target="_blank"
-                                                    href="{{ route('transactionshemo_print', ['id' => $list->ID]) }}"
+                                                    href="{{ route('patientshemo_print', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-primary">
                                                     <i class="fa fa-print" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="{{ route('transactionshemo_edit', ['id' => $list->ID]) }}"
+                                                @if ($list->FILE_PATH)
+                                                    <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
+                                                        target="_blank" class="btn-sm text-danger">
+                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                    </a>
+                                                @else
+                                                    <a href="#" class="btn-sm text-secondary">
+                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                    </a>
+                                                @endif
+                                                <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>

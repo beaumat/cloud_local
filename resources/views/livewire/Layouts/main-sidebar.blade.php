@@ -18,40 +18,40 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item {{ request()->is('transactions*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->is('transactions*') ? 'active ' : '' }}">
+                <li class="nav-item {{ request()->is('patients*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('patients*') ? 'active ' : '' }}">
                         <i class="nav-icon fas fa-users "></i>
                         <p>
-                            Transaction
+                            Patients
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview bg-light">
                         <li class="nav-item">
-                            <a href="{{ route('transactionsschedules') }}"
-                                class="nav-link {{ request()->is('transactions/schedules*') ? 'active text-primary' : '' }}">
+                            <a href="{{ route('patientsschedules') }}"
+                                class="nav-link {{ request()->is('patients/schedules*') ? 'active text-primary' : '' }}">
                                 <i class="fas fa-calendar nav-icon"></i>
                                 <p>Schedules</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('transactionsservice_charges') }}"
-                                class="nav-link {{ request()->is('transactions/service-charges*') ? 'active text-primary' : '' }}">
+                            <a href="{{ route('patientsservice_charges') }}"
+                                class="nav-link {{ request()->is('patients/service-charges*') ? 'active text-primary' : '' }}">
                                 <i class="fas fa-file-invoice nav-icon"></i>
                                 <p>Service Charge</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('transactionspayment') }}"
-                                class="nav-link {{ request()->is('transactions/payments*') ? 'active text-primary' : '' }}">
+                            <a href="{{ route('patientspayment') }}"
+                                class="nav-link {{ request()->is('patients/payments*') ? 'active text-primary' : '' }}">
                                 <i class="fas fa-money-bill-wave nav-icon"></i>
                                 <p>Payments</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('transactionshemo') }}"
-                                class="nav-link {{ request()->is('transactions/hemodialysis-treatment*') ? 'active text-primary' : '' }}">
+                            <a href="{{ route('patientshemo') }}"
+                                class="nav-link {{ request()->is('patients/hemodialysis-treatment*') ? 'active text-primary' : '' }}">
                                 <i class="fas fa-medkit nav-icon"></i>
                                 <p>Treatment</p>
                             </a>
@@ -70,15 +70,15 @@
                             </a>
                         </li> --}}
                         <li class="nav-item">
-                            <a href="{{ route('transactionsphic') }}"
-                                class="nav-link {{ request()->is('transactions/phil-health*') ? 'active text-primary' : '' }}">
+                            <a href="{{ route('patientsphic') }}"
+                                class="nav-link {{ request()->is('patients/phil-health*') ? 'active text-primary' : '' }}">
                                 <i class="fas fa-hospital-o nav-icon"></i>
                                 <p>PhilHealth</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('transactionssoa') }}"
-                                class="nav-link {{ request()->is('transactions/statement-of-account*') ? 'active text-primary' : '' }}">
+                            <a href="{{ route('patientssoa') }}"
+                                class="nav-link {{ request()->is('patients/statement-of-account*') ? 'active text-primary' : '' }}">
                                 <i class="fas fa-newspaper nav-icon"></i>
                                 <p>Statement of Account</p>
                             </a>
@@ -86,7 +86,7 @@
 
                     </ul>
                 </li>
-                <li class="d-none nav-item {{ request()->is('vendors*') ? 'menu-open' : '' }}">
+                <li class="nav-item {{ request()->is('vendors*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('vendors*') ? 'active ' : '' }}">
                         <i class="nav-icon fas fa-user-tie"></i>
                         <p>
@@ -130,7 +130,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="d-none nav-item">
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-building"></i>
                         <p>
@@ -166,7 +166,7 @@
 
                     </ul>
                 </li>
-                <li class="d-none nav-item">
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-university"></i>
                         <p>
@@ -196,7 +196,7 @@
 
                     </ul>
                 </li>
-                <li class="d-none nav-item">
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-line-chart"></i>
                         <p>

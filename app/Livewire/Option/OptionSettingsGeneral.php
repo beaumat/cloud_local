@@ -36,6 +36,7 @@ class OptionSettingsGeneral extends Component
         $this->NewTransactionsDefaultDate = $this->returnArray('NewTransactionsDefaultDate');
         $this->LockDefaultLocation = (bool) $this->returnArray('LockDefaultLocation');
         $this->IncRefNoByLocation = (bool) $this->returnArray('IncRefNoByLocation');
+        
     }
     public function returnArray($name): string
     {

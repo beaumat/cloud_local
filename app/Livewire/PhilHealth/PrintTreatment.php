@@ -86,7 +86,7 @@ class PrintTreatment extends Component
     public string $DATE_SIGNED;
     public string $OTHER_NAME;
     public string $ADDRESS;
-
+    public string $PHYSICIAN;
     private $philHealthServices;
     private $contactServices;
     private $hemoServices;
@@ -122,10 +122,7 @@ class PrintTreatment extends Component
                 $this->TIME_ADMITTED = $data->TIME_ADMITTED;
                 $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
                 $this->TIME_DISCHARGED = $data->TIME_DISCHARGED;
-                $this->FINAL_DIAGNOSIS = $data->FINAL_DIAGNOSIS;
-                $this->OTHER_DIAGNOSIS = $data->OTHER_DIAGNOSIS;
-                $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE;
-                $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE;
+               
 
                 $this->CHARGES_ROOM_N_BOARD = $data->CHARGES_ROOM_N_BOARD;
                 $this->CHARGES_DRUG_N_MEDICINE = $data->CHARGES_DRUG_N_MEDICINE;
@@ -200,6 +197,10 @@ class PrintTreatment extends Component
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS = $contact->POSTAL_ADDRESS;
                     $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
+                    $this->FINAL_DIAGNOSIS = $contact->FINAL_DIAGNOSIS;
+                    $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS;
+                    $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE;
+                    $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE;
                 }
                 $conUser = $this->contactServices->get(\Auth::user()->contact_id, 2);
                 if ($conUser) {
@@ -208,6 +209,16 @@ class PrintTreatment extends Component
                 }
 
                 $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
+
+
+
+
+
+                $PF = $this->philHealthServices->getProfFee($ID);
+                foreach ($PF as $p) {
+                    $this->PHYSICIAN = $p->NAME;
+                }
+
                 return;
             }
 

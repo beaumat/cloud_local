@@ -34,6 +34,8 @@ class Payment extends Model
         'DEPOSITED',
         'ACCOUNTS_RECEIVABLE_ID',
         'FILE_NAME',
-        'FILE_PATH'
+        'FILE_PATH',
+        'IS_CONFIRM',
+        'DATE_CONFIRM'
     ];
 }

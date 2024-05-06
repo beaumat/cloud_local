@@ -6,7 +6,6 @@ use App\Models\Invoice;
 use App\Models\InvoiceItems;
 use App\Models\PaymentInvoices;
 use App\Models\Tax;
-use Carbon\Carbon;
 use Livewire\WithPagination;
 
 class InvoiceServices
@@ -15,16 +14,21 @@ class InvoiceServices
     private $object;
     private $compute;
     private $locationReference;
+    private $systemSettingServices;
+    private $dateServices;
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         LocationReferenceServices $locationReferenceServices,
+        SystemSettingServices $systemSettingServices,
+        DateServices $dateServices
 
     ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
         $this->locationReference = $locationReferenceServices;
-
+        $this->systemSettingServices = $systemSettingServices;
+        $this->dateServices = $dateServices;
     }
     public function getBalance(int $INVOICE_ID): float
     {
@@ -57,7 +61,7 @@ class InvoiceServices
     }
     public function Store(
         string $CODE,
-        $DATE,
+        string $DATE,
         int $CUSTOMER_ID,
         int $LOCATION_ID,
         int $CLASS_ID,
@@ -77,16 +81,18 @@ class InvoiceServices
         float $OUTPUT_TAX_RATE,
         int $OUTPUT_TAX_VAT_METHOD,
         int $OUTPUT_TAX_ACCOUNT_ID
-
     ): int {
 
         $ID = (int) $this->object->ObjectNextID('INVOICE');
+
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('INVOICE');
+
+        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Invoice::create([
             'ID' => $ID,
-            'RECORDED_ON' => Carbon::now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DATE' => $DATE,
             'CUSTOMER_ID' => $CUSTOMER_ID,
             'LOCATION_ID' => $LOCATION_ID,
@@ -105,14 +111,13 @@ class InvoiceServices
             'BALANCE_DUE' => 0,
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID,
             'STATUS' => $STATUS,
-            'STATUS_DATE' => Carbon::now()->format('Y-m-d'),
+            'STATUS_DATE' => $this->dateServices->NowDate(),
             'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
             'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
             'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
-            'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
+            'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null
 
         ]);
-
         return $ID;
     }
 
@@ -120,7 +125,7 @@ class InvoiceServices
     {
         Invoice::where('ID', $ID)->update([
             'STATUS' => $STATUS,
-            'STATUS_DATE' => Carbon::now()->format('Y-m-d')
+            'STATUS_DATE' => $this->dateServices->NowDate()
         ]);
     }
     public function Update(
@@ -406,7 +411,7 @@ class InvoiceServices
             $AMOUNT = (float) $data->AMOUNT;
             $PAYMENT = (float) $this->GetPaymentAppliedViaInvoice($INVOICE_ID);
             $BALANCE = $AMOUNT - $PAYMENT;
-        
+
             $STATUS = 0;
 
             if ($PAYMENT == 0) {
@@ -423,7 +428,7 @@ class InvoiceServices
             Invoice::where('ID', $INVOICE_ID)->update([
                 'BALANCE_DUE' => $BALANCE,
                 'STATUS' => $STATUS,
-                'STATUS_DATE' => Carbon::now()->format('Y-m-d')
+                'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
 
 

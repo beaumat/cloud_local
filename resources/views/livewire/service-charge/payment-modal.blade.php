@@ -39,13 +39,13 @@
                                     <div class="tab-pane fade @if ($tab == 'available') show active @endif"
                                         id="custom-tabs-four-available" role="tabpanel"
                                         aria-labelledby="custom-tabs-four-available-tab">
-                                        @livewire('ServiceCharge.PaymentModalAvailable', ['CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'INVOICE_ID' => $INVOICE_ID])
+                                        @livewire('ServiceCharge.PaymentModalAvailable', ['PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID])
 
                                     </div>
                                     <div class="tab-pane fade @if ($tab == 'new') show active @endif"
                                         id="custom-tabs-four-new" role="tabpanel"
                                         aria-labelledby="custom-tabs-four-new-tab">
-                                        @livewire('ServiceCharge.PaymentModalNewEntry', ['CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'INVOICE_ID' => $INVOICE_ID])
+                                        @livewire('ServiceCharge.PaymentModalNewEntry', ['PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID])
                                     </div>
                                 </div>
                             </div>

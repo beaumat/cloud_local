@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Contacts;
 use App\Models\Hemodialysis;
 use App\Models\PatientDoctor;
 use App\Models\PhilHealth;
+use App\Models\PhilhealthDrugsMedicines;
 use App\Models\PhilHealthProfFee;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -24,9 +24,11 @@ class PhilHealthServices
 
     private float $TOTAL_FEE = 0;
     private $object;
-    public function __construct(ObjectServices $objectService)
+    private $dateServices;
+    public function __construct(ObjectServices $objectService, DateServices $dateServices)
     {
         $this->object = $objectService;
+        $this->dateServices = $dateServices;
     }
     public function get($ID)
     {
@@ -83,18 +85,19 @@ class PhilHealthServices
 
             $OP_TOTAL = $PROFESSIONAL_FEE_SUB_TOTAL + $OP_SUB_TOTAL;
 
-            PhilHealth::where('ID', $data->ID)->update([
-                'CHARGES_DRUG_N_MEDICINE' => $DRUG_MED,
-                'CHARGES_OPERATING_ROOM_FEE' => $OPERATE_FEE,
-                'CHARGES_SUPPLIES' => $SUP,
-                'CHARGES_SUB_TOTAL' => $C_SUB_TOTAL,
-                'P1_SUB_TOTAL' => $P1_SUB_TOTAL,
-                'OP_SUB_TOTAL' => $OP_SUB_TOTAL,
-                'PROFESSIONAL_FEE_SUB_TOTAL' => $PROFESSIONAL_FEE_SUB_TOTAL,
-                'CHARGE_TOTAL' => $CHARGE_TOTAL,
-                'P1_TOTAL' => $P1_TOTAL,
-                'OP_TOTAL' => $OP_TOTAL
-            ]);
+            PhilHealth::where('ID', $data->ID)
+                ->update([
+                    'CHARGES_DRUG_N_MEDICINE' => $DRUG_MED,
+                    'CHARGES_OPERATING_ROOM_FEE' => $OPERATE_FEE,
+                    'CHARGES_SUPPLIES' => $SUP,
+                    'CHARGES_SUB_TOTAL' => $C_SUB_TOTAL,
+                    'P1_SUB_TOTAL' => $P1_SUB_TOTAL,
+                    'OP_SUB_TOTAL' => $OP_SUB_TOTAL,
+                    'PROFESSIONAL_FEE_SUB_TOTAL' => $PROFESSIONAL_FEE_SUB_TOTAL,
+                    'CHARGE_TOTAL' => $CHARGE_TOTAL,
+                    'P1_TOTAL' => $P1_TOTAL,
+                    'OP_TOTAL' => $OP_TOTAL
+                ]);
         }
 
         //got professional fee
@@ -391,4 +394,105 @@ class PhilHealthServices
     {
         PhilHealthProfFee::where('ID', $ID)->delete();
     }
+    public function DrugMedicineStore(
+        int $PHILHEALTH_ID,
+        string $GENERIC_NAME,
+        float $QUANTITY,
+        string $DOSSAGE,
+        string $ROUTE,
+        string $FREQUENCY,
+        float $TOTAL_COST,
+        string $CONT_GENERIC_NAME,
+        float $CONT_QUANTITY,
+        string $CONT_DOSSAGE,
+        string $CONT_ROUTE,
+        string $CONT_FREQUENCY,
+        float $CONT_TOTAL_COST
+    ) {
+        $ID = $this->object->ObjectNextID('PHILHEALTH_DRUGS_MEDICINES');
+
+        PhilhealthDrugsMedicines::create([
+            'ID' => $ID,
+            'PHILHEALTH_ID' => $PHILHEALTH_ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'GENERIC_NAME' => $GENERIC_NAME,
+            'QUANTITY' => $QUANTITY,
+            'DOSSAGE' => $DOSSAGE,
+            'ROUTE' => $ROUTE,
+            'FREQUENCY' => $FREQUENCY,
+            'TOTAL_COST' => $TOTAL_COST,
+            'CONT_GENERIC_NAME' => $CONT_GENERIC_NAME,
+            'CONT_QUANTITY' => $CONT_QUANTITY,
+            'CONT_DOSSAGE' => $CONT_DOSSAGE,
+            'CONT_ROUTE' => $CONT_ROUTE,
+            'CONT_FREQUENCY' => $CONT_FREQUENCY,
+            'CONT_TOTAL_COST' => $CONT_TOTAL_COST
+
+        ]);
+    }
+    public function DrugMedicineUpdate(
+        int $ID,
+        int $PHILHEALTH_ID,
+        string $GENERIC_NAME,
+        float $QUANTITY,
+        string $DOSSAGE,
+        string $ROUTE,
+        string $FREQUENCY,
+        float $TOTAL_COST,
+        string $CONT_GENERIC_NAME,
+        float $CONT_QUANTITY,
+        string $CONT_DOSSAGE,
+        string $CONT_ROUTE,
+        string $CONT_FREQUENCY,
+        float $CONT_TOTAL_COST
+    ) {
+        PhilhealthDrugsMedicines::where('ID', $ID, )->update([
+            'PHILHEALTH_ID' => $PHILHEALTH_ID,
+            'GENERIC_NAME' => $GENERIC_NAME,
+            'QUANTITY' => $QUANTITY,
+            'DOSSAGE' => $DOSSAGE,
+            'ROUTE' => $ROUTE,
+            'FREQUENCY' => $FREQUENCY,
+            'TOTAL_COST' => $TOTAL_COST,
+            'CONT_GENERIC_NAME' => $CONT_GENERIC_NAME,
+            'CONT_QUANTITY' => $CONT_QUANTITY,
+            'CONT_DOSSAGE' => $CONT_DOSSAGE,
+            'CONT_ROUTE' => $CONT_ROUTE,
+            'CONT_FREQUENCY' => $CONT_FREQUENCY,
+            'CONT_TOTAL_COST' => $CONT_TOTAL_COST
+
+        ]);
+    }
+    public function DrugMedicineDelete(int $ID)
+    {
+        PhilhealthDrugsMedicines::where('ID', $ID, )->delete();
+    }
+
+    public function DrugMedicineList(int $PHILHEALTH_ID): object
+    {
+        return PhilhealthDrugsMedicines::query()
+            ->select([
+                'ID',
+                'GENERIC_NAME',
+                'QUANTITY',
+                'DOSSAGE',
+                'ROUTE',
+                'FREQUENCY',
+                'TOTAL_COST',
+                'CONT_GENERIC_NAME',
+                'CONT_QUANTITY',
+                'CONT_DOSSAGE',
+                'CONT_ROUTE',
+                'CONT_FREQUENCY',
+                'CONT_TOTAL_COST'
+            ])
+            ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
+            ->orderBy('ID', 'asc')
+            ->get();
+    }
+    public function GetDrugMedicine(int $ID): object
+    {
+        return PhilhealthDrugsMedicines::where('ID', $ID)->first();
+    }
+
 }

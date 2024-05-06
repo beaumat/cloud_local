@@ -25,23 +25,24 @@
                         <table class="table table-sm table-bordered table-hover mt-2">
                             <thead class="bg-sky text-xs">
                                 <tr>
-                                    <th class="text-center"> <input type="checkbox" wire:model.live='SelectAll' /></th>
+                                    <th class="text-center col-1"> <input type="checkbox" wire:model.live='SelectAll' />
+                                    </th>
                                     <th class="col-4">Patient Name</th>
                                     <th class="col-2 text-center">No. of Treatment</th>
                                     <th class="col-2">Philhealth No.</th>
-                                    <th class="col-4">Physician</th>
 
                                 </tr>
                             </thead>
                             <tbody class="text-xs">
                                 @foreach ($dataList as $list)
                                     <tr>
-                                        <td><input type="checkbox"
-                                                wire:model.live='patientSelected.{{ $list->ID }}' /></td>
+                                        <td class="text-center">
+                                            <input type="checkbox"
+                                                wire:model.live='patientSelected.{{ $list->ID }}' />
+                                        </td>
                                         <td>{{ $list->PATIENT }}</td>
                                         <td class="text-center">{{ $list->TOTAL_HEMO }}</td>
                                         <td>{{ $list->PIN }}</td>
-                                        <td>{{ $list->PHYSICIAN }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

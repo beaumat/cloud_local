@@ -38,7 +38,7 @@
         <!-- checkbox -->
         <div class="form-group">
             <div class="custom-control custom-checkbox">
-                <input wire:model.live='LockDefaultLocation' type="checkbox" id="LockDefaultLocation1">
+                <input wire:model='LockDefaultLocation' type="checkbox" id="LockDefaultLocation1">
                 <label>
                     Limit transaction to default location
                 </label>
@@ -46,7 +46,7 @@
         </div>
         <div class="form-group">
             <div class="custom-control custom-checkbox">
-                <input wire:model.live='IncRefNoByLocation' type="checkbox" id="IncRefNoByLocation1">
+                <input wire:model='IncRefNoByLocation' type="checkbox" id="IncRefNoByLocation1">
                 <label>
                     Increment reference number by location
                 </label>

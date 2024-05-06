@@ -8,12 +8,12 @@ use App\Models\ObjectTypeMap;
 
 class ObjectServices
 {
-
     public function ObjectTypeID(string $TABLE_NAME): int
     {
 
         try {
             return ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first()->ID;
+
         } catch (\Exception $e) {
             //throw $th;
             dd("$TABLE_NAME :" . $e->getMessage());
@@ -24,7 +24,7 @@ class ObjectServices
         try {
             return ObjectTypeMap::where('NAME', $NAME)->first()->ID;
         } catch (\Exception $e) {
-            //throw $th;
+         
             dd("$NAME :" . $e->getMessage());
         }
     }
@@ -44,7 +44,6 @@ class ObjectServices
     {
         $Nxt_ID = 0;
         $result = ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first();
-
         if ($result) {
             $Nxt_ID = $result->NEXT_ID;
             ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->update([
@@ -53,10 +52,10 @@ class ObjectServices
             return $Nxt_ID;
         } else {
 
-     
             dd("$TABLE_NAME table not found . please try again");
-            
-            return 1;
+            // Auto Create
+    
+            return 1;   
         }
 
 
@@ -64,18 +63,12 @@ class ObjectServices
     public function ObjectNextIdByName(string $NAME): int
     {
         $Nxt_ID = 0;
-
-        // Retrieving data from the database
         $result = ObjectTypeMap::where('TABLE_NAME', $NAME)->first();
-
         if ($result) {
             $Nxt_ID = $result->NEXT_ID;
         } else {
-            // Displaying a message if the table is not found
             dd("$NAME name not found");
         }
-
-        // Updating the NEXT_ID in the database
         ObjectTypeMap::where('NAME', $NAME)->update([
             'NEXT_ID' => ($Nxt_ID + 1)
         ]);
@@ -90,11 +83,10 @@ class ObjectServices
     public function GetSequence(int $Type, $LocationId): string
     {
         $data = ObjectCodeSequence::where('OBJECT_TYPE', $Type)->where('LOCATION_ID', $LocationId)->first();
-
         if ($data) {
+
             $this->SetSequence($data->ID, $data->NEXT_SEQUENCE, $data->INCREMENT);
             return $this->codeFormat($LocationId, $data->NEXT_SEQUENCE, $data->WIDTH, $data->POSTFIX, $data->PREFIX);
-
         }
         $this->NewSequence(2, $Type, $LocationId, 1, null, null, 4);
         return $this->codeFormat($LocationId, 1, 4, '', '');
@@ -126,8 +118,11 @@ class ObjectServices
     public function codeFormat($LOCATION_ID, int $SEQUENCE, int $WIDTH, $POSTFIX, $PREFIX): string
     {
         if ($LOCATION_ID) {
-            return $LOCATION_ID . '-' . $POSTFIX ?? '' . Str::padLeft($SEQUENCE, $WIDTH, '0') . $PREFIX ?? '';
+            $loc = Str::padLeft($LOCATION_ID, 3, '0');
+            $data = "$loc-$POSTFIX" . Str::padLeft($SEQUENCE, $WIDTH, '0') . "$PREFIX";
+            return trim($data);
         }
+
         return $POSTFIX ?? '' . Str::padLeft($SEQUENCE, $WIDTH, '0') . $PREFIX ?? '';
 
     }

@@ -16,7 +16,6 @@ class PrintSchedules extends Component
     public int $MONTH;
     #[Reactive]
     public int $LOCATION_ID;
-
     public bool $showModal = false;
     public $shiftList = [];
     public string $DATE_START;
@@ -43,10 +42,6 @@ class PrintSchedules extends Component
         $this->reloadWeekly();
     }
 
-    private function reloadWeekly()
-    {
-        // $this->weekdays = $this->dateServices->Get7Days($this->YEAR, $this->MONTH, $this->WEEKLY_ID);
-    }
 
     #[On('print-modal')]
     public function openModal()

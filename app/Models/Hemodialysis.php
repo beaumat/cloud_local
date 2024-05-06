@@ -37,6 +37,8 @@ class Hemodialysis extends Model
         'TIME_START',
         'TIME_END',
         'PRE_BLOOD_PRESSURE2',
-        'POST_BLOOD_PRESSURE2'
+        'POST_BLOOD_PRESSURE2',
+        'FILE_NAME',
+        'FILE_PATH'
     ];
 }

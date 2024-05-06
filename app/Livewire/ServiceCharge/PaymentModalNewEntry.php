@@ -3,33 +3,29 @@
 namespace App\Livewire\ServiceCharge;
 
 use App\Services\AccountServices;
-use App\Services\InvoiceServices;
+use App\Services\PatientPaymentServices;
 use App\Services\PaymentMethodServices;
-use App\Services\PaymentServices;
+use App\Services\ServiceChargeServices;
 use App\Services\SystemSettingServices;
+use App\Services\UploadServices;
 use Carbon\Carbon;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-
 class PaymentModalNewEntry extends Component
 {
 
     use WithFileUploads;
     public $PDF;
-
     #[Reactive]
-    public int $CUSTOMER_ID;
+    public int $PATIENT_ID;
     #[Reactive]
     public int $LOCATION_ID;
     #[Reactive]
-    public int $INVOICE_ID;
+    public int $SERVICE_CHARGES_ID;
     public int $ID;
     public string $CODE;
     public $DATE;
-
     public float $AMOUNT;
     public float $AMOUNT_APPLIED;
     public int $PAYMENT_METHOD_ID;
@@ -51,25 +47,27 @@ class PaymentModalNewEntry extends Component
     public bool $showReceiptNo = false;
     public bool $showReceiptDate = false;
     public bool $showFileName = false;
-
     public int $PAYMENT_TYPE;
     private $systemSettingServices;
     private $paymentMethodServices;
     private $accountServices;
-    private $paymentServices;
-    private $invoiceServices;
+    private $patientPaymentServices;
+    private $serviceChargeServices;
+    private $uploadServices;
     public function boot(
-        PaymentServices $paymentServices,
-        InvoiceServices $invoiceServices,
+        PatientPaymentServices $patientPaymentServices,
+        ServiceChargeServices $serviceChargeServices,
         PaymentMethodServices $paymentMethodServices,
         SystemSettingServices $systemSettingServices,
-        AccountServices $accountServices
+        AccountServices $accountServices,
+        UploadServices $uploadServices
     ) {
-        $this->paymentServices = $paymentServices;
-        $this->invoiceServices = $invoiceServices;
+        $this->patientPaymentServices = $patientPaymentServices;
+        $this->serviceChargeServices = $serviceChargeServices;
         $this->paymentMethodServices = $paymentMethodServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
+        $this->uploadServices = $uploadServices;
     }
     public function mount()
     {
@@ -79,7 +77,6 @@ class PaymentModalNewEntry extends Component
         $this->DATE = Carbon::now()->format('Y-m-d');
         $this->CODE = '';
         $this->NOTES = '';
-
         $this->CARD_NO = '';
         $this->CARD_EXPIRY_DATE = null;
         $this->RECEIPT_REF_NO = '';
@@ -128,7 +125,7 @@ class PaymentModalNewEntry extends Component
             );
         }
 
-        if ($this->paymentServices->HaveRemainingPaymentBalance($this->CUSTOMER_ID, $this->LOCATION_ID)) {
+        if ($this->patientPaymentServices->HaveRemainingPaymentBalance($this->PATIENT_ID, $this->LOCATION_ID)) {
             session()->flash('error', 'Invalid create. Patient have existing balance.');
             return;
         }
@@ -138,7 +135,7 @@ class PaymentModalNewEntry extends Component
             return;
         }
 
-        $balance = (float) $this->invoiceServices->getBalance($this->INVOICE_ID);
+        $balance = (float) $this->serviceChargeServices->getBalance($this->SERVICE_CHARGES_ID);
         if ($balance < $this->AMOUNT_APPLIED) {
             session()->flash('error', 'Amount applied is to high from balance');
             return;
@@ -146,8 +143,8 @@ class PaymentModalNewEntry extends Component
 
         if ($this->storeMode()) {
 
-            $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
-            $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
+            $this->serviceChargeServices->updateServiceChargesBalance($this->SERVICE_CHARGES_ID);
+            $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);       
             $this->dispatch('update-amount', result: $getResult);
             $this->dispatch('update-status');
             $this->dispatch('payment-modal-close');
@@ -160,10 +157,10 @@ class PaymentModalNewEntry extends Component
         try {
             \DB::beginTransaction();
             if ($this->ID == 0) {
-                $this->ID = $this->paymentServices->Store(
+                $this->ID = $this->patientPaymentServices->Store(
                     $this->CODE,
                     $this->DATE,
-                    $this->CUSTOMER_ID,
+                    $this->PATIENT_ID,
                     $this->LOCATION_ID,
                     $this->AMOUNT,
                     $this->AMOUNT_APPLIED,
@@ -179,31 +176,17 @@ class PaymentModalNewEntry extends Component
                     $this->ACCOUNTS_RECEIVABLE_ID
                 );
 
-                $this->paymentServices->PaymentInvoiceStore($this->ID, $this->INVOICE_ID, 0, $this->AMOUNT_APPLIED, 0, 0);
+                $this->patientPaymentServices->PaymentChargeStore($this->ID, $this->SERVICE_CHARGES_ID, 0, $this->AMOUNT_APPLIED, 0, 0);
 
                 if ($this->PAYMENT_TYPE == 10) {
-                    $tempPath = $this->PDF->store('public/temp', 'public');
-                    // Generate a random filename
-                    $randomFilename = Str::random(40); // Generate a random string of 40 characters             
-                    // Get the file extension
-                    $extension = $this->PDF->extension();
-                    // Construct the new file path with the random filename and original extension
-                    $newPath = 'payment/' . $randomFilename . '.' . $extension;
-                    // Move the temporary file to the new path
-                    Storage::disk('public')->move($tempPath, $newPath);
-                    // Update the database record with the new filename
-                    $this->paymentServices->UpdateFile($this->ID, $randomFilename . '.' . $extension, $newPath);
+
+                    $returnData = $this->uploadServices->Payment($this->PDF);
+                 
+                    $this->patientPaymentServices->UpdateFile($this->ID, $returnData['filename'] . '.' . $returnData['extension'], $returnData['new_path']);
 
                 }
 
                 \DB::commit();
-
-
-
-
-
-
-
                 return true;
             }
             return false;
@@ -273,15 +256,12 @@ class PaymentModalNewEntry extends Component
                     # code...
                     $this->showCardNo = false;
                     $this->showCardDateExpire = false;
-                    $this->showReceiptNo = false;
-                    $this->showReceiptDate = false;
+                    $this->showReceiptNo = true;
+                    $this->showReceiptDate = true;
                     $this->showFileName = true;
                     break;
             }
         }
-
-
-
     }
 
     public function render()

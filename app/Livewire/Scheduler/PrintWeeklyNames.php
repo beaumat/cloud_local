@@ -17,7 +17,7 @@ class PrintWeeklyNames extends Component
     {
         $this->scheduleServices = $scheduleServices;
         $this->hemodialysisMachineServices = $hemodialysisMachineServices;
-        
+
     }
 
     public function mount($date, $shift, $location)
@@ -28,9 +28,7 @@ class PrintWeeklyNames extends Component
 
         foreach ($type as $item) {
             $this->totalCapacity = $this->totalCapacity + (int) $item->CAPACITY;
-
             $data = $this->scheduleServices->scheduleListByShift($date, $location, $shift, $item->ID);
-
             foreach ($data as $dataList) {
                 $this->contactList[$n] = ['ID' => $n + 1, 'NAME' => $dataList->CONTACT_NAME, 'TYPE' => $item->ID];
                 $n++;
@@ -41,10 +39,7 @@ class PrintWeeklyNames extends Component
                     $this->contactList[$n] = ['ID' => $n + 1, 'NAME' => '', 'TYPE' => $item->ID];
                     $n++;
                 }
-
             }
-
-
         }
     }
     public function render()

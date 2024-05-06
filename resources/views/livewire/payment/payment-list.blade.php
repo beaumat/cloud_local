@@ -51,15 +51,16 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">Ref No.</th>
+                                        <th class="col-1">No</th>
                                         <th class="col-1">Date</th>
                                         <th class="col-2">Patients</th>
-                                        <th class="col-1">Amount Deposit</th>
-                                        <th class="col-2">Payment Method</th>
+                                        <th class="col-1">Deposit</th>
+                                        <th class="col-1">Applied</th>
+                                        <th class="col-1">Method</th>
+                                        <th class="text-center col-1">Confirm</th>
                                         <th class="col-1">Location</th>
-                                        <th class="col-1">Amount Applied</th>
-                                        <th class="col-1">Status</th>
-                                        <th class="text-center col-1 bg-success">
+                                        <th class="col-1 text-center">Status</th>
+                                        <th class="text-center col-2 bg-success">
                                             <a href="{{ route('transactionspayment_create') }}"
                                                 class="text-white btn btn-xs w-100">
                                                 <i class="fas fa-plus"></i> New
@@ -70,16 +71,27 @@
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ $list->CODE }}</td>
+                                            <td>
+                                                <a href="{{ route('transactionspayment_edit', ['id' => $list->ID]) }}"
+                                                    class="text-primary">
+                                                    {{ $list->CODE }}
+                                                </a>
+                                            </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
-                                            <td> {{ $list->PAYMENT_METHOD }}</td>
-                                            <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
-                                            <td> {{ $list->STATUS }}</td>
+                                            <td> {{ $list->PAYMENT_METHOD }}</td>
                                             <td class="text-center">
-
+                                                @if ($list->IS_CONFIRM)
+                                                    <strong class="text-success">Yes</strong>
+                                                @else
+                                                    <strong class="text-danger">No</strong>
+                                                @endif
+                                            </td>
+                                            <td> {{ $list->LOCATION_NAME }}</td>
+                                            <td class="text-center"> {{ $list->STATUS }}</td>
+                                            <td class="text-center">
                                                 @if ($list->FILE_PATH)
                                                     <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
                                                         target="_blank" class="btn-sm text-danger">
@@ -90,15 +102,24 @@
                                                         <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                                     </a>
                                                 @endif
-
-
                                                 <a href="{{ route('transactionspayment_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
 
+                                                @if ($list->FILE_PATH)
+                                                    <button wire:click='getConfirm({{ $list->ID }})' type="button"
+                                                        wire:confirm="Are you sure this guaranteed letter is confirm?"
+                                                        class="btn btn-outline-none btn-sm p-0  text-success">
+                                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button"
+                                                        class="btn btn-outline-none btn-sm p-0 text-secondary">
+                                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                                    </button>
+                                                @endif
 
-                                               
                                                 <a href="#" wire:click='delete({{ $list->ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
                                                     class="btn-sm text-danger">

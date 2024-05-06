@@ -2,8 +2,8 @@
 
 namespace App\Livewire\ServiceCharge;
 
-use App\Services\InvoiceServices;
-use App\Services\PaymentServices;
+use App\Services\PatientPaymentServices;
+use App\Services\ServiceChargeServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -11,36 +11,32 @@ class Payments extends Component
 {
 
     #[Reactive]
-    public int $INVOICE_ID;
+    public int $SERVICE_CHARGES_ID;
     #[Reactive]
-    public int $CUSTOMER_ID;
+    public int $PATIENT_ID;
     #[Reactive]
     public int $LOCATION_ID;
     public int $openStatus = 0;
     public $data = [];
-    private $paymentServices;
-    private $invoiceServices;
-    public function boot(PaymentServices $paymentServices, InvoiceServices $invoiceServices)
+    private $patientPaymentServices;
+    private $serviceChargeServices;
+    public function boot(PatientPaymentServices $patientPaymentServices, ServiceChargeServices $serviceChargeServices)
     {
-        $this->paymentServices = $paymentServices;
-        $this->invoiceServices = $invoiceServices;
-
+        $this->patientPaymentServices = $patientPaymentServices;
+        $this->serviceChargeServices = $serviceChargeServices;
     }
-    public function delete(int $ID, int $PAYMENT_ID)
+    public function delete(int $ID, int $PATIENT_PAYMENT_ID)
     {
-        $this->paymentServices->PaymentInvoiceDelete($ID, $PAYMENT_ID, $this->INVOICE_ID);
-        
-        $this->paymentServices->UpdatePaymentApplied($PAYMENT_ID);
-        
-        $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
-
-        $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
+        $this->patientPaymentServices->PaymentChargesDelete($ID, $PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ID);
+        $this->patientPaymentServices->UpdatePaymentChargesApplied($PATIENT_PAYMENT_ID);
+        $this->serviceChargeServices->updateServiceChargesBalance($this->SERVICE_CHARGES_ID);
+        $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
         $this->dispatch('update-amount', result: $getResult);
         $this->dispatch('update-status');
     }
     public function render()
     {
-        $this->data = $this->paymentServices->InvoicePaymentList($this->INVOICE_ID, $this->CUSTOMER_ID);
+        $this->data = $this->patientPaymentServices->ServiceChargesPaymentList($this->SERVICE_CHARGES_ID, $this->PATIENT_ID);
         return view('livewire.service-charge.payments');
     }
 

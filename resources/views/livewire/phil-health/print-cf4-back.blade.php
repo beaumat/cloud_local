@@ -1,15 +1,11 @@
 <div class="font-weight-light verdana p-3">
-
     <div id='part_id' class="row text-left left-line2 right-line2 bottom-line2 top-line2">
-
-
         <div class="col-12">
             <label class="text-sm" for="">
                 5. Physical Examination continued (Pertinent Findings per System).
             </label>
         </div>
         <div class="col-12">
-
             <div class="row text-xs">
                 <div class="col-2">
                     CHEST/LUNGS:
@@ -263,7 +259,7 @@
                     </h5>
                 </div>
 
-             
+
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
                         @if ($dateList[1])
@@ -322,7 +318,7 @@
                         @else
                             &nbsp;
                         @endif
-                    </h5>    
+                    </h5>
                 </div>
 
 
@@ -362,7 +358,7 @@
                         @else
                             &nbsp;
                         @endif
-                    </h5>         
+                    </h5>
                 </div>
 
 
@@ -403,7 +399,7 @@
                             &nbsp;
                         @endif
                     </h5>
-            
+
                 </div>
 
 
@@ -424,7 +420,7 @@
                             &nbsp;
                         @endif
                     </h5>
-              
+
                 </div>
 
 
@@ -446,7 +442,7 @@
                             &nbsp;
                         @endif
                     </h5>
-               
+
                 </div>
 
 
@@ -467,7 +463,7 @@
                             &nbsp;
                         @endif
                     </h5>
-                
+
                 </div>
 
 
@@ -488,7 +484,7 @@
                             &nbsp;
                         @endif
                     </h5>
-               
+
                 </div>
 
 
@@ -509,7 +505,7 @@
                             &nbsp;
                         @endif
                     </h5>
-             
+
                 </div>
 
 
@@ -530,7 +526,7 @@
                             &nbsp;
                         @endif
                     </h5>
-            
+
                 </div>
 
 
@@ -551,7 +547,7 @@
                             &nbsp;
                         @endif
                     </h5>
-             
+
                 </div>
 
                 <div class="col-12 top-line2 text-left">
@@ -572,35 +568,36 @@
                 <div class="col bottom-line2 ">
                     <p> Generic Name </p>
 
-                    <div class="row top-line2">
+                    <div class="row top-line2 ">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[0]['GENERIC_NAME'] }} </strong>
                     </div>
 
-                    <div class="row top-line2">
+                    <div class="row top-line2 ">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[1]['GENERIC_NAME'] }} </strong>
                     </div>
 
-                    <div class="row top-line2">
+                    <div class="row top-line2 ">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[2]['GENERIC_NAME'] }} </strong>
+                    </div>
+                    <div class="row top-line2 ">
+                        <br />
+                        &nbsp; <strong class="h6"> {{ $dataMed[3]['GENERIC_NAME'] }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[4]['GENERIC_NAME'] }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[5]['GENERIC_NAME'] }} </strong>
                     </div>
-                    <div class="row top-line2">
+                    <div class="row top-line2 ">
                         <br />
-                        &nbsp;
-                    </div>
-                    <div class="row top-line2">
-                        <br />
-                        &nbsp;
+
+                        &nbsp; <strong class="h6"> {{ $dataMed[6]['GENERIC_NAME'] }} </strong>
                     </div>
 
 
@@ -609,165 +606,332 @@
                     <p>Quantity/Dosage/Route/Frequency</p>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[0]['GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[0]['QUANTITY'] }}/{{ $dataMed[0]['DOSSAGE'] }}/{{ $dataMed[0]['ROUTE'] }}/{{ $dataMed[0]['FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[1]['GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[1]['QUANTITY'] }}/{{ $dataMed[1]['DOSSAGE'] }}/{{ $dataMed[1]['ROUTE'] }}/{{ $dataMed[1]['FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[2]['GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[2]['QUANTITY'] }}/{{ $dataMed[2]['DOSSAGE'] }}/{{ $dataMed[2]['ROUTE'] }}/{{ $dataMed[2]['FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[3]['GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[3]['QUANTITY'] }}/{{ $dataMed[3]['DOSSAGE'] }}/{{ $dataMed[3]['ROUTE'] }}/{{ $dataMed[3]['FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[4]['GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[4]['QUANTITY'] }}/{{ $dataMed[4]['DOSSAGE'] }}/{{ $dataMed[4]['ROUTE'] }}/{{ $dataMed[4]['FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[5]['GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[5]['QUANTITY'] }}/{{ $dataMed[5]['DOSSAGE'] }}/{{ $dataMed[5]['ROUTE'] }}/{{ $dataMed[5]['FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[6]['GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[6]['QUANTITY'] }}/{{ $dataMed[6]['DOSSAGE'] }}/{{ $dataMed[6]['ROUTE'] }}/{{ $dataMed[6]['FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                 </div>
-                <div class="col left-line2 bottom-line2">
+                <div class="col left-line2 bottom-line2 ">
                     <p>Total Cost</p>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[0]['GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[0]['TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="row top-line2">
+                        <br />
+                        @if ($dataMed[1]['GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[1]['TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
-                    </div>
-
-                    <div class="row top-line2">
-                        <br />
-                        &nbsp;
-                    </div>
-                    <div class="row top-line2">
-                        <br />
-                        &nbsp;
+                        @if ($dataMed[2]['GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[2]['TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[3]['GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[3]['TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[4]['GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[4]['TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[5]['GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[5]['TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
+                    </div>
+                    <div class="row top-line2">
+                        <br />
+                        @if ($dataMed[6]['GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[6]['TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                 </div>
                 <div class="col left-line2 bottom-line2">
                     <p>Generic Name (cont)</p>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[0]['CONT_GENERIC_NAME'] }} </strong>
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[1]['CONT_GENERIC_NAME'] }} </strong>
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[2]['CONT_GENERIC_NAME'] }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[3]['CONT_GENERIC_NAME'] }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[4]['CONT_GENERIC_NAME'] }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[5]['CONT_GENERIC_NAME'] }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        &nbsp; <strong class="h6"> {{ $dataMed[6]['CONT_GENERIC_NAME'] }} </strong>
                     </div>
                 </div>
                 <div class="col-3 left-line2 bottom-line2">
                     <p>Quantity/Dosage/Route/Frequency (cont)</p>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[0]['CONT_GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[0]['CONT_QUANTITY'] }}/{{ $dataMed[0]['CONT_DOSSAGE'] }}/{{ $dataMed[0]['CONT_ROUTE'] }}/{{ $dataMed[0]['CONT_FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[1]['CONT_GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[1]['CONT_QUANTITY'] }}/{{ $dataMed[1]['CONT_DOSSAGE'] }}/{{ $dataMed[1]['CONT_ROUTE'] }}/{{ $dataMed[1]['CONT_FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[2]['CONT_GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[2]['CONT_QUANTITY'] }}/{{ $dataMed[2]['CONT_DOSSAGE'] }}/{{ $dataMed[2]['CONT_ROUTE'] }}/{{ $dataMed[2]['CONT_FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[3]['CONT_GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[3]['CONT_QUANTITY'] }}/{{ $dataMed[3]['CONT_DOSSAGE'] }}/{{ $dataMed[3]['CONT_ROUTE'] }}/{{ $dataMed[3]['CONT_FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[4]['CONT_GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[4]['CONT_QUANTITY'] }}/{{ $dataMed[4]['CONT_DOSSAGE'] }}/{{ $dataMed[4]['CONT_ROUTE'] }}/{{ $dataMed[4]['CONT_FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[5]['CONT_GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[5]['CONT_QUANTITY'] }}/{{ $dataMed[5]['CONT_DOSSAGE'] }}/{{ $dataMed[5]['CONT_ROUTE'] }}/{{ $dataMed[5]['CONT_FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[6]['CONT_GENERIC_NAME'] != '')
+                            &nbsp; <strong class="h6">
+                                {{ $dataMed[6]['CONT_QUANTITY'] }}/{{ $dataMed[6]['CONT_DOSSAGE'] }}/{{ $dataMed[6]['CONT_ROUTE'] }}/{{ $dataMed[6]['CONT_FREQUENCY'] }}
+                            </strong>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                 </div>
                 <div class="col left-line2 bottom-line2">
                     <p>Total Cost (cont)</p>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[0]['CONT_GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[0]['CONT_TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[1]['CONT_GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[1]['CONT_TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[2]['CONT_GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[2]['CONT_TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[3]['CONT_GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[3]['CONT_TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[4]['CONT_GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[4]['CONT_TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[5]['CONT_GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[5]['CONT_TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp;
+                        @if ($dataMed[6]['CONT_GENERIC_NAME'] != '')
+                            <div class="col-12 text-center" style="margin-bottom: 14px;">
+                                <strong class="h6"> {{ $dataMed[6]['CONT_TOTAL_COST'] }}</strong>
+                            </div>
+                        @else
+                            &nbsp;
+                        @endif
                     </div>
                 </div>
             </div>

@@ -3,11 +3,11 @@
 namespace App\Livewire\PhilHealth;
 
 use App\Services\ContactServices;
+use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use App\Services\UserServices;
-use Carbon\Carbon;
 use Livewire\Component;
 
 class QuickCreate extends Component
@@ -25,13 +25,21 @@ class QuickCreate extends Component
     private $hemoServices;
     private $philHealthServices;
     private $contactServices;
-    public function boot(LocationServices $locationServices, UserServices $userServices, HemoServices $hemoServices, PhilHealthServices $philHealthServices, ContactServices $contactServices)
-    {
+    private $dateServices;
+    public function boot(
+        LocationServices $locationServices,
+        UserServices $userServices,
+        HemoServices $hemoServices,
+        PhilHealthServices $philHealthServices,
+        ContactServices $contactServices,
+        DateServices $dateServices
+    ) {
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->hemoServices = $hemoServices;
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
+        $this->dateServices = $dateServices;
     }
     public function ResetValue()
     {
@@ -55,8 +63,8 @@ class QuickCreate extends Component
     {
         $this->locationList = $this->locationServices->getList();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->DATE_FROM = Carbon::now()->format('Y-m-d');
-        $this->DATE_TO = Carbon::now()->format('Y-m-d');
+        $this->DATE_FROM = $this->dateServices->NowDate();
+        $this->DATE_TO = $this->dateServices->NowDate();
     }
     public function updatedSelectAll($value)
     {
@@ -101,6 +109,12 @@ class QuickCreate extends Component
 
         return false;
     }
+    private function resetMethod()
+    {
+        $this->dispatch('reload-list', );
+        $this->ResetValue();
+        $this->showModal = false;
+    }
     public function generateRemarks($CONTACT_ID)
     {
         $contact = $this->contactServices->get($CONTACT_ID, 3);
@@ -116,16 +130,14 @@ class QuickCreate extends Component
     {
 
         $gotSelected = false;
-
-
         foreach ($this->patientSelected as $patientID => $isSelected) {
             if ($isSelected) {
                 $gotSelected = true;
                 if ($this->generateDateTime($patientID)) {
                     $this->generateRemarks($patientID);
-                    $ID  = (int) $this->philHealthServices->preSave(
+                    $ID = (int) $this->philHealthServices->preSave(
                         '',
-                        Carbon::now()->format('Y-m-d'),
+                        $this->dateServices->NowDate(),
                         $this->LOCATION_ID,
                         $patientID,
                         $this->DATE_ADMITTED,
@@ -142,16 +154,12 @@ class QuickCreate extends Component
             }
         }
 
-        if ($gotSelected) {
-            $this->dispatch('reload-list');
-            $this->ResetValue();
-            $this->showModal = false;
-       
+        if ($gotSelected == true) {
+            $this->resetMethod();
         }
     }
     public function render()
     {
-
         $this->dataList = $this->hemoServices->QuickFilterByDateRange($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
         return view('livewire.phil-health.quick-create');
     }

@@ -12,7 +12,7 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('transactionsservice_charges') }}"> Service
+                                    <a class="text-white" href="{{ route('patientsservice_charges') }}"> Service
                                         Charges </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
@@ -28,15 +28,15 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             @if ($Modify)
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Patient"
+                                                <livewire:select-option name="PATIENT_ID" titleName="Patient"
                                                     :options="$patientList" :zero="true" :isDisabled=false
-                                                    wire:model='CUSTOMER_ID' />
+                                                    wire:model='PATIENT_ID' />
                                             @else
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Patient"
+                                                <livewire:select-option name="PATIENT_ID" titleName="Patient"
                                                     :options="$patientList" :zero="true" :isDisabled=true
-                                                    wire:model='CUSTOMER_ID' />
+                                                    wire:model='PATIENT_ID' />
                                             @endif
-                                            <div class="row">
+                                            {{-- <div class="row">
                                                 <div class="col-md-4 class">
                                                     @if ($Modify)
                                                         <livewire:select-option name="PAYMENT_TERMS_ID"
@@ -58,7 +58,7 @@
                                                             titleName="Due Date" wire:model='DUE_DATE' />
                                                     @endif
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         <div class="col-md-6">
                                             <div class="row">
@@ -87,9 +87,7 @@
                                                             wire:model.live='LOCATION_ID' />
                                                     @endif
                                                 </div>
-
                                                 <div class="col-md-4">
-
                                                     @if ($Modify)
                                                         <livewire:select-option name="OUTPUT_TAX_ID" titleName="Tax"
                                                             :options="$taxList" :zero="false" :isDisabled=false
@@ -113,8 +111,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="card-footer">
                                 <div class="row">
@@ -142,7 +138,7 @@
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 0)
                                             <a id="new" title="Create"
-                                                href="{{ route('transactionsservice_charges_create') }}"
+                                                href="{{ route('patientsservice_charges_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
                                     </div>
@@ -187,7 +183,7 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('ServiceCharge.ServiceChargeFormItems', ['INVOICE_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID])
+                                                @livewire('ServiceCharge.ServiceChargeFormItems', ['SERVICE_CHARGES_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID])
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +194,7 @@
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-                                                @livewire('ServiceCharge.Payments', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                @livewire('ServiceCharge.Payments', ['SERVICE_CHARGES_ID' => $ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID])
                                             </div>
                                         </div>
                                     </div>
@@ -207,20 +203,7 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-4 text-left">
-                                        {{-- @if ($STATUS == 0)
-                                            <button class="btn btn-sm btn-success" wire:click='getSubmit'
-                                                wire:confirm="Are you sure you want to submit?"
-                                                @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                Submit
-                                            </button>
-                                        @endif --}}
 
-                                        {{-- @if ($STATUS == 2)
-                                            <button class="btn btn-sm btn-danger" wire:click='getVoid'
-                                                wire:confirm="Are you sure you want to void?">
-                                                Void
-                                            </button>
-                                        @endif --}}
                                     </div>
                                     <div class="col-md-8">
                                         <div class="row">

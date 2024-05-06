@@ -54,8 +54,9 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:date-input name="HIRE_DATE" titleName="Date of Death"
-                                                wire:model.live='HIRE_DATE' />
+                                
+                                                <livewire:select-option name="PATIENT_TYPE_ID" :options="$patientTypeList"
+                                                :zero="true" titleName="Type" wire:model='PATIENT_TYPE_ID' />
                                         </div>
                                     </div>
                                 </div>
@@ -457,7 +458,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-12 p-1 mt-2 border-top  ">
+                                                            <div class="col-md-12 p-1 mt-2 border-top ">
                                                                 <label class="text-info text-xs">
                                                                     Member Contact:</label>
                                                                 <div class="row">

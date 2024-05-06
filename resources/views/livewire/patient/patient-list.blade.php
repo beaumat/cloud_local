@@ -41,24 +41,22 @@
                                             @endforeach
                                         </select>
                                     </div>
-
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>ID</th>       
+                                        <th>ID</th>
                                         <th class="col-2">PATIENT NAME</th>
                                         <th>SEX</th>
-                                        <th class="col-1">Date Birth</th>
-                                        <th>Age</th>
-                                        <th class="col-1">PIN</th>
-                                 
-                                        <th class="col-1">Mobile No.</th>
-                                        <th class="col-1">Admission</th>
+                                        <th class="col-1">DATE OF BIRTH</th>
+                                        <th>AGE</th>
+                                        <th class="col-1">PHILHEALTH NO.</th>
+                                        <th class="col-1">MOBILE NO.</th>
+                                        <th class="col-1">ADMISSION</th>
                                         <th class="col-1">LOCATION</th>
-                                        <th class="text-center">Inactive</th>
-                                        <th class="text-center">Requirement</th>
+                                        <th class="text-center">REQ. STATUS</th>
+                                        <th class="text-center">INACTIVE</th>
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenancecontactpatients_create') }}"
                                                 class="text-white">
@@ -68,7 +66,7 @@
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
-                                        <tr class="@if(!$list->IS_COMPLETE) text-secondary  @endif">
+                                        <tr class="@if (!$list->IS_COMPLETE) text-secondary @endif">
                                             <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
                                             <td> {{ $list->GENDER }}</td>
@@ -76,25 +74,22 @@
                                             <td> {{ $list->AGE }}</td>
                                             <td> {{ $list->PIN }}</td>
                                             <td> {{ $list->MOBILE_NO }}</td>
-                                            <td> {{ \Carbon\Carbon::parse($list->DATE_ADMISSION)->format('M/d/Y') }}</td>
+                                            <td> {{ \Carbon\Carbon::parse($list->DATE_ADMISSION)->format('M/d/Y') }}
+                                            </td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center">
-                                               
-                                                @if ($list->INACTIVE)
-                                                    <strong class="text-danger">Yes</strong>
-                                                @else
-                                                    <strong class="text-primary">No</strong>
-                                                @endif
-
-                                            </td>
-                                            <td class="text-center">
-                                               
                                                 @if ($list->IS_COMPLETE)
                                                     <strong class="text-success">Completed</strong>
                                                 @else
                                                     <strong class="text-secondary">Uncompleted</strong>
                                                 @endif
-
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($list->INACTIVE)
+                                                    <strong class="text-danger">Yes</strong>
+                                                @else
+                                                    <strong class="text-primary">No</strong>
+                                                @endif
                                             </td>
                                             <td class="text-center">
                                                 <a href="{{ route('maintenancecontactpatients_edit', ['id' => $list->ID]) }}"

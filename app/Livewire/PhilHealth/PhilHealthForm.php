@@ -109,8 +109,7 @@ class PhilHealthForm extends Component
             }
 
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('transactionsphic')->with('error', $errorMessage);
-
+            return Redirect::route('patientsphic')->with('error', $errorMessage);
         }
 
         $this->ID = 0;
@@ -135,7 +134,7 @@ class PhilHealthForm extends Component
 
     public function updateCancel()
     {
-        return Redirect::route('transactionsphic_edit', ['id' => $this->ID]);
+        return Redirect::route('patientsphic_edit', ['id' => $this->ID]);
     }
     public function save()
     {
@@ -183,7 +182,7 @@ class PhilHealthForm extends Component
             $this->philHealthServices->DefaultEntry($this->ID);
             $this->Modify = false;
 
-            return Redirect::route('transactionsphic_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+            return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
         } else {
 
@@ -205,7 +204,7 @@ class PhilHealthForm extends Component
             $this->philHealthServices->DefaultEntry($this->ID);
             $this->Modify = false;
 
-            return Redirect::route('transactionsphic_edit', ['id' => $this->ID])->with('message', 'Successfully updated');
+            return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully updated');
         }
 
     }

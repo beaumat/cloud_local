@@ -13,9 +13,7 @@ class PrintSchedulesPrintOut extends Component
     public $LOCATION_ID;
     public int $YEAR;
     public int $MONTH;
-
     public int $SHIFT_ID;
-
     public $SHIFT_LIST = [];
     public int $WEEKLY_ID;
     private $shiftServices;
@@ -31,16 +29,12 @@ class PrintSchedulesPrintOut extends Component
         $this->MONTH = $month;
         $this->SHIFT_ID = $shift;
         $this->WEEKLY_ID = $week;
-
-
         if ($shift == 0) {
             $this->SHIFT_LIST = $this->shiftServices->List();
-
         } else {
-
             $this->SHIFT_ID = $shift;
         }
-
+        
         $this->dispatch('preview_print');
     }
     #[On('preview_print')]

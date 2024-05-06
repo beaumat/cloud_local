@@ -16,7 +16,7 @@
             <button type="button" class="close text-white" aria-label="Close" wire:click="dismissAlert">
                 <i class="fa fa-times text-white" aria-hidden="true"></i>
             </button>
-            <small><i class="icon fas fa-check"></i> {{ $message }}</small>
+            <small><i class="icon fas fa-check"></i> {!! $message !!}</small>
         </div>
     @endif
     @if ($error)
@@ -25,7 +25,7 @@
                 <i class="fa fa-times text-white" aria-hidden="true"></i>
             </button>
             <i class="fas fa-times-circle"></i> <!-- Error icon -->
-            {{ $error }}
+            {!! $error !!}
         </div>
     @endif
 </div>

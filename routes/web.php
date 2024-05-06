@@ -17,6 +17,8 @@ use App\Livewire\Hemodialysis\PrintForm;
 use App\Livewire\HemodialysisMachine\HemoMachineForm;
 use App\Livewire\HemodialysisMachine\HemoMachineList;
 use App\Livewire\Option\OptionSettings;
+use App\Livewire\PatientPayment\PatientPaymentForm;
+use App\Livewire\PatientPayment\PatientPaymentList;
 use App\Livewire\Payment\PaymentForm;
 use App\Livewire\Payment\PaymentList;
 use App\Livewire\PhilHealth\PhilHealthForm;
@@ -101,7 +103,7 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
-    Route::prefix('/transactions')->name('transactions')->group(function () {
+    Route::prefix('/patients')->name('patients')->group(function () {
         Route::prefix('/schedules')->group(function () {
             Route::get('/', SchedulerList::class)->name('schedules');
             Route::get('/setup', SchedulerForm::class)->name('schedules_setup');
@@ -122,9 +124,13 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('/payments')->group(function () {
-            Route::get('/', PaymentList::class)->name('payment');
-            Route::get('/create', PaymentForm::class)->name('payment_create');
-            Route::get('/{id}/edit', PaymentForm::class)->name('payment_edit');
+            // Route::get('/', PaymentList::class)->name('payment');
+            // Route::get('/create', PaymentForm::class)->name('payment_create');
+            // Route::get('/{id}/edit', PaymentForm::class)->name('payment_edit');
+
+            Route::get('/', PatientPaymentList::class)->name('payment');
+            Route::get('/create', PatientPaymentForm::class)->name('payment_create');
+            Route::get('/{id}/edit', PatientPaymentForm::class)->name('payment_edit');
         });
 
         Route::prefix('/phil-health')->group(function () {
@@ -134,8 +140,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/print', PhilHealthPrint::class)->name('phic_print');
             Route::get('/{id}/print-form', PhilHealthPrintForm::class)->name('phic_print_form');
         });
-
-
 
         Route::prefix('/statement-of-account')->group(function () {
             Route::get('/', SoaModule::class)->name('soa');

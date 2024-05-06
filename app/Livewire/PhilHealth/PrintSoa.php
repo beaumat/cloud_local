@@ -190,11 +190,16 @@ class PrintSoa extends Component
                 $this->OTHER_NAME = $data->OTHER_NAME ?? '';
 
                 $contact = $this->contactServices->get($this->CONTACT_ID, 3);
+                
                 if ($contact) {
                     $this->PATIENT_NAME = $contact->NAME;
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS = $contact->POSTAL_ADDRESS;
                     $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
+                    $this->FINAL_DIAGNOSIS = $contact->FINAL_DIAGNOSIS;
+                    $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS;
+                    $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE;
+                    $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE;
                 }
                 $conUser = $this->contactServices->get(\Auth::user()->contact_id, 2);
                 if ($conUser) {

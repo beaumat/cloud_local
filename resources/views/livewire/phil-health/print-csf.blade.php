@@ -812,17 +812,13 @@
                             <div class="row">
                                 <div class="col-2">
                                     <label> 3. Business Name: </label>
-
                                 </div>
                                 <div class="col-10 text-center">
-
-
                                     <div style="right: 30px; position: absolute; top:-8px;"
                                         class="float-left bottom-line2 w-100 mt-1">
                                         <b class="h5 text-primary courier-new font-weight-bold ">{{ $COMPANY_NAME }}
                                             &nbsp;</b>
                                     </div>
-
                                     <p class="text-sm pt-4"> Business Name of Employer</p>
                                 </div>
                             </div>

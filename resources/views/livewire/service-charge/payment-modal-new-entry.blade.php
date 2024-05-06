@@ -39,7 +39,6 @@
                                                 wire:model='CARD_NO' />
                                         </div>
                                     @endif
-
                                     @if ($showCardDateExpire)
                                         <div class="col-md-6">
                                             <livewire:date-input name="CARD_EXPIRY_DATE" titleName="Card Expired"
@@ -51,7 +50,6 @@
                                         <div class="col-md-6">
                                             <livewire:text-input name="RECEIPT_REF_NO" titleName="Receipt No."
                                                 :isDisabled=false wire:model='RECEIPT_REF_NO' />
-
                                         </div>
                                     @endif
 

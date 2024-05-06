@@ -23,7 +23,7 @@ class HemoServices
     }
     public function GetPost(int $CONTACT_ID, int $LOCATION_ID, string $DATE)
     {
-       return  Hemodialysis::where('CUSTOMER_ID', $CONTACT_ID)
+        return Hemodialysis::where('CUSTOMER_ID', $CONTACT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('DATE', $DATE)
             ->where('STATUS_ID', 2)
@@ -196,7 +196,17 @@ class HemoServices
 
         if ($TIME_START != "" && $TIME_END != "") {
             $this->statusUpdate($ID, 2);
+        } else {
+            $this->statusUpdate($ID, 1);
         }
+    }
+
+    public function UpdateFile(int $ID, $FILE_NAME, $FILE_PATH)
+    {
+        Hemodialysis::where('ID', $ID)->update([
+            'FILE_NAME' => $FILE_NAME,
+            'FILE_PATH' => $FILE_PATH
+        ]);
     }
 
     private function statusUpdate(int $ID, int $STATUS)
@@ -220,11 +230,11 @@ class HemoServices
 
         return Hemodialysis::query()
             ->select([
-                'hemodialysis.ID',
-                'hemodialysis.CODE',
-                'hemodialysis.DATE',
-                'c.NAME as PATIENT_NAME'
-            ])
+                    'hemodialysis.ID',
+                    'hemodialysis.CODE',
+                    'hemodialysis.DATE',
+                    'c.NAME as PATIENT_NAME'
+                ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
                 $join->on('l.ID', '=', 'hemodialysis.LOCATION_ID');
@@ -241,31 +251,36 @@ class HemoServices
             ->orderBy('hemodialysis.ID', 'desc')
             ->get();
     }
+    public function getPrevousEntry(int $LOCATION_ID, string $Date, int $CONTACT_ID)
+    {
+        return Hemodialysis::where('');
+    }
     public function Search($search, int $LOCATION_ID, int $perPage)
     {
         return Hemodialysis::query()
             ->select([
-                'hemodialysis.ID',
-                'hemodialysis.CODE',
-                'hemodialysis.DATE',
-                'c.NAME as CONTACT_NAME',
-                'l.NAME as LOCATION_NAME',
-                'hemodialysis.PRE_WEIGHT',
-                'hemodialysis.PRE_BLOOD_PRESSURE',
-                'hemodialysis.PRE_BLOOD_PRESSURE2',
-                'hemodialysis.PRE_HEART_RATE',
-                'hemodialysis.PRE_O2_SATURATION',
-                'hemodialysis.PRE_TEMPERATURE',
-                'hemodialysis.POST_WEIGHT',
-                'hemodialysis.POST_BLOOD_PRESSURE',
-                'hemodialysis.POST_BLOOD_PRESSURE2',
-                'hemodialysis.POST_HEART_RATE',
-                'hemodialysis.POST_O2_SATURATION',
-                'hemodialysis.POST_TEMPERATURE',
-                'hemodialysis.TIME_START',
-                'hemodialysis.TIME_END',
-                's.DESCRIPTION as STATUS'
-            ])
+                    'hemodialysis.ID',
+                    'hemodialysis.CODE',
+                    'hemodialysis.DATE',
+                    'c.NAME as CONTACT_NAME',
+                    'l.NAME as LOCATION_NAME',
+                    'hemodialysis.PRE_WEIGHT',
+                    'hemodialysis.PRE_BLOOD_PRESSURE',
+                    'hemodialysis.PRE_BLOOD_PRESSURE2',
+                    'hemodialysis.PRE_HEART_RATE',
+                    'hemodialysis.PRE_O2_SATURATION',
+                    'hemodialysis.PRE_TEMPERATURE',
+                    'hemodialysis.POST_WEIGHT',
+                    'hemodialysis.POST_BLOOD_PRESSURE',
+                    'hemodialysis.POST_BLOOD_PRESSURE2',
+                    'hemodialysis.POST_HEART_RATE',
+                    'hemodialysis.POST_O2_SATURATION',
+                    'hemodialysis.POST_TEMPERATURE',
+                    'hemodialysis.TIME_START',
+                    'hemodialysis.TIME_END',
+                    's.DESCRIPTION as STATUS',
+                    'hemodialysis.FILE_PATH'
+                ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
@@ -290,11 +305,10 @@ class HemoServices
                 'contact.ID',
                 'contact.NAME as PATIENT',
                 'contact.PIN',
-                'p.NAME as PHYSICIAN',
                 DB::raw('count(h.ID) as TOTAL_HEMO')
             )
             ->join('hemodialysis as h', 'h.CUSTOMER_ID', '=', 'contact.ID')
-            ->leftJoin('contact as p', 'p.ID', '=', 'contact.SALES_REP_ID')
+     
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.STATUS_ID', 2)
             ->whereBetween('h.DATE', [$DATE_FORM, $DATE_TO])
@@ -305,7 +319,7 @@ class HemoServices
                     ->whereColumn('l.LOCATION_ID', 'h.LOCATION_ID')
                     ->where('l.DATE', '>', 'h.DATE');
             })
-            ->groupBy(['contact.ID', 'contact.NAME', 'contact.PIN', 'p.NAME'])
+            ->groupBy(['contact.ID', 'contact.NAME', 'contact.PIN'])
             ->get();
 
 

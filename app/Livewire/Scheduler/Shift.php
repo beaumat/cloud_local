@@ -41,7 +41,7 @@ class Shift extends Component
     {
         $count = (int) $this->scheduleServices->CheckingType($SHIFT_ID, $CONTACT_ID, $DATE, $LOCATION_ID, $HEMO_M_ID);
         $capacity = (int) $this->hemodialysisMachineServices->GetCapacity($HEMO_M_ID);
-
+ 
         if ($count < $capacity) {
             return false;
         } else {
@@ -51,7 +51,6 @@ class Shift extends Component
     }
     public function save(int $shift_id, $date)
     {
-
         if ($this->CONTACT_ID > 0) {
             try {
                 $schedule = $this->scheduleServices->get($this->CONTACT_ID, $date, $this->LOCATION_ID);
@@ -61,19 +60,21 @@ class Shift extends Component
                         $this->scheduleServices->Delete($schedule->ID, $this->LOCATION_ID);
                     } else {
                         //
-                      $isMaximum =  $this->CheckingIsMaximumCapacity($date,$this->CONTACT_ID,$this->LOCATION_ID,$shift_id,$this->HEMO_MACHINE_ID);
-                      
-                      if($isMaximum) {
-                        return true;
-                      }
+                        $isMaximum = $this->CheckingIsMaximumCapacity($date, $this->CONTACT_ID, $this->LOCATION_ID, $shift_id, $this->HEMO_MACHINE_ID);
+
+                        if ($isMaximum) {
+                          
+                            return true;
+                        }
 
                         $this->scheduleServices->Update($this->CONTACT_ID, $date, $shift_id, $schedule->SCHED_STATUS, $schedule->STATUS_LOG, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);
                     }
                 } elseif ($shift_id != 0) {
-                   
-                    $isMaximum =  $this->CheckingIsMaximumCapacity($date,$this->CONTACT_ID,$this->LOCATION_ID,$shift_id,$this->HEMO_MACHINE_ID);         
-                    if($isMaximum) {
-                      return true;
+
+                    $isMaximum = $this->CheckingIsMaximumCapacity($date, $this->CONTACT_ID, $this->LOCATION_ID, $shift_id, $this->HEMO_MACHINE_ID);
+                    if ($isMaximum) {
+              
+                        return true;
                     }
 
                     $this->scheduleServices->Store($shift_id, $this->CONTACT_ID, $date, 0, null, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);

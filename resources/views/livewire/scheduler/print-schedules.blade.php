@@ -53,7 +53,7 @@
                         <div class="modal-footer">
 
                             <a target="_BLANK"
-                                href="{{ route('transactionsschedules_print', [
+                                href="{{ route('patientsschedules_print', [
                                     'week' => $WEEKLY_ID,
                                     'location' => $LOCATION_ID,
                                     'year' => $YEAR,

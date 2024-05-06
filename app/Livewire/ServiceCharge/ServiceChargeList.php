@@ -2,8 +2,8 @@
 
 namespace App\Livewire\ServiceCharge;
 
-use App\Services\InvoiceServices;
 use App\Services\LocationServices;
+use App\Services\ServiceChargeServices;
 use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -16,15 +16,15 @@ class ServiceChargeList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public int $perPage = 20;
+    public int $perPage = 15;
     public int $locationid;
     public $locationList = [];
-    private $invoiceServices;
     private $locationServices;
     private $userServices;
-    public function boot(InvoiceServices $invoiceServices, LocationServices $locationServices, UserServices $userServices)
+    private $serviceChargeServices;
+    public function boot(ServiceChargeServices $serviceChargeServices, LocationServices $locationServices, UserServices $userServices)
     {
-        $this->invoiceServices = $invoiceServices;
+        $this->serviceChargeServices = $serviceChargeServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
@@ -37,7 +37,7 @@ class ServiceChargeList extends Component
     public function delete($id)
     {
         try {
-            $this->invoiceServices->Delete($id);
+            $this->serviceChargeServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
 
         } catch (\Exception $e) {
@@ -45,7 +45,6 @@ class ServiceChargeList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -55,7 +54,7 @@ class ServiceChargeList extends Component
     }
     public function render()
     {
-        $dataList = $this->invoiceServices->Search($this->search, $this->locationid, $this->perPage);
+        $dataList = $this->serviceChargeServices->Search($this->search, $this->locationid, $this->perPage);
         return view('livewire.service-charge.service-charge-list', ['dataList' => $dataList]);
     }
 }

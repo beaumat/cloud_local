@@ -55,7 +55,6 @@ class SchedulerForm extends Component
     {
         $this->reloadComponent();
         $this->loadScheduleByContact();
-
         $data = $this->contactServices->get($this->CONTACT_ID, 3);
         if ($data) {
             $this->HEMO_MACHINE_ID = $data->PATIENT_TYPE_ID;
@@ -67,7 +66,6 @@ class SchedulerForm extends Component
     {
         $this->reloadComponent();
         $this->loadScheduleByContact();
-
     }
     public function reloadComponent()
     {

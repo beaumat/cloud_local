@@ -57,7 +57,7 @@ class ScheduleModal extends Component
             return;
         }
 
-        $url = route('transactionshemo_print', ['id' => $this->ids]);
+        $url = route('patientshemo_print', ['id' => $this->ids]);
         $this->dispatch('schedOpenNewTab', data: $url);
         $this->dispatch('refresh-list');
         $this->closeModal();

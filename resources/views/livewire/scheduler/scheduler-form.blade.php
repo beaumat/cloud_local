@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('transactionsschedules') }}"> Schedules Setup</a></h5>
+                    <h5 class="m-0"><a href="{{ route('patientsschedules') }}"> Schedules Setup</a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -29,7 +29,7 @@
                                     </div>
                                     <div class="col-md-6 text-right">
                                             
-                                        <a href="{{ route('transactionsschedules') }}" class="btn btn-info btn-sm">
+                                        <a href="{{ route('patientsschedules') }}" class="btn btn-info btn-sm">
                                             <i class="fa fa-table" aria-hidden="true"></i>
                                             List</a>
                                     </div>

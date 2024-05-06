@@ -49,7 +49,8 @@ class Invoice extends Model
         'CUSTOM_FIELD2',
         'CUSTOM_FIELD3',
         'CUSTOM_FIELD4',
-        'CUSTOM_FIELD5'
+        'CUSTOM_FIELD5',
+        'IS_CHARGES'
     ];
 
 

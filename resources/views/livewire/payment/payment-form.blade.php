@@ -6,7 +6,9 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+                <div class="col-md-12">
+                    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+                </div>
                 <div class="col-md-12">
                     <div class="card">
                         <div class="pt-1 pb-1 card-header bg-sky">
@@ -37,7 +39,6 @@
                                             @endif
 
                                             <div class="row">
-
                                                 <div class="col-md-6">
                                                     @if ($Modify)
                                                         <livewire:number-input name="AMOUNT" titleName="Amount"
@@ -59,42 +60,34 @@
                                                             :options="$paymentMethodList" :zero="false"
                                                             wire:model.live='PAYMENT_METHOD_ID' />
                                                     @endif
-
                                                 </div>
-
-
-
                                             </div>
 
                                             <div class="row">
-
-                                                @if ($showCardNo)
+                                                @if ($showReceiptNo)
                                                     <div class="col-md-6">
                                                         @if ($Modify)
-                                                            <livewire:text-input name="CARD_NO" titleName="Card No."
-                                                                :isDisabled=false wire:model='CARD_NO' />
+                                                            <livewire:text-input name="RECEIPT_REF_NO"
+                                                                titleName="GL Ref#" :isDisabled=false
+                                                                wire:model='RECEIPT_REF_NO' />
                                                         @else
-                                                            <livewire:text-input name="CARD_NO" titleName="Card No."
-                                                                :isDisabled=true wire:model='CARD_NO' />
-                                                        @endif
-                                                    </div>
-
-                                                @endif
-
-                                                @if ($showCardDateExpire)
-                                                    <div class="col-md-6">
-                                                        @if ($Modify)
-                                                            <livewire:date-input name="CARD_EXPIRY_DATE"
-                                                                titleName="Card Expired" wire:model='CARD_EXPIRY_DATE'
-                                                                :isDisabled="false" />
-                                                        @else
-                                                            <livewire:date-input name="CARD_EXPIRY_DATE"
-                                                                titleName="Card Expired" wire:model='CARD_EXPIRY_DATE'
-                                                                :isDisabled="true" />
+                                                            <livewire:text-input name="RECEIPT_REF_NO"
+                                                                titleName="GL Ref#" :isDisabled=true
+                                                                wire:model='RECEIPT_REF_NO' />
                                                         @endif
                                                     </div>
                                                 @endif
-
+                                                @if ($showReceiptDate)
+                                                    <div class="col-md-6">
+                                                        @if ($Modify)
+                                                            <livewire:date-input name="RECEIPT_DATE" titleName="GL Date"
+                                                                wire:model='RECEIPT_DATE' :isDisabled="false" />
+                                                        @else
+                                                            <livewire:date-input name="RECEIPT_DATE" titleName="GL Date"
+                                                                wire:model='RECEIPT_DATE' :isDisabled="true" />
+                                                        @endif
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -123,30 +116,30 @@
                                                             wire:model='LOCATION_ID' />
                                                     @endif
                                                 </div>
-                                                @if ($showReceiptNo)
-                                                    <div class="col-md-4">
+
+
+                                                @if ($showCardNo)
+                                                    <div class="col-md-6">
                                                         @if ($Modify)
-                                                            <livewire:text-input name="RECEIPT_REF_NO"
-                                                                titleName="Receipt No." :isDisabled=false
-                                                                wire:model='RECEIPT_REF_NO' />
+                                                            <livewire:text-input name="CARD_NO" titleName="Card No."
+                                                                :isDisabled=false wire:model='CARD_NO' />
                                                         @else
-                                                            <livewire:text-input name="RECEIPT_REF_NO"
-                                                                titleName="Receipt No." :isDisabled=true
-                                                                wire:model='RECEIPT_REF_NO' />
+                                                            <livewire:text-input name="CARD_NO" titleName="Card No."
+                                                                :isDisabled=true wire:model='CARD_NO' />
                                                         @endif
                                                     </div>
 
                                                 @endif
 
-                                                @if ($showReceiptDate)
-                                                    <div class="col-md-4">
+                                                @if ($showCardDateExpire)
+                                                    <div class="col-md-6">
                                                         @if ($Modify)
-                                                            <livewire:date-input name="RECEIPT_DATE"
-                                                                titleName="Receipt Date" wire:model='RECEIPT_DATE'
+                                                            <livewire:date-input name="CARD_EXPIRY_DATE"
+                                                                titleName="Card Expired" wire:model='CARD_EXPIRY_DATE'
                                                                 :isDisabled="false" />
                                                         @else
-                                                            <livewire:date-input name="RECEIPT_DATE"
-                                                                titleName="Receipt Date" wire:model='RECEIPT_DATE'
+                                                            <livewire:date-input name="CARD_EXPIRY_DATE"
+                                                                titleName="Card Expired" wire:model='CARD_EXPIRY_DATE'
                                                                 :isDisabled="true" />
                                                         @endif
                                                     </div>
@@ -161,6 +154,8 @@
                                                             :isDisabled=true wire:model='NOTES' :vertical="false" />
                                                     @endif
                                                 </div>
+
+
                                                 @if ($showFileName && $Modify)
                                                     <div class="col-md-12">
                                                         <div class="form-group">
@@ -222,6 +217,24 @@
                                                     <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Preview
                                                 </a>
                                             @endif
+                                            @if ($showFileName)
+                                                @if (!$IS_CONFIRM)
+                                                    <button type="button" wire:click='getConfirm()'
+                                                        wire:confirm="Are you sure this guaranteed letter is confirm?"
+                                                        class="btn btn-sm btn-info">
+                                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                                        Confirm
+                                                    </button>
+                                                @else
+                                                    <label class="text-xs text-primary px-3">
+                                                        <i>
+                                                            Guarantee Letter Confirm on
+                                                            <b class="text-info">{{ \Carbon\Carbon::parse($DATE_CONFIRM)->format('m/d/Y') }}
+                                                            </b>
+                                                        </i>
+                                                    </label>
+                                                @endif
+                                            @endif
                                         @endif
 
                                     </div>
@@ -272,19 +285,7 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-6 text-left">
-                                    {{-- @if ($STATUS == 0)
-                                        <button class="btn btn-sm btn-success" wire:click='getSubmit'
-                                            wire:confirm="Are you sure you want to submit?"
-                                            @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            Submit
-                                        </button>
-                                    @endif --}}
-                                    {{-- @if ($STATUS == 2)
-                                        <button class="btn btn-sm btn-danger" wire:click='getVoid'
-                                            wire:confirm="Are you sure you want to void?">
-                                            Void
-                                        </button>
-                                    @endif --}}
+
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">

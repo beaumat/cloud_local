@@ -12,7 +12,7 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('transactionshemo') }}">
+                                    <a class="text-white" href="{{ route('patientshemo') }}">
                                         @if ($ID == 0)
                                             Create
                                         @endif
@@ -98,7 +98,7 @@
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 0)
                                             <a id="new" title="Create"
-                                                href="{{ route('transactionsservice_charges_create') }}"
+                                                href="{{ route('patientsservice_charges_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
                                     </div>
@@ -200,29 +200,24 @@
                                                             <input wire:model='PRE_BLOOD_PRESSURE' type="text"
                                                                 class="text-xs w-100 text-right" />
                                                         </div>
-                                          
+
                                                         <div class="col-sm-6">
                                                             <input wire:model='PRE_BLOOD_PRESSURE2' type="text"
                                                                 class="text-xs w-100 text-right" />
                                                         </div>
                                                     </div>
-
-
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="row">
                                                         <div class="col-sm-6">
                                                             <input wire:model='POST_BLOOD_PRESSURE' type="text"
-                                                            class="text-xs w-100 text-right" />
+                                                                class="text-xs w-100 text-right" />
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <input wire:model='POST_BLOOD_PRESSURE2' type="text"
-                                                            class="text-xs w-100 text-right" />
+                                                                class="text-xs w-100 text-right" />
                                                         </div>
                                                     </div>
-                                                  
-                                               
-
                                                 </div>
                                             </div>
                                         </td>
@@ -326,12 +321,46 @@
                                         class="form-control form-control-sm" />
                                 </div>
                             </div>
+                            <div class="row form-group">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="fileUpload" class="text-xs">PDF document file
+                                            @if ($PDF)
+                                                <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                                            @endif
+                                        </label>
+                                        <div class="input-group input-group-sm">
+                                            <div class="custom-file text-xs">
+                                                <input type="file" class="custom-file-input text-xs"
+                                                    id="fileUpload" wire:model.live='PDF'>
+                                                <label class="custom-file-label text-xs" for="fileUpload">
+                                                    @if ($PDF)
+                                                        {{ $PDF->getClientOriginalName() }}
+                                                    @else
+                                                        Choose file
+                                                    @endif
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    @if ($FILE_PATH)
+                                        <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
+                                            class="btn btn-sm btn-warning">
+                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Preview
+                                        </a>
+                                    @endif
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-12">
                     <button class="btn btn-sm btn-primary" wire:click='update_all'>Save</button>
-                    <a target="_blank" href="{{ route('transactionshemo_print', ['id' => $ID]) }}"
+                    <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
                         class="btn btn-sm btn-success">Print</a>
                 </div>
             </div>

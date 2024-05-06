@@ -1,10 +1,18 @@
 <?php
 
 namespace App\Services;
+use Carbon\Carbon;
 
 class DateServices
 {
-
+    public function NowDate()
+    {
+        return Carbon::now()->format('Y-m-d');
+    }
+    public function Now()
+    {
+        return Carbon::now();
+    }
     public function WeeklyList(): array
     {
         return [
@@ -34,29 +42,19 @@ class DateServices
         $month = $m;
         $year = $yr;
         $selectedWeek = $wk_selected;
-
-        // Get the day of the week for the first day of the month
         $firstDayOfWeek = date('N', strtotime("$year-$month-01"));
-
-        // Calculate the start date of the first week based on the day of the week
-        $startOfWeek = 1 - $firstDayOfWeek + 1; // Adjust for Monday being the start of the week
-
-        // Get the number of days in the month
+        $startOfWeek = 1 - $firstDayOfWeek + 1;
         $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
-        // If the start of the week is greater than 1, then it's actually the last week of the previous month
         if ($startOfWeek > 1) {
             $month--;
             if ($month == 0) {
                 $month = 12;
                 $year--;
             }
-            // Recalculate the start of the week
             $firstDayOfWeek = date('N', strtotime("$year-$month-01"));
             $startOfWeek = 1 - $firstDayOfWeek + 1;
         }
 
-        // Calculate the start and end dates for the selected week
         $startDate = $startOfWeek + ($selectedWeek - 1) * 7;
         $endDate = min($startDate + 6, $daysInMonth);
 
@@ -88,16 +86,10 @@ class DateServices
         }
 
         if (count($selectedDates) < 6) {
-
             return [];
         }
         return $selectedDates;
     }
-
-
-
-
-
     public function SemiMonthly(): array
     {
         return [

@@ -17,6 +17,7 @@ class PrintCf4Back extends Component
     private $contactServices;
     public string $DR_NAME;
     public $dateList = [];
+    public $dataMed = [];
     public $DOCTOR_ORDER = "UNDERGO HEMODIALYSIS TREATMENT WITH NO COMPLICATIONS";
     public function boot(
         PhilHealthServices $philHealthServices,
@@ -29,6 +30,19 @@ class PrintCf4Back extends Component
     }
     public function mount($id = null)
     {
+
+        $this->dataMed = [
+            ['GENERIC_NAME' => '', 'QUANTITY' => '', 'DOSSAGE' => '', 'ROUTE' => '', 'FREQUENCY' => '', 'TOTAL_COST' => '', 'CONT_GENERIC_NAME' => '', 'CONT_QUANTITY' => '', 'CONT_DOSSAGE' => '', 'CONT_ROUTE' => '', 'CONT_FREQUENCY' => '', 'CONT_TOTAL_COST' => ''],
+            ['GENERIC_NAME' => '', 'QUANTITY' => '', 'DOSSAGE' => '', 'ROUTE' => '', 'FREQUENCY' => '', 'TOTAL_COST' => '', 'CONT_GENERIC_NAME' => '', 'CONT_QUANTITY' => '', 'CONT_DOSSAGE' => '', 'CONT_ROUTE' => '', 'CONT_FREQUENCY' => '', 'CONT_TOTAL_COST' => ''],
+            ['GENERIC_NAME' => '', 'QUANTITY' => '', 'DOSSAGE' => '', 'ROUTE' => '', 'FREQUENCY' => '', 'TOTAL_COST' => '', 'CONT_GENERIC_NAME' => '', 'CONT_QUANTITY' => '', 'CONT_DOSSAGE' => '', 'CONT_ROUTE' => '', 'CONT_FREQUENCY' => '', 'CONT_TOTAL_COST' => ''],
+            ['GENERIC_NAME' => '', 'QUANTITY' => '', 'DOSSAGE' => '', 'ROUTE' => '', 'FREQUENCY' => '', 'TOTAL_COST' => '', 'CONT_GENERIC_NAME' => '', 'CONT_QUANTITY' => '', 'CONT_DOSSAGE' => '', 'CONT_ROUTE' => '', 'CONT_FREQUENCY' => '', 'CONT_TOTAL_COST' => ''],
+            ['GENERIC_NAME' => '', 'QUANTITY' => '', 'DOSSAGE' => '', 'ROUTE' => '', 'FREQUENCY' => '', 'TOTAL_COST' => '', 'CONT_GENERIC_NAME' => '', 'CONT_QUANTITY' => '', 'CONT_DOSSAGE' => '', 'CONT_ROUTE' => '', 'CONT_FREQUENCY' => '', 'CONT_TOTAL_COST' => ''],
+            ['GENERIC_NAME' => '', 'QUANTITY' => '', 'DOSSAGE' => '', 'ROUTE' => '', 'FREQUENCY' => '', 'TOTAL_COST' => '', 'CONT_GENERIC_NAME' => '', 'CONT_QUANTITY' => '', 'CONT_DOSSAGE' => '', 'CONT_ROUTE' => '', 'CONT_FREQUENCY' => '', 'CONT_TOTAL_COST' => ''],
+            ['GENERIC_NAME' => '', 'QUANTITY' => '', 'DOSSAGE' => '', 'ROUTE' => '', 'FREQUENCY' => '', 'TOTAL_COST' => '', 'CONT_GENERIC_NAME' => '', 'CONT_QUANTITY' => '', 'CONT_DOSSAGE' => '', 'CONT_ROUTE' => '', 'CONT_FREQUENCY' => '', 'CONT_TOTAL_COST' => ''],
+        ];
+
+        $this->getMed($id);
+
         $data = $this->philHealthServices->get($id);
         if ($data) {
 
@@ -57,6 +71,34 @@ class PrintCf4Back extends Component
             return;
         }
 
+
+    }
+    public function getMed(int $ID)
+    {
+
+
+        $dt = $this->philHealthServices->DrugMedicineList($ID);
+        $r = 0;
+
+        foreach ($dt as $list) {
+            if ($r == 7) {
+                return;
+            }
+            $this->dataMed[$r]['GENERIC_NAME'] = $list->GENERIC_NAME;
+            $this->dataMed[$r]['QUANTITY'] = number_format($list->QUANTITY, 0);
+            $this->dataMed[$r]['DOSSAGE'] = $list->DOSSAGE;
+            $this->dataMed[$r]['ROUTE'] = $list->ROUTE;
+            $this->dataMed[$r]['FREQUENCY'] = $list->FREQUENCY;
+            $this->dataMed[$r]['TOTAL_COST'] = number_format($list->TOTAL_COST, 2);
+
+            $this->dataMed[$r]['CONT_GENERIC_NAME'] = $list->CONT_GENERIC_NAME;
+            $this->dataMed[$r]['CONT_QUANTITY'] = number_format($list->CONT_QUANTITY, 0);
+            $this->dataMed[$r]['CONT_DOSSAGE'] = $list->CONT_DOSSAGE;
+            $this->dataMed[$r]['CONT_ROUTE'] = $list->CONT_ROUTE;
+            $this->dataMed[$r]['CONT_FREQUENCY'] = $list->CONT_FREQUENCY;
+            $this->dataMed[$r]['CONT_TOTAL_COST'] = number_format($list->CONT_TOTAL_COST, 2);
+            $r++;
+        }
     }
     public function render()
     {

@@ -13,13 +13,15 @@ use App\Models\ScheduleType;
 use App\Models\Tax;
 use App\Services\ContactRequirementServices;
 use App\Services\ContactServices;
+use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+
+
 
 #[Title('Patients')]
 class PatientForm extends Component
@@ -139,6 +141,7 @@ class PatientForm extends Component
     private $locationServices;
     private $userServices;
     private $contactRequirementServices;
+    private $dateServices;
     public $patientTypeList = [];
     public $patientStatusList = [];
     public string $DATE_ADMISSION;
@@ -147,12 +150,14 @@ class PatientForm extends Component
         ContactServices $contactServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        ContactRequirementServices $contactRequirementServices
+        ContactRequirementServices $contactRequirementServices,
+        DateServices $dateServices
     ) {
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->contactRequirementServices = $contactRequirementServices;
+        $this->dateServices = $dateServices;
     }
 
     public function mount($id = null)
@@ -307,17 +312,13 @@ class PatientForm extends Component
         $this->NICKNAME = '';
         $this->HIRE_DATE = '';
         $this->age = null;
-
-
         $this->SCHEDULE_TYPE = 0;
-
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->PATIENT_TYPE_ID = 1;
         $this->PATIENT_STATUS_ID = 1;
         $this->ADMITTED = false;
         $this->LONG_HRS_DURATION = false;
-        $this->DATE_ADMISSION = Carbon::now()->format('Y-m-d');
-
+        $this->DATE_ADMISSION = $this->dateServices->NowDate();
         $this->ADDRESS_UNIT_ROOM_FLOOR = '';
         $this->ADDRESS_BUILDING_NAME = '';
         $this->ADDRESS_LOT_BLK_HOUSE_BLDG = '';
@@ -331,7 +332,6 @@ class PatientForm extends Component
         $this->PIN = '';
         $this->PEN = '';
         $this->IS_PATIENT = true;
-
         $this->MEMBER_TEL_NO = '';
         $this->MEMBER_MOBILE = '';
         $this->MEMBER_EMAIL = '';
@@ -360,7 +360,7 @@ class PatientForm extends Component
         $this->MEMBER_IS_SPOUSE = false;
 
         $this->PEN_CONTACT = '';
-        $this->FIRST_CASE_RATE = '';
+        $this->FIRST_CASE_RATE = '90935';
         $this->SECOND_CASE_RATE = '';
         $this->FINAL_DIAGNOSIS = '';
         $this->OTHER_DIAGNOSIS = '';
@@ -458,59 +458,33 @@ class PatientForm extends Component
             'MEMBER_ZIP_CODE' => $this->MEMBER_ZIP_CODE,
             'PIN_DEPENDENT' => $this->PIN_DEPENDENT,
             'IS_DEPENDENT' => $this->IS_DEPENDENT,
-            'HEIGHT' => $this->HEIGHT
+            'HEIGHT' => $this->HEIGHT,
+            'PATIENT_TYPE_ID' => $this->PATIENT_TYPE_ID,
+            'DATE_ADMISSION' => $this->DATE_ADMISSION
         ]);
     }
     public function save()
     {
 
-        if ($this->PIN) {
-
-            $this->validate(
-                [
-                    'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
-                    'FIRST_NAME' => 'required',
-                    'LAST_NAME' => 'required',
-                    'TAXPAYER_ID' => 'required|max:100|unique:contact,taxpayer_id,' . $this->ID,
-                    'DATE_OF_BIRTH' => 'required',
-                    'HEIGHT' => 'required|not_in:0'
-
-
-                ],
-                [
-                    'HEIGHT' => 'Height is required'
-                ],
-                [
-                    'NAME' => 'Name',
-                    'FIRST_NAME' => 'Firstname',
-                    'LAST_NAME' => 'Lastname',
-                    'TAXPAYER_ID' => 'Philhealth No.',
-                    'DATE_OF_BIRTH' => 'Date of Birth',
-                    'HEIGHT' => 'Height'
-                ]
-            );
-        } else {
-
-            $this->validate(
-                [
-                    'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
-                    'FIRST_NAME' => 'required',
-                    'LAST_NAME' => 'required',
-                    'DATE_OF_BIRTH' => 'required',
-                    'HEIGHT' => 'required|not_in:0'
-                ],
-                [
-                    'HEIGHT' => 'Height is required'
-                ],
-                [
-                    'NAME' => 'Name',
-                    'FIRST_NAME' => 'Firstname',
-                    'LAST_NAME' => 'Lastname',
-                    'DATE_OF_BIRTH' => 'Date of Birth',
-                    'HEIGHT' => 'Height'
-                ]
-            );
-        }
+        $this->validate(
+            [
+                'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
+                'FIRST_NAME' => 'required',
+                'LAST_NAME' => 'required',
+                'DATE_OF_BIRTH' => 'required',
+                'HEIGHT' => 'required|not_in:0'
+            ],
+            [
+                'HEIGHT' => 'Height is required'
+            ],
+            [
+                'NAME' => 'Name',
+                'FIRST_NAME' => 'Firstname',
+                'LAST_NAME' => 'Lastname',
+                'DATE_OF_BIRTH' => 'Date of Birth',
+                'HEIGHT' => 'Height'
+            ]
+        );
 
         if ($this->contactServices->is12CharRequired($this->PIN)) {
             session()->flash('error', 'Invalid (PIN). must 12 character only.');

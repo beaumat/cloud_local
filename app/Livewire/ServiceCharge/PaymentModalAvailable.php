@@ -2,8 +2,8 @@
 
 namespace App\Livewire\ServiceCharge;
 
-use App\Services\InvoiceServices;
-use App\Services\PaymentServices;
+use App\Services\PatientPaymentServices;
+use App\Services\ServiceChargeServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -11,26 +11,26 @@ class PaymentModalAvailable extends Component
 {
 
     #[Reactive]
-    public int $CUSTOMER_ID;
+    public int $PATIENT_ID;
     #[Reactive]
     public int $LOCATION_ID;
     #[Reactive]
-    public int $INVOICE_ID;
-    private $paymentServices;
-    private $invoiceServices;
+    public int $SERVICE_CHARGES_ID;
+    private $patientPaymentServices;
+    private $serviceChargeServices;
     public $data = [];
     public $paymentSelected = [];
     public $paymentAmounts = [];
     public $paymentRemain = [];
     public float $balance;
-    public function boot(PaymentServices $paymentServices, InvoiceServices $invoiceServices)
+    public function boot(PatientPaymentServices $patientPaymentServices, ServiceChargeServices $serviceChargeServices)
     {
-        $this->paymentServices = $paymentServices;
-        $this->invoiceServices = $invoiceServices;
+        $this->patientPaymentServices = $patientPaymentServices;
+        $this->serviceChargeServices = $serviceChargeServices;
     }
     public function mount()
     {
-        $this->balance = $this->invoiceServices->getBalance($this->INVOICE_ID);
+        $this->balance = $this->serviceChargeServices->getBalance($this->SERVICE_CHARGES_ID);
     }
     public function updatedpaymentSelected(bool $value, $id)
     {
@@ -43,7 +43,7 @@ class PaymentModalAvailable extends Component
 
             if ($isSelected) {
                 try {
-                    $CurrentRemain = $this->paymentServices->GetPaymentRemaining($paymentId);
+                    $CurrentRemain = $this->patientPaymentServices->GetPaymentRemaining($paymentId);
                     if ($CurrentRemain == $myBalance) {
                         $this->paymentAmounts[$paymentId] = $CurrentRemain;
                     } else {
@@ -81,7 +81,7 @@ class PaymentModalAvailable extends Component
                 session()->flash('error', 'Please enter payment applied.');
                 break;
             } else {
-                if ($CollectAmount > $this->paymentServices->GetPaymentRemaining($paymentId)) {
+                if ($CollectAmount > $this->patientPaymentServices->GetPaymentRemaining($paymentId)) {
                     session()->flash('error', 'Invalid amount');
                     break;
                 } else {
@@ -95,8 +95,6 @@ class PaymentModalAvailable extends Component
             session()->flash('error', 'Payment not selected');
             return;
         }
-
-
         foreach ($this->paymentSelected as $paymentId => $isSelected) {
             $appliedAmount = 0;
             if ($isSelected) {
@@ -107,22 +105,23 @@ class PaymentModalAvailable extends Component
                 }
 
                 if ($appliedAmount > 0) {
-                    $ID = (int) $this->paymentServices->PaymentInvoiceExist($paymentId, $this->INVOICE_ID);
+                    $ID = (int) $this->patientPaymentServices->PaymentChargesExist($paymentId, $this->SERVICE_CHARGES_ID);
                     if ($ID > 0) {
-                        $this->paymentServices->PaymentInvoiceUpdate($ID, $paymentId, $this->INVOICE_ID, 0, $appliedAmount);
+                        $this->patientPaymentServices->PaymentChargesUpdate($ID, $paymentId, $this->SERVICE_CHARGES_ID, 0, $appliedAmount);
                     } else {
-                        $this->paymentServices->PaymentInvoiceStore($paymentId, $this->INVOICE_ID, 0, $appliedAmount, 0, 0);
+                        $this->patientPaymentServices->PaymentChargeStore($paymentId, $this->SERVICE_CHARGES_ID, 0, $appliedAmount, 0, 0);
                     }
+
+                    $this->serviceChargeServices->updateServiceChargesBalance($this->SERVICE_CHARGES_ID);
                     
-                    $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
-                    $this->paymentServices->UpdatePaymentApplied($paymentId);
+                    $this->patientPaymentServices->UpdatePaymentChargesApplied($paymentId);
 
                 }
 
             }
         }
 
-        $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
+        $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
         $this->dispatch('update-amount', result: $getResult);
         $this->dispatch('update-status');
         $this->paymentSelected = [];
@@ -133,7 +132,7 @@ class PaymentModalAvailable extends Component
     public function render()
     {
 
-        $this->data = $this->paymentServices->PaymentAvailableList($this->CUSTOMER_ID, $this->LOCATION_ID);
+        $this->data = $this->patientPaymentServices->PaymentAvailableList($this->PATIENT_ID, $this->LOCATION_ID);
 
         return view('livewire.service-charge.payment-modal-available');
     }

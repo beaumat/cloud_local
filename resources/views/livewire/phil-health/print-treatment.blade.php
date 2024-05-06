@@ -20,7 +20,6 @@
                             <b class="h4">HEMODIALYSIS TREATMENT SUMMARY</b>
                         </div>
                         <div class="col-12">
-
                             <div class="row mt-4">
                                 <div class="col-3 text-right">NAME OF PATIENT : </div>
                                 <div class="col-6 bottom-line"> {{ $PATIENT_NAME }}</div>
@@ -33,14 +32,13 @@
                             </div>
                             <div class="row">
                                 <div class="col-3 text-right">ATTENDING PHYSICIAN : </div>
-                                <div class="col-6 bottom-line"> </div>
+                                <div class="col-6 bottom-line"> {{ $PHYSICIAN}} </div>
                             </div>
                             <div class="row">
                                 <div class="col-3 text-right"> FIRST CASE RATE : </div>
                                 <div class="col-9 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
                             </div>
                             <div class="row">
-
                                 <div class="col-3 text-right"> DIAGNOSIS : </div>
                                 <div class="col-9 bottom-line"> {{ $FINAL_DIAGNOSIS }}</div>
                             </div>
