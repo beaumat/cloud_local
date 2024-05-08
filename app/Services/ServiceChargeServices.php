@@ -79,6 +79,10 @@ class ServiceChargeServices
     {
         return ServiceCharges::where('ID', $ID)->first();
     }
+    public function getItem(int $ID)
+    {
+        return ServiceChargesItems::where('ID', $ID)->first();
+    }
     public function Store(
         string $CODE,
         string $DATE,
@@ -362,7 +366,7 @@ class ServiceChargeServices
     public function GetPaymentAppliedViaServiceCharges(int $SERVICE_CHARGES_ID): float
     {
         $result = PatientPaymentCharges::query()
-            ->select(\DB::raw('IFNULL(SUM(patient_payment_charges.AMOUNT_APPLIED), 0) AS pay'))
+            ->select(DB::raw('IFNULL(SUM(patient_payment_charges.AMOUNT_APPLIED), 0) AS pay'))
             ->join('service_charges_items', 'service_charges_items.ID', '=', 'patient_payment_charges.SERVICE_CHARGES_ITEM_ID')
             ->where('service_charges_items.SERVICE_CHARGES_ID', '=', $SERVICE_CHARGES_ID)
             ->first();
@@ -381,7 +385,7 @@ class ServiceChargeServices
                     'PAID_AMOUNT' => $ITEM_PAID
                 ]);
 
-            $this->updateServiceChargesBalance($data->ID);
+            $this->updateServiceChargesBalance($data->SERVICE_CHARGES_ID);
         }
 
     }
@@ -389,7 +393,7 @@ class ServiceChargeServices
     {
 
         $result = PatientPaymentCharges::query()
-            ->select(\DB::raw('IFNULL(SUM(patient_payment_charges.AMOUNT_APPLIED), 0) AS pay'))
+            ->select(DB::raw('IFNULL(SUM(patient_payment_charges.AMOUNT_APPLIED), 0) AS pay'))
             ->where('SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)
             ->first();
 
@@ -423,8 +427,6 @@ class ServiceChargeServices
                 'STATUS' => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
-
-
         }
     }
 

@@ -18,12 +18,20 @@ class Payments extends Component
     public int $LOCATION_ID;
     public int $openStatus = 0;
     public $data = [];
+    public float $ORG_AMOUNT = 0;
     private $patientPaymentServices;
     private $serviceChargeServices;
     public function boot(PatientPaymentServices $patientPaymentServices, ServiceChargeServices $serviceChargeServices)
     {
         $this->patientPaymentServices = $patientPaymentServices;
         $this->serviceChargeServices = $serviceChargeServices;
+    }
+    public function mount()
+    {
+       $data = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
+        if($data) {
+            $this->ORG_AMOUNT = (float) $data->AMOUNT;
+        }
     }
     public function delete(int $ID, int $PATIENT_PAYMENT_ID)
     {

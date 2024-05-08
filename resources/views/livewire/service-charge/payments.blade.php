@@ -3,18 +3,23 @@
     <table class="table table-sm table-bordered table-hover">
         <thead class="text-xs bg-sky">
             <tr>
+                <th class="col-2 bg-info">Item Description</th>
+                <th class="col-1 bg-info">Qty </th>
+                <th class="col-1 bg-info">Item Amount</th>
                 <th class="col-1">Reference</th>
                 <th class="col-1">Date</th>
-                <th class="col-3">Payment Methods</th>
-                <th class="col-2">Amount Deposit</th>
-                <th class="col-2">Amount Applied</th>
+                <th class="col-1">Applied</th>
+                <th class="col-1">Running Bal.</th>
                 <th class="col-1 text-center">GL Confirm</th>
-                <th class="text-center">Action</th>
+                <th class="text-center col-2">Action</th>
             </tr>
         </thead>
         <tbody class="text-xs">
             @foreach ($data as $list)
                 <tr>
+                    <td>{{ $list->ITEM_NAME }}</td>
+                    <td>{{ number_format($list->QUANTITY, 0) }}</td>
+                    <td>{{ number_format($list->ITEM_AMOUNT, 2) }}</td>
                     <td>
                         <a target="_blank"
                             href="{{ route('patientspayment_edit', ['id' => $list->PATIENT_PAYMENT_ID]) }}">
@@ -22,9 +27,13 @@
                         </a>
                     </td>
                     <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }} </td>
-                    <td> {{ $list->PAYMENT_METHOD }} </td>
-                    <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
+
                     <td class="text-right">{{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
+                    @php
+                        $ORG_AMOUNT = $ORG_AMOUNT - $list->AMOUNT_APPLIED;
+                    @endphp
+                    <td class="text-right">{{ number_format($ORG_AMOUNT,2) }}
+                    </td>
                     <td class="text-center">
                         @if ($list->IS_CONFIRM)
                             <strong class="text-success">Yes</strong>
@@ -54,5 +63,5 @@
             @endforeach
         </tbody>
     </table>
-    @livewire('ServiceCharge.PaymentModal', ['PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID])
+    <a target="_BLANK" class="btn btn-success btn-xs" href="{{ route('patientspayment_create') }}"> <i class="fas fa-plus"></i> Create Payment</a>
 </div>

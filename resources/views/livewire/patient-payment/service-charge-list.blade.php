@@ -65,6 +65,7 @@
                                                 $temp_max = ($list->ITEM_AMOUNT - $list->PAID_AMOUNT);
                                          
                                             @endphp
+                                            
                                             <input type="number" min="0" max='{{ $temp_max }}'
                                                 wire:model="paymentAmounts.{{ $list->ID }}"
                                                 class="text-xs w-100" />

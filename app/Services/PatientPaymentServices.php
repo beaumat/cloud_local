@@ -230,7 +230,7 @@ class PatientPaymentServices
             ]);
     }
     public function PaymentChargesDelete(int $ID, int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID)
-    {   
+    {
 
         PatientPaymentCharges::where('ID', $ID)->where('PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)->where('SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)->delete();
     }
@@ -254,12 +254,12 @@ class PatientPaymentServices
             ])
             ->leftJoin('service_charges_items as sci', 'sci.ID', '=', 'patient_payment_charges.SERVICE_CHARGES_ITEM_ID')
             ->join('item as i', 'i.ID', '=', 'sci.ITEM_ID')
-            ->leftJoin('unit_of_measure','unit_of_measure.ID','=','sci.UNIT_ID')
+            ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'sci.UNIT_ID')
             ->join('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')
             ->where('patient_payment_charges.PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)
             ->get();
-  
-            return $result;
+
+        return $result;
     }
 
     public function UpdatePaymentChargesApplied(int $PATIENT_PAYMENT_ID): float
@@ -274,9 +274,9 @@ class PatientPaymentServices
 
         return $pay;
     }
-    public function ServiceChargesPaymentList(int $SERVICE_CHARGES_ITEM_ID, int $PATIENT_PAYMENT_ID)
+    public function ServiceChargesPaymentList(int $SERVICE_CHARGES_ID, int $PATIENT_PAYMENT_ID)
     {
-        return PatientPayments::query()
+        $result = PatientPayments::query()
             ->select([
                 'patient_payment_charges.ID',
                 'patient_payment_charges.PATIENT_PAYMENT_ID',
@@ -286,13 +286,20 @@ class PatientPaymentServices
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
                 'patient_payment_charges.AMOUNT_APPLIED',
                 'patient_payment.FILE_PATH',
-                'patient_payment.IS_CONFIRM'
+                'patient_payment.IS_CONFIRM',
+                'item.DESCRIPTION as ITEM_NAME',
+                'service_charges_items.QUANTITY',
+                'service_charges_items.AMOUNT as ITEM_AMOUNT'
             ])
             ->join('payment_method', 'payment_method.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->join('patient_payment_charges', 'patient_payment_charges.PATIENT_PAYMENT_ID', '=', 'patient_payment.ID')
-            ->where('patient_payment_charges.SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)
+            ->join('service_charges_items', 'service_charges_items.ID', '=', 'patient_payment_charges.SERVICE_CHARGES_ITEM_ID')
+            ->leftJoin('item', 'item.ID', '=', 'service_charges_items.ITEM_ID')
             ->where('patient_payment.PATIENT_ID', $PATIENT_PAYMENT_ID)
+            ->where('service_charges_items.SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)
             ->get();
+
+        return $result;
     }
     public function PaymentAvailableList(int $PATIENT_PAYMENT_ID, int $LOCATION_ID)
     {

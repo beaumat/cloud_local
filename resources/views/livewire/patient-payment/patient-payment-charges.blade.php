@@ -7,11 +7,11 @@
                 <th class="col-1">Reference</th>
                 <th class="col-1">Orig. Amount</th>
                 <th class="col-1">Balance</th>
-                <th class="col-2">Item Description</th>
-                <th class="col-1"> Qty</th>
-                <th class="col-1"> UOM</th>
-                <th class="col-1"> Total Rate</th>
-                <th class="col-1">Payment</th>
+                <th class="col-2 bg-info">Item Description</th>
+                <th class="col-1 bg-info text-right"> Qty</th>
+                <th class="col-1 bg-info"> UOM</th>
+                <th class="col-1 bg-info text-right"> Item Amount</th>
+                <th class="col-1 bg-warning text-right" >Paid</th>
                 <th class="text-center col-1">Action</th>
             </tr>
         </thead>
@@ -26,18 +26,18 @@
                     <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                     <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
                     <td>{{ $list->ITEM_NAME }}</td>
-                    <td>{{ number_format($list->QUANTITY, 2) }}</td>
+                    <td class="text-right">{{ number_format($list->QUANTITY, 2) }}</td>
                     <td>{{ $list->SYMBOL }}</td>
-                    <td>{{ number_format($list->ITEM_AMOUNT, 2) }}</td>
+                    <td class="text-right">{{ number_format($list->ITEM_AMOUNT, 2) }}</td>
                     <td class="text-right">
-                        @if ($editPaymentId === $list->ID)
+                        @if ($editPaymentChargeId === $list->ID)
                             <input wire:model='editAmountApplied' type="number" class="form-control form-control-sm" />
                         @else
                             {{ number_format($list->AMOUNT_APPLIED, 2) }}
                         @endif
                     </td>
                     <td class="text-center">
-                        @if ($editPaymentId === $list->ID)
+                        @if ($editPaymentChargeId === $list->ID)
                             <a href="#" title="Update" id="updatebtn" wire:click="update()"
                                 class="text-success btn-sm">
                                 <i class="fas fa-check" aria-hidden="true"></i>
@@ -48,7 +48,7 @@
                             </a>
                         @else
                             <a href="#" title="Edit" id="editbtn"
-                                wire:click='edit( {{ $list->ID }}, {{ $list->SERVICE_CHARGES_ID }}, {{ $list->AMOUNT_APPLIED }})'
+                                wire:click='edit( {{ $list->ID }}, {{ $list->SERVICE_CHARGES_ITEM_ID }}, {{ $list->AMOUNT_APPLIED }})'
                                 class="text-info  btn-sm">
                                 <i class="fas fa-edit" aria-hidden="true"></i>
                             </a>
