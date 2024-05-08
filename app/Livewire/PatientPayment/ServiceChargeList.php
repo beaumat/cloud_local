@@ -59,7 +59,8 @@ class ServiceChargeList extends Component
             }
         }
         $newPay = $CurrentAmount - $CollectAmount;
-        $balance = $this->serviceChargeServices->getBalance($id);
+        $balance = $this->serviceChargeServices->getItemBalance($id);
+
         if ($balance <= $newPay) {
             $mustPay = $balance;
         } else {
@@ -88,7 +89,21 @@ class ServiceChargeList extends Component
         }
         return false;
     }
-    public function save()
+    private function gotHaveItemBalance(int $ID, int $Init_AMOUNT)
+    {
+        foreach ($this->dataList as $list) {
+            if ($list->ID == $ID) {
+
+                $bal = $list->AMOUNT - $list->PAID_AMOUNT;
+
+                if ($Init_AMOUNT > $bal) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public function save(): void
     {
         $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
         $CollectAmount = 0;
@@ -96,7 +111,12 @@ class ServiceChargeList extends Component
         foreach ($this->selectedCharges as $chargeId => $isSelected) {
             if ($isSelected) {
                 try {
-                    $CollectAmount = $CollectAmount + $this->paymentAmounts[$chargeId] ?? 0;
+                    $init_value = $this->paymentAmounts[$chargeId] ?? 0;
+                    $CollectAmount = $CollectAmount + $init_value;
+                    if ($this->gotHaveItemBalance($chargeId, $init_value) == true) {
+                        session()->flash('error', 'invalid payment initial. please enter exactly initial amount');
+                        return;
+                    }
                 } catch (\Throwable $th) {
                     $CollectAmount = $CollectAmount + 0;
                 }
@@ -124,11 +144,11 @@ class ServiceChargeList extends Component
                     $ID = (int) $this->patientPaymentServices->PaymentChargesExist($this->PATIENT_PAYMENT_ID, $chargeId);
                     if ($ID > 0) {
                         $this->patientPaymentServices->PaymentChargesUpdate($ID, $this->PATIENT_PAYMENT_ID, $chargeId, 0, $chargeAmount);
-                        $this->serviceChargeServices->updateServiceChargesBalance($chargeId);
+                        $this->serviceChargeServices->updateServiceChargesItemPaid($chargeId);
 
                     } else {
                         $this->patientPaymentServices->PaymentChargeStore($this->PATIENT_PAYMENT_ID, $chargeId, 0, $chargeAmount, 0, 0);
-                        $this->serviceChargeServices->updateServiceChargesBalance($chargeId);
+                        $this->serviceChargeServices->updateServiceChargesItemPaid($chargeId);
                     }
                     $this->dispatch('reset-payment');
                 }
@@ -152,7 +172,7 @@ class ServiceChargeList extends Component
     public function render()
     {
 
-        $this->dataList = $this->serviceChargeServices->getServiceChargeList($this->PATIENT_ID, $this->LOCATION_ID, $this->PATIENT_PAYMENT_ID);
+        $this->dataList = $this->serviceChargeServices->getServiceChargeList($this->PATIENT_PAYMENT_ID, $this->PATIENT_ID, $this->LOCATION_ID);
 
         return view('livewire.patient-payment.service-charge-list');
     }

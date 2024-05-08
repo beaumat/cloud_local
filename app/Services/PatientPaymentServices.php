@@ -26,8 +26,8 @@ class PatientPaymentServices
     public function PaymentHaveAvailable(int $PATIENT_ID)
     {
         $data = PatientPayments::where('PATIENT_ID', $PATIENT_ID)
-        ->whereRaw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED) > 0')
-        ->first();
+            ->whereRaw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED) > 0')
+            ->first();
 
         return $data;
     }
@@ -181,7 +181,7 @@ class PatientPaymentServices
 
     public function PaymentChargeStore(
         int $PATIENT_PAYMENT_ID,
-        int $SERVICE_CHARGES_ID,
+        int $SERVICE_CHARGES_ITEM_ID,
         float $DISCOUNT,
         float $AMOUNT_APPLIED,
         int $DISCOUNT_ACCOUNT_ID,
@@ -193,12 +193,13 @@ class PatientPaymentServices
         PatientPaymentCharges::create([
             'ID' => $ID,
             'PATIENT_PAYMENT_ID' => $PATIENT_PAYMENT_ID,
-            'SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID,
+            'SERVICE_CHARGES_ITEM_ID' => $SERVICE_CHARGES_ITEM_ID,
             'DISCOUNT' => $DISCOUNT > 0 ? $DISCOUNT : null,
             'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
             'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
         ]);
+
         return $ID;
     }
 
@@ -209,44 +210,56 @@ class PatientPaymentServices
             'FILE_PATH' => $FILE_PATH
         ]);
     }
-    public function PaymentChargesExist(int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ID): int
+    public function PaymentChargesExist(int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID): int
     {
-        $data = PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)->where('SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)->first();
+        $data = PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)->where('SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)->first();
         if ($data) {
             return $data->ID;
         }
         return 0;
     }
 
-    public function PaymentChargesUpdate(int $ID, int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ID, float $DISCOUNT, float $AMOUNT_APPLIED)
+    public function PaymentChargesUpdate(int $ID, int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID, float $DISCOUNT, float $AMOUNT_APPLIED)
     {
         PatientPaymentCharges::where('ID', $ID)
             ->where('PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)
-            ->where('SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)
+            ->where('SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)
             ->update([
                 'DISCOUNT' => $DISCOUNT,
                 'AMOUNT_APPLIED' => $AMOUNT_APPLIED
             ]);
     }
-    public function PaymentChargesDelete(int $ID, int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ID)
-    {
-        PatientPaymentCharges::where('ID', $ID)->where('PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)->where('SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)->delete();
+    public function PaymentChargesDelete(int $ID, int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID)
+    {   
+
+        PatientPaymentCharges::where('ID', $ID)->where('PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)->where('SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)->delete();
     }
     public function PaymentChargesList(int $PATIENT_PAYMENT_ID)
     {
-        return PatientPaymentCharges::query()
+        $result = PatientPaymentCharges::query()
             ->select([
                 'patient_payment_charges.ID',
-                'patient_payment_charges.SERVICE_CHARGES_ID',
-                'i.DATE',
-                'i.CODE',
-                'i.AMOUNT',
-                'i.BALANCE_DUE',
-                'patient_payment_charges.AMOUNT_APPLIED'
+                'patient_payment_charges.SERVICE_CHARGES_ITEM_ID',
+                'sc.ID as SERVICE_CHARGES_ID',
+                'sc.DATE',
+                'sc.CODE',
+                'sc.AMOUNT',
+                'sc.BALANCE_DUE',
+                'i.DESCRIPTION as ITEM_NAME',
+                'sci.QUANTITY',
+                'unit_of_measure.SYMBOL',
+                'sci.AMOUNT as ITEM_AMOUNT',
+                'patient_payment_charges.AMOUNT_APPLIED',
+
             ])
-            ->leftJoin('SERVICE_CHARGES as i', 'i.ID', '=', 'patient_payment_charges.SERVICE_CHARGES_ID')
+            ->leftJoin('service_charges_items as sci', 'sci.ID', '=', 'patient_payment_charges.SERVICE_CHARGES_ITEM_ID')
+            ->join('item as i', 'i.ID', '=', 'sci.ITEM_ID')
+            ->leftJoin('unit_of_measure','unit_of_measure.ID','=','sci.UNIT_ID')
+            ->join('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')
             ->where('patient_payment_charges.PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)
             ->get();
+  
+            return $result;
     }
 
     public function UpdatePaymentChargesApplied(int $PATIENT_PAYMENT_ID): float
@@ -261,7 +274,7 @@ class PatientPaymentServices
 
         return $pay;
     }
-    public function ServiceChargesPaymentList(int $SERVICE_CHARGES_ID, int $PATIENT_PAYMENT_ID)
+    public function ServiceChargesPaymentList(int $SERVICE_CHARGES_ITEM_ID, int $PATIENT_PAYMENT_ID)
     {
         return PatientPayments::query()
             ->select([
@@ -277,7 +290,7 @@ class PatientPaymentServices
             ])
             ->join('payment_method', 'payment_method.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->join('patient_payment_charges', 'patient_payment_charges.PATIENT_PAYMENT_ID', '=', 'patient_payment.ID')
-            ->where('patient_payment_charges.SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)
+            ->where('patient_payment_charges.SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)
             ->where('patient_payment.PATIENT_ID', $PATIENT_PAYMENT_ID)
             ->get();
     }
@@ -304,6 +317,7 @@ class PatientPaymentServices
     public function GetPaymentRemaining(int $PATIENT_PAYMENT_ID): float
     {
         $result = PatientPayments::where('ID', $PATIENT_PAYMENT_ID)->first();
+
         return (float) $result->AMOUNT - (float) $result->AMOUNT_APPLIED;
     }
 
@@ -313,6 +327,7 @@ class PatientPaymentServices
             ->select(DB::raw('IFNULL(SUM(AMOUNT-AMOUNT_APPLIED), 0) AS TOTAL'))
             ->where('PATIENT_ID', $PATIENT_PAYMENT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
+            ->orderBy('ID', 'asc')
             ->first()
             ->TOTAL;
 

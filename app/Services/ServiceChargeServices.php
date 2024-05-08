@@ -6,6 +6,7 @@ use App\Models\PatientPaymentCharges;
 use App\Models\ServiceCharges;
 use App\Models\ServiceChargesItems;
 use App\Models\Tax;
+use DB;
 use Livewire\WithPagination;
 
 class ServiceChargeServices
@@ -31,30 +32,48 @@ class ServiceChargeServices
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
     }
-    public function getBalance(int $SERVICE_CHARGES_ID): float
+    public function getItemBalance(int $SERVICE_CHARGES_ITEM_ID): float
     {
-        return (float) ServiceCharges::where('ID', $SERVICE_CHARGES_ID)->first()->BALANCE_DUE;
+        $data = ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)->first();
+        if ($data) {
+            return (float) ($data->AMOUNT - $data->PAID_AMOUNT);
+        }
+        return 0;
+
     }
-    public function getServiceChargeList(int $PATIENT_ID, int $LOCATION_ID, int $PATIENT_PAYMENT_ID)
+    public function getServiceChargeList(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID): object
     {
-        return ServiceCharges::query()
+        $result = ServiceChargesItems::query()
             ->select([
-                'service_charges.ID',
+                'service_charges_items.ID',
+                'service_charges_items.SERVICE_CHARGES_ID',
                 'service_charges.DATE',
                 'service_charges.CODE',
-                'service_charges.AMOUNT',
-                'service_charges.BALANCE_DUE'
+                'service_charges.AMOUNT as ORG_AMOUNT',
+                'service_charges.BALANCE_DUE',
+                'item.DESCRIPTION as ITEM_NAME',
+                'service_charges_items.AMOUNT as ITEM_AMOUNT',
+                'service_charges_items.PAID_AMOUNT',
+                'service_charges_items.QUANTITY',
+                'unit_of_measure.SYMBOL'
             ])
-            ->whereNotExists(function ($query) use (&$PATIENT_PAYMENT_ID) {
-                $query->select(\DB::raw(1))
-                    ->from('patient_payment_charges as p')
-                    ->whereRaw('p.SERVICE_CHARGES_ID = service_charges.ID')
-                    ->where('p.PATIENT_PAYMENT_ID', '=', $PATIENT_PAYMENT_ID);
-            })
+            ->leftJoin('service_charges', 'service_charges.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->leftJoin('item', 'item.ID', '=', 'service_charges_items.ITEM_ID')
+            ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'service_charges_items.UNIT_ID')
             ->where('service_charges.PATIENT_ID', $PATIENT_ID)
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
-            ->where('service_charges.BALANCE_DUE', '>', 0)
+            ->whereRaw('(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) > 0')
+            ->whereNotExists(function ($query) use (&$PATIENT_PAYMENT_ID) {
+                $query->select(DB::raw(1))
+                    ->from('patient_payment_charges as ppc')
+                    ->where('ppc.PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)
+                    ->whereRaw('ppc.SERVICE_CHARGES_ITEM_ID = service_charges_items.ID');
+            })
             ->get();
+
+        return $result;
+
+
     }
     public function get(int $ID): object
     {
@@ -342,16 +361,41 @@ class ServiceChargeServices
 
     public function GetPaymentAppliedViaServiceCharges(int $SERVICE_CHARGES_ID): float
     {
-        $paymentSum = PatientPaymentCharges::query()
+        $result = PatientPaymentCharges::query()
             ->select(\DB::raw('IFNULL(SUM(patient_payment_charges.AMOUNT_APPLIED), 0) AS pay'))
-            ->where('patient_payment_charges.SERVICE_CHARGES_ID', '=', $SERVICE_CHARGES_ID)
-            ->whereNull('patient_payment_charges.ACCOUNTS_RECEIVABLE_ID')
+            ->join('service_charges_items', 'service_charges_items.ID', '=', 'patient_payment_charges.SERVICE_CHARGES_ITEM_ID')
+            ->where('service_charges_items.SERVICE_CHARGES_ID', '=', $SERVICE_CHARGES_ID)
             ->first();
 
-        return $paymentSum->pay;
+        return $result->pay;
 
     }
+    public function updateServiceChargesItemPaid(int $SERVICE_CHARGES_ITEM_ID)
+    {
+        $data = ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)->first();
+        if ($data) {
+            $ITEM_PAID = $this->getPaidItemCharge($SERVICE_CHARGES_ITEM_ID);
 
+            ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)
+                ->update([
+                    'PAID_AMOUNT' => $ITEM_PAID
+                ]);
+
+            $this->updateServiceChargesBalance($data->ID);
+        }
+
+    }
+    public function getPaidItemCharge(int $SERVICE_CHARGES_ITEM_ID): float
+    {
+
+        $result = PatientPaymentCharges::query()
+            ->select(\DB::raw('IFNULL(SUM(patient_payment_charges.AMOUNT_APPLIED), 0) AS pay'))
+            ->where('SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)
+            ->first();
+
+        return $result->pay;
+
+    }
     public function updateServiceChargesBalance(int $SERVICE_CHARGES_ID)
     {
         $data = ServiceCharges::where('ID', $SERVICE_CHARGES_ID)->first();

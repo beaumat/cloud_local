@@ -52,10 +52,15 @@ class PatientPaymentCharges extends Component
         $this->editPaymentId = null;
         $this->dispatch('reset-payment');
     }
-    public function delete(int $ID, int $SERVICE_CHARGES_ID)
+    public function delete(int $ID, int $SERVICE_CHARGES_ITEM_ID)
     {
-        $this->patientPaymentServices->PaymentChargesDelete($ID, $this->PATIENT_PAYMENT_ID, $SERVICE_CHARGES_ID);
-        $this->serviceChargeServices->updateServiceChargesBalance($SERVICE_CHARGES_ID);
+
+
+
+
+        $this->patientPaymentServices->PaymentChargesDelete($ID, $this->PATIENT_PAYMENT_ID, $SERVICE_CHARGES_ITEM_ID);
+        $this->serviceChargeServices->updateServiceChargesItemPaid($SERVICE_CHARGES_ITEM_ID);
+        // $this->serviceChargeServices->updateServiceChargesBalance($SERVICE_CHARGES_ID);
         $this->dispatch('reset-payment');
     }
     public function mount(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID, float $AMOUNT, float $AMOUNT_APPLIED)
@@ -72,6 +77,8 @@ class PatientPaymentCharges extends Component
     {
 
         $this->dataList = $this->patientPaymentServices->PaymentChargesList($this->PATIENT_PAYMENT_ID);
+
+
         return view('livewire.patient-payment.patient-payment-charges');
     }
 }

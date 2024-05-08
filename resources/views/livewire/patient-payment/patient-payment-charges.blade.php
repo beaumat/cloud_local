@@ -7,6 +7,10 @@
                 <th class="col-1">Reference</th>
                 <th class="col-1">Orig. Amount</th>
                 <th class="col-1">Balance</th>
+                <th class="col-2">Item Description</th>
+                <th class="col-1"> Qty</th>
+                <th class="col-1"> UOM</th>
+                <th class="col-1"> Total Rate</th>
                 <th class="col-1">Payment</th>
                 <th class="text-center col-1">Action</th>
             </tr>
@@ -17,10 +21,14 @@
                     <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }}</td>
                     <td>
                         <a target="_blank"
-                            href="{{ route('transactionsservice_charges_edit', ['id' => $list->SERVICE_CHARGES_ID]) }}">{{ $list->CODE }}</a>
+                            href="{{ route('patientsservice_charges_edit', ['id' => $list->SERVICE_CHARGES_ID]) }}">{{ $list->CODE }}</a>
                     </td>
                     <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                     <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
+                    <td>{{ $list->ITEM_NAME }}</td>
+                    <td>{{ number_format($list->QUANTITY, 2) }}</td>
+                    <td>{{ $list->SYMBOL }}</td>
+                    <td>{{ number_format($list->ITEM_AMOUNT, 2) }}</td>
                     <td class="text-right">
                         @if ($editPaymentId === $list->ID)
                             <input wire:model='editAmountApplied' type="number" class="form-control form-control-sm" />
@@ -45,7 +53,7 @@
                                 <i class="fas fa-edit" aria-hidden="true"></i>
                             </a>
                             <a href="#" title="Delete" id="deletebtn"
-                                wire:click='delete({{ $list->ID }}, {{ $list->SERVICE_CHARGES_ID }})'
+                                wire:click='delete({{ $list->ID }},{{ $list->SERVICE_CHARGES_ITEM_ID }})'
                                 wire:confirm="Are you sure you want to delete this?" class="text-danger btn-sm">
                                 <i class="fas fa-times" aria-hidden="true"></i>
                             </a>

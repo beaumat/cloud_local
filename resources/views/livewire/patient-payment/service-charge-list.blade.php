@@ -1,15 +1,13 @@
 <div>
-
     <button wire:click="openModal" class="btn btn-success btn-sm text-xs ">
         <i class="fa fa-plus" aria-hidden="true"></i>
     </button>
-
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title">Service Charges List</h6>
+                        <h6 class="modal-title">Service Charges Items</h6>
                         <button type="button" class="close" wire:click="closeModal">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -20,12 +18,17 @@
                             class="table table-sm table-bordered table-hover">
                             <thead class="bg-sky text-xs">
                                 <tr>
-                                    <th class="col-1">Select</th>
-                                    <th class="col-2">Date</th>
-                                    <th class="col-2">Reference</th>
-                                    <th class="col-2">Amount</th>
-                                    <th class="col-2">Balance</th>
-                                    <th class="col-2">Payment Initial</th>
+                                    <th class="text-center">Select</th>
+                                    <th class="col-1 ">Date</th>
+                                    <th class="col-1 ">Reference</th>
+                                    <th class="col-1 ">Org.Amount</th>
+                                    <th class="col-1 ">Balance</th>
+                                    <th class="col-3 bg-info">Item Description</th>
+                                    <th class="text-center bg-info">Qty</th>
+                                    <th class="col-1 bg-info">Unit</th>
+                                    <th class="col-1 bg-info">Amoint</th>
+                                    <th class="col-1 bg-info">Paid</th>
+                                    <th class="col-1 bg-dark">Initial</th>
                                 </tr>
                             </thead>
 
@@ -35,14 +38,38 @@
                                         <td class="text-center">
                                             <input class="text-lg" type="checkbox"
                                                 wire:model.live="selectedCharges.{{ $list->ID }}" />
-
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }} </td>
-                                        <td>{{ $list->CODE }}</td>
+                                        <td> <a target="_BLANK"
+                                                href="{{ $list->SERVICE_CHARGES_ID }}">{{ $list->CODE }}</a> </td>
                                         <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                                         <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
-                                        <th><input type="number" wire:model="paymentAmounts.{{ $list->ID }}"
-                                                class="form-control form-control-sm text-xs w-100" /></th>
+                                        <th>
+                                            {{ $list->ITEM_NAME }}
+                                        </th>
+                                        <th class="text-center">
+                                            {{ number_format($list->QUANTITY, 0) }}
+                                        </th>
+                                        <th>
+                                            {{ $list->SYMBOL }}
+                                        </th>
+                                        <th>
+                                            {{ number_format($list->ITEM_AMOUNT, 2) }}
+                                        </th>
+                                        <th>
+                                            {{ number_format($list->PAID_AMOUNT, 2) }}
+                                        </th>
+
+                                        <th>
+                                            @php
+                                                $temp_max = ($list->ITEM_AMOUNT - $list->PAID_AMOUNT);
+                                         
+                                            @endphp
+                                            <input type="number" min="0" max='{{ $temp_max }}'
+                                                wire:model="paymentAmounts.{{ $list->ID }}"
+                                                class="text-xs w-100" />
+
+                                        </th>
                                     </tr>
                                 @endforeach
                             </tbody>

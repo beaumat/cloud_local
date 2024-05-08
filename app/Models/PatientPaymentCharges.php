@@ -15,7 +15,7 @@ class PatientPaymentCharges extends Model
     protected $fillable = [
         'ID',
         'PATIENT_PAYMENT_ID',
-        'SERVICE_CHARGES_ID',
+        'SERVICE_CHARGES_ITEM_ID',
         'DISCOUNT',
         'AMOUNT_APPLIED',
         'DISCOUNT_ACCOUNT_ID',
