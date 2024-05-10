@@ -8,7 +8,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-class ServiceChargeModal extends Component
+class InvoiceListModal extends Component
 {
     public $showModal = false;
     #[Reactive]
@@ -137,12 +137,10 @@ class ServiceChargeModal extends Component
         session()->forget('message');
         session()->forget('error');
     }
+
     public function render()
     {
-
         $this->invoiceList = $this->invoiceServices->getInvoiceList($this->CUSTOMER_ID, $this->LOCATION_ID, $this->PAYMENT_ID);
-
-        return view('livewire.payment.service-charge-modal');
+        return view('livewire.payment.invoice-list-modal');
     }
-
 }

@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Livewire\ServiceCharge;
+namespace App\Livewire\Invoice;
+
 
 use App\Services\ComputeServices;
+use App\Services\InvoiceServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
-use App\Services\ServiceChargeServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-class ServiceChargeFormItems extends Component
+class InvoiceFormItems extends Component
 {
     #[Reactive]
-    public int $SERVICE_CHARGES_ID;
+    public int $INVOICE_ID;
     #[Reactive]
     public int $STATUS;
     #[Reactive]
@@ -62,38 +63,38 @@ class ServiceChargeFormItems extends Component
     public int $linePriceLevelId;
     public $editUnitList = [];
     public int $lineItemId = 0;
-    private $serviceChargeServices;
+    public $CLASS_DESCRIPTION;
+
+    private $invoiceServices;
     private $computeServices;
     private $unitOfMeasureServices;
     private $taxServices;
     private $itemServices;
     private $itemSubClassServices;
-    public $CLASS_DESCRIPTION;
 
     public function boot(
-        ServiceChargeServices $serviceChargeServices,
+        InvoiceServices $invoiceServices,
         ComputeServices $computeServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         TaxServices $taxServices,
         ItemServices $itemServices,
         ItemSubClassServices $itemSubClassServices
     ) {
-        $this->serviceChargeServices = $serviceChargeServices;
+        $this->invoiceServices = $invoiceServices;
         $this->computeServices = $computeServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->taxServices = $taxServices;
         $this->itemServices = $itemServices;
         $this->itemSubClassServices = $itemSubClassServices;
     }
+
     public function updatedcodeBase()
     {
-
         if ($this->codeBase) {
             $this->itemCodeList = $this->itemServices->getByCustomer(true);
             return;
         }
         $this->itemDescList = $this->itemServices->getByCustomer(false);
-
     }
     public function getAmount(): void
     {
@@ -109,6 +110,7 @@ class ServiceChargeFormItems extends Component
             //throw $th;
         }
     }
+
     public function updatedquantity()
     {
         $this->getAmount();
@@ -128,7 +130,7 @@ class ServiceChargeFormItems extends Component
         $this->TAXABLE = false;
         $this->AMOUNT = 0;
         $this->unitList = [];
-        $this->RATE_TYPE = 0; 
+        $this->RATE_TYPE = 0;
         $this->CLASS_DESCRIPTION = '';
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
@@ -141,12 +143,13 @@ class ServiceChargeFormItems extends Component
                 $this->INCOME_ACCOUNT_ID = $item->GL_ACCOUNT_ID ?? 0;
                 $this->COGS_ACCOUNT_ID = $item->COGS_ACCOUNT_ID ?? 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
-           
+                $this->BATCH_ID = $item->BATCH_ID ?? 0;
                 $this->GROUP_LINE_ID = false;
                 $this->PRINT_IN_FORMS = false;
                 $this->PRICE_LEVEL_ID = 0;
+                $this->REF_LINE_ID = 0;
                 $this->getAmount();
-                $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);    
+                $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);
             }
         }
 
@@ -200,8 +203,8 @@ class ServiceChargeFormItems extends Component
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
 
-            $this->serviceChargeServices->ItemStore(
-                $this->SERVICE_CHARGES_ID,
+            $this->invoiceServices->ItemStore(
+                $this->INVOICE_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
                 $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
@@ -215,12 +218,15 @@ class ServiceChargeFormItems extends Component
                 $this->COGS_ACCOUNT_ID,
                 $this->ASSET_ACCOUNT_ID,
                 $this->INCOME_ACCOUNT_ID,
+                $this->REF_LINE_ID,
+                $this->BATCH_ID,
                 $this->GROUP_LINE_ID,
                 $this->PRINT_IN_FORMS,
+                false,
                 $this->PRICE_LEVEL_ID
             );
 
-            $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
+            $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
             $this->dispatch('update-amount', result: $getResult);
 
             $this->ITEM_ID = 0;
@@ -290,9 +296,9 @@ class ServiceChargeFormItems extends Component
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
-            $this->serviceChargeServices->ItemUpdate(
+            $this->invoiceServices->ItemUpdate(
                 $Id,
-                $this->SERVICE_CHARGES_ID,
+                $this->INVOICE_ID,
                 $this->lineItemId,
                 $this->lineQty,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
@@ -303,12 +309,13 @@ class ServiceChargeFormItems extends Component
                 $this->lineTax,
                 $this->lineTaxable,
                 $this->lineTaxAmount,
+                $this->lineBatchId,
                 $this->linePriceLevelId
             );
 
-            $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
+            $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
             $this->dispatch('update-amount', result: $getResult);
-            $this->itemList = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID);
+            $this->itemList = $this->invoiceServices->ItemView($this->INVOICE_ID);
             $this->editItemId = null;
             $this->lineQty = 0;
             $this->lineUnitId = 0;
@@ -331,12 +338,12 @@ class ServiceChargeFormItems extends Component
     public function deleteItem($Id)
     {
         try {
-            $this->serviceChargeServices->ItemDelete(
+            $this->invoiceServices->ItemDelete(
                 $Id,
-                $this->SERVICE_CHARGES_ID
+                $this->INVOICE_ID
             );
 
-            $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
+            $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
             $this->dispatch('update-amount', result: $getResult);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -354,13 +361,12 @@ class ServiceChargeFormItems extends Component
     {
         $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
-        $this->itemList = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID);
+        $this->itemList = $this->invoiceServices->ItemView($this->INVOICE_ID);
     }
     public function render()
     {
-
         $this->getReload();
 
-        return view('livewire.service-charge.service-charge-form-items');
+        return view('livewire.invoice.invoice-form-items');
     }
 }

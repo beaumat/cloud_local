@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Services;
-
 use App\Models\Invoice;
 use App\Models\InvoiceItems;
 use App\Models\PaymentInvoices;
@@ -217,10 +216,7 @@ class InvoiceServices
             })
             ->orderBy('invoice.ID', 'desc')
             ->paginate($perPage);
-
-
     }
-
     private function getLine($Id): int
     {
         return (int) InvoiceItems::where('INVOICE_ID', $Id)->max('LINE_NO');

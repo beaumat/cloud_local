@@ -21,12 +21,6 @@ use Livewire\WithFileUploads;
 #[Title('Payments')]
 class PaymentForm extends Component
 {
-    use WithFileUploads;
-    public string $FILE_NAME;
-    public string $FILE_PATH;
-    public bool $IS_CONFIRM;
-    public string $DATE_CONFIRM;
-    public $PDF;
     public int $ID;
     public string $CODE;
     public $DATE;
@@ -126,9 +120,9 @@ class PaymentForm extends Component
     }
     public function mount($id = null)
     {
-        $this->contactList = $this->contactServices->getList(3);
+        $this->contactList = $this->contactServices->getList(1);
         $this->locationList = $this->locationServices->getList();
-        $this->paymentMethodList = $this->paymentMethodServices->getList();
+        $this->paymentMethodList = $this->paymentMethodServices->getListNonPatient();
 
         if (is_numeric($id)) {
             $data = $this->paymentServices->get($id);
@@ -137,7 +131,7 @@ class PaymentForm extends Component
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('transactionspayment')->with('error', $errorMessage);
+            return Redirect::route('customerspayment')->with('error', $errorMessage);
         }
 
 
@@ -148,7 +142,7 @@ class PaymentForm extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->AMOUNT = 0;
         $this->AMOUNT_APPLIED = 0;
-        $this->PAYMENT_METHOD_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentMethodId');
+        $this->PAYMENT_METHOD_ID = 0;
         $this->CARD_NO = '';
         $this->CARD_EXPIRY_DATE = null;
         $this->RECEIPT_REF_NO = '';
@@ -175,60 +169,33 @@ class PaymentForm extends Component
     }
     public function getConfirm()
     {
-        $this->paymentServices->ConfirmProccess($this->ID);
-        return Redirect::route('transactionspayment_edit', ['id' => $this->ID])->with('message', 'Successfully confirm');
+        // $this->paymentServices->ConfirmProccess($this->ID);
+        // return Redirect::route('transactionspayment_edit', ['id' => $this->ID])->with('message', 'Successfully confirm');
     }
     public function save()
     {
 
-        $getType = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
-        $PAYMENT_TYPE = (int) $getType->PAYMENT_TYPE;
-        if ($PAYMENT_TYPE == 10 && $this->ID == 0) {
-            $this->validate(
-                [
-                    'CUSTOMER_ID' => 'required|not_in:0',
-                    'DATE' => 'required',
-                    'PDF' => 'required',
-                    'LOCATION_ID' => 'required',
-                    'AMOUNT' => 'required|not_in:0',
-                ],
-                [],
-                [
-                    'CUSTOMER_ID' => 'Patient',
-                    'DATE' => 'Date',
-                    'PDF' => 'Pdf document file',
-                    'LOCATION_ID' => 'Location',
-                    'AMOUNT' => 'Amount',
-                ]
-            );
-
-        } else {
-
-            $this->validate(
-                [
-                    'CUSTOMER_ID' => 'required|not_in:0',
-                    'DATE' => 'required',
-                    'LOCATION_ID' => 'required',
-                    'AMOUNT' => 'required|not_in:0',
-                ],
-                [],
-                [
-                    'CUSTOMER_ID' => 'Patient',
-                    'DATE' => 'Date',
-                    'LOCATION_ID' => 'Location',
-                    'AMOUNT' => 'Amount',
-                ]
-            );
-        }
+        $this->validate(
+            [
+                'CUSTOMER_ID' => 'required|not_in:0',
+                'PAYMENT_METHOD_ID' => 'required|not_in:0',
+                'DATE' => 'required',
+                'LOCATION_ID' => 'required',
+                'AMOUNT' => 'required|not_in:0',
+            ],
+            [],
+            [
+                'CUSTOMER_ID' => 'Customer',
+                'PAYMENT_METHOD_ID' => 'Payment Method',
+                'DATE' => 'Date',
+                'LOCATION_ID' => 'Location',
+                'AMOUNT' => 'Amount',
+            ]
+        );
 
         try {
 
             if ($this->ID == 0) {
-
-                // if ($this->paymentServices->HaveRemainingPaymentBalance($this->CUSTOMER_ID, $this->LOCATION_ID)) {
-                //     session()->flash('error', 'Invalid create. Patient have existing balance.');
-                //     return;
-                // }
 
                 $this->ID = $this->paymentServices->Store(
                     $this->CODE,
@@ -249,12 +216,8 @@ class PaymentForm extends Component
                     $this->ACCOUNTS_RECEIVABLE_ID
                 );
 
-                if ($PAYMENT_TYPE == 10) {
 
-                    $this->getDocumentProccess();
-                }
-
-                return Redirect::route('transactionspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+                return Redirect::route('customerspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
             } else {
 
@@ -276,19 +239,6 @@ class PaymentForm extends Component
                     0,
                     $this->ACCOUNTS_RECEIVABLE_ID
                 );
-
-                if ($this->PDF) {
-                    if ($PAYMENT_TYPE == 10) {
-
-                        $this->uploadServices->RemoveIfExists($this->FILE_PATH);
-                        $this->getDocumentProccess();
-
-                        $data = $this->paymentServices->get($this->ID);
-                        if ($data) {
-                            $this->getInfo($data);
-                        }
-                    }
-                }
                 $this->Modify = false;
                 session()->flash('message', 'Successfully updated');
             }
@@ -296,16 +246,6 @@ class PaymentForm extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-    }
-    public function getDocumentProccess()
-    {
-        $returnData = $this->uploadServices->Payment($this->PDF);
-        $this->paymentServices->UpdateFile($this->ID, $returnData['filename'] . '.' . $returnData['extension'], $returnData['new_path']);
-    }
-    public function getModify()
-    {
-        $this->PDF = null;
-        $this->Modify = true;
     }
     public function updateCancel()
     {

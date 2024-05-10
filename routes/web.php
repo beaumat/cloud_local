@@ -4,6 +4,7 @@ use App\Livewire\Bills\BillingForm;
 use App\Livewire\Bills\BillingList;
 use App\Livewire\ChartOfAccount\ChartOfAccountForm;
 use App\Livewire\ChartOfAccount\ChartOfAccountList;
+use App\Livewire\CreditMemo\CreditMemoList;
 use App\Livewire\Customer\CustomerForm;
 use App\Livewire\Customer\CustomerList;
 use App\Livewire\DashboardPage\Dashboard;
@@ -16,6 +17,8 @@ use App\Livewire\Hemodialysis\HemoList;
 use App\Livewire\Hemodialysis\PrintForm;
 use App\Livewire\HemodialysisMachine\HemoMachineForm;
 use App\Livewire\HemodialysisMachine\HemoMachineList;
+use App\Livewire\Invoice\InvoiceForm;
+use App\Livewire\Invoice\InvoiceList;
 use App\Livewire\Option\OptionSettings;
 use App\Livewire\PatientPayment\PatientPaymentForm;
 use App\Livewire\PatientPayment\PatientPaymentList;
@@ -27,6 +30,7 @@ use App\Livewire\PhilHealth\PhilHealthPrint;
 use App\Livewire\PhilHealth\PhilHealthPrintForm;
 use App\Livewire\Requirement\RequirementForm;
 use App\Livewire\Requirement\RequirementList;
+use App\Livewire\SalesOrder\SalesOrderList;
 use App\Livewire\Scheduler\PrintSchedulesPrintOut;
 use App\Livewire\Scheduler\SchedulerForm;
 use App\Livewire\Scheduler\SchedulerList;
@@ -34,7 +38,9 @@ use App\Livewire\ServiceCharge\ServiceChargeForm;
 use App\Livewire\ServiceCharge\ServiceChargeList;
 use App\Livewire\Shift\ShiftForm;
 use App\Livewire\Shift\ShiftList;
+use App\Livewire\Statement\Statement;
 use App\Livewire\StatementOfAccount\SoaModule;
+use App\Livewire\TaxCredit\TaxCreditList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
@@ -146,6 +152,32 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    Route::prefix('/customers')->name('customers')->group(function () {
+        Route::prefix('/sales-order')->group(function () {
+            Route::get('/', SalesOrderList::class)->name('sales_order');
+        });
+        Route::prefix('/invoice')->group(function () {
+            Route::get('/', InvoiceList::class)->name('invoice');
+            Route::get('/create', InvoiceForm::class)->name('invoice_create');
+            Route::get('/{id}/edit', InvoiceForm::class)->name('invoice_edit');
+        });
+        Route::prefix('/payment')->group(function () {
+            Route::get('/', PaymentList::class)->name('payment');
+            Route::get('/create', PaymentForm::class)->name('payment_create');
+            Route::get('/{id}/edit', PaymentForm::class)->name('payment_edit');
+        });
+        Route::prefix('/statement')->group(function () {
+            Route::get('/', Statement::class)->name('statement');
+        });
+        Route::prefix('/credit-memo')->group(function () {
+            Route::get('/', CreditMemoList::class)->name('credit_memo');
+        });
+        Route::prefix('/tax-credit')->group(function () {
+            Route::get('/', TaxCreditList::class)->name('tax_credit');
+        });
+      
+    });
+
     Route::prefix('/vendors')->name('vendors')->group(function () {
         Route::prefix('/purchase-order')->group(function () {
             Route::get('/', PurchaseOrderList::class)->name('purchase_order');
@@ -158,7 +190,33 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', BillingForm::class)->name('bills_create');
             Route::get('/{id}/edit', BillingForm::class)->name('bills_edit');
         });
+        Route::prefix('/pay-bills')->group(function () {
+        });
+        Route::prefix('/bill-credits')->group(function () {
+        });
+        Route::prefix('/withholding-tax')->group(function () {
+        });
     });
+
+
+    Route::prefix('/customers')->name('customers')->group(function () {
+        Route::prefix('/sales-order')->group(function () {
+
+        });
+        Route::prefix('/invoice')->group(function () {
+        });
+        Route::prefix('/payment')->group(function () {
+        });
+        Route::prefix('/statement')->group(function () {
+        });
+        Route::prefix('/credit-memo')->group(function () {
+        });
+        Route::prefix('/tax-credit')->group(function () {
+        });
+        // Route::prefix('/sales-recept')->group(function () {
+        // });
+    });
+
 
     Route::prefix('/maintenance')->name('maintenance')->group(function () {
 

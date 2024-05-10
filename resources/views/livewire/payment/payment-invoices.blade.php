@@ -17,7 +17,7 @@
                     <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }}</td>
                     <td>
                         <a target="_blank"
-                            href="{{ route('transactionsservice_charges_edit', ['id' => $list->INVOICE_ID]) }}">{{ $list->CODE }}</a>
+                            href="{{ route('customersinvoice_edit', ['id' => $list->INVOICE_ID]) }}">{{ $list->CODE }}</a>
                     </td>
                     <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                     <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
@@ -55,5 +55,5 @@
             @endforeach
         </tbody>
     </table>
-    @livewire('Payment.ServiceChargeModal', ['CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'PAYMENT_ID' => $PAYMENT_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED])
+    @livewire('Payment.InvoiceListModal', ['CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'PAYMENT_ID' => $PAYMENT_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED])
 </div>

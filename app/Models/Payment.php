@@ -32,10 +32,6 @@ class Payment extends Model
         'STATUS',
         'STATUS_DATE',
         'DEPOSITED',
-        'ACCOUNTS_RECEIVABLE_ID',
-        'FILE_NAME',
-        'FILE_PATH',
-        'IS_CONFIRM',
-        'DATE_CONFIRM'
+        'ACCOUNTS_RECEIVABLE_ID'
     ];
 }

@@ -8,11 +8,11 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-class PaymentCharges extends Component
+class PaymentInvoices extends Component
 {
     #[Reactive]
     public int $PAYMENT_ID;
-    public $invoiceList = [];
+    public $dataList = [];
     public int $STATUS;
     public int $openStatus;
     private $paymentServices;
@@ -26,15 +26,18 @@ class PaymentCharges extends Component
     #[Reactive]
     public float $AMOUNT_APPLIED;
 
-
+    public float $prevAmount;
+    public float $orgAmount;
     public $editPaymentId = null;
     public int $editInvoiceId;
 
     public float $editAmountApplied;
 
     private $invoiceServices;
-    public function boot(PaymentServices $paymentServices, InvoiceServices $invoiceServices)
-    {
+    public function boot(
+        PaymentServices $paymentServices,
+        InvoiceServices $invoiceServices
+    ) {
         $this->paymentServices = $paymentServices;
         $this->invoiceServices = $invoiceServices;
     }
@@ -43,6 +46,11 @@ class PaymentCharges extends Component
         $this->editPaymentId = $ID;
         $this->editInvoiceId = $INVOICE_ID;
         $this->editAmountApplied = $Applied;
+        $this->prevAmount = $Applied;
+        $data = $this->invoiceServices->get($INVOICE_ID);
+        if ($data) {
+            $this->orgAmount = $data->AMOUNT;
+        }
     }
 
     public function cancel()
@@ -52,14 +60,28 @@ class PaymentCharges extends Component
     }
     public function update()
     {
-        $this->paymentServices->PaymentInvoiceUpdate($this->editPaymentId,$this->PAYMENT_ID,$this->editInvoiceId,0,$this->editAmountApplied);
+        $RemainAmount = (float) $this->AMOUNT_APPLIED - $this->prevAmount;
+        if ($this->AMOUNT < ($RemainAmount + $this->editAmountApplied)) {
+            session()->flash('error', 'invalid payment initial. the remaining payment to low.');
+            return;
+        }
+
+        $totalPay = (float) $this->paymentServices->getTotalPay($this->editInvoiceId, $this->PAYMENT_ID);
+
+        $current_balance = (float) $this->orgAmount - $totalPay;
+
+        if ($current_balance < $this->editAmountApplied) {
+            session()->flash('error', 'invalid payment initial is to high from invoice balance. please enter exactly initial amount');
+            return;
+        }
+
+        $this->paymentServices->PaymentInvoiceUpdate($this->editPaymentId, $this->PAYMENT_ID, $this->editInvoiceId, 0, $this->editAmountApplied);
         $this->invoiceServices->updateInvoiceBalance($this->editInvoiceId);
         $this->editPaymentId = null;
         $this->dispatch('reset-payment');
     }
     public function delete(int $ID, int $INVOICE_ID)
     {
-
         $this->paymentServices->PaymentInvoiceDelete($ID, $this->PAYMENT_ID, $INVOICE_ID);
         $this->invoiceServices->updateInvoiceBalance($INVOICE_ID);
         $this->dispatch('reset-payment');
@@ -76,7 +98,7 @@ class PaymentCharges extends Component
     #[On('reload_payment_invoice')]
     public function render()
     {
-        $this->invoiceList = $this->paymentServices->PaymentInvoiceList($this->PAYMENT_ID);
-        return view('livewire.payment.payment-charges');
+        $this->dataList = $this->paymentServices->PaymentInvoiceList($this->PAYMENT_ID);
+        return view('livewire.payment.payment-invoices', );
     }
 }

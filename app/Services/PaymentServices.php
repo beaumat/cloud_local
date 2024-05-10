@@ -22,7 +22,16 @@ class PaymentServices
     {
         return Payment::where('ID', $ID)->first();
     }
+    public function getTotalPay(int $INVOICE_ID, int $EXECPT_PAYMENT_ID): float
+    {
+        $data = PaymentInvoices::query()->selectRaw('ifnull(sum(AMOUNT_APPLIED),0) as total')->where('INVOICE_ID', $INVOICE_ID)->where('PAYMENT_ID', '<>', $EXECPT_PAYMENT_ID)->first();
+        if ($data) {
+            return $data->total;
+        }
 
+        return 0;
+
+    }
     public function Store(
         string $CODE,
         $DATE,
@@ -112,20 +121,6 @@ class PaymentServices
             'STATUS_DATE' => $this->dateServices->NowDate()
         ]);
     }
-    public function ConfirmProccess(int $ID)
-    {
-        Payment::where('ID', $ID)->update([
-            'IS_CONFIRM' => true,
-            'DATE_CONFIRM' => $this->dateServices->NowDate()
-        ]);
-    }
-    public function UnConfirmProccess(int $ID)
-    {
-        Payment::where('ID', $ID)->update([
-            'IS_CONFIRM' => false,
-            'DATE_CONFIRM' => null
-        ]);
-    }
     public function Delete(int $ID)
     {
         PaymentInvoices::where('PAYMENT_ID', $ID)->delete();
@@ -144,9 +139,7 @@ class PaymentServices
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                'pm.DESCRIPTION as PAYMENT_METHOD',
-                'payment.FILE_PATH',
-                'payment.IS_CONFIRM'
+                'pm.DESCRIPTION as PAYMENT_METHOD'
 
             ])
             ->join('contact as c', 'c.ID', '=', 'payment.CUSTOMER_ID')
@@ -187,14 +180,6 @@ class PaymentServices
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
         ]);
         return $ID;
-    }
-
-    public function UpdateFile(int $ID, $FILE_NAME, $FILE_PATH)
-    {
-        Payment::where('ID', $ID)->update([
-            'FILE_NAME' => $FILE_NAME,
-            'FILE_PATH' => $FILE_PATH
-        ]);
     }
     public function PaymentInvoiceExist(int $PAYMENT_ID, int $INVOICE_ID): int
     {
@@ -255,9 +240,8 @@ class PaymentServices
                 'payment.DATE',
                 'payment.AMOUNT',
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
-                'payment_invoices.AMOUNT_APPLIED',
-                'payment.FILE_PATH',
-                'payment.IS_CONFIRM'
+                'payment_invoices.AMOUNT_APPLIED'
+
             ])
             ->join('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
             ->join('payment_invoices', 'payment_invoices.PAYMENT_ID', '=', 'payment.ID')

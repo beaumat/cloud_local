@@ -19,7 +19,13 @@ class PaymentMethodServices
     public function getList()
     {
         $result = PaymentMethods::query()->select(['ID', 'DESCRIPTION'])->get();
-    
+
+        return $result;
+    }
+    public function getListNonPatient()
+    {
+        $result = PaymentMethods::query()->select(['ID', 'DESCRIPTION'])->where('PAYMENT_TYPE', '<=', '8')->get();
+
         return $result;
     }
     public function Store(string $CODE, string $DESCRIPTION, int $PAYMENT_TYPE, int $GL_ACCOUNT_ID): int

@@ -11,7 +11,7 @@ class LocationServices
     {
         $this->object = $objectService;
     }
-    public function getList(): object
+    public function getList()
     {
         return Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
     }

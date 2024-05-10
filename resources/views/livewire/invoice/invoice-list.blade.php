@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('customerspayment') }}"> Receive Payments </a></h5>
+                    <h5 class="m-0"><a href="{{ route('customersinvoice') }}"> Invoice </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -51,16 +51,16 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">No</th>
+                                        <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
-                                        <th class="col-2">Customer</th>
-                                        <th class="col-1">Deposit</th>
-                                        <th class="col-1">Applied</th>
-                                        <th class="col-1">Method</th>
+                                        <th>Customer</th>
                                         <th class="col-1">Location</th>
-                                        <th class="col-1 text-center">Status</th>
-                                        <th class="text-center col-2 bg-success">
-                                            <a href="{{ route('customerspayment_create') }}"
+                                        <th class="col-1">Amount</th>
+                                        <th class="col-1">Balance</th>
+                                        <th class="col-1">Tax</th>
+                                        <th class="col-1">Status</th>
+                                        <th class="text-center col-1 bg-success">
+                                            <a href="{{ route('customersinvoice_create') }}"
                                                 class="text-white btn btn-xs w-100">
                                                 <i class="fas fa-plus"></i> New
                                             </a>
@@ -71,28 +71,34 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('customerspayment_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('customersinvoice_edit', ['id' => $list->ID]) }}"
                                                     class="text-primary">
                                                     {{ $list->CODE }}
                                                 </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
-                                            <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
-                                            <td class="text-right"> {{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
-                                            <td> {{ $list->PAYMENT_METHOD }}</td>  
                                             <td> {{ $list->LOCATION_NAME }}</td>
-                                            <td class="text-center"> {{ $list->STATUS }}</td>
+                                            <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
+                                            <td class="text-right"> {{ number_format($list->BALANCE_DUE, 2) }}</td>
+                                            <td> {{ $list->TAX_NAME }}</td>
+                                            <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('customerspayment_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('customersinvoice_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+                                                @if ($list->AMOUNT == $list->BALANCE_DUE)
+                                                    <a href="#" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn-sm text-danger">
+                                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                                    </a>
+                                                @else
+                                                    <a href="#" class="btn-sm text-secondary">
+                                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

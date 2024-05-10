@@ -1,4 +1,4 @@
-<aside class="main-sidebar  sidebar-light-primary elevation-4 text-xs">
+<aside class="main-sidebar  sidebar-light-info elevation-4 text-xs">
     <!-- Brand Logo -->
     <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="" class="brand-image img-circle elevation-3"
@@ -20,30 +20,30 @@
                 </li>
                 <li class="nav-item {{ request()->is('patients*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('patients*') ? 'active ' : '' }}">
-                        <i class="nav-icon fas fa-users "></i>
+                        <i class="nav-icon fas fa-wheelchair "></i>
                         <p>
                             Patients
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview bg-light">
+                    <ul class="nav nav-treeview ">
                         <li class="nav-item">
                             <a href="{{ route('patientsschedules') }}"
-                                class="nav-link {{ request()->is('patients/schedules*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('patients/schedules*') ? 'active' : '' }}">
                                 <i class="fas fa-calendar nav-icon"></i>
                                 <p>Schedules</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('patientsservice_charges') }}"
-                                class="nav-link {{ request()->is('patients/service-charges*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('patients/service-charges*') ? 'active' : '' }}">
                                 <i class="fas fa-file-invoice nav-icon"></i>
                                 <p>Service Charge</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('patientspayment') }}"
-                                class="nav-link {{ request()->is('patients/payments*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('patients/payments*') ? 'active' : '' }}">
                                 <i class="fas fa-money-bill-wave nav-icon"></i>
                                 <p>Payments</p>
                             </a>
@@ -51,36 +51,80 @@
 
                         <li class="nav-item">
                             <a href="{{ route('patientshemo') }}"
-                                class="nav-link {{ request()->is('patients/hemodialysis-treatment*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('patients/hemodialysis-treatment*') ? 'active' : '' }}">
                                 <i class="fas fa-medkit nav-icon"></i>
                                 <p>Treatment</p>
                             </a>
                         </li>
-
-                        {{-- <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-file-import nav-icon"></i>
-                                <p>Credit Memo</p>
-                            </a>
-                        </li> --}}
-                        {{-- <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-landmark nav-icon"></i>
-                                <p>Tax Credit</p>
-                            </a>
-                        </li> --}}
                         <li class="nav-item">
                             <a href="{{ route('patientsphic') }}"
-                                class="nav-link {{ request()->is('patients/phil-health*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('patients/phil-health*') ? 'active' : '' }}">
                                 <i class="fas fa-hospital-o nav-icon"></i>
                                 <p>PhilHealth</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('patientssoa') }}"
-                                class="nav-link {{ request()->is('patients/statement-of-account*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('patients/statement-of-account*') ? 'active' : '' }}">
                                 <i class="fas fa-newspaper nav-icon"></i>
-                                <p>Statement of Account</p>
+                                <p>GL Statement</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="nav-item {{ request()->is('customers*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('customers*') ? 'active ' : '' }}">
+                        <i class="nav-icon fas fa-users "></i>
+                        <p>
+                            Customers
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('customerssales_order') }}"
+                                class="nav-link {{ request()->is('customers/sales-order*') ? 'active' : '' }}">
+                                <i class="fas fa-truck nav-icon"></i>
+                                <p>Sales Order</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('customersinvoice') }}"
+                                class="nav-link {{ request()->is('customers/invoice*') ? 'active' : '' }}">
+                                <i class="fas fa-sticky-note nav-icon"></i>
+                                <p>Invoice</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('customerspayment') }}"
+                                class="nav-link {{ request()->is('customers/payment*') ? 'active' : '' }}">
+                                <i class="fas fa-money nav-icon"></i>
+                                <p>Receive Payment</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('customersstatement') }}"
+                                class="nav-link {{ request()->is('customers/statment*') ? 'active' : '' }}">
+                                <i class="fas fa-bar-chart nav-icon"></i>
+                                <p>Statement</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('customerscredit_memo') }}"
+                                class="nav-link {{ request()->is('customers/credit-memo*') ? 'active' : '' }}">
+                                <i class="fas fa-envelope nav-icon"></i>
+                                <p>Credit Memo</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('customerstax_credit') }}"
+                                class="nav-link {{ request()->is('customers/tax-credit*') ? 'active' : '' }}">
+                                <i class="fas fa-university nav-icon"></i>
+                                <p>Tax Credit</p>
                             </a>
                         </li>
 
@@ -94,18 +138,17 @@
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview bg-light">
+                    <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('vendorspurchase_order') }}"
-                                class="nav-link {{ request()->is('vendors/purchase-order*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('vendors/purchase-order*') ? 'active' : '' }}">
                                 <i class="fas fa-shopping-cart nav-icon"></i>
-
                                 <p>Purchase Order</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('vendorsbills') }}"
-                                class="nav-link {{ request()->is('vendors/bills*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('vendors/bills*') ? 'active' : '' }}">
                                 <i class="fas fa-file-invoice nav-icon"></i>
                                 <p>Bills</p>
                             </a>
@@ -479,7 +522,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item {{ request()->is('maintenance/contact*') ? 'menu-open' : '' }}">
                             <a href="#"
-                                class="nav-link {{ request()->is('maintenance/contact*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('maintenance/contact*') ? 'active' : '' }}">
                                 <i class="fa fa-address-book nav-icon"></i>
                                 <p>
                                     Contacts
@@ -526,7 +569,7 @@
                         </li>
                         <li class="nav-item {{ request()->is('maintenance/financial*') ? 'menu-open' : '' }}">
                             <a href="#"
-                                class="nav-link {{ request()->is('maintenance/financial*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('maintenance/financial*') ? 'active' : '' }}">
                                 <i class="fa fa-pie-chart nav-icon"></i>
                                 <p>
                                     Financial
@@ -572,7 +615,7 @@
                         </li>
                         <li class="nav-item {{ request()->is('maintenance/inventory*') ? 'menu-open' : '' }}">
                             <a href="#"
-                                class="nav-link {{ request()->is('maintenance/inventory*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('maintenance/inventory*') ? 'active' : '' }}">
                                 <i class="fa fa-cubes nav-icon"></i>
                                 <p>
                                     Inventory
@@ -656,7 +699,7 @@
                         </li>
                         <li class="nav-item {{ request()->is('maintenance/others*') ? 'menu-open' : '' }}">
                             <a href="#"
-                                class="nav-link {{ request()->is('maintenance/others*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('maintenance/others*') ? 'active' : '' }}">
                                 <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
                                 <p>
                                     Others
@@ -689,7 +732,7 @@
                         </li>
                         <li class="nav-item {{ request()->is('maintenance/settings*') ? 'menu-open' : '' }}">
                             <a href="#"
-                                class="nav-link {{ request()->is('maintenance/settings*') ? 'active text-primary' : '' }}">
+                                class="nav-link {{ request()->is('maintenance/settings*') ? 'active' : '' }}">
                                 <i class="fa fa-wrench nav-icon"></i>
                                 <p>
                                     Settings

@@ -9,11 +9,10 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title">Service Charges List</h6>
+                        <h6 class="modal-title">Invoice List</h6>
                         <button type="button" class="close" wire:click="closeModal">
                             <span aria-hidden="true">&times;</span>
                         </button>
-
                     </div>
                     <div class="modal-body">
                         @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
