@@ -49,7 +49,7 @@ class InvoiceForm extends Component
     public float $TAXABLE_AMOUNT;
     public float $NONTAXABLE_AMOUNT;
     public int $ACCOUNTS_RECEIVABLE_ID;
-    public $patientList = [];
+    public $contactList = [];
     public $locationList = [];
     public $shipViaList = [];
     public $paymentTermList = [];
@@ -102,7 +102,7 @@ class InvoiceForm extends Component
     public function LoadDropdown()
     {
 
-        $this->patientList = $this->contactServices->getList(1);
+        $this->contactList = $this->contactServices->getList(1);
         $this->locationList = $this->locationServices->getList();
         $this->shipViaList = $this->shipViaServices->getList();
         $this->paymentTermList = $this->paymentTermServices->getList();
@@ -316,7 +316,9 @@ class InvoiceForm extends Component
 
             $this->Modify = false;
         } catch (\Exception $e) {
+
             $errorMessage = 'Error occurred: ' . $e->getMessage();
+            
             session()->flash('error', $errorMessage);
         }
     }

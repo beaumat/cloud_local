@@ -1,10 +1,14 @@
 <?php
 
 namespace App\Services;
+
+use App\Models\CreditMemoInvoices;
 use App\Models\Invoice;
 use App\Models\InvoiceItems;
 use App\Models\PaymentInvoices;
+use App\Models\SalesOrderItems;
 use App\Models\Tax;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 class InvoiceServices
@@ -15,6 +19,7 @@ class InvoiceServices
     private $locationReference;
     private $systemSettingServices;
     private $dateServices;
+
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
@@ -33,9 +38,9 @@ class InvoiceServices
     {
         return (float) Invoice::where('ID', $INVOICE_ID)->first()->BALANCE_DUE;
     }
-    public function getInvoiceList(int $CUSTOMER_ID, int $LOCATION_ID, int $PAYMENT_ID)
+    public function getInvoiceListViaPayment(int $CUSTOMER_ID, int $LOCATION_ID, int $PAYMENT_ID)
     {
-        return Invoice::query()
+        $result = Invoice::query()
             ->select([
                 'invoice.ID',
                 'invoice.DATE',
@@ -48,6 +53,29 @@ class InvoiceServices
                     ->from('payment_invoices as p')
                     ->whereRaw('p.INVOICE_ID = invoice.ID')
                     ->where('p.PAYMENT_ID', '=', $PAYMENT_ID);
+            })
+            ->where('invoice.CUSTOMER_ID', $CUSTOMER_ID)
+            ->where('invoice.LOCATION_ID', $LOCATION_ID)
+            ->where('invoice.BALANCE_DUE', '>', 0)
+            ->get();
+
+        return $result;
+    }
+    public function getInvoiceListViaCreditMemo(int $CUSTOMER_ID, int $LOCATION_ID, int $CREDIT_MEMO_ID)
+    {
+        return Invoice::query()
+            ->select([
+                'invoice.ID',
+                'invoice.DATE',
+                'invoice.CODE',
+                'invoice.AMOUNT',
+                'invoice.BALANCE_DUE'
+            ])
+            ->whereNotExists(function ($query) use (&$CREDIT_MEMO_ID) {
+                $query->select(\DB::raw(1))
+                    ->from('credit_memo_invoices as p')
+                    ->whereRaw('p.INVOICE_ID = invoice.ID')
+                    ->where('p.CREDIT_MEMO_ID', '=', $CREDIT_MEMO_ID);
             })
             ->where('invoice.CUSTOMER_ID', $CUSTOMER_ID)
             ->where('invoice.LOCATION_ID', $LOCATION_ID)
@@ -175,13 +203,11 @@ class InvoiceServices
             'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
         ]);
     }
-
     public function Delete(int $ID): void
     {
         InvoiceItems::where('INVOICE_ID', $ID)->delete();
         Invoice::where('ID', $ID)->delete();
     }
-
     public function Search($search, int $locationId, int $perPage)
     {
         return Invoice::query()
@@ -292,18 +318,44 @@ class InvoiceServices
         int $BATCH_ID,
         int $PRICE_LEVEL_ID,
     ) {
-        InvoiceItems::where('ID', $ID)->where('INVOICE_ID', $INVOICE_ID)->where('ITEM_ID', $ITEM_ID)->update([
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'RATE' => $RATE,
-            'AMOUNT' => $AMOUNT,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
-        ]);
+        $data = InvoiceItems::where('ID', $ID)->where('INVOICE_ID', $INVOICE_ID)->where('ITEM_ID', $ITEM_ID)->first();
+        if ($data) {
+            DB::beginTransaction();
+            try {
+                $data->update([
+                    'QUANTITY' => $QUANTITY,
+                    'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+                    'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                    'RATE' => $RATE,
+                    'AMOUNT' => $AMOUNT,
+                    'TAXABLE' => $TAXABLE,
+                    'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+                    'TAX_AMOUNT' => $TAX_AMOUNT,
+                    'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
+                    'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
+                ]);
+
+                if ($data->REF_LINE_ID) {
+                    SalesOrderItems::where('ID', $data->REF_LINE_ID)
+                        ->update([
+                            'INVOICED_QTY' => $QUANTITY
+                        ]);
+                }
+                DB::commit();
+            } catch (\Exception $e) {
+                //throw $th;
+
+                DB::rollBack();
+
+                dd($e);
+            }
+
+        }
+
+
+
+
+
     }
     public function ItemDelete(int $ID, int $INVOICE_ID)
     {
@@ -360,9 +412,13 @@ class InvoiceServices
 
             $data = $this->compute->taxCompute($itemResult, $TAX_ID);
 
+            $paymentApplied = (float) $this->GetPaymentApplied($ID);
+            $creditApplied = (float) $this->GetCreditApplied($ID);
+            $totalPay = (float) $paymentApplied + $creditApplied;
+
             foreach ($data as $list) {
                 $originalAmount = (float) $list['AMOUNT'];
-                $balance = (float) $originalAmount - $this->GetPaymentAppliedViaInvoice($ID);
+                $balance = (float) $originalAmount - $totalPay;
                 Invoice::where('ID', $ID)->update([
                     'AMOUNT' => $originalAmount,
                     'BALANCE_DUE' => $balance,
@@ -387,30 +443,40 @@ class InvoiceServices
         return [];
     }
 
-    public function GetPaymentAppliedViaInvoice(int $INVOICE_ID): float
+    public function GetPaymentApplied(int $INVOICE_ID): float
     {
         $paymentSum = PaymentInvoices::query()
             ->select(\DB::raw('IFNULL(SUM(payment_invoices.AMOUNT_APPLIED), 0) AS pay'))
             ->where('payment_invoices.INVOICE_ID', '=', $INVOICE_ID)
             ->whereNull('payment_invoices.ACCOUNTS_RECEIVABLE_ID')
             ->first();
+        return $paymentSum->pay;
+    }
+
+    public function GetCreditApplied(int $INVOICE_ID): float
+    {
+        $paymentSum = CreditMemoInvoices::query()
+            ->select(\DB::raw('IFNULL(SUM(credit_memo_invoices.AMOUNT_APPLIED), 0) AS pay'))
+            ->where('credit_memo_invoices.INVOICE_ID', '=', $INVOICE_ID)
+            ->first();
 
         return $paymentSum->pay;
-
     }
 
     public function updateInvoiceBalance(int $INVOICE_ID)
     {
-        $data = Invoice::where('ID', $INVOICE_ID)->first();
+        $PAYMENT = (float) $this->GetPaymentApplied($INVOICE_ID);
+        $CREDIT = (float) $this->GetCreditApplied($INVOICE_ID);
 
+        $PAY = (float) $PAYMENT + $CREDIT;
+
+        $data = Invoice::where('ID', $INVOICE_ID)->first();
         if ($data) {
             $AMOUNT = (float) $data->AMOUNT;
-            $PAYMENT = (float) $this->GetPaymentAppliedViaInvoice($INVOICE_ID);
-            $BALANCE = $AMOUNT - $PAYMENT;
-
+            $BALANCE = $AMOUNT - $PAY;
             $STATUS = 0;
 
-            if ($PAYMENT == 0) {
+            if ($PAY == 0) {
                 // poste    d
                 $STATUS = 0;
             } elseif ($BALANCE <= 0) {
@@ -426,11 +492,8 @@ class InvoiceServices
                 'STATUS' => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
-
-
         }
     }
-
 
     public function getUpdateTaxItem(int $INVOICE_ID, int $TAX_ID)
     {
@@ -458,4 +521,25 @@ class InvoiceServices
             }
         }
     }
+
+    public function PaymentHistory($INVOICE_ID)
+    {
+        $results = DB::table(DB::raw('(
+            SELECT \'Payment\' AS `TYPE`, payment_invoices.`ID`, payment_invoices.`PAYMENT_ID` AS MAIN_ID, payment_invoices.`INVOICE_ID`, payment_invoices.`AMOUNT_APPLIED`, payment.`RECORDED_ON`,payment.CODE,payment.DATE
+            FROM payment_invoices  
+            INNER JOIN payment ON payment.`ID` = payment_invoices.`PAYMENT_ID`
+            UNION 
+            SELECT \'Credit Memo\' AS `TYPE`, credit_memo_invoices.`ID`, credit_memo_invoices.`CREDIT_MEMO_ID` AS MAIN_ID, credit_memo_invoices.`INVOICE_ID`, credit_memo_invoices.`AMOUNT_APPLIED`, credit_memo.`RECORDED_ON`,credit_memo.CODE,credit_memo.DATE
+            FROM credit_memo_invoices 
+            INNER JOIN credit_memo ON credit_memo.`ID` = credit_memo_invoices.`CREDIT_MEMO_ID`
+        ) AS pay'))
+            ->select('pay.TYPE', 'pay.ID', 'pay.MAIN_ID', 'pay.INVOICE_ID', 'pay.AMOUNT_APPLIED', 'pay.RECORDED_ON', 'pay.CODE', 'pay.DATE')
+            ->where('pay.INVOICE_ID', '=', $INVOICE_ID)
+            ->orderBy('pay.RECORDED_ON')
+            ->get();
+
+
+        return $results;
+    }
+
 }

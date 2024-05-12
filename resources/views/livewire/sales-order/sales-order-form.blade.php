@@ -12,8 +12,8 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('customersinvoice') }}">
-                                        Invoice
+                                    <a class="text-white" href="{{ route('customerssales_order') }}">
+                                        Sales Order
                                     </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
@@ -52,23 +52,13 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     @if ($Modify)
-                                                        <livewire:date-input name="DUE_DATE" :isDisabled=false
-                                                            titleName="Due Date" wire:model='DUE_DATE' />
+                                                        <livewire:date-input name="DATE_NEEDED" :isDisabled=false
+                                                            titleName="Date Needed" wire:model='DATE_NEEDED' />
                                                     @else
-                                                        <livewire:date-input name="DUE_DATE" :isDisabled=true
-                                                            titleName="Due Date" wire:model='DUE_DATE' />
+                                                        <livewire:date-input name="DATE_NEEDED" :isDisabled=true
+                                                            titleName="Date Needed" wire:model='DATE_NEEDED' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-6">
-                                                    @if ($Modify)
-                                                        <livewire:date-input name="DISCOUNT_DATE" :isDisabled=false
-                                                            titleName="Discount Date" wire:model='DISCOUNT_DATE' />
-                                                    @else
-                                                        <livewire:date-input name="DISCOUNT_DATE" :isDisabled=true
-                                                            titleName="Discount Date" wire:model='DISCOUNT_DATE' />
-                                                    @endif
-                                                </div>
-
                                                 <div class="col-md-6">
                                                     @if ($Modify)
                                                         <livewire:text-input name="PO_NUMBER" titleName="PO Number"
@@ -79,6 +69,8 @@
                                                             :isDisabled=true wire:model='PO_NUMBER' :vertical="false" />
                                                     @endif
                                                 </div>
+
+
 
 
                                             </div>
@@ -201,7 +193,7 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('Invoice.InvoiceFormItems', ['INVOICE_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID])
+                                                @livewire('SalesOrder.SalesOrderFormItems', ['SALES_ORDER_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID])
                                             </div>
                                         </div>
                                     </div>
@@ -212,39 +204,27 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-4 text-left">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                @livewire('Invoice.SalesOrderListPromp', ['CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'INVOICE_ID' => $ID])
-                                            </div>
-                                            <div class="col-md-4">
-                                                @livewire('Invoice.PaymentListPromp', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'AMOUNT' => $AMOUNT])
-                                            </div>
-                                        </div>
-
+                                        {{-- @livewire('Invoice.PaymentListPromp', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'AMOUNT' => $AMOUNT]) --}}
 
                                     </div>
                                     <div class="col-md-8">
                                         <div class="row">
                                             <div class="col-md-3 text-right">
+
+                                            </div>
+                                            <div class="col-md-3 text-right">
+
+                                            </div>
+                                            <div class="col-md-3 text-right">
                                                 <label class="text-sm">Tax:</label>
                                                 <label
                                                     class="text-info text-lg">{{ number_format($OUTPUT_TAX_AMOUNT, 2) }}</label>
+
                                             </div>
                                             <div class="col-md-3 text-right">
                                                 <label class="text-sm">Total:</label>
                                                 <label
                                                     class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
-                                            </div>
-                                            <div class="col-md-3 text-right">
-                                                <label class="text-sm">Payment:</label>
-                                                <label
-                                                    class="text-success text-lg">{{ number_format($AMOUNT - $BALANCE_DUE, 2) }}</label>
-
-                                            </div>
-                                            <div class="col-md-3 text-right">
-                                                <label class="text-sm">Balance:</label>
-                                                <label
-                                                    class="text-danger text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
                                             </div>
                                         </div>
                                     </div>

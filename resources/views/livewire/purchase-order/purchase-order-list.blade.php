@@ -49,7 +49,7 @@
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>Ref No.</th>
                                         <th>Date</th>
@@ -58,13 +58,13 @@
                                         <th>Amount</th>
                                         <th>Tax</th>
                                         <th>Status</th>
-                                        <th class="text-center col-1">
+                                        <th class="text-center col-1 bg-success">
                                             <a href="{{ route('vendorspurchase_order_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
+                                <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td> {{ $list->CODE }}</td>

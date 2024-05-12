@@ -4,6 +4,7 @@ use App\Livewire\Bills\BillingForm;
 use App\Livewire\Bills\BillingList;
 use App\Livewire\ChartOfAccount\ChartOfAccountForm;
 use App\Livewire\ChartOfAccount\ChartOfAccountList;
+use App\Livewire\CreditMemo\CreditMemoForm;
 use App\Livewire\CreditMemo\CreditMemoList;
 use App\Livewire\Customer\CustomerForm;
 use App\Livewire\Customer\CustomerList;
@@ -30,6 +31,7 @@ use App\Livewire\PhilHealth\PhilHealthPrint;
 use App\Livewire\PhilHealth\PhilHealthPrintForm;
 use App\Livewire\Requirement\RequirementForm;
 use App\Livewire\Requirement\RequirementList;
+use App\Livewire\SalesOrder\SalesOrderForm;
 use App\Livewire\SalesOrder\SalesOrderList;
 use App\Livewire\Scheduler\PrintSchedulesPrintOut;
 use App\Livewire\Scheduler\SchedulerForm;
@@ -130,10 +132,6 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('/payments')->group(function () {
-            // Route::get('/', PaymentList::class)->name('payment');
-            // Route::get('/create', PaymentForm::class)->name('payment_create');
-            // Route::get('/{id}/edit', PaymentForm::class)->name('payment_edit');
-
             Route::get('/', PatientPaymentList::class)->name('payment');
             Route::get('/create', PatientPaymentForm::class)->name('payment_create');
             Route::get('/{id}/edit', PatientPaymentForm::class)->name('payment_edit');
@@ -155,6 +153,8 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/customers')->name('customers')->group(function () {
         Route::prefix('/sales-order')->group(function () {
             Route::get('/', SalesOrderList::class)->name('sales_order');
+            Route::get('/create', SalesOrderForm::class)->name('sales_order_create');
+            Route::get('/{id}/edit', SalesOrderForm::class)->name('sales_order_edit');
         });
         Route::prefix('/invoice')->group(function () {
             Route::get('/', InvoiceList::class)->name('invoice');
@@ -171,11 +171,13 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::prefix('/credit-memo')->group(function () {
             Route::get('/', CreditMemoList::class)->name('credit_memo');
+            Route::get('/create', CreditMemoForm::class)->name('credit_memo_create');
+            Route::get('/{id}/edit', CreditMemoForm::class)->name('credit_memo_edit');
         });
         Route::prefix('/tax-credit')->group(function () {
             Route::get('/', TaxCreditList::class)->name('tax_credit');
         });
-      
+
     });
 
     Route::prefix('/vendors')->name('vendors')->group(function () {

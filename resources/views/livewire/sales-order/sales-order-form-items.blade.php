@@ -10,6 +10,8 @@
                 <th class="col-1">Rate</th>
                 <th class="col-1">Amount</th>
                 <th class="text-center">Tax</th>
+                <th>Inv.Qty</th>
+                <th>Closed</th>
                 @if ($STATUS == $openStatus)
                     <th class="text-center col-1">Action</th>
                 @endif
@@ -20,7 +22,7 @@
                 <tr>
                     <td>{{ $list->CODE }}</td>
                     <td>{{ $list->DESCRIPTION }}</td>
-              
+
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
@@ -68,6 +70,14 @@
                             @endif
                         @endif
                     </td>
+                    <td class="text-center">{{ number_format($list->INVOICED_QTY, 2) }}</td>
+                    <td class="text-center">
+                        @if ($list->CLOSED == true)
+                            Yes
+                        @else
+                            No
+                        @endif
+                    </td>
                     @if ($STATUS == $openStatus)
                         <td class="text-center">
                             @if ($editItemId === $list->ID)
@@ -100,7 +110,7 @@
             @if ($STATUS == $openStatus)
                 <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
                     <tr>
-                        <td  class="text-md">
+                        <td class="text-md">
                             @if ($saveSuccess)
                                 @if ($codeBase)
                                     <livewire:select-option name="ITEM_ID1" titleName="Item Code" :options="$itemCodeList"
@@ -138,7 +148,7 @@
                                 @endif
                             @endif
                         </td>
-                      
+
                         <td>
 
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
@@ -155,6 +165,7 @@
                             </select>
                         </td>
                         <td>
+
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
                                 name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                         </td>
@@ -165,6 +176,8 @@
                             <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
                                 @if ($ITEM_ID == 0) disabled @endif />
                         </td>
+                        <td></td>
+                        <td></td>
                         <td>
                             <div class="mt-2">
                                 <button type="submit" wire:loading.attr='hidden'
@@ -177,14 +190,10 @@
                                 </div>
                             </div>
                         </td>
-
                     </tr>
-
                 </form>
             @endif
-
         </tbody>
-
     </table>
     @if ($STATUS == $openStatus)
         <livewire:custom-check-box name="codeBase" titleName="Use choose item code" wire:model.live='codeBase' />

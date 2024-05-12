@@ -1,22 +1,20 @@
 <?php
 
-namespace App\Livewire\Invoice;
-
+namespace App\Livewire\SalesOrder;
 
 use App\Services\ComputeServices;
-use App\Services\InvoiceServices;
 use App\Services\ItemServices;
-use App\Services\ItemSubClassServices;
+use App\Services\SalesOrderServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-class InvoiceFormItems extends Component
+class SalesOrderFormItems extends Component
 {
     #[Reactive]
-    public int $INVOICE_ID;
+    public int $SALES_ORDER_ID;
     #[Reactive]
     public int $STATUS;
     #[Reactive]
@@ -36,10 +34,6 @@ class InvoiceFormItems extends Component
     public bool $TAXABLE;
     public float $TAXABLE_AMOUNT;
     public float $TAX_AMOUNT;
-    public int $COGS_ACCOUNT_ID;
-    public int $ASSET_ACCOUNT_ID;
-    public int $INCOME_ACCOUNT_ID;
-    public int $REF_LINE_ID;
     public int $BATCH_ID;
     public int $GROUP_LINE_ID;
     public bool $PRINT_IN_FORMS;
@@ -51,7 +45,6 @@ class InvoiceFormItems extends Component
     public $itemCodeList = [];
     public $unitList = [];
     public $saveSuccess;
-
     public float $lineQty;
     public int $lineUnitId;
     public float $lineRate;
@@ -65,27 +58,26 @@ class InvoiceFormItems extends Component
     public int $lineItemId = 0;
     public $CLASS_DESCRIPTION;
 
-    private $invoiceServices;
+    private $salesOrderServices;
     private $computeServices;
     private $unitOfMeasureServices;
     private $taxServices;
     private $itemServices;
-    private $itemSubClassServices;
+
 
     public function boot(
-        InvoiceServices $invoiceServices,
+        SalesOrderServices $salesOrderServices,
         ComputeServices $computeServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         TaxServices $taxServices,
-        ItemServices $itemServices,
-        ItemSubClassServices $itemSubClassServices
+        ItemServices $itemServices
     ) {
-        $this->invoiceServices = $invoiceServices;
+        $this->salesOrderServices = $salesOrderServices;
         $this->computeServices = $computeServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->taxServices = $taxServices;
         $this->itemServices = $itemServices;
-        $this->itemSubClassServices = $itemSubClassServices;
+      
     }
 
     public function updatedcodeBase()
@@ -140,21 +132,14 @@ class InvoiceFormItems extends Component
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
                 $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
-                $this->INCOME_ACCOUNT_ID = $item->GL_ACCOUNT_ID ?? 0;
-                $this->COGS_ACCOUNT_ID = $item->COGS_ACCOUNT_ID ?? 0;
-                $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
+   
                 $this->BATCH_ID = $item->BATCH_ID ?? 0;
                 $this->GROUP_LINE_ID = false;
                 $this->PRINT_IN_FORMS = false;
                 $this->PRICE_LEVEL_ID = 0;
-                $this->REF_LINE_ID = 0;
-                $this->getAmount();
-                $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);
+                $this->getAmount();     
             }
         }
-
-
-
     }
     public function getGroupPrice(int $item_id)
     {
@@ -165,7 +150,6 @@ class InvoiceFormItems extends Component
                 ->first();
 
             return $totalSum->total;
-
         } catch (\Throwable $th) {
             return 0;
         }
@@ -203,8 +187,8 @@ class InvoiceFormItems extends Component
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
 
-            $this->invoiceServices->ItemStore(
-                $this->INVOICE_ID,
+            $this->salesOrderServices->ItemStore(
+                $this->SALES_ORDER_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
                 $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
@@ -215,18 +199,13 @@ class InvoiceFormItems extends Component
                 $this->TAXABLE,
                 $this->TAXABLE_AMOUNT,
                 $this->TAX_AMOUNT,
-                $this->COGS_ACCOUNT_ID,
-                $this->ASSET_ACCOUNT_ID,
-                $this->INCOME_ACCOUNT_ID,
-                $this->REF_LINE_ID,
                 $this->BATCH_ID,
                 $this->GROUP_LINE_ID,
                 $this->PRINT_IN_FORMS,
-                false,
                 $this->PRICE_LEVEL_ID
             );
 
-            $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
+            $getResult = $this->salesOrderServices->ReComputed($this->SALES_ORDER_ID);
             $this->dispatch('update-amount', result: $getResult);
 
             $this->ITEM_ID = 0;
@@ -290,15 +269,14 @@ class InvoiceFormItems extends Component
 
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
-
             $tax_result = $this->computeServices->ItemComputeTax($this->lineAmount, $this->lineTax, $this->TAX_ID, $taxRate);
             if ($tax_result) {
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
-            $this->invoiceServices->ItemUpdate(
+            $this->salesOrderServices->ItemUpdate(
                 $Id,
-                $this->INVOICE_ID,
+                $this->SALES_ORDER_ID,
                 $this->lineItemId,
                 $this->lineQty,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
@@ -313,9 +291,9 @@ class InvoiceFormItems extends Component
                 $this->linePriceLevelId
             );
 
-            $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
+            $getResult = $this->salesOrderServices->ReComputed($this->SALES_ORDER_ID);
             $this->dispatch('update-amount', result: $getResult);
-            $this->itemList = $this->invoiceServices->ItemView($this->INVOICE_ID);
+            $this->itemList = $this->salesOrderServices->ItemView($this->SALES_ORDER_ID);
             $this->editItemId = null;
             $this->lineQty = 0;
             $this->lineUnitId = 0;
@@ -334,16 +312,15 @@ class InvoiceFormItems extends Component
     {
         $this->editItemId = null;
     }
-
     public function deleteItem($Id)
     {
         try {
-            $this->invoiceServices->ItemDelete(
+            $this->salesOrderServices->ItemDelete(
                 $Id,
-                $this->INVOICE_ID
+                $this->SALES_ORDER_ID
             );
 
-            $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
+            $getResult = $this->salesOrderServices->ReComputed($this->SALES_ORDER_ID);
             $this->dispatch('update-amount', result: $getResult);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -361,11 +338,11 @@ class InvoiceFormItems extends Component
     {
         $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
-        $this->itemList = $this->invoiceServices->ItemView($this->INVOICE_ID);
+        $this->itemList = $this->salesOrderServices->ItemView($this->SALES_ORDER_ID);
     }
     public function render()
     {
         $this->getReload();
-        return view('livewire.invoice.invoice-form-items');
+        return view('livewire.sales-order.sales-order-form-items');
     }
 }

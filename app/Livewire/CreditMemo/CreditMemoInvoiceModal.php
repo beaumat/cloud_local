@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Livewire\Payment;
+namespace App\Livewire\CreditMemo;
 
+use App\Services\CreditMemoServices;
 use App\Services\InvoiceServices;
-use App\Services\PaymentServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-class InvoiceListModal extends Component
+class CreditMemoInvoiceModal extends Component
 {
     public $showModal = false;
     #[Reactive]
@@ -16,43 +16,41 @@ class InvoiceListModal extends Component
     #[Reactive]
     public int $LOCATION_ID;
     #[Reactive]
-    public int $PAYMENT_ID;
+    public int $CREDIT_MEMO_ID;
     #[Reactive]
     public float $AMOUNT;
     #[Reactive]
     public float $AMOUNT_APPLIED;
     public $invoiceList = [];
-    public $selectedCharges = [];
-    public $paymentAmounts = [];
+    public $selectedInvoices = [];
+    public $creditAmounts = [];
     private $invoiceServices;
-    private $paymentServices;
-
-    public function boot(InvoiceServices $invoiceServices, PaymentServices $paymentServices)
+    private $creditMemoServices;
+    public function boot(InvoiceServices $invoiceServices, CreditMemoServices $creditMemoServices)
     {
         $this->invoiceServices = $invoiceServices;
-        $this->paymentServices = $paymentServices;
+        $this->creditMemoServices = $creditMemoServices;
     }
-    public function mount(int $CUSTOMER_ID, int $LOCATION_ID, int $PAYMENT_ID, float $AMOUNT, float $AMOUNT_APPLIED)
+    public function mount(int $CUSTOMER_ID, int $LOCATION_ID, int $CREDIT_MEMO_ID, float $AMOUNT, float $AMOUNT_APPLIED)
     {
         $this->CUSTOMER_ID = $CUSTOMER_ID;
         $this->LOCATION_ID = $LOCATION_ID;
-        $this->PAYMENT_ID = $PAYMENT_ID;
+        $this->CREDIT_MEMO_ID = $CREDIT_MEMO_ID;
         $this->AMOUNT = $AMOUNT;
         $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
     }
-    public function updatedSelectedCharges(bool $value, $id)
+    public function updatedselectedInvoices(bool $value, $id)
     {
         if (!$value) {
-            $this->paymentAmounts[$id] = 0;
+            $this->creditAmounts[$id] = 0;
             return;
         }
-
         $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
         $CollectAmount = 0;
-        foreach ($this->selectedCharges as $chargeId => $isSelected) {
+        foreach ($this->selectedInvoices as $chargeId => $isSelected) {
             if ($isSelected) {
                 try {
-                    $CollectAmount = $CollectAmount + $this->paymentAmounts[$chargeId] ?? 0;
+                    $CollectAmount = $CollectAmount + $this->creditAmounts[$chargeId] ?? 0;
                 } catch (\Throwable $th) {
                     $CollectAmount = $CollectAmount + 0;
                 }
@@ -65,7 +63,7 @@ class InvoiceListModal extends Component
         } else {
             $mustPay = $newPay;
         }
-        $this->paymentAmounts[$id] = $mustPay;
+        $this->creditAmounts[$id] = $mustPay;
     }
     public function openModal()
     {
@@ -80,10 +78,10 @@ class InvoiceListModal extends Component
         $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
         $CollectAmount = 0;
         //Check Amount First
-        foreach ($this->selectedCharges as $chargeId => $isSelected) {
+        foreach ($this->selectedInvoices as $InvoiceId => $isSelected) {
             if ($isSelected) {
                 try {
-                    $CollectAmount = $CollectAmount + $this->paymentAmounts[$chargeId] ?? 0;
+                    $CollectAmount = $CollectAmount + $this->creditAmounts[$InvoiceId] ?? 0;
                 } catch (\Throwable $th) {
                     $CollectAmount = $CollectAmount + 0;
                 }
@@ -91,7 +89,7 @@ class InvoiceListModal extends Component
         }
 
         if ($CollectAmount == 0) {
-            session()->flash('error', 'payment selected not found.');
+            session()->flash('error', 'Invoice not selected.');
             return;
         }
 
@@ -99,35 +97,37 @@ class InvoiceListModal extends Component
             session()->flash('error', 'Invalid amount');
             return;
         }
-
-        foreach ($this->selectedCharges as $chargeId => $isSelected) {
+        foreach ($this->selectedInvoices as $InvoiceId => $isSelected) {
             if ($isSelected) {
                 try {
-                    $chargeAmount = $this->paymentAmounts[$chargeId] ?? 0;
+                    $initialAmount = (float) $this->creditAmounts[$InvoiceId] ?? 0;
                 } catch (\Throwable $th) {
-                    $chargeAmount = 0;
+                    $initialAmount = 0;
                 }
-                if ($chargeAmount) {
-                    $ID = (int) $this->paymentServices->PaymentInvoiceExist($this->PAYMENT_ID, $chargeId);
+
+                if ($initialAmount) {
+                    $ID = (int) $this->creditMemoServices->CreditMemoInvoiceExist($this->CREDIT_MEMO_ID, $InvoiceId);
                     if ($ID > 0) {
-                        $this->paymentServices->PaymentInvoiceUpdate($ID, $this->PAYMENT_ID, $chargeId, 0, $chargeAmount);
-                        $this->invoiceServices->updateInvoiceBalance($chargeId);
+                        $this->creditMemoServices->CreditMemoInvoiceUpdate($ID, $this->CREDIT_MEMO_ID, $InvoiceId, $initialAmount);
+                        $this->invoiceServices->updateInvoiceBalance($InvoiceId);
 
                     } else {
-                        $this->paymentServices->PaymentInvoiceStore($this->PAYMENT_ID, $chargeId, 0, $chargeAmount, 0, 0);
-                        $this->invoiceServices->updateInvoiceBalance($chargeId);
+                        $this->creditMemoServices->CreditMemoInvoiceStore($this->CREDIT_MEMO_ID, $InvoiceId,  $initialAmount);
+                        $this->invoiceServices->updateInvoiceBalance($InvoiceId);
 
                     }
-                    $this->dispatch('reset-payment');
+     
                 }
 
             }
         }
-        
+
         $this->showModal = false;
-        $this->selectedCharges = [];
-        $this->paymentAmounts = [];
-        $this->dispatch('reload_payment_invoice');
+        $this->selectedInvoices = [];
+        $this->creditAmounts = [];
+        $getResult = $this->creditMemoServices->ReComputed($this->CREDIT_MEMO_ID);
+        $this->dispatch('update-amount', result: $getResult);
+        $this->dispatch('update-status');
     }
 
     #[On('clear-alert')]
@@ -140,8 +140,7 @@ class InvoiceListModal extends Component
 
     public function render()
     {
-        $this->invoiceList = $this->invoiceServices->getInvoiceListViaPayment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->PAYMENT_ID);
-        
-        return view('livewire.payment.invoice-list-modal');
+        $this->invoiceList = $this->invoiceServices->getInvoiceListViaCreditMemo($this->CUSTOMER_ID, $this->LOCATION_ID, $this->CREDIT_MEMO_ID);
+        return view('livewire.credit-memo.credit-memo-invoice-modal');
     }
 }

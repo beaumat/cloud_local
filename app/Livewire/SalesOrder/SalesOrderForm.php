@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Livewire\CreditMemo;
+namespace App\Livewire\SalesOrder;
 
 use App\Services\AccountServices;
 use App\Services\ContactServices;
-use App\Services\CreditMemoServices;
 use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
+use App\Services\PaymentTermServices;
+use App\Services\SalesOrderServices;
+use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
@@ -16,55 +18,63 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Credit Memo')]
-class CreditMemoForm extends Component
+#[Title('Sales Order')]
+class SalesOrderForm extends Component
 {
 
     public int $ID;
-    public string $CODE;
-    public string $DATE;
     public int $CUSTOMER_ID;
+    public int $SALES_REP_ID;
+    public string $DATE;
+    public string $CODE;
     public int $LOCATION_ID;
     public int $CLASS_ID;
-    public int $SALES_REP_ID;
-    public float $AMOUNT;
-    public float $AMOUNT_APPLIED;
+    public int $SHIP_VIA_ID;
+    public $DATE_NEEDED;
+    public int $PAYMENT_TERMS_ID;
+    public string $PO_NUMBER;
     public string $NOTES;
-    public int $ACCOUNTS_RECEIVABLE_ID;
+    public int $STATUS;
+    public string $STATUS_DESCRIPTION;
     public int $OUTPUT_TAX_ID;
     public float $OUTPUT_TAX_RATE;
+    public int $OUTPUT_TAX_VAT_METHOD;
+    public int $OUTPUT_TAX_ACCOUNT_ID;
     public float $OUTPUT_TAX_AMOUNT;
-    public float $OUTPUT_TAX_VAT_METHOD;
-    public float $OUTPUT_TAX_ACCOUNT_ID;
+    public float $AMOUNT;
     public float $TAXABLE_AMOUNT;
     public float $NONTAXABLE_AMOUNT;
-    public int $STATUS;
-    public int $STATUS_DATE;
-    public string $STATUS_DESCRIPTION;
-
     public $contactList = [];
     public $locationList = [];
+    public $shipViaList = [];
+    public $paymentTermList = [];
     public $taxList = [];
     public bool $Modify;
     private $locationServices;
     private $contactServices;
+    private $shipViaServices;
+    private $paymentTermServices;
     private $taxServices;
     private $userServices;
     private $documentStatusServices;
     private $systemSettingServices;
     private $accountServices;
     private $scheduleServices;
-    private $creditMemoServices;
+    private $salesOrderServices;
     private $dateServices;
+
     public string $tab = "item";
     public function SelectTab(string $select)
     {
         $this->tab = $select;
     }
+
     public function boot(
-        CreditMemoServices $creditMemoServices,
+        SalesOrderServices $salesOrderServices,
         LocationServices $locationServices,
         ContactServices $contactServices,
+        ShipViaServices $shipViaServices,
+        PaymentTermServices $paymentTermServices,
         TaxServices $taxServices,
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
@@ -72,9 +82,11 @@ class CreditMemoForm extends Component
         AccountServices $accountServices,
         DateServices $dateServices
     ) {
-        $this->creditMemoServices = $creditMemoServices;
+        $this->salesOrderServices = $salesOrderServices;
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
+        $this->shipViaServices = $shipViaServices;
+        $this->paymentTermServices = $paymentTermServices;
         $this->taxServices = $taxServices;
         $this->userServices = $userServices;
         $this->documentStatusServices = $documentStatusServices;
@@ -82,11 +94,13 @@ class CreditMemoForm extends Component
         $this->accountServices = $accountServices;
         $this->dateServices = $dateServices;
     }
-
     public function LoadDropdown()
     {
+
         $this->contactList = $this->contactServices->getList(1);
         $this->locationList = $this->locationServices->getList();
+        $this->shipViaList = $this->shipViaServices->getList();
+        $this->paymentTermList = $this->paymentTermServices->getList();
         $this->taxList = $this->taxServices->getList();
     }
     public function getTax()
@@ -107,11 +121,15 @@ class CreditMemoForm extends Component
         $this->LOCATION_ID = $Data->LOCATION_ID;
         $this->CUSTOMER_ID = $Data->CUSTOMER_ID;
         $this->SALES_REP_ID = $Data->SALES_REP_ID ?? 0;
+        $this->SHIP_VIA_ID = $Data->SHIP_VIA_ID ?? 0;
+        $this->PAYMENT_TERMS_ID = $Data->PAYMENT_TERMS_ID ? $Data->PAYMENT_TERMS_ID : 0;
         $this->CLASS_ID = $Data->CLASS_ID ? $Data->CLASS_ID : 0;
+        $this->DATE_NEEDED = $Data->DATE_NEEDED ? $Data->DATE_NEEDED : null;
+        $this->PO_NUMBER = $Data->PO_NUMBER ?? '';
+        $this->DISCOUNT_DATE = $Data->DISCOUNT_DATE ?? null;
+        $this->DISCOUNT_PCT = $Data->DISCOUNT_PCT ?? 0;
         $this->NOTES = $Data->NOTES ?? '';
         $this->AMOUNT = $Data->AMOUNT;
-        $this->AMOUNT_APPLIED = $Data->AMOUNT_APPLIED;
-        $this->ACCOUNTS_RECEIVABLE_ID = $Data->ACCOUNTS_RECEIVABLE_ID;
         $this->STATUS = $Data->STATUS;
         $this->OUTPUT_TAX_ID = $Data->OUTPUT_TAX_ID ? $Data->OUTPUT_TAX_ID : 0;
         $this->OUTPUT_TAX_RATE = $Data->OUTPUT_TAX_RATE ? $Data->OUTPUT_TAX_RATE : 0;
@@ -123,7 +141,10 @@ class CreditMemoForm extends Component
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
 
-
+    public function updatedPAYMENTTERMSID()
+    {
+        $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID);
+    }
     public function mount($id = null)
     {
         $currentDate = $this->dateServices->Now();
@@ -132,14 +153,14 @@ class CreditMemoForm extends Component
 
         if (is_numeric($id)) {
             $this->LoadDropdown();
-            $data = $this->creditMemoServices->get($id);
+            $data = $this->salesOrderServices->get($id);
             if ($data) {
                 $this->getInfo($data);
                 $this->Modify = false;
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('customerscredit_memo')->with('error', $errorMessage);
+            return Redirect::route('customerssales_order')->with('error', $errorMessage);
         }
 
         $this->LoadDropdown();
@@ -148,12 +169,12 @@ class CreditMemoForm extends Component
         $this->CODE = '';
         $this->CUSTOMER_ID = 0;
         $this->SALES_REP_ID = 0;
-
+        $this->SHIP_VIA_ID = $this->shipViaServices->getFirst();
         $this->CLASS_ID = 0;
+        $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
+        $this->DATE_NEEDED = null;
         $this->NOTES = '';
         $this->AMOUNT = 0;
-        $this->BALANCE_DUE = 0;
-        $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
         $this->STATUS = 0;
         $this->OUTPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('OutputTaxId');
         $this->OUTPUT_TAX_RATE = 0;
@@ -163,15 +184,13 @@ class CreditMemoForm extends Component
         $this->TAXABLE_AMOUNT = 0;
         $this->NONTAXABLE_AMOUNT = 0;
         $this->STATUS_DESCRIPTION = "";
-
-
+        $this->PO_NUMBER = '';
         $this->getTax();
     }
     public function getModify()
     {
         $this->Modify = true;
     }
-
     public function save()
     {
         try {
@@ -182,61 +201,66 @@ class CreditMemoForm extends Component
                         'CUSTOMER_ID' => 'required|not_in:0',
                         'OUTPUT_TAX_ID' => 'required|not_in:0',
                         'DATE' => 'required',
-                        'LOCATION_ID' => 'required'
+                        'LOCATION_ID' => 'required',
+                        'PAYMENT_TERMS_ID' => 'required'
                     ],
                     [],
                     [
-                        'CUSTOMER_ID' => 'Customer',
+                        'CUSTOMER_ID' => 'Patient',
                         'OUTPUT_TAX_ID' => 'Tax',
                         'DATE' => 'Date',
                         'LOCATION_ID' => 'Location',
-
+                        'PAYMENT_TERMS_ID' => 'Payment Terms'
                     ]
                 );
 
                 $this->getTax();
-
-                $this->ID = (int) $this->creditMemoServices->Store(
+                $this->ID = (int) $this->salesOrderServices->Store(
                     $this->CODE,
                     $this->DATE,
                     $this->CUSTOMER_ID,
                     $this->LOCATION_ID,
                     $this->CLASS_ID,
                     $this->SALES_REP_ID,
+                    $this->DATE_NEEDED,
+                    $this->PO_NUMBER,
+                    0,
+                    $this->SHIP_VIA_ID,
+                    $this->PAYMENT_TERMS_ID,
                     $this->NOTES,
-                    $this->ACCOUNTS_RECEIVABLE_ID,
+                    $this->STATUS,
                     $this->OUTPUT_TAX_ID,
                     $this->OUTPUT_TAX_RATE,
                     $this->OUTPUT_TAX_AMOUNT,
-                    $this->OUTPUT_TAX_VAT_METHOD,
-                    $this->OUTPUT_TAX_ACCOUNT_ID
+                    $this->OUTPUT_TAX_VAT_METHOD
+             
                 );
-                return Redirect::route('customerscredit_memo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+                return Redirect::route('customerssales_order_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
             } else {
 
                 $this->validate(
                     [
                         'CUSTOMER_ID' => 'required|not_in:0',
-                        'CODE' => 'required|max:20|unique:credit_memo,code,' . $this->ID,
+                        'CODE' => 'required|max:20|unique:sales_order,code,' . $this->ID,
                         'OUTPUT_TAX_ID' => 'required|not_in:0',
                         'DATE' => 'required',
                         'LOCATION_ID' => 'required',
+                        'PAYMENT_TERMS_ID' => 'required'
                     ],
                     [],
                     [
-                        'CUSTOMER_ID' => 'Customer',
+                        'CUSTOMER_ID' => 'Petient',
                         'CODE' => 'Reference No.',
                         'OUTPUT_TAX_ID' => 'Tax',
                         'DATE' => 'Date',
                         'LOCATION_ID' => 'Location',
-
+                        'PAYMENT_TERMS_ID' => 'Payment Terms'
                     ]
                 );
 
                 $this->getTax();
-
-                $this->creditMemoServices->Update(
+                $this->salesOrderServices->Update(
                     $this->ID,
                     $this->CODE,
                     $this->DATE,
@@ -244,25 +268,29 @@ class CreditMemoForm extends Component
                     $this->LOCATION_ID,
                     $this->CLASS_ID,
                     $this->SALES_REP_ID,
+                    $this->DATE_NEEDED,
+                    $this->PO_NUMBER,
+                    0,
+                    $this->SHIP_VIA_ID,
+                    $this->PAYMENT_TERMS_ID,
                     $this->NOTES,
-                    $this->ACCOUNTS_RECEIVABLE_ID,
+                    $this->STATUS,
                     $this->OUTPUT_TAX_ID,
                     $this->OUTPUT_TAX_RATE,
                     $this->OUTPUT_TAX_AMOUNT,
-                    $this->OUTPUT_TAX_VAT_METHOD,
-                    $this->OUTPUT_TAX_ACCOUNT_ID
+                    $this->OUTPUT_TAX_VAT_METHOD
                 );
 
-                $this->creditMemoServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
-                
-                $getResult = $this->creditMemoServices->ReComputed($this->ID);
+                $this->salesOrderServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
+
+                $getResult = $this->salesOrderServices->ReComputed($this->ID);
 
                 $this->getUpdateAmount($getResult);
 
                 session()->flash('message', 'Successfully updated');
             }
 
-            $data = $this->creditMemoServices->get($this->ID);
+            $data = $this->salesOrderServices->get($this->ID);
 
             if ($data) {
                 $this->getInfo($data);
@@ -270,7 +298,9 @@ class CreditMemoForm extends Component
 
             $this->Modify = false;
         } catch (\Exception $e) {
+
             $errorMessage = 'Error occurred: ' . $e->getMessage();
+            
             session()->flash('error', $errorMessage);
         }
     }
@@ -279,7 +309,6 @@ class CreditMemoForm extends Component
     {
         foreach ($result as $list) {
             $this->AMOUNT = $list['AMOUNT'];
-            $this->AMOUNT_APPLIED = $list['AMOUNT_APPLIED'];
             $this->OUTPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
             $this->TAXABLE_AMOUNT = $list['TAXABLE_AMOUNT'];
             $this->NONTAXABLE_AMOUNT = $list['NONTAXABLE_AMOUNT'];
@@ -288,14 +317,14 @@ class CreditMemoForm extends Component
     #[On('update-status')]
     public function updateStatus()
     {
-        $data = $this->creditMemoServices->get($this->ID);
+        $data = $this->salesOrderServices->get($this->ID);
         if ($data) {
             $this->getInfo($data);
         }
     }
     public function updateCancel()
     {
-        $data = $this->creditMemoServices->get($this->ID);
+        $data = $this->salesOrderServices->get($this->ID);
         if ($data) {
             $this->getInfo($data);
         }
@@ -310,9 +339,8 @@ class CreditMemoForm extends Component
         session()->forget('error');
     }
 
-
     public function render()
     {
-        return view('livewire.credit-memo.credit-memo-form');
+        return view('livewire.sales-order.sales-order-form');
     }
 }
