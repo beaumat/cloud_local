@@ -120,13 +120,13 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="{{ route('customerstax_credit') }}"
                                 class="nav-link {{ request()->is('customers/tax-credit*') ? 'active' : '' }}">
                                 <i class="fas fa-university nav-icon"></i>
                                 <p>Tax Credit</p>
                             </a>
-                        </li>
+                        </li> --}}
 
                     </ul>
                 </li>
@@ -154,23 +154,23 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('vendorsbill_payment') }}" class="nav-link {{ request()->is('vendors/bill-payments*') ? 'active' : '' }}">
                                 <i class="fas fa-money-bill nav-icon"></i>
-                                <p>Bill Payments</p>
+                                <p>Pay Bills</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{  route('vendorsbill_credit') }}" class="nav-link {{ request()->is('vendors/bill-credits*') ? 'active' : '' }}">
                                 <i class="fas fa-credit-card nav-icon"></i>
                                 <p>Bill Credits</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-balance-scale nav-icon"></i>
                                 <p>Withholding Tax</p>
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </li>
                 <li class="nav-item">

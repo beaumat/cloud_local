@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\BillPayments\BillPaymentForm;
+use App\Livewire\BillPayments\BillPaymentList;
 use App\Livewire\Bills\BillingForm;
 use App\Livewire\Bills\BillingList;
 use App\Livewire\ChartOfAccount\ChartOfAccountForm;
@@ -192,9 +194,16 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', BillingForm::class)->name('bills_create');
             Route::get('/{id}/edit', BillingForm::class)->name('bills_edit');
         });
-        Route::prefix('/pay-bills')->group(function () {
+
+
+        Route::prefix('/bill-payments')->group(function () {
+            Route::get('/', BillPaymentList::class)->name('bill_payment');
+            Route::get('/create', BillPaymentForm::class)->name('bill_payment_create');
+            Route::get('/{id}/edit', BillPaymentForm::class)->name('bill_payment_edit');
         });
+
         Route::prefix('/bill-credits')->group(function () {
+            Route::get('/', BillPaymentList::class)->name('bill_credit');
         });
         Route::prefix('/withholding-tax')->group(function () {
         });

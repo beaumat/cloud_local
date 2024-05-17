@@ -2,7 +2,7 @@
     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
 
     <table class="table table-sm table-bordered table-hover">
-        <thead class="text-sm bg-sky">
+        <thead class="text-xs bg-sky">
             <tr>
                 <th class="col-1">Account Code</th>
                 <th class="col-3">Account Name</th>
@@ -15,7 +15,7 @@
                 @endif
             </tr>
         </thead>
-        <tbody class="text-sm">
+        <tbody class="text-xs">
             @foreach ($expenses as $list)
                 <tr>
                     <td>{{ $list->CODE }}</td>

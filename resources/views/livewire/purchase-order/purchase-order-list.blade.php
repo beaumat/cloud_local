@@ -51,13 +51,13 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>Ref No.</th>
-                                        <th>Date</th>
-                                        <th>Vendor</th>
-                                        <th>Location</th>
-                                        <th>Amount</th>
-                                        <th>Tax</th>
-                                        <th>Status</th>
+                                        <th class="col-1">Ref No.</th>
+                                        <th class="col-1">Date</th>
+                                        <th class="col-3">Vendor</th>
+                                        <th class="col-1">Location</th>
+                                        <th class="col-1">Amount</th>
+                                        <th class="col-1">Tax</th>
+                                        <th class="col-1">Status</th>
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('vendorspurchase_order_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
@@ -91,6 +91,9 @@
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-6">
+                    {{ $dataList->links() }}
                 </div>
             </div>
         </div>

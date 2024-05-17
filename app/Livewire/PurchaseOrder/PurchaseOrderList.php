@@ -8,44 +8,41 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use App\Services\PurchaseOrderServices;
+use Livewire\WithPagination;
 
 #[Title('Purchase Order')]
 class PurchaseOrderList extends Component
-{
-    public $dataList = [];
+{   
+    use WithPagination;
+    public int $perPage = 15;
+    protected $paginationTheme = 'bootstrap';
     public $search = '';
     public int $locationid;
     public $locationList = [];
     private $purchaseOrderServices;
     private $locationServices;
     private $userServices;
-    public function boot(PurchaseOrderServices $purchaseOrderServices, LocationServices $locationServices, UserServices $userServices)
-    {
+    public function boot(
+        PurchaseOrderServices $purchaseOrderServices,
+        LocationServices $locationServices,
+        UserServices $userServices
+    ) {
         $this->purchaseOrderServices = $purchaseOrderServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
-    public function updatedlocationid()
-    {
-        $this->dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid);
-    }
-    public function updatedsearch()
-    {
-        $this->dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid);
-    }
-
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
-        $this->dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid);
+ 
     }
     public function delete($id)
     {
         try {
             $this->purchaseOrderServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid);
+       
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -61,6 +58,7 @@ class PurchaseOrderList extends Component
     }
     public function render()
     {
-        return view('livewire.purchase-order.purchase-order-list');
+        $dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid,$this->perPage);
+        return view('livewire.purchase-order.purchase-order-list',['dataList' => $dataList]);
     }
 }

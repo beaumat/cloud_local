@@ -190,23 +190,4 @@
             </div>
         </div>
     </section>
-
-
-    @script()
-        <script>
-            $(document).ready(function() {
-                $('#ITEM_GROUP_ID').select2();
-                $('#ITEM_GROUP_ID').on('change', function() {
-                    @this.ITEM_GROUP_ID = $(this).val();
-                });
-
-
-                $('#ITEM_ID').select2();
-                $('#ITEM_ID').on('change', function() {
-                    @this.ITEM_ID = $(this).val();
-                });
-            });
-        </script>
-    @endscript
-
 </div>

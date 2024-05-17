@@ -51,16 +51,16 @@
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>Ref No.</th>
-                                        <th>Date</th>
-                                        <th>Vendor</th>
-                                        <th>Location</th>
-                                        <th>Amount</th>
+                                        <th class="col-1">Ref No.</th>
+                                        <th class="col-1">Date</th>
+                                        <th class="col-4">Vendor</th>
+                                        <th class="col-1">Location</th>
+                                        <th class="col-1">Amount</th>
 
-                                        <th>Tax</th>
-                                        <th>Status</th>
+                                        <th class="col-1">Tax</th>
+                                        <th class="col-1">Status</th>
 
                                         <th class="text-center col-1">
                                             <a href="{{ route('vendorsbills_create') }}" class="text-white">
@@ -68,8 +68,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
-
+                                <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td> {{ $list->CODE }}</td>
@@ -97,6 +96,9 @@
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-6">
+                    {{ $dataList->links() }}
                 </div>
             </div>
         </div>

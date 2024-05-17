@@ -119,7 +119,7 @@ class PurchaseOrderServices
         PurchaseOrder::where('ID', $ID)->delete();
     }
 
-    public function Search($search, int $LOCATION_ID): object
+    public function Search($search, int $LOCATION_ID, int $perPage): object
     {
         $result = PurchaseOrder::query()
             ->select([
@@ -151,9 +151,8 @@ class PurchaseOrderServices
                     ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
             })
             ->orderBy('ID', 'desc')
-            ->limit($this->object->RecordLimit())
-            ->get();
-
+            ->paginate($perPage);
+    
         return $result;
     }
 

@@ -112,7 +112,7 @@ class BillingServices
     {
         Bill::where('ID', $ID)->update(['STATUS' => $STATUS, 'STATUS_DATE' => Carbon::now()->startOfDay()]);
     }
-    public function Search($search, int $LOCATION_ID)
+    public function Search($search, int $LOCATION_ID, int $perPage)
     {
         $result = Bill::query()
             ->select([
@@ -145,7 +145,7 @@ class BillingServices
             })
             ->orderBy('ID', 'desc')
             ->limit($this->object->RecordLimit())
-            ->get();
+            ->paginate($perPage);
 
         return $result;
     }

@@ -125,7 +125,6 @@
                                                 <button type="submit" class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
-
                                                 @if ($ID > 0)
                                                     <button type="button" wire:click='updateCancel'
                                                         class="btn btn-sm btn-danger"><i class="fa fa-ban"
@@ -149,7 +148,6 @@
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -161,7 +159,7 @@
                 <div class="col-md-12">
                     <div class="card card-primary card-outline card-outline-tabs">
                         <div class="card-header p-0 border-bottom-0">
-                            <ul class="nav text-sm nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                            <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link @if ($tab == 'item') active @endif"
                                         id="custom-tabs-four-item-tab" wire:click="SelectTab('item')"

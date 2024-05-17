@@ -41,7 +41,7 @@
             @if ($isDisabled) disabled @endif>
             @if ($zero)
                 <option value="0">
-                     &nbsp;
+                    &nbsp;
                 </option>
             @endif
             @foreach ($options as $option)
@@ -62,21 +62,16 @@
 
 </div>
 
-@script()
+@script
     <script>
         $(document).ready(function() {
             $('#{{ $name }}').select2();
-
             $('#{{ $name }}').siblings('.select2-container').css('width', '100%');
-
             $('#{{ $name }}').on('change', function(event) {
-
                 $wire.$set('value', event.target.value);
                 $('#{{ $name }}').val(event.target.value);
                 $('#{{ $name }}').trigger('change.select2');
             });
-
-
         });
     </script>
 @endscript

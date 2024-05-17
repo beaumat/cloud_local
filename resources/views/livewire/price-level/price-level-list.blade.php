@@ -32,7 +32,6 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-sm bg-sky">
                                     <tr>
-
                                         <th>CODE</th>
                                         <th>DESCRIPTION</th>
                                         <th class="col-1">TYPE</th>
