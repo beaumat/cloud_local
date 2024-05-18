@@ -14,9 +14,11 @@ class PaymentServices
     private $object;
     private $dateServices;
     private $systemSettingServices;
-    public function __construct(ObjectServices $objectService,
-     DateServices $dateServices, SystemSettingServices $systemSettingServices)
-    {
+    public function __construct(
+        ObjectServices $objectService,
+        DateServices $dateServices,
+        SystemSettingServices $systemSettingServices
+    ) {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
@@ -27,7 +29,12 @@ class PaymentServices
     }
     public function getTotalPay(int $INVOICE_ID, int $EXECPT_PAYMENT_ID): float
     {
-        $data = PaymentInvoices::query()->selectRaw('ifnull(sum(AMOUNT_APPLIED),0) as total')->where('INVOICE_ID', $INVOICE_ID)->where('PAYMENT_ID', '<>', $EXECPT_PAYMENT_ID)->first();
+        $data = PaymentInvoices::query()
+            ->selectRaw('ifnull(sum(AMOUNT_APPLIED),0) as total')
+            ->where('INVOICE_ID', $INVOICE_ID)
+            ->where('PAYMENT_ID', '<>', $EXECPT_PAYMENT_ID)
+            ->first();
+
         if ($data) {
             return $data->total;
         }

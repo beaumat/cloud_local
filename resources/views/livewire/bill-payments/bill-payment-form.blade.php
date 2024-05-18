@@ -163,7 +163,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            {{-- @livewire('Payment.PaymentInvoices', ['PAYMENT_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED]) --}}
+                                            @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED])
                                         </div>
                                     </div>
                                 </div>
@@ -178,7 +178,8 @@
                                     <div class="row">
                                         <div class="col-md-12 text-right">
                                             <label class="text-sm">Payment Applied:</label>
-                                            <label class="text-primary text-lg">0</label>
+                                            <label class="text-primary text-lg"> {{ number_format($AMOUNT_APPLIED, 2) }}
+                                            </label>
 
                                         </div>
                                     </div>

@@ -39,6 +39,8 @@ class BillingForm extends Component
     public int $INPUT_TAX_ACCOUNT_ID;
     public float $INPUT_TAX_AMOUNT;
     public float $AMOUNT;
+    public float $BALANCE_DUE;
+
     public $vendorList = [];
     public $locationList = [];
     public $paymentTermList = [];
@@ -47,7 +49,6 @@ class BillingForm extends Component
     private $billingServices;
     private $locationServices;
     private $contactServices;
-
     private $paymentTermServices;
     private $taxServices;
     private $userServices;
@@ -98,30 +99,31 @@ class BillingForm extends Component
         }
     }
 
-    private function getInfo($BILL)
+    private function getInfo($data)
     {
-        $this->ID = $BILL->ID;
-        $this->CODE = $BILL->CODE;
-        $this->DATE = $BILL->DATE;
-        $this->DUE_DATE = $BILL->DUE_DATE ? $BILL->DUE_DATE : '';
-        $this->DISCOUNT_DATE = $BILL->DISCOUNT_DATE ? $BILL->DISCOUNT_DATE : '';
-        $this->DISCOUNT_PCT = $BILL->DISCOUNT_PCT ? $BILL->DISCOUNT_PCT : 0;
-        $this->LOCATION_ID = $BILL->LOCATION_ID;
-        $this->VENDOR_ID = $BILL->VENDOR_ID;
-        $this->PAYMENT_TERMS_ID = $BILL->PAYMENT_TERMS_ID ? $BILL->PAYMENT_TERMS_ID : 0;
-        $this->CLASS_ID = $BILL->CLASS_ID ? $BILL->CLASS_ID : 0;
-        $this->NOTES = $BILL->NOTES;
-        $this->AMOUNT = $BILL->AMOUNT;
-        $this->STATUS = $BILL->STATUS;
-        $this->INPUT_TAX_ID = $BILL->INPUT_TAX_ID > 0 ? $BILL->INPUT_TAX_ID : 0;
-        $this->INPUT_TAX_RATE = $BILL->INPUT_TAX_RATE > 0 ? $BILL->INPUT_TAX_RATE : 0;
-        $this->INPUT_TAX_AMOUNT = $BILL->INPUT_TAX_AMOUNT > 0 ? $BILL->INPUT_TAX_AMOUNT : 0;
-        $this->INPUT_TAX_VAT_METHOD = $BILL->INPUT_TAX_VAT_METHOD > 0 ? $BILL->INPUT_TAX_VAT_METHOD : 0;
-        $this->INPUT_TAX_ACCOUNT_ID = $BILL->INPUT_TAX_ACCOUNT_ID > 0 ? $BILL->INPUT_TAX_ACCOUNT_ID : 0;
+        $this->ID = $data->ID;
+        $this->CODE = $data->CODE;
+        $this->DATE = $data->DATE;
+        $this->DUE_DATE = $data->DUE_DATE ? $data->DUE_DATE : '';
+        $this->DISCOUNT_DATE = $data->DISCOUNT_DATE ? $data->DISCOUNT_DATE : '';
+        $this->DISCOUNT_PCT = $data->DISCOUNT_PCT ? $data->DISCOUNT_PCT : 0;
+        $this->LOCATION_ID = $data->LOCATION_ID;
+        $this->VENDOR_ID = $data->VENDOR_ID;
+        $this->PAYMENT_TERMS_ID = $data->PAYMENT_TERMS_ID ? $data->PAYMENT_TERMS_ID : 0;
+        $this->CLASS_ID = $data->CLASS_ID ? $data->CLASS_ID : 0;
+        $this->NOTES = $data->NOTES;
+        $this->AMOUNT = $data->AMOUNT;
+        $this->BALANCE_DUE = $data->BALANCE_DUE ?? 0;
+        $this->STATUS = $data->STATUS;
+        $this->INPUT_TAX_ID = $data->INPUT_TAX_ID > 0 ? $data->INPUT_TAX_ID : 0;
+        $this->INPUT_TAX_RATE = $data->INPUT_TAX_RATE > 0 ? $data->INPUT_TAX_RATE : 0;
+        $this->INPUT_TAX_AMOUNT = $data->INPUT_TAX_AMOUNT > 0 ? $data->INPUT_TAX_AMOUNT : 0;
+        $this->INPUT_TAX_VAT_METHOD = $data->INPUT_TAX_VAT_METHOD > 0 ? $data->INPUT_TAX_VAT_METHOD : 0;
+        $this->INPUT_TAX_ACCOUNT_ID = $data->INPUT_TAX_ACCOUNT_ID > 0 ? $data->INPUT_TAX_ACCOUNT_ID : 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-        $this->ACCOUNTS_PAYABLE_ID = $BILL->ACCOUNTS_PAYABLE_ID;
+        $this->ACCOUNTS_PAYABLE_ID = $data->ACCOUNTS_PAYABLE_ID;
 
-        if ($this->billingServices->isItemTab($BILL->ID)) {
+        if ($this->billingServices->isItemTab($data->ID)) {
             $this->tab = "item";
             return;
         }
@@ -156,6 +158,7 @@ class BillingForm extends Component
         $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
         $this->NOTES = '';
         $this->AMOUNT = 0;
+        $this->BALANCE_DUE = 0;
         $this->STATUS = 0;
         $this->INPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('InputTaxId');
         $this->INPUT_TAX_RATE = 0;
@@ -263,7 +266,7 @@ class BillingForm extends Component
                 session()->flash('message', 'Successfully updated');
             }
 
-        
+
             $this->Modify = false;
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -275,7 +278,9 @@ class BillingForm extends Component
     {
         foreach ($result as $list) {
             $this->AMOUNT = $list['AMOUNT'];
+            $this->BALANCE_DUE = $list['AMOUNT'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
+
         }
     }
     public function updateCancel()

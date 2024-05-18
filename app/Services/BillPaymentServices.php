@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Check;
 use App\Models\CheckBills;
+use Illuminate\Support\Facades\DB;
 
 class BillPaymentServices
 {
@@ -85,6 +86,16 @@ class BillPaymentServices
                 'PRINTED' => false
             ]);
     }
+    public function UpdateBillPaymentApplied(int $CHECK_ID): float
+    {
+        $pay = CheckBills::query()
+            ->select(DB::raw('IFNULL(SUM(check_bills.AMOUNT_PAID), 0) as pay'))
+            ->where('check_bills.CHECK_ID', '=', $CHECK_ID)
+            ->first()
+            ->pay;
+
+        return $pay;
+    }
     public function Delete(int $ID)
     {
         Check::where('ID', $ID)->where('TYPE', 1)->delete();
@@ -124,27 +135,51 @@ class BillPaymentServices
             ->paginate($perPage);
 
     }
+    public function BillPaymentBillsExist(int $CHECK_ID, int $BILL_ID)
+    {
+        $data = CheckBills::where('CHECK_ID', $CHECK_ID)->where('BILL_ID', $BILL_ID)->first();
+        if ($data) {
+            return $data->ID;
+        }
+        return 0;
+    }
 
     public function billPaymentBills(int $CHECK_ID)
     {
         return CheckBills::query()
             ->select([
                 'check_bills.ID',
+                'check_bills.BILL_ID',
                 'check_bills.DISCOUNT',
                 'check_bills.AMOUNT_PAID',
-                'b.CODE',
-                'b.DATE',
-                'b.AMOUNT',
-                'b.BALANCE_DUE'
+                'bill.CODE',
+                'bill.DATE',
+                'bill.AMOUNT',
+                'bill.BALANCE_DUE'
             ])
-            ->join('bill as b ', 'b.ID', '=', 'check_bills.BILL_ID')
+            ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
             ->where('check_bills.CHECK_ID', $CHECK_ID)
             ->get();
 
     }
-    public function billPaymentBills_Delete(int $ID)
+    public function getTotalApplied(int $CHECK_ID): float
     {
-        CheckBills::where('ID', $ID)->delete();
+        if ($CHECK_ID == 0) {
+            return 0;
+        }
+
+        $result = CheckBills::query()
+            ->select([
+                DB::raw('IFNULL(SUM(check_bills.AMOUNT_PAID),0) as PAID')
+            ])
+            ->where('check_bills.CHECK_ID', $CHECK_ID)
+            ->first();
+
+        return (float) $result->PAID;
+    }
+    public function billPaymentBills_Delete(int $ID, int $CHECK_ID, int $BILL_ID)
+    {
+        CheckBills::where('ID', $ID)->where('CHECK_ID', $CHECK_ID)->where('BILL_ID', $BILL_ID)->delete();
     }
     public function billPaymentBills_Store(
         int $CHECK_ID,
@@ -155,16 +190,48 @@ class BillPaymentServices
         int $ACCOUNTS_PAYABLE_ID
     ) {
 
-
+        $ID = $this->object->ObjectNextID('CHECK_BILLS');
         CheckBills::create([
-            'ID',
+            'ID' => $ID,
             'CHECK_ID' => $CHECK_ID,
             'BILL_ID' => $BILL_ID,
             'DISCOUNT' => $DISCOUNT,
             'AMOUNT_PAID' => $AMOUNT_PAID,
-            'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID,
-            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID
+            'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
+            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null
         ]);
+
+    }
+    public function getTotalPay(int $BILL_ID, int $EXECPT_CHECK_ID): float
+    {
+        $data = CheckBills::query()
+            ->selectRaw('ifnull(sum(AMOUNT_PAID),0) as total')
+            ->where('BILL_ID', $BILL_ID)
+            ->where('CHECK_ID', '<>', $EXECPT_CHECK_ID)
+            ->first();
+
+        if ($data) {
+            return $data->total;
+        }
+
+        return 0;
+
+    }
+    public function billPaymentBills_Update(
+        int $ID,
+        int $CHECK_ID,
+        int $BILL_ID,
+        float $DISCOUNT,
+        float $AMOUNT_PAID
+
+    ) {
+        CheckBills::where('ID', $ID)
+            ->where('CHECK_ID', $CHECK_ID)
+            ->where('BILL_ID', $BILL_ID)
+            ->update([
+                'DISCOUNT' => $DISCOUNT,
+                'AMOUNT_PAID' => $AMOUNT_PAID
+            ]);
 
     }
 }

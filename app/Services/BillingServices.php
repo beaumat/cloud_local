@@ -54,7 +54,7 @@ class BillingServices
 
         Bill::create([
             'ID' => $ID,
-            'RECORDED_ON' =>$this->dateServices->Now(),
+            'RECORDED_ON' => $this->dateServices->Now(),
             'DATE' => $DATE,
             'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'VENDOR_ID' => $VENDOR_ID,
@@ -378,9 +378,11 @@ class BillingServices
                 ->orderBy('bill_expenses.LINE_NO', 'asc')
                 ->get();
             $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID);
+            
             foreach ($result as $list) {
                 Bill::where('ID', $ID)->update([
                     'AMOUNT' => $list['AMOUNT'],
+                    'BALANCE_DUE' => $list['AMOUNT'],
                     'INPUT_TAX_AMOUNT' => $list['TAX_AMOUNT']
                 ]);
             }
@@ -490,5 +492,38 @@ class BillingServices
                 'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
         }
+    }
+    public function getBalance(int $BILL_ID): float
+    {
+        $data = Bill::where('ID', $BILL_ID)->first();
+        if ($data) {
+            return (float) $data->BALANCE_DUE;
+        }
+
+        return 0;
+
+    }
+    public function getBillListViaBillPayment(int $VENDOR_ID, int $LOCATION_ID, int $CHECK_ID)
+    {
+        $result = Bill::query()
+            ->select([
+                'bill.ID',
+                'bill.DATE',
+                'bill.CODE',
+                'bill.AMOUNT',
+                'bill.BALANCE_DUE'
+            ])
+            ->whereNotExists(function ($query) use (&$CHECK_ID) {
+                $query->select(\DB::raw(1))
+                    ->from('check_bills as b')
+                    ->whereRaw('b.BILL_ID = bill.ID')
+                    ->where('b.CHECK_ID', '=', $CHECK_ID);
+            })
+            ->where('bill.VENDOR_ID', $VENDOR_ID)
+            ->where('bill.LOCATION_ID', $LOCATION_ID)
+            ->where('bill.BALANCE_DUE', '>', 0)
+            ->get();
+
+        return $result;
     }
 }

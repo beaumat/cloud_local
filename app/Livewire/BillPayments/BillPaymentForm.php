@@ -23,8 +23,8 @@ class BillPaymentForm extends Component
     public int $PAY_TO_ID;
     public int $LOCATION_ID;
     public int $BANK_ACCOUNT_ID;
-
     public float $AMOUNT;
+    public float $AMOUNT_APPLIED;
     public string $NOTES;
     public int $TYPE = 1;
     public int $STATUS = 0;
@@ -58,6 +58,12 @@ class BillPaymentForm extends Component
         $this->accountServices = $accountServices;
         $this->documentStatusServices = $documentStatusServices;
     }
+
+    #[On('reset-payment')]
+    public function ResetPaymentApplied()
+    {
+        $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->UpdateBillPaymentApplied($this->ID);
+    }
     public function mount($id = null)
     {
         $this->contactList = $this->contactServices->getList(0);
@@ -84,6 +90,7 @@ class BillPaymentForm extends Component
         $this->BANK_ACCOUNT_ID = 0;
         $this->PAY_TO_ID = 0;
         $this->Modify = true;
+        $this->AMOUNT_APPLIED = 0;
     }
     public function getInfo($data)
     { {
@@ -98,6 +105,7 @@ class BillPaymentForm extends Component
             $this->STATUS = $data->STATUS;
             $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
             $this->Modify = false;
+   
         }
     }
     public function getModify()
@@ -195,7 +203,8 @@ class BillPaymentForm extends Component
     }
 
     public function render()
-    {
+    {   
+        $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->getTotalApplied($this->ID);
         return view('livewire.bill-payments.bill-payment-form');
     }
 }

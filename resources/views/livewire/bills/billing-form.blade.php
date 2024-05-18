@@ -219,7 +219,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <div class="col-md-8 text-right">
+                                        <div class="col-md-4 text-right">
                                             <label class="text-sm">Input Tax:</label>
                                             <label
                                                 class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label>
@@ -227,6 +227,12 @@
                                         <div class="col-md-4 text-right">
                                             <label class="text-sm">Total:</label>
                                             <label class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
+
+                                        </div>
+                                        <div class="col-md-4 text-right">
+                                            <label class="text-sm">Balance:</label>
+                                            <label
+                                                class="text-primary text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
 
                                         </div>
                                     </div>

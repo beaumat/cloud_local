@@ -17,7 +17,7 @@
                     <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }}</td>
                     <td>
                         <a target="_blank"
-                            href="{{ route('customersinvoice_edit', ['id' => $list->INVOICE_ID]) }}">{{ $list->CODE }}</a>
+                            href="{{ route('vendorsbills_edit', ['id' => $list->BILL_ID]) }}">{{ $list->CODE }}</a>
                     </td>
                     <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                     <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
@@ -25,7 +25,7 @@
                         @if ($editPaymentId === $list->ID)
                             <input wire:model='editAmountApplied' type="number" class="form-control form-control-sm" />
                         @else
-                            {{ number_format($list->AMOUNT_APPLIED, 2) }}
+                            {{ number_format($list->AMOUNT_PAID, 2) }}
                         @endif
                     </td>
                     <td class="text-center">
@@ -40,12 +40,12 @@
                             </a>
                         @else
                             <a href="#" title="Edit" id="editbtn"
-                                wire:click='edit( {{ $list->ID }}, {{ $list->INVOICE_ID }}, {{ $list->AMOUNT_APPLIED }})'
+                                wire:click='edit( {{ $list->ID }}, {{ $list->BILL_ID }}, {{ $list->AMOUNT_PAID }})'
                                 class="text-info  btn-sm">
                                 <i class="fas fa-edit" aria-hidden="true"></i>
                             </a>
                             <a href="#" title="Delete" id="deletebtn"
-                                wire:click='delete({{ $list->ID }}, {{ $list->INVOICE_ID }})'
+                                wire:click='delete({{ $list->ID }}, {{ $list->BILL_ID }})'
                                 wire:confirm="Are you sure you want to delete this?" class="text-danger btn-sm">
                                 <i class="fas fa-times" aria-hidden="true"></i>
                             </a>
@@ -55,5 +55,5 @@
             @endforeach
         </tbody>
     </table>
-    {{-- @livewire('Payment.InvoiceListModal', ['CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'PAYMENT_ID' => $PAYMENT_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED]) --}}
+    @livewire('BillPayments.BillModal', ['VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'CHECK_ID' => $CHECK_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED])
 </div>
