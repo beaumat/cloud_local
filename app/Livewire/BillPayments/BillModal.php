@@ -81,7 +81,6 @@ class BillModal extends Component
     {
         $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
         $CollectAmount = 0;
-        //Check Amount First
         foreach ($this->selectedCharges as $chargeId => $isSelected) {
             if ($isSelected) {
                 try {
@@ -93,15 +92,13 @@ class BillModal extends Component
         }
 
         if ($CollectAmount == 0) {
-            session()->flash('error', 'payment selected not found.');
+            session()->flash('error', 'bill payment selected not found.');
             return;
         }
-
         if ($CollectAmount > $CurrentAmount) {
             session()->flash('error', 'Invalid amount');
             return;
         }
-
         foreach ($this->selectedCharges as $chargeId => $isSelected) {
             if ($isSelected) {
                 try {
@@ -114,16 +111,12 @@ class BillModal extends Component
                     if ($ID > 0) {
                         $this->billPaymentServices->billPaymentBills_Update($ID, $this->CHECK_ID, $chargeId, 0, $chargeAmount);
                     } else {
-                        // no account
                         $bill = $this->billingServices->get($chargeId);
-
-                        if ($bill) { // Chekcing if bill is exists             
+                        if ($bill) {
                             $this->billPaymentServices->billPaymentBills_Store($this->CHECK_ID, $chargeId, 0, $chargeAmount, 0, $bill->ACCOUNTS_PAYABLE_ID ?? 0);
                         }
-
                     }
                     $this->billingServices->UpdateBalance($chargeId);
-                    
                     $this->dispatch('reset-payment');
                 }
 

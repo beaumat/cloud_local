@@ -16,7 +16,6 @@ class PaymentInvoices extends Component
     public int $STATUS;
     public int $openStatus;
     private $paymentServices;
-
     #[Reactive]
     public int $CUSTOMER_ID;
     #[Reactive]
@@ -25,14 +24,11 @@ class PaymentInvoices extends Component
     public float $AMOUNT;
     #[Reactive]
     public float $AMOUNT_APPLIED;
-
     public float $prevAmount;
     public float $orgAmount;
     public $editPaymentId = null;
     public int $editInvoiceId;
-
     public float $editAmountApplied;
-
     private $invoiceServices;
     public function boot(
         PaymentServices $paymentServices,
@@ -56,25 +52,21 @@ class PaymentInvoices extends Component
     public function cancel()
     {
         $this->editPaymentId = null;
-
     }
     public function update()
     {
         $RemainAmount = (float) $this->AMOUNT_APPLIED - $this->prevAmount;
         if ($this->AMOUNT < ($RemainAmount + $this->editAmountApplied)) {
-            session()->flash('error', 'invalid payment initial. the remaining payment to low.');
+            session()->flash('error', 'Invalid payment initial. the remaining payment to low.');
             return;
         }
 
         $totalPay = (float) $this->paymentServices->getTotalPay($this->editInvoiceId, $this->PAYMENT_ID);
-
         $current_balance = (float) $this->orgAmount - $totalPay;
-
         if ($current_balance < $this->editAmountApplied) {
-            session()->flash('error', 'invalid payment initial is to high from invoice balance. please enter exactly initial amount');
+            session()->flash('error', 'Invalid payment initial is to high from invoice balance. please enter exactly initial amount');
             return;
         }
-
         $this->paymentServices->PaymentInvoiceUpdate($this->editPaymentId, $this->PAYMENT_ID, $this->editInvoiceId, 0, $this->editAmountApplied);
         $this->invoiceServices->updateInvoiceBalance($this->editInvoiceId);
         $this->editPaymentId = null;

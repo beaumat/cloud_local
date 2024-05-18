@@ -105,7 +105,7 @@ class BillPaymentForm extends Component
             $this->STATUS = $data->STATUS;
             $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
             $this->Modify = false;
-   
+
         }
     }
     public function getModify()
@@ -125,11 +125,12 @@ class BillPaymentForm extends Component
             if ($this->ID == 0) {
                 $this->validate(
                     [
-                        'PAY_TO_ID' => 'required|not_in:0',
                         'BANK_ACCOUNT_ID' => 'required|not_in:0',
+                        'PAY_TO_ID' => 'required|not_in:0',
+                        'AMOUNT' => 'required|not_in:0',
                         'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'AMOUNT' => 'required|not_in:0'
+                        'LOCATION_ID' => 'required'
+
                     ],
                     [],
                     [
@@ -151,18 +152,15 @@ class BillPaymentForm extends Component
                     $this->ACCOUNTS_PAYABLE_ID
                 );
                 return Redirect::route('vendorsbill_payment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
-
                 $this->validate(
                     [
                         'PAY_TO_ID' => 'required|not_in:0',
                         'BANK_ACCOUNT_ID' => 'required|not_in:0',
-                        'CODE' => 'required|max:20|unique:purchase_order,code,' . $this->ID,
+                        'CODE' => 'required|max:20|unique:bill,code,' . $this->ID,
                         'DATE' => 'required',
                         'LOCATION_ID' => 'required',
                         'AMOUNT' => 'required|not_in:0'
-
                     ],
                     [],
                     [
@@ -203,8 +201,10 @@ class BillPaymentForm extends Component
     }
 
     public function render()
-    {   
+    {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->getTotalApplied($this->ID);
+
+
         return view('livewire.bill-payments.bill-payment-form');
     }
 }

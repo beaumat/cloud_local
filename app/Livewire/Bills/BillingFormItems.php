@@ -74,12 +74,10 @@ class BillingFormItems extends Component
     }
     public function updatedcodeBase()
     {
-
         if ($this->codeBase) {
             $this->itemCodeList = $this->itemServices->getByVendor(true);
             return;
         }
-
         $this->itemDescList = $this->itemServices->getByVendor(false);
     }
     public function getAmount(): void
@@ -118,7 +116,6 @@ class BillingFormItems extends Component
         $this->RATE_TYPE = 0;
         $this->BATCH_ID = 0;
         $this->ACCOUNT_ID = false;
-
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
@@ -189,7 +186,6 @@ class BillingFormItems extends Component
 
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
             $this->dispatch('update-amount', result: $getResult);
-            // $this->itemList = $this->billingServices->ItemView($this->PO_ID);
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;

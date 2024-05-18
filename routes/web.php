@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\BillCredit\BillCreditForm;
+use App\Livewire\BillCredit\BillCreditList;
 use App\Livewire\BillPayments\BillPaymentForm;
 use App\Livewire\BillPayments\BillPaymentList;
 use App\Livewire\Bills\BillingForm;
@@ -203,8 +205,11 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('/bill-credits')->group(function () {
-            Route::get('/', BillPaymentList::class)->name('bill_credit');
+            Route::get('/', BillCreditList::class)->name('bill_credit');
+            Route::get('/create', BillCreditForm::class)->name('bill_credit_create');
+            Route::get('/{id}/edit', BillCreditForm::class)->name('bill_credit_edit');
         });
+        
         Route::prefix('/withholding-tax')->group(function () {
         });
     });

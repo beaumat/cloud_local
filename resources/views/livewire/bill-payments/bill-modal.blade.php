@@ -16,7 +16,6 @@
                     </div>
                     <div class="modal-body">
                         @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-
                         <table class="table table-sm table-bordered table-hover">
                             <thead class="bg-sky text-xs">
                                 <tr>
@@ -35,7 +34,6 @@
                                         <td class="text-center">
                                             <input class="text-lg" type="checkbox"
                                                 wire:model.live="selectedCharges.{{ $list->ID }}" />
-                                                
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }} </td>
                                         <td>{{ $list->CODE }}</td>

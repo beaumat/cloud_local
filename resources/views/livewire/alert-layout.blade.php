@@ -10,16 +10,15 @@
                 @endforeach
             </ul>
         </div>
-    @endif
-    @if ($message)
+    @elseif ($message)
         <div class="alert alert-success alert-sm  alert-dismissible" id="success-alert">
             <button type="button" class="close text-white" aria-label="Close" wire:click="dismissAlert">
                 <i class="fa fa-times text-white" aria-hidden="true"></i>
             </button>
             <small><i class="icon fas fa-check"></i> {!! $message !!}</small>
+
         </div>
-    @endif
-    @if ($error)
+    @elseif ($error)
         <div class="pt-1 pb-1 text-sm alert alert-danger" id="session-error-alert">
             <button type="button" class="close text-white"wire:click="dismissAlert">
                 <i class="fa fa-times text-white" aria-hidden="true"></i>
