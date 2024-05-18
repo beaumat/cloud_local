@@ -16,21 +16,19 @@ class InvoiceServices
     use WithPagination;
     private $object;
     private $compute;
-    private $locationReference;
+
     private $systemSettingServices;
     private $dateServices;
 
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
-        LocationReferenceServices $locationReferenceServices,
         SystemSettingServices $systemSettingServices,
         DateServices $dateServices
 
     ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
-        $this->locationReference = $locationReferenceServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
     }
@@ -448,7 +446,6 @@ class InvoiceServices
         $paymentSum = PaymentInvoices::query()
             ->select(\DB::raw('IFNULL(SUM(payment_invoices.AMOUNT_APPLIED), 0) AS pay'))
             ->where('payment_invoices.INVOICE_ID', '=', $INVOICE_ID)
-            ->whereNull('payment_invoices.ACCOUNTS_RECEIVABLE_ID')
             ->first();
         return $paymentSum->pay;
     }
@@ -477,13 +474,13 @@ class InvoiceServices
             $STATUS = 0;
 
             if ($PAY == 0) {
-                // poste    d
+                // DRAFT 
                 $STATUS = 0;
             } elseif ($BALANCE <= 0) {
-                //paid
+                // PAID
                 $STATUS = 11;
             } else {
-                // Unpaid
+                // UNPAID
                 $STATUS = 2;
             }
 

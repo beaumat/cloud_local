@@ -30,8 +30,6 @@
                                                 <input type="text" wire:model.live.debounce.150ms='search'
                                                     class="w-100 form-control form-control-sm" placeholder="Search" />
                                             </div>
-
-
                                         </div>
                                         <div class="col-md-3">
                                             <div class="mt-0">

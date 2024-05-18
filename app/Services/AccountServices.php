@@ -11,6 +11,11 @@ class AccountServices
     {
         $this->object = $objectService;
     }
+    public function getBankAccount()
+    {
+        return Accounts::whereIn('TYPE', ['0', '6'])->get();
+
+    }
     public function get(int $ID)
     {
         return Accounts::where('ID', $ID)->first();

@@ -21,7 +21,6 @@
                     <td>{{ $list->CODE }}</td>
                     <td>{{ $list->NAME }}</td>
                     <td class="text-right">
-
                         @if ($editExpensesId === $list->ID)
                             <input type="number" class="form-control form-control-sm" wire:model='lineAmount'
                                 name="lineAmount" />

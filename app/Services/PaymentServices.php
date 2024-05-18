@@ -13,10 +13,13 @@ class PaymentServices
     use WithPagination;
     private $object;
     private $dateServices;
-    public function __construct(ObjectServices $objectService, DateServices $dateServices)
+    private $systemSettingServices;
+    public function __construct(ObjectServices $objectService,
+     DateServices $dateServices, SystemSettingServices $systemSettingServices)
     {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
+        $this->systemSettingServices = $systemSettingServices;
     }
     public function get($ID)
     {
@@ -54,10 +57,12 @@ class PaymentServices
 
         $ID = (int) $this->object->ObjectNextID('PAYMENT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PAYMENT');
+        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+
         Payment::create([
             'ID' => $ID,
             'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DATE' => $DATE,
             'CUSTOMER_ID' => $CUSTOMER_ID,
             'LOCATION_ID' => $LOCATION_ID,
@@ -241,7 +246,6 @@ class PaymentServices
                 'payment.AMOUNT',
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
                 'payment_invoices.AMOUNT_APPLIED'
-
             ])
             ->join('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
             ->join('payment_invoices', 'payment_invoices.PAYMENT_ID', '=', 'payment.ID')
@@ -251,7 +255,6 @@ class PaymentServices
     }
     public function PaymentAvailableList(int $CUSTOMER_ID, int $LOCATION_ID)
     {
-
         $result = Payment::query()
             ->select([
                 'payment.ID',

@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Models\Bill;
 use App\Models\BillExpenses;
 use App\Models\BillItems;
+use App\Models\CheckBills;
 use App\Models\Tax;
 use Carbon\Carbon;
 
@@ -11,12 +12,18 @@ class BillingServices
 {
     private $object;
     private $compute;
-    private $locationReference;
-    public function __construct(ObjectServices $objectService, ComputeServices $computeServices, LocationReferenceServices $locationReferenceServices)
-    {
+    private $systemSettingServices;
+    private $dateServices;
+    public function __construct(
+        ObjectServices $objectService,
+        ComputeServices $computeServices,
+        SystemSettingServices $systemSettingServices,
+        DateServices $dateServices
+    ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
-        $this->locationReference = $locationReferenceServices;
+        $this->systemSettingServices = $systemSettingServices;
+        $this->dateServices = $dateServices;
     }
     public function get(int $ID): object
     {
@@ -43,11 +50,13 @@ class BillingServices
 
         $ID = (int) $this->object->ObjectNextID('BILL');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL');
+        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+
         Bill::create([
             'ID' => $ID,
-            'RECORDED_ON' => Carbon::now(),
+            'RECORDED_ON' =>$this->dateServices->Now(),
             'DATE' => $DATE,
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, NULL),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'VENDOR_ID' => $VENDOR_ID,
             'LOCATION_ID' => $LOCATION_ID,
             'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : 0,
@@ -64,7 +73,7 @@ class BillingServices
             'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
             'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
             'STATUS' => $STATUS,
-            'STATUS_DATE' => Carbon::now()->startOfDay()
+            'STATUS_DATE' => $this->dateServices->NowDate()
         ]);
 
         return $ID;
@@ -102,6 +111,7 @@ class BillingServices
             'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
         ]);
     }
+
     public function Delete(int $ID)
     {
         BillItems::where('BILL_ID', $ID)->delete();
@@ -110,7 +120,11 @@ class BillingServices
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
-        Bill::where('ID', $ID)->update(['STATUS' => $STATUS, 'STATUS_DATE' => Carbon::now()->startOfDay()]);
+        Bill::where('ID', $ID)
+            ->update([
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
+            ]);
     }
     public function Search($search, int $LOCATION_ID, int $perPage)
     {
@@ -427,5 +441,54 @@ class BillingServices
         }
 
     }
+    public function GetBillPaymentApplied(int $BILL_ID): float
+    {
+        $paymentSum = CheckBills::query()
+            ->select(\DB::raw('IFNULL(SUM(check_bills.AMOUNT_PAID), 0) AS pay'))
+            ->where('check_bills.BILL_ID', '=', $BILL_ID)
+            ->first();
+        return $paymentSum->pay;
+    }
 
+    public function GetBillCreditApplied(int $BILL_ID): float
+    {
+        // $paymentSum = CreditMemoInvoices::query()
+        //     ->select(\DB::raw('IFNULL(SUM(credit_memo_invoices.AMOUNT_APPLIED), 0) AS pay'))
+        //     ->where('credit_memo_invoices.INVOICE_ID', '=', $BILL_ID)
+        //     ->first();
+
+        // return $paymentSum->pay;
+        return 0;
+    }
+    public function UpdateBalance(int $BILL_ID)
+    {
+        $PAYMENT = $this->GetBillPaymentApplied($BILL_ID);
+        $CREDIT = $this->GetBillCreditApplied($BILL_ID);
+
+        $PAY = (float) $PAYMENT + $CREDIT;
+
+        $data = Bill::where('ID', $BILL_ID)->first();
+        if ($data) {
+            $AMOUNT = (float) $data->AMOUNT;
+            $BALANCE = $AMOUNT - $PAY;
+            $STATUS = 0;
+
+            if ($PAY == 0) {
+                // poste    d
+                $STATUS = 0;
+            } elseif ($BALANCE <= 0) {
+                //paid
+                $STATUS = 11;
+            } else {
+                // Unpaid
+                $STATUS = 2;
+            }
+
+            Bill::where('ID', $BILL_ID)->update([
+                'BALANCE_DUE' => $BALANCE,
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
+            ]);
+        }
+    }
 }

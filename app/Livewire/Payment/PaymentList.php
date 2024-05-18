@@ -63,11 +63,6 @@ class PaymentList extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function getConfirm($id)
-    {
-        $this->paymentServices->ConfirmProccess($id);
-       
-    }
     public function render()
     {
         $dataList = $this->paymentServices->Search($this->search, $this->locationid, $this->perPage);
