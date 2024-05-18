@@ -2,9 +2,459 @@
 
 namespace App\Services;
 
+use App\Models\BillCredit;
+use App\Models\BillCreditExpenses;
+use App\Models\BillCreditItems;
+use App\Models\Tax;
+
 class BillCreditServices
 {
 
+    private $object;
+    private $compute;
+    private $systemSettingServices;
+    private $dateServices;
+
+    public function __construct(
+        ObjectServices $objectService,
+        ComputeServices $computeServices,
+        SystemSettingServices $systemSettingServices,
+        DateServices $dateServices
+    ) {
+        $this->object = $objectService;
+        $this->compute = $computeServices;
+        $this->systemSettingServices = $systemSettingServices;
+        $this->dateServices = $dateServices;
+    }
+
+    public function get(int $ID): object
+    {
+        return BillCredit::where('ID', $ID)->first();
+    }
+
+    public function Store(
+        string $CODE,
+        string $DATE,
+        int $VENDOR_ID,
+        int $LOCATION_ID,
+        string $NOTES,
+        int $ACCOUNTS_PAYABLE_ID,
+        int $INPUT_TAX_ID,
+        float $INPUT_TAX_RATE,
+        float $INPUT_TAX_AMOUNT,
+        int $INPUT_TAX_VAT_METHOD,
+        int $INPUT_TAX_ACCOUNT_ID,
+    ): int {
+        $ID = (int) $this->object->ObjectNextID('BILL_CREDIT');
+        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL_CREDIT');
+        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+
+        BillCredit::create([
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'DATE' => $DATE,
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'VENDOR_ID' => $VENDOR_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+            'AMOUNT' => 0,
+            'AMOUNT_APPLIED' => 0,
+            'NOTES' => $NOTES,
+            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null,
+            'INPUT_TAX_ID' => $INPUT_TAX_ID,
+            'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
+            'INPUT_TAX_AMOUNT' => $INPUT_TAX_AMOUNT,
+            'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
+            'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
+            'STATUS' => 0,
+            'STATUS_DATE' => $this->dateServices->NowDate()
+        ]);
+
+        return $ID;
+    }
 
 
+    public function Update(
+        int $ID,
+        string $CODE,
+        string $DATE,
+        int $VENDOR_ID,
+        int $LOCATION_ID,
+        string $NOTES,
+        int $ACCOUNTS_PAYABLE_ID,
+        int $INPUT_TAX_ID,
+        float $INPUT_TAX_RATE,
+        float $INPUT_TAX_AMOUNT,
+        int $INPUT_TAX_VAT_METHOD,
+        int $INPUT_TAX_ACCOUNT_ID
+    ) {
+        BillCredit::where('ID', $ID)->update([
+            'CODE' => $CODE,
+            'VENDOR_ID' => $VENDOR_ID,
+            'NOTES' => $NOTES,
+            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID,
+            'INPUT_TAX_ID' => $INPUT_TAX_ID,
+            'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
+            'INPUT_TAX_AMOUNT' => $INPUT_TAX_AMOUNT,
+            'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
+            'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
+        ]);
+    }
+
+    public function Delete(int $ID)
+    {
+        BillCreditItems::where('BILL_CREDIT_ID', $ID)->delete();
+        BillCreditExpenses::where('BILL_CREDIT_ID', $ID)->delete();
+        BillCredit::where('ID', $ID)->delete();
+    }
+
+    public function StatusUpdate(int $ID, int $STATUS)
+    {
+        BillCredit::where('ID', $ID)
+            ->update([
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
+            ]);
+    }
+
+
+    public function Search($search, int $LOCATION_ID, int $perPage)
+    {
+        $result = BillCredit::query()
+            ->select([
+                'bill_credit.ID',
+                'bill_credit.CODE',
+                'bill_credit.DATE',
+                'bill_credit.AMOUNT',
+                'bill_credit.INPUT_TAX_RATE',
+                'bill_credit.NOTES',
+                'c.NAME as CONTACT_NAME',
+                'l.NAME as LOCATION_NAME',
+                't.NAME as TAX_NAME',
+                's.DESCRIPTION as STATUS'
+            ])
+            ->join('contact as c', 'c.ID', '=', 'bill_credit.VENDOR_ID')
+            ->join('location as l', function ($join) use (&$LOCATION_ID) {
+                $join->on('l.ID', '=', 'bill_credit.LOCATION_ID');
+                if ($LOCATION_ID > 0) {
+                    $join->where('l.ID', $LOCATION_ID);
+                }
+            })
+            ->join('document_status_map as s', 's.ID', '=', 'bill_credit.STATUS')
+            ->leftJoin('tax as t', 't.ID', '=', 'bill_credit.INPUT_TAX_ID')
+            ->when($search, function ($query) use (&$search) {
+                $query->where('bill_credit.CODE', 'like', '%' . $search . '%')
+                    ->orWhere('bill_credit.AMOUNT', 'like', '%' . $search . '%')
+                    ->orWhere('bill_credit.NOTES', 'like', '%' . $search . '%')
+                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+            })
+            ->orderBy('ID', 'desc')
+            ->limit($this->object->RecordLimit())
+            ->paginate($perPage);
+
+        return $result;
+    }
+
+
+    private function getLine(int $Id, bool $isItem): int
+    {
+        if ($isItem) {
+            return (int) BillCreditItems::where('BILL_CREDIT_ID', $Id)->max('LINE_NO');
+        }
+        return (int) BillCreditExpenses::where('BILL_CREDIT_ID', $Id)->max('LINE_NO');
+    }
+
+    public function ItemStore(
+        int $BILL_CREDIT_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        float $UNIT_BASE_QUANTITY,
+        float $RATE,
+        int $RATE_TYPE,
+        float $AMOUNT,
+        int $BATCH_ID,
+        int $ACCOUNT_ID,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT,
+        int $CLASS_ID
+    ) {
+
+        $LINE_NO = $this->getLine($BILL_CREDIT_ID, true) + 1;
+        $ID = $this->object->ObjectNextID('BILL_CREDIT_ITEMS');
+
+        BillCreditItems::create([
+            'ID' => $ID,
+            'BILL_CREDIT_ID' => $BILL_CREDIT_ID,
+            'LINE_NO' => $LINE_NO,
+            'ITEM_ID' => $ITEM_ID,
+            'DESCRIPTION' => null,
+            'QUANTITY' => $QUANTITY,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+            'RATE' => $RATE,
+            'RATE_TYPE' => $RATE_TYPE,
+            'AMOUNT' => $AMOUNT,
+            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'ACCOUNT_ID' => $ACCOUNT_ID,
+            'TAXABLE' => $TAXABLE,
+            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT' => $TAX_AMOUNT,
+            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
+        ]);
+    }
+    public function ItemUpdate(
+        int $ID,
+        int $BILL_CREDIT_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        float $UNIT_BASE_QUANTITY,
+        float $RATE,
+        float $AMOUNT,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT
+    ) {
+
+        BillCreditItems::where('ID', $ID)
+            ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->where('ITEM_ID', $ITEM_ID)
+            ->update([
+                'QUANTITY' => $QUANTITY,
+                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                'RATE' => $RATE,
+                'AMOUNT' => $AMOUNT,
+                'TAXABLE' => $TAXABLE,
+                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT' => $TAX_AMOUNT
+            ]);
+    }
+
+    public function ItemDelete(int $ID, int $BILL_CREDIT_ID)
+    {
+        BillCreditItems::where('ID', $ID)
+            ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->delete();
+    }
+
+    public function ItemView(int $BILL_CREDIT_ID)
+    {
+        return BillCreditItems::query()
+            ->select([
+                'bill_credit_items.ID',
+                'bill_credit_items.ITEM_ID',
+                'bill_credit_items.BILL_CREDIT_ID',
+                'bill_credit_items.QUANTITY',
+                'bill_credit_items.UNIT_ID',
+                'bill_credit_items.RATE',
+                'bill_credit_items.AMOUNT',
+                'bill_credit_items.TAXABLE',
+                'bill_credit_items.TAXABLE_AMOUNT',
+                'i.CODE',
+                'i.PURCHASE_DESCRIPTION',
+                'u.NAME as UNIT_NAME',
+                'u.SYMBOL'
+            ])
+            ->leftJoin('item as i', 'i.ID', '=', 'bill_credit_items.ITEM_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'bill_credit_items.UNIT_ID')
+            ->where('bill_credit_items.BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->orderBy('bill_credit_items.LINE_NO', 'asc')
+            ->get();
+    }
+
+    public function ExpenseStore(
+        int $BILL_CREDIT_ID,
+        int $ACCOUNT_ID,
+        float $AMOUNT,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT,
+        string $PARTICULARS,
+        int $CLASS_ID
+    ) {
+        $LINE_NO = $this->getLine($BILL_CREDIT_ID, false) + 1;
+        $ID = $this->object->ObjectNextID('BILL_CREDIT_EXPENSES');
+
+        BillCreditExpenses::create([
+            'ID' => $ID,
+            'BILL_CREDIT_ID' => $BILL_CREDIT_ID,
+            'LINE_NO' => $LINE_NO,
+            'ACCOUNT_ID' => $ACCOUNT_ID,
+            'AMOUNT' => $AMOUNT,
+            'TAXABLE' => $TAXABLE,
+            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT' => $TAX_AMOUNT,
+            'PARTICULARS' => $PARTICULARS,
+            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
+
+        ]);
+    }
+
+    public function ExpenseUpdate(
+        int $ID,
+        int $BILL_CREDIT_ID,
+        float $AMOUNT,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT,
+        string $PARTICULARS,
+        int $CLASS_ID
+    ) {
+        BillCreditExpenses::where('ID', $ID)
+            ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->update([
+                'AMOUNT' => $AMOUNT,
+                'TAXABLE' => $TAXABLE,
+                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT' => $TAX_AMOUNT,
+                'PARTICULARS' => $PARTICULARS,
+                'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
+            ]);
+    }
+
+    public function ExpenseDelete(
+        int $ID,
+        int $BILL_CREDIT_ID,
+    ) {
+        BillCreditExpenses::where('ID', $ID)
+            ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->delete();
+    }
+    public function ExpenseView(int $BILL_CREDIT_ID)
+    {
+        $result = BillCreditExpenses::query()
+            ->select([
+                'bill_credit_expenses.ID',
+                'bill_credit_expenses.ACCOUNT_ID',
+                'bill_credit_expenses.AMOUNT',
+                'bill_credit_expenses.PARTICULARS',
+                'bill_credit_expenses.TAXABLE',
+                'bill_credit_expenses.CLASS_ID',
+                'a.NAME',
+                'a.TAG as CODE'
+            ])
+            ->leftJoin('account as a', 'a.ID', '=', 'bill_credit_expenses.ACCOUNT_ID')
+            ->where('bill_credit_expenses.BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->orderBy('bill_credit_expenses.LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
+
+    public function isItemTab($BILL_CREDIT_ID): bool
+    {
+        $ItemCount = $this->getLine($BILL_CREDIT_ID, true);
+
+        $AccountCount = $this->getLine($BILL_CREDIT_ID, false);
+ 
+        if ($ItemCount >= $AccountCount) {
+            return true;
+        }
+        return false;
+    }
+
+    public function ReComputed(int $ID): array
+    {
+        $billCredit = BillCredit::where('ID', $ID)->first();
+
+        if ($billCredit) {
+            $TAX_ID = (int) $billCredit->INPUT_TAX_ID;
+
+            $itemResult = BillCreditItems::query()
+                ->select(
+                    [
+                        'AMOUNT',
+                        'TAX_AMOUNT',
+                        'TAXABLE_AMOUNT',
+                        'TAXABLE'
+                    ]
+                )
+                ->where('BILL_CREDIT_ID', $ID)
+                ->orderBy('LINE_NO', 'asc')
+                ->get();
+
+            $expensesResult = BillCreditExpenses::query()
+                ->select(
+                    [
+                        'AMOUNT',
+                        'TAX_AMOUNT',
+                        'TAXABLE_AMOUNT',
+                        'TAXABLE'
+                    ]
+                )
+                ->where('BILL_CREDIT_ID', $ID)
+                ->orderBy('LINE_NO', 'asc')
+                ->get();
+
+            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID);
+
+            foreach ($result as $list) {
+                BillCredit::where('ID', $ID)->update([
+                    'AMOUNT' => $list['AMOUNT'],
+                    'INPUT_TAX_AMOUNT' => $list['TAX_AMOUNT']
+                ]);
+            }
+
+
+            return $result;
+        }
+
+        return [];
+    }
+
+    public function getUpdateTaxItem(int $BILL_CREDIT_ID, int $TAX_ID)
+    {
+        $taxRate = (float) Tax::where('ID', $TAX_ID)->first()->RATE;
+
+        $items = BillCreditItems::query()
+            ->select([
+                'bill_credit_items.ID',
+                'bill_credit_items.AMOUNT',
+                'bill_credit_items.TAXABLE'
+            ])
+            ->join('item', 'item.ID', '=', 'bill_credit_items.ITEM_ID')
+            ->where('bill_credit_items.BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->where('item.TYPE', 0)
+            ->orderBy('bill_credit_items.LINE_NO', 'asc')
+            ->get();
+
+        foreach ($items as $list) {
+            $tax_result = $this->compute->ItemComputeTax($list->AMOUNT, $list->TAXABLE, $TAX_ID, $taxRate);
+            if ($tax_result) {
+
+                BillCreditItems::where('ID', $list->ID)
+                    ->update([
+                        'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
+                        'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
+                    ]);
+            }
+        }
+
+        $expenses = BillCreditExpenses::query()
+            ->select(
+                [
+                    'bill_credit_expenses.ID',
+                    'bill_credit_expenses.AMOUNT',
+                    'bill_credit_expenses.TAXABLE'
+                ]
+            )
+            ->where('bill_credit_expenses.BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->orderBy('bill_credit_expenses.LINE_NO', 'asc')
+            ->get();
+
+        foreach ($expenses as $list) {
+
+            $tax_result = $this->compute->ItemComputeTax($list->AMOUNT, $list->TAXABLE, $TAX_ID, $taxRate);
+
+            BillCreditExpenses::where('ID', $list->ID)
+                ->update([
+                    'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
+                    'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
+                ]);
+        }
+
+    }
 }

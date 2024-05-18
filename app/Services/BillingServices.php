@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Bill;
+use App\Models\BillCreditBills;
 use App\Models\BillExpenses;
 use App\Models\BillItems;
 use App\Models\CheckBills;
@@ -227,20 +228,25 @@ class BillingServices
         float $TAX_AMOUNT
     ) {
 
-        BillItems::where('ID', $ID)->where('BILL_ID', $BILL_ID)->where('ITEM_ID', $ITEM_ID)->update([
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'RATE' => $RATE,
-            'AMOUNT' => $AMOUNT,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT
-        ]);
+        BillItems::where('ID', $ID)
+            ->where('BILL_ID', $BILL_ID)
+            ->where('ITEM_ID', $ITEM_ID)
+            ->update([
+                'QUANTITY' => $QUANTITY,
+                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                'RATE' => $RATE,
+                'AMOUNT' => $AMOUNT,
+                'TAXABLE' => $TAXABLE,
+                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT' => $TAX_AMOUNT
+            ]);
     }
     public function ItemDelete(int $ID, int $BILL_ID)
     {
-        BillItems::where('ID', $ID)->where('BILL_ID', $BILL_ID)->delete();
+        BillItems::where('ID', $ID)
+            ->where('BILL_ID', $BILL_ID)
+            ->delete();
     }
     public function ItemView(int $BILL_ID)
     {
@@ -277,7 +283,7 @@ class BillingServices
         int $CLASS_ID
     ) {
         $LINE_NO = $this->getLine($BILL_ID, false) + 1;
-        $ID = $this->object->ObjectNextID('BILL_ITEMS');
+        $ID = $this->object->ObjectNextID('BILL_EXPENSES');
 
         BillExpenses::create([
             'ID' => $ID,
@@ -296,7 +302,6 @@ class BillingServices
     public function ExpenseUpdate(
         int $ID,
         int $BILL_ID,
-
         float $AMOUNT,
         bool $TAXABLE,
         float $TAXABLE_AMOUNT,
@@ -304,20 +309,24 @@ class BillingServices
         string $PARTICULARS,
         int $CLASS_ID
     ) {
-        BillExpenses::where('ID', $ID)->where('BILL_ID', $BILL_ID)->update([
-            'AMOUNT' => $AMOUNT,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT,
-            'PARTICULARS' => $PARTICULARS,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
-        ]);
+        BillExpenses::where('ID', $ID)
+            ->where('BILL_ID', $BILL_ID)
+            ->update([
+                'AMOUNT' => $AMOUNT,
+                'TAXABLE' => $TAXABLE,
+                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT' => $TAX_AMOUNT,
+                'PARTICULARS' => $PARTICULARS,
+                'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
+            ]);
     }
     public function ExpenseDelete(
         int $ID,
         int $BILL_ID,
     ) {
-        BillExpenses::where('ID', $ID)->where('BILL_ID', $BILL_ID)->delete();
+        BillExpenses::where('ID', $ID)
+            ->where('BILL_ID', $BILL_ID)
+            ->delete();
     }
     public function ExpenseView(int $BILL_ID)
     {
@@ -378,7 +387,7 @@ class BillingServices
                 ->orderBy('bill_expenses.LINE_NO', 'asc')
                 ->get();
             $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID);
-            
+
             foreach ($result as $list) {
                 Bill::where('ID', $ID)->update([
                     'AMOUNT' => $list['AMOUNT'],
@@ -445,22 +454,23 @@ class BillingServices
     }
     public function GetBillPaymentApplied(int $BILL_ID): float
     {
-        $paymentSum = CheckBills::query()
+        $result = CheckBills::query()
             ->select(\DB::raw('IFNULL(SUM(check_bills.AMOUNT_PAID), 0) AS pay'))
             ->where('check_bills.BILL_ID', '=', $BILL_ID)
             ->first();
-        return $paymentSum->pay;
+
+        return $result->pay;
     }
 
     public function GetBillCreditApplied(int $BILL_ID): float
     {
-        // $paymentSum = CreditMemoInvoices::query()
-        //     ->select(\DB::raw('IFNULL(SUM(credit_memo_invoices.AMOUNT_APPLIED), 0) AS pay'))
-        //     ->where('credit_memo_invoices.INVOICE_ID', '=', $BILL_ID)
-        //     ->first();
+        $result = BillCreditBills::query()
+            ->select(\DB::raw('IFNULL(SUM(bill_credit_bills.AMOUNT_APPLIED), 0) AS pay'))
+            ->where('bill_credit_bills.BILL_ID', '=', $BILL_ID)
+            ->first();
 
-        // return $paymentSum->pay;
-        return 0;
+        return $result->pay;
+
     }
     public function UpdateBalance(int $BILL_ID)
     {
@@ -499,9 +509,7 @@ class BillingServices
         if ($data) {
             return (float) $data->BALANCE_DUE;
         }
-
         return 0;
-
     }
     public function getBillListViaBillPayment(int $VENDOR_ID, int $LOCATION_ID, int $CHECK_ID)
     {
