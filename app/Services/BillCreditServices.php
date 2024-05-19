@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\BillCredit;
+use App\Models\BillCreditBills;
 use App\Models\BillCreditExpenses;
 use App\Models\BillCreditItems;
 use App\Models\Tax;
@@ -156,12 +157,12 @@ class BillCreditServices
     }
 
 
-    private function getLine(int $Id, bool $isItem): int
+    private function getLine(int $BILL_CREDIT_ID, bool $isItem): int
     {
         if ($isItem) {
-            return (int) BillCreditItems::where('BILL_CREDIT_ID', $Id)->max('LINE_NO');
+            return (int) BillCreditItems::where('BILL_CREDIT_ID', $BILL_CREDIT_ID)->max('LINE_NO');
         }
-        return (int) BillCreditExpenses::where('BILL_CREDIT_ID', $Id)->max('LINE_NO');
+        return (int) BillCreditExpenses::where('BILL_CREDIT_ID', $BILL_CREDIT_ID)->max('LINE_NO');
     }
 
     public function ItemStore(
@@ -347,9 +348,8 @@ class BillCreditServices
     public function isItemTab($BILL_CREDIT_ID): bool
     {
         $ItemCount = $this->getLine($BILL_CREDIT_ID, true);
-
         $AccountCount = $this->getLine($BILL_CREDIT_ID, false);
- 
+
         if ($ItemCount >= $AccountCount) {
             return true;
         }
@@ -404,7 +404,15 @@ class BillCreditServices
 
         return [];
     }
+    public function GetCreditApplied(int $BILL_CREDIT_ID): float
+    {
+        $paymentSum = BillCreditBills::query()
+            ->select(\DB::raw('IFNULL(SUM(bill_credit_bills.AMOUNT_APPLIED), 0) AS pay'))
+            ->where('bill_credit_bills.BILL_CREDIT_ID', '=', $BILL_CREDIT_ID)
+            ->first();
 
+        return $paymentSum->pay;
+    }
     public function getUpdateTaxItem(int $BILL_CREDIT_ID, int $TAX_ID)
     {
         $taxRate = (float) Tax::where('ID', $TAX_ID)->first()->RATE;
@@ -457,4 +465,86 @@ class BillCreditServices
         }
 
     }
+    private function UpdateCreditApplied(int $BILL_CREDIT_ID)
+    {
+        $TOTAL_APPLIED = (float) $this->GetCreditApplied($BILL_CREDIT_ID);
+
+        BillCredit::where('ID', $BILL_CREDIT_ID)
+            ->update([
+                'AMOUNT_APPLIED' => $TOTAL_APPLIED
+            ]);
+
+        if ($TOTAL_APPLIED > 0) {
+            $this->StatusUpdate($BILL_CREDIT_ID, 2);
+        } else {
+            $this->StatusUpdate($BILL_CREDIT_ID, 0);
+        }
+    }
+    public function BillCreditBillsStore(int $BILL_CREDIT_ID, int $BILL_ID, float $AMOUNT_APPLIED, ): int
+    {
+        $ID = $this->object->ObjectNextID('BILL_CREDIT_BILLS');
+        BillCreditBills::create([
+            'ID' => $ID,
+            'BILL_CREDIT_ID' => $BILL_CREDIT_ID,
+            'BILL_ID' => $BILL_ID,
+            'AMOUNT_APPLIED' => $AMOUNT_APPLIED
+        ]);
+        $this->UpdateCreditApplied($BILL_CREDIT_ID);
+        return $ID;
+    }
+    public function BillCreditBillExists(int $BILL_CREDIT_ID, int $BILL_ID): int
+    {
+        $data = BillCreditBills::where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->where('BILL_ID', $BILL_ID)
+            ->first();
+
+        if ($data) {
+            return $data->ID;
+        }
+        return 0;
+    }
+    public function BillCreditBillsUpdate(int $ID, int $BILL_CREDIT_ID, int $BILL_ID, float $AMOUNT_APPLIED)
+    {
+        BillCreditBills::where('ID', $ID)
+            ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->where('BILL_ID', $BILL_ID)
+            ->update([
+                'AMOUNT_APPLIED' => $AMOUNT_APPLIED
+            ]);
+
+        $this->UpdateCreditApplied($BILL_CREDIT_ID);
+    }
+    public function BillCreditBillsDelete(int $ID, int $BILL_CREDIT_ID, int $BILL_ID)
+    {
+        BillCreditBills::where('ID', $ID)
+            ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->where('BILL_ID', $BILL_ID)
+            ->delete();
+
+        $this->UpdateCreditApplied($BILL_CREDIT_ID);
+    }
+    public function BillCreditBillsList(int $BILL_CREDIT_ID)
+    {
+        $result = BillCreditBills::query()
+            ->select([
+                'bill_credit_bills.ID',
+                'bill_credit_bills.BILL_ID',
+                'i.DATE',
+                'i.CODE',
+                'i.AMOUNT',
+                'i.BALANCE_DUE',
+                'bill_credit_bills.AMOUNT_APPLIED'
+            ])
+            ->leftJoin('bill as i', 'i.ID', '=', 'bill_credit_bills.BILL_ID')
+            ->where('bill_credit_bills.BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->get();
+
+        return $result;
+    }
+
+
+
+
+
+
 }

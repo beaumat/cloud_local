@@ -36,7 +36,6 @@ class BillCreditForm extends Component
     public float $INPUT_TAX_AMOUNT;
     public float $AMOUNT;
     public float $AMOUNT_APPLIED;
-
     public $vendorList = [];
     public $locationList = [];
     public $taxList = [];
@@ -74,8 +73,6 @@ class BillCreditForm extends Component
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
     }
-
-
     public function LoadDropdown()
     {
         $this->vendorList = $this->contactServices->getList(0);

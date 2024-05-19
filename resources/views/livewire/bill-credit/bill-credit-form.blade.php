@@ -35,8 +35,6 @@
                                                     :options="$vendorList" :zero="true" :isDisabled=true
                                                     wire:model='VENDOR_ID' />
                                             @endif
-
-
                                         </div>
                                         <div class="col-md-6">
                                             <div class="row">
@@ -66,7 +64,6 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-md-4">
-
                                                     @if ($Modify)
                                                         <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
                                                             :options="$taxList" :zero="false" :isDisabled=false
@@ -77,7 +74,6 @@
                                                             wire:model='INPUT_TAX_ID' />
                                                     @endif
                                                 </div>
-
                                                 <div class="col-md-8">
                                                     @if ($Modify)
                                                         <livewire:text-input name="NOTES" titleName="Notes"
@@ -177,20 +173,8 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-6 text-left">
-                                    @if ($STATUS == 0)
-                                        <button class="btn btn-sm btn-success" wire:click='getSubmit'
-                                            wire:confirm="Are you sure you want to submit?"
-                                            @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            Submit
-                                        </button>
-                                    @endif
+                                    @livewire('BillCredit.BillListPromp', ['BILL_CREDIT_ID' => $ID, 'VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED])
 
-                                    @if ($STATUS == 2)
-                                        <button class="btn btn-sm btn-danger" wire:click='getVoid'
-                                            wire:confirm="Are you sure you want to void?">
-                                            Void
-                                        </button>
-                                    @endif
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
@@ -217,7 +201,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
