@@ -90,7 +90,7 @@ class SalesOrderListPromp extends Component
     }
     public function render()
     {
-        $this->dataList = $this->salesOrderServices->SalesOrderToInvoiceList($this->CUSTOMER_ID, $this->LOCATION_ID);
+        $this->dataList = $this->salesOrderServices->SalesOrderListAvailable($this->CUSTOMER_ID, $this->LOCATION_ID);
 
         return view('livewire.invoice.sales-order-list-promp');
     }

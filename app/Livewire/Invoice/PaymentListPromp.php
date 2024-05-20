@@ -19,7 +19,6 @@ class PaymentListPromp extends Component
     {
         $this->invoiceServices = $invoiceServices;
     }
-
     public function openModal()
     {
         $this->showModal = true;

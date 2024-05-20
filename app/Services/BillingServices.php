@@ -8,6 +8,7 @@ use App\Models\BillItems;
 use App\Models\CheckBills;
 use App\Models\Tax;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class BillingServices
 {
@@ -554,5 +555,26 @@ class BillingServices
             ->where('bill.LOCATION_ID', $LOCATION_ID)
             ->where('bill.BALANCE_DUE', '>', 0)
             ->get();
+    }
+
+    public function PaymentHistory($BILL_ID)
+    {
+        $results = DB::table(DB::raw('
+        (
+            SELECT \'Pay Bills\' AS `TYPE`, check_bills.`ID`, check_bills.`CHECK_ID` AS MAIN_ID, check_bills.`BILL_ID`, check_bills.AMOUNT_PAID as `AMOUNT_APPLIED`, `check`.`RECORDED_ON`,`check`.CODE,`check`.DATE
+            FROM check_bills  
+            INNER JOIN `check` ON `check`.`ID` = check_bills.`CHECK_ID`
+            UNION 
+            SELECT \'Bill Credits\' AS `TYPE`, bill_credit_bills.`ID`, bill_credit_bills.`BILL_CREDIT_ID` AS MAIN_ID, bill_credit_bills.`BILL_ID`, bill_credit_bills.`AMOUNT_APPLIED`, bill_credit.`RECORDED_ON`,bill_credit.CODE,bill_credit.DATE
+            FROM bill_credit_bills 
+            INNER JOIN bill_credit ON bill_credit.`ID` = bill_credit_bills.`BILL_CREDIT_ID`
+        ) AS pay'))
+            ->select('pay.TYPE', 'pay.ID', 'pay.MAIN_ID', 'pay.BILL_ID', 'pay.AMOUNT_APPLIED', 'pay.RECORDED_ON', 'pay.CODE', 'pay.DATE')
+            ->where('pay.BILL_ID', '=', $BILL_ID)
+            ->orderBy('pay.RECORDED_ON')
+            ->get();
+
+
+        return $results;
     }
 }

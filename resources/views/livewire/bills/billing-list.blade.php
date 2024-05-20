@@ -60,7 +60,7 @@
                                         <th class="col-1">Tax</th>
                                         <th class="col-1">Status</th>
 
-                                        <th class="text-center col-1">
+                                        <th class="text-center bg-success col-1">
                                             <a href="{{ route('vendorsbills_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>

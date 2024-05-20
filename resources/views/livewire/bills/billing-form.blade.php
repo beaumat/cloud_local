@@ -37,29 +37,29 @@
                                             @endif
 
                                             <div class="row">
+                                                <div class="col-md-4">
+                                                    @if ($Modify)
+                                                        <livewire:select-option name="PAYMENT_TERMS_ID"
+                                                            :isDisabled=false titleName="Payment Terms"
+                                                            :options="$paymentTermList" :zero="false"
+                                                            wire:model='PAYMENT_TERMS_ID' />
+                                                    @else
+                                                        <livewire:select-option name="PAYMENT_TERMS_ID" :isDisabled=true
+                                                            titleName="Payment Terms" :options="$paymentTermList"
+                                                            :zero="false" wire:model='PAYMENT_TERMS_ID' />
+                                                    @endif
 
+                                                </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify)
                                                         <livewire:date-input name="DUE_DATE" :isDisabled=false
-                                                            titleName="Date Due" wire:model='DUE_DATE' />
+                                                            titleName="Dua Date" wire:model='DUE_DATE' />
                                                     @else
                                                         <livewire:date-input name="DUE_DATE" :isDisabled=true
-                                                            titleName="Date Due" wire:model='DUE_DATE' />
-                                                    @endif
-
-                                                </div>
-                                                <div class="col-md-4">
-
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
-                                                            :options="$taxList" :zero="false" :isDisabled=false
-                                                            wire:model='INPUT_TAX_ID' />
-                                                    @else
-                                                        <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
-                                                            :options="$taxList" :zero="false" :isDisabled=true
-                                                            wire:model='INPUT_TAX_ID' />
+                                                            titleName="Due Date" wire:model='DUE_DATE' />
                                                     @endif
                                                 </div>
+
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -90,18 +90,18 @@
                                                     @endif
                                                 </div>
 
-                                                <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID"
-                                                            :isDisabled=false titleName="Payment Terms"
-                                                            :options="$paymentTermList" :zero="false"
-                                                            wire:model='PAYMENT_TERMS_ID' />
-                                                    @else
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID" :isDisabled=true
-                                                            titleName="Payment Terms" :options="$paymentTermList"
-                                                            :zero="false" wire:model='PAYMENT_TERMS_ID' />
-                                                    @endif
 
+                                                <div class="col-md-4">
+
+                                                    @if ($Modify)
+                                                        <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
+                                                            :options="$taxList" :zero="false" :isDisabled=false
+                                                            wire:model='INPUT_TAX_ID' />
+                                                    @else
+                                                        <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
+                                                            :options="$taxList" :zero="false" :isDisabled=true
+                                                            wire:model='INPUT_TAX_ID' />
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-8">
                                                     @if ($Modify)
@@ -202,7 +202,16 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-6 text-left">
-                                    @if ($STATUS == 0)
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID])
+                                        </div>
+                                        <div class="col-md-2">
+                                            @livewire('Bills.BillPaymentModal', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID])
+                                        </div>
+                                    </div>
+
+                                    {{-- @if ($STATUS == 0)
                                         <button class="btn btn-sm btn-success" wire:click='getSubmit'
                                             wire:confirm="Are you sure you want to submit?"
                                             @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
@@ -215,7 +224,7 @@
                                             wire:confirm="Are you sure you want to void?">
                                             Void
                                         </button>
-                                    @endif
+                                    @endif --}}
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
@@ -227,13 +236,11 @@
                                         <div class="col-md-4 text-right">
                                             <label class="text-sm">Total:</label>
                                             <label class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
-
                                         </div>
                                         <div class="col-md-4 text-right">
                                             <label class="text-sm">Balance:</label>
                                             <label
                                                 class="text-primary text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
-
                                         </div>
                                     </div>
                                 </div>

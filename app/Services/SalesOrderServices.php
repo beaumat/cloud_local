@@ -412,7 +412,7 @@ class SalesOrderServices
         }
         return [];
     }
-    public function SalesOrderToInvoiceList(int $CUSTOMER_ID, int $LOCATION_ID)
+    public function SalesOrderListAvailable(int $CUSTOMER_ID, int $LOCATION_ID)
     {
         $result = SalesOrder::query()
             ->select(['ID', 'CODE', 'DATE', 'DATE_NEEDED', 'AMOUNT'])

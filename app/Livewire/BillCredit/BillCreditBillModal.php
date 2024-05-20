@@ -121,11 +121,10 @@ class BillCreditBillModal extends Component
             }
         }
 
-        $this->updateCreditAmount();
+        $this->updateCreditAmount();        
     }
     public function updateCreditAmount()
     {
-
         Redirect::route('vendorsbill_credit_edit', ['id' => $this->BILL_CREDIT_ID]);
     }
 

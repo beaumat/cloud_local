@@ -141,6 +141,7 @@ class CreditMemoInvoiceModal extends Component
     public function render()
     {
         $this->invoiceList = $this->invoiceServices->getInvoiceListViaCreditMemo($this->CUSTOMER_ID, $this->LOCATION_ID, $this->CREDIT_MEMO_ID);
+        
         return view('livewire.credit-memo.credit-memo-invoice-modal');
     }
 }

@@ -152,10 +152,17 @@ class PurchaseOrderServices
             })
             ->orderBy('ID', 'desc')
             ->paginate($perPage);
-    
+
         return $result;
     }
-
+    public function UpdateItemBills(int $ID, int $QTY, bool $CLOSED)
+    {
+        PurchaseOrderItems::where('ID', $ID)
+            ->update([
+                'RECEIVED_QTY' => $QTY,
+                'CLOSED' => $CLOSED
+            ]);
+    }
     private function getLine($Id): int
     {
         return (int) PurchaseOrderItems::where('PO_ID', $Id)->max('LINE_NO');
@@ -316,5 +323,45 @@ class PurchaseOrderServices
                     ]);
             }
         }
+    }
+    public function GetItemList(int $PO_ID)
+    {
+        $result = PurchaseOrderItems::query()
+            ->select([
+                'purchase_order_items.ID',
+                'purchase_order_items.ITEM_ID',
+                'purchase_order_items.DESCRIPTION',
+                'purchase_order_items.QUANTITY',
+                'purchase_order_items.UNIT_ID',
+                'purchase_order_items.UNIT_BASE_QUANTITY',
+                'purchase_order_items.RATE',
+                'purchase_order_items.RATE_TYPE',
+                'purchase_order_items.AMOUNT',
+                'purchase_order_items.TAXABLE',
+                'purchase_order_items.TAXABLE_AMOUNT',
+                'purchase_order_items.TAX_AMOUNT',
+                'purchase_order_items.RECEIVED_QTY',
+                'purchase_order_items.CLOSED',
+                'item.GL_ACCOUNT_ID',
+                'item.COGS_ACCOUNT_ID',
+                'item.ASSET_ACCOUNT_ID',
+            ])
+            ->join('item', 'item.ID', '=', 'purchase_order_items.ITEM_ID')
+            ->where('PO_ID', $PO_ID)
+            ->get();
+
+        return $result;
+    }
+    public function PurchaseOrderAvailableList(int $VENDOR_ID, int $LOCATION_ID)
+    {
+        $result = PurchaseOrder::query()
+            ->select(['ID', 'CODE', 'DATE', 'DATE_EXPECTED', 'AMOUNT'])
+            ->where('VENDOR_ID', $VENDOR_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('STATUS', 0)
+            ->orderBy('ID', 'asc')
+            ->get();
+
+        return $result;
     }
 }

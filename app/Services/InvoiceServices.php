@@ -61,7 +61,7 @@ class InvoiceServices
     }
     public function getInvoiceListViaCreditMemo(int $CUSTOMER_ID, int $LOCATION_ID, int $CREDIT_MEMO_ID)
     {
-        return Invoice::query()
+        $result = Invoice::query()
             ->select([
                 'invoice.ID',
                 'invoice.DATE',
@@ -79,6 +79,8 @@ class InvoiceServices
             ->where('invoice.LOCATION_ID', $LOCATION_ID)
             ->where('invoice.BALANCE_DUE', '>', 0)
             ->get();
+
+            return $result;
     }
     public function get(int $ID): object
     {
