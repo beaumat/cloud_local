@@ -263,41 +263,41 @@ class BillCreditForm extends Component
         }
         $this->Modify = false;
     }
-    public function getSubmit()
-    {
-        try {
-            $this->billCreditServices->StatusUpdate($this->ID, 2);
-            $BILL = $this->billCreditServices->get($this->ID);
-            if ($BILL) {
-                $this->getInfo($BILL);
-                $this->Modify = false;
-                return;
-            }
+    // public function getSubmit()
+    // {
+    //     try {
+    //         $this->billCreditServices->StatusUpdate($this->ID, 2);
+    //         $BILL = $this->billCreditServices->get($this->ID);
+    //         if ($BILL) {
+    //             $this->getInfo($BILL);
+    //             $this->Modify = false;
+    //             return;
+    //         }
 
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-        }
+    //     } catch (\Exception $e) {
+    //         $errorMessage = 'Error occurred: ' . $e->getMessage();
+    //         session()->flash('error', $errorMessage);
+    //     }
 
-    }
-    public function getVoid()
-    {
-        try {
+    // }
+    // public function getVoid()
+    // {
+    //     try {
 
-            $this->billCreditServices->StatusUpdate($this->ID, 7);
-            $BILL = $this->billCreditServices->get($this->ID);
+    //         $this->billCreditServices->StatusUpdate($this->ID, 7);
+    //         $BILL = $this->billCreditServices->get($this->ID);
 
-            if ($BILL) {
-                $this->getInfo($BILL);
-                $this->Modify = false;
-                return;
-            }
+    //         if ($BILL) {
+    //             $this->getInfo($BILL);
+    //             $this->Modify = false;
+    //             return;
+    //         }
 
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-        }
-    }
+    //     } catch (\Exception $e) {
+    //         $errorMessage = 'Error occurred: ' . $e->getMessage();
+    //         session()->flash('error', $errorMessage);
+    //     }
+    // }
     #[On('clear-alert')]
     public function clearAlert()
     {

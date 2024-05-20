@@ -8,11 +8,9 @@ use Livewire\Component;
 
 class BillPaymentModal extends Component
 {
-   
+
     #[Reactive]
     public int $BILL_ID;
-    #[Reactive]
-    public float $AMOUNT;
     public $showModal = false;
     private $billingServices;
     public $dataList = [];
@@ -20,7 +18,6 @@ class BillPaymentModal extends Component
     {
         $this->billingServices = $billingServices;
     }
-
     public function openModal()
     {
         $this->showModal = true;
@@ -32,7 +29,7 @@ class BillPaymentModal extends Component
     public function render()
     {
         $this->dataList = $this->billingServices->PaymentHistory($this->BILL_ID);
-        
+
         return view('livewire.bills.bill-payment-modal');
     }
 }

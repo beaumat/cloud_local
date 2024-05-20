@@ -12,7 +12,8 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('vendorsbills') }}"> Bills </a>
+                                    <a class="text-white" href="{{ route('companybuild_assembly') }}"> Build Assembly
+                                    </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)
@@ -27,37 +28,52 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             @if ($Modify)
-                                                <livewire:select-option name="VENDOR_ID" titleName="Vendor"
-                                                    :options="$vendorList" :zero="true" :isDisabled=false
-                                                    wire:model='VENDOR_ID' />
+                                                <livewire:select-option name="ASSEMBLY_ITEM_ID"
+                                                    titleName="Assembly Item" :options="$itemList" :zero="true"
+                                                    :isDisabled=false wire:model.live='ASSEMBLY_ITEM_ID' />
                                             @else
-                                                <livewire:select-option name="VENDOR_ID" titleName="Vendor"
-                                                    :options="$vendorList" :zero="true" :isDisabled=true
-                                                    wire:model='VENDOR_ID' />
+                                                <livewire:select-option name="ASSEMBLY_ITEM_ID"
+                                                    titleName="Assembly Item" :options="$itemList" :zero="true"
+                                                    :isDisabled=true wire:model.live='ASSEMBLY_ITEM_ID' />
                                             @endif
 
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     @if ($Modify)
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID"
-                                                            :isDisabled=false titleName="Payment Terms"
-                                                            :options="$paymentTermList" :zero="false"
-                                                            wire:model='PAYMENT_TERMS_ID' />
+                                                        <livewire:number-input name="QUANTITY"
+                                                            titleName="Quantity to Build" :isDisabled=false
+                                                            wire:model='QUANTITY' />
                                                     @else
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID" :isDisabled=true
-                                                            titleName="Payment Terms" :options="$paymentTermList"
-                                                            :zero="false" wire:model='PAYMENT_TERMS_ID' />
+                                                        <livewire:number-input name="QUANTITY"
+                                                            titleName="Quantity to Build" :isDisabled=true
+                                                            wire:model='QUANTITY' />
                                                     @endif
-
                                                 </div>
+
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:date-input name="DUE_DATE" :isDisabled=false
-                                                            titleName="Dua Date" wire:model='DUE_DATE' />
-                                                    @else
-                                                        <livewire:date-input name="DUE_DATE" :isDisabled=true
-                                                            titleName="Due Date" wire:model='DUE_DATE' />
-                                                    @endif
+                                                    <div class="row mt-2">
+                                                        <div class="col-md-12">
+                                                            <label for="UNIT_ID" class="text-xs "> Unit of
+                                                                Measure</label>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <select @if (!$Modify) disabled @endif
+                                                                wire:model='UNIT_ID' name="UNIT_ID" id='UNIT_ID'
+                                                                class="form-control form-control-sm ">
+                                                                @foreach ($unitList as $list)
+                                                                    @if ($list->ID != null)
+                                                                        <option value="{{ $list->ID }}">
+                                                                            {{ $list->SYMBOL }}
+                                                                        </option>
+                                                                    @endif
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+
                                                 </div>
 
                                             </div>
@@ -91,19 +107,7 @@
                                                 </div>
 
 
-                                                <div class="col-md-4">
-
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
-                                                            :options="$taxList" :zero="false" :isDisabled=false
-                                                            wire:model='INPUT_TAX_ID' />
-                                                    @else
-                                                        <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
-                                                            :options="$taxList" :zero="false" :isDisabled=true
-                                                            wire:model='INPUT_TAX_ID' />
-                                                    @endif
-                                                </div>
-                                                <div class="col-md-8">
+                                                <div class="col-md-12">
                                                     @if ($Modify)
                                                         <livewire:text-input name="NOTES" titleName="Notes"
                                                             :isDisabled=false wire:model='NOTES' :vertical="false" />
@@ -116,6 +120,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+
                             </div>
                             <div class="card-footer">
                                 <div class="row">
@@ -125,6 +131,7 @@
                                                 <button type="submit" class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
+
                                                 @if ($ID > 0)
                                                     <button type="button" wire:click='updateCancel'
                                                         class="btn btn-sm btn-danger"><i class="fa fa-ban"
@@ -141,13 +148,15 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 0)
-                                            <a id="new" title="Create" href="{{ route('vendorsbills_create') }}"
+                                            <a id="new" title="Create"
+                                                href="{{ route('vendorspurchase_order_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
                                     </div>
                                 </div>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -161,39 +170,21 @@
                         <div class="card-header p-0 border-bottom-0">
                             <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link @if ($tab == 'item') active @endif"
-                                        id="custom-tabs-four-item-tab" wire:click="SelectTab('item')"
-                                        data-toggle="pill" href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link @if ($tab == 'account') active @endif"
-                                        id="custom-tabs-four-account-tab" wire:click="SelectTab('account')"
-                                        data-toggle="pill" href="#custom-tabs-four-account" role="tab"
-                                        aria-controls="custom-tabs-four-account" aria-selected="true">Expenses</a>
+                                    <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
+                                        href="#custom-tabs-four-item" role="tab"
+                                        aria-controls="custom-tabs-four-item" aria-selected="true">Components</a>
                                 </li>
                             </ul>
                         </div>
                         <div class="card-body">
                             <div class="tab-content" id="custom-tabs-four-tabContent">
-                                <div class="tab-pane fade @if ($tab == 'item') show active @endif "
-                                    id="custom-tabs-four-item" role="tabpanel">
+                                <div class="tab-pane fade show active " id="custom-tabs-four-item" role="tabpanel"
+                                    aria-labelledby="custom-tabs-four-item-tab">
                                     <div class="row"
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('Bills.BillingFormItems', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade @if ($tab == 'account') show active @endif "
-                                    id="custom-tabs-four-account" role="tabpanel">
-                                    <div class="row"
-                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        <div class="col-md-12"
-                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('Bills.BillingFormAccounts', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
+                                            {{-- @livewire('PurchaseOrder.PurchaseOrderFormItems', ['PO_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID]) --}}
                                         </div>
                                     </div>
                                 </div>
@@ -202,15 +193,6 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-6 text-left">
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID])
-                                        </div>
-                                        <div class="col-md-2">
-                                            @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID])
-                                        </div>
-                                    </div>
-
                                     {{-- @if ($STATUS == 0)
                                         <button class="btn btn-sm btn-success" wire:click='getSubmit'
                                             wire:confirm="Are you sure you want to submit?"
@@ -228,19 +210,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <div class="col-md-4 text-right">
-                                            <label class="text-sm">Input Tax:</label>
+                                        <div class="col-md-8 text-right">
+                                            {{-- <label class="text-sm">Input Tax:</label>
                                             <label
-                                                class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label>
+                                                class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label> --}}
                                         </div>
                                         <div class="col-md-4 text-right">
-                                            <label class="text-sm">Total:</label>
+                                            <label class="text-sm">Amount:</label>
                                             <label class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
-                                        </div>
-                                        <div class="col-md-4 text-right">
-                                            <label class="text-sm">Balance:</label>
-                                            <label
-                                                class="text-primary text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
+
                                         </div>
                                     </div>
                                 </div>

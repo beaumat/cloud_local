@@ -344,18 +344,10 @@ class InvoiceServices
                 DB::commit();
             } catch (\Exception $e) {
                 //throw $th;
-
                 DB::rollBack();
-
                 dd($e);
             }
-
         }
-
-
-
-
-
     }
     public function ItemDelete(int $ID, int $INVOICE_ID)
     {

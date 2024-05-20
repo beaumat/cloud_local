@@ -1,35 +1,32 @@
 <?php
 
-namespace App\Livewire\BillCredit;
+namespace App\Livewire\BuildAssembly;
 
-use App\Services\BillCreditServices;
+use App\Services\BuildAssemblyServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-
-#[Title('Bill Credits')]
-class BillCreditList extends Component
+#[Title('Build Assembly')]
+class BuildAssemblyList extends Component
 {
     use WithPagination;
     public int $perPage = 15;
     protected $paginationTheme = 'bootstrap';
-
     public $search = '';
     public int $locationid;
     public $locationList = [];
-    private $billCreditServices;
+    private $buildAssemblyServices;
     private $locationServices;
     private $userServices;
-
     public function boot(
-        BillCreditServices $billCreditServices,
+        BuildAssemblyServices $buildAssemblyServices,
         LocationServices $locationServices,
         UserServices $userServices
     ) {
-        $this->billCreditServices = $billCreditServices;
+        $this->buildAssemblyServices = $buildAssemblyServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
@@ -42,7 +39,7 @@ class BillCreditList extends Component
     public function delete($id)
     {
         try {
-            $this->billCreditServices->Delete($id);
+            $this->buildAssemblyServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
 
         } catch (\Exception $e) {
@@ -52,7 +49,7 @@ class BillCreditList extends Component
     }
     public function render()
     {
-        $dataList = $this->billCreditServices->Search($this->search, $this->locationid, $this->perPage);       
-        return view('livewire.bill-credit.bill-credit-list', ['dataList' => $dataList]);
+        $dataList = $this->buildAssemblyServices->Search($this->search, $this->locationid, $this->perPage);
+        return view('livewire.build-assembly.build-assembly-list', ['dataList' => $dataList]);
     }
 }

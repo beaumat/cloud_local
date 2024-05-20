@@ -173,8 +173,8 @@
                         </li> --}}
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+                <li class="nav-item {{ request()->is('company*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('company*') ? 'active ' : '' }}">
                         <i class="nav-icon fa fa-building"></i>
                         <p>
                             Company
@@ -183,7 +183,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('companybuild_assembly') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Build Assembly</p>
                             </a>

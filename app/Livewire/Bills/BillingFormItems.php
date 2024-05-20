@@ -290,7 +290,7 @@ class BillingFormItems extends Component
         $this->editItemId = null;
     }
 
-    public function deleteItem($Id)
+    public function deleteItem(int $Id)
     {
         try {
             $this->billingServices->ItemDelete(

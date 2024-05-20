@@ -18,6 +18,10 @@ class ItemServices
     {
         return items::where('ID', $ID)->first();
     }
+    public function AssemblyItem()
+    {
+        return items::where('TYPE', 1)->where('INACTIVE', 0)->get();
+    }
     public function getByVendor(bool $isCode)
     {
         if ($isCode) {

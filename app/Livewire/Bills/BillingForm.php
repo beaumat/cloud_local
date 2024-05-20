@@ -112,7 +112,7 @@ class BillingForm extends Component
         $this->PAYMENT_TERMS_ID = $data->PAYMENT_TERMS_ID ? $data->PAYMENT_TERMS_ID : 0;
         $this->CLASS_ID = $data->CLASS_ID ? $data->CLASS_ID : 0;
         $this->NOTES = $data->NOTES;
-        $this->AMOUNT = $data->AMOUNT;
+        $this->AMOUNT = $data->AMOUNT ?? 0;
         $this->BALANCE_DUE = $data->BALANCE_DUE ?? 0;
         $this->STATUS = $data->STATUS;
         $this->INPUT_TAX_ID = $data->INPUT_TAX_ID > 0 ? $data->INPUT_TAX_ID : 0;

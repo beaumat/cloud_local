@@ -6,6 +6,8 @@ use App\Livewire\BillPayments\BillPaymentForm;
 use App\Livewire\BillPayments\BillPaymentList;
 use App\Livewire\Bills\BillingForm;
 use App\Livewire\Bills\BillingList;
+use App\Livewire\BuildAssembly\BuildAssemblyForm;
+use App\Livewire\BuildAssembly\BuildAssemblyList;
 use App\Livewire\ChartOfAccount\ChartOfAccountForm;
 use App\Livewire\ChartOfAccount\ChartOfAccountList;
 use App\Livewire\CreditMemo\CreditMemoForm;
@@ -17,6 +19,8 @@ use App\Livewire\Doctor\DoctorForm;
 use App\Livewire\Doctor\DoctorList;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
+use App\Livewire\GeneralJournal\GeneralJournalForm;
+use App\Livewire\GeneralJournal\GeneralJournalList;
 use App\Livewire\Hemodialysis\HemoForm;
 use App\Livewire\Hemodialysis\HemoList;
 use App\Livewire\Hemodialysis\PrintForm;
@@ -209,9 +213,25 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', BillCreditForm::class)->name('bill_credit_create');
             Route::get('/{id}/edit', BillCreditForm::class)->name('bill_credit_edit');
         });
-        
+
         Route::prefix('/withholding-tax')->group(function () {
         });
+    });
+
+    Route::prefix('/company')->name('company')->group(function () {
+        Route::prefix('/build-assembly')->group(function () {
+            Route::get('/', BuildAssemblyList::class)->name('build_assembly');
+            Route::get('/create', BuildAssemblyForm::class)->name('build_assembly_create');
+            Route::get('/{id}/edit', BuildAssemblyForm::class)->name('build_assembly_edit');
+        });
+
+        Route::prefix('/general-journal')->group(function () {
+            Route::get('/', GeneralJournalList::class)->name('general_journal');
+            Route::get('/create', GeneralJournalForm::class)->name('general_journal_create');
+            Route::get('/{id}/edit', GeneralJournalForm::class)->name('general_journal_edit');
+        });
+
+
     });
 
 

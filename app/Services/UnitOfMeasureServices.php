@@ -52,17 +52,17 @@ class UnitOfMeasureServices
                 ->get();
         }
     }
-    public function ItemUnit($ITEM_ID)
+    public function ItemUnit(int $ITEM_ID)
     {
         $result = Items::query()
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'item.BASE_UNIT_ID')
             ->select(['u.ID', 'u.SYMBOL'])
-            ->where('item.ID',  $ITEM_ID)
+            ->where('item.ID', $ITEM_ID)
             ->unionAll(
                 ItemUnits::query()
                     ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'item_units.UNIT_ID')
                     ->select(['u.ID', 'u.SYMBOL'])
-                    ->where('item_units.ITEM_ID',  $ITEM_ID)
+                    ->where('item_units.ITEM_ID', $ITEM_ID)
             )
             ->get();
 

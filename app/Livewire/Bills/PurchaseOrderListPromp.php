@@ -38,16 +38,11 @@ class PurchaseOrderListPromp extends Component
     {
         try {
             //code...
-
             $po = $this->purchaseOrderServices->get($PO_ID);
-
             if ($po) {
-
-                $itemList = $this->purchaseOrderServices->GetItemList($PO_ID);
-                
+                $itemList = $this->purchaseOrderServices->GetItemList($PO_ID);      
                 DB::beginTransaction();
                 foreach ($itemList as $list) {
-
                     $this->billingServices->ItemStore(
                         $this->BILL_ID,
                         $list->ITEM_ID,
@@ -58,15 +53,13 @@ class PurchaseOrderListPromp extends Component
                         $list->RATE_TYPE ?? 0,
                         $list->AMOUNT ?? 0,
                         0,
-                        $list->COGS_ACCOUNT_ID,
+                        $list->ASSET_ACCOUNT_ID,
                         $list->ID,
                         $list->TAXABLE ?? false,
                         $list->TAXABLE_AMOUNT ?? 0,
                         $list->TAX_AMOUNT ?? 0,
                         0
-
                     );
-
                     $this->purchaseOrderServices->UpdateItemBills($list->ID, $list->QUANTITY, true);
                 }
 
@@ -74,7 +67,6 @@ class PurchaseOrderListPromp extends Component
                 DB::commit();
                 $getResult = $this->billingServices->ReComputed($this->BILL_ID);
                 $this->dispatch('update-amount', result: $getResult);
-
                 $this->closeModal();
             }
 

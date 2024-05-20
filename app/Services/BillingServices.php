@@ -160,7 +160,6 @@ class BillingServices
                     ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
             })
             ->orderBy('ID', 'desc')
-            ->limit($this->object->RecordLimit())
             ->paginate($perPage);
 
         return $result;
@@ -460,7 +459,7 @@ class BillingServices
             ->where('check_bills.BILL_ID', '=', $BILL_ID)
             ->first();
 
-        return $result->pay;
+        return (float) $result->pay ?? 0;
     }
 
     public function GetBillCreditApplied(int $BILL_ID): float
@@ -470,8 +469,7 @@ class BillingServices
             ->where('bill_credit_bills.BILL_ID', '=', $BILL_ID)
             ->first();
 
-        return $result->pay;
-
+            return (float) $result->pay ?? 0;
     }
     public function UpdateBalance(int $BILL_ID)
     {
@@ -573,7 +571,6 @@ class BillingServices
             ->where('pay.BILL_ID', '=', $BILL_ID)
             ->orderBy('pay.RECORDED_ON')
             ->get();
-
 
         return $results;
     }
