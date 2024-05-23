@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\BuildAssembly;
 use App\Models\BuildAssemblyItems;
+use App\Models\ItemComponents;
+use Illuminate\Support\Facades\DB;
 
 class BuildAssemblyServices
 {
@@ -54,20 +56,26 @@ class BuildAssemblyServices
             'STATUS' => 0,
         ]);
 
+        $newAmount = (float) $this->AutoCreateComponent($ASSEMBLY_ITEM_ID, $ID, $QUANTITY);
+        BuildAssembly::where('ID', $ID)->update(['AMOUNT' => $newAmount]);
+
+
         return (int) $ID;
     }
 
     public function Update(
         int $ID,
         string $CODE,
+        int $ASSEMBLY_ITEM_ID,
         float $QUANTITY,
         int $BATCH_ID,
         int $UNIT_ID,
         int $UNIT_BASE_QUANTITY,
         string $NOTES,
-    ) {
+    ): float {
 
         BuildAssembly::where('ID', $ID)
+            ->where('ASSEMBLY_ITEM_ID', $ASSEMBLY_ITEM_ID)
             ->update([
                 'CODE' => $CODE,
                 'QUANTITY' => $QUANTITY,
@@ -76,9 +84,14 @@ class BuildAssemblyServices
                 'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
                 'NOTES' => $NOTES
             ]);
+
+        $newAmount = (float) $this->AutoUpdateComponent($ASSEMBLY_ITEM_ID, $ID, $QUANTITY);
+        BuildAssembly::where('ID', $ID)->update(['AMOUNT' => $newAmount]);
+        return $newAmount;
     }
     public function Delete(int $ID)
     {
+        BuildAssemblyItems::where('BUILD_ASSEMBLY_ID', $ID)->delete();
         BuildAssembly::where('ID', $ID)->delete();
     }
     public function StatusUpdate(int $ID, int $STATUS)
@@ -119,6 +132,55 @@ class BuildAssemblyServices
 
         return $result;
     }
+    public function AutoCreateComponent(int $ASSEMBLY_ITEM_ID, int $BUILD_ASSEMBLY_ID, float $QUANTITY): float
+    {
+        $TOTAL = 0;
+        $result = ItemComponents::query()
+            ->select([
+                'item_components.COMPONENT_ID',
+                'item_components.QUANTITY',
+                'item_components.RATE',
+                'item.ASSET_ACCOUNT_ID'
+            ])
+            ->join('item', 'item.ID', '=', 'item_components.COMPONENT_ID')
+            ->where('item_components.ITEM_ID', $ASSEMBLY_ITEM_ID)
+            ->where('item.INACTIVE', 0)
+            ->get();
+
+        foreach ($result as $item) {
+            $QTY = (float) $item->QUANTITY * $QUANTITY;
+            $AMOUNT = (float) ($item->RATE * $item->QUANTITY) * $QUANTITY;
+            $TOTAL = $TOTAL + $AMOUNT;
+            $this->ComponentStore($BUILD_ASSEMBLY_ID, $item->COMPONENT_ID, $QTY, $AMOUNT, 0, $item->ASSET_ACCOUNT_ID);
+        }
+
+        return $TOTAL;
+    }
+    public function AutoUpdateComponent(int $ASSEMBLY_ITEM_ID, int $BUILD_ASSEMBLY_ID, float $QUANTITY): float
+    {
+        $TOTAL = 0;
+        $result = BuildAssemblyItems::query()
+            ->select([
+                'build_assembly_items.ID',
+                'build_assembly_items.ITEM_ID',
+                DB::raw('(select QUANTITY from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ' ) as QUANTITY'),
+                DB::raw('(select RATE from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ' ) as RATE'),
+            ])
+            ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
+            ->where('build_assembly_items.BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
+            ->get();
+
+        foreach ($result as $item) {
+
+            $QTY = (float) $item->QUANTITY * $QUANTITY;
+            $AMOUNT = (float) ($item->RATE * $item->QUANTITY) * $QUANTITY;
+            $TOTAL = $TOTAL + $AMOUNT;
+            $this->ComponentUpdate($item->ID, $BUILD_ASSEMBLY_ID, $item->ITEM_ID, $QTY, $AMOUNT);
+        }
+
+        return $TOTAL;
+
+    }
 
     public function ComponentStore(int $BUILD_ASSEMBLY_ID, int $ITEM_ID, float $QUANTITY, float $AMOUNT, int $BATCH_ID, int $ASSET_ACCOUNT_ID)
     {
@@ -138,29 +200,36 @@ class BuildAssemblyServices
     {
         BuildAssemblyItems::where('ID', $ID)
             ->where('BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
-            ->where('ITEM_ID', $ITEM_ID)->update([
-                    'QUANTITY' => $QUANTITY,
-                    'AMOUNT' => $AMOUNT
-                ]);
+            ->where('ITEM_ID', $ITEM_ID)
+            ->update([
+                'QUANTITY' => $QUANTITY,
+                'AMOUNT' => $AMOUNT
+            ]);
     }
     public function ComponentDelete(int $ID)
     {
         BuildAssemblyItems::where('ID', $ID)->delete();
     }
 
-    public function ComponentList(int $BUILD_ASSEMBLY_ID) {
+    public function ComponentList(int $BUILD_ASSEMBLY_ID)
+    {
 
         $result = BuildAssemblyItems::query()
-        ->select(['build_assembly_items.ID',
-        'build_assembly_items.QUANTITY',
-        'build_assembly_items.AMOUNT',
-        'build_assembly_items.BATCH_ID',
-        'i.DESCRIPTION as ITEM_NAME',
-        'build_assembly_items.ID'])
-        ->join('item as i','i.ID','=','build_assembly_items.ITEM_ID')
-        ->where('build_assembly_items.BUILD_ASSEMBLY_ID',$BUILD_ASSEMBLY_ID)
-        ->get();
-        // to be continue
+            ->select([
+                'build_assembly_items.ID',
+                'build_assembly_items.QUANTITY',
+                'build_assembly_items.AMOUNT',
+                'build_assembly_items.BATCH_ID',
+                'item.DESCRIPTION',
+                'item.CODE',
+                'build_assembly_items.ID'
+            ])
+            ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
+            ->where('build_assembly_items.BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
+            ->get();
+
+
+        return $result;
     }
 
 }

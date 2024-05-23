@@ -184,7 +184,9 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            {{-- @livewire('PurchaseOrder.PurchaseOrderFormItems', ['PO_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID]) --}}
+
+                                            @livewire('BuildAssembly.BuildAssemblyFormItems', ['BUILD_ASSEMBLY_ID' => $ID, 'ASSEMBLY_ITEM_ID' => $ASSEMBLY_ITEM_ID, 'LOCATION_ID' => $LOCATION_ID])
+
                                         </div>
                                     </div>
                                 </div>
@@ -193,30 +195,15 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-6 text-left">
-                                    {{-- @if ($STATUS == 0)
-                                        <button class="btn btn-sm btn-success" wire:click='getSubmit'
-                                            wire:confirm="Are you sure you want to submit?"
-                                            @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            Submit
-                                        </button>
-                                    @endif
 
-                                    @if ($STATUS == 2)
-                                        <button class="btn btn-sm btn-danger" wire:click='getVoid'
-                                            wire:confirm="Are you sure you want to void?">
-                                            Void
-                                        </button>
-                                    @endif --}}
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
                                         <div class="col-md-8 text-right">
-                                            {{-- <label class="text-sm">Input Tax:</label>
-                                            <label
-                                                class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label> --}}
+
                                         </div>
                                         <div class="col-md-4 text-right">
-                                            <label class="text-sm">Amount:</label>
+                                            <label class="text-sm">Total:</label>
                                             <label class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
 
                                         </div>

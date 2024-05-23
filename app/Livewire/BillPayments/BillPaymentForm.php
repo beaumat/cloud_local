@@ -52,7 +52,7 @@ class BillPaymentForm extends Component
     ) {
         $this->billPaymentServices = $billPaymentServices;
         $this->contactServices = $contactServices;
-        $this->locationService = $locationServices;
+        $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->dateServices = $dateServices;
         $this->accountServices = $accountServices;

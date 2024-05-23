@@ -41,7 +41,6 @@ class CreditMemoForm extends Component
     public int $STATUS;
     public int $STATUS_DATE;
     public string $STATUS_DESCRIPTION;
-
     public $contactList = [];
     public $locationList = [];
     public $taxList = [];
@@ -152,7 +151,6 @@ class CreditMemoForm extends Component
         $this->CLASS_ID = 0;
         $this->NOTES = '';
         $this->AMOUNT = 0;
-        $this->BALANCE_DUE = 0;
         $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
         $this->STATUS = 0;
         $this->OUTPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('OutputTaxId');

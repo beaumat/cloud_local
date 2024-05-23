@@ -10,6 +10,7 @@ use App\Services\LocationServices;
 use App\Services\SystemSettingServices;
 use App\Services\UnitOfMeasureServices;
 use App\Services\UserServices;
+use DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -27,10 +28,11 @@ class BuildAssemblyForm extends Component
     public int $ASSET_ACCOUNT_ID;
     public float $QUANTITY;
     public float $AMOUNT;
-    public int $BATCH_ID;
     public int $UNIT_ID;
+    public int $BATCH_ID;
     public int $UNIT_BASE_QUANTITY;
     public int $STATUS;
+    public string $STATUS_DESCRIPTION;
     public $itemList = [];
     public $locationList = [];
     public $unitList = [];
@@ -81,18 +83,16 @@ class BuildAssemblyForm extends Component
         $this->ID = $data->ID;
         $this->CODE = $data->CODE;
         $this->DATE = $data->DATE;
-        $this->DATE_EXPECTED = $data->DATE_EXPECTED ? $data->DATE_EXPECTED : '';
         $this->LOCATION_ID = $data->LOCATION_ID;
         $this->ASSEMBLY_ITEM_ID = $data->ASSEMBLY_ITEM_ID;
         $this->ASSET_ACCOUNT_ID = $data->ASSET_ACCOUNT_ID ? $data->ASSET_ACCOUNT_ID : 0;
-        $this->updatedUnitId();
         $this->NOTES = $data->NOTES ?? '';
-        $this->AMOUNT = $data->AMOUNT;
-        $this->QUANTITY = $data->QUANTITY;
-        $this->BATCH_ID = $data->BITCH_ID;
-        $this->UNIT_ID = $data->UNIT_ID;
-        $this->UNIT_BASE_QUANTITY = $data->UNIT_BASE_QUANTITY;
-        $this->STATUS = $data->STATUS;
+        $this->AMOUNT = $data->AMOUNT ?? 0;
+        $this->BATCH_ID = $data->BATCH_ID ?? 0;
+        $this->QUANTITY = $data->QUANTITY ?? 1;
+        $this->UNIT_ID = $data->UNIT_ID ?? 0;
+        $this->UNIT_BASE_QUANTITY = $data->UNIT_BASE_QUANTITY ?? 1;
+        $this->STATUS = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
@@ -134,24 +134,26 @@ class BuildAssemblyForm extends Component
     {
         try {
 
-            $this->validate(
-                [
-                    'ASSEMBLY_ITEM_ID' => 'required|not_in:0',
-                    'CODE' => 'required|max:20|unique:build_assembly,code,' . $this->ID,
-                    'DATE' => 'required',
-                    'LOCATION_ID' => 'required',
-                    'QUANTITY' => 'required|not_in:0',
-                ],
-                [],
-                [
-                    'ASSEMBLY_ITEM_ID' => 'Aseembly Item',
-                    'CODE' => 'Reference No.',
-                    'DATE' => 'Date',
-                    'LOCATION_ID' => 'Location',
-                    'QUANTITY' => 'Quantity'
-                ]
-            );
+
             if ($this->ID == 0) {
+
+                $this->validate(
+                    [
+                        'ASSEMBLY_ITEM_ID' => 'required|not_in:0',
+                        'DATE' => 'required',
+                        'LOCATION_ID' => 'required',
+                        'QUANTITY' => 'required|not_in:0',
+                    ],
+                    [],
+                    [
+                        'ASSEMBLY_ITEM_ID' => 'Aseembly Item',
+                        'DATE' => 'Date',
+                        'LOCATION_ID' => 'Location',
+                        'QUANTITY' => 'Quantity'
+                    ]
+                );
+
+                DB::beginTransaction();
                 $this->ID = $this->buildAssemblyServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -165,22 +167,46 @@ class BuildAssemblyForm extends Component
                     $this->ASSET_ACCOUNT_ID
                 );
 
+                DB::commit();
                 return Redirect::route('companybuild_assembly_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
             } else {
-                $this->buildAssemblyServices->Update(
+
+                $this->validate(
+                    [
+                        'ASSEMBLY_ITEM_ID' => 'required|not_in:0',
+                        'CODE' => 'required|max:20|unique:build_assembly,code,' . $this->ID,
+                        'DATE' => 'required',
+                        'LOCATION_ID' => 'required',
+                        'QUANTITY' => 'required|not_in:0',
+                    ],
+                    [],
+                    [
+                        'ASSEMBLY_ITEM_ID' => 'Aseembly Item',
+                        'CODE' => 'Reference No.',
+                        'DATE' => 'Date',
+                        'LOCATION_ID' => 'Location',
+                        'QUANTITY' => 'Quantity'
+                    ]
+                );
+
+                DB::beginTransaction();
+                $this->AMOUNT = $this->buildAssemblyServices->Update(
                     $this->ID,
                     $this->CODE,
+                    $this->ASSEMBLY_ITEM_ID,
                     $this->QUANTITY,
                     $this->BATCH_ID,
                     $this->UNIT_ID,
                     $this->UNIT_BASE_QUANTITY,
                     $this->NOTES
                 );
+                DB::commit();
                 session()->flash('message', 'Successfully updated');
             }
             $this->updateCancel();
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

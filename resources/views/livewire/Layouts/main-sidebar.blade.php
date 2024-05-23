@@ -154,13 +154,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('vendorsbill_payment') }}" class="nav-link {{ request()->is('vendors/bill-payments*') ? 'active' : '' }}">
+                            <a href="{{ route('vendorsbill_payment') }}"
+                                class="nav-link {{ request()->is('vendors/bill-payments*') ? 'active' : '' }}">
                                 <i class="fas fa-money-bill nav-icon"></i>
                                 <p>Pay Bills</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{  route('vendorsbill_credit') }}" class="nav-link {{ request()->is('vendors/bill-credits*') ? 'active' : '' }}">
+                            <a href="{{ route('vendorsbill_credit') }}"
+                                class="nav-link {{ request()->is('vendors/bill-credits*') ? 'active' : '' }}">
                                 <i class="fas fa-credit-card nav-icon"></i>
                                 <p>Bill Credits</p>
                             </a>
@@ -183,26 +185,27 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('companybuild_assembly') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                            <a href="{{ route('companybuild_assembly') }}"
+                                class="nav-link {{ request()->is('company/build-assembly*') ? 'active' : '' }}">
+                                <i class="fa fa-cube nav-icon"></i>
                                 <p>Build Assembly</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-table nav-icon"></i>
                                 <p>General Journal</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-adjust nav-icon"></i>
                                 <p>Inventory Adjustment</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="pages/UI/sliders.html" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-truck nav-icon"></i>
                                 <p>Stock Transfer</p>
                             </a>
                         </li>
