@@ -215,6 +215,7 @@ class BuildAssemblyForm extends Component
     public function updateCancel()
     {
         $BA = $this->buildAssemblyServices->get($this->ID);
+        
         if ($BA) {
             $this->getInfo($BA);
         }

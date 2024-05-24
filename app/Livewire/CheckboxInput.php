@@ -11,10 +11,12 @@ class CheckboxInput extends Component
     public $value = null;
     public string $name;
     public string $titleName;
-    public function mount($name, $titleName)
+    public bool $isDisabled;
+    public function mount($name, $titleName,  $isDisabled = false)
     {
         $this->titleName = $titleName;
         $this->name = $name;
+        $this->isDisabled = $isDisabled;
     }
     public function render()
     {

@@ -43,7 +43,7 @@ class BuildAssemblyServices
             'ID' => $ID,
             'RECORDED_ON' => $this->dateServices->Now(),
             'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $this->dateServices->NowDate(),
+            'DATE' => $DATE,
             'LOCATION_ID' => $LOCATION_ID,
             'ASSEMBLY_ITEM_ID' => $ASSEMBLY_ITEM_ID,
             'QUANTITY' => $QUANTITY,
@@ -57,6 +57,7 @@ class BuildAssemblyServices
         ]);
 
         $newAmount = (float) $this->AutoCreateComponent($ASSEMBLY_ITEM_ID, $ID, $QUANTITY);
+        
         BuildAssembly::where('ID', $ID)->update(['AMOUNT' => $newAmount]);
 
 
@@ -222,7 +223,9 @@ class BuildAssemblyServices
                 'build_assembly_items.BATCH_ID',
                 'item.DESCRIPTION',
                 'item.CODE',
-                'build_assembly_items.ID'
+                'build_assembly_items.ID',
+                DB::raw(' 0 as OTY_OHAND')
+                
             ])
             ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
             ->where('build_assembly_items.BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)

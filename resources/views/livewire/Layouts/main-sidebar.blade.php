@@ -185,6 +185,22 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
+                            <a href="{{ route('companystock_transfer') }}"
+                                class="nav-link {{ request()->is('company/stock-transfer*') ? 'active' : '' }}">
+                                <i class="fa fa-truck nav-icon"></i>
+                                <p>Stock Transfer</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('companyinventory_adjustment') }}"
+                                class="nav-link {{ request()->is('company/inventory-adjustment*') ? 'active' : '' }}">
+                                <i class="fa fa-adjust nav-icon"></i>
+                                <p>Inventory Adjustment</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a href="{{ route('companybuild_assembly') }}"
                                 class="nav-link {{ request()->is('company/build-assembly*') ? 'active' : '' }}">
                                 <i class="fa fa-cube nav-icon"></i>
@@ -192,24 +208,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('companygeneral_journal') }}"
+                                class="nav-link  {{ request()->is('company/general-journal*') ? 'active' : '' }}">
                                 <i class="fa fa-table nav-icon"></i>
                                 <p>General Journal</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fa fa-adjust nav-icon"></i>
-                                <p>Inventory Adjustment</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/UI/sliders.html" class="nav-link">
-                                <i class="fa fa-truck nav-icon"></i>
-                                <p>Stock Transfer</p>
-                            </a>
-                        </li>
-
                     </ul>
                 </li>
                 <li class="nav-item">

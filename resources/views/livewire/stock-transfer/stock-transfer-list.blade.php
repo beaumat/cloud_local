@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('companygeneral_journal') }}"> General Journal </a></h5>
+                    <h5 class="m-0"><a href="{{ route('companystock_transfer') }}"> Stock Transfer </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -43,6 +43,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -50,12 +51,15 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-2">Ref No.</th>
-                                        <th class="col-2">Date</th>   
-                                        <th class="col-3">Location</th>
-                                          <th class="col-2">Status</th>
-                                        <th class="text-center bg-success col-2">
-                                            <a href="{{ route('companygeneral_journal_create') }}" class="text-white">
+                                        <th class="col-1">Ref No.</th>
+                                        <th class="col-1">Date</th>
+                                        <th class="col-1">Transfer To</th>
+                                        <th class="col-1">Prepared By</th>
+                                        <th class="col-1">Location</th>
+                                        <th class="col-1">Amount</th>
+                                        <th class="col-1">Status</th>
+                                        <th class="text-center bg-success col-1">
+                                            <a href="{{ route('companystock_transfer_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
@@ -64,17 +68,19 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('companygeneral_journal_edit', ['id' => $list->ID]) }}">
+                                                <a
+                                                    href="{{ route('companystock_transfer_edit', ['id' => $list->ID]) }}">
                                                     {{ $list->CODE }}
                                                 </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                             
+                                            <td> {{ $list->TRANSFER_TO }}</td>
+                                            <td> {{ $list->PREPARED_BY }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
-            
+                                            <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('companygeneral_journal_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('companystock_transfer_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>

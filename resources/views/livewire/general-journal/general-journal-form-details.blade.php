@@ -1,54 +1,59 @@
 <div>
-    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+    @livewire('alert-layout', [
+        'errors' => $errors->any() ? $errors->all() : '',
+        'message' => session('message'),
+        'error' => session('error'),
+    ])
 
     <table class="table table-sm table-bordered table-hover">
         <thead class="text-xs bg-sky">
             <tr>
                 <th class="col-1">Account Code</th>
                 <th class="col-3">Account Name</th>
-                <th class="col-1">Amount</th>
-                <th class="col-1 text-center">Tax</th>
+                <th class="col-1">Debit</th>
+                <th class="col-1">Credit</th>
                 <th class="col-3">Particular</th>
                 <th class="col-2">Class</th>
-                @if ($STATUS == $openStatus)
+                @if ($STATUS == 0)
                     <th class="text-center col-1">Action</th>
                 @endif
+
             </tr>
         </thead>
         <tbody class="text-xs">
-            @foreach ($expenses as $list)
+            @foreach ($dataList as $list)
                 <tr>
                     <td>{{ $list->CODE }}</td>
-                    <td>{{ $list->NAME }}</td>
+                    <td>{{ $list->ACCOUNT_DESCRIPTION }}</td>
                     <td class="text-right">
-                        @if ($editExpensesId === $list->ID)
-                            <input type="number" class="form-control form-control-sm" wire:model='lineAmount'
-                                name="lineAmount" />
+                        @if ($editId === $list->ID)
+                            <input type="number" class="form-control form-control-sm" wire:model='editDebit'
+                                name="editDebit" />
                         @else
-                            {{ number_format($list->AMOUNT, 2) }}
+                            {{ number_format($list->DEBIT, 2) }}
                         @endif
                     </td>
-                    <td class="text-center">
-                        @if ($editExpensesId === $list->ID)
-                            <input type="checkbox" class="text-lg mt-2" wire:model='lineTaxable' name="lineTax" />
+                    <td class="text-right">
+                        @if ($editId === $list->ID)
+                            <input type="number" class="form-control form-control-sm" wire:model='editCredit'
+                                name="editCredit" />
                         @else
-                            @if ($list->TAXABLE)
-                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                            @endif
+                            {{ number_format($list->CREDIT, 2) }}
                         @endif
                     </td>
+
                     <td>
-                        @if ($editExpensesId === $list->ID)
-                            <input wire:model='lineParticulars' name="partiuclaredit" type="text"
+                        @if ($editId === $list->ID)
+                            <input wire:model='editNotes' name="editNotes" type="text"
                                 class="form-control form-control-sm" />
                         @else
-                            {{ $list->PARTICULARS }}
+                            {{ $list->NOTES }}
                         @endif
 
                     </td>
                     <td>
-                        @if ($editExpensesId === $list->ID)
-                            <select wire:model='lineClassId' name="CLASS_ID_Edit"
+                        @if ($editId === $list->ID)
+                            <select wire:model='editNotes' name="editNotes"
                                 class="text-sm form-control form-control-sm">
                                 <option value="0"></option>
                                 @foreach ($classList as $listitem)
@@ -59,24 +64,23 @@
                             {{ $list->CLASS_NAME }}
                         @endif
                     </td>
-                    @if ($STATUS == $openStatus)
+                    @if ($STATUS == 0)
                         <td class="text-center">
-                            @if ($editExpensesId === $list->ID)
-                                <button title="Update" id="updatebtn" wire:click="updateExpenses({{ $list->ID }})"
+                            @if ($editId === $list->ID)
+                                <button title="Update" id="updatebtn" wire:click="update({{ $list->ID }})"
                                     class="text-success btn btn-sm btn-link">
                                     <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>
-                                <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelExpenses()"
+                                <button title="Cancel" id="cancelbtn" href="#" wire:click="cancal()"
                                     class="text-warning btn btn-sm btn-link">
                                     <i class="fas fa-ban" aria-hidden="true"></i>
                                 </button>
                             @else
-                                <button title="Edit" id="editbtn"
-                                    wire:click="editExpenses( {{ $list->ID }}, {{ $list->AMOUNT }} ,{{ $list->TAXABLE }},'{{ $list->PARTICULARS }}',{{ $list->CLASS_ID > 0 ? $list->CLASS_ID : 0 }})"
+                                <button title="Edit" id="editbtn" wire:click="edit( {{ $list->ID }})"
                                     class="text-info btn btn-sm btn-link">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
-                                <button title="Delete" id="deletebtn" wire:click='deleteExpenses({{ $list->ID }})'
+                                <button title="Delete" id="deletebtn" wire:click='delete({{ $list->ID }})'
                                     wire:confirm="Are you sure you want to delete this?"
                                     class="text-danger btn btn-sm btn-link">
                                     <i class="fas fa-times" aria-hidden="true"></i>
@@ -88,8 +92,8 @@
             @endforeach
 
             {{-- INSERT FORM --}}
-            @if ($STATUS == $openStatus)
-                <form wire:submit.prevent='saveExpenses' wire:loading.attr='disabled'>
+            @if ($STATUS == 0)
+                <form wire:submit.prevent='save' wire:loading.attr='disabled'>
                     <tr>
                         <td>
                             @if ($saveSuccess)
@@ -129,17 +133,18 @@
                                 @endif
                             @endif
                         </td>
+
                         <td>
-                            <input type="number" class="form-control form-control-sm mt-2 text-right"
-                                name="AMOUNT" wire:model='AMOUNT' />
+                            <input type="number" class="form-control form-control-sm mt-2 text-right" name="DEBIT"
+                                wire:model='DEBIT' />
                         </td>
-                        <td class="text-center">
-                            <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
-                                @if ($ACCOUNT_ID == 0) disabled @endif />
+                        <td>
+                            <input type="number" class="form-control form-control-sm mt-2 text-right" name="CREDIT"
+                                wire:model='CREDIT' />
                         </td>
                         <td class="text-left">
-                            <input type="text" class="form-control form-control-sm mt-2" wire:model='PARTICULARS'
-                                name="PARTICULARS" />
+                            <input type="text" class="form-control form-control-sm mt-2" wire:model='NOTES'
+                                name="NOTES" />
                         </td>
                         <td>
                             @if ($saveSuccess)
@@ -155,7 +160,6 @@
                                         :withLabel="false" />
                                 @endif
                             @endif
-
                         </td>
                         <td>
                             <div class="mt-2">
@@ -169,16 +173,29 @@
                                 </div>
                             </div>
                         </td>
-
                     </tr>
-
                 </form>
+                <tr>
+                    <td></td>
+                    <td class='text-right'>
+                        <label class=' text-primary text-sm'>Total:</label>
+                    </td>
+                    <td class='text-right'>
+                        <label class='text-primary text-sm'>{{ number_format($TOTAL_DEBIT, 2) }}</label>
+                    </td>
+                    <td class='text-right'>
+                        <label class='text-primary text-sm'>{{ number_format($TOTAL_CREDIT, 2) }}</label>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
             @endif
 
         </tbody>
 
     </table>
-    @if ($STATUS == $openStatus)
+    @if ($STATUS == 0)
         <livewire:custom-check-box name="codeBaseAcct" titleName="Use choose account code"
             wire:model.live='codeBase' />
     @endif

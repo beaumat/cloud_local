@@ -53,8 +53,9 @@
                                                 <div class="col-md-4">
                                                     <div class="row mt-2">
                                                         <div class="col-md-12">
-                                                            <label for="UNIT_ID" class="text-xs "> Unit of
-                                                                Measure</label>
+                                                            <label for="UNIT_ID" class="text-xs ">
+                                                                Unit of Measure
+                                                            </label>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <select @if (!$Modify) disabled @endif
@@ -71,11 +72,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <div class="col-md-4">
 
                                                 </div>
-
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -92,7 +91,6 @@
                                                         <livewire:text-input name="Code" titleName="Reference No."
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
-
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify && $AMOUNT == 0)
@@ -105,8 +103,6 @@
                                                             wire:model='LOCATION_ID' />
                                                     @endif
                                                 </div>
-
-
                                                 <div class="col-md-12">
                                                     @if ($Modify)
                                                         <livewire:text-input name="NOTES" titleName="Notes"
@@ -120,8 +116,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="card-footer">
                                 <div class="row">
@@ -156,7 +150,6 @@
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>

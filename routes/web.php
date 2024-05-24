@@ -26,6 +26,8 @@ use App\Livewire\Hemodialysis\HemoList;
 use App\Livewire\Hemodialysis\PrintForm;
 use App\Livewire\HemodialysisMachine\HemoMachineForm;
 use App\Livewire\HemodialysisMachine\HemoMachineList;
+use App\Livewire\InventoryAdjustment\InventoryAdjustmentForm;
+use App\Livewire\InventoryAdjustment\InventoryAdjustmentList;
 use App\Livewire\Invoice\InvoiceForm;
 use App\Livewire\Invoice\InvoiceList;
 use App\Livewire\Option\OptionSettings;
@@ -50,6 +52,8 @@ use App\Livewire\Shift\ShiftForm;
 use App\Livewire\Shift\ShiftList;
 use App\Livewire\Statement\Statement;
 use App\Livewire\StatementOfAccount\SoaModule;
+use App\Livewire\StockTransfer\StockTransferForm;
+use App\Livewire\StockTransfer\StockTransferList;
 use App\Livewire\TaxCredit\TaxCreditList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
@@ -231,27 +235,19 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', GeneralJournalForm::class)->name('general_journal_edit');
         });
 
+        Route::prefix('/inventory-adjustment')->group(function () {
+            Route::get('/', InventoryAdjustmentList::class)->name('inventory_adjustment');
+            Route::get('/create', InventoryAdjustmentForm::class)->name('inventory_adjustment_create');
+            Route::get('/{id}/edit', InventoryAdjustmentForm::class)->name('inventory_adjustment_edit');
+        });
 
+        Route::prefix('/stock-transfer')->group(function () {
+            Route::get('/', StockTransferList::class)->name('stock_transfer');
+            Route::get('/create', StockTransferForm::class)->name('stock_transfer_create');
+            Route::get('/{id}/edit', StockTransferForm::class)->name('stock_transfer_edit');
+        });
     });
 
-
-    Route::prefix('/customers')->name('customers')->group(function () {
-        Route::prefix('/sales-order')->group(function () {
-
-        });
-        Route::prefix('/invoice')->group(function () {
-        });
-        Route::prefix('/payment')->group(function () {
-        });
-        Route::prefix('/statement')->group(function () {
-        });
-        Route::prefix('/credit-memo')->group(function () {
-        });
-        Route::prefix('/tax-credit')->group(function () {
-        });
-        // Route::prefix('/sales-recept')->group(function () {
-        // });
-    });
 
 
     Route::prefix('/maintenance')->name('maintenance')->group(function () {

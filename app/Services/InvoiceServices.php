@@ -80,7 +80,7 @@ class InvoiceServices
             ->where('invoice.BALANCE_DUE', '>', 0)
             ->get();
 
-            return $result;
+        return $result;
     }
     public function get(int $ID): object
     {

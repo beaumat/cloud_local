@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Livewire\GeneralJournal;
+namespace App\Livewire\StockTransfer;
 
-use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
+use App\Services\StockTransferServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title("General Journal")]
-class GeneralJournalList extends Component
+#[Title('Stock Transfer')]
+class StockTransferList extends Component
 {
     use WithPagination;
     public int $perPage = 15;
@@ -18,15 +18,15 @@ class GeneralJournalList extends Component
     public $search = '';
     public int $locationid;
     public $locationList = [];
-    private $generalJournalServices;
+    private $stockTransferServices;
     private $locationServices;
     private $userServices;
     public function boot(
-        GeneralJournalServices $generalJournalServices,
+        StockTransferServices $stockTransferServices,
         LocationServices $locationServices,
         UserServices $userServices
     ) {
-        $this->generalJournalServices = $generalJournalServices;
+        $this->stockTransferServices = $stockTransferServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
@@ -39,20 +39,17 @@ class GeneralJournalList extends Component
     public function delete($id)
     {
         try {
-            \DB::beginTransaction();
-            $this->generalJournalServices->Delete($id);
-            \DB::commit();
+            $this->stockTransferServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
 
         } catch (\Exception $e) {
-            \DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
     public function render()
     {
-        $dataList = $this->generalJournalServices->Search($this->search, $this->locationid, $this->perPage);
-        return view('livewire.general-journal.general-journal-list', ['dataList' => $dataList]);
+        $dataList = $this->stockTransferServices->Search($this->search, $this->locationid, $this->perPage);
+        return view('livewire.stock-transfer.stock-transfer-list', ['dataList' => $dataList]);
     }
 }

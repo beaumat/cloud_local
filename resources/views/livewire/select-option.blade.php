@@ -1,4 +1,4 @@
-<div wire:ignore class="mt-2">
+<div wire:ignore class="mt-2 text-sm">
     @if ($vertical)
         <div class="row">
             <div class="col-3">
@@ -11,9 +11,7 @@
                     @if ($isDisabled) disabled @endif>
                     @if ($zero)
                         <option value="0">
-
                             &nbsp;
-
                         </option>
                     @endif
                     @foreach ($options as $option)
@@ -31,7 +29,6 @@
                     @endforeach
                 </select>
             </div>
-
         </div>
     @else
         @if ($withLabel)

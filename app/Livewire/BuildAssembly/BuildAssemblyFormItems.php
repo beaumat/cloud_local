@@ -8,7 +8,6 @@ use Livewire\Component;
 
 class BuildAssemblyFormItems extends Component
 {
-
     #[Reactive]
     public int $BUILD_ASSEMBLY_ID;
     #[Reactive]
@@ -17,7 +16,6 @@ class BuildAssemblyFormItems extends Component
     public int $ASSEMBLY_ITEM_ID;
 
     private $buildAssemblyService;
-
     public function boot(BuildAssemblyServices $buildAssemblyServices)
     {
         $this->buildAssemblyService = $buildAssemblyServices;
