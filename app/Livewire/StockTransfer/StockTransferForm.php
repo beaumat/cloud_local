@@ -2,6 +2,7 @@
 
 namespace App\Livewire\StockTransfer;
 
+use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
@@ -30,6 +31,7 @@ class StockTransferForm extends Component
     public $transferList = [];
     public $contactList = [];
     public bool $Modify;
+    public bool $transferReset = false;
     private $stockTransferServices;
     private $locationServices;
     private $userServices;
@@ -37,23 +39,38 @@ class StockTransferForm extends Component
     public int $STATUS;
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
-
+    private $contactServices;
     public function boot(
         StockTransferServices $stockTransferServices,
         LocationServices $locationServices,
         UserServices $userServices,
         DateServices $dateServices,
-        DocumentStatusServices $documentStatusServices
+        DocumentStatusServices $documentStatusServices,
+        ContactServices $contactServices
     ) {
         $this->stockTransferServices = $stockTransferServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->dateServices = $dateServices;
         $this->documentStatusServices = $documentStatusServices;
+        $this->contactServices = $contactServices;
     }
     public function LoadDropdown()
     {
         $this->locationList = $this->locationServices->getList();
+        $this->contactList = $this->contactServices->getList(2);
+    }
+    public function updatedLocationId()
+    {
+        $this->transferList = $this->locationServices->getListExcept($this->LOCATION_ID);
+        $this->dispatch('clear-transfer');
+    }
+    #[On('clear-transfer')]
+    public function clearTransfer()
+    {
+        $this->TRANSFER_TO_ID = 0;
+        $this->transferReset = $this->transferReset ? false : true;
+
     }
     public function posted()
     {
@@ -86,14 +103,17 @@ class StockTransferForm extends Component
         $this->CODE = $data->CODE;
         $this->DATE = $data->DATE;
         $this->LOCATION_ID = $data->LOCATION_ID;
+        $this->transferList = $this->locationServices->getListExcept($this->LOCATION_ID);
         $this->NOTES = $data->NOTES ?? '';
         $this->TRANSFER_TO_ID = $data->TRANSFER_TO_ID ?? 0;
+        $this->transferReset = $this->transferReset ? false : true;
         $this->AMOUNT = $data->AMOUNT ?? 0;
         $this->RETAIL_VALUE = $data->RETAIL_VALUE ?? 0;
         $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
         $this->ACCOUNT_ID = $data->ACCOUNT_ID ?? 0;
         $this->STATUS = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+
     }
     public function mount($id = null)
     {
@@ -115,9 +135,11 @@ class StockTransferForm extends Component
         $this->CODE = '';
         $this->DATE = $this->dateServices->NowDate();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->transferList = $this->locationServices->getListExcept($this->LOCATION_ID);
         $this->TRANSFER_TO_ID = 0;
         $this->AMOUNT = 0;
         $this->RETAIL_VALUE = 0;
+
         $this->PREPARED_BY_ID = 0;
         $this->NOTES = '';
 
@@ -152,10 +174,11 @@ class StockTransferForm extends Component
                     ]
                 );
 
+                \DB::beginTransaction();
 
                 $this->ID = $this->stockTransferServices->Store(
-                    $this->DATE,
                     $this->CODE,
+                    $this->DATE,
                     $this->LOCATION_ID,
                     $this->TRANSFER_TO_ID,
                     $this->NOTES,
@@ -163,7 +186,7 @@ class StockTransferForm extends Component
                     $this->ACCOUNT_ID
 
                 );
-
+                \DB::commit();
                 return Redirect::route('companystock_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
             } else {
@@ -186,7 +209,7 @@ class StockTransferForm extends Component
                     ]
                 );
 
-
+                \DB::beginTransaction();
                 $this->stockTransferServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -194,10 +217,12 @@ class StockTransferForm extends Component
                     $this->NOTES,
                     $this->PREPARED_BY_ID
                 );
+                \DB::commit();
                 session()->flash('message', 'Successfully updated');
             }
             $this->updateCancel();
         } catch (\Exception $e) {
+            \DB::rollback();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

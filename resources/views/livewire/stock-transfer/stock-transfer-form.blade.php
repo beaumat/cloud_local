@@ -30,25 +30,43 @@
                                             <div class='row'>
                                                 <div class="col-md-8">
                                                     @if ($Modify)
-                                                        <livewire:select-option name="TRANSFER_TO_ID" titleName="Transfer To"
-                                                            :options="$transferList" :zero="false" :isDisabled=false
-                                                            wire:model='TRANSFER_TO_ID' />
+                                                        @if ($transferReset)
+                                                            <livewire:select-option name="TRANSFER_TO_ID1"
+                                                                titleName="Transfer To" :options="$transferList"
+                                                                :zero="true" :isDisabled=false
+                                                                wire:model='TRANSFER_TO_ID' />
+                                                        @else
+                                                            <livewire:select-option name="TRANSFER_TO_ID2"
+                                                                titleName="Transfer To" :options="$transferList"
+                                                                :zero="true" :isDisabled=false
+                                                                wire:model='TRANSFER_TO_ID' />
+                                                        @endif
                                                     @else
-                                                        <livewire:select-option name="TRANSFER_TO_ID" titleName="Transfer To"
-                                                            :options="$transferList" :zero="false" :isDisabled=true
-                                                            wire:model='TRANSFER_TO_ID' />
+                                                        @if ($transferReset)
+                                                            <livewire:select-option name="TRANSFER_TO_ID3"
+                                                                titleName="Transfer To" :options="$transferList"
+                                                                :zero="true" :isDisabled=true
+                                                                wire:model='TRANSFER_TO_ID' />
+                                                        @else
+                                                            <livewire:select-option name="TRANSFER_TO_ID4"
+                                                                titleName="Transfer To" :options="$transferList"
+                                                                :zero="true" :isDisabled=true
+                                                                wire:model='TRANSFER_TO_ID' />
+                                                        @endif
+
                                                     @endif
                                                 </div>
                                                 <div class="col-md-12">
                                                     @if ($Modify)
-                                                    <livewire:select-option name="PREPARED_BY_ID" titleName="Prepared by"
-                                                        :options="$transferList" :zero="false" :isDisabled=false
-                                                        wire:model='TRANSFER_TO_ID' />
-                                                @else
-                                                    <livewire:select-option name="PREPARED_BY_ID" titleName="Prepared by"
-                                                        :options="$transferList" :zero="false" :isDisabled=true
-                                                        wire:model='TRANSFER_TO_ID' />
-                                                @endif
+                                                        <livewire:select-option name="PREPARED_BY_ID"
+                                                            titleName="Prepared by" :options="$contactList" :zero="true"
+                                                            :isDisabled=false wire:model='PREPARED_BY_ID' />
+                                                    @else
+                                                        <livewire:select-option name="PREPARED_BY_ID"
+                                                            titleName="Prepared by" :options="$contactList"
+                                                            :zero="true" :isDisabled=true
+                                                            wire:model='PREPARED_BY_ID' />
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -71,11 +89,11 @@
                                                     @if ($Modify)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
-                                                            wire:model='LOCATION_ID' />
+                                                            wire:model.live='LOCATION_ID' />
                                                     @else
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=true
-                                                            wire:model='LOCATION_ID' />
+                                                            wire:model.live='LOCATION_ID' />
                                                     @endif
                                                 </div>
                                                 <div class="col-md-12">
@@ -121,7 +139,7 @@
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0)
                                             <a id="new" title="Create"
-                                                href="{{ route('companygeneral_journal_create') }}"
+                                                href="{{ route('companystock_transfer_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
                                     </div>
@@ -156,7 +174,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            {{-- @livewire('GeneralJournal.GeneralJournalFormDetails', ['GENERAL_JOURNAL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS]) --}}
+                                            @livewire('StockTransfer.StockTransferFormItems', ['STOCK_TREANSFER_ID' => $ID, 'STATUS' => $STATUS])
                                         </div>
                                     </div>
                                 </div>

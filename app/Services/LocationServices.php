@@ -15,6 +15,15 @@ class LocationServices
     {
         return Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
     }
+    public function getListExcept($id)
+    {
+        return Locations::query()
+            ->select(['ID', 'NAME'])
+            ->where('INACTIVE', '0')
+            ->where('ID', '<>', $id)
+            ->get();
+
+    }
     public function getPesonel($LOC_ID)
     {
         return Locations::query()
