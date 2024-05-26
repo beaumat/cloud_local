@@ -9,14 +9,13 @@ use App\Models\PaymentInvoices;
 use App\Models\SalesOrderItems;
 use App\Models\Tax;
 use Illuminate\Support\Facades\DB;
-use Livewire\WithPagination;
+
 
 class InvoiceServices
 {
-    use WithPagination;
+
     private $object;
     private $compute;
-
     private $systemSettingServices;
     private $dateServices;
 

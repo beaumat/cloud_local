@@ -11,7 +11,20 @@ class InventoryAdjustmentTypeServices
     {
         $this->object = $objectService;
     }
+    public function getList()
+    {
+        return InventoryAdjustmentType::query()->select(['ID', 'DESCRIPTION'])->get();
 
+    }
+    public function getAccountId(int $ID): int
+    {
+        $data = InventoryAdjustmentType::where('ID', $ID)->first();
+
+        if ($data) {
+            return (int) $data->ACCOUNT_ID;
+        }
+        return 0;
+    }
     public function Store(string $CODE, string $DESCRIPTION, int $ACCOUNT_ID): int
     {
         $ID = $this->object->ObjectNextID('INVENTORY_ADJUSTMENT_TYPE');

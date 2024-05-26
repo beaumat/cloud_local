@@ -78,15 +78,12 @@ class StockTransferForm extends Component
     }
     public function posted()
     {
-
         try {
             $count = (float) $this->stockTransferServices->CountItems($this->ID);
-
             if ($count == 0) {
                 Session()->flash('error', 'No item to transfer');
                 return;
             }
-
             $this->stockTransferServices->StatusUpdate($this->ID, 15);
             $this->STATUS = 15;
             Session()->flash('message', 'Successfully posted');
@@ -117,7 +114,6 @@ class StockTransferForm extends Component
     public function mount($id = null)
     {
         $this->LoadDropdown();
-
         if (is_numeric($id)) {
             $data = $this->stockTransferServices->Get($id);
             if ($data) {
