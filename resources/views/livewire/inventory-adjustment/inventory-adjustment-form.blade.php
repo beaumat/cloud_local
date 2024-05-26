@@ -12,7 +12,8 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('companyinventory_adjustment') }}"> Inventory Adjustment
+                                    <a class="text-white" href="{{ route('companyinventory_adjustment') }}"> Inventory
+                                        Adjustment
                                     </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
@@ -31,15 +32,17 @@
                                                 <div class="col-md-12">
                                                     @if ($Modify)
                                                         <livewire:select-option name="ADJUSTMENT_TYPE_ID0"
-                                                            titleName="Adjustment Type" :options="$adjustmentTypeList " :zero="true"
-                                                            :isDisabled=false wire:model='ADJUSTMENT_TYPE_ID' />
+                                                            titleName="Adjustment Type" :options="$adjustmentTypeList"
+                                                            :zero="true" :isDisabled=false
+                                                            wire:model='ADJUSTMENT_TYPE_ID' />
                                                     @else
                                                         <livewire:select-option name="ADJUSTMENT_TYPE1"
-                                                            titleName="Adjustment Type" :options="$adjustmentTypeList " :zero="true"
-                                                            :isDisabled=true wire:model='ADJUSTMENT_TYPE_ID' />
+                                                            titleName="Adjustment Type" :options="$adjustmentTypeList"
+                                                            :zero="true" :isDisabled=true
+                                                            wire:model='ADJUSTMENT_TYPE_ID' />
                                                     @endif
                                                 </div>
-                                
+
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -146,7 +149,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            {{-- @livewire('StockTransfer.StockTransferFormItems', ['STOCK_TRANSFER_ID' => $ID, 'STATUS' => $STATUS, 'openStatus' => $openStatus]) --}}
+                                            @livewire('InventoryAdjustment.InventoryAdjustmentFormItems', ['INVENTORY_ADJUSTMENT_ID' => $ID, 'STATUS' => $STATUS, 'openStatus' => $openStatus])
                                         </div>
                                     </div>
                                 </div>

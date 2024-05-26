@@ -53,7 +53,7 @@
                                     <tr>
                                         <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
-                                        <th class="col-1">Type</th>                      
+                                        <th class="col-1">Adustment Type</th>                      
                                         <th class="col-1">Location</th>                             
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">

@@ -27,7 +27,12 @@ class ItemServices
         if ($isCode) {
             return Items::query()->select(['ID', 'CODE'])->where('INACTIVE', '0')->where('TYPE', 0)->get();
         }
-        return Items::query()->select(['ID', 'PURCHASE_DESCRIPTION as DESCRIPTION'])->where('INACTIVE', '0')->where('TYPE', 0)->get();
+        return Items::query()->select(
+            [
+                'item.ID',
+                \DB::raw('IFNULL(item.PURCHASE_DESCRIPTION, item.DESCRIPTION) as DESCRIPTION')
+            ]
+        )->where('INACTIVE', '0')->where('TYPE', 0)->get();
     }
     public function getByCustomer(bool $isCode)
     {

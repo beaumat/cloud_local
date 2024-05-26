@@ -17,6 +17,8 @@ class InventoryAdjustmentItems extends Model
         'INVENTORY_ADJUSTMENT_ID',
         'LINE_NO',
         'ITEM_ID',
+        'QUANTITY',
+        'UNIT_COST',
         'DESCRIPTION',
         'QTY_DIFFERENCE',
         'VALUE_DIFFERENCE',
