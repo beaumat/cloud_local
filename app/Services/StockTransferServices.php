@@ -46,10 +46,20 @@ class StockTransferServices
             'NOTES' => $NOTES,
             'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
             'STATUS' => 0,
+            'STATUS_DATE' => $this->dateServices->NowDate(),
             'ACCOUNT_ID' => $ACCOUNT_ID
         ]);
 
         return $ID;
+    }
+
+    public function StatusUpdate(int $ID, int $STATUS)
+    {
+        StockTransfer::where('ID', $ID)
+            ->update([
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
+            ]);
     }
     public function Update(
         int $ID,
@@ -107,6 +117,10 @@ class StockTransferServices
 
         return $result;
     }
+    public function CountItems(int $STOCK_TRANSFER_ID): int
+    {
+        return (int) StockTransferItems::where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)->count();
+    }
     private function getLine($STOCK_TRANSFER_ID): int
     {
         return (int) StockTransferItems::where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)->max('LINE_NO');
@@ -145,7 +159,13 @@ class StockTransferServices
 
         $this->UpdateTotal($STOCK_TRANSFER_ID);
     }
+    public function GetItem(int $ID, int $STOCK_TRANSFER_ID)
+    {
+        return StockTransferItems::where('ID', $ID)
+            ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
+            ->first();
 
+    }
     public function ItemUpdate(
         int $ID,
         int $STOCK_TRANSFER_ID,
@@ -164,7 +184,7 @@ class StockTransferServices
                 'ID' => $ID,
                 'ITEM_ID' => $ITEM_ID,
                 'QUANTITY' => $QUANTITY,
-                'UNIT_ID' => $UNIT_ID,
+                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
                 'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
                 'UNIT_COST' => $UNIT_COST,
                 'UNIT_PRICE' => $UNIT_PRICE,
@@ -233,15 +253,38 @@ class StockTransferServices
             'RETAIL_VALUE' => 0
         ];
     }
+    public function GetSum(int $STOCK_TRANSFER_ID)
+    {
+        $result = StockTransfer::query()
+            ->select([
+                'AMOUNT',
+                'RETAIL_VALUE'
+            ])
+            ->where('ID', $STOCK_TRANSFER_ID)
+            ->first();
+
+        if ($result) {
+            return [
+                'AMOUNT' => $result->AMOUNT,
+                'RETAIL_VALUE' => $result->RETAIL_VALUE,
+            ];
+        }
+
+
+        return [
+            'AMOUNT' => 0,
+            'RETAIL_VALUE' => 0,
+        ];
+    }
     public function UpdateTotal(int $STOCK_TRANSFER_ID)
     {
         $result = $this->GetTotal($STOCK_TRANSFER_ID);
+
         StockTransfer::where('ID', $STOCK_TRANSFER_ID)
             ->update(
                 [
                     'AMOUNT' => $result['AMOUNT'],
                     'RETAIL_VALUE' => $result['RETAIL_VALUE'],
-
                 ]
             );
     }

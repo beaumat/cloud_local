@@ -10,13 +10,15 @@ use App\Services\StockTransferServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 
-
+#[Title('Stock Transfer')]
 class StockTransferForm extends Component
 {
 
+    public int $openStatus = 0;
     public int $ID;
     public string $DATE;
     public string $CODE;
@@ -40,6 +42,8 @@ class StockTransferForm extends Component
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
     private $contactServices;
+
+
     public function boot(
         StockTransferServices $stockTransferServices,
         LocationServices $locationServices,
@@ -74,28 +78,23 @@ class StockTransferForm extends Component
     }
     public function posted()
     {
-        // $total_result = $this->stockTransferServices->GetTotal($this->ID);
 
-        // $total_debit = (float) $total_result['TOTAL_DEBIT'];
+        try {
+            $count = (float) $this->stockTransferServices->CountItems($this->ID);
 
-        // $total_credit = (float) $total_result['TOTAL_CREDIT'];
+            if ($count == 0) {
+                Session()->flash('error', 'No item to transfer');
+                return;
+            }
 
-        // if ($total_debit == 0) {
-        //     Session()->flash('error', 'No debit entry');
-        //     return;
-        // }
-        // if ($total_credit == 0) {
-        //     Session()->flash('error', 'No credit entry');
-        //     return;
-        // }
+            $this->stockTransferServices->StatusUpdate($this->ID, 15);
+            $this->STATUS = 15;
+            Session()->flash('message', 'Successfully posted');
+        } catch (\Exception $e) {
+            Session()->flash('error', $e->getMessage());
+        }
 
-        // if ($total_debit == $total_credit) {
-        //     $this->stockTransferServices->StatusUpdate($this->ID, 15);
-        //     Session()->flash('message', 'Successfully posted');
-        //     return;
-        // }
 
-        Session()->flash('error', 'Invalid disbalanced.');
     }
     private function getInfo($data)
     {
@@ -244,6 +243,14 @@ class StockTransferForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    #[On('update-amount')]
+    public function updateAmount()
+    {
+        $data = $this->stockTransferServices->GetSum($this->ID);
+        $this->AMOUNT = $data['AMOUNT'];
+        $this->RETAIL_VALUE = $data['RETAIL_VALUE'];
+    }
+
     public function render()
     {
         return view('livewire.stock-transfer.stock-transfer-form');

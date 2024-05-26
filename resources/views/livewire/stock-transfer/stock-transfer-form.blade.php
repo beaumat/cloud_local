@@ -174,9 +174,17 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('StockTransfer.StockTransferFormItems', ['STOCK_TREANSFER_ID' => $ID, 'STATUS' => $STATUS])
+                                            @livewire('StockTransfer.StockTransferFormItems', ['STOCK_TRANSFER_ID' => $ID, 'STATUS' => $STATUS, 'openStatus' => $openStatus])
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    <label>{{ number_format($RETAIL_VALUE, 2) }}</label>
                                 </div>
                             </div>
                         </div>

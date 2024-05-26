@@ -23,6 +23,7 @@ class StockTransfer extends Model
         'NOTES',
         'PREPARED_BY_ID',
         'STATUS',
+        'STATUS_DATE',
         'ACCOUNT_ID',
         'CUSTOM_FIELD1',
         'CUSTOM_FIELD2',

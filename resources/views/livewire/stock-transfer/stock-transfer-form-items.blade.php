@@ -31,7 +31,7 @@
                     </td>
                     <td class="text-sm">
                         @if ($editItemId === $list->ID)
-                            <select wire:model='lineUnitId' name="lineUnitId"
+                            <select wire:model.live='lineUnitId' name="lineUnitId"
                                 class="text-sm form-control form-control-sm mt-2">
                                 @foreach ($editUnitList as $listitem)
                                     <option value="{{ $listitem->ID }}">{{ $listitem->SYMBOL }}</option>
@@ -45,7 +45,7 @@
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
-                                name="lineRate" wire:model.live.debounce.1000ms='lineRate' wire:blur="getEditAmount"
+                                name="lineUnitPrice" wire:model.live.debounce.1000ms='lineUnitPrice' wire:blur="getEditAmount"
                                 readonly />
                         @else
                             {{ number_format($list->UNIT_PRICE, 2) }}
@@ -53,7 +53,7 @@
                     </td>
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
-                            <label class="mt-2">{{ number_format($lineAmount, 2) }}</label>
+                            <label class="mt-2">{{ number_format($lineRetailValue, 2) }}</label>
                         @else
                             {{ number_format($list->RETAIL_VALUE, 2) }}
                         @endif
@@ -62,20 +62,22 @@
                     @if ($STATUS == $openStatus)
                         <td class="text-center">
                             @if ($editItemId === $list->ID)
-                                <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
+                                <button title="Update" id="updatebtn" wire:click="updateItem()"
                                     class="text-success btn btn-sm btn-link">
                                     <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>
+                               
                                 <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
                                     class="text-warning btn btn-sm btn-link">
                                     <i class="fas fa-ban" aria-hidden="true"></i>
                                 </button>
                             @else
                                 <button title="Edit" id="editbtn"
-                                    wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
+                                    wire:click='editItem( {{ $list->ID }})'
                                     class="text-info btn btn-sm btn-link">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
+                               
                                 <button title="Delete" id="deletebtn" wire:click='deleteItem({{ $list->ID }})'
                                     wire:confirm="Are you sure you want to delete this?"
                                     class="text-danger btn btn-sm btn-link">
