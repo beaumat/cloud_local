@@ -71,16 +71,14 @@ class PurchaseOrderListPromp extends Component
             }
 
         } catch (\Exception $ex) {
-
             DB::rollBack();
-            dd($ex);
+            dd($ex->getMessage());
         }
 
     }
     public function render()
     {
         $this->dataList = $this->purchaseOrderServices->PurchaseOrderAvailableList($this->VENDOR_ID, $this->LOCATION_ID);
-
         return view('livewire.bills.purchase-order-list-promp');
     }
 }

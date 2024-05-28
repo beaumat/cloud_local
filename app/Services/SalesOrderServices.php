@@ -145,6 +145,7 @@ class SalesOrderServices
                 'sales_order.AMOUNT',
                 'sales_order.OUTPUT_TAX_RATE',
                 'sales_order.NOTES',
+                'sales_order.STATUS as STATUS_ID',
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
@@ -269,6 +270,10 @@ class SalesOrderServices
                 'CLOSED' => $CLOSED
             ]);
     }
+    public function CountItems(int $SALES_ORDER_ID): int
+    {
+        return SalesOrderItems::where('SALES_ORDER_ID', $SALES_ORDER_ID)->count();
+    }
     public function GetItemList(int $SALES_ORDER_ID)
     {
         $result = SalesOrderItems::query()
@@ -297,7 +302,7 @@ class SalesOrderServices
                 'item.ASSET_ACCOUNT_ID',
             ])
             ->join('item', 'item.ID', '=', 'sales_order_items.ITEM_ID')
-            ->where('SALES_ORDER_ID', $SALES_ORDER_ID)
+            ->where('sales_order_items.SALES_ORDER_ID', $SALES_ORDER_ID)
             ->get();
 
         return $result;

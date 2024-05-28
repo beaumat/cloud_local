@@ -65,7 +65,6 @@ class PurchaseOrderServices
             'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
             'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
             'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID > 0 ? $INPUT_TAX_ACCOUNT_ID : null,
-
         ]);
 
         return $ID;
@@ -94,23 +93,24 @@ class PurchaseOrderServices
         int $INPUT_TAX_ACCOUNT_ID,
     ): void {
 
-        PurchaseOrder::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DATE' => $DATE,
-            'VENDOR_ID' => $VENDOR_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
-            'DATE_EXPECTED' => $DATE_EXPECTED ? $DATE_EXPECTED : null,
-            'SHIP_TO' => $SHIP_TO ? $SHIP_TO : null,
-            'SHIP_VIA_ID' => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
-            'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
-            'NOTES' => $NOTES,
-            'STATUS' => $STATUS,
-            'INPUT_TAX_ID' => $INPUT_TAX_ID ? $INPUT_TAX_ID : null,
-            'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
-            'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
-            'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID > 0 ? $INPUT_TAX_ACCOUNT_ID : null,
-        ]);
+        PurchaseOrder::where('ID', $ID)
+            ->update([
+                'CODE' => $CODE,
+                'DATE' => $DATE,
+                'VENDOR_ID' => $VENDOR_ID,
+                'LOCATION_ID' => $LOCATION_ID,
+                'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
+                'DATE_EXPECTED' => $DATE_EXPECTED ? $DATE_EXPECTED : null,
+                'SHIP_TO' => $SHIP_TO ? $SHIP_TO : null,
+                'SHIP_VIA_ID' => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
+                'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
+                'NOTES' => $NOTES,
+                'STATUS' => $STATUS,
+                'INPUT_TAX_ID' => $INPUT_TAX_ID ? $INPUT_TAX_ID : null,
+                'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
+                'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
+                'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID > 0 ? $INPUT_TAX_ACCOUNT_ID : null,
+            ]);
     }
 
     public function Delete(int $ID): void
@@ -162,6 +162,11 @@ class PurchaseOrderServices
                 'RECEIVED_QTY' => $QTY,
                 'CLOSED' => $CLOSED
             ]);
+    }
+
+    public function CountItems(int $PO_ID): int
+    {
+        return PurchaseOrderItems::where('PO_ID', $PO_ID)->count();
     }
     private function getLine($Id): int
     {
@@ -358,7 +363,7 @@ class PurchaseOrderServices
             ->select(['ID', 'CODE', 'DATE', 'DATE_EXPECTED', 'AMOUNT'])
             ->where('VENDOR_ID', $VENDOR_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
-            ->where('STATUS', 0)
+            ->where('STATUS', 15)
             ->orderBy('ID', 'asc')
             ->get();
 

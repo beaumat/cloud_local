@@ -2,12 +2,15 @@
 
 namespace App\Livewire\BillPayments;
 
+use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\BillPaymentServices;
 use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
+use App\Services\DocumentTypeServices;
 use App\Services\LocationServices;
+use App\Services\ObjectServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
@@ -41,6 +44,9 @@ class BillPaymentForm extends Component
     private $dateServices;
     private $accountServices;
     private $documentStatusServices;
+    private $documentTypeServices;
+    private $objectServices;
+    private $accountJournalServices;
     public function boot(
         BillPaymentServices $billPaymentServices,
         ContactServices $contactServices,
@@ -48,7 +54,10 @@ class BillPaymentForm extends Component
         UserServices $userServices,
         DateServices $dateServices,
         AccountServices $accountServices,
-        DocumentStatusServices $documentStatusServices
+        DocumentStatusServices $documentStatusServices,
+        DocumentTypeServices $documentTypeServices,
+        ObjectServices $objectServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->billPaymentServices = $billPaymentServices;
         $this->contactServices = $contactServices;
@@ -57,6 +66,9 @@ class BillPaymentForm extends Component
         $this->dateServices = $dateServices;
         $this->accountServices = $accountServices;
         $this->documentStatusServices = $documentStatusServices;
+        $this->documentTypeServices = $documentTypeServices;
+        $this->objectServices = $objectServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
 
     #[On('reset-payment')]
@@ -67,7 +79,7 @@ class BillPaymentForm extends Component
     public function mount($id = null)
     {
         $this->contactList = $this->contactServices->getList(0);
-        $this->locationList = $this->locationService->getList();
+        $this->locationList = $this->locationServices->getList();
         $this->accountList = $this->accountServices->getBankAccount();
 
         if (is_numeric($id)) {
@@ -93,20 +105,20 @@ class BillPaymentForm extends Component
         $this->AMOUNT_APPLIED = 0;
     }
     public function getInfo($data)
-    { {
-            $this->ID = $data->ID;
-            $this->CODE = $data->CODE;
-            $this->DATE = $data->DATE;
-            $this->LOCATION_ID = $data->LOCATION_ID;
-            $this->AMOUNT = $data->AMOUNT;
-            $this->NOTES = $data->NOTE ?? '';
-            $this->BANK_ACCOUNT_ID = $data->BANK_ACCOUNT_ID;
-            $this->PAY_TO_ID = $data->PAY_TO_ID;
-            $this->STATUS = $data->STATUS;
-            $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-            $this->Modify = false;
+    {
+        $this->ID = $data->ID;
+        $this->CODE = $data->CODE;
+        $this->DATE = $data->DATE;
+        $this->LOCATION_ID = $data->LOCATION_ID;
+        $this->AMOUNT = $data->AMOUNT;
+        $this->NOTES = $data->NOTE ?? '';
+        $this->BANK_ACCOUNT_ID = $data->BANK_ACCOUNT_ID;
+        $this->PAY_TO_ID = $data->PAY_TO_ID;
+        $this->STATUS = $data->STATUS;
+        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+        $this->Modify = false;
 
-        }
+
     }
     public function getModify()
     {
@@ -200,10 +212,51 @@ class BillPaymentForm extends Component
         session()->forget('error');
     }
 
+    public function getPosted()
+    {
+        try {
+
+            \DB::beginTransaction();
+
+            $check = (int) $this->objectServices->ObjectTypeID('CHECK');
+            $checkbills = (int) $this->objectServices->ObjectTypeID('CHECK_BILLS');
+
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($check, $this->ID) + 1;
+
+            $checkDataBills = $this->billPaymentServices->billPaymentBillsJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkDataBills, $this->LOCATION_ID, $checkbills, $this->DATE);
+
+            $checkData = $this->billPaymentServices->billPaymentJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkData, $this->LOCATION_ID, $check, $this->DATE);
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                $this->billPaymentServices->StatusUpdate($this->ID, 15);
+                \DB::commit();
+                $data = $this->billPaymentServices->get($this->ID);
+                if ($data) {
+                    $this->getInfo($data);
+                    $this->Modify = false;
+                    return;
+                }
+                session()->flash('message', 'Successfully posted');
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            \DB::rollBack();
+            
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function render()
     {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->getTotalApplied($this->ID);
-
 
         return view('livewire.bill-payments.bill-payment-form');
     }

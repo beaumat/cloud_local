@@ -86,7 +86,7 @@
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
-                                                @if ($list->STATUS == 0)
+                                                @if ($list->STATUS_ID == 0 || $list->STATUS_ID == 3 )
                                                     <a href="#" wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn-sm text-danger">

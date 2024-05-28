@@ -251,18 +251,29 @@ class PurchaseOrderForm extends Component
         }
         $this->Modify = false;
     }
-    public function getSubmit()
+    public function getPosted()
     {
         try {
-            $this->purchaseOrderServices->StatusUpdate($this->ID, 2);
-            $PO = $this->purchaseOrderServices->get($this->ID);
-            if ($PO) {
-                $this->getInfo($PO);
-                $this->Modify = false;
+
+            $count = (int) $this->purchaseOrderServices->CountItems($this->ID);
+            if ($count == 0) {
+                session()->flash('error', 'Item not found.');
                 return;
             }
 
+            \DB::beginTransaction();
+            $this->purchaseOrderServices->StatusUpdate($this->ID, 15);
+            \DB::commit();
+            $data = $this->purchaseOrderServices->get($this->ID);
+            if ($data) {
+                $this->getInfo($data);
+                $this->Modify = false;
+                return;
+            }
+            session()->flash('message','Successfully posted');
+
         } catch (\Exception $e) {
+            \DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

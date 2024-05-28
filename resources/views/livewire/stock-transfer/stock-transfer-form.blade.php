@@ -115,7 +115,6 @@
                                 <div class="row">
                                     <div class="col-md-6 col-6"
                                         @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
-
                                         @if ($Modify)
                                             <button type="submit" class="btn btn-sm btn-primary"> <i
                                                     class="fa fa-floppy-o" aria-hidden="true"></i>

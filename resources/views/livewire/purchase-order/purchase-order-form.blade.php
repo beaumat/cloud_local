@@ -12,7 +12,8 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('vendorspurchase_order') }}"> Purchase Order </a>
+                                    <a class="text-white" href="{{ route('vendorspurchase_order') }}"> Purchase Order
+                                    </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)
@@ -149,6 +150,21 @@
                                                     @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
+                                                @if ($STATUS == 0)
+                                                    <button type="button" wire:click='getPosted()'
+                                                        class="btn btn-sm btn-warning"
+                                                        wire:confirm="Are you sure you want to post?">
+                                                        <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                    </button>
+                                                @endif
+
+                                                @if ($STATUS == 15)
+                                                    <button class="btn btn-sm btn-danger" wire:click='getVoid()'
+                                                        wire:confirm="Are you sure you want to void?">
+                                                        Void
+                                                    </button>
+                                                @endif
+
                                             @endif
                                         @endif
                                     </div>
@@ -174,7 +190,7 @@
                 <div class="col-md-12">
                     <div class="card card-primary card-outline card-outline-tabs">
                         <div class="card-header p-0 border-bottom-0">
-                            <ul class="nav text-sm nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                            <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
                                         href="#custom-tabs-four-item" role="tab"
@@ -199,20 +215,7 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-6 text-left">
-                                    @if ($STATUS == 0)
-                                        <button class="btn btn-sm btn-success" wire:click='getSubmit'
-                                            wire:confirm="Are you sure you want to submit?"
-                                            @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            Submit
-                                        </button>
-                                    @endif
 
-                                    @if ($STATUS == 2)
-                                        <button class="btn btn-sm btn-danger" wire:click='getVoid'
-                                            wire:confirm="Are you sure you want to void?">
-                                            Void
-                                        </button>
-                                    @endif
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">

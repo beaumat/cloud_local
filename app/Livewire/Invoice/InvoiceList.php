@@ -37,9 +37,12 @@ class InvoiceList extends Component
     public function delete($id)
     {
         try {
+            \DB::beginTransaction();
             $this->invoiceServices->Delete($id);
+            \DB::commit();
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {
+            \DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -54,7 +57,7 @@ class InvoiceList extends Component
     public function render()
     {
         $dataList = $this->invoiceServices->Search($this->search, $this->locationid, $this->perPage);
-        
+
         return view('livewire.invoice.invoice-list', ['dataList' => $dataList]);
     }
 }

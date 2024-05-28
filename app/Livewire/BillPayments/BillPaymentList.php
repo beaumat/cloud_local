@@ -40,10 +40,12 @@ class BillPaymentList extends Component
     {
 
         try {
+            \DB::beginTransaction();
             $this->billPaymentServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-
+            \DB::commit();
         } catch (\Exception $e) {
+            \DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

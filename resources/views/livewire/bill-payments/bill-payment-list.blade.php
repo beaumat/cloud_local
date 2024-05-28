@@ -68,9 +68,9 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a
-                                                    href="{{ route('vendorsbill_payment_edit', ['id' => $list->ID]) }}">{{ $list->CODE }}</a>
-
+                                                <a href="{{ route('vendorsbill_payment_edit', ['id' => $list->ID]) }}">
+                                                    {{ $list->CODE }}
+                                                </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->BANK_ACCOUNT_NAME }}</td>

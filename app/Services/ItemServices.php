@@ -18,6 +18,16 @@ class ItemServices
     {
         return items::where('ID', $ID)->first();
     }
+    public function getCost(int $ID): float
+    {
+        $item = items::select('COST')->find($ID);
+
+        return $item ? $item->COST : 0.0;
+    }
+    public function updateCost(int $ID, float $COST)
+    {
+        items::where('ID', $ID)->update(['COST' => $COST]);
+    }
     public function AssemblyItem()
     {
         return items::where('TYPE', 1)->where('INACTIVE', 0)->get();
@@ -25,14 +35,20 @@ class ItemServices
     public function getByVendor(bool $isCode)
     {
         if ($isCode) {
-            return Items::query()->select(['ID', 'CODE'])->where('INACTIVE', '0')->where('TYPE', 0)->get();
+            return Items::query()
+                ->select(['ID', 'CODE'])->where('INACTIVE', '0')
+                ->where('TYPE', 0)
+                ->get();
         }
-        return Items::query()->select(
-            [
-                'item.ID',
-                \DB::raw('IFNULL(item.PURCHASE_DESCRIPTION, item.DESCRIPTION) as DESCRIPTION')
-            ]
-        )->where('INACTIVE', '0')->where('TYPE', 0)->get();
+        return Items::query()
+            ->select(
+                [
+                    'item.ID',
+                    \DB::raw('IFNULL(item.PURCHASE_DESCRIPTION, item.DESCRIPTION) as DESCRIPTION')
+                ]
+            )->where('INACTIVE', '0')
+            ->where('TYPE', 0)
+            ->get();
     }
     public function getByCustomer(bool $isCode)
     {

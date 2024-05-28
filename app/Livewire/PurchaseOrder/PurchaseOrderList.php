@@ -12,7 +12,7 @@ use Livewire\WithPagination;
 
 #[Title('Purchase Order')]
 class PurchaseOrderList extends Component
-{   
+{
     use WithPagination;
     public int $perPage = 15;
     protected $paginationTheme = 'bootstrap';
@@ -35,15 +35,17 @@ class PurchaseOrderList extends Component
     {
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
- 
     }
     public function delete($id)
     {
         try {
+            \DB::beginTransaction();
             $this->purchaseOrderServices->Delete($id);
+            \DB::commit();
             session()->flash('message', 'Successfully deleted.');
-       
+
         } catch (\Exception $e) {
+            \DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -58,7 +60,8 @@ class PurchaseOrderList extends Component
     }
     public function render()
     {
-        $dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid,$this->perPage);
-        return view('livewire.purchase-order.purchase-order-list',['dataList' => $dataList]);
+        $dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid, $this->perPage);
+
+        return view('livewire.purchase-order.purchase-order-list', ['dataList' => $dataList]);
     }
 }

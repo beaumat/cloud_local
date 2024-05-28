@@ -7,18 +7,21 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
         </li>
-
         <li class="nav-item dropdown">
-            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+            <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                 class="nav-link dropdown-toggle">Contacts</a>
-            <ul aria-labelledby="dropdownSubMenu1" class="border-0 shadow dropdown-menu">
+            <ul aria-labelledby="dropdownSubMenu2" class="border-0 shadow dropdown-menu">
                 <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a></li>
                 <li><a href="{{ route('maintenancecontactdoctors') }}" class="dropdown-item"> Doctors</a></li>
-                <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Suppliers</a></li>
+                <div class="dropdown-divider"></div>
+                <li><a href="{{ route('maintenancecontactcustomer') }}" class="dropdown-item">Customers</a></li>
+                <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Vendors</a></li>
                 <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
             </ul>
         </li>
-
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ route('dashboard') }}" class="nav-link">Items Monitoring</a>
+        </li>
 
     </ul>
 

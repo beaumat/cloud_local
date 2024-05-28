@@ -7,7 +7,6 @@ use App\Models\BillExpenses;
 use App\Models\BillItems;
 use App\Models\CheckBills;
 use App\Models\Tax;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class BillingServices
@@ -16,16 +15,19 @@ class BillingServices
     private $compute;
     private $systemSettingServices;
     private $dateServices;
+
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         SystemSettingServices $systemSettingServices,
         DateServices $dateServices
+
     ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
+
     }
     public function get(int $ID): object
     {
@@ -163,6 +165,13 @@ class BillingServices
             ->paginate($perPage);
 
         return $result;
+    }
+    public function CountItems(int $BILL_ID, bool $isItem): int
+    {
+        if ($isItem == true) {
+            return (int) BillItems::where('BILL_ID', $BILL_ID)->count();
+        }
+        return (int) BillExpenses::where('BILL_ID', $BILL_ID)->count();
     }
     private function getLine(int $Id, bool $isItem): int
     {
@@ -469,7 +478,7 @@ class BillingServices
             ->where('bill_credit_bills.BILL_ID', '=', $BILL_ID)
             ->first();
 
-            return (float) $result->pay ?? 0;
+        return (float) $result->pay ?? 0;
     }
     public function UpdateBalance(int $BILL_ID)
     {
@@ -573,5 +582,89 @@ class BillingServices
             ->get();
 
         return $results;
+    }
+    public function ItemInventory(int $BILL_ID)
+    {
+        $result = billitems::query()
+            ->select([
+                'bill_items.ID',
+                'bill_items.ITEM_ID',
+                'bill_items.RATE',
+                'bill_items.QUANTITY',
+                'bill_items.UNIT_BASE_QUANTITY',
+                'bill_items.RATE',
+                'item.COST'
+            ])
+            ->join('item', 'item.ID', '=', 'bill_items.ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('bill_items.BILL_ID', $BILL_ID)
+            ->get();
+
+        return $result;
+    }
+    public function getBillTaxJournal(int $BILL_ID)
+    {
+        $result = Bill::query()
+            ->select([
+                'ID',
+                'INPUT_TAX_ACCOUNT_ID as ACCOUNT_ID',
+                'VENDOR_ID as SUBSIDIARY_ID',
+                'INPUT_TAX_AMOUNT as AMOUNT',
+                \DB::raw(' 0 as ENTRY_TYPE')
+
+            ])
+            ->where('ID', $BILL_ID)
+            ->where('INPUT_TAX_AMOUNT', '>', 0)
+            ->get();
+
+        return $result;
+    }
+    public function getBillJournal(int $BILL_ID)
+    {
+        $result = Bill::query()
+            ->select([
+                'ID',
+                'ACCOUNTS_PAYABLE_ID as ACCOUNT_ID',
+                'VENDOR_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                \DB::raw(' 1 as ENTRY_TYPE')
+
+            ])
+            ->where('ID', $BILL_ID)->get();
+
+        return $result;
+    }
+    public function getBillItemJournal(int $BILL_ID)
+    {
+        $result = BillItems::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                'ITEM_ID as SUBSIDIARY_ID',
+                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                DB::raw('0 as ENTRY_TYPE')
+            ])
+            ->where('BILL_ID', $BILL_ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
+
+    public function getBillExpenseJournal(int $BILL_ID)
+    {
+        $result = BillExpenses::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                'ACCOUNT_ID as SUBSIDIARY_ID',
+                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                \DB::raw(' 0 as ENTRY_TYPE')
+            ])
+            ->where('BILL_ID', $BILL_ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+        return $result;
     }
 }

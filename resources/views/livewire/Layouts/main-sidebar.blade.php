@@ -3,7 +3,7 @@
     <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="" class="brand-image img-circle elevation-3"
             style="opacity: .8">
-        <span class="brand-text font-weight-light"><b>X</b>ONE</span>
+        <span class="brand-text font-weight-light"><b>E-</b>System</span>
     </a>
     <div class="sidebar">
         <nav class="mt-1">
@@ -537,13 +537,13 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                {{-- <li class="nav-item">
+                                <li class="nav-item">
                                     <a href="{{ route('maintenancecontactcustomer') }}"
                                         class="nav-link {{ request()->is('maintenance/contact/customer*') ? 'active' : '' }}">
                                         <i class="fa fa-file nav-icon"></i>
                                         <p>Customer</p>
                                     </a>
-                                </li> --}}
+                                </li>
                                 <li class="nav-item">
                                     <a href="{{ route('maintenancecontactvendor') }}"
                                         class="nav-link {{ request()->is('maintenance/contact/vendor*') ? 'active' : '' }}">

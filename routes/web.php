@@ -367,6 +367,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/edit', PriceLevelForm::class)->name('price_level_edit')->middleware(['permission:price-level.edit']);
             });
         });
+
         Route::prefix('/others')->name('others')->group(function () {
             Route::prefix('/shift')->group(function () {
                 Route::get('/', ShiftList::class)->name('shift');
@@ -387,6 +388,7 @@ Route::middleware(['auth'])->group(function () {
             });
 
         });
+        
         Route::prefix('/settings')->name('settings')->group(function () {
             Route::prefix('/user')->middleware(['permission:users'])->group(function () {
                 Route::get('/', UserList::class)->name('users');

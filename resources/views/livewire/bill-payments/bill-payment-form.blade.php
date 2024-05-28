@@ -118,6 +118,13 @@
                                                 <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                             </button>
 
+                                            @if ($STATUS == 0)
+                                                <button type="button" wire:click='getPosted()'
+                                                    class="btn btn-sm btn-warning"
+                                                    wire:confirm="Are you sure you want to post?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                </button>
+                                            @endif
                                         @endif
 
                                     </div>
@@ -131,7 +138,6 @@
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -176,7 +182,8 @@
                                     <div class="row">
                                         <div class="col-md-12 text-right">
                                             <label class="text-sm">Payment Applied:</label>
-                                            <label class="text-primary text-lg"> {{ number_format($AMOUNT_APPLIED, 2) }}
+                                            <label class="text-primary text-lg">
+                                                {{ number_format($AMOUNT_APPLIED, 2) }}
                                             </label>
 
                                         </div>

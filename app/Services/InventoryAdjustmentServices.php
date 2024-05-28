@@ -51,10 +51,11 @@ class InventoryAdjustmentServices
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
-        InventoryAdjustment::where('ID', $ID)->update([
-            'STATUS' => $STATUS,
-            'STATUS_DATE' => $this->dateServices->NowDate()
-        ]);
+        InventoryAdjustment::where('ID', $ID)
+            ->update([
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
+            ]);
     }
     public function Update(int $ID, string $CODE, int $LOCATION_ID, int $ADJUSTMENT_TYPE_ID, int $ACCOUNT_ID, string $NOTES)
     {
@@ -70,7 +71,7 @@ class InventoryAdjustmentServices
     public function Delete(int $ID)
     {
         InventoryAdjustmentItems::where('INVENTORY_ADJUSTMENT_ID', $ID)->delete();
-        
+
         InventoryAdjustment::where('ID', $ID)->delete();
     }
     public function Search($search, int $locationId, int $perPage)
@@ -162,8 +163,8 @@ class InventoryAdjustmentServices
         float $UNIT_BASE_QUANTITY
     ) {
         InventoryAdjustmentItems::where('ID', $ID)
-        ->where('ITEM_ID', $ITEM_ID) 
-        ->where('INVENTORY_ADJUSTMENT_ID', $INVENTORY_ADJUSTMENT_ID)
+            ->where('ITEM_ID', $ITEM_ID)
+            ->where('INVENTORY_ADJUSTMENT_ID', $INVENTORY_ADJUSTMENT_ID)
             ->update([
                 'QUANTITY' => $QUANTITY,
                 'UNIT_COST' => $UNIT_COST,

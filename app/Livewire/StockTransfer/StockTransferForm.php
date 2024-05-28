@@ -17,7 +17,6 @@ use Livewire\Component;
 #[Title('Stock Transfer')]
 class StockTransferForm extends Component
 {
-
     public int $openStatus = 0;
     public int $ID;
     public string $DATE;
@@ -42,7 +41,6 @@ class StockTransferForm extends Component
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
     private $contactServices;
-
 
     public function boot(
         StockTransferServices $stockTransferServices,
@@ -122,7 +120,7 @@ class StockTransferForm extends Component
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('companygeneral_journal')->with('error', $errorMessage);
+            return Redirect::route('companystock_transfer')->with('error', $errorMessage);
         }
 
         $this->Modify = true;
@@ -134,10 +132,8 @@ class StockTransferForm extends Component
         $this->TRANSFER_TO_ID = 0;
         $this->AMOUNT = 0;
         $this->RETAIL_VALUE = 0;
-
         $this->PREPARED_BY_ID = 0;
         $this->NOTES = '';
-
         $this->ACCOUNT_ID = 31;
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = '';

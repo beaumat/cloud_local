@@ -126,7 +126,6 @@ class InventoryAdjustmentFormItems extends Component
             [
                 'ITEM_ID' => 'required|not_in:0',
                 'QUANTITY' => 'required|not_in:0',
-
             ],
             [],
             [

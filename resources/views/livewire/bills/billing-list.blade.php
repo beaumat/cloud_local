@@ -69,7 +69,11 @@
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ $list->CODE }}</td>
+                                            <td>
+                                                <a href="{{ route('vendorsbills_edit', ['id' => $list->ID]) }}">
+                                                    {{ $list->CODE }}
+                                                </a>
+                                            </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>

@@ -54,13 +54,21 @@ class BillPaymentServices
             'AMOUNT' => $AMOUNT,
             'NOTES' => $NOTES,
             'PRINTED' => false,
-            'STATUS' => 2,
+            'STATUS' => 0,
             'STATUS_DATE' => $this->dateServices->NowDate(),
             'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID
 
         ]);
 
         return $ID;
+    }
+    public function StatusUpdate(int $ID, int $STATUS)
+    {
+        Check::where('ID', $ID)
+            ->update([
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
+            ]);
     }
     public function Update(
         int $ID,
@@ -98,6 +106,7 @@ class BillPaymentServices
     }
     public function Delete(int $ID)
     {
+        CheckBills::where('CHECK_ID', $ID)->delete();
         Check::where('ID', $ID)->where('TYPE', 1)->delete();
     }
     public function Search($search, $locationId, $perPage)
@@ -135,11 +144,11 @@ class BillPaymentServices
             ->paginate($perPage);
 
     }
-    public function BillPaymentBillsExist(int $CHECK_ID, int $BILL_ID)
+    public function BillPaymentBillsExist(int $CHECK_ID, int $BILL_ID): int
     {
         $data = CheckBills::where('CHECK_ID', $CHECK_ID)->where('BILL_ID', $BILL_ID)->first();
         if ($data) {
-            return $data->ID;
+            return (int) $data->ID;
         }
         return 0;
     }
@@ -233,5 +242,39 @@ class BillPaymentServices
                 'AMOUNT_PAID' => $AMOUNT_PAID
             ]);
 
+    }
+
+    public function billPaymentJournal(int $CHECK_ID)
+    {
+        $result = Check::query()
+            ->select([
+                'ID',
+                'BANK_ACCOUNT_ID as ACCOUNT_ID',
+                'PAY_TO_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                \DB::raw(' 1 as ENTRY_TYPE')
+            ])
+            ->where('ID', $CHECK_ID)
+            ->where('TYPE', 1)
+            ->get();
+
+        return $result;
+    }
+    public function billPaymentBillsjournal(int $CHECK_ID)
+    {
+        $result = CheckBills::query()
+            ->select([
+                'CHECK_BILLS.ID',
+                'CHECK_BILLS.ACCOUNTS_PAYABLE_ID as ACCOUNT_ID',
+                'CHECK.PAY_TO_ID as SUBSIDIARY_ID',
+                'CHECK_BILLS.AMOUNT_PAID as AMOUNT',
+                \DB::raw(' 0 as ENTRY_TYPE')
+            ])
+            ->join('CHECK', 'CHECK.ID', '=', 'CHECK_BILLS.CHECK_ID')
+            ->where('CHECK_BILLS.CHECK_ID', $CHECK_ID)
+
+            ->get();
+
+        return $result;
     }
 }

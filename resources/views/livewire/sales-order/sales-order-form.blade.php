@@ -89,7 +89,6 @@
                                                         <livewire:text-input name="Code" titleName="Reference No."
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
-
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify && $AMOUNT == 0)
@@ -153,7 +152,7 @@
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 0)
                                             <a id="new" title="Create"
-                                                href="{{ route('customersinvoice_create') }}"
+                                                href="{{ route('customerssales_order_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
                                     </div>

@@ -191,6 +191,38 @@ class SalesOrderForm extends Component
     {
         $this->Modify = true;
     }
+    public function getPosted()
+    {
+        try {
+            $count = (int) $this->salesOrderServices->CountItems($this->ID);
+            if ($count == 0) {
+                session()->flash('error', 'No item entries.');
+                return;
+            }
+
+            \DB::beginTransaction();
+            $this->salesOrderServices->StatusUpdate($this->ID, 15);
+            \DB::commit();
+            $this->Modify = false;
+
+      
+            $data = $this->salesOrderServices->get($this->ID);
+            if ($data) {
+                $this->getInfo($data);
+                $this->Modify = false;
+                return;
+            }
+            session()->flash('message','Successfully posted');
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+
+
+
+
+
+    }
     public function save()
     {
         try {
@@ -233,7 +265,7 @@ class SalesOrderForm extends Component
                     $this->OUTPUT_TAX_RATE,
                     $this->OUTPUT_TAX_AMOUNT,
                     $this->OUTPUT_TAX_VAT_METHOD
-             
+
                 );
                 return Redirect::route('customerssales_order_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
@@ -282,11 +314,8 @@ class SalesOrderForm extends Component
                 );
 
                 $this->salesOrderServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
-
                 $getResult = $this->salesOrderServices->ReComputed($this->ID);
-
                 $this->getUpdateAmount($getResult);
-
                 session()->flash('message', 'Successfully updated');
             }
 
@@ -300,7 +329,7 @@ class SalesOrderForm extends Component
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();
-            
+
             session()->flash('error', $errorMessage);
         }
     }

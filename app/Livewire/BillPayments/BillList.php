@@ -72,10 +72,19 @@ class BillList extends Component
         $this->dispatch('reset-payment');
     }
     public function delete(int $ID, int $BILL_ID)
-    {
-        $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
-        $this->billingServices->UpdateBalance($BILL_ID);
-        $this->dispatch('reset-payment');
+    {  
+        try {
+            \DB::beginTransaction();
+            $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
+            $this->billingServices->UpdateBalance($BILL_ID);
+            \DB::commit();
+            $this->dispatch('reset-payment');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            
+        }
     }
     public function mount(int $CHECK_ID, int $VENDOR_ID, int $LOCATION_ID, float $AMOUNT, float $AMOUNT_APPLIED)
     {
@@ -84,6 +93,14 @@ class BillList extends Component
         $this->LOCATION_ID = $LOCATION_ID;
         $this->AMOUNT = $AMOUNT;
         $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
+    }
+
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
     }
     #[On('reload_bill_list')]
     public function render()

@@ -3,33 +3,49 @@
 namespace App\Livewire\Customer;
 
 use App\Services\ContactServices;
+use App\Services\LocationServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('Customer')]
 class CustomerList extends Component
 {
-    public $contacts = [];
+
+
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public function updatedsearch(ContactServices $contactServices)
-    {
-        $this->contacts = $contactServices->Search($this->search,1);
+    public int $perPage = 15;
+    public $locationList = [];
+    public int $locationid = 0;
+
+    private $contactServices;
+    private $locationServices;
+    public function boot(
+        ContactServices $contactServices,
+        LocationServices $locationServices
+    ) {
+        $this->contactServices = $contactServices;
+        $this->locationServices = $locationServices;
     }
-    public function delete($id, ContactServices $contactServices)
+    public function mount()
+    {
+        $this->locationList = $this->locationServices->getList();
+        $this->locationid = 0;
+    }
+
+    public function delete($id)
     {
         try {
-            $contactServices->Delete($id);
+            $this->contactServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->contacts = $contactServices->Search($this->search,1);
+
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-    }
-    public function mount(ContactServices $contactServices)
-    {
-        $this->contacts = $contactServices->Search($this->search,1);
     }
 
     #[On('clear-alert')]
@@ -41,6 +57,8 @@ class CustomerList extends Component
     }
     public function render()
     {
-        return view('livewire.customer.customer-list');
+
+        $dataList = $this->contactServices->Search($this->search, 1, $this->perPage);
+        return view('livewire.customer.customer-list', ['dataList' => $dataList]);
     }
 }

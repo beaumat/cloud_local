@@ -47,7 +47,7 @@
                         @if ($editItemId === $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
                                 name="lineRate" wire:model.live.debounce.1000ms='lineRate' wire:blur="getEditAmount"
-                                readonly />
+                                 />
                         @else
                             {{ number_format($list->RATE, 2) }}
                         @endif

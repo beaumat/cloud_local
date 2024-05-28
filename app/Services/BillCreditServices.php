@@ -44,7 +44,7 @@ class BillCreditServices
         float $INPUT_TAX_RATE,
         float $INPUT_TAX_AMOUNT,
         int $INPUT_TAX_VAT_METHOD,
-        int $INPUT_TAX_ACCOUNT_ID,
+        int $INPUT_TAX_ACCOUNT_ID
     ): int {
         $ID = (int) $this->object->ObjectNextID('BILL_CREDIT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL_CREDIT');
@@ -542,7 +542,25 @@ class BillCreditServices
         return $result;
     }
 
+    public function ItemInventory(int $BILL_CREDIT_ID)
+    {
+        $result = BillCreditItems::query()
+            ->select([
+                'bill_credit_items.ID',
+                'bill_credit_items.ITEM_ID',
+                'bill_credit_items.RATE',
+                'bill_credit_items.QUANTITY',
+                'bill_credit_items.UNIT_BASE_QUANTITY',
+                'bill_credit_items.RATE',
+                'item.COST'
+            ])
+            ->join('item', 'item.ID', '=', 'bill_credit_items.ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('bill_credit_items.BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->get();
 
+        return $result;
+    }
 
 
 

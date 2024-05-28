@@ -241,12 +241,12 @@ class BillCreditFormItems extends Component
 
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
-
             $tax_result = $this->computeServices->ItemComputeTax($this->lineAmount, $this->lineTax, $this->TAX_ID, $taxRate);
             if ($tax_result) {
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
+            
             $this->billCreditServices->ItemUpdate(
                 $Id,
                 $this->BILL_CREDIT_ID,

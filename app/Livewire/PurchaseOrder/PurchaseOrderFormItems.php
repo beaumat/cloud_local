@@ -73,13 +73,11 @@ class PurchaseOrderFormItems extends Component
     }
     public function updatedcodeBase()
     {
-
         if ($this->codeBase) {
             $this->itemCodeList = $this->itemServices->getByVendor(true);
             return;
         }
         $this->itemDescList = $this->itemServices->getByVendor(false);
-
     }
     public function getAmount(): void
     {
@@ -183,7 +181,7 @@ class PurchaseOrderFormItems extends Component
 
             $getResult = $this->purchaseOrderServices->ReComputed($this->PO_ID);
             $this->dispatch('update-amount', result: $getResult);
-            // $this->itemList = $this->purchaseOrderServices->ItemView($this->PO_ID);
+
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;

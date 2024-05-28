@@ -2,10 +2,15 @@
 
 namespace App\Livewire\Bills;
 
+use App\Services\AccountJournalServices;
 use App\Services\BillingServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
+use App\Services\DocumentTypeServices;
+use App\Services\ItemInventoryServices;
+use App\Services\ItemServices;
 use App\Services\LocationServices;
+use App\Services\ObjectServices;
 use App\Services\PaymentTermServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
@@ -54,12 +59,11 @@ class BillingForm extends Component
     private $userServices;
     private $documentStatusServices;
     private $systemSettingServices;
-    public string $tab = 'item';
-    #[On('select-tab')]
-    public function SelectTab($tab)
-    {
-        $this->tab = $tab;
-    }
+    private $itemInventoryServices;
+    private $itemServices;
+    private $documentTypeServices;
+    private $objectServices;
+    private $accountJournalServices;
     public function boot(
         BillingServices $billingServices,
         LocationServices $locationServices,
@@ -68,8 +72,12 @@ class BillingForm extends Component
         TaxServices $taxServices,
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
-        SystemSettingServices $systemSettingServices
-
+        SystemSettingServices $systemSettingServices,
+        ItemInventoryServices $itemInventoryServices,
+        ItemServices $itemServices,
+        DocumentTypeServices $documentTypeServices,
+        ObjectServices $objectServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->billingServices = $billingServices;
         $this->locationServices = $locationServices;
@@ -79,9 +87,19 @@ class BillingForm extends Component
         $this->userServices = $userServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->systemSettingServices = $systemSettingServices;
+        $this->itemInventoryServices = $itemInventoryServices;
+        $this->itemServices = $itemServices;
+        $this->documentTypeServices = $documentTypeServices;
+        $this->objectServices = $objectServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
 
-
+    public string $tab = 'item';
+    #[On('select-tab')]
+    public function SelectTab($tab)
+    {
+        $this->tab = $tab;
+    }
     public function LoadDropdown()
     {
         $this->vendorList = $this->contactServices->getList(0);
@@ -129,6 +147,7 @@ class BillingForm extends Component
         }
         $this->tab = "account";
     }
+
     public function mount($id = null)
     {
         $this->LoadDropdown();
@@ -172,6 +191,104 @@ class BillingForm extends Component
     public function getModify()
     {
         $this->Modify = true;
+    }
+    private function ItemInventory(): bool
+    {
+        try {
+            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Bill');
+            $data = $this->billingServices->ItemInventory($this->ID);
+            if ($data) {
+                foreach ($data as $item) {
+                    $this->itemServices->updateCost($item->ITEM_ID, $item->RATE);
+                }
+                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, true);
+            }
+            return true;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
+    private function AccountJournal(): bool
+    {
+        try {
+
+            $bills = (int) $this->objectServices->ObjectTypeID('BILL');
+            $billItems = (int) $this->objectServices->ObjectTypeID('BILL_ITEMS');
+            $billExpenses = (int) $this->objectServices->ObjectTypeID('BILL_EXPENSES');
+
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($bills, $this->ID) + 1;
+            //Item
+            $billitemData = $this->billingServices->getBillItemJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billitemData, $this->LOCATION_ID, $billItems, $this->DATE);
+            //Expenses
+            $billExpensesData = $this->billingServices->getBillExpenseJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billExpensesData, $this->LOCATION_ID, $billExpenses, $this->DATE);
+
+            //Main
+            $billData = $this->billingServices->getBillJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billData, $this->LOCATION_ID, $bills, $this->DATE);
+            //Tax
+            $billDataTax = $this->billingServices->getBillTaxJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billDataTax, $this->LOCATION_ID, $bills, $this->DATE);
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+
+        }
+
+    }
+    public function getPosted()
+    {
+        try {
+
+            $count_item = (int) $this->billingServices->CountItems($this->ID, true);
+            $count_expense = (int) $this->billingServices->CountItems($this->ID, false);
+            $count = $count_item + $count_expense;
+            if ($count == 0) {
+                session()->flash('error', 'Item not found.');
+                return;
+            }
+            \DB::beginTransaction();
+            if (!$this->ItemInventory()) {
+                \DB::rollBack();
+                return;
+            }
+
+            if (!$this->AccountJournal()) {
+                \DB::rollBack();
+                return;
+            }
+
+            $this->billingServices->StatusUpdate($this->ID, 15);
+            \DB::commit();
+            $data = $this->billingServices->get($this->ID);
+            if ($data) {
+                $this->getInfo($data);
+                $this->Modify = false;
+                return;
+            }
+            session()->flash('message', 'Successfully posted');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+
     }
     public function save()
     {
@@ -225,7 +342,7 @@ class BillingForm extends Component
                 $this->validate(
                     [
                         'VENDOR_ID' => 'required|not_in:0',
-                        'CODE' => 'required|max:20|unique:purchase_order,code,' . $this->ID,
+                        'CODE' => 'required|max:20|unique:bill,code,' . $this->ID,
                         'INPUT_TAX_ID' => 'required|not_in:0',
                         'DATE' => 'required',
                         'LOCATION_ID' => 'required',
@@ -260,13 +377,12 @@ class BillingForm extends Component
                     $this->INPUT_TAX_VAT_METHOD,
                     $this->INPUT_TAX_ACCOUNT_ID
                 );
+
                 $this->billingServices->getUpdateTaxItem($this->ID, $this->INPUT_TAX_ID);
                 $getResult = $this->billingServices->ReComputed($this->ID);
                 $this->getUpdateAmount($getResult);
                 session()->flash('message', 'Successfully updated');
             }
-
-
             $this->Modify = false;
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -291,41 +407,6 @@ class BillingForm extends Component
         }
         $this->Modify = false;
     }
-    // public function getSubmit()
-    // {
-    //     try {
-    //         $this->billingServices->StatusUpdate($this->ID, 2);
-    //         $BILL = $this->billingServices->get($this->ID);
-    //         if ($BILL) {
-    //             $this->getInfo($BILL);
-    //             $this->Modify = false;
-    //             return;
-    //         }
-
-    //     } catch (\Exception $e) {
-    //         $errorMessage = 'Error occurred: ' . $e->getMessage();
-    //         session()->flash('error', $errorMessage);
-    //     }
-
-    // }
-    // public function getVoid()
-    // {
-    //     try {
-
-    //         $this->billingServices->StatusUpdate($this->ID, 7);
-    //         $BILL = $this->billingServices->get($this->ID);
-
-    //         if ($BILL) {
-    //             $this->getInfo($BILL);
-    //             $this->Modify = false;
-    //             return;
-    //         }
-
-    //     } catch (\Exception $e) {
-    //         $errorMessage = 'Error occurred: ' . $e->getMessage();
-    //         session()->flash('error', $errorMessage);
-    //     }
-    // }
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -333,8 +414,6 @@ class BillingForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-
-
     public function render()
     {
         return view('livewire.bills.billing-form');

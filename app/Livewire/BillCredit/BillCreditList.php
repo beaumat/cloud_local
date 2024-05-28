@@ -42,17 +42,20 @@ class BillCreditList extends Component
     public function delete($id)
     {
         try {
+            \DB::beginTransaction();
             $this->billCreditServices->Delete($id);
+            \DB::commit();
             session()->flash('message', 'Successfully deleted.');
 
         } catch (\Exception $e) {
+            \DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
     public function render()
     {
-        $dataList = $this->billCreditServices->Search($this->search, $this->locationid, $this->perPage);       
+        $dataList = $this->billCreditServices->Search($this->search, $this->locationid, $this->perPage);
         return view('livewire.bill-credit.bill-credit-list', ['dataList' => $dataList]);
     }
 }

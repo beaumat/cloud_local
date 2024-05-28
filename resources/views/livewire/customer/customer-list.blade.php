@@ -28,7 +28,7 @@
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>No.</th>
                                         <th>Name</th>
@@ -42,8 +42,8 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
-                                    @foreach ($contacts as $list)
+                                <tbody class="text-xs">
+                                    @foreach ($dataList as $list)
                                         <tr>
                                             <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
@@ -75,6 +75,9 @@
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="col-12">
+                    {{ $dataList->links() }}
                 </div>
             </div>
         </div>

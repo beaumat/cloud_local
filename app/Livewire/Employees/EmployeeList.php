@@ -16,16 +16,15 @@ class EmployeeList extends Component
     protected $paginationTheme = 'bootstrap';
     public $search = '';
     public int $perPage = 15;
-    public $locationList = [];
     public int $locationid = 0;
     private $contactServices;
-    private $locationServices;
+
     public function boot(
         ContactServices $contactServices,
-        LocationServices $locationServices
+
     ) {
         $this->contactServices = $contactServices;
-        $this->locationServices = $locationServices;
+
        
     }
     public function delete($id)
@@ -39,11 +38,7 @@ class EmployeeList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function mount()
-    {
-        $this->locationList = $this->locationServices->getList();
-        $this->locationid = 0;
-    }
+
     #[On('clear-alert')]
     public function clearAlert()
     {
