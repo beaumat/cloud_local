@@ -542,9 +542,17 @@ class BillCreditServices
         return $result;
     }
 
+  
+    public function CountItems(int $BILL_ID, bool $isItem): int
+    {
+        if ($isItem == true) {
+            return (int) BillCreditItems::where('BILL_CREDIT_ID', $BILL_ID)->count();
+        }
+        return (int) BillCreditExpenses::where('BILL_CREDIT_ID', $BILL_ID)->count();
+    }
     public function ItemInventory(int $BILL_CREDIT_ID)
     {
-        $result = BillCreditItems::query()
+        $result = billcreditItems::query()
             ->select([
                 'bill_credit_items.ID',
                 'bill_credit_items.ITEM_ID',
@@ -561,8 +569,70 @@ class BillCreditServices
 
         return $result;
     }
+    public function getBillCreditTaxJournal(int $BILL_CREDIT_ID)
+    {
+        $result = BillCredit::query()
+            ->select([
+                'ID',
+                'INPUT_TAX_ACCOUNT_ID as ACCOUNT_ID',
+                'VENDOR_ID as SUBSIDIARY_ID',
+                'INPUT_TAX_AMOUNT as AMOUNT',
+                \DB::raw(' 1 as ENTRY_TYPE')
 
+            ])
+            ->where('ID', $BILL_CREDIT_ID)
+            ->where('INPUT_TAX_AMOUNT', '>', 0)
+            ->get();
 
+        return $result;
+    }
+    public function getBillCreditJournal(int $BILL_CREDIT_ID)
+    {
+        $result = BillCredit::query()
+            ->select([
+                'ID',
+                'ACCOUNTS_PAYABLE_ID as ACCOUNT_ID',
+                'VENDOR_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                \DB::raw(' 0 as ENTRY_TYPE')
 
+            ])
+            ->where('ID', $BILL_CREDIT_ID)->get();
+
+        return $result;
+    }
+    public function getBillCreditItemJournal(int $BILL_CREDIT_ID)
+    {
+        $result = BillCreditItems::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                'ITEM_ID as SUBSIDIARY_ID',
+                \DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                \DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
+
+    public function getBillCreditExpenseJournal(int $BILL_CREDIT_ID)
+    {
+        $result = BillCreditExpenses::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                'ACCOUNT_ID as SUBSIDIARY_ID',
+                \DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                \DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
 
 }

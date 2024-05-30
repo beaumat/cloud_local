@@ -161,6 +161,24 @@ class AccountJournalServices
             $ENTRY_TYPE = (int) $list->ENTRY_TYPE;
             $AMOUNT = (float) $list->AMOUNT;
             $SEQUENCE_GROUP = 0;
+            
+            if (isset($list->EXTENDED_OPTIONS)) {
+                $EXTENDED_OPTIONS = $list->EXTENDED_OPTIONS;
+                // Perform any additional operations if EXTENDED_OPTIONS is set
+            } else {
+                $EXTENDED_OPTIONS = null;
+                // Perform any additional operations if EXTENDED_OPTIONS is not set
+            }
+
+            if (isset($list->SEQUENCE_GROUP)) {
+                $SEQUENCE_GROUP = $list->SEQUENCE_GROUP;
+                // Perform any additional operations if EXTENDED_OPTIONS is set
+            } else {
+                $SEQUENCE_GROUP = 0;
+                // Perform any additional operations if EXTENDED_OPTIONS is not set
+            }
+
+
             if (!$this->JournalExists($ACCOUNT_ID, $OBJECT_ID, $OBJECT_TYPE, $OBJECT_DATE, $LOCATION_ID, $ENTRY_TYPE)) {
 
                 $PREV = $this->getPreviousAccountJournal($ACCOUNT_ID, $LOCATION_ID, $SUBSIDIARY_ID, 0, $OBJECT_DATE);
@@ -190,7 +208,7 @@ class AccountJournalServices
                     $ENTRY_TYPE,
                     $AMOUNT,
                     $ENDING_BALANCE,
-                    null
+                    $EXTENDED_OPTIONS
                 );
             }
 

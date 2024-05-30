@@ -114,11 +114,13 @@
                                                         aria-hidden="true"></i> Cancel</button>
                                             @endif
                                         @else
-                                            <button type="button" wire:click='getModify()' class="btn btn-sm btn-info">
-                                                <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                            </button>
-
                                             @if ($STATUS == 0)
+                                                <button type="button" wire:click='getModify()'
+                                                    class="btn btn-sm btn-info">
+                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                </button>
+
+
                                                 <button type="button" wire:click='getPosted()'
                                                     class="btn btn-sm btn-warning"
                                                     wire:confirm="Are you sure you want to post?">

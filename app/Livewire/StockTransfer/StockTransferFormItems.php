@@ -63,10 +63,10 @@ class StockTransferFormItems extends Component
     public function updatedcodeBase()
     {
         if ($this->codeBase) {
-            $this->itemCodeList = $this->itemServices->getByCustomer(true);
+            $this->itemCodeList = $this->itemServices->getInventoryItem(true);
             return;
         }
-        $this->itemDescList = $this->itemServices->getByCustomer(false);
+        $this->itemDescList = $this->itemServices->getInventoryItem(false);
     }
     public function getAmount(): void
     {

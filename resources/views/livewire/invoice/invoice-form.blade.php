@@ -155,6 +155,11 @@
                                                     @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
+                                                <button type="button" wire:click='getPosted()'
+                                                    class="btn btn-sm btn-warning"
+                                                    wire:confirm="Are you sure you want to post?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                </button>
                                             @endif
                                         @endif
                                     </div>

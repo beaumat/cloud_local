@@ -205,13 +205,19 @@ class ItemInventoryServices
             $SOURCE_REF_ID = (int) $list->ID;
             $ITEM_ID = (int) $list->ITEM_ID;
             $QUANTITY = (float) $list->QUANTITY;
-            $UNIT_BASE_QUANTITY = (float) $list->UNIT_BASE_QUANTITY;
             $BATCH_ID = $list->BATCH_ID ?? 0;
+            $UNIT_BASE_QUANTITY = (float) $list->UNIT_BASE_QUANTITY;
+
+            $QTY = (float) $QUANTITY * $UNIT_BASE_QUANTITY;
 
 
-            $QTY = $QUANTITY * $UNIT_BASE_QUANTITY;
+            if (isset($list->COST)) {
+                $COST = (float) $list->COST ?? 0;
 
-            $COST = $this->itemServices->getCost($ITEM_ID);
+            } else {
+                $COST = (float) $this->itemServices->getCost($ITEM_ID);
+            }
+
 
             if (!$Is_Added) {
                 $QTY = $QTY * -1;

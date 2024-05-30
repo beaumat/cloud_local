@@ -13,7 +13,7 @@ class BillList extends Component
     #[Reactive]
     public int $CHECK_ID;
     public $dataList = [];
-    public int $STATUS;
+
     public int $openStatus;
     private $billPaymentServices;
     #[Reactive]
@@ -24,6 +24,8 @@ class BillList extends Component
     public float $AMOUNT;
     #[Reactive]
     public float $AMOUNT_APPLIED;
+    #[Reactive]
+    public int $STATUS;
     public float $prevAmount;
     public float $orgAmount;
     public $editPaymentId = null;
@@ -72,7 +74,7 @@ class BillList extends Component
         $this->dispatch('reset-payment');
     }
     public function delete(int $ID, int $BILL_ID)
-    {  
+    {
         try {
             \DB::beginTransaction();
             $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
@@ -83,7 +85,7 @@ class BillList extends Component
             \DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
-            
+
         }
     }
     public function mount(int $CHECK_ID, int $VENDOR_ID, int $LOCATION_ID, float $AMOUNT, float $AMOUNT_APPLIED)

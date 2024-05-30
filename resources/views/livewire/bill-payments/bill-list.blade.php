@@ -8,7 +8,9 @@
                 <th class="col-1">Orig. Amount</th>
                 <th class="col-1">Balance</th>
                 <th class="col-1">Payment</th>
-                <th class="text-center col-1">Action</th>
+                @if ($STATUS == 0)
+                    <th class="text-center col-1">Action</th>
+                @endif
             </tr>
         </thead>
         <tbody class="text-xs">
@@ -28,32 +30,38 @@
                             {{ number_format($list->AMOUNT_PAID, 2) }}
                         @endif
                     </td>
-                    <td class="text-center">
-                        @if ($editPaymentId === $list->ID)
-                            <a href="#" title="Update" id="updatebtn" wire:click="update()"
-                                class="text-success btn-sm">
-                                <i class="fas fa-check" aria-hidden="true"></i>
-                            </a>
-                            <a href="#" title="Cancel" id="cancelbtn" href="#" wire:click="cancel()"
-                                class="text-warning btn-sm ">
-                                <i class="fas fa-ban" aria-hidden="true"></i>
-                            </a>
-                        @else
-                            <a href="#" title="Edit" id="editbtn"
-                                wire:click='edit( {{ $list->ID }}, {{ $list->BILL_ID }}, {{ $list->AMOUNT_PAID }})'
-                                class="text-info  btn-sm">
-                                <i class="fas fa-edit" aria-hidden="true"></i>
-                            </a>
-                            <a href="#" title="Delete" id="deletebtn"
-                                wire:click='delete({{ $list->ID }}, {{ $list->BILL_ID }})'
-                                wire:confirm="Are you sure you want to delete this?" class="text-danger btn-sm">
-                                <i class="fas fa-times" aria-hidden="true"></i>
-                            </a>
-                        @endif
-                    </td>
+
+                    @if ($STATUS == 0)
+                        <td class="text-center">
+                            @if ($editPaymentId === $list->ID)
+                                <a href="#" title="Update" id="updatebtn" wire:click="update()"
+                                    class="text-success btn-sm">
+                                    <i class="fas fa-check" aria-hidden="true"></i>
+                                </a>
+                                <a href="#" title="Cancel" id="cancelbtn" href="#" wire:click="cancel()"
+                                    class="text-warning btn-sm ">
+                                    <i class="fas fa-ban" aria-hidden="true"></i>
+                                </a>
+                            @else
+                                <a href="#" title="Edit" id="editbtn"
+                                    wire:click='edit( {{ $list->ID }}, {{ $list->BILL_ID }}, {{ $list->AMOUNT_PAID }})'
+                                    class="text-info  btn-sm">
+                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                </a>
+                                <a href="#" title="Delete" id="deletebtn"
+                                    wire:click='delete({{ $list->ID }}, {{ $list->BILL_ID }})'
+                                    wire:confirm="Are you sure you want to delete this?" class="text-danger btn-sm">
+                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                </a>
+                            @endif
+                        </td>
+                    @endif
                 </tr>
             @endforeach
         </tbody>
     </table>
-    @livewire('BillPayments.BillModal', ['VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'CHECK_ID' => $CHECK_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED])
+
+    @if ($STATUS === 0)
+        @livewire('BillPayments.BillModal', ['VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'CHECK_ID' => $CHECK_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'STATUS' => $STATUS])
+    @endif
 </div>

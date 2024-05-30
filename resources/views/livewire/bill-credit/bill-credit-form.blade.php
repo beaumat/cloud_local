@@ -107,6 +107,12 @@
                                                     @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
+
+                                                <button type="button" wire:click='getPosted()'
+                                                    class="btn btn-sm btn-warning"
+                                                    wire:confirm="Are you sure you want to post?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                </button>
                                             @endif
                                         @endif
                                     </div>
@@ -134,8 +140,8 @@
                             <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link @if ($tab == 'item') active @endif"
-                                        id="custom-tabs-four-item-tab" wire:click="SelectTab('item')" data-toggle="pill"
-                                        href="#custom-tabs-four-item" role="tab"
+                                        id="custom-tabs-four-item-tab" wire:click="SelectTab('item')"
+                                        data-toggle="pill" href="#custom-tabs-four-item" role="tab"
                                         aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
                                 </li>
                                 <li class="nav-item">

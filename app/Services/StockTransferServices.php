@@ -154,7 +154,8 @@ class StockTransferServices
             'UNIT_PRICE' => $UNIT_PRICE,
             'AMOUNT' => $UNIT_COST * $QUANTITY,
             'RETAIL_VALUE' => $UNIT_PRICE * $QUANTITY,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null
+            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null
         ]);
 
         $this->UpdateTotal($STOCK_TRANSFER_ID);
@@ -279,7 +280,6 @@ class StockTransferServices
     public function UpdateTotal(int $STOCK_TRANSFER_ID)
     {
         $result = $this->GetTotal($STOCK_TRANSFER_ID);
-
         StockTransfer::where('ID', $STOCK_TRANSFER_ID)
             ->update(
                 [
@@ -287,5 +287,90 @@ class StockTransferServices
                     'RETAIL_VALUE' => $result['RETAIL_VALUE'],
                 ]
             );
+    }
+    public function ItemInventory(int $STOCK_TRANSFER_ID)
+    {
+        $result = StockTransferItems::query()
+            ->select([
+                'stock_transfer_items.ID',
+                'stock_transfer_items.ITEM_ID',
+                'stock_transfer_items.QUANTITY',
+                'stock_transfer_items.UNIT_BASE_QUANTITY',
+                'item.COST'
+            ])
+            ->join('item', 'item.ID', '=', 'stock_transfer_items.ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('stock_transfer_items.STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
+            ->get();
+
+        return $result;
+    }
+    public function getStockTransferJournal_Source(int $STOCK_TRANSFER_ID)
+    {
+        $result = StockTransfer::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                \DB::raw(" 0 as SUBSIDIARY_ID"),
+                'AMOUNT',
+                \DB::raw(" 1 as ENTRY_TYPE"),
+                \DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS"),
+                \DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
+            ])
+            ->where('ID', $STOCK_TRANSFER_ID)->get();
+
+        return $result;
+    }
+    public function getStockTransferJournal_Des(int $STOCK_TRANSFER_ID)
+    {
+        $result = StockTransfer::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                \DB::raw(" 0 as SUBSIDIARY_ID"),
+                'AMOUNT',
+                \DB::raw("0 as ENTRY_TYPE"),
+                \DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS"),
+                \DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
+
+            ])
+            ->where('ID', $STOCK_TRANSFER_ID)->get();
+
+        return $result;
+    }
+
+    public function getStockTransferItemJournal_Debit(int $STOCK_TRANSFER_ID)
+    {
+        $result = StockTransferItems::query()
+            ->select([
+                'ID',
+                'ASSET_ACCOUNT_ID as ACCOUNT_ID',
+                'ITEM_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                \DB::raw('0 as ENTRY_TYPE'),
+                \DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS")
+            ])
+            ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
+    public function getStockTransferItemJournal_Credit(int $STOCK_TRANSFER_ID)
+    {
+        $result = StockTransferItems::query()
+            ->select([
+                'ID',
+                'ASSET_ACCOUNT_ID as ACCOUNT_ID',
+                'ITEM_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                \DB::raw('1 as ENTRY_TYPE'),
+                \DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS")
+            ])
+            ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+        return $result;
     }
 }

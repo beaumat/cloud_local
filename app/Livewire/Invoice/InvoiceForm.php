@@ -2,12 +2,16 @@
 
 namespace App\Livewire\Invoice;
 
+use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
+use App\Services\DocumentTypeServices;
 use App\Services\InvoiceServices;
+use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
+use App\Services\ObjectServices;
 use App\Services\PaymentTermServices;
 use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
@@ -67,6 +71,10 @@ class InvoiceForm extends Component
     private $scheduleServices;
     private $invoiceServices;
     private $dateServices;
+    private $itemInventoryServices;
+    private $documentTypeServices;
+    private $objectServices;
+    private $accountJournalServices;
 
     public string $tab = "item";
     public function SelectTab(string $select)
@@ -85,7 +93,11 @@ class InvoiceForm extends Component
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
         AccountServices $accountServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        ItemInventoryServices $itemInventoryServices,
+        DocumentTypeServices $documentTypeServices,
+        ObjectServices $objectServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->invoiceServices = $invoiceServices;
         $this->locationServices = $locationServices;
@@ -98,10 +110,13 @@ class InvoiceForm extends Component
         $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
         $this->dateServices = $dateServices;
+        $this->itemInventoryServices = $itemInventoryServices;
+        $this->documentTypeServices = $documentTypeServices;
+        $this->objectServices = $objectServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function LoadDropdown()
     {
-
         $this->contactList = $this->contactServices->getList(1);
         $this->locationList = $this->locationServices->getList();
         $this->shipViaList = $this->shipViaServices->getList();
@@ -318,7 +333,7 @@ class InvoiceForm extends Component
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();
-            
+
             session()->flash('error', $errorMessage);
         }
     }
@@ -356,6 +371,97 @@ class InvoiceForm extends Component
         $this->resetErrorBag();
         session()->forget('message');
         session()->forget('error');
+    }
+
+    private function ItemInventory(): bool
+    {
+        try {
+            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Invoice');
+            $data = $this->invoiceServices->ItemInventory($this->ID);
+            if ($data) {
+                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+            }
+            return true;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
+    private function AccountJournal(): bool
+    {
+        try {
+
+            $invoice = (int) $this->objectServices->ObjectTypeID('INVOICE');
+            $invoiceItems = (int) $this->objectServices->ObjectTypeID('INVOICE_ITEMS');
+
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($invoice, $this->ID) + 1;
+            //Main
+            $invoiceData = $this->invoiceServices->getInvoiceJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceData, $this->LOCATION_ID, $invoice, $this->DATE);
+            //Tax
+            $invoiceDataTax = $this->invoiceServices->getInvoiceTaxJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceDataTax, $this->LOCATION_ID, $invoice, $this->DATE);
+
+            //Item
+            $invoiceItemData = $this->invoiceServices->getInvoiceItemJournalIncome($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceItemData, $this->LOCATION_ID, $invoiceItems, $this->DATE);
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+
+        }
+
+    }
+    public function getPosted()
+    {
+        try {
+
+            $count = (int) $this->invoiceServices->CountItems($this->ID);
+
+            if ($count == 0) {
+                session()->flash('error', 'Item not found.');
+                return;
+            }
+            \DB::beginTransaction();
+            if (!$this->ItemInventory()) {
+                \DB::rollBack();
+                return;
+            }
+
+            if (!$this->AccountJournal()) {
+                \DB::rollBack();
+                return;
+            }
+
+            $this->invoiceServices->StatusUpdate($this->ID, 15);
+            \DB::commit();
+            $data = $this->invoiceServices->get($this->ID);
+            if ($data) {
+                $this->getInfo($data);
+                $this->Modify = false;
+                return;
+            }
+            session()->flash('message', 'Successfully posted');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+
     }
     public function render()
     {

@@ -2,10 +2,14 @@
 
 namespace App\Livewire\StockTransfer;
 
+use App\Services\AccountJournalServices;
 use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
+use App\Services\DocumentTypeServices;
+use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
+use App\Services\ObjectServices;
 use App\Services\StockTransferServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\Redirect;
@@ -41,14 +45,21 @@ class StockTransferForm extends Component
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
     private $contactServices;
-
+    private $documentTypeServices;
+    private $itemInventoryServices;
+    private $accountJournalServices;
+    private $objectServices;
     public function boot(
         StockTransferServices $stockTransferServices,
         LocationServices $locationServices,
         UserServices $userServices,
         DateServices $dateServices,
         DocumentStatusServices $documentStatusServices,
-        ContactServices $contactServices
+        ContactServices $contactServices,
+        DocumentTypeServices $documentTypeServices,
+        ItemInventoryServices $itemInventoryServices,
+        AccountJournalServices $accountJournalServices,
+        ObjectServices $objectServices
     ) {
         $this->stockTransferServices = $stockTransferServices;
         $this->locationServices = $locationServices;
@@ -56,6 +67,10 @@ class StockTransferForm extends Component
         $this->dateServices = $dateServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->contactServices = $contactServices;
+        $this->documentTypeServices = $documentTypeServices;
+        $this->itemInventoryServices = $itemInventoryServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->objectServices = $objectServices;
     }
     public function LoadDropdown()
     {
@@ -74,6 +89,66 @@ class StockTransferForm extends Component
         $this->transferReset = $this->transferReset ? false : true;
 
     }
+
+    private function ItemInventory(): bool
+    {
+        try {
+            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Stock Transfer');
+            $data = $this->stockTransferServices->ItemInventory($this->ID);
+            if ($data) {
+                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+                $this->itemInventoryServices->InventoryExecute($data, $this->TRANSFER_TO_ID, $SOURCE_REF_TYPE, $this->DATE, true);
+            }
+            return true;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
+    private function AccountJournal(): bool
+    {
+        try {
+
+            $stockTransfer = (int) $this->objectServices->ObjectTypeID('STOCK_TRANSFER');
+            $stockTransferItems = (int) $this->objectServices->ObjectTypeID('STOCK_TRANSFER_ITEMS');
+
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($stockTransfer, $this->ID) + 1;
+           
+            //Main
+            $sourceData = $this->stockTransferServices->getStockTransferJournal_Source($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $sourceData, $this->LOCATION_ID, $stockTransfer, $this->DATE);
+
+            $desData = $this->stockTransferServices->getStockTransferJournal_Des($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $desData, $this->TRANSFER_TO_ID, $stockTransfer, $this->DATE);
+
+
+            //Item
+            $stItemCredit = $this->stockTransferServices->getStockTransferItemJournal_Credit($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $stItemCredit, $this->LOCATION_ID, $stockTransferItems, $this->DATE);
+
+            $stItemDebit = $this->stockTransferServices->getStockTransferItemJournal_Debit($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $stItemDebit, $this->TRANSFER_TO_ID, $stockTransferItems, $this->DATE);
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+
+        }
+
+    }
     public function posted()
     {
         try {
@@ -81,12 +156,27 @@ class StockTransferForm extends Component
             if ($count == 0) {
                 Session()->flash('error', 'No item to transfer');
                 return;
+            }   
+
+            \DB::beginTransaction();
+            if (!$this->ItemInventory()) {
+                \DB::rollBack();
+                return;
+            }
+
+            if (!$this->AccountJournal()) {
+                \DB::rollBack();
+                return;
             }
             $this->stockTransferServices->StatusUpdate($this->ID, 15);
             $this->STATUS = 15;
+            \DB::commit();
+
             Session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
-            Session()->flash('error', $e->getMessage());
+            \DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
         }
 
 
@@ -134,7 +224,7 @@ class StockTransferForm extends Component
         $this->RETAIL_VALUE = 0;
         $this->PREPARED_BY_ID = 0;
         $this->NOTES = '';
-        $this->ACCOUNT_ID = 31;
+        $this->ACCOUNT_ID = 100;
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = '';
     }

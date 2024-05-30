@@ -30,6 +30,7 @@ use App\Livewire\InventoryAdjustment\InventoryAdjustmentForm;
 use App\Livewire\InventoryAdjustment\InventoryAdjustmentList;
 use App\Livewire\Invoice\InvoiceForm;
 use App\Livewire\Invoice\InvoiceList;
+use App\Livewire\List\ItemActiveList;
 use App\Livewire\Option\OptionSettings;
 use App\Livewire\PatientPayment\PatientPaymentForm;
 use App\Livewire\PatientPayment\PatientPaymentList;
@@ -387,8 +388,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/edit', RequirementForm::class)->name('requirement_edit');
             });
 
+            Route::prefix('/item-active-list')->group(function () {
+                Route::get('/', ItemActiveList::class)->name('item-active-list');
+
+            });
         });
-        
+
         Route::prefix('/settings')->name('settings')->group(function () {
             Route::prefix('/user')->middleware(['permission:users'])->group(function () {
                 Route::get('/', UserList::class)->name('users');

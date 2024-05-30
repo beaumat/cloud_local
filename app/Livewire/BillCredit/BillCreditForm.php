@@ -2,11 +2,15 @@
 
 namespace App\Livewire\BillCredit;
 
+use App\Services\AccountJournalServices;
 use App\Services\BillCreditServices;
 use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
+use App\Services\DocumentTypeServices;
+use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
+use App\Services\ObjectServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
@@ -48,6 +52,10 @@ class BillCreditForm extends Component
     private $documentStatusServices;
     private $systemSettingServices;
     private $dateServices;
+    private $objectServices;
+    private $documentTypeServices;
+    private $itemInventoryServices;
+    private $accountJournalServices;
     public string $tab = 'item';
     #[On('select-tab')]
     public function SelectTab($tab)
@@ -62,7 +70,11 @@ class BillCreditForm extends Component
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        ObjectServices $objectServices,
+        DocumentTypeServices $documentTypeServices,
+        ItemInventoryServices $itemInventoryServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->billCreditServices = $billCreditServices;
         $this->locationServices = $locationServices;
@@ -72,6 +84,10 @@ class BillCreditForm extends Component
         $this->documentStatusServices = $documentStatusServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
+        $this->documentTypeServices = $documentTypeServices;
+        $this->itemInventoryServices = $itemInventoryServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->objectServices = $objectServices;
     }
     public function LoadDropdown()
     {
@@ -110,7 +126,7 @@ class BillCreditForm extends Component
         $this->ACCOUNTS_PAYABLE_ID = $data->ACCOUNTS_PAYABLE_ID;
 
         if ($this->billCreditServices->isItemTab($data->ID)) {
-            
+
             $this->tab = "item";
             return;
         }
@@ -269,6 +285,104 @@ class BillCreditForm extends Component
         $this->resetErrorBag();
         session()->forget('message');
         session()->forget('error');
+    }
+
+    private function ItemInventory(): bool
+    {
+        try {
+            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Bill Credit');
+            $data = $this->billCreditServices->ItemInventory($this->ID);
+            if ($data) {
+                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+            }
+            return true;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
+    private function AccountJournal(): bool
+    {
+        try {
+
+            $billCredits = (int) $this->objectServices->ObjectTypeID('BILL_CREDIT');
+            $billCreditItems = (int) $this->objectServices->ObjectTypeID('BILL_CREDIT_ITEMS');
+            $billCreditExpenses = (int) $this->objectServices->ObjectTypeID('BILL_CREDIT_EXPENSES');
+
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($billCredits, $this->ID) + 1;
+
+            //Main
+            $billCreditData = $this->billCreditServices->getBillCreditJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditData, $this->LOCATION_ID, $billCredits, $this->DATE);
+            //Tax
+            $billDataTax = $this->billCreditServices->getBillCreditTaxJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billDataTax, $this->LOCATION_ID, $billCredits, $this->DATE);
+
+            //Item
+            $billCreditItemData = $this->billCreditServices->getBillCreditItemJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditItemData, $this->LOCATION_ID, $billCreditItems, $this->DATE);
+            //Expenses
+            $billCreditExpensesData = $this->billCreditServices->getBillCreditExpenseJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditExpensesData, $this->LOCATION_ID, $billCreditExpenses, $this->DATE);
+
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+
+        }
+
+    }
+    public function getPosted()
+    {
+        try {
+
+            $count_item = (int) $this->billCreditServices->CountItems($this->ID, true);
+            $count_expense = (int) $this->billCreditServices->CountItems($this->ID, false);
+            $count = $count_item + $count_expense;
+            if ($count == 0) {
+                session()->flash('error', 'Item not found.');
+                return;
+            }
+            \DB::beginTransaction();
+            if (!$this->ItemInventory()) {
+                \DB::rollBack();
+                return;
+            }
+
+            if (!$this->AccountJournal()) {
+                \DB::rollBack();
+                return;
+            }
+
+            $this->billCreditServices->StatusUpdate($this->ID, 15);
+            \DB::commit();
+            $data = $this->billCreditServices->get($this->ID);
+            if ($data) {
+                $this->getInfo($data);
+                $this->Modify = false;
+                return;
+            }
+            session()->flash('message', 'Successfully posted');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+
     }
     public function render()
     {

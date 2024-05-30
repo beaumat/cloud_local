@@ -1,0 +1,481 @@
+<?php
+
+namespace App\Livewire\List;
+
+use App\Services\DateServices;
+use App\Services\LocationServices;
+use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Title;
+use Livewire\Component;
+
+#[Title('Active Item List')]
+class ItemActiveList extends Component
+{
+  private $userServices;
+  private $dateServices;
+  public int $LOCATION_ID;
+  public $locationList = [];
+  public $DATE;
+  public function boot(
+    UserServices $userServices,
+    DateServices $dateServices,
+    LocationServices $locationServices
+  ) {
+    $this->userServices = $userServices;
+    $this->dateServices = $dateServices;
+    $this->locationServices = $locationServices;
+  }
+  public function mount()
+  { 
+    $this->LOCATION_ID = $this->userServices->getLocationDefault();
+    $this->DATE = $this->dateServices->NowDate();
+    $this->locationList = $this->locationServices->getList();
+  }
+  public function getItems($locationId = null, $batchId = null, $sourceRefDate = null)
+  {
+    $query = DB::select("SELECT
+        ITEM.ID,
+        ITEM.CODE,
+        ITEM.DESCRIPTION,
+        ITEM.PURCHASE_DESCRIPTION,
+        ITEM.TYPE,
+        ITEM_TYPE_MAP.DESCRIPTION TYPE_DESC,
+        ITEM_GROUP.ID GROUP_ID,
+        ITEM_GROUP.DESCRIPTION GROUP_DESC,
+        ITEM_SUB_CLASS.ID SUB_CLASS_ID,
+        ITEM_SUB_CLASS.DESCRIPTION SUB_CLASS_DESC,
+        ITEM_CLASS.ID CLASS_ID,
+        ITEM_CLASS.DESCRIPTION CLASS_DESC,
+        VENDOR.NAME VENDOR_NAME,
+        MANUFACTURER.NAME MANUFACTURER_NAME,
+        ITEM.NOTES,
+        STOCK_BIN.CODE STOCK_BIN_CODE,
+        ITEM_UNIT.ID UNIT_ID,
+        CASE
+          WHEN ITEM_UNITS.ID IS NOT NULL THEN
+            CONCAT(ITEM_UNIT.NAME,
+              ' (', TRIM(TRAILING '.' FROM TRIM('0'
+                FROM CAST(ITEM_UNITS.QUANTITY AS CHAR))),'/1)')
+        ELSE
+          ITEM_UNIT.NAME
+        END UNIT_NAME,
+        ITEM_UNIT.SYMBOL UNIT_SYMBOL,
+        DUMMY.DUMMY_INT BATCH_ID,
+        DUMMY.DUMMY_CHAR BATCH_NO,
+        DUMMY.DUMMY_DATE EXPIRY_DATE,
+        COALESCE(ITEM_INVENTORY.QUANTITY / COALESCE(ITEM_UNITS.QUANTITY, 1),
+          CASE
+            WHEN ITEM.TYPE <= 1 THEN 0
+            ELSE NULL
+          END
+          ) QTY_ON_HAND,
+        SO_QRY.QUANTITY QTY_ON_SO,
+        PO_QRY.QUANTITY QTY_ON_PO,
+        LAST_PURCHASE.DATE LAST_PURCHASE_DATE,
+        LAST_PURCHASE.QUANTITY LAST_PURCHASE_QUANTITY,
+        LAST_PURCHASE.UNIT_NAME LAST_PURCHASE_UNIT_NAME,
+        LAST_PURCHASE.UNIT_SYMBOL LAST_PURCHASE_UNIT_SYMBOL,
+        LAST_PURCHASE.UNIT_COST LAST_PURCHASE_PRICE,
+        LAST_PURCHASE.VENDOR_NAME LAST_PURCHASE_VENDOR_NAME,
+        ITEM_INVENTORY.COST / ITEM_INVENTORY.QUANTITY UNIT_COST,
+        CASE
+          WHEN ITEM.TYPE = 6 THEN
+            GROUP_ITEM.UNIT_PRICE
+          WHEN ITEM.TYPE <= 4 THEN
+            CASE
+              WHEN PRICE_LEVEL.ID IS NOT NULL THEN
+                CASE
+                  WHEN PRICE_LEVEL.TYPE=0 THEN
+                    ROUND(ITEM.RATE * COALESCE(ITEM_UNITS.QUANTITY, 1) + ((ITEM.RATE * COALESCE(ITEM_UNITS.QUANTITY, 1)) * PRICE_LEVEL.RATE/100), 2)
+                  WHEN ITEM_UNITS.RATE IS NOT NULL THEN
+                    CASE
+                      WHEN ITEM_UNIT_PRICE_LEVELS.CUSTOM_PRICE IS NOT NULL THEN
+                        ITEM_UNIT_PRICE_LEVELS.CUSTOM_PRICE
+                      ELSE
+                        ITEM_UNITS.RATE
+                    END
+                  WHEN PRICE_LEVEL_LINES.CUSTOM_PRICE IS NOT NULL THEN
+                    PRICE_LEVEL_LINES.CUSTOM_PRICE * COALESCE(ITEM_UNITS.QUANTITY, 1)
+                  ELSE
+                    ITEM.RATE * COALESCE(ITEM_UNITS.QUANTITY, 1)
+                END
+              WHEN LOCATION_PRICE_LEVEL.ID IS NOT NULL THEN
+                CASE
+                  WHEN LOCATION_PRICE_LEVEL.TYPE=0 THEN
+                    ROUND(ITEM.RATE * COALESCE(ITEM_UNITS.QUANTITY, 1) + ((ITEM.RATE * COALESCE(ITEM_UNITS.QUANTITY, 1)) * LOCATION_PRICE_LEVEL.RATE/100), 2)
+                  WHEN ITEM_UNITS.RATE IS NOT NULL THEN
+                    CASE
+                      WHEN LOCATION_ITEM_UNIT_PRICE_LEVELS.CUSTOM_PRICE IS NOT NULL THEN
+                        LOCATION_ITEM_UNIT_PRICE_LEVELS.CUSTOM_PRICE
+                      ELSE
+                        ITEM_UNITS.RATE
+                    END
+                  WHEN LOCATION_PRICE_LEVEL_LINES.CUSTOM_PRICE IS NOT NULL THEN
+                    LOCATION_PRICE_LEVEL_LINES.CUSTOM_PRICE * COALESCE(ITEM_UNITS.QUANTITY, 1)
+                  ELSE
+                    ITEM.RATE * COALESCE(ITEM_UNITS.QUANTITY, 1)
+                END
+              WHEN ITEM_UNITS.RATE IS NOT NULL THEN
+                ITEM_UNITS.RATE
+              ELSE
+                ITEM.RATE * COALESCE(ITEM_UNITS.QUANTITY, 1)
+            END
+          WHEN ITEM_UNITS.RATE IS NOT NULL THEN
+            ITEM_UNITS.RATE
+          ELSE
+            ITEM.RATE * COALESCE(ITEM_UNITS.QUANTITY, 1)
+        END UNIT_PRICE,
+       0 AS PRICE_LEVEL0,
+        ITEM.CUSTOM_FIELD1,
+        ITEM.CUSTOM_FIELD2,
+        ITEM.CUSTOM_FIELD3,
+        ITEM.CUSTOM_FIELD4,
+        ITEM.CUSTOM_FIELD5,
+        ITEM.INACTIVE
+      FROM
+        ITEM
+      LEFT JOIN
+        (
+      SELECT
+        ITEM_INVENTORY.ITEM_ID,
+        SUM(ITEM_INVENTORY.ENDING_QUANTITY) QUANTITY,
+        SUM(ITEM_INVENTORY.ENDING_COST) COST
+      FROM
+        ITEM_INVENTORY
+      INNER JOIN
+        (
+          SELECT
+            ITEM_INVENTORY.ITEM_ID,
+            ITEM_INVENTORY.LOCATION_ID,
+            ITEM_INVENTORY.BATCH_ID,
+            MAX(ITEM_INVENTORY.SEQUENCE_NO) SEQUENCE_NO
+          FROM
+            ITEM_INVENTORY
+            FORCE INDEX(IX_ITEM_INVENTORY_TRANS_REF)
+          INNER JOIN
+            ITEM
+            ON ITEM.ID=ITEM_INVENTORY.ITEM_ID
+          LEFT JOIN
+            ITEM_TYPE_MAP
+            ON ITEM_TYPE_MAP.ID=ITEM.TYPE
+          LEFT JOIN
+            ITEM_SUB_CLASS
+            ON ITEM_SUB_CLASS.ID=ITEM.SUB_CLASS_ID
+          LEFT JOIN
+            ITEM_CLASS
+            ON ITEM_CLASS.ID=ITEM_SUB_CLASS.CLASS_ID
+          LEFT JOIN
+            ITEM_GROUP
+            ON ITEM_GROUP.ID=ITEM.GROUP_ID
+          LEFT JOIN
+            ITEM_PREFERENCE
+            ON ITEM_PREFERENCE.ITEM_ID=ITEM.ID
+              AND ITEM_PREFERENCE.LOCATION_ID=1
+          LEFT JOIN
+            ITEM_BATCHES
+            ON ITEM_BATCHES.ID=ITEM_INVENTORY.BATCH_ID
+              AND ITEM_BATCHES.ITEM_ID=ITEM_INVENTORY.ITEM_ID
+      WHERE 
+        ITEM.INACTIVE=0
+        AND
+        ITEM_INVENTORY.LOCATION_ID=1
+        AND
+        ITEM_INVENTORY.SOURCE_REF_DATE<=_latin1'2024-05-29'
+          GROUP BY
+            ITEM_INVENTORY.ITEM_ID,
+            ITEM_INVENTORY.LOCATION_ID,
+            ITEM_INVENTORY.BATCH_ID
+        ) CURRENT_INVENTORY
+        ON CURRENT_INVENTORY.ITEM_ID=ITEM_INVENTORY.ITEM_ID
+          AND CURRENT_INVENTORY.LOCATION_ID=ITEM_INVENTORY.LOCATION_ID
+          AND CURRENT_INVENTORY.BATCH_ID=ITEM_INVENTORY.BATCH_ID
+          AND CURRENT_INVENTORY.SEQUENCE_NO=ITEM_INVENTORY.SEQUENCE_NO
+      GROUP BY
+        ITEM_INVENTORY.ITEM_ID
+        ) ITEM_INVENTORY
+        ON ITEM_INVENTORY.ITEM_ID=ITEM.ID
+      LEFT JOIN
+        (
+      SELECT
+        SALES_ORDER_ITEMS.ITEM_ID,
+        SUM((SALES_ORDER_ITEMS.QUANTITY -
+          COALESCE(SALES_ORDER_ITEMS.INVOICED_QTY,0)) * COALESCE(SALES_ORDER_ITEMS.UNIT_BASE_QUANTITY, 1)
+        ) QUANTITY
+      FROM
+        SALES_ORDER_ITEMS
+      LEFT JOIN
+        SALES_ORDER
+        ON SALES_ORDER.ID=SALES_ORDER_ITEMS.SALES_ORDER_ID
+      WHERE
+        SALES_ORDER.STATUS=2
+        AND SALES_ORDER_ITEMS.CLOSED=0
+        AND SALES_ORDER.LOCATION_ID=1
+      GROUP BY
+        SALES_ORDER_ITEMS.ITEM_ID
+        ) SO_QRY
+          ON SO_QRY.ITEM_ID=ITEM.ID
+      LEFT JOIN
+        (
+      SELECT
+        PO_ITEMS.ITEM_ID,
+        SUM(PO_ITEMS.QUANTITY * COALESCE(PO_ITEMS.UNIT_BASE_QUANTITY, 1)) QUANTITY
+      FROM
+        PURCHASE_ORDER_ITEMS PO_ITEMS
+      LEFT JOIN
+        PURCHASE_ORDER PO
+        ON PO.ID=PO_ITEMS.PO_ID
+      WHERE
+        PO.STATUS=2
+        AND PO_ITEMS.CLOSED=0
+        AND PO.LOCATION_ID=1
+      GROUP BY
+        PO_ITEMS.ITEM_ID
+        ) PO_QRY
+          ON PO_QRY.ITEM_ID=ITEM.ID
+      LEFT JOIN
+        (
+      SELECT
+        BILL_ITEMS.ID,
+        BILL_ITEMS.ITEM_ID,
+        BILL.LOCATION_ID,
+        BILL.VENDOR_ID,
+        VENDOR.NAME VENDOR_NAME,
+        VENDOR.ACCOUNT_NO VENDOR_ACCOUNT_NO,
+        BILL.DATE,
+        BILL_ITEMS.QUANTITY,
+        UNIT_OF_MEASURE.NAME UNIT_NAME,
+        UNIT_OF_MEASURE.SYMBOL UNIT_SYMBOL,
+        BILL_ITEMS.RATE UNIT_COST
+      FROM
+        ITEM_INVENTORY
+      INNER JOIN
+        (
+          SELECT
+            MAX(ITEM_INVENTORY.ID) ID
+          FROM
+            ITEM_INVENTORY
+          INNER JOIN
+            (
+              SELECT
+                ITEM_INVENTORY.ITEM_ID,
+                ITEM_INVENTORY.LOCATION_ID,
+                ITEM_INVENTORY.BATCH_ID,
+                MAX(ITEM_INVENTORY.SEQUENCE_NO) SEQUENCE_NO
+              FROM
+                ITEM_INVENTORY
+              INNER JOIN
+                ITEM
+                ON ITEM.ID=ITEM_INVENTORY.ITEM_ID
+              LEFT JOIN
+                ITEM_TYPE_MAP
+                ON ITEM_TYPE_MAP.ID=ITEM.TYPE
+              LEFT JOIN
+                ITEM_SUB_CLASS
+                ON ITEM_SUB_CLASS.ID=ITEM.SUB_CLASS_ID
+              LEFT JOIN
+                ITEM_CLASS
+                ON ITEM_CLASS.ID=ITEM_SUB_CLASS.CLASS_ID
+              LEFT JOIN
+                ITEM_GROUP
+                ON ITEM_GROUP.ID=ITEM.GROUP_ID
+              LEFT JOIN
+                MANUFACTURER
+                ON MANUFACTURER.ID=ITEM.MANUFACTURER_ID
+              LEFT JOIN
+                ITEM_BATCHES
+                ON ITEM_BATCHES.ID=NULL
+              WHERE
+                ITEM_INVENTORY.SOURCE_REF_TYPE=1
+                AND ITEM_INVENTORY.COST>0
+        AND ITEM.INACTIVE=0
+              GROUP BY
+                ITEM_INVENTORY.ITEM_ID,
+                ITEM_INVENTORY.LOCATION_ID,
+                ITEM_INVENTORY.BATCH_ID
+            ) LAST_RECEIVING
+            ON LAST_RECEIVING.ITEM_ID=ITEM_INVENTORY.ITEM_ID
+              AND LAST_RECEIVING.LOCATION_ID=ITEM_INVENTORY.LOCATION_ID
+              AND LAST_RECEIVING.BATCH_ID=ITEM_INVENTORY.BATCH_ID
+              AND LAST_RECEIVING.SEQUENCE_NO=ITEM_INVENTORY.SEQUENCE_NO
+          GROUP BY
+            ITEM_INVENTORY.ITEM_ID
+        ) LAST_RECEIVING
+        ON LAST_RECEIVING.ID=ITEM_INVENTORY.ID
+      INNER JOIN
+        BILL_ITEMS
+        ON BILL_ITEMS.ID=ITEM_INVENTORY.SOURCE_REF_ID
+      INNER JOIN
+        BILL
+        ON BILL.ID=BILL_ITEMS.BILL_ID
+      INNER JOIN
+        CONTACT VENDOR
+        ON VENDOR.ID=BILL.VENDOR_ID
+      LEFT JOIN
+        UNIT_OF_MEASURE
+        ON UNIT_OF_MEASURE.ID=BILL_ITEMS.UNIT_ID
+      LEFT JOIN
+        DUMMY
+        ON DUMMY.ID=0
+        ) LAST_PURCHASE
+          ON LAST_PURCHASE.ITEM_ID=ITEM.ID
+      LEFT JOIN
+        (
+          SELECT
+            ITEM.ID ITEM_ID,
+            SUM(COALESCE(ITEM_COMPONENTS.QUANTITY, 1) *
+              CASE
+                WHEN ITEM_COMPONENTS.RATE IS NOT NULL
+                  THEN
+                    CASE
+                      WHEN COMPONENT.TYPE <> 7
+                        THEN ITEM_COMPONENTS.RATE
+                      ELSE
+                        -ITEM_COMPONENTS.RATE
+                    END
+                ELSE
+                  CASE
+                    WHEN PRICE_LEVEL.ID IS NOT NULL THEN
+                      CASE WHEN PRICE_LEVEL.TYPE=0 THEN
+                         ROUND(COMPONENT.RATE + (COMPONENT.RATE * PRICE_LEVEL.RATE/100), 2)
+                        WHEN PRICE_LEVEL_LINES.CUSTOM_PRICE IS NOT NULL THEN
+                          PRICE_LEVEL_LINES.CUSTOM_PRICE
+                        WHEN COMPONENT.TYPE <> 7 THEN
+                          COMPONENT.RATE
+                        ELSE
+                          -COMPONENT.RATE
+                      END
+                    WHEN LOCATION_PRICE_LEVEL.ID IS NOT NULL THEN
+                      CASE WHEN LOCATION_PRICE_LEVEL.TYPE=0 THEN
+                         ROUND(COMPONENT.RATE + (COMPONENT.RATE * LOCATION_PRICE_LEVEL.RATE/100), 2)
+                        WHEN LOCATION_PRICE_LEVEL_LINES.CUSTOM_PRICE IS NOT NULL THEN
+                          LOCATION_PRICE_LEVEL_LINES.CUSTOM_PRICE
+                        WHEN COMPONENT.TYPE <> 7 THEN
+                          COMPONENT.RATE
+                        ELSE
+                          -COMPONENT.RATE
+                      END
+                    ELSE
+                      CASE
+                        WHEN COMPONENT.TYPE <> 7
+                          THEN COMPONENT.RATE
+                      ELSE
+                        -COMPONENT.RATE
+                      END
+                  END
+              END
+            ) UNIT_PRICE
+          FROM
+            ITEM
+          INNER JOIN
+            ITEM_COMPONENTS
+            ON ITEM_COMPONENTS.ITEM_ID=ITEM.ID
+          INNER JOIN
+            ITEM COMPONENT
+            ON COMPONENT.ID=ITEM_COMPONENTS.COMPONENT_ID
+          LEFT JOIN
+            PRICE_LEVEL
+            ON PRICE_LEVEL.ID=NULL
+          LEFT JOIN
+            PRICE_LEVEL_LINES
+            ON PRICE_LEVEL_LINES.PRICE_LEVEL_ID=PRICE_LEVEL.ID
+              AND PRICE_LEVEL_LINES.ITEM_ID=COMPONENT.ID
+          LEFT JOIN
+            LOCATION
+            ON LOCATION.ID=1
+          LEFT JOIN
+            PRICE_LEVEL LOCATION_PRICE_LEVEL
+            ON LOCATION_PRICE_LEVEL.ID=LOCATION.PRICE_LEVEL_ID
+          LEFT JOIN
+            PRICE_LEVEL_LINES LOCATION_PRICE_LEVEL_LINES
+            ON LOCATION_PRICE_LEVEL_LINES.PRICE_LEVEL_ID=LOCATION_PRICE_LEVEL.ID
+              AND LOCATION_PRICE_LEVEL_LINES.ITEM_ID=COMPONENT.ID
+          GROUP BY
+            ITEM.ID
+        ) GROUP_ITEM
+          ON GROUP_ITEM.ITEM_ID=ITEM.ID
+      LEFT JOIN
+        PRICE_LEVEL
+        ON PRICE_LEVEL.ID=NULL
+      LEFT JOIN
+        PRICE_LEVEL_LINES
+        ON PRICE_LEVEL_LINES.PRICE_LEVEL_ID=PRICE_LEVEL.ID
+          AND PRICE_LEVEL_LINES.ITEM_ID=ITEM.ID
+      LEFT JOIN
+        LOCATION
+        ON LOCATION.ID=1
+      LEFT JOIN
+        PRICE_LEVEL LOCATION_PRICE_LEVEL
+        ON LOCATION_PRICE_LEVEL.ID=LOCATION.PRICE_LEVEL_ID
+      LEFT JOIN
+        PRICE_LEVEL_LINES LOCATION_PRICE_LEVEL_LINES
+        ON LOCATION_PRICE_LEVEL_LINES.PRICE_LEVEL_ID=LOCATION_PRICE_LEVEL.ID
+          AND LOCATION_PRICE_LEVEL_LINES.ITEM_ID=ITEM.ID
+      LEFT JOIN
+        ITEM_PREFERENCE
+        ON ITEM_PREFERENCE.ITEM_ID=ITEM.ID
+          AND ITEM_PREFERENCE.LOCATION_ID=1
+      LEFT JOIN
+        ITEM_TYPE_MAP
+        ON ITEM_TYPE_MAP.ID=ITEM.TYPE
+      LEFT JOIN
+        ITEM_SUB_CLASS
+        ON ITEM_SUB_CLASS.ID=ITEM.SUB_CLASS_ID
+      LEFT JOIN
+        ITEM_CLASS
+        ON ITEM_CLASS.ID=ITEM_SUB_CLASS.CLASS_ID
+      LEFT JOIN
+        ITEM_GROUP
+        ON ITEM_GROUP.ID=ITEM.GROUP_ID
+      LEFT JOIN
+        CONTACT VENDOR
+        ON VENDOR.ID=ITEM.PREFERRED_VENDOR_ID
+      LEFT JOIN
+        MANUFACTURER
+        ON MANUFACTURER.ID=ITEM.MANUFACTURER_ID
+      LEFT JOIN
+        STOCK_BIN
+        ON STOCK_BIN.ID=ITEM_PREFERENCE.STOCK_BIN_ID
+      LEFT JOIN
+        ITEM_BATCHES
+        ON ITEM_BATCHES.ID=NULL
+      LEFT JOIN
+        ITEM_LOCATION_UNITS
+        ON ITEM_LOCATION_UNITS.ITEM_ID=ITEM.ID
+          AND ITEM_LOCATION_UNITS.LOCATION_ID=LOCATION.ID
+      LEFT JOIN
+        UNIT_OF_MEASURE ITEM_UNIT
+        ON (ITEM_UNIT.ID=ITEM_LOCATION_UNITS.SALES_UNIT_ID)
+          OR (ITEM_LOCATION_UNITS.SALES_UNIT_ID IS NULL
+            AND ITEM_UNIT.ID=ITEM.SALES_UNIT_ID)
+          OR (ITEM_UNIT.ID=ITEM.BASE_UNIT_ID AND ITEM_LOCATION_UNITS.SALES_UNIT_ID IS NULL
+            AND ITEM.SALES_UNIT_ID IS NULL)
+      LEFT JOIN
+        ITEM_UNITS
+        ON ITEM_UNITS.ITEM_ID=ITEM.ID
+          AND ITEM_UNITS.UNIT_ID=ITEM_UNIT.ID
+      LEFT JOIN
+        ITEM_UNIT_PRICE_LEVELS
+        ON ITEM_UNIT_PRICE_LEVELS.ITEM_UNIT_LINE_ID=ITEM_UNITS.ID
+          AND ITEM_UNIT_PRICE_LEVELS.PRICE_LEVEL_ID=PRICE_LEVEL.ID
+      LEFT JOIN
+        ITEM_UNIT_PRICE_LEVELS LOCATION_ITEM_UNIT_PRICE_LEVELS
+        ON LOCATION_ITEM_UNIT_PRICE_LEVELS.ITEM_UNIT_LINE_ID=ITEM_UNITS.ID
+          AND LOCATION_ITEM_UNIT_PRICE_LEVELS.PRICE_LEVEL_ID=LOCATION_PRICE_LEVEL.ID
+      LEFT JOIN
+        DUMMY
+        ON DUMMY.ID=0
+      WHERE 
+        ITEM.INACTIVE=0
+      ORDER BY
+        TYPE,
+        DESCRIPTION");
+
+    return $query;
+  }
+  public function render()
+  {
+    $dataList = $this->getItems($this->LOCATION_ID, 0, $this->DATE);
+    return view('livewire.list.item-active-list', ['dataList' => $dataList]);
+  }
+}

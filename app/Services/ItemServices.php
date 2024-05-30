@@ -26,11 +26,35 @@ class ItemServices
     }
     public function updateCost(int $ID, float $COST)
     {
-        items::where('ID', $ID)->update(['COST' => $COST]);
+        items::where('ID', $ID)
+        ->update(['COST' => $COST]);
     }
     public function AssemblyItem()
     {
-        return items::where('TYPE', 1)->where('INACTIVE', 0)->get();
+        return items::where('TYPE', 1)
+            ->where('INACTIVE', 0)
+            ->get();
+    }
+    public function getInventoryItem(bool $isCode)
+    {
+        if ($isCode) {
+
+            return Items::query()
+                ->select(['ID', 'CODE'])
+                ->where('INACTIVE', '0')
+                ->whereIn('TYPE', ['0', '1'])
+                ->get();
+        }
+
+        return Items::query()
+            ->select(
+                [
+                    'item.ID',
+                    'item.DESCRIPTION'
+                ]
+            )->where('INACTIVE', '0')
+            ->whereIn('TYPE', ['0', '1'])
+            ->get();
     }
     public function getByVendor(bool $isCode)
     {

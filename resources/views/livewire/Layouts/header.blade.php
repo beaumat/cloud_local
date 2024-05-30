@@ -20,7 +20,7 @@
             </ul>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{ route('dashboard') }}" class="nav-link">Items Monitoring</a>
+            <a href="{{ route('maintenanceothersitem-active-list') }}" class="nav-link">Items Monitoring</a>
         </li>
 
     </ul>

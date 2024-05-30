@@ -321,6 +321,7 @@ class InvoiceServices
         if ($data) {
             DB::beginTransaction();
             try {
+
                 $data->update([
                     'QUANTITY' => $QUANTITY,
                     'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
@@ -382,6 +383,7 @@ class InvoiceServices
     public function ReComputed(int $ID): array
     {
         $invoiceItems = Invoice::where('ID', $ID)->first();
+
         if ($invoiceItems) {
             $TAX_ID = (int) $invoiceItems->OUTPUT_TAX_ID;
 
@@ -401,12 +403,13 @@ class InvoiceServices
                 ->orderBy('invoice_items.LINE_NO', 'asc')
                 ->get();
 
-            $data = $this->compute->taxCompute($itemResult, $TAX_ID);
+
 
             $paymentApplied = (float) $this->GetPaymentApplied($ID);
             $creditApplied = (float) $this->GetCreditApplied($ID);
             $totalPay = (float) $paymentApplied + $creditApplied;
-
+            
+            $data = $this->compute->taxCompute($itemResult, $TAX_ID);
             foreach ($data as $list) {
                 $originalAmount = (float) $list['AMOUNT'];
                 $balance = (float) $originalAmount - $totalPay;
@@ -528,8 +531,78 @@ class InvoiceServices
             ->orderBy('pay.RECORDED_ON')
             ->get();
 
-
         return $results;
     }
 
+    public function CountItems(int $INVOICE_ID): int
+    {
+        return (int) InvoiceItems::where('INVOICE_ID', $INVOICE_ID)->count();
+    }
+
+    public function ItemInventory(int $INVOICE_ID)
+    {
+        $result = InvoiceItems::query()
+            ->select([
+                'invoice_items.ID',
+                'invoice_items.ITEM_ID',
+                'invoice_items.RATE',
+                'invoice_items.QUANTITY',
+                'invoice_items.UNIT_BASE_QUANTITY',
+                'item.COST'
+            ])
+            ->join('item', 'item.ID', '=', 'invoice_items.ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('invoice_items.INVOICE_ID', $INVOICE_ID)
+            ->get();
+
+        return $result;
+    }
+    public function getInvoiceTaxJournal(int $INVOICE_ID)
+    {
+        $result = Invoice::query()
+            ->select([
+                'ID',
+                'OUTPUT_TAX_ACCOUNT_ID as ACCOUNT_ID',
+                'CUSTOMER_ID as SUBSIDIARY_ID',
+                'OUTPUT_TAX_AMOUNT as AMOUNT',
+                \DB::raw(' 1 as ENTRY_TYPE')
+
+            ])
+            ->where('ID', $INVOICE_ID)
+            ->where('OUTPUT_TAX_AMOUNT', '>', 0)
+            ->get();
+
+        return $result;
+    }
+    public function getInvoiceJournal(int $INVOICE_ID)
+    {
+        $result = Invoice::query()
+            ->select([
+                'ID',
+                'ACCOUNTS_RECEIVABLE_ID as ACCOUNT_ID',
+                'CUSTOMER_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                \DB::raw(' 0 as ENTRY_TYPE')
+
+            ])
+            ->where('ID', $INVOICE_ID)->get();
+
+        return $result;
+    }
+    public function getInvoiceItemJournalIncome(int $INVOICE_ID)
+    {
+        $result = InvoiceItems::query()
+            ->select([
+                'ID',
+                'INCOME_ACCOUNT_ID as ACCOUNT_ID',
+                'ITEM_ID as SUBSIDIARY_ID',
+                \DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                \DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->where('INVOICE_ID', $INVOICE_ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
 }

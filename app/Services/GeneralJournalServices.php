@@ -65,7 +65,6 @@ class GeneralJournalServices
     {
         return GeneralJournal::where('ID', $ID)->first();
     }
-
     public function Search($search, int $locationId, int $perPage)
     {
         $result = GeneralJournal::query()
