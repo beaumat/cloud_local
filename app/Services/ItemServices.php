@@ -21,13 +21,15 @@ class ItemServices
     public function getCost(int $ID): float
     {
         $item = items::select('COST')->find($ID);
-
-        return $item ? $item->COST : 0.0;
+        if ($item) {
+            return $item->COST ?? 0;
+        }
+        return 0;
     }
     public function updateCost(int $ID, float $COST)
     {
         items::where('ID', $ID)
-        ->update(['COST' => $COST]);
+            ->update(['COST' => $COST]);
     }
     public function AssemblyItem()
     {

@@ -57,7 +57,7 @@ class BuildAssemblyServices
         ]);
 
         $newAmount = (float) $this->AutoCreateComponent($ASSEMBLY_ITEM_ID, $ID, $QUANTITY);
-        
+
         BuildAssembly::where('ID', $ID)->update(['AMOUNT' => $newAmount]);
 
 
@@ -211,7 +211,10 @@ class BuildAssemblyServices
     {
         BuildAssemblyItems::where('ID', $ID)->delete();
     }
-
+    public function CountItems(int $BUILD_ASSEMBLY_ID): int
+    {
+        return (int) BuildAssemblyItems::where('BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)->count();
+    }
     public function ComponentList(int $BUILD_ASSEMBLY_ID)
     {
 
@@ -225,7 +228,7 @@ class BuildAssemblyServices
                 'item.CODE',
                 'build_assembly_items.ID',
                 DB::raw(' 0 as OTY_OHAND')
-                
+
             ])
             ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
             ->where('build_assembly_items.BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
@@ -234,5 +237,70 @@ class BuildAssemblyServices
 
         return $result;
     }
+    public function AssemblyItemInventory(int $BUILD_ASSEMBLY_ID)
+    {
+        $result = BuildAssembly::query()
+            ->select([
+                'build_assembly.ID',
+                'build_assembly.ASSEMBLY_ITEM_ID as ITEM_ID',
+                'build_assembly.QUANTITY',
+                \DB::raw(' 1 as UNIT_BASE_QUANTITY'),
+                'item.COST'
+            ])
+            ->join('item', 'item.ID', '=', 'build_assembly.ASSEMBLY_ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('build_assembly.ID', $BUILD_ASSEMBLY_ID)
+            ->get();
 
+        return $result;
+    }
+    public function ItemInventory(int $BUILD_ASSEMBLY_ID)
+    {
+        $result = BuildAssemblyItems::query()
+            ->select([
+                'build_assembly_items.ID',
+                'build_assembly_items.ITEM_ID',
+                'build_assembly_items.QUANTITY',
+                \DB::raw(' 1 as UNIT_BASE_QUANTITY'),
+                'item.COST'
+            ])
+            ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('build_assembly_items.BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
+            ->get();
+
+        return $result;
+    }
+
+    public function getBuildAssemblyJournal(int $BUILD_ASSEMBLY_ID)
+    {
+        $result = BuildAssembly::query()
+            ->select([
+                'ID',
+                'ASSET_ACCOUNT_ID as ACCOUNT_ID',
+                'ASSEMBLY_ITEM_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                \DB::raw(' 0 as ENTRY_TYPE')
+
+            ])
+            ->where('ID', $BUILD_ASSEMBLY_ID)->get();
+
+        return $result;
+    }
+    public function getBuildAssemblyItemsJournal(int $BUILD_ASSEMBLY_ID)
+    {
+        $result = BuildAssemblyItems::query()
+            ->select([
+                'ID',
+                'ASSET_ACCOUNT_ID as ACCOUNT_ID',
+                'ITEM_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                \DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->where('BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
+            ->orderBy('ID', 'asc')
+            ->get();
+
+        return $result;
+    }
 }

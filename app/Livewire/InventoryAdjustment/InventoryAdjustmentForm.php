@@ -2,12 +2,16 @@
 
 namespace App\Livewire\InventoryAdjustment;
 
+use App\Services\AccountJournalServices;
 use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
+use App\Services\DocumentTypeServices;
 use App\Services\InventoryAdjustmentServices;
 use App\Services\InventoryAdjustmentTypeServices;
+use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
+use App\Services\ObjectServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
@@ -38,6 +42,10 @@ class InventoryAdjustmentForm extends Component
     private $documentStatusServices;
     private $contactServices;
     private $inventoryAdjustmentTypeServices;
+    private $itemInventoryServices;
+    private $documentTypeServices;
+    private $objectServices;
+    private $accountJournalServices;
 
     public function boot(
         InventoryAdjustmentServices $inventoryAdjustmentServices,
@@ -45,7 +53,11 @@ class InventoryAdjustmentForm extends Component
         UserServices $userServices,
         DateServices $dateServices,
         DocumentStatusServices $documentStatusServices,
-        InventoryAdjustmentTypeServices $inventoryAdjustmentTypeServices
+        InventoryAdjustmentTypeServices $inventoryAdjustmentTypeServices,
+        ItemInventoryServices $itemInventoryServices,
+        DocumentTypeServices $documentTypeServices,
+        ObjectServices $objectServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->inventoryAdjustmentServices = $inventoryAdjustmentServices;
         $this->locationServices = $locationServices;
@@ -53,11 +65,69 @@ class InventoryAdjustmentForm extends Component
         $this->dateServices = $dateServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->inventoryAdjustmentTypeServices = $inventoryAdjustmentTypeServices;
+        $this->itemInventoryServices = $itemInventoryServices;
+        $this->documentTypeServices = $documentTypeServices;
+        $this->objectServices = $objectServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function LoadDropdown()
     {
         $this->locationList = $this->locationServices->getList();
         $this->adjustmentTypeList = $this->inventoryAdjustmentTypeServices->getList();
+    }
+
+    private function ItemInventory(): bool
+    {
+        try {
+            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Inventory Adjustment');
+
+
+            $dataItem = $this->inventoryAdjustmentServices->ItemInventory($this->ID);
+            if ($dataItem) {
+                $this->itemInventoryServices->InventoryExecute($dataItem, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+            }
+            return true;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
+    private function AccountJournal(): bool
+    {
+        try {
+
+            $buildAssembly = (int) $this->objectServices->ObjectTypeID('BUILD_ASSEMBLY');
+
+            $buildAssemblyItems = (int) $this->objectServices->ObjectTypeID('BUILD_ASSEMBLY_ITEMS');
+
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($buildAssembly, $this->ID) + 1;
+            //Main
+            $buildAssemblyData = $this->inventoryAdjustmentServices->getInventoryAdjustmentJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyData, $this->LOCATION_ID, $buildAssembly, $this->DATE);
+
+            //Item
+            $buildAssemblyItemData = $this->inventoryAdjustmentServices->getInventoryAdjustmentItemsJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyItemData, $this->LOCATION_ID, $buildAssemblyItems, $this->DATE);
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+
+        }
+
     }
     public function posted()
     {
@@ -67,11 +137,16 @@ class InventoryAdjustmentForm extends Component
                 Session()->flash('error', 'No item to adjust');
                 return;
             }
+
+            \DB::beginTransaction();
             $this->inventoryAdjustmentServices->StatusUpdate($this->ID, 15);
             $this->STATUS = 15;
+            \DB::commit();
             Session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
-            Session()->flash('error', $e->getMessage());
+            \DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
         }
     }
     private function getInfo($data)
@@ -156,7 +231,7 @@ class InventoryAdjustmentForm extends Component
                     $this->ACCOUNT_ID,
                     $this->NOTES
                 );
-                
+
                 \DB::commit();
                 return Redirect::route('companyinventory_adjustment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 

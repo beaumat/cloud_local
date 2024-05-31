@@ -2,15 +2,18 @@
 
 namespace App\Livewire\BuildAssembly;
 
+use App\Services\AccountJournalServices;
 use App\Services\BuildAssemblyServices;
 use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
+use App\Services\DocumentTypeServices;
+use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use App\Services\LocationServices;
+use App\Services\ObjectServices;
 use App\Services\SystemSettingServices;
 use App\Services\UnitOfMeasureServices;
 use App\Services\UserServices;
-use DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -45,6 +48,11 @@ class BuildAssemblyForm extends Component
     private $systemSettingServices;
     private $dateServices;
     private $unitOfMeasureServices;
+    private $itemInventoryServices;
+    private $documentTypeServices;
+    private $objectServices;
+    private $accountJournalServices;
+
     public function boot(
         BuildAssemblyServices $buildAssemblyServices,
         LocationServices $locationServices,
@@ -53,8 +61,11 @@ class BuildAssemblyForm extends Component
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
         DateServices $dateServices,
-        UnitOfMeasureServices $unitOfMeasureServices
-
+        UnitOfMeasureServices $unitOfMeasureServices,
+        ItemInventoryServices $itemInventoryServices,
+        DocumentTypeServices $documentTypeServices,
+        ObjectServices $objectServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->buildAssemblyServices = $buildAssemblyServices;
         $this->locationServices = $locationServices;
@@ -64,6 +75,10 @@ class BuildAssemblyForm extends Component
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
+        $this->itemInventoryServices = $itemInventoryServices;
+        $this->documentTypeServices = $documentTypeServices;
+        $this->objectServices = $objectServices;
+        $this->accountJournalServices = $accountJournalServices;
 
     }
     public function LoadDropdown()
@@ -153,7 +168,7 @@ class BuildAssemblyForm extends Component
                     ]
                 );
 
-                DB::beginTransaction();
+                \DB::beginTransaction();
                 $this->ID = $this->buildAssemblyServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -167,7 +182,7 @@ class BuildAssemblyForm extends Component
                     $this->ASSET_ACCOUNT_ID
                 );
 
-                DB::commit();
+                \DB::commit();
                 return Redirect::route('companybuild_assembly_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
             } else {
@@ -190,7 +205,7 @@ class BuildAssemblyForm extends Component
                     ]
                 );
 
-                DB::beginTransaction();
+                \DB::beginTransaction();
                 $this->AMOUNT = $this->buildAssemblyServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -201,12 +216,12 @@ class BuildAssemblyForm extends Component
                     $this->UNIT_BASE_QUANTITY,
                     $this->NOTES
                 );
-                DB::commit();
+                \DB::commit();
                 session()->flash('message', 'Successfully updated');
             }
             $this->updateCancel();
         } catch (\Exception $e) {
-            DB::rollBack();
+           \DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -215,7 +230,7 @@ class BuildAssemblyForm extends Component
     public function updateCancel()
     {
         $BA = $this->buildAssemblyServices->get($this->ID);
-        
+
         if ($BA) {
             $this->getInfo($BA);
         }
@@ -228,6 +243,101 @@ class BuildAssemblyForm extends Component
         $this->resetErrorBag();
         session()->forget('message');
         session()->forget('error');
+    }
+
+    private function ItemInventory(): bool
+    {
+        try {
+            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Build Assembly');
+
+            $data = $this->buildAssemblyServices->AssemblyItemInventory($this->ID);
+            if ($data) {
+                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, true);
+            }
+
+            $dataItem = $this->buildAssemblyServices->ItemInventory($this->ID);
+            if ($dataItem) {
+                $this->itemInventoryServices->InventoryExecute($dataItem, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+            }
+            return true;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
+    private function AccountJournal(): bool
+    {
+        try {
+
+            $buildAssembly = (int) $this->objectServices->ObjectTypeID('BUILD_ASSEMBLY');
+            
+            $buildAssemblyItems = (int) $this->objectServices->ObjectTypeID('BUILD_ASSEMBLY_ITEMS');
+
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($buildAssembly, $this->ID) + 1;
+            //Main
+            $buildAssemblyData = $this->buildAssemblyServices->getBuildAssemblyJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyData, $this->LOCATION_ID, $buildAssembly, $this->DATE);
+     
+            //Item
+            $buildAssemblyItemData = $this->buildAssemblyServices->getBuildAssemblyItemsJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyItemData, $this->LOCATION_ID, $buildAssemblyItems, $this->DATE);
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+
+        }
+
+    }
+    public function posted()
+    {
+        try {
+
+            $count = (int) $this->buildAssemblyServices->CountItems($this->ID);
+
+            if ($count == 0) {
+                session()->flash('error', 'Item not found.');
+                return;
+            }
+            \DB::beginTransaction();
+            if (!$this->ItemInventory()) {
+                \DB::rollBack();
+                return;
+            }
+
+            if (!$this->AccountJournal()) {
+                \DB::rollBack();
+                return;
+            }
+
+            $this->buildAssemblyServices->StatusUpdate($this->ID, 15);
+            \DB::commit();
+            $data = $this->buildAssemblyServices->get($this->ID);
+            if ($data) {
+                $this->getInfo($data);
+                $this->Modify = false;
+                return;
+            }
+            session()->flash('message', 'Successfully posted');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+
     }
     public function render()
     {

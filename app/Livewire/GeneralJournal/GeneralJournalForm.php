@@ -2,10 +2,12 @@
 
 namespace App\Livewire\GeneralJournal;
 
+use App\Services\AccountJournalServices;
 use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
+use App\Services\ObjectServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
@@ -32,48 +34,114 @@ class GeneralJournalForm extends Component
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
 
+    private $objectServices;
+    private $accountJournalServices;
 
     public function boot(
         GeneralJournalServices $generalJournalServices,
         LocationServices $locationServices,
         UserServices $userServices,
         DateServices $dateServices,
-        DocumentStatusServices $documentStatusServices
+        DocumentStatusServices $documentStatusServices,
+        ObjectServices $objectServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->generalJournalServices = $generalJournalServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->dateServices = $dateServices;
         $this->documentStatusServices = $documentStatusServices;
+        $this->objectServices = $objectServices;
+        $this->accountJournalServices = $accountJournalServices;
+
     }
     public function LoadDropdown()
     {
         $this->locationList = $this->locationServices->getList();
     }
+
+    public function AccountJournal(): bool
+    {
+
+        try {
+
+            $generaljournal = (int) $this->objectServices->ObjectTypeID('GENERAL_JOURNAL');
+
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($generaljournal, $this->ID) + 1;
+            //Main
+            $generalJournalData = $this->generalJournalServices->getGeneralJournalEntries($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $generalJournalData, $this->LOCATION_ID, $generaljournal, $this->DATE);
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+
+        }
+    }
     public function posted()
     {
-        $total_result = $this->generalJournalServices->GetTotal($this->ID);
+        try {
 
-        $total_debit = (float) $total_result['TOTAL_DEBIT'];
 
-        $total_credit = (float) $total_result['TOTAL_CREDIT'];
+            $total_result = $this->generalJournalServices->GetTotal($this->ID);
 
-        if ($total_debit == 0) {
-            Session()->flash('error', 'No debit entry');
-            return;
+            $total_debit = (float) $total_result['TOTAL_DEBIT'];
+
+            $total_credit = (float) $total_result['TOTAL_CREDIT'];
+
+            if ($total_debit == 0) {
+                Session()->flash('error', 'No debit entry');
+                return;
+            }
+            if ($total_credit == 0) {
+                Session()->flash('error', 'No credit entry');
+                return;
+            }
+
+            if ($total_debit == $total_credit) {
+
+                \DB::beginTransaction();
+
+
+                if (!$this->AccountJournal()) {
+                    \DB::rollBack();
+                    return;
+                }
+
+
+                $this->generalJournalServices->StatusUpdate($this->ID, 15);
+                \DB::commit();
+
+                $data = $this->generalJournalServices->get($this->ID);
+                if ($data) {
+                    $this->getInfo($data);
+                    $this->Modify = false;
+                }
+
+                Session()->flash('message', 'Successfully posted');
+                return;
+            }
+
+            Session()->flash('error', 'Invalid disbalanced.');
+
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
         }
-        if ($total_credit == 0) {
-            Session()->flash('error', 'No credit entry');
-            return;
-        }
 
-        if ($total_debit == $total_credit) {
-            $this->generalJournalServices->StatusUpdate($this->ID, 15);
-            Session()->flash('message', 'Successfully posted');
-            return;
-        }
-
-        Session()->flash('error', 'Invalid disbalanced.');
     }
     private function getInfo($data)
     {

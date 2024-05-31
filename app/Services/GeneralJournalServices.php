@@ -201,4 +201,21 @@ class GeneralJournalServices
     {
         return GeneralJournalDetails::where('ID', $Id)->first();
     }
+
+    public function getGeneralJournalEntries(int $ID)
+    {
+        $result = GeneralJournalDetails::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                \DB::raw('0 as SUBSIDIARY_ID'),
+                'AMOUNT',
+                'ENTRY_TYPE'
+            ])
+            ->where('GENERAL_JOURNAL_ID', $ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
 }

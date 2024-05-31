@@ -208,5 +208,16 @@ class InventoryAdjustmentServices
         return $result;
     }
 
+    public function ItemInventory(int $ID)
+    {
 
+    }
+    public function getInventoryAdjustmentJournal(int $ID)
+    {
+
+    }
+    public function getInventoryAdjustmentItemsJournal(int $ID)
+    {
+
+    }
 }

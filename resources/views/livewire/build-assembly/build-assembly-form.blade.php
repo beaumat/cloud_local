@@ -122,8 +122,8 @@
                                     <div class="col-md-6 col-6">
                                         @if ($STATUS == 0)
                                             @if ($Modify)
-                                                <button type="submit" class="btn btn-sm btn-primary"> <i
-                                                        class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                     <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
                                                 @if ($ID > 0)
@@ -137,13 +137,17 @@
                                                     @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
+                                                <button type="button" wire:click='posted()'
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                </button>
                                             @endif
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 0)
                                             <a id="new" title="Create"
-                                                href="{{ route('vendorspurchase_order_create') }}"
+                                                href="{{ route('companybuild_assembly_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
                                     </div>
