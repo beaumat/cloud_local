@@ -57,10 +57,13 @@
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center col-2 bg-success">
-                                            <a href="{{ route('patientsphic_create') }}"
-                                                class="text-white btn btn-xs w-100">
-                                                <i class="fas fa-plus"></i> New
-                                            </a>
+                                            @can('patient.philhealth.create')
+                                                <a href="{{ route('patientsphic_create') }}"
+                                                    class="text-white btn btn-xs w-100">
+                                                    <i class="fas fa-plus"></i> New
+                                                </a>
+                                            @endcan
+
                                         </th>
                                     </tr>
                                 </thead>
@@ -81,38 +84,32 @@
                                             <td class="text-right"> {{ number_format($list->CHARGE_TOTAL, 2) }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
+
                                             <td class="text-center">
-                                                {{-- @if ($list->FILE_PATH)
-                                                    <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
-                                                        target="_blank" class="btn-sm text-danger">
-                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                    </a>
-                                                @else
-                                                    <a href="#" class="btn-sm text-secondary">
-                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                    </a>
-                                                @endif --}}
+                                                @can('patient.philhealth.print')
+                                                    <a target="_BLANK" title="Soa"
+                                                        href="{{ route('patientsphic_print', ['id' => $list->ID]) }}"
+                                                        class="btn-sm text-primary"> <i class="fa fa-file-pdf-o"
+                                                            aria-hidden="true"></i></a>
 
-
-                                                <a target="_BLANK" title="Computation"
-                                                    href="{{ route('patientsphic_print', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-primary"> <i class="fa fa-file-pdf-o"
-                                                        aria-hidden="true"></i></a>
-
-                                                <a target="_BLANK" title="Philheath Form"
-                                                    href="{{ route('patientsphic_print_form', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-danger"> <i class="fa fa-file-pdf-o"
-                                                        aria-hidden="true"></i> </a>
+                                                    <a target="_BLANK" title="Philheath Form"
+                                                        href="{{ route('patientsphic_print_form', ['id' => $list->ID]) }}"
+                                                        class="btn-sm text-danger"> <i class="fa fa-file-pdf-o"
+                                                            aria-hidden="true"></i> </a>
+                                                @endcan
 
                                                 <a href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+
+                                                @can('patient.philhealth.delete')
+                                                    <a href="#" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn-sm text-danger">
+                                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                                    </a>
+                                                @endcan
                                             </td>
                                         </tr>
                                     @endforeach

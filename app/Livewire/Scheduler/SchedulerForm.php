@@ -12,10 +12,14 @@ use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('Schedules')]
 class SchedulerForm extends Component
 {
+
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $month;
     public $year;
     public $contactList = [];
@@ -31,7 +35,8 @@ class SchedulerForm extends Component
     private $dateServices;
     private $scheduleServices;
     public $monthList = [];
-    public $scheduleList = [];
+    public $scheduleStatusList = [];
+    public int $scheduleStatusId = 0;
 
     public function boot(
         LocationServices $locationServices,
@@ -46,26 +51,24 @@ class SchedulerForm extends Component
         $this->dateServices = $dateServices;
         $this->scheduleServices = $scheduleServices;
     }
-    #[On('load-schedule-by-contact')]
-    public function loadScheduleByContact()
-    {
-        $this->scheduleList = $this->scheduleServices->ContactSchedule($this->CONTACT_ID ?? 0, $this->LOCATION_ID ?? 0);
-    }
+
+
     public function updatedcontactid()
     {
         $this->reloadComponent();
-        $this->loadScheduleByContact();
         $data = $this->contactServices->get($this->CONTACT_ID, 3);
         if ($data) {
             $this->HEMO_MACHINE_ID = $data->PATIENT_TYPE_ID;
             return;
         }
         $this->HEMO_MACHINE_ID = 0;
+
+
     }
     public function updatedlocationid()
     {
         $this->reloadComponent();
-        $this->loadScheduleByContact();
+
     }
     public function reloadComponent()
     {
@@ -89,6 +92,7 @@ class SchedulerForm extends Component
     }
     public function mount()
     {
+        $this->scheduleStatusList = $this->scheduleServices->ScheduleStatusList();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->monthList = $this->dateServices->MonthList();
         $this->resetDate();
@@ -111,13 +115,15 @@ class SchedulerForm extends Component
         $this->reloadComponent();
     }
 
+    #[On('load-schedule-by-contact')]
     public function render()
     {
 
         $this->contactList = $this->contactServices->getList(3);
         $this->locationList = $this->locationServices->getList();
-        $this->loadScheduleByContact();
-        return view('livewire.scheduler.scheduler-form');
+
+        $scheduleList = $this->scheduleServices->ContactSchedule($this->CONTACT_ID ?? 0, $this->LOCATION_ID ?? 0, $this->scheduleStatusId, 10);
+        return view('livewire.scheduler.scheduler-form', ['scheduleList' => $scheduleList]);
     }
 
 }

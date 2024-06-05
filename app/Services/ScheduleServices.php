@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Contacts;
 use App\Models\HemodialysisMachines;
 use App\Models\Schedules;
+use App\Models\ScheduleStatus;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -119,7 +120,7 @@ class ScheduleServices
             ->where('CONTACT_ID', '<>', $CONTACT_ID)
             ->count();
 
-            
+
         return $totalCount;
 
     }
@@ -140,7 +141,7 @@ class ScheduleServices
         ]);
     }
 
-    public function ContactSchedule(int $CONTACT_ID, int $LOCATION_ID)
+    public function ContactSchedule(int $CONTACT_ID, int $LOCATION_ID, int $STATUS_ID, int $perPage)
     {
         $result = Schedules::query()
             ->select([
@@ -154,8 +155,11 @@ class ScheduleServices
             ->leftJoin('shift as t', 't.ID', '=', 'schedules.SHIFT_ID')
             ->where('schedules.CONTACT_ID', $CONTACT_ID)
             ->where('schedules.LOCATION_ID', $LOCATION_ID)
+            ->where('schedules.SCHED_STATUS', $STATUS_ID)
             ->orderBy('schedules.SCHED_DATE', 'asc')
-            ->get();
+
+            ->paginate($perPage);
+
 
         return $result;
     }
@@ -178,7 +182,11 @@ class ScheduleServices
             ->get();
     }
 
+    public function ScheduleStatusList()
+    {
+        return ScheduleStatus::query()->get();
 
+    }
     public function AutoGenerateSchedule(int $PATIENT_ID, int $LOCATION_ID, int $YEAR, int $MONTH, array $weekDate = [], $shiftList)
     {
         $contact = Contacts::where('ID', $PATIENT_ID)

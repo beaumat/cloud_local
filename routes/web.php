@@ -122,40 +122,42 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth'])->group(function () {
+    
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
     Route::prefix('/patients')->name('patients')->group(function () {
         Route::prefix('/schedules')->group(function () {
-            Route::get('/', SchedulerList::class)->name('schedules');
-            Route::get('/setup', SchedulerForm::class)->name('schedules_setup');
-            Route::get('/{year}/{month}/{week}/{location}/{shift}/print-form', PrintSchedulesPrintOut::class)->name('schedules_print');
+            Route::get('/', SchedulerList::class)->name('schedules')->middleware(['permission:patient.schedule.view']);
+            Route::get('/setup', SchedulerForm::class)->name('schedules_setup')->middleware(['permission:patient.schedule.modify']);
+            Route::get('/{year}/{month}/{week}/{location}/{shift}/print-form', PrintSchedulesPrintOut::class)->name('schedules_print')->middleware(['permission:patient.schedule.print']);
         });
 
         Route::prefix('/service-charges')->group(function () {
-            Route::get('/', ServiceChargeList::class)->name('service_charges');
-            Route::get('/create', ServiceChargeForm::class)->name('service_charges_create');
-            Route::get('/{id}/edit', ServiceChargeForm::class)->name('service_charges_edit');
-        });
-
-        Route::prefix('/hemodialysis-treatment')->group(function () {
-            Route::get('/', HemoList::class)->name('hemo');
-            Route::get('/create', HemoForm::class)->name('hemo_create');
-            Route::get('/{id}/edit', HemoForm::class)->name('hemo_edit');
-            Route::get('/{id}/print', PrintForm::class)->name('hemo_print');
+            Route::get('/', ServiceChargeList::class)->name('service_charges')->middleware(['permission:patient.service-charges.view']);
+            Route::get('/create', ServiceChargeForm::class)->name('service_charges_create')->middleware(['permission:patient.service-charges.create']);
+            Route::get('/{id}/edit', ServiceChargeForm::class)->name('service_charges_edit')->middleware(['permission:patient.service-charges.view']);
         });
 
         Route::prefix('/payments')->group(function () {
-            Route::get('/', PatientPaymentList::class)->name('payment');
-            Route::get('/create', PatientPaymentForm::class)->name('payment_create');
-            Route::get('/{id}/edit', PatientPaymentForm::class)->name('payment_edit');
+            Route::get('/', PatientPaymentList::class)->name('payment')->middleware(['permission:patient.payment.view']);
+            Route::get('/create', PatientPaymentForm::class)->name('payment_create')->middleware(['permission:patient.payment.create']);
+            Route::get('/{id}/edit', PatientPaymentForm::class)->name('payment_edit')->middleware(['permission:patient.payment.view']);
+        });
+
+        Route::prefix('/hemodialysis-treatment')->group(function () {
+            Route::get('/', HemoList::class)->name('hemo')->middleware(['permission:patient.treatment.view']);
+            Route::get('/create', HemoForm::class)->name('hemo_create')->middleware(['permission:patient.treatment.create']);
+            Route::get('/{id}/edit', HemoForm::class)->name('hemo_edit')->middleware(['permission:patient.treatment.view']);
+            Route::get('/{id}/print', PrintForm::class)->name('hemo_print')->middleware(['permission:patient.treatment.print']);
+            ;
         });
 
         Route::prefix('/phil-health')->group(function () {
-            Route::get('/', PhilHealthList::class)->name('phic');
-            Route::get('/create', PhilHealthForm::class)->name('phic_create');
-            Route::get('/{id}/edit', PhilHealthForm::class)->name('phic_edit');
-            Route::get('/{id}/print', PhilHealthPrint::class)->name('phic_print');
-            Route::get('/{id}/print-form', PhilHealthPrintForm::class)->name('phic_print_form');
+            Route::get('/', PhilHealthList::class)->name('phic')->middleware(['permission:patient.philhealth.view']);
+            Route::get('/create', PhilHealthForm::class)->name('phic_create')->middleware(['permission:patient.philhealth.create']);
+            Route::get('/{id}/edit', PhilHealthForm::class)->name('phic_edit')->middleware(['permission:patient.philhealth.view']);
+            Route::get('/{id}/print', PhilHealthPrint::class)->name('phic_print')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/print-form', PhilHealthPrintForm::class)->name('phic_print_form')->middleware(['permission:patient.philhealth.print']);
         });
 
         Route::prefix('/statement-of-account')->group(function () {
@@ -390,7 +392,6 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('/item-active-list')->group(function () {
                 Route::get('/', ItemActiveList::class)->name('item-active-list');
-
             });
         });
 

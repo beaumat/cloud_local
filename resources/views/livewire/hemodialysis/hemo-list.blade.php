@@ -7,12 +7,21 @@
                 </div>
                 <div class="col-6 text-right">
                     <div style="float: right;" class="row">
-                        <div class="col-6 text-right">
-                            @livewire('Hemodialysis.ScheduleModal', ['LOCATION_ID' => $locationid])
-                        </div>
-                        <div class="col-6">
-                            @livewire('Hemodialysis.PrintListModal', ['LOCATION_ID' => $locationid])
-                        </div>
+                        @can('patient.treatment.create')
+                            @can('patient.treatment.print')
+                                <div class="col-6 text-right">
+                                    @livewire('Hemodialysis.ScheduleModal', ['LOCATION_ID' => $locationid])
+                                </div>
+                            @endcan
+                        @endcan
+
+                        @can('patient.treatment.print')
+                            <div class="col-6">
+                                @livewire('Hemodialysis.PrintListModal', ['LOCATION_ID' => $locationid])
+                            </div>
+                        @endcan
+
+
                     </div>
                 </div>
             </div>
@@ -68,22 +77,24 @@
                                         <th class="col-1">Location</th>
                                         <th> Status</th>
                                         <th class="text-center col-4 bg-success">
-                                            <a href="{{ route('patientshemo_create') }}"
-                                                class="text-white btn btn-xs w-100">
-                                                <i class="fas fa-plus"></i> New
-                                            </a>
+                                            @can('patient.treatment.create')
+                                                <a href="{{ route('patientshemo_create') }}"
+                                                    class="text-white btn btn-xs w-100">
+                                                    <i class="fas fa-plus"></i> New
+                                                </a>
+                                            @endcan
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> 
+                                            <td>
                                                 <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
                                                     class="text-primary">
                                                     {{ $list->CODE }}
                                                 </a>
-                                               </td>
+                                            </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td class="text-center">
@@ -112,30 +123,37 @@
                                             <td> {{ $list->LOCATION_NAME }} </td>
                                             <td> {{ $list->STATUS }} </td>
                                             <td class="text-center">
-                                                <a target="_blank"
-                                                    href="{{ route('patientshemo_print', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-primary">
-                                                    <i class="fa fa-print" aria-hidden="true"></i>
-                                                </a>
-                                                @if ($list->FILE_PATH)
-                                                    <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
-                                                        target="_blank" class="btn-sm text-danger">
-                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                @can('patient.treatment.print')
+                                                    <a target="_blank"
+                                                        href="{{ route('patientshemo_print', ['id' => $list->ID]) }}"
+                                                        class="btn-sm text-primary">
+                                                        <i class="fa fa-print" aria-hidden="true"></i>
                                                     </a>
-                                                @else
-                                                    <a href="#" class="btn-sm text-secondary">
-                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                    </a>
-                                                @endif
+
+                                                    @if ($list->FILE_PATH)
+                                                        <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
+                                                            target="_blank" class="btn-sm text-danger">
+                                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                        </a>
+                                                    @else
+                                                        <a href="#" class="btn-sm text-secondary">
+                                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                        </a>
+                                                    @endif
+                                                @endcan
+
                                                 <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+
+                                                @can('patient.treatment.delete')
+                                                    <a href="#" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn-sm text-danger">
+                                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                                    </a>
+                                                @endcan
 
                                             </td>
                                         </tr>

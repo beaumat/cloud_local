@@ -87,7 +87,9 @@ class ScheduleModal extends Component
     public function render()
     {
         $this->shiftList = $this->shiftServices->List();
+
         $this->DATE = Carbon::now()->format('M/d/Y');
+        
         $this->dataList = $this->scheduleServices->GetScheduleList(Carbon::now()->format('Y-m-d'), $this->LOCATION_ID, $this->SHIFT_ID);
 
         return view('livewire.hemodialysis.schedule-modal');

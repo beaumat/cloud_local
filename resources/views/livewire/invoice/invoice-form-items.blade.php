@@ -20,7 +20,7 @@
                 <tr>
                     <td>{{ $list->CODE }}</td>
                     <td>{{ $list->DESCRIPTION }}</td>
-              
+
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
@@ -72,24 +72,20 @@
                         <td class="text-center">
                             @if ($editItemId === $list->ID)
                                 <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
-                                    class="text-success btn btn-sm btn-link">
-                                    <i class="fas fa-check" aria-hidden="true"></i>
-                                </button>
+                                    class="text-success btn btn-sm btn-link"> <i class="fas fa-check"
+                                        aria-hidden="true"></i> </button>
                                 <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
-                                    class="text-warning btn btn-sm btn-link">
-                                    <i class="fas fa-ban" aria-hidden="true"></i>
-                                </button>
+                                    class="text-warning btn btn-sm btn-link"> <i class="fas fa-ban"
+                                        aria-hidden="true"></i> </button>
                             @else
                                 <button title="Edit" id="editbtn"
                                     wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
-                                    class="text-info btn btn-sm btn-link">
-                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                </button>
+                                    class="text-info btn btn-sm btn-link"> <i class="fas fa-edit"
+                                        aria-hidden="true"></i> </button>
                                 <button title="Delete" id="deletebtn" wire:click='deleteItem({{ $list->ID }})'
                                     wire:confirm="Are you sure you want to delete this?"
-                                    class="text-danger btn btn-sm btn-link">
-                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                </button>
+                                    class="text-danger btn btn-sm btn-link"> <i class="fas fa-times"
+                                        aria-hidden="true"></i> </button>
                             @endif
                         </td>
                     @endif
@@ -100,7 +96,7 @@
             @if ($STATUS == $openStatus)
                 <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
                     <tr>
-                        <td  class="text-md">
+                        <td class="text-md">
                             @if ($saveSuccess)
                                 @if ($codeBase)
                                     <livewire:select-option name="ITEM_ID1" titleName="Item Code" :options="$itemCodeList"
@@ -138,7 +134,7 @@
                                 @endif
                             @endif
                         </td>
-                      
+
                         <td>
 
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"

@@ -3,10 +3,12 @@
 namespace App\Livewire\RolePermissionPage;
 
 use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
+#[Title('Roles & Permission')]
 class RolePermissionConfig extends Component
 {
     public int $role_id;

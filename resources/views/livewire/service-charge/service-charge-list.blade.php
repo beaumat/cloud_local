@@ -59,12 +59,16 @@
                                         <th class="col-1">Balance</th>
                                         <th class="col-1">Tax</th>
                                         <th class="col-1">Status</th>
-                                        <th class="text-center col-1 bg-success">
-                                            <a href="{{ route('patientsservice_charges_create') }}"
-                                                class="text-white btn btn-xs w-100">
-                                                <i class="fas fa-plus"></i> New
-                                            </a>
-                                        </th>
+                                        @can('patient.service-charges.create')
+                                            <th class="text-center col-1 bg-success">
+
+                                                <a href="{{ route('patientsservice_charges_create') }}"
+                                                    class="text-white btn btn-xs w-100">
+                                                    <i class="fas fa-plus"></i> New
+                                                </a>
+
+                                            </th>
+                                        @endcan
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -75,6 +79,7 @@
                                                     class="text-primary">
                                                     {{ $list->CODE }}
                                                 </a>
+
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
@@ -83,23 +88,27 @@
                                             <td class="text-right"> {{ number_format($list->BALANCE_DUE, 2) }}</td>
                                             <td> {{ $list->TAX_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
-                                            <td class="text-center">
-                                                <a href="{{ route('patientsservice_charges_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                                </a>
-                                                @if ($list->AMOUNT == $list->BALANCE_DUE)
-                                                    <a href="#" wire:click='delete({{ $list->ID }})'
-                                                        wire:confirm="Are you sure you want to delete this?"
-                                                        class="btn-sm text-danger">
-                                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                            @can('patient.service-charges.create')
+                                                <td class="text-center">
+                                                    <a href="{{ route('patientsservice_charges_edit', ['id' => $list->ID]) }}"
+                                                        class="btn-sm text-info">
+                                                        <i class="fas fa-edit" aria-hidden="true"></i>
                                                     </a>
-                                                @else
-                                                    <a href="#" class="btn-sm text-secondary">
-                                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
+                                                    @if ($list->AMOUNT == $list->BALANCE_DUE)
+                                                        @can('patient.service-charges.delete')
+                                                            <a href="#" wire:click='delete({{ $list->ID }})'
+                                                                wire:confirm="Are you sure you want to delete this?"
+                                                                class="btn-sm text-danger">
+                                                                <i class="fas fa-times" aria-hidden="true"></i>
+                                                            </a>
+                                                        @endcan
+                                                    @else
+                                                        <a href="#" class="btn-sm text-secondary">
+                                                            <i class="fas fa-times" aria-hidden="true"></i>
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            @endcan
                                         </tr>
                                     @endforeach
                                 </tbody>

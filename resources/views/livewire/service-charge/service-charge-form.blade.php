@@ -36,29 +36,7 @@
                                                     :options="$patientList" :zero="true" :isDisabled=true
                                                     wire:model='PATIENT_ID' />
                                             @endif
-                                            {{-- <div class="row">
-                                                <div class="col-md-4 class">
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID"
-                                                            :isDisabled=false titleName="Payment Terms"
-                                                            :options="$paymentTermList" :zero="false"
-                                                            wire:model.live='PAYMENT_TERMS_ID' />
-                                                    @else
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID" :isDisabled=true
-                                                            titleName="Payment Terms" :options="$paymentTermList"
-                                                            :zero="false" wire:model.live='PAYMENT_TERMS_ID' />
-                                                    @endif
-                                                </div>
-                                                <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:date-input name="DUE_DATE" :isDisabled=false
-                                                            titleName="Due Date" wire:model='DUE_DATE' />
-                                                    @else
-                                                        <livewire:date-input name="DUE_DATE" :isDisabled=true
-                                                            titleName="Due Date" wire:model='DUE_DATE' />
-                                                    @endif
-                                                </div>
-                                            </div> --}}
+
                                         </div>
                                         <div class="col-md-6">
                                             <div class="row">
@@ -136,11 +114,14 @@
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0 && $STATUS > 0)
-                                            <a id="new" title="Create"
-                                                href="{{ route('patientsservice_charges_create') }}"
-                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
-                                        @endif
+                                        @can('patient.service-charges.create')
+                                            @if ($ID > 0 && $STATUS > 0)
+                                                <a id="new" title="Create"
+                                                    href="{{ route('patientsservice_charges_create') }}"
+                                                    class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                            @endif
+                                        @endcan
+
                                     </div>
                                 </div>
                             </div>

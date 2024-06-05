@@ -169,7 +169,7 @@ class ServiceChargeServices
 
     public function Search($search, int $locationId, int $perPage)
     {
-        return ServiceCharges::query()
+        $result = ServiceCharges::query()
             ->select([
                 'service_charges.ID',
                 'service_charges.CODE',
@@ -201,6 +201,8 @@ class ServiceChargeServices
             })
             ->orderBy('service_charges.ID', 'desc')
             ->paginate($perPage);
+
+        return $result;
     }
 
     private function getLine($Id): int

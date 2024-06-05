@@ -1,7 +1,7 @@
 <div>
 
     <button wire:click="openModal" class="btn btn-info btn-sm text-xs ">
-        Print List
+        Print
     </button>
 
     @if ($showModal)

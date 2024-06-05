@@ -81,10 +81,10 @@ class InventoryAdjustmentForm extends Component
         try {
             $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Inventory Adjustment');
 
-
             $dataItem = $this->inventoryAdjustmentServices->ItemInventory($this->ID);
+
             if ($dataItem) {
-                $this->itemInventoryServices->InventoryExecute($dataItem, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+                $this->itemInventoryServices->InventoryExecuteAdjustment($dataItem, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE);
             }
             return true;
         } catch (\Exception $e) {
@@ -97,18 +97,20 @@ class InventoryAdjustmentForm extends Component
     {
         try {
 
-            $buildAssembly = (int) $this->objectServices->ObjectTypeID('BUILD_ASSEMBLY');
+            $invAdjustment = (int) $this->objectServices->ObjectTypeID('INVENTORY_ADJUSTMENT');
+            
+            $invAdjustmentItems = (int) $this->objectServices->ObjectTypeID('INVENTORY_ADJUSTMENT_ITEMS');
 
-            $buildAssemblyItems = (int) $this->objectServices->ObjectTypeID('BUILD_ASSEMBLY_ITEMS');
-
-            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($buildAssembly, $this->ID) + 1;
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($invAdjustment, $this->ID) + 1;
             //Main
-            $buildAssemblyData = $this->inventoryAdjustmentServices->getInventoryAdjustmentJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyData, $this->LOCATION_ID, $buildAssembly, $this->DATE);
+            $inventoryAdjustmentData = $this->inventoryAdjustmentServices->getInventoryAdjustmentJournal($this->ID);
+
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $inventoryAdjustmentData, $this->LOCATION_ID, $invAdjustment, $this->DATE);
 
             //Item
-            $buildAssemblyItemData = $this->inventoryAdjustmentServices->getInventoryAdjustmentItemsJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyItemData, $this->LOCATION_ID, $buildAssemblyItems, $this->DATE);
+            $inventoryAdjustmentItemData = $this->inventoryAdjustmentServices->getInventoryAdjustmentItemsJournal($this->ID);
+
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $inventoryAdjustmentItemData, $this->LOCATION_ID, $invAdjustmentItems, $this->DATE);
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
@@ -139,6 +141,18 @@ class InventoryAdjustmentForm extends Component
             }
 
             \DB::beginTransaction();
+
+            if (!$this->ItemInventory()) {
+                \DB::rollBack();
+                return;
+            }
+
+            if (!$this->AccountJournal()) {
+                \DB::rollBack();
+                return;
+            }
+
+
             $this->inventoryAdjustmentServices->StatusUpdate($this->ID, 15);
             $this->STATUS = 15;
             \DB::commit();

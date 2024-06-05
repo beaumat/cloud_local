@@ -17,7 +17,6 @@ use Livewire\Component;
 
 class PhilHealthForm extends Component
 {
-
     public bool $Modify = false;
     public string $STATUS_DESCRIPTION;
     public int $STATUS;

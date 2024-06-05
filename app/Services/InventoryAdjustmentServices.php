@@ -71,7 +71,6 @@ class InventoryAdjustmentServices
     public function Delete(int $ID)
     {
         InventoryAdjustmentItems::where('INVENTORY_ADJUSTMENT_ID', $ID)->delete();
-
         InventoryAdjustment::where('ID', $ID)->delete();
     }
     public function Search($search, int $locationId, int $perPage)
@@ -208,16 +207,54 @@ class InventoryAdjustmentServices
         return $result;
     }
 
-    public function ItemInventory(int $ID)
+    public function ItemInventory(int $INVENTORY_ADJUSTMENT_ID)
     {
+        $result = InventoryAdjustmentItems::query()
+            ->select([
+                'inventory_adjustment_items.ID',
+                'inventory_adjustment_items.ITEM_ID',
+                'inventory_adjustment_items.QUANTITY',
+                'inventory_adjustment_items.UNIT_BASE_QUANTITY',
+                'item.COST'
+            ])
+            ->join('item', 'item.ID', '=', 'inventory_adjustment_items.ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID', $INVENTORY_ADJUSTMENT_ID)
+            ->get();
+
+        return $result;
 
     }
     public function getInventoryAdjustmentJournal(int $ID)
-    {
+    {   
 
+        $result = InventoryAdjustment::query()
+            ->select([
+                'inventory_adjustment.ID',
+                'inventory_adjustment.ACCOUNT_ID',
+                'inventory_adjustment.ADJUSTMENT_TYPE_ID as SUBSIDIARY_ID',
+                \DB::raw('(SELECT IFNULL(SUM(items.QUANTITY * items.UNIT_COST), 0) FROM inventory_adjustment_items as items WHERE items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) as AMOUNT'),
+                \DB::raw('IF((SELECT IFNULL(SUM(items.QUANTITY * items.UNIT_COST), 0) FROM inventory_adjustment_items as items WHERE items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) >= 0, 1, 0) as ENTRY_TYPE')
+            ])
+            ->where('inventory_adjustment.ID', $ID)
+            ->get();
+
+        return $result;
     }
     public function getInventoryAdjustmentItemsJournal(int $ID)
     {
+        $result = InventoryAdjustmentItems::query()
+            ->select([
+                'inventory_adjustment_items.ID',
+                'inventory_adjustment_items.ASSET_ACCOUNT_ID as ACCOUNT_ID',
+                'inventory_adjustment_items.ITEM_ID as SUBSIDIARY_ID',
+                \DB::raw('IFNULL(inventory_adjustment_items.QUANTITY * inventory_adjustment_items.UNIT_COST, 0) as AMOUNT'),
+                \DB::raw('IF(IFNULL(inventory_adjustment_items.QUANTITY * inventory_adjustment_items.UNIT_COST, 0) >= 0, 0, 1) as ENTRY_TYPE')
+            ])
+            ->where('inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID', $ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
 
+        return $result;
     }
 }

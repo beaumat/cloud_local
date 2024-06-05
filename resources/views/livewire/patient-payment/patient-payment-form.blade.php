@@ -212,38 +212,45 @@
                                             @endif
 
                                             @if ($showFileName)
-                                                <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
-                                                    class="btn btn-sm btn-warning">
-                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Preview
-                                                </a>
+                                                @can('patient.payment.print')
+                                                    <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
+                                                        class="btn btn-sm btn-warning">
+                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Preview
+                                                    </a>
+                                                @endcan
                                             @endif
+                                            
                                             @if ($showFileName)
-                                                @if (!$IS_CONFIRM)
-                                                    <button type="button" wire:click='getConfirm()'
-                                                        wire:confirm="Are you sure this guaranteed letter is confirm?"
-                                                        class="btn btn-sm btn-info">
-                                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                        Confirm
-                                                    </button>
-                                                @else
-                                                    <label class="text-xs text-primary px-3">
-                                                        <i>
-                                                            Guarantee Letter Confirm on
-                                                            <b class="text-info">{{ \Carbon\Carbon::parse($DATE_CONFIRM)->format('m/d/Y') }}
-                                                            </b>
-                                                        </i>
-                                                    </label>
+                                                @can('patient.payment.update')
+                                                    @if (!$IS_CONFIRM)
+                                                        <button type="button" wire:click='getConfirm()'
+                                                            wire:confirm="Are you sure this guaranteed letter is confirm?"
+                                                            class="btn btn-sm btn-info">
+                                                            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                                            Confirm
+                                                        </button>
+                                                    @else
+                                                        <label class="text-xs text-primary px-3">
+                                                            <i>
+                                                                Guarantee Letter Confirm on
+                                                                <b class="text-info">{{ \Carbon\Carbon::parse($DATE_CONFIRM)->format('m/d/Y') }}
+                                                                </b>
+                                                            </i>
+                                                        </label>
+                                                    @endif
                                                 @endif
-                                            @endif
+                                            @endcan
                                         @endif
-
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0 && $STATUS > 0)
-                                            <a id="new" title="Create"
-                                                href="{{ route('patientspayment_create') }}"
-                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
-                                        @endif
+                                        @can('patient.payment.create')
+                                            @if ($ID > 0 && $STATUS > 0)
+                                                <a id="new" title="Create"
+                                                    href="{{ route('patientspayment_create') }}"
+                                                    class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                            @endif
+                                        @endcan
+
                                     </div>
                                 </div>
                             </div>

@@ -31,7 +31,6 @@ class ItemInventoryServices
     ) {
 
         $ID = (int) $this->object->ObjectNextID('ITEM_INVENTORY');
-
         ItemInventory::create([
             'ID' => $ID,
             'PREVIOUS_ID' => $PREVIOUS_ID > 0 ? $PREVIOUS_ID : null,
@@ -262,4 +261,64 @@ class ItemInventoryServices
         }
 
     }
+    public function InventoryExecuteAdjustment($data, int $LOCATION_ID, int $SOURCE_REF_TYPE, $SOURCE_REF_DATE)
+    {
+
+        foreach ($data as $list) {
+
+            $SOURCE_REF_ID = (int) $list->ID;
+            $ITEM_ID = (int) $list->ITEM_ID;
+            $QUANTITY = (float) $list->QUANTITY ?? 1;
+            $BATCH_ID = $list->BATCH_ID ?? 0;
+            $UNIT_BASE_QUANTITY = (float) $list->UNIT_BASE_QUANTITY ?? 1;
+            $ENDING_QUANTITY = (float) $QUANTITY * $UNIT_BASE_QUANTITY;
+
+            if (isset($list->COST)) {
+                $COST = (float) $list->COST ?? 0;
+            } else {
+                $COST = (float) $this->itemServices->getCost($ITEM_ID);
+            }
+
+            // if (!$Is_Added) {
+            //     $QTY = $QTY * -1;
+            // }
+
+            $isExists = (bool) $this->InvItemExists($ITEM_ID, $LOCATION_ID, $SOURCE_REF_ID, $SOURCE_REF_TYPE, $SOURCE_REF_DATE);
+
+            if (!$isExists) {
+                $PREV = $this->getPreviousItemInventory($LOCATION_ID, $ITEM_ID, $BATCH_ID, $SOURCE_REF_DATE);
+                $PREVIOUS_ID = (int) $PREV['ID'];
+                $NEXT_ID = $PREV['NEXT_ID'];
+                $NEXT_QUANTITY = (int) $PREV['NEXT_QUANTITY'];
+                $NEXT_COST = (int) $PREV['NEXT_COST'];
+                $ending = $this->getEnding($PREVIOUS_ID);
+                $SEQUENCE_NO = (int) $ending['SEQUENCE_NO'];
+                $QTY = (float) $ENDING_QUANTITY - (float) $ending['ENDING_QUANTITY'];
+                
+
+                $ENDING_UNIT_COST = (float) $COST;
+                $ENDING_COST = $ENDING_UNIT_COST * $ENDING_QUANTITY;
+                $this->Store(
+                    $PREVIOUS_ID,
+                    $SEQUENCE_NO + 1,
+                    $ITEM_ID,
+                    $LOCATION_ID,
+                    $BATCH_ID,
+                    $SOURCE_REF_TYPE,
+                    $SOURCE_REF_ID,
+                    $SOURCE_REF_DATE,
+                    $QTY,
+                    $COST,
+                    $ENDING_QUANTITY,
+                    $ENDING_UNIT_COST,
+                    $ENDING_COST
+                );
+
+            }
+
+        }
+
+    }
+
+
 }

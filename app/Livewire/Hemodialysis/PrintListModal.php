@@ -51,9 +51,6 @@ class PrintListModal extends Component
         if (!$gotSelect) {
             return;
         }
-        // 
-        // return Redirect::to(route('patientshemo_print', ['id' => $this->id]));
-
         $url = route('patientshemo_print', ['id' => $this->id]);
         $this->dispatch('openNewTab', data: $url);
         $this->closeModal();

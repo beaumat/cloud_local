@@ -65,28 +65,7 @@
                                                     @endif
                                                 </div>
 
-                                                {{-- <div class="col-12">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="FINAL_DIAGNOSIS"
-                                                            titleName="Final Diagnosis" :isDisabled=false
-                                                            wire:model='FINAL_DIAGNOSIS' :vertical="false" />
-                                                    @else
-                                                        <livewire:text-input name="FINAL_DIAGNOSIS"
-                                                            titleName="Final Diagnosis" :isDisabled=true
-                                                            wire:model='FINAL_DIAGNOSIS' :vertical="false" />
-                                                    @endif
-                                                </div>
-                                                <div class="col-12">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="OTHER_DIAGNOSIS"
-                                                            titleName="Other Diagnosis" :isDisabled=false
-                                                            wire:model='OTHER_DIAGNOSIS' :vertical="false" />
-                                                    @else
-                                                        <livewire:text-input name="OTHER_DIAGNOSIS"
-                                                            titleName="Other Diagnosis" :isDisabled=true
-                                                            wire:model='OTHER_DIAGNOSIS' :vertical="false" />
-                                                    @endif
-                                                </div> --}}
+
                                             </div>
                                         </div>
                                         <div class="col-md-8">
@@ -119,7 +98,6 @@
                                                 <div class="col-md-3">
 
                                                 </div>
-
                                                 <div class="col-md-3">
                                                     @if ($Modify)
                                                         <livewire:date-input name="DATE_DISCHARGED"
@@ -131,8 +109,6 @@
                                                             :isDisabled="true" />
                                                     @endif
                                                 </div>
-
-
                                                 <div class="col-md-3">
                                                     @if ($Modify)
                                                         <livewire:time-input name="TIME_DISCHARGED"
@@ -144,28 +120,7 @@
                                                             :isDisabled="true" />
                                                     @endif
                                                 </div>
-                                                {{-- <div class="col-6">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="FIRST_CASE_RATE"
-                                                            titleName="First Case Rate" :isDisabled=false
-                                                            wire:model='FIRST_CASE_RATE' :vertical="false" />
-                                                    @else
-                                                        <livewire:text-input name="FIRST_CASE_RATE"
-                                                            titleName="First Case Rate" :isDisabled=true
-                                                            wire:model='FIRST_CASE_RATE' :vertical="false" />
-                                                    @endif
-                                                </div>
-                                                <div class="col-6">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="SECOND_CASE_RATE"
-                                                            titleName="Second Case Rate" :isDisabled=false
-                                                            wire:model='SECOND_CASE_RATE' :vertical="false" />
-                                                    @else
-                                                        <livewire:text-input name="SECOND_CASE_RATE"
-                                                            titleName="Second Case Rate" :isDisabled=true
-                                                            wire:model='SECOND_CASE_RATE' :vertical="false" />
-                                                    @endif
-                                                </div> --}}
+
                                             </div>
                                         </div>
                                     </div>
@@ -195,19 +150,25 @@
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0)
-                                            <a target="_BLANK" href="{{ route('patientsphic_print', ['id' => $ID]) }}"
-                                                class="btn btn-sm btn-primary"> Print SOA </a>
+                                        @can('patient.philhealth.print')
+                                            @if ($ID > 0)
+                                                <a target="_BLANK" href="{{ route('patientsphic_print', ['id' => $ID]) }}"
+                                                    class="btn btn-sm btn-primary"> Print SOA </a>
 
-                                            <a target="_BLANK"
-                                                href="{{ route('patientsphic_print_form', ['id' => $ID]) }}"
-                                                class="btn btn-sm btn-primary"> Print Form </a>
-                                        @endif
-                                        @if ($ID > 0 && $STATUS > 0)
-                                            <a id="new" title="Create"
-                                                href="{{ route('patientsphic_create') }}"
-                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
-                                        @endif
+                                                <a target="_BLANK"
+                                                    href="{{ route('patientsphic_print_form', ['id' => $ID]) }}"
+                                                    class="btn btn-sm btn-primary"> Print Form </a>
+                                            @endif
+                                        @endcan
+
+                                        @can('patient.philhealth.create')
+                                            @if ($ID > 0 && $STATUS > 0)
+                                                <a id="new" title="Create"
+                                                    href="{{ route('patientsphic_create') }}"
+                                                    class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                            @endif
+                                        @endcan
+
                                     </div>
                                 </div>
                             </div>

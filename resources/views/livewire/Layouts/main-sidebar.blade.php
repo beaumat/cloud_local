@@ -27,49 +27,64 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview ">
-                        <li class="nav-item">
-                            <a href="{{ route('patientsschedules') }}"
-                                class="nav-link {{ request()->is('patients/schedules*') ? 'active' : '' }}">
-                                <i class="fas fa-calendar nav-icon"></i>
-                                <p>Schedules</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('patientsservice_charges') }}"
-                                class="nav-link {{ request()->is('patients/service-charges*') ? 'active' : '' }}">
-                                <i class="fas fa-file-invoice nav-icon"></i>
-                                <p>Service Charge</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('patientspayment') }}"
-                                class="nav-link {{ request()->is('patients/payments*') ? 'active' : '' }}">
-                                <i class="fas fa-money-bill-wave nav-icon"></i>
-                                <p>Payments</p>
-                            </a>
-                        </li>
+                        @can('patient.schedule.view')
+                            <li class="nav-item">
+                                <a href="{{ route('patientsschedules') }}"
+                                    class="nav-link {{ request()->is('patients/schedules*') ? 'active' : '' }}">
+                                    <i class="fas fa-calendar nav-icon"></i>
+                                    <p>Schedules</p>
+                                </a>
+                            </li>
+                        @endcan
 
-                        <li class="nav-item">
-                            <a href="{{ route('patientshemo') }}"
-                                class="nav-link {{ request()->is('patients/hemodialysis-treatment*') ? 'active' : '' }}">
-                                <i class="fas fa-medkit nav-icon"></i>
-                                <p>Treatment</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('patientsphic') }}"
-                                class="nav-link {{ request()->is('patients/phil-health*') ? 'active' : '' }}">
-                                <i class="fas fa-hospital-o nav-icon"></i>
-                                <p>PhilHealth</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
+                        @can('patient.service-charges.view')
+                            <li class="nav-item">
+                                <a href="{{ route('patientsservice_charges') }}"
+                                    class="nav-link {{ request()->is('patients/service-charges*') ? 'active' : '' }}">
+                                    <i class="fas fa-file-invoice nav-icon"></i>
+                                    <p>Service Charge</p>
+                                </a>
+                            </li>
+                        @endcan
+
+
+                        @can('patient.payment.view')
+                            <li class="nav-item">
+                                <a href="{{ route('patientspayment') }}"
+                                    class="nav-link {{ request()->is('patients/payments*') ? 'active' : '' }}">
+                                    <i class="fas fa-money-bill-wave nav-icon"></i>
+                                    <p>Payments</p>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('patient.treatment.view')
+                            <li class="nav-item">
+                                <a href="{{ route('patientshemo') }}"
+                                    class="nav-link {{ request()->is('patients/hemodialysis-treatment*') ? 'active' : '' }}">
+                                    <i class="fas fa-medkit nav-icon"></i>
+                                    <p>Treatment</p>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('patient.philhealth.view')
+                            <li class="nav-item">
+                                <a href="{{ route('patientsphic') }}"
+                                    class="nav-link {{ request()->is('patients/phil-health*') ? 'active' : '' }}">
+                                    <i class="fas fa-hospital-o nav-icon"></i>
+                                    <p>PhilHealth</p>
+                                </a>
+                            </li>
+                        @endcan
+
+                        {{-- <li class="nav-item">
                             <a href="{{ route('patientssoa') }}"
                                 class="nav-link {{ request()->is('patients/statement-of-account*') ? 'active' : '' }}">
                                 <i class="fas fa-newspaper nav-icon"></i>
                                 <p>GL Statement</p>
                             </a>
-                        </li>
+                        </li> --}}
 
                     </ul>
                 </li>
@@ -733,6 +748,13 @@
                                         class="nav-link {{ request()->is('maintenance/others/requirement*') ? 'active' : '' }}">
                                         <i class="fa fa-sort-numeric-asc nav-icon"></i>
                                         <p>Rquirements</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('maintenanceothersitem-active-list') }}"
+                                        class="nav-link {{ request()->is('maintenance/others/item-active-list*') ? 'active' : '' }}">
+                                        <i class="fa fa-sort-numeric-asc nav-icon"></i>
+                                        <p>Active items</p>
                                     </a>
                                 </li>
                             </ul>

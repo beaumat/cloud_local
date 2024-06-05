@@ -2,9 +2,11 @@
 
 namespace App\Livewire\RolePermissionPage;
 
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
+#[Title('Roles & Permission')]
 class RolePermissionList extends Component
 {
     public $roles = [];

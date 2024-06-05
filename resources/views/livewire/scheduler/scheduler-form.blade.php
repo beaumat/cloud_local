@@ -28,7 +28,7 @@
                                         {{-- <h4 class="card-title">{{ __('Schedules Setup') }}</h4> --}}
                                     </div>
                                     <div class="col-md-6 text-right">
-                                            
+
                                         <a href="{{ route('patientsschedules') }}" class="btn btn-info btn-sm">
                                             <i class="fa fa-table" aria-hidden="true"></i>
                                             List</a>
@@ -65,26 +65,36 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <table class="table table-sm text-xs">
-                                    <thead class="bg-sky text-xs">
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Shift</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($scheduleList as $list)
+                                
+                                <div class="form-group">
+                                    <livewire:dropdown-option name="scheduleStatusId" :isDisabled=false titleName="Status"
+                                    :options="$scheduleStatusList" :zero="false" wire:model.live='scheduleStatusId' />
+                                </div>
+                        
+                                <div class="form-group">
+                                    <table class="table table-sm table-bordered table-hover">
+                                        <thead class="bg-sky text-xs">
                                             <tr>
-                                                <td>{{ \Carbon\Carbon::parse($list->SCHED_DATE)->format('m/d/Y') }}</td>
-                                                <td>{{ $list->SHIFT }}</td>
-                                                <td>{{ $list->STATUS }}</td>
-                                                <td></td>
+                                                <th>Date</th>
+                                                <th>Shift</th>
+                                                <th>Status</th>
                                             </tr>
-                                        @endforeach
-
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody class="text-xs">
+                                            @foreach ($scheduleList as $list)
+                                                <tr>
+                                                    <td>{{ \Carbon\Carbon::parse($list->SCHED_DATE)->format('m/d/Y') }}</td>
+                                                    <td>{{ $list->SHIFT }}</td>
+                                                    <td>{{ $list->STATUS }}</td>
+    
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    <div class="text-xs"> {{ $scheduleList->links() }}</div>
+                                </div>
+                       
+                        
                             </div>
                         </div>
                     </div>

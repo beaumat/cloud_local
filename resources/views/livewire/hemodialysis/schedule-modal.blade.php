@@ -38,6 +38,7 @@
                                         <th class="col-8 text-left">Patient Name</th>
                                         <th class="col-2 text-left">Shift </th>
                                         <th class="col-2 text-left">Type</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -65,6 +66,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success btn-sm" wire:click="create">Create &
                             Print</button>
+                            
                         <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">Close</button>
                     </div>
                 </div>

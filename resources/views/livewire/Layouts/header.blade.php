@@ -19,9 +19,20 @@
                 <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
             </ul>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{ route('maintenanceothersitem-active-list') }}" class="nav-link">Items Monitoring</a>
+        <li class="nav-item dropdown">
+            <a id="dropdownSubMenu3" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                class="nav-link dropdown-toggle">Files</a>
+
+            <ul aria-labelledby="dropdownSubMenu3" class="border-0 shadow dropdown-menu">
+                <li>
+                    <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">Item On Hand </a>
+                </li>
+
+                <div class="dropdown-divider"></div>
+
+            </ul>
         </li>
+
 
     </ul>
 

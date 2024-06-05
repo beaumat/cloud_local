@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Contacts;
 use App\Models\Hemodialysis;
+use App\Models\HemodialysisItems;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -12,10 +13,12 @@ class HemoServices
 
     private $object;
     private $user;
-    public function __construct(ObjectServices $objectService, UserServices $userServices)
+    private $systemSettingServices;
+    public function __construct(ObjectServices $objectService, UserServices $userServices, SystemSettingServices $systemSettingServices)
     {
         $this->object = $objectService;
         $this->user = $userServices;
+        $this->systemSettingServices = $systemSettingServices;
     }
     public function Get(int $ID)
     {
@@ -59,7 +62,11 @@ class HemoServices
     public function GetSummary(int $CONTACT_ID, int $LOCATION_ID, string $DATE_START, string $DATE_END)
     {
         $dataList = Hemodialysis::query()
-            ->select(['ID', 'DATE'])
+            ->select([
+                'ID',
+                'CODE',
+                'DATE'
+            ])
             ->where('CUSTOMER_ID', $CONTACT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('STATUS_ID', '2')
@@ -76,7 +83,6 @@ class HemoServices
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('STATUS_ID', '2')
             ->first();
-
 
         if ($dates) {
             $firstDate = $dates->first_date ?? null;
@@ -131,11 +137,12 @@ class HemoServices
         $MACHINE_NO = 0;
         $ID = (int) $this->object->ObjectNextID('HEMODIALYSIS');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('HEMODIALYSIS');
+        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Hemodialysis::create([
             'ID' => $ID,
             'RECORDED_ON' => Carbon::now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DATE' => $DATE,
             'CUSTOMER_ID' => $CUSTOMER_ID,
             'LOCATION_ID' => $LOCATION_ID,
@@ -175,24 +182,24 @@ class HemoServices
         string $TIME_END
 
     ) {
-        Hemodialysis::where('ID', $ID)->update([
+        Hemodialysis::where('ID', $ID)
+            ->update([
+                'PRE_WEIGHT' => $PRE_WEIGHT,
+                'PRE_BLOOD_PRESSURE' => $PRE_BLOOD_PRESSURE,
+                'PRE_BLOOD_PRESSURE2' => $PRE_BLOOD_PRESSURE,
+                'PRE_HEART_RATE' => $PRE_HEART_RATE,
+                'PRE_O2_SATURATION' => $PRE_O2_SATURATION,
+                'PRE_TEMPERATURE' => $PRE_TEMPERATURE,
+                'POST_WEIGHT' => $POST_WEIGHT,
+                'POST_BLOOD_PRESSURE' => $POST_BLOOD_PRESSURE,
+                'POST_BLOOD_PRESSURE2' => $POST_BLOOD_PRESSURE2,
+                'POST_HEART_RATE' => $POST_HEART_RATE,
+                'POST_O2_SATURATION' => $POST_O2_SATURATION,
+                'POST_TEMPERATURE' => $POST_TEMPERATURE,
+                'TIME_START' => $TIME_START != "" ? $TIME_START : null,
+                'TIME_END' => $TIME_END != "" ? $TIME_END : null
 
-            'PRE_WEIGHT' => $PRE_WEIGHT,
-            'PRE_BLOOD_PRESSURE' => $PRE_BLOOD_PRESSURE,
-            'PRE_BLOOD_PRESSURE2' => $PRE_BLOOD_PRESSURE,
-            'PRE_HEART_RATE' => $PRE_HEART_RATE,
-            'PRE_O2_SATURATION' => $PRE_O2_SATURATION,
-            'PRE_TEMPERATURE' => $PRE_TEMPERATURE,
-            'POST_WEIGHT' => $POST_WEIGHT,
-            'POST_BLOOD_PRESSURE' => $POST_BLOOD_PRESSURE,
-            'POST_BLOOD_PRESSURE2' => $POST_BLOOD_PRESSURE2,
-            'POST_HEART_RATE' => $POST_HEART_RATE,
-            'POST_O2_SATURATION' => $POST_O2_SATURATION,
-            'POST_TEMPERATURE' => $POST_TEMPERATURE,
-            'TIME_START' => $TIME_START != "" ? $TIME_START : null,
-            'TIME_END' => $TIME_END != "" ? $TIME_END : null
-
-        ]);
+            ]);
 
         if ($TIME_START != "" && $TIME_END != "") {
             $this->statusUpdate($ID, 2);
@@ -213,28 +220,30 @@ class HemoServices
     {
         // Check if already done
         $STATUS_ID = Hemodialysis::where('ID', $ID)->first()->STATUS_ID;
+
         if ($STATUS_ID == 1) { // if DRAFT ONLY
-            Hemodialysis::where('ID', $ID)->update([
-                'STATUS_ID' => $STATUS,
-                'STATUS_DATE' => Carbon::now(),
-            ]);
+            Hemodialysis::where('ID', $ID)
+                ->update([
+                    'STATUS_ID' => $STATUS,
+                    'STATUS_DATE' => Carbon::now(),
+                ]);
         }
     }
     public function Delete(int $id)
     {
-
+        HemodialysisItems::where('HEMO_ID', $id)->delete();
         Hemodialysis::where('ID', $id)->delete();
     }
     public function SearchList($search, int $LOCATION_ID)
     {
 
-        return Hemodialysis::query()
+        $result = Hemodialysis::query()
             ->select([
-                    'hemodialysis.ID',
-                    'hemodialysis.CODE',
-                    'hemodialysis.DATE',
-                    'c.NAME as PATIENT_NAME'
-                ])
+                'hemodialysis.ID',
+                'hemodialysis.CODE',
+                'hemodialysis.DATE',
+                'c.NAME as PATIENT_NAME'
+            ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
                 $join->on('l.ID', '=', 'hemodialysis.LOCATION_ID');
@@ -250,6 +259,8 @@ class HemoServices
             ->orderBy('ID', 'desc')
             ->orderBy('hemodialysis.ID', 'desc')
             ->get();
+
+        return $result;
     }
     public function getPrevousEntry(int $LOCATION_ID, string $Date, int $CONTACT_ID)
     {
@@ -259,28 +270,28 @@ class HemoServices
     {
         return Hemodialysis::query()
             ->select([
-                    'hemodialysis.ID',
-                    'hemodialysis.CODE',
-                    'hemodialysis.DATE',
-                    'c.NAME as CONTACT_NAME',
-                    'l.NAME as LOCATION_NAME',
-                    'hemodialysis.PRE_WEIGHT',
-                    'hemodialysis.PRE_BLOOD_PRESSURE',
-                    'hemodialysis.PRE_BLOOD_PRESSURE2',
-                    'hemodialysis.PRE_HEART_RATE',
-                    'hemodialysis.PRE_O2_SATURATION',
-                    'hemodialysis.PRE_TEMPERATURE',
-                    'hemodialysis.POST_WEIGHT',
-                    'hemodialysis.POST_BLOOD_PRESSURE',
-                    'hemodialysis.POST_BLOOD_PRESSURE2',
-                    'hemodialysis.POST_HEART_RATE',
-                    'hemodialysis.POST_O2_SATURATION',
-                    'hemodialysis.POST_TEMPERATURE',
-                    'hemodialysis.TIME_START',
-                    'hemodialysis.TIME_END',
-                    's.DESCRIPTION as STATUS',
-                    'hemodialysis.FILE_PATH'
-                ])
+                'hemodialysis.ID',
+                'hemodialysis.CODE',
+                'hemodialysis.DATE',
+                'c.NAME as CONTACT_NAME',
+                'l.NAME as LOCATION_NAME',
+                'hemodialysis.PRE_WEIGHT',
+                'hemodialysis.PRE_BLOOD_PRESSURE',
+                'hemodialysis.PRE_BLOOD_PRESSURE2',
+                'hemodialysis.PRE_HEART_RATE',
+                'hemodialysis.PRE_O2_SATURATION',
+                'hemodialysis.PRE_TEMPERATURE',
+                'hemodialysis.POST_WEIGHT',
+                'hemodialysis.POST_BLOOD_PRESSURE',
+                'hemodialysis.POST_BLOOD_PRESSURE2',
+                'hemodialysis.POST_HEART_RATE',
+                'hemodialysis.POST_O2_SATURATION',
+                'hemodialysis.POST_TEMPERATURE',
+                'hemodialysis.TIME_START',
+                'hemodialysis.TIME_END',
+                's.DESCRIPTION as STATUS',
+                'hemodialysis.FILE_PATH'
+            ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
@@ -308,7 +319,6 @@ class HemoServices
                 DB::raw('count(h.ID) as TOTAL_HEMO')
             )
             ->join('hemodialysis as h', 'h.CUSTOMER_ID', '=', 'contact.ID')
-     
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.STATUS_ID', 2)
             ->whereBetween('h.DATE', [$DATE_FORM, $DATE_TO])
@@ -326,4 +336,115 @@ class HemoServices
 
         return $result;
     }
+    public function GetLastTreatment(int $CONTACT_ID, int $LOCATION_ID, string $DATE)
+    {
+        $result = Hemodialysis::query()
+            ->select([
+                'PRE_WEIGHT',
+                'PRE_BLOOD_PRESSURE',
+                'PRE_HEART_RATE',
+                'PRE_O2_SATURATION',
+                'PRE_TEMPERATURE',
+                'POST_WEIGHT',
+                'POST_BLOOD_PRESSURE',
+                'POST_HEART_RATE',
+                'POST_O2_SATURATION',
+                'POST_TEMPERATURE',
+                'PRE_BLOOD_PRESSURE2',
+                'POST_BLOOD_PRESSURE2',
+            ])
+            ->where('CUSTOMER_ID', $CONTACT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('DATE', '<', $DATE)
+            ->where('STATUS_ID', '<>', 0)
+            ->orderBy('ID', 'desc')
+            ->first();
+
+        return $result;
+
+    }
+    private function getLine($HEMO_ID): int
+    {
+        return (int) HemodialysisItems::where('HEMO_ID', $HEMO_ID)->max('LINE_NO');
+    }
+    public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW)
+    {
+        $ID = (int) $this->object->ObjectNextID('HEMODIALYSIS_ITEMS');
+
+        $LINE_NO = (int) $this->getLine($HEMO_ID) + 1;
+
+        HemodialysisItems::create([
+            'ID' => $ID,
+            'HEMO_ID' => $HEMO_ID,
+            'LINE_NO' => $LINE_NO,
+            'ITEM_ID' => $ITEM_ID,
+            'QUANTITY' => $QUANTITY,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+            'IS_NEW' => $IS_NEW
+        ]);
+
+    }
+    public function ItemUpdate(int $ID, int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW)
+    {
+        HemodialysisItems::where('ID', $ID)
+            ->where('HEMO_ID', $HEMO_ID)
+            ->where('ITEM_ID', $ITEM_ID)
+            ->update([
+                'QUANTITY' => $QUANTITY,
+                'UNIT_ID' => $UNIT_ID,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                'IS_NEW' => $IS_NEW
+            ]);
+    }
+    public function ItemDelete(int $ID, int $HEMO_ID, int $ITEM_ID)
+    {
+        HemodialysisItems::where('ID', $ID)
+            ->where('HEMO_ID', $HEMO_ID)
+            ->where('ITEM_ID', $ITEM_ID)
+            ->delete();
+
+    }
+    public function ItemView(int $HEMO_ID)
+    {
+        $result = HemodialysisItems::query()
+            ->select([
+                'hemodialysis_items.ID',
+                'hemodialysis_items.ITEM_ID',
+                'hemodialysis_items.QUANTITY',
+                'hemodialysis_items.UNIT_ID',
+                'hemodialysis_items.UNIT_BASE_QUANTITY',
+                'hemodialysis_items.IS_NEW',
+                'item.CODE',
+                'item.DESCRIPTION'
+            ])
+            ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->where('hemodialysis_items.HEMO_ID', $HEMO_ID)
+            ->get();
+
+        return $result;
+    }
+
+
+    public function ItemInventory(int $ID)
+    {
+        $result = HemodialysisItems::query()
+            ->select([
+                'hemodialysis_items.ID',
+                'hemodialysis_items.ITEM_ID',
+                'hemodialysis_items.QUANTITY',
+                'hemodialysis_items.UNIT_BASE_QUANTITY',
+                'item.COST'
+            ])
+            ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('hemodialysis_items.HEMO_ID', $ID)
+            ->get();
+
+        return $result;
+    }
+
+    
+
+
 }

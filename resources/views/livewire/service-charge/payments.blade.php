@@ -32,7 +32,7 @@
                     @php
                         $ORG_AMOUNT = $ORG_AMOUNT - $list->AMOUNT_APPLIED;
                     @endphp
-                    <td class="text-right">{{ number_format($ORG_AMOUNT,2) }}
+                    <td class="text-right">{{ number_format($ORG_AMOUNT, 2) }}
                     </td>
                     <td class="text-center">
                         @if ($list->IS_CONFIRM)
@@ -63,5 +63,9 @@
             @endforeach
         </tbody>
     </table>
-    <a target="_BLANK" class="btn btn-success btn-xs" href="{{ route('patientspayment_create') }}"> <i class="fas fa-plus"></i> Create Payment</a>
+
+    @can('patient.payment.create')
+        <a target="_BLANK" class="btn btn-success btn-xs" href="{{ route('patientspayment_create') }}"> <i
+                class="fas fa-plus"></i> Create Payment</a>
+    @endcan
 </div>

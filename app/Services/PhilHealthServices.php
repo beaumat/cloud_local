@@ -21,14 +21,16 @@ class PhilHealthServices
     public float $ROOM_FEE = 700;
     public float $SUPPLIES = 780;
     public float $PROF_FEE_AMOUNT = 350;
-
     private float $TOTAL_FEE = 0;
     private $object;
     private $dateServices;
-    public function __construct(ObjectServices $objectService, DateServices $dateServices)
+    private $systemSettingServices;
+
+    public function __construct(ObjectServices $objectService, DateServices $dateServices, SystemSettingServices $systemSettingServices)
     {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
+        $this->systemSettingServices = $systemSettingServices;
     }
     public function get($ID)
     {
@@ -150,11 +152,12 @@ class PhilHealthServices
     ): int {
         $ID = $this->object->ObjectNextID('PHILHEALTH');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PHILHEALTH');
+        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         PhilHealth::create([
             'ID' => $ID,
-            'RECORDED_ON' => Carbon::now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DATE' => $DATE,
             'LOCATION_ID' => $LOCATION_ID,
             'CONTACT_ID' => $CONTACT_ID,
@@ -167,7 +170,7 @@ class PhilHealthServices
             'FIRST_CASE_RATE' => $FIRST_CASE_RATE,
             'SECOND_CASE_RATE' => $SECOND_CASE_RATE,
             'STATUS_ID' => 1,
-            'STATUS_DATETIME' => Carbon::now(),
+            'STATUS_DATETIME' => $this->dateServices->Now(),
         ]);
 
         return $ID;
@@ -311,8 +314,9 @@ class PhilHealthServices
             'OTHER_NAME' => $OTHER_NAME ?? null,
         ]);
     }
-    public function Delete($ID)
+    public function Delete(int $ID)
     {
+        PhilhealthDrugsMedicines::where('PHILHEALTH_ID', $ID)->delete();
         PhilHealthProfFee::where('PHIC_ID', $ID)->delete();
         PhilHealth::where('ID', $ID)->delete();
     }
@@ -374,6 +378,7 @@ class PhilHealthServices
     {
         $ID = $this->object->ObjectNextID('PHILHEALTH_PROF_FEE');
         $LINE_NO = $this->getLine($PHIC_ID) + 1;
+
         PhilHealthProfFee::create([
             'ID' => $ID,
             'PHIC_ID' => $PHIC_ID,

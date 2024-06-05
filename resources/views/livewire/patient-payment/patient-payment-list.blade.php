@@ -43,7 +43,6 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -60,12 +59,15 @@
                                         <th class="text-center col-1">Confirm</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1 text-center">Status</th>
-                                        <th class="text-center col-2 bg-success">
-                                            <a href="{{ route('patientspayment_create') }}"
-                                                class="text-white btn btn-xs w-100">
-                                                <i class="fas fa-plus"></i> New
-                                            </a>
-                                        </th>
+                                        @can('patient.payment.create')
+                                            <th class="text-center col-2 bg-success">
+                                                <a href="{{ route('patientspayment_create') }}"
+                                                    class="text-white btn btn-xs w-100">
+                                                    <i class="fas fa-plus"></i> New
+                                                </a>
+                                            </th>
+                                        @endcan
+
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -91,41 +93,51 @@
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center"> {{ $list->STATUS }}</td>
-                                            <td class="text-center">
-                                                @if ($list->FILE_PATH)
-                                                    <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
-                                                        target="_blank" class="btn-sm text-danger">
-                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                    </a>
-                                                @else
-                                                    <a href="#" class="btn-sm text-secondary">
-                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                    </a>
-                                                @endif
-                                                <a href="{{ route('patientspayment_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                                </a>
+                                            @can('patient.payment.create')
+                                                <td class="text-center">
+                                                    @can('patient.payment.print')
+                                                        @if ($list->FILE_PATH)
+                                                            <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
+                                                                target="_blank" class="btn-sm text-danger">
+                                                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                            </a>
+                                                        @else
+                                                            <a href="#" class="btn-sm text-secondary">
+                                                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                            </a>
+                                                        @endif
+                                                    @endcan
 
-                                                @if ($list->FILE_PATH)
-                                                    <button wire:click='getConfirm({{ $list->ID }})' type="button"
-                                                        wire:confirm="Are you sure this guaranteed letter is confirm?"
-                                                        class="btn btn-outline-none btn-sm p-0  text-success">
-                                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                    </button>
-                                                @else
-                                                    <button type="button"
-                                                        class="btn btn-outline-none btn-sm p-0 text-secondary">
-                                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                    </button>
-                                                @endif
 
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
-                                            </td>
+                                                    <a href="{{ route('patientspayment_edit', ['id' => $list->ID]) }}"
+                                                        class="btn-sm text-info">
+                                                        <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    </a>
+                                                    @can('patient.payment.update')
+                                                        @if ($list->FILE_PATH)
+                                                            <button wire:click='getConfirm({{ $list->ID }})' type="button"
+                                                                wire:confirm="Are you sure this guaranteed letter is confirm?"
+                                                                class="btn btn-outline-none btn-sm p-0  text-success">
+                                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                                            </button>
+                                                        @else
+                                                            <button type="button"
+                                                                class="btn btn-outline-none btn-sm p-0 text-secondary">
+                                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                                            </button>
+                                                        @endif
+                                                    @endcan
+
+                                                    @can('patient.payment.delete')
+                                                        <a href="#" wire:click='delete({{ $list->ID }})'
+                                                            wire:confirm="Are you sure you want to delete this?"
+                                                            class="btn-sm text-danger">
+                                                            <i class="fas fa-times" aria-hidden="true"></i>
+                                                        </a>
+                                                    @endcan
+
+                                                </td>
+                                            @endcan
                                         </tr>
                                     @endforeach
                                 </tbody>
