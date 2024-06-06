@@ -12,12 +12,8 @@ class BillPaymentServices
     private $compute;
     private $systemSettingServices;
     private $dateServices;
-    public function __construct(
-        ObjectServices $objectService,
-        ComputeServices $computeServices,
-        DateServices $dateServices,
-        SystemSettingServices $systemSettingServices,
-    ) {
+    public function __construct(ObjectServices $objectService, ComputeServices $computeServices, DateServices $dateServices, SystemSettingServices $systemSettingServices)
+    {
         $this->object = $objectService;
         $this->compute = $computeServices;
         $this->dateServices = $dateServices;
@@ -27,17 +23,8 @@ class BillPaymentServices
     {
         return Check::where('ID', $ID)->where('TYPE', 1)->first();
     }
-    public function Store(
-        string $CODE,
-        string $DATE,
-        int $BANK_ACCOUNT_ID,
-        int $PAY_TO_ID,
-        int $LOCATION_ID,
-        float $AMOUNT,
-        string $NOTES,
-        int $ACCOUNTS_PAYABLE_ID
-    ): int {
-
+    public function Store(string $CODE, string $DATE, int $BANK_ACCOUNT_ID, int $PAY_TO_ID, int $LOCATION_ID, float $AMOUNT, string $NOTES, int $ACCOUNTS_PAYABLE_ID): int
+    {
         $ID = (int) $this->object->ObjectNextID('CHECK');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('CHECK');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
@@ -56,7 +43,7 @@ class BillPaymentServices
             'PRINTED' => false,
             'STATUS' => 0,
             'STATUS_DATE' => $this->dateServices->NowDate(),
-            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID
+            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID ?? null
 
         ]);
 
@@ -73,7 +60,6 @@ class BillPaymentServices
     public function Update(
         int $ID,
         string $CODE,
-        string $DATE,
         int $BANK_ACCOUNT_ID,
         int $PAY_TO_ID,
         int $LOCATION_ID,
@@ -142,7 +128,6 @@ class BillPaymentServices
             })
             ->orderBy('check.ID', 'desc')
             ->paginate($perPage);
-
     }
     public function BillPaymentBillsExist(int $CHECK_ID, int $BILL_ID): int
     {
@@ -169,7 +154,6 @@ class BillPaymentServices
             ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
             ->where('check_bills.CHECK_ID', $CHECK_ID)
             ->get();
-
     }
     public function getTotalApplied(int $CHECK_ID): float
     {
@@ -209,7 +193,6 @@ class BillPaymentServices
             'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
             'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null
         ]);
-
     }
     public function getTotalPay(int $BILL_ID, int $EXECPT_CHECK_ID): float
     {
@@ -224,7 +207,6 @@ class BillPaymentServices
         }
 
         return 0;
-
     }
     public function billPaymentBills_Update(
         int $ID,
@@ -241,7 +223,6 @@ class BillPaymentServices
                 'DISCOUNT' => $DISCOUNT,
                 'AMOUNT_PAID' => $AMOUNT_PAID
             ]);
-
     }
 
     public function billPaymentJournal(int $CHECK_ID)
@@ -252,7 +233,7 @@ class BillPaymentServices
                 'BANK_ACCOUNT_ID as ACCOUNT_ID',
                 'PAY_TO_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                \DB::raw(' 1 as ENTRY_TYPE')
+                DB::raw(' 1 as ENTRY_TYPE')
             ])
             ->where('ID', $CHECK_ID)
             ->where('TYPE', 1)
@@ -268,11 +249,9 @@ class BillPaymentServices
                 'CHECK_BILLS.ACCOUNTS_PAYABLE_ID as ACCOUNT_ID',
                 'CHECK.PAY_TO_ID as SUBSIDIARY_ID',
                 'CHECK_BILLS.AMOUNT_PAID as AMOUNT',
-                \DB::raw(' 0 as ENTRY_TYPE')
-            ])
-            ->join('CHECK', 'CHECK.ID', '=', 'CHECK_BILLS.CHECK_ID')
+                DB::raw(' 0 as ENTRY_TYPE')
+            ])->join('CHECK', 'CHECK.ID', '=', 'CHECK_BILLS.CHECK_ID')
             ->where('CHECK_BILLS.CHECK_ID', $CHECK_ID)
-
             ->get();
 
         return $result;

@@ -361,7 +361,6 @@ class HemoServices
             ->first();
 
         return $result;
-
     }
     private function getLine($HEMO_ID): int
     {
@@ -383,7 +382,6 @@ class HemoServices
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
             'IS_NEW' => $IS_NEW
         ]);
-
     }
     public function ItemUpdate(int $ID, int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW)
     {
@@ -403,7 +401,6 @@ class HemoServices
             ->where('HEMO_ID', $HEMO_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->delete();
-
     }
     public function ItemView(int $HEMO_ID)
     {
@@ -443,8 +440,4 @@ class HemoServices
 
         return $result;
     }
-
-    
-
-
 }

@@ -5,6 +5,7 @@ namespace App\Livewire\BillCredit;
 use App\Services\BillCreditServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -39,16 +40,15 @@ class BillCreditList extends Component
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
-    public function delete($id)
+    public function delete(int $ID)
     {
         try {
-            \DB::beginTransaction();
-            $this->billCreditServices->Delete($id);
-            \DB::commit();
+            DB::beginTransaction();
+            $this->billCreditServices->Delete($ID);
+            DB::commit();
             session()->flash('message', 'Successfully deleted.');
-
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

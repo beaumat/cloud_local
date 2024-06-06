@@ -24,9 +24,10 @@ class ItemUnitPriceLevelServices
     }
     public function Update(int $ID, float $CUSTOM_PRICE)
     {
-        ItemUnitPriceLevels::where('ID', $ID)->update([
-            'CUSTOM_PRICE' => $CUSTOM_PRICE
-        ]);
+        ItemUnitPriceLevels::where('ID', $ID)
+            ->update([
+                'CUSTOM_PRICE' => $CUSTOM_PRICE
+            ]);
     }
     public function Delete(int $ID)
     {

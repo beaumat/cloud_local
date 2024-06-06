@@ -3,12 +3,13 @@
 namespace App\Services;
 
 use App\Models\SystemSetting;
+use Illuminate\Support\Facades\DB;
 
 class SystemSettingServices
 {
     public function GetList()
     {
-        return \DB::table('system_settings')->select(['NAME', 'VALUE'])->get();
+        return DB::table('system_settings')->select(['NAME', 'VALUE'])->get();
   
     }
     public function SetValue(string $NAME, string $VALUE)

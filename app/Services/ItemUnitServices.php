@@ -57,14 +57,14 @@ class ItemUnitServices
     public function RelatedUnitList(int $ITEM_ID)
     {
         return ItemUnits::query()
-        ->select([
-            'item_units.ID',
-            'unit_of_measure.NAME',
-        ])
-        ->join('unit_of_measure', 'unit_of_measure.ID', '=', 'item_units.UNIT_ID')
-        ->where('item_units.ITEM_ID', $ITEM_ID)
-        ->where('unit_of_measure.INACTIVE', '0')
-        ->orderBy('item_units.ID', 'asc')
-        ->get();
+            ->select([
+                'item_units.ID',
+                'unit_of_measure.NAME',
+            ])
+            ->join('unit_of_measure', 'unit_of_measure.ID', '=', 'item_units.UNIT_ID')
+            ->where('item_units.ITEM_ID', $ITEM_ID)
+            ->where('unit_of_measure.INACTIVE', '0')
+            ->orderBy('item_units.ID', 'asc')
+            ->get();
     }
 }

@@ -6,18 +6,18 @@ use App\Models\PatientPaymentCharges;
 use App\Models\ServiceCharges;
 use App\Models\ServiceChargesItems;
 use App\Models\Tax;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 class ServiceChargeServices
 {
-
     use WithPagination;
     private $object;
     private $compute;
     private $locationReference;
     private $systemSettingServices;
     private $dateServices;
+
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,

@@ -7,6 +7,7 @@ use App\Models\BillCreditBills;
 use App\Models\BillCreditExpenses;
 use App\Models\BillCreditItems;
 use App\Models\Tax;
+use Illuminate\Support\Facades\DB;
 
 class BillCreditServices
 {
@@ -407,7 +408,7 @@ class BillCreditServices
     public function GetCreditApplied(int $BILL_CREDIT_ID): float
     {
         $paymentSum = BillCreditBills::query()
-            ->select(\DB::raw('IFNULL(SUM(bill_credit_bills.AMOUNT_APPLIED), 0) AS pay'))
+            ->select(DB::raw('IFNULL(SUM(bill_credit_bills.AMOUNT_APPLIED), 0) AS pay'))
             ->where('bill_credit_bills.BILL_CREDIT_ID', '=', $BILL_CREDIT_ID)
             ->first();
 
@@ -463,7 +464,6 @@ class BillCreditServices
                     'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
                 ]);
         }
-
     }
     private function UpdateCreditApplied(int $BILL_CREDIT_ID)
     {
@@ -480,7 +480,7 @@ class BillCreditServices
             $this->StatusUpdate($BILL_CREDIT_ID, 0);
         }
     }
-    public function BillCreditBillsStore(int $BILL_CREDIT_ID, int $BILL_ID, float $AMOUNT_APPLIED, ): int
+    public function BillCreditBillsStore(int $BILL_CREDIT_ID, int $BILL_ID, float $AMOUNT_APPLIED,): int
     {
         $ID = $this->object->ObjectNextID('BILL_CREDIT_BILLS');
         BillCreditBills::create([
@@ -542,7 +542,7 @@ class BillCreditServices
         return $result;
     }
 
-  
+
     public function CountItems(int $BILL_ID, bool $isItem): int
     {
         if ($isItem == true) {
@@ -577,7 +577,7 @@ class BillCreditServices
                 'INPUT_TAX_ACCOUNT_ID as ACCOUNT_ID',
                 'VENDOR_ID as SUBSIDIARY_ID',
                 'INPUT_TAX_AMOUNT as AMOUNT',
-                \DB::raw(' 1 as ENTRY_TYPE')
+                DB::raw(' 1 as ENTRY_TYPE')
 
             ])
             ->where('ID', $BILL_CREDIT_ID)
@@ -594,7 +594,7 @@ class BillCreditServices
                 'ACCOUNTS_PAYABLE_ID as ACCOUNT_ID',
                 'VENDOR_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                \DB::raw(' 0 as ENTRY_TYPE')
+                DB::raw(' 0 as ENTRY_TYPE')
 
             ])
             ->where('ID', $BILL_CREDIT_ID)->get();
@@ -608,8 +608,8 @@ class BillCreditServices
                 'ID',
                 'ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
-                \DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
-                \DB::raw('1 as ENTRY_TYPE')
+                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                DB::raw('1 as ENTRY_TYPE')
             ])
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->orderBy('LINE_NO', 'asc')
@@ -625,8 +625,8 @@ class BillCreditServices
                 'ID',
                 'ACCOUNT_ID',
                 'ACCOUNT_ID as SUBSIDIARY_ID',
-                \DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
-                \DB::raw('1 as ENTRY_TYPE')
+                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                DB::raw('1 as ENTRY_TYPE')
             ])
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->orderBy('LINE_NO', 'asc')
@@ -634,5 +634,4 @@ class BillCreditServices
 
         return $result;
     }
-
 }

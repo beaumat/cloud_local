@@ -46,7 +46,7 @@ class InvoiceServices
                 'invoice.BALANCE_DUE'
             ])
             ->whereNotExists(function ($query) use (&$PAYMENT_ID) {
-                $query->select(\DB::raw(1))
+                $query->select(DB::raw(1))
                     ->from('payment_invoices as p')
                     ->whereRaw('p.INVOICE_ID = invoice.ID')
                     ->where('p.PAYMENT_ID', '=', $PAYMENT_ID);
@@ -69,7 +69,7 @@ class InvoiceServices
                 'invoice.BALANCE_DUE'
             ])
             ->whereNotExists(function ($query) use (&$CREDIT_MEMO_ID) {
-                $query->select(\DB::raw(1))
+                $query->select(DB::raw(1))
                     ->from('credit_memo_invoices as p')
                     ->whereRaw('p.INVOICE_ID = invoice.ID')
                     ->where('p.CREDIT_MEMO_ID', '=', $CREDIT_MEMO_ID);
@@ -408,7 +408,7 @@ class InvoiceServices
             $paymentApplied = (float) $this->GetPaymentApplied($ID);
             $creditApplied = (float) $this->GetCreditApplied($ID);
             $totalPay = (float) $paymentApplied + $creditApplied;
-            
+
             $data = $this->compute->taxCompute($itemResult, $TAX_ID);
             foreach ($data as $list) {
                 $originalAmount = (float) $list['AMOUNT'];
@@ -440,7 +440,7 @@ class InvoiceServices
     public function GetPaymentApplied(int $INVOICE_ID): float
     {
         $paymentSum = PaymentInvoices::query()
-            ->select(\DB::raw('IFNULL(SUM(payment_invoices.AMOUNT_APPLIED), 0) AS pay'))
+            ->select(DB::raw('IFNULL(SUM(payment_invoices.AMOUNT_APPLIED), 0) AS pay'))
             ->where('payment_invoices.INVOICE_ID', '=', $INVOICE_ID)
             ->first();
         return $paymentSum->pay;
@@ -449,7 +449,7 @@ class InvoiceServices
     public function GetCreditApplied(int $INVOICE_ID): float
     {
         $paymentSum = CreditMemoInvoices::query()
-            ->select(\DB::raw('IFNULL(SUM(credit_memo_invoices.AMOUNT_APPLIED), 0) AS pay'))
+            ->select(DB::raw('IFNULL(SUM(credit_memo_invoices.AMOUNT_APPLIED), 0) AS pay'))
             ->where('credit_memo_invoices.INVOICE_ID', '=', $INVOICE_ID)
             ->first();
 
@@ -503,6 +503,7 @@ class InvoiceServices
             ->get();
 
         $taxRate = (float) Tax::where('ID', $TAX_ID)->first()->RATE;
+
         foreach ($items as $list) {
             $tax_result = $this->compute->ItemComputeTax($list->AMOUNT, $list->TAXABLE, $TAX_ID, $taxRate);
             if ($tax_result) {
@@ -565,7 +566,7 @@ class InvoiceServices
                 'OUTPUT_TAX_ACCOUNT_ID as ACCOUNT_ID',
                 'CUSTOMER_ID as SUBSIDIARY_ID',
                 'OUTPUT_TAX_AMOUNT as AMOUNT',
-                \DB::raw(' 1 as ENTRY_TYPE')
+                DB::raw(' 1 as ENTRY_TYPE')
 
             ])
             ->where('ID', $INVOICE_ID)
@@ -582,7 +583,7 @@ class InvoiceServices
                 'ACCOUNTS_RECEIVABLE_ID as ACCOUNT_ID',
                 'CUSTOMER_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                \DB::raw(' 0 as ENTRY_TYPE')
+                DB::raw(' 0 as ENTRY_TYPE')
 
             ])
             ->where('ID', $INVOICE_ID)->get();
@@ -596,8 +597,8 @@ class InvoiceServices
                 'ID',
                 'INCOME_ACCOUNT_ID as ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
-                \DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
-                \DB::raw('1 as ENTRY_TYPE')
+                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                DB::raw('1 as ENTRY_TYPE')
             ])
             ->where('INVOICE_ID', $INVOICE_ID)
             ->orderBy('LINE_NO', 'asc')

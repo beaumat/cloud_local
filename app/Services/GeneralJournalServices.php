@@ -195,20 +195,18 @@ class GeneralJournalServices
             'TOTAL_DEBIT' => 0,
             'TOTAL_CREDIT' => 0,
         ];
-
     }
     public function getDetails(int $Id)
     {
         return GeneralJournalDetails::where('ID', $Id)->first();
     }
-
     public function getGeneralJournalEntries(int $ID)
     {
         $result = GeneralJournalDetails::query()
             ->select([
                 'ID',
                 'ACCOUNT_ID',
-                \DB::raw('0 as SUBSIDIARY_ID'),
+                DB::raw('0 as SUBSIDIARY_ID'),
                 'AMOUNT',
                 'ENTRY_TYPE'
             ])

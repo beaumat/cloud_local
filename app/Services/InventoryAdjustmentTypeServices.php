@@ -14,12 +14,10 @@ class InventoryAdjustmentTypeServices
     public function getList()
     {
         return InventoryAdjustmentType::query()->select(['ID', 'DESCRIPTION'])->get();
-
     }
     public function getAccountId(int $ID): int
     {
         $data = InventoryAdjustmentType::where('ID', $ID)->first();
-
         if ($data) {
             return (int) $data->ACCOUNT_ID;
         }
@@ -28,7 +26,6 @@ class InventoryAdjustmentTypeServices
     public function Store(string $CODE, string $DESCRIPTION, int $ACCOUNT_ID): int
     {
         $ID = $this->object->ObjectNextID('INVENTORY_ADJUSTMENT_TYPE');
-
         InventoryAdjustmentType::create([
             'ID' => $ID,
             'CODE' => $CODE,
@@ -54,7 +51,6 @@ class InventoryAdjustmentTypeServices
     }
     public function Search($search)
     {
-
         return InventoryAdjustmentType::query()
             ->select([
                 'inventory_adjustment_type.ID',

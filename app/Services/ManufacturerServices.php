@@ -17,9 +17,9 @@ class ManufacturerServices
         $ID = $this->object->ObjectNextID('MANUFACTURER');
 
         Manufacturers::create([
-            'ID' => $ID,
-            'CODE' => $CODE,
-            'NAME' => $NAME
+            'ID'    => $ID,
+            'CODE'  => $CODE,
+            'NAME'  => $NAME
         ]);
 
         return $ID;

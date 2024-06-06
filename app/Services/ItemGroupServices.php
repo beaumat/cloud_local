@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 use App\Models\ItemGroup;
 
 class ItemGroupServices
@@ -12,7 +13,7 @@ class ItemGroupServices
     }
     public function Store(string $CODE, string $DESCRIPTION, int $ITEM_TYPE): int
     {
-        $ID = $this->object->ObjectNextID('ITEM_GROUP');
+        $ID = (int)  $this->object->ObjectNextID('ITEM_GROUP');
         ItemGroup::create([
             'ID' => $ID,
             'CODE' => $CODE,
@@ -26,9 +27,9 @@ class ItemGroupServices
     public function Update(int $ID, string $CODE, string $DESCRIPTION, int $ITEM_TYPE): void
     {
         ItemGroup::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DESCRIPTION' => $DESCRIPTION,
-            'ITEM_TYPE' =>  $ITEM_TYPE
+            'CODE'          => $CODE,
+            'DESCRIPTION'   => $DESCRIPTION,
+            'ITEM_TYPE'     => $ITEM_TYPE
         ]);
     }
     public function Delete(int $ID): void
@@ -37,7 +38,7 @@ class ItemGroupServices
     }
     public function Search($search)
     {
-        return ItemGroup::query()
+        $result = ItemGroup::query()
             ->select([
                 'item_group.ID',
                 'item_group.CODE',
@@ -52,5 +53,7 @@ class ItemGroupServices
             })
             ->orderBy('item_group.ID', 'desc')
             ->get();
+            
+        return $result;
     }
 }

@@ -14,7 +14,6 @@ class AccountServices
     public function getBankAccount()
     {
         return Accounts::whereIn('TYPE', ['0', '6'])->get();
-
     }
     public function get(int $ID)
     {
@@ -28,7 +27,6 @@ class AccountServices
         }
 
         return 0;
-
     }
     public function getAccount(bool $isCode)
     {

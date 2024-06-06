@@ -22,8 +22,7 @@
                     <td>{{ $list->NAME }}</td>
                     <td class="text-right">
                         @if ($editExpensesId === $list->ID)
-                            <input type="number" class="form-control form-control-sm" wire:model='lineAmount'
-                                name="lineAmount" />
+                            <input type="number" class="form-control form-control-sm" wire:model='lineAmount' name="lineAmount" />
                         @else
                             {{ number_format($list->AMOUNT, 2) }}
                         @endif

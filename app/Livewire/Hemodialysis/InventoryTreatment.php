@@ -22,6 +22,7 @@ class InventoryTreatment extends Component
     private $hemoServices;
     private $itemServices;
     private $unitOfMeasureServices;
+
     public function boot(
         HemoServices $hemoServices,
         ItemServices $itemServices,
@@ -44,6 +45,7 @@ class InventoryTreatment extends Component
     public $editUnitList = [];
     public float $UNIT_BASE_QUANTITY;
     public bool $IS_NEW;
+    public int $BASE_UNIT_ID;
     public function mount()
     {
         $this->codeBase = false;
@@ -62,14 +64,12 @@ class InventoryTreatment extends Component
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
-                $this->RATE = $item->TYPE == 6 ? $this->getGroupPrice($item->ID) : $item->RATE ?? 0;
+     
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
             }
         }
-
-
     }
 
     public function updatedcodeBase()
@@ -95,8 +95,7 @@ class InventoryTreatment extends Component
             [],
             [
                 'ITEM_ID' => 'Item',
-                'QUANTITY' => 'Quantity',
-
+                'QUANTITY' => 'Quantity'
             ]
         );
 

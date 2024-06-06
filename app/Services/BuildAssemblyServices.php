@@ -57,24 +57,12 @@ class BuildAssemblyServices
         ]);
 
         $newAmount = (float) $this->AutoCreateComponent($ASSEMBLY_ITEM_ID, $ID, $QUANTITY);
-
         BuildAssembly::where('ID', $ID)->update(['AMOUNT' => $newAmount]);
-
-
         return (int) $ID;
     }
 
-    public function Update(
-        int $ID,
-        string $CODE,
-        int $ASSEMBLY_ITEM_ID,
-        float $QUANTITY,
-        int $BATCH_ID,
-        int $UNIT_ID,
-        int $UNIT_BASE_QUANTITY,
-        string $NOTES,
-    ): float {
-
+    public function Update(int $ID, string $CODE, int $ASSEMBLY_ITEM_ID, float $QUANTITY, int $BATCH_ID, int $UNIT_ID, int $UNIT_BASE_QUANTITY, string $NOTES): float
+    {
         BuildAssembly::where('ID', $ID)
             ->where('ASSEMBLY_ITEM_ID', $ASSEMBLY_ITEM_ID)
             ->update([
@@ -180,7 +168,6 @@ class BuildAssemblyServices
         }
 
         return $TOTAL;
-
     }
 
     public function ComponentStore(int $BUILD_ASSEMBLY_ID, int $ITEM_ID, float $QUANTITY, float $AMOUNT, int $BATCH_ID, int $ASSET_ACCOUNT_ID)
@@ -244,7 +231,7 @@ class BuildAssemblyServices
                 'build_assembly.ID',
                 'build_assembly.ASSEMBLY_ITEM_ID as ITEM_ID',
                 'build_assembly.QUANTITY',
-                \DB::raw(' 1 as UNIT_BASE_QUANTITY'),
+                DB::raw(' 1 as UNIT_BASE_QUANTITY'),
                 'item.COST'
             ])
             ->join('item', 'item.ID', '=', 'build_assembly.ASSEMBLY_ITEM_ID')
@@ -261,7 +248,7 @@ class BuildAssemblyServices
                 'build_assembly_items.ID',
                 'build_assembly_items.ITEM_ID',
                 'build_assembly_items.QUANTITY',
-                \DB::raw(' 1 as UNIT_BASE_QUANTITY'),
+                DB::raw(' 1 as UNIT_BASE_QUANTITY'),
                 'item.COST'
             ])
             ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
@@ -280,7 +267,7 @@ class BuildAssemblyServices
                 'ASSET_ACCOUNT_ID as ACCOUNT_ID',
                 'ASSEMBLY_ITEM_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                \DB::raw(' 0 as ENTRY_TYPE')
+                DB::raw(' 0 as ENTRY_TYPE')
 
             ])
             ->where('ID', $BUILD_ASSEMBLY_ID)->get();
@@ -295,7 +282,7 @@ class BuildAssemblyServices
                 'ASSET_ACCOUNT_ID as ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                \DB::raw('1 as ENTRY_TYPE')
+                DB::raw('1 as ENTRY_TYPE')
             ])
             ->where('BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
             ->orderBy('ID', 'asc')

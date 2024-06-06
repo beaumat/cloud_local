@@ -29,9 +29,10 @@ class TaxServices
     {
         return Tax::where('TAX_TYPE', $ID)->first()->ID;
     }
-    public function getList(): object
+    public function getList()
     {
-        return Tax::query()->select(['ID', 'NAME'])->where('TAX_TYPE', 3)->get();
+        $result = Tax::query()->select(['ID', 'NAME'])->where('TAX_TYPE', 3)->get();
+        return  $result;
     }
     public function Store(string $NAME, int $TAX_TYPE, float $RATE, int $VAT_METHOD, int $TAX_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $INACTIVE): int
     {

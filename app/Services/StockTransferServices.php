@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\StockTransfer;
 use App\Models\StockTransferItems;
+use Illuminate\Support\Facades\DB;
 
 class StockTransferServices
 {
@@ -165,7 +166,6 @@ class StockTransferServices
         return StockTransferItems::where('ID', $ID)
             ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
             ->first();
-
     }
     public function ItemUpdate(
         int $ID,
@@ -236,8 +236,8 @@ class StockTransferServices
 
         $result = StockTransferItems::query()
             ->select([
-                \DB::raw(' ifnull( sum(AMOUNT),2) as AMOUNT'),
-                \DB::raw(' ifnull( sum(RETAIL_VALUE),2) as RETAIL_VALUE'),
+                DB::raw(' ifnull( sum(AMOUNT),2) as AMOUNT'),
+                DB::raw(' ifnull( sum(RETAIL_VALUE),2) as RETAIL_VALUE'),
             ])
             ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
             ->first();
@@ -311,11 +311,11 @@ class StockTransferServices
             ->select([
                 'ID',
                 'ACCOUNT_ID',
-                \DB::raw(" 0 as SUBSIDIARY_ID"),
+                DB::raw(" 0 as SUBSIDIARY_ID"),
                 'AMOUNT',
-                \DB::raw(" 1 as ENTRY_TYPE"),
-                \DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS"),
-                \DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
+                DB::raw(" 1 as ENTRY_TYPE"),
+                DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS"),
+                DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
             ])
             ->where('ID', $STOCK_TRANSFER_ID)->get();
 
@@ -327,11 +327,11 @@ class StockTransferServices
             ->select([
                 'ID',
                 'ACCOUNT_ID',
-                \DB::raw(" 0 as SUBSIDIARY_ID"),
+                DB::raw(" 0 as SUBSIDIARY_ID"),
                 'AMOUNT',
-                \DB::raw("0 as ENTRY_TYPE"),
-                \DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS"),
-                \DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
+                DB::raw("0 as ENTRY_TYPE"),
+                DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS"),
+                DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
 
             ])
             ->where('ID', $STOCK_TRANSFER_ID)->get();
@@ -347,8 +347,8 @@ class StockTransferServices
                 'ASSET_ACCOUNT_ID as ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                \DB::raw('0 as ENTRY_TYPE'),
-                \DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS")
+                DB::raw('0 as ENTRY_TYPE'),
+                DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS")
             ])
             ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
             ->orderBy('LINE_NO', 'asc')
@@ -364,8 +364,8 @@ class StockTransferServices
                 'ASSET_ACCOUNT_ID as ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                \DB::raw('1 as ENTRY_TYPE'),
-                \DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS")
+                DB::raw('1 as ENTRY_TYPE'),
+                DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS")
             ])
             ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
             ->orderBy('LINE_NO', 'asc')

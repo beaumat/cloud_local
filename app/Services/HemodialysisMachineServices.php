@@ -7,11 +7,10 @@ use App\Models\HemodialysisMachines;
 class HemodialysisMachineServices
 {
     private $object;
-    private $user;
-    public function __construct(ObjectServices $objectService, UserServices $userServices)
+
+    public function __construct(ObjectServices $objectService)
     {
         $this->object = $objectService;
-        $this->user = $userServices;
     }
 
     public function get(int $ID)
@@ -21,6 +20,7 @@ class HemodialysisMachineServices
     public function Store(string $CODE, int $TYPE, string $DESCRIPTION, int $LOCATION_ID, int $CAPACITY): int
     {
         $ID = $this->object->ObjectNextID('HEMODIALYSIS_MACHINE');
+        
         HemodialysisMachines::create([
             'ID' => $ID,
             'CODE' => $CODE,
@@ -71,8 +71,5 @@ class HemodialysisMachineServices
             ->where('hemodialysis_machine.CODE', 'like', '%' . $search . '%')
             ->orWhere('hemodialysis_machine.DESCRIPTION', 'like', '%' . $search . '%')
             ->get();
-
     }
-
-
 }

@@ -252,7 +252,7 @@ class CreditMemoServices
     public function GetCreditApplied(int $CREDIT_MEMO_ID): float
     {
         $paymentSum = CreditMemoInvoices::query()
-            ->select(\DB::raw('IFNULL(SUM(credit_memo_invoices.AMOUNT_APPLIED), 0) AS pay'))
+            ->select(DB::raw('IFNULL(SUM(credit_memo_invoices.AMOUNT_APPLIED), 0) AS pay'))
             ->where('credit_memo_invoices.CREDIT_MEMO_ID', '=', $CREDIT_MEMO_ID)
             ->first();
 

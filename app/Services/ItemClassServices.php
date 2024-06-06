@@ -35,10 +35,9 @@ class ItemClassServices
 
     public function Update(int $ID, string $CODE, string $DESCRIPTION): void
     {
-
         ItemClass::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DESCRIPTION' => $DESCRIPTION
+            'CODE'           => $CODE,
+            'DESCRIPTION'    => $DESCRIPTION
         ]);
     }
 

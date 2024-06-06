@@ -90,10 +90,6 @@ class ContactServices
         $CUSTOM_FIELD4 = null,
         $CUSTOM_FIELD5 = null
     ): int {
-
-
-
-
         $OBJECT_TYPE = 0;
         switch ($TYPE) {
             case 0:
@@ -210,7 +206,6 @@ class ContactServices
         $CUSTOM_FIELD4 = null,
         $CUSTOM_FIELD5 = null
     ): void {
-
         Contacts::where('ID', $ID)->where('TYPE', $TYPE)->update([
             "NAME" => $NAME,
             "COMPANY_NAME" => $COMPANY_NAME,
@@ -251,7 +246,6 @@ class ContactServices
             "CUSTOM_FIELD3" => $CUSTOM_FIELD3,
             "CUSTOM_FIELD4" => $CUSTOM_FIELD4,
             "CUSTOM_FIELD5" => $CUSTOM_FIELD5
-
         ]);
     }
 
@@ -354,8 +348,7 @@ class ContactServices
             })
             ->orderBy('contact.ID', 'desc')
             ->paginate($perPage);
-
-
+            
         return $result;
     }
 

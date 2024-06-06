@@ -78,8 +78,6 @@ class PhilHealthForm extends Component
         $this->TIME_ADMITTED = '';
         $this->DATE_DISCHARGED = '';
         $this->TIME_DISCHARGED = '';
-
-
     }
     public function mount($id = null)
     {
@@ -128,7 +126,6 @@ class PhilHealthForm extends Component
 
 
         $this->Modify = true;
-
     }
 
     public function updateCancel()
@@ -182,7 +179,6 @@ class PhilHealthForm extends Component
             $this->Modify = false;
 
             return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
         } else {
 
             $this->philHealthServices->preUpdate(
@@ -205,7 +201,6 @@ class PhilHealthForm extends Component
 
             return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully updated');
         }
-
     }
     public function getModify()
     {
@@ -213,7 +208,6 @@ class PhilHealthForm extends Component
     }
     public function print()
     {
-
     }
     public function render()
     {

@@ -28,6 +28,7 @@ class BillCreditFormItems extends Component
     public float $QUANTITY;
     public int $UNIT_ID;
     public float $UNIT_BASE_QUANTITY;
+    public int $BASE_UNIT_ID;
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -128,8 +129,6 @@ class BillCreditFormItems extends Component
                 $this->getAmount();
             }
         }
-
-
     }
     public function mount()
     {
@@ -137,7 +136,6 @@ class BillCreditFormItems extends Component
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
-
     }
     public function saveItem()
     {
@@ -199,7 +197,6 @@ class BillCreditFormItems extends Component
             $this->ITEM_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -246,7 +243,7 @@ class BillCreditFormItems extends Component
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
-            
+
             $this->billCreditServices->ItemUpdate(
                 $Id,
                 $this->BILL_CREDIT_ID,
@@ -271,7 +268,6 @@ class BillCreditFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax = false;
             $this->lineItemId = 0;
-
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -313,7 +309,6 @@ class BillCreditFormItems extends Component
     }
     public function render()
     {
-
         $this->getReload();
         return view('livewire.bill-credit.bill-credit-form-items');
     }

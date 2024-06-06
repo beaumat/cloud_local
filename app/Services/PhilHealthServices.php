@@ -7,7 +7,6 @@ use App\Models\PatientDoctor;
 use App\Models\PhilHealth;
 use App\Models\PhilhealthDrugsMedicines;
 use App\Models\PhilHealthProfFee;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
@@ -451,7 +450,7 @@ class PhilHealthServices
         string $CONT_FREQUENCY,
         float $CONT_TOTAL_COST
     ) {
-        PhilhealthDrugsMedicines::where('ID', $ID, )->update([
+        PhilhealthDrugsMedicines::where('ID', $ID,)->update([
             'PHILHEALTH_ID' => $PHILHEALTH_ID,
             'GENERIC_NAME' => $GENERIC_NAME,
             'QUANTITY' => $QUANTITY,
@@ -470,7 +469,7 @@ class PhilHealthServices
     }
     public function DrugMedicineDelete(int $ID)
     {
-        PhilhealthDrugsMedicines::where('ID', $ID, )->delete();
+        PhilhealthDrugsMedicines::where('ID', $ID,)->delete();
     }
 
     public function DrugMedicineList(int $PHILHEALTH_ID): object
@@ -499,5 +498,4 @@ class PhilHealthServices
     {
         return PhilhealthDrugsMedicines::where('ID', $ID)->first();
     }
-
 }

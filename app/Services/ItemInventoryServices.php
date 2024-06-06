@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ItemInventory;
+use Illuminate\Support\Facades\DB;
 
 class ItemInventoryServices
 {
@@ -78,15 +79,15 @@ class ItemInventoryServices
 
     public function getPreviousItemInventory(int $LOCATION_ID, int $ITEM_ID, int $BATCH_ID, string $SOURCE_REF_DATE)
     {
-        $currentInventorySubquery = \DB::table('ITEM_INVENTORY')
-            ->select('ITEM_ID', 'LOCATION_ID', 'BATCH_ID', \DB::raw('MAX(SEQUENCE_NO) AS SEQUENCE_NO'))
+        $currentInventorySubquery = DB::table('ITEM_INVENTORY')
+            ->select('ITEM_ID', 'LOCATION_ID', 'BATCH_ID', DB::raw('MAX(SEQUENCE_NO) AS SEQUENCE_NO'))
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->where('BATCH_ID', $BATCH_ID)
             ->where('SOURCE_REF_DATE', '<=', $SOURCE_REF_DATE)
             ->groupBy('ITEM_ID', 'LOCATION_ID', 'BATCH_ID');
 
-        $result = \DB::table('ITEM_INVENTORY AS ITEM_INV')
+        $result = DB::table('ITEM_INVENTORY AS ITEM_INV')
             ->joinSub($currentInventorySubquery, 'CURRENT_INVENTORY', function ($join) {
                 $join->on('CURRENT_INVENTORY.ITEM_ID', '=', 'ITEM_INV.ITEM_ID')
                     ->on('CURRENT_INVENTORY.LOCATION_ID', '=', 'ITEM_INV.LOCATION_ID')
@@ -118,14 +119,13 @@ class ItemInventoryServices
             'NEXT_QUANTITY' => 0,
             'NEXT_COST' => 0
         ];
-
     }
 
     public function getAdavanceItemInventory(int $LOCATION_ID, int $ITEM_ID, int $BATCH_ID, string $SOURCE_REF_DATE)
     {
         // Subquery for CURRENT_INVENTORY
-        $currentInventorySubquery = \DB::table('ITEM_INVENTORY')
-            ->select('ITEM_ID', 'LOCATION_ID', 'BATCH_ID', \DB::raw('MIN(SEQUENCE_NO) AS SEQUENCE_NO'))
+        $currentInventorySubquery = DB::table('ITEM_INVENTORY')
+            ->select('ITEM_ID', 'LOCATION_ID', 'BATCH_ID', DB::raw('MIN(SEQUENCE_NO) AS SEQUENCE_NO'))
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->where('BATCH_ID', $BATCH_ID)
@@ -133,7 +133,7 @@ class ItemInventoryServices
             ->groupBy('ITEM_ID', 'LOCATION_ID', 'BATCH_ID');
 
         // Main query
-        $query = \DB::table('ITEM_INVENTORY AS ITEM_INV')
+        $query = DB::table('ITEM_INVENTORY AS ITEM_INV')
             ->joinSub($currentInventorySubquery, 'CURRENT_INVENTORY', function ($join) {
                 $join->on('CURRENT_INVENTORY.ITEM_ID', '=', 'ITEM_INV.ITEM_ID')
                     ->on('CURRENT_INVENTORY.LOCATION_ID', '=', 'ITEM_INV.LOCATION_ID')
@@ -182,7 +182,6 @@ class ItemInventoryServices
             'ENDING_UNIT_COST' => 0,
             'ENDING_COST' => 0,
         ];
-
     }
 
     private function InvItemExists(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_ID, int $SOURCE_REF_TYPE, string $SOURCE_REF_DATE): bool
@@ -255,11 +254,8 @@ class ItemInventoryServices
                     $ENDING_UNIT_COST,
                     $ENDING_COST
                 );
-
             }
-
         }
-
     }
     public function InventoryExecuteAdjustment($data, int $LOCATION_ID, int $SOURCE_REF_TYPE, $SOURCE_REF_DATE)
     {
@@ -294,7 +290,7 @@ class ItemInventoryServices
                 $ending = $this->getEnding($PREVIOUS_ID);
                 $SEQUENCE_NO = (int) $ending['SEQUENCE_NO'];
                 $QTY = (float) $ENDING_QUANTITY - (float) $ending['ENDING_QUANTITY'];
-                
+
 
                 $ENDING_UNIT_COST = (float) $COST;
                 $ENDING_COST = $ENDING_UNIT_COST * $ENDING_QUANTITY;
@@ -313,12 +309,7 @@ class ItemInventoryServices
                     $ENDING_UNIT_COST,
                     $ENDING_COST
                 );
-
             }
-
         }
-
     }
-
-
 }

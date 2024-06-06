@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AccountJournal;
+use Illuminate\Support\Facades\DB;
 
 class AccountJournalServices
 {
@@ -11,7 +12,6 @@ class AccountJournalServices
     {
         $this->object = $objectService;
     }
-
     private function Store(
         int $PREVIOUS_ID,
         int $SEQUENCE_NO,
@@ -30,6 +30,7 @@ class AccountJournalServices
     ) {
 
         $ID = (int) $this->object->ObjectNextID('ACCOUNT_JOURNAL');
+        
         AccountJournal::create([
             'ID' => $ID,
             'PREVIOUS_ID' => $PREVIOUS_ID > 0 ? $PREVIOUS_ID : null,
@@ -63,18 +64,18 @@ class AccountJournalServices
     }
     private function getPreviousAccountJournal(int $ACCOUNT_ID, int $LOCATION_ID, int $SUBSIDIARY_ID, int $SEQUENCE_GROUP, string $OBJECT_DATE)
     {
-        // Define the subquery to get the maximum SEQUENCE_NO
-        $currentJournal = \DB::table('ACCOUNT_JOURNAL')
-            ->select('ACCOUNT_ID', 'LOCATION_ID', 'SUBSIDIARY_ID', 'SEQUENCE_GROUP', \DB::raw('MAX(SEQUENCE_NO) as SEQUENCE_NO'))
+ 
+        $currentJournal = DB::table('ACCOUNT_JOURNAL')
+            ->select('ACCOUNT_ID', 'LOCATION_ID', 'SUBSIDIARY_ID', 'SEQUENCE_GROUP', DB::raw('MAX(SEQUENCE_NO) as SEQUENCE_NO'))
             ->where('ACCOUNT_ID', $ACCOUNT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
-            ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID) //from item_ID
+            ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
             ->where('SEQUENCE_GROUP', $SEQUENCE_GROUP)
             ->where('OBJECT_DATE', '<=', $OBJECT_DATE)
             ->groupBy('ACCOUNT_ID', 'LOCATION_ID', 'SUBSIDIARY_ID', 'SEQUENCE_GROUP');
 
         // Main query
-        $result = \DB::table('ACCOUNT_JOURNAL as aj')
+        $result = DB::table('ACCOUNT_JOURNAL as aj')
             ->joinSub($currentJournal, 'cj', function ($join) {
                 $join->on('aj.ACCOUNT_ID', '=', 'cj.ACCOUNT_ID')
                     ->on('aj.LOCATION_ID', '=', 'cj.LOCATION_ID')
@@ -98,7 +99,6 @@ class AccountJournalServices
             'NEXT_ID' => 0,
             'NEXT_AMOUNT' => 0
         ];
-
     }
 
     private function getEnding(int $ID)
@@ -121,8 +121,8 @@ class AccountJournalServices
     {
         $result = AccountJournal::query()
             ->select(
-                \DB::raw('SUM(IF(ENTRY_TYPE=0, AMOUNT, 0)) as DEBIT'),
-                \DB::raw('SUM(IF(ENTRY_TYPE=1, AMOUNT, 0)) as CREDIT')
+                DB::raw('SUM(IF(ENTRY_TYPE=0, AMOUNT, 0)) as DEBIT'),
+                DB::raw('SUM(IF(ENTRY_TYPE=1, AMOUNT, 0)) as CREDIT')
             )
             ->where('ACCOUNT_JOURNAL.JOURNAL_NO', $JOURNAL_NO)
             ->first();
@@ -150,7 +150,6 @@ class AccountJournalServices
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('ENTRY_TYPE', $ENTRY_TYPE)
             ->exists();
-
     }
     public function JournalExecute(int $JOURNAL_NO, $data, int $LOCATION_ID, int $OBJECT_TYPE, string $OBJECT_DATE)
     {
@@ -161,7 +160,7 @@ class AccountJournalServices
             $ENTRY_TYPE = (int) $list->ENTRY_TYPE;
             $AMOUNT = (float) $list->AMOUNT;
             $SEQUENCE_GROUP = 0;
-            
+
             if (isset($list->EXTENDED_OPTIONS)) {
                 $EXTENDED_OPTIONS = $list->EXTENDED_OPTIONS;
                 // Perform any additional operations if EXTENDED_OPTIONS is set
@@ -211,11 +210,6 @@ class AccountJournalServices
                     $EXTENDED_OPTIONS
                 );
             }
-
-
-
         }
-
     }
-
 }

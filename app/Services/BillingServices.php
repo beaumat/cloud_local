@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Bill;
@@ -27,7 +28,6 @@ class BillingServices
         $this->compute = $computeServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
-
     }
     public function get(int $ID): object
     {
@@ -54,7 +54,7 @@ class BillingServices
 
         $ID = (int) $this->object->ObjectNextID('BILL');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef = (bool) boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Bill::create([
             'ID' => $ID,
@@ -81,14 +81,11 @@ class BillingServices
         ]);
 
         return $ID;
-
     }
     public function Update(
         int $ID,
         string $CODE,
-        string $DATE,
         int $VENDOR_ID,
-        int $LOCATION_ID,
         int $PAYMENT_TERMS_ID,
         string $DUE_DATE,
         string $NOTES,
@@ -179,7 +176,6 @@ class BillingServices
             return (int) BillItems::where('BILL_ID', $Id)->max('LINE_NO');
         }
         return (int) BillExpenses::where('BILL_ID', $Id)->max('LINE_NO');
-
     }
     public function ItemStore(
         int $BILL_ID,
@@ -459,12 +455,11 @@ class BillingServices
                     'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
                 ]);
         }
-
     }
     public function GetBillPaymentApplied(int $BILL_ID): float
     {
         $result = CheckBills::query()
-            ->select(\DB::raw('IFNULL(SUM(check_bills.AMOUNT_PAID), 0) AS pay'))
+            ->select(DB::raw('IFNULL(SUM(check_bills.AMOUNT_PAID), 0) AS pay'))
             ->where('check_bills.BILL_ID', '=', $BILL_ID)
             ->first();
 
@@ -474,17 +469,17 @@ class BillingServices
     public function GetBillCreditApplied(int $BILL_ID): float
     {
         $result = BillCreditBills::query()
-            ->select(\DB::raw('IFNULL(SUM(bill_credit_bills.AMOUNT_APPLIED), 0) AS pay'))
+            ->select(DB::raw('IFNULL(SUM(bill_credit_bills.AMOUNT_APPLIED), 0) AS pay'))
             ->where('bill_credit_bills.BILL_ID', '=', $BILL_ID)
             ->first();
 
         return (float) $result->pay ?? 0;
     }
+    
     public function UpdateBalance(int $BILL_ID)
     {
         $PAYMENT = $this->GetBillPaymentApplied($BILL_ID);
         $CREDIT = $this->GetBillCreditApplied($BILL_ID);
-
         $PAY = (float) $PAYMENT + $CREDIT;
 
         $data = Bill::where('ID', $BILL_ID)->first();
@@ -530,7 +525,7 @@ class BillingServices
                 'bill.BALANCE_DUE'
             ])
             ->whereNotExists(function ($query) use (&$CHECK_ID) {
-                $query->select(\DB::raw(1))
+                $query->select(DB::raw(1))
                     ->from('check_bills as b')
                     ->whereRaw('b.BILL_ID = bill.ID')
                     ->where('b.CHECK_ID', '=', $CHECK_ID);
@@ -553,7 +548,7 @@ class BillingServices
                 'bill.BALANCE_DUE'
             ])
             ->whereNotExists(function ($query) use (&$BILL_CREDIT_ID) {
-                $query->select(\DB::raw(1))
+                $query->select(DB::raw(1))
                     ->from('bill_credit_bills as p')
                     ->whereRaw('p.BILL_ID = bill.ID')
                     ->where('p.BILL_CREDIT_ID', '=', $BILL_CREDIT_ID);
@@ -610,7 +605,7 @@ class BillingServices
                 'INPUT_TAX_ACCOUNT_ID as ACCOUNT_ID',
                 'VENDOR_ID as SUBSIDIARY_ID',
                 'INPUT_TAX_AMOUNT as AMOUNT',
-                \DB::raw(' 0 as ENTRY_TYPE')
+                DB::raw(' 0 as ENTRY_TYPE')
 
             ])
             ->where('ID', $BILL_ID)
@@ -627,7 +622,7 @@ class BillingServices
                 'ACCOUNTS_PAYABLE_ID as ACCOUNT_ID',
                 'VENDOR_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                \DB::raw(' 1 as ENTRY_TYPE')
+                DB::raw(' 1 as ENTRY_TYPE')
 
             ])
             ->where('ID', $BILL_ID)->get();
@@ -659,7 +654,7 @@ class BillingServices
                 'ACCOUNT_ID',
                 'ACCOUNT_ID as SUBSIDIARY_ID',
                 DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
-                \DB::raw(' 0 as ENTRY_TYPE')
+                DB::raw(' 0 as ENTRY_TYPE')
             ])
             ->where('BILL_ID', $BILL_ID)
             ->orderBy('LINE_NO', 'asc')

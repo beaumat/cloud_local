@@ -11,7 +11,6 @@ class ItemLocationUnitServices
     {
         $this->object = $objectService;
     }
-
     public function Store(int $ITEM_ID, int $LOCATION_ID, int $PURCHASES_UNIT_ID, int $SALES_UNIT_ID, int $SHIPPING_UNIT_ID): int
     {
         $ID = $this->object->ObjectNextID('ITEM_LOCATION_UNITS');

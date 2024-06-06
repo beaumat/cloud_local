@@ -4,25 +4,19 @@ namespace App\Services;
 
 use App\Models\InventoryAdjustment;
 use App\Models\InventoryAdjustmentItems;
+use Illuminate\Support\Facades\DB;
 
 class InventoryAdjustmentServices
 {
     private $object;
-    private $compute;
     private $systemSettingServices;
     private $dateServices;
 
-    public function __construct(
-        ObjectServices $objectService,
-        ComputeServices $computeServices,
-        SystemSettingServices $systemSettingServices,
-        DateServices $dateServices
-    ) {
+    public function __construct(ObjectServices $objectService, SystemSettingServices $systemSettingServices, DateServices $dateServices)
+    {
         $this->object = $objectService;
-        $this->compute = $computeServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
-
     }
     public function Get(int $ID)
     {
@@ -32,19 +26,19 @@ class InventoryAdjustmentServices
     {
         $ID = (int) $this->object->ObjectNextID('INVENTORY_ADJUSTMENT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('INVENTORY_ADJUSTMENT');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef = (bool) boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         InventoryAdjustment::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'LOCATION_ID' => $LOCATION_ID,
+            'ID'            => $ID,
+            'RECORDED_ON'   => $this->dateServices->Now(),
+            'CODE'          => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'          => $DATE,
+            'LOCATION_ID'   => $LOCATION_ID,
             'ADJUSTMENT_TYPE_ID' => $ADJUSTMENT_TYPE_ID,
-            'ACCOUNT_ID' => $ACCOUNT_ID,
-            'NOTES' => $NOTES,
-            'STATUS' => 0,
-            'STATUS_DATE' => $this->dateServices->NowDate(),
+            'ACCOUNT_ID'    => $ACCOUNT_ID,
+            'NOTES'         => $NOTES,
+            'STATUS'        => 0,
+            'STATUS_DATE'   => $this->dateServices->NowDate(),
         ]);
 
         return $ID;
@@ -53,8 +47,8 @@ class InventoryAdjustmentServices
     {
         InventoryAdjustment::where('ID', $ID)
             ->update([
-                'STATUS' => $STATUS,
-                'STATUS_DATE' => $this->dateServices->NowDate()
+                'STATUS'        => $STATUS,
+                'STATUS_DATE'   => $this->dateServices->NowDate()
             ]);
     }
     public function Update(int $ID, string $CODE, int $LOCATION_ID, int $ADJUSTMENT_TYPE_ID, int $ACCOUNT_ID, string $NOTES)
@@ -62,10 +56,10 @@ class InventoryAdjustmentServices
         InventoryAdjustment::where('ID', $ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->update([
-                'CODE' => $CODE,
-                'ADJUSTMENT_TYPE_ID' => $ADJUSTMENT_TYPE_ID,
-                'ACCOUNT_ID' => $ACCOUNT_ID,
-                'NOTES' => $NOTES
+                'CODE'                  => $CODE,
+                'ADJUSTMENT_TYPE_ID'    => $ADJUSTMENT_TYPE_ID,
+                'ACCOUNT_ID'            => $ACCOUNT_ID,
+                'NOTES'                 => $NOTES
             ]);
     }
     public function Delete(int $ID)
@@ -97,7 +91,6 @@ class InventoryAdjustmentServices
                 $query->where('inventory_adjustment.CODE', 'like', '%' . $search . '%')
                     ->where('t.DESCRIPTION', 'like', '%' . $search . '%')
                     ->orWhere('inventory_adjustment.NOTES', 'like', '%' . $search . '%');
-
             })
             ->orderBy('inventory_adjustment.ID', 'desc')
             ->paginate($perPage);
@@ -117,7 +110,6 @@ class InventoryAdjustmentServices
         return InventoryAdjustmentItems::where('ID', $ID)
             ->where('INVENTORY_ADJUSTMENT_ID', $INVENTORY_ADJUSTMENT_ID)
             ->first();
-
     }
     public function ItemStore(
         int $INVENTORY_ADJUSTMENT_ID,
@@ -131,7 +123,6 @@ class InventoryAdjustmentServices
     ) {
 
         $ID = (int) $this->object->ObjectNextID('INVENTORY_ADJUSTMENT_ITEMS');
-
         $LINE_NO = (int) $this->getLine($INVENTORY_ADJUSTMENT_ID) + 1;
 
         InventoryAdjustmentItems::create([
@@ -149,7 +140,6 @@ class InventoryAdjustmentServices
             'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY
         ]);
-
     }
     public function ItemUpdate(
         int $ID,
@@ -223,18 +213,17 @@ class InventoryAdjustmentServices
             ->get();
 
         return $result;
-
     }
     public function getInventoryAdjustmentJournal(int $ID)
-    {   
+    {
 
         $result = InventoryAdjustment::query()
             ->select([
                 'inventory_adjustment.ID',
                 'inventory_adjustment.ACCOUNT_ID',
                 'inventory_adjustment.ADJUSTMENT_TYPE_ID as SUBSIDIARY_ID',
-                \DB::raw('(SELECT IFNULL(SUM(items.QUANTITY * items.UNIT_COST), 0) FROM inventory_adjustment_items as items WHERE items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) as AMOUNT'),
-                \DB::raw('IF((SELECT IFNULL(SUM(items.QUANTITY * items.UNIT_COST), 0) FROM inventory_adjustment_items as items WHERE items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) >= 0, 1, 0) as ENTRY_TYPE')
+                DB::raw('(SELECT IFNULL(SUM(items.QUANTITY * items.UNIT_COST), 0) FROM inventory_adjustment_items as items WHERE items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) as AMOUNT'),
+                DB::raw('IF((SELECT IFNULL(SUM(items.QUANTITY * items.UNIT_COST), 0) FROM inventory_adjustment_items as items WHERE items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) >= 0, 1, 0) as ENTRY_TYPE')
             ])
             ->where('inventory_adjustment.ID', $ID)
             ->get();
@@ -248,8 +237,8 @@ class InventoryAdjustmentServices
                 'inventory_adjustment_items.ID',
                 'inventory_adjustment_items.ASSET_ACCOUNT_ID as ACCOUNT_ID',
                 'inventory_adjustment_items.ITEM_ID as SUBSIDIARY_ID',
-                \DB::raw('IFNULL(inventory_adjustment_items.QUANTITY * inventory_adjustment_items.UNIT_COST, 0) as AMOUNT'),
-                \DB::raw('IF(IFNULL(inventory_adjustment_items.QUANTITY * inventory_adjustment_items.UNIT_COST, 0) >= 0, 0, 1) as ENTRY_TYPE')
+                DB::raw('IFNULL(inventory_adjustment_items.QUANTITY * inventory_adjustment_items.UNIT_COST, 0) as AMOUNT'),
+                DB::raw('IF(IFNULL(inventory_adjustment_items.QUANTITY * inventory_adjustment_items.UNIT_COST, 0) >= 0, 0, 1) as ENTRY_TYPE')
             ])
             ->where('inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID', $ID)
             ->orderBy('LINE_NO', 'asc')

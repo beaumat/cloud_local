@@ -48,35 +48,34 @@ class ItemSubClassServices
             'DESCRIPTION' => $DESCRIPTION,
             'CLASS_ID' => $CLASS_ID
         ]);
-
-
     }
 
     public function Delete(int $ID): void
     {
         ItemSubClass::where('ID', $ID)->delete();
-
     }
 
     public function Search($search)
     {
         if (!$search) {
-            return ItemSubClass::query()->select([
-                'item_sub_class.ID',
-                'item_sub_class.CODE',
-                'item_sub_class.DESCRIPTION',
-                'item_class.DESCRIPTION as CLASS'
-            ])
+            return ItemSubClass::query()
+                ->select([
+                    'item_sub_class.ID',
+                    'item_sub_class.CODE',
+                    'item_sub_class.DESCRIPTION',
+                    'item_class.DESCRIPTION as CLASS'
+                ])
                 ->join('item_class', 'item_class.ID', '=', 'item_sub_class.CLASS_ID')
                 ->orderBy('item_sub_class.ID', 'desc')
                 ->get();
         } else {
-            return ItemSubClass::query()->select([
-                'item_sub_class.ID',
-                'item_sub_class.CODE',
-                'item_sub_class.DESCRIPTION',
-                'item_class.DESCRIPTION as CLASS'
-            ])
+            return ItemSubClass::query()
+                ->select([
+                    'item_sub_class.ID',
+                    'item_sub_class.CODE',
+                    'item_sub_class.DESCRIPTION',
+                    'item_class.DESCRIPTION as CLASS'
+                ])
                 ->join('item_class', 'item_class.ID', '=', 'item_sub_class.CLASS_ID')
                 ->where('item_sub_class.CODE', 'like', '%' . $search . '%')
                 ->orWhere('item_sub_class.DESCRIPTION', 'like', '%' . $search . '%')

@@ -34,8 +34,7 @@
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
-                                                <select name="location" wire:model.live='locationid'
-                                                    class="form-control form-control-sm">
+                                                <select name="location" wire:model.live='locationid' class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
                                                         <option value="{{ $item->ID }}"> {{ $item->NAME }}
@@ -43,7 +42,6 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -56,10 +54,8 @@
                                         <th class="col-4">Vendor</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Amount</th>
-
                                         <th class="col-1">Tax</th>
                                         <th class="col-1">Status</th>
-
                                         <th class="text-center col-1">
                                             <a href="{{ route('vendorsbill_credit_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>

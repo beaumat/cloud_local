@@ -93,7 +93,6 @@ class HemoForm extends Component
         $this->CUSTOMER_ID = $data->CUSTOMER_ID;
         $this->CODE = $data->CODE;
         $this->Modify = false;
-
         $this->PRE_WEIGHT = $data->PRE_WEIGHT ?? "";
         $this->PRE_BLOOD_PRESSURE = $data->PRE_BLOOD_PRESSURE ?? "";
         $this->PRE_BLOOD_PRESSURE2 = $data->PRE_BLOOD_PRESSURE2 ?? "";
@@ -106,10 +105,8 @@ class HemoForm extends Component
         $this->POST_HEART_RATE = $data->POST_HEART_RATE ?? "";
         $this->POST_O2_SATURATION = $data->POST_O2_SATURATION ?? "";
         $this->POST_TEMPERATURE = $data->POST_TEMPERATURE ?? "";
-
         $this->TIME_START = $data->TIME_START ?? "";
         $this->TIME_END = $data->TIME_END ?? "";
-
         $this->FILE_NAME = $data->FILE_NAME ?? "";
         $this->FILE_PATH = $data->FILE_PATH ?? "";
         $this->STATUS = $data->STATUS ?? 0;
@@ -129,7 +126,6 @@ class HemoForm extends Component
             }
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('patientshemo')->with('error', $errorMessage);
-
         }
 
         $this->ID = 0;
@@ -154,8 +150,7 @@ class HemoForm extends Component
         $this->PDF = null;
         $this->FILE_NAME = '';
         $this->FILE_PATH = '';
-        $this->STATUS  = 0;
-
+        $this->STATUS = 0;
     }
     public function getPreviousTreatment()
     {
@@ -238,7 +233,6 @@ class HemoForm extends Component
 
 
         $this->Modify = false;
-
     }
     public function save()
     {
@@ -265,14 +259,12 @@ class HemoForm extends Component
             } else {
                 $this->hemoServices->PreUpdate($this->ID, $this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
             }
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
 
         $this->Modify = false;
-
     }
     public function updatedPdf()
     {

@@ -12,8 +12,8 @@ class ObjectServices
     {
 
         try {
-            return ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first()->ID;
 
+            return ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first()->ID;
         } catch (\Exception $e) {
             //throw $th;
             dd("$TABLE_NAME :" . $e->getMessage());
@@ -24,7 +24,7 @@ class ObjectServices
         try {
             return ObjectTypeMap::where('NAME', $NAME)->first()->ID;
         } catch (\Exception $e) {
-         
+
             dd("$NAME :" . $e->getMessage());
         }
     }
@@ -54,11 +54,9 @@ class ObjectServices
 
             dd("$TABLE_NAME table not found . please try again");
             // Auto Create
-    
-            return 1;   
+
+            return 1;
         }
-
-
     }
     public function ObjectNextIdByName(string $NAME): int
     {
@@ -84,10 +82,10 @@ class ObjectServices
     {
         $data = ObjectCodeSequence::where('OBJECT_TYPE', $Type)->where('LOCATION_ID', $LocationId)->first();
         if ($data) {
-
             $this->SetSequence($data->ID, $data->NEXT_SEQUENCE, $data->INCREMENT);
             return $this->codeFormat($LocationId, $data->NEXT_SEQUENCE, $data->WIDTH, $data->POSTFIX, $data->PREFIX);
         }
+
         $this->NewSequence(2, $Type, $LocationId, 1, null, null, 4);
         return $this->codeFormat($LocationId, 1, 4, '', '');
     }
@@ -98,7 +96,7 @@ class ObjectServices
     public function NewSequence(
         int $NEXT_SEQUENCE,
         int $OBJECT_TYPE,
-        $LOCATION_ID,
+        int $LOCATION_ID,
         int $INCREMENT,
         $PREFIX,
         $POSTFIX,
@@ -106,13 +104,13 @@ class ObjectServices
     ) {
 
         ObjectCodeSequence::create([
-            'NEXT_SEQUENCE' => $NEXT_SEQUENCE,
-            'OBJECT_TYPE' => $OBJECT_TYPE,
-            'LOCATION_ID' => $LOCATION_ID,
-            'INCREMENT' => $INCREMENT,
-            'PREFIX' => $PREFIX,
-            'POSTFIX' => $POSTFIX,
-            'WIDTH' => $WIDTH
+            'NEXT_SEQUENCE'     => $NEXT_SEQUENCE,
+            'OBJECT_TYPE'       => $OBJECT_TYPE,
+            'LOCATION_ID'       => $LOCATION_ID,
+            'INCREMENT'         => $INCREMENT,
+            'PREFIX'            => $PREFIX,
+            'POSTFIX'           => $POSTFIX,
+            'WIDTH'             => $WIDTH
         ]);
     }
     public function codeFormat($LOCATION_ID, int $SEQUENCE, int $WIDTH, $POSTFIX, $PREFIX): string
@@ -124,7 +122,5 @@ class ObjectServices
         }
 
         return $POSTFIX ?? '' . Str::padLeft($SEQUENCE, $WIDTH, '0') . $PREFIX ?? '';
-
     }
-
 }

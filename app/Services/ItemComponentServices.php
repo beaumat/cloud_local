@@ -14,6 +14,7 @@ class ItemComponentServices
     public function Store(int $COMPONENT_ID, int  $ITEM_ID, float $QUANTITY, float $RATE): int
     {
         $ID = $this->object->ObjectNextID('ITEM_COMPONENTS');
+
         ItemComponents::create([
             'ID'            => $ID,
             'ITEM_ID'       => $ITEM_ID,

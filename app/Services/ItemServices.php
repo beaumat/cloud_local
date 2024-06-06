@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Items;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 class ItemServices
@@ -70,7 +71,7 @@ class ItemServices
             ->select(
                 [
                     'item.ID',
-                    \DB::raw('IFNULL(item.PURCHASE_DESCRIPTION, item.DESCRIPTION) as DESCRIPTION')
+                    DB::raw('IFNULL(item.PURCHASE_DESCRIPTION, item.DESCRIPTION) as DESCRIPTION')
                 ]
             )->where('INACTIVE', '0')
             ->where('TYPE', 0)
@@ -232,7 +233,7 @@ class ItemServices
                 'item.CODE',
                 'item.DESCRIPTION',
                 'item.TAXABLE',
-                \DB::raw("(CASE WHEN item.TYPE = 6 THEN (SELECT sum(c.RATE * c.QUANTITY) FROM item_components as c WHERE c.ITEM_ID = item.ID) ELSE item.RATE END) as RATE"),
+                DB::raw("(CASE WHEN item.TYPE = 6 THEN (SELECT sum(c.RATE * c.QUANTITY) FROM item_components as c WHERE c.ITEM_ID = item.ID) ELSE item.RATE END) as RATE"),
                 'item.COST',
                 'item.INACTIVE',
                 'item.COST',
@@ -263,7 +264,5 @@ class ItemServices
             })
             ->orderBy('item.ID', 'desc')
             ->paginate($perPage);
-
-
     }
 }
