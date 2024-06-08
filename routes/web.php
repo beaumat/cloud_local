@@ -254,15 +254,12 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::prefix('/maintenance')->name('maintenance')->group(function () {
-
         Route::prefix('/contact')->name('contact')->group(function () {
-
             Route::prefix('/customer')->group(function () {
                 Route::get('/', CustomerList::class)->name('customer');
                 Route::get('/create', CustomerForm::class)->name('customer_create');
                 Route::get('/{id}/edit', CustomerForm::class)->name('customer_edit');
             });
-
             Route::prefix('/vendor')->group(function () {
                 Route::get('/', VendorList::class)->name('vendor');
                 Route::get('/create', VendorForm::class)->name('vendor_create');

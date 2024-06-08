@@ -12,6 +12,7 @@ use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -190,7 +191,6 @@ class PurchaseOrderForm extends Component
                 $this->ID = $this->purchaseOrderServices->Store($this->CODE, $this->DATE, $this->VENDOR_ID, $this->LOCATION_ID, $this->CLASS_ID, $this->DATE_EXPECTED, '', $this->SHIP_VIA_ID, $this->PAYMENT_TERMS_ID, $this->NOTES, $this->STATUS, $this->INPUT_TAX_ID, $this->INPUT_TAX_RATE, $this->INPUT_TAX_VAT_METHOD, $this->INPUT_TAX_ACCOUNT_ID);
 
                 return Redirect::route('vendorspurchase_order_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
 
                 $this->validate(
@@ -220,8 +220,6 @@ class PurchaseOrderForm extends Component
                 $getResult = $this->purchaseOrderServices->ReComputed($this->ID);
                 $this->getUpdateAmount($getResult);
                 session()->flash('message', 'Successfully updated');
-
-
             }
             $PO = $this->purchaseOrderServices->get($this->ID);
             if ($PO) {
@@ -261,23 +259,21 @@ class PurchaseOrderForm extends Component
                 return;
             }
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $this->purchaseOrderServices->StatusUpdate($this->ID, 15);
-            \DB::commit();
+            DB::commit();
             $data = $this->purchaseOrderServices->get($this->ID);
             if ($data) {
                 $this->getInfo($data);
                 $this->Modify = false;
                 return;
             }
-            session()->flash('message','Successfully posted');
-
+            session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-
     }
     public function getVoid()
     {
@@ -291,7 +287,6 @@ class PurchaseOrderForm extends Component
                 $this->Modify = false;
                 return;
             }
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);

@@ -20,6 +20,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 #[Title('Bills')]
 class BillingForm extends Component
@@ -128,7 +129,6 @@ class BillingForm extends Component
         $this->LOCATION_ID = $data->LOCATION_ID;
         $this->VENDOR_ID = $data->VENDOR_ID;
         $this->PAYMENT_TERMS_ID = $data->PAYMENT_TERMS_ID ? $data->PAYMENT_TERMS_ID : 0;
-        $this->CLASS_ID = $data->CLASS_ID ? $data->CLASS_ID : 0;
         $this->NOTES = $data->NOTES;
         $this->AMOUNT = $data->AMOUNT ?? 0;
         $this->BALANCE_DUE = $data->BALANCE_DUE ?? 0;
@@ -173,7 +173,6 @@ class BillingForm extends Component
         $this->DISCOUNT_PCT = 0;
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->VENDOR_ID = 0;
-        $this->CLASS_ID = 0;
         $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
         $this->NOTES = '';
         $this->AMOUNT = 0;
@@ -263,19 +262,19 @@ class BillingForm extends Component
                 session()->flash('error', 'Item not found.');
                 return;
             }
-            \DB::beginTransaction();
+            DB::beginTransaction();
             if (!$this->ItemInventory()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
             if (!$this->AccountJournal()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
             $this->billingServices->StatusUpdate($this->ID, 15);
-            \DB::commit();
+            DB::commit();
             $data = $this->billingServices->get($this->ID);
             if ($data) {
                 $this->getInfo($data);
@@ -284,7 +283,7 @@ class BillingForm extends Component
             }
             session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -363,10 +362,8 @@ class BillingForm extends Component
                 $this->getTax();
                 $this->billingServices->Update(
                     $this->ID,
-                    $this->CODE,
-                    $this->DATE,
+                    $this->CODE,          
                     $this->VENDOR_ID,
-                    $this->LOCATION_ID,
                     $this->PAYMENT_TERMS_ID,
                     $this->DUE_DATE,
                     $this->NOTES,

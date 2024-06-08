@@ -27,6 +27,7 @@ class BillingFormItems extends Component
     public string $ITEM_DESCRIPTION;
     public float $QUANTITY;
     public int $UNIT_ID;
+    public int $BASE_UNIT_ID;
     public float $UNIT_BASE_QUANTITY;
     public float $RATE;
     public int $RATE_TYPE;
@@ -130,8 +131,6 @@ class BillingFormItems extends Component
                 $this->getAmount();
             }
         }
-
-
     }
     public function mount()
     {
@@ -139,7 +138,6 @@ class BillingFormItems extends Component
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
-
     }
     public function saveItem()
     {
@@ -203,7 +201,6 @@ class BillingFormItems extends Component
             $this->ITEM_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -214,7 +211,6 @@ class BillingFormItems extends Component
     public function updatedlineqty()
     {
         $this->getEditAmount();
-
     }
     public function updatedlinerate()
     {
@@ -278,7 +274,6 @@ class BillingFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax = false;
             $this->lineItemId = 0;
-
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();

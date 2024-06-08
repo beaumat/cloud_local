@@ -4,6 +4,7 @@ namespace App\Livewire\BillPayments;
 
 use App\Services\BillingServices;
 use App\Services\BillPaymentServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -76,13 +77,13 @@ class BillList extends Component
     public function delete(int $ID, int $BILL_ID)
     {
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
             $this->billingServices->UpdateBalance($BILL_ID);
-            \DB::commit();
+            DB::commit();
             $this->dispatch('reset-payment');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
 

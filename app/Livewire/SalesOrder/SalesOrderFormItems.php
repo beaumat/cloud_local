@@ -7,6 +7,7 @@ use App\Services\ItemServices;
 use App\Services\SalesOrderServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -28,6 +29,7 @@ class SalesOrderFormItems extends Component
     public float $QUANTITY;
     public int $UNIT_ID;
     public float $UNIT_BASE_QUANTITY;
+    public int $BASE_UNIT_ID;
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -77,7 +79,6 @@ class SalesOrderFormItems extends Component
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->taxServices = $taxServices;
         $this->itemServices = $itemServices;
-      
     }
 
     public function updatedcodeBase()
@@ -132,20 +133,20 @@ class SalesOrderFormItems extends Component
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
                 $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
-   
+
                 $this->BATCH_ID = $item->BATCH_ID ?? 0;
                 $this->GROUP_LINE_ID = false;
                 $this->PRINT_IN_FORMS = false;
                 $this->PRICE_LEVEL_ID = 0;
-                $this->getAmount();     
+                $this->getAmount();
             }
         }
     }
     public function getGroupPrice(int $item_id)
     {
         try {
-            $totalSum = \DB::table('item_components')
-                ->select(\DB::raw('SUM(RATE * QUANTITY) as total'))
+            $totalSum = DB::table('item_components')
+                ->select(DB::raw('SUM(RATE * QUANTITY) as total'))
                 ->where('ITEM_ID', $item_id)
                 ->first();
 
@@ -160,7 +161,6 @@ class SalesOrderFormItems extends Component
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
-
     }
     public function saveItem()
     {
@@ -207,7 +207,6 @@ class SalesOrderFormItems extends Component
 
             $getResult = $this->salesOrderServices->ReComputed($this->SALES_ORDER_ID);
             $this->dispatch('update-amount', result: $getResult);
-
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
@@ -223,7 +222,6 @@ class SalesOrderFormItems extends Component
             $this->CLASS_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -232,7 +230,6 @@ class SalesOrderFormItems extends Component
     public function updatedlineqty()
     {
         $this->getEditAmount();
-
     }
     public function updatedlinerate()
     {
@@ -301,7 +298,6 @@ class SalesOrderFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax = false;
             $this->lineItemId = 0;
-
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();

@@ -8,6 +8,7 @@ use App\Services\ItemSubClassServices;
 use App\Services\ServiceChargeServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -28,6 +29,7 @@ class ServiceChargeFormItems extends Component
     public string $ITEM_DESCRIPTION;
     public float $QUANTITY;
     public int $UNIT_ID;
+    public int $BASE_UNIT_ID;
     public float $UNIT_BASE_QUANTITY;
     public float $RATE;
     public int $RATE_TYPE;
@@ -156,8 +158,8 @@ class ServiceChargeFormItems extends Component
     public function getGroupPrice(int $item_id)
     {
         try {
-            $totalSum = \DB::table('item_components')
-                ->select(\DB::raw('SUM(RATE * QUANTITY) as total'))
+            $totalSum = DB::table('item_components')
+                ->select(DB::raw('SUM(RATE * QUANTITY) as total'))
                 ->where('ITEM_ID', $item_id)
                 ->first();
 

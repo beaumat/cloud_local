@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use App\Services\PurchaseOrderServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 #[Title('Purchase Order')]
@@ -39,13 +40,13 @@ class PurchaseOrderList extends Component
     public function delete($id)
     {
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $this->purchaseOrderServices->Delete($id);
-            \DB::commit();
+            DB::commit();
             session()->flash('message', 'Successfully deleted.');
 
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

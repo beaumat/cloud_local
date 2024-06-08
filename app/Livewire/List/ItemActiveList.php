@@ -14,9 +14,12 @@ class ItemActiveList extends Component
 {
   private $userServices;
   private $dateServices;
+  private $locationServices;
   public int $LOCATION_ID;
   public $locationList = [];
   public $DATE;
+
+
   public function boot(
     UserServices $userServices,
     DateServices $dateServices,

@@ -26,11 +26,12 @@ class InventoryAdjustmentTypeServices
     public function Store(string $CODE, string $DESCRIPTION, int $ACCOUNT_ID): int
     {
         $ID = $this->object->ObjectNextID('INVENTORY_ADJUSTMENT_TYPE');
+        
         InventoryAdjustmentType::create([
-            'ID' => $ID,
-            'CODE' => $CODE,
-            'DESCRIPTION' => $DESCRIPTION,
-            'ACCOUNT_ID' => $ACCOUNT_ID
+            'ID'            => $ID,
+            'CODE'          => $CODE,
+            'DESCRIPTION'   => $DESCRIPTION,
+            'ACCOUNT_ID'    => $ACCOUNT_ID
         ]);
 
         return $ID;

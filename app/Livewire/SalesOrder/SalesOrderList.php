@@ -5,6 +5,7 @@ namespace App\Livewire\SalesOrder;
 use App\Services\LocationServices;
 use App\Services\SalesOrderServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -23,8 +24,11 @@ class SalesOrderList extends Component
     private $locationServices;
     private $userServices;
 
-    public function boot(SalesOrderServices $salesOrderServices, LocationServices $locationServices, UserServices $userServices)
-    {
+    public function boot(
+        SalesOrderServices $salesOrderServices,
+        LocationServices $locationServices,
+        UserServices $userServices
+    ) {
         $this->salesOrderServices = $salesOrderServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -37,12 +41,12 @@ class SalesOrderList extends Component
     public function delete($id)
     {
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $this->salesOrderServices->Delete($id);
-            \DB::commit();
+            DB::commit();
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

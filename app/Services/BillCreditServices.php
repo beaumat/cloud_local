@@ -541,8 +541,6 @@ class BillCreditServices
 
         return $result;
     }
-
-
     public function CountItems(int $BILL_ID, bool $isItem): int
     {
         if ($isItem == true) {

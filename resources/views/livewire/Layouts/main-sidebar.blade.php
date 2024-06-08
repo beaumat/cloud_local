@@ -13,38 +13,29 @@
                     <a href="{{ route('dashboard') }}"
                         class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Dashboard
-                        </p>
+                        <p> Dashboard </p>
                     </a>
                 </li>
                 <li class="nav-item {{ request()->is('patients*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->is('patients*') ? 'active ' : '' }}">
-                        <i class="nav-icon fas fa-wheelchair "></i>
-                        <p>
-                            Patients
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
+                    <a href="#" class="nav-link {{ request()->is('patients*') ? 'active ' : '' }}"> <i
+                            class="nav-icon fas fa-wheelchair "></i>
+                        <p> Patients <i class="fas fa-angle-left right"></i> </p>
                     </a>
                     <ul class="nav nav-treeview ">
                         @can('patient.schedule.view')
-                            <li class="nav-item">
-                                <a href="{{ route('patientsschedules') }}"
-                                    class="nav-link {{ request()->is('patients/schedules*') ? 'active' : '' }}">
-                                    <i class="fas fa-calendar nav-icon"></i>
+                            <li class="nav-item"> <a href="{{ route('patientsschedules') }}"
+                                    class="nav-link {{ request()->is('patients/schedules*') ? 'active' : '' }}"> <i
+                                        class="fas fa-calendar nav-icon"></i>
                                     <p>Schedules</p>
-                                </a>
-                            </li>
+                                </a> </li>
                         @endcan
 
                         @can('patient.service-charges.view')
-                            <li class="nav-item">
-                                <a href="{{ route('patientsservice_charges') }}"
-                                    class="nav-link {{ request()->is('patients/service-charges*') ? 'active' : '' }}">
-                                    <i class="fas fa-file-invoice nav-icon"></i>
+                            <li class="nav-item"> <a href="{{ route('patientsservice_charges') }}"
+                                    class="nav-link {{ request()->is('patients/service-charges*') ? 'active' : '' }}"> <i
+                                        class="fas fa-file-invoice nav-icon"></i>
                                     <p>Service Charge</p>
-                                </a>
-                            </li>
+                                </a> </li>
                         @endcan
 
 
@@ -89,17 +80,13 @@
                     </ul>
                 </li>
                 <li class="nav-item {{ request()->is('customers*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->is('customers*') ? 'active ' : '' }}">
-                        <i class="nav-icon fas fa-users "></i>
-                        <p>
-                            Customers
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
+                    <a href="#" class="nav-link {{ request()->is('customers*') ? 'active ' : '' }}"> <i
+                            class="nav-icon fas fa-users "></i>
+                        <p> Customers <i class="fas fa-angle-left right"></i> </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('customerssales_order') }}"
-                                class="nav-link {{ request()->is('customers/sales-order*') ? 'active' : '' }}">
+                            <a href="{{ route('customerssales_order') }}" class="nav-link {{ request()->is('customers/sales-order*') ? 'active' : '' }}">
                                 <i class="fas fa-truck nav-icon"></i>
                                 <p>Sales Order</p>
                             </a>
@@ -234,10 +221,7 @@
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-university"></i>
-                        <p>
-                            Banking
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
+                        <p> Banking <i class="fas fa-angle-left right"></i> </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">

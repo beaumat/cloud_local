@@ -8,6 +8,7 @@ use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -28,6 +29,7 @@ class CreditMemoFormItems extends Component
     public string $ITEM_DESCRIPTION;
     public float $QUANTITY;
     public int $UNIT_ID;
+    public int $BASE_UNIT_ID;
     public float $UNIT_BASE_QUANTITY;
     public float $RATE;
     public int $RATE_TYPE;
@@ -145,7 +147,7 @@ class CreditMemoFormItems extends Component
                 $this->GROUP_LINE_ID = false;
                 $this->PRINT_IN_FORMS = false;
                 $this->PRICE_LEVEL_ID = 0;
-                $this->REF_LINE_ID = 0;
+      
                 $this->getAmount();
                 $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);
             }
@@ -157,8 +159,8 @@ class CreditMemoFormItems extends Component
     public function getGroupPrice(int $item_id)
     {
         try {
-            $totalSum = \DB::table('item_components')
-                ->select(\DB::raw('SUM(RATE * QUANTITY) as total'))
+            $totalSum = DB::table('item_components')
+                ->select(DB::raw('SUM(RATE * QUANTITY) as total'))
                 ->where('ITEM_ID', $item_id)
                 ->first();
 

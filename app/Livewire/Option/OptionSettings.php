@@ -35,7 +35,7 @@ class OptionSettings extends Component
             $this->systemSetting = SystemSetting::all();
         } catch (\Exception $e) {
             //throw $th;
-            dd($e->message);
+            dd($e->getMessage());
         }
     }
     public function returnArray($name): string
@@ -56,7 +56,7 @@ class OptionSettings extends Component
         try {
             return $systemSettingServices->GetValue($name);
         } catch (\Exception $e) {
-            dd($e->message);
+            dd($e->getMessage());
         }
     }
     public function SelectTab($tab)

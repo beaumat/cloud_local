@@ -100,24 +100,24 @@ class CreditMemoForm extends Component
 
     private function getInfo($Data)
     {
-        $this->ID = $Data->ID;
-        $this->CODE = $Data->CODE;
-        $this->DATE = $Data->DATE;
-        $this->LOCATION_ID = $Data->LOCATION_ID;
-        $this->CUSTOMER_ID = $Data->CUSTOMER_ID;
-        $this->SALES_REP_ID = $Data->SALES_REP_ID ?? 0;
-        $this->CLASS_ID = $Data->CLASS_ID ? $Data->CLASS_ID : 0;
-        $this->NOTES = $Data->NOTES ?? '';
-        $this->AMOUNT = $Data->AMOUNT;
-        $this->AMOUNT_APPLIED = $Data->AMOUNT_APPLIED;
+        $this->ID               = $Data->ID;
+        $this->CODE             = $Data->CODE;
+        $this->DATE             = $Data->DATE;
+        $this->LOCATION_ID      = $Data->LOCATION_ID;
+        $this->CUSTOMER_ID      = $Data->CUSTOMER_ID;
+        $this->SALES_REP_ID     = $Data->SALES_REP_ID ?? 0;
+        $this->CLASS_ID         = $Data->CLASS_ID ? $Data->CLASS_ID : 0;
+        $this->NOTES            = $Data->NOTES ?? '';
+        $this->AMOUNT           = $Data->AMOUNT;
+        $this->AMOUNT_APPLIED   = $Data->AMOUNT_APPLIED;
         $this->ACCOUNTS_RECEIVABLE_ID = $Data->ACCOUNTS_RECEIVABLE_ID;
-        $this->STATUS = $Data->STATUS;
-        $this->OUTPUT_TAX_ID = $Data->OUTPUT_TAX_ID ? $Data->OUTPUT_TAX_ID : 0;
-        $this->OUTPUT_TAX_RATE = $Data->OUTPUT_TAX_RATE ? $Data->OUTPUT_TAX_RATE : 0;
+        $this->STATUS           = $Data->STATUS;
+        $this->OUTPUT_TAX_ID    = $Data->OUTPUT_TAX_ID ? $Data->OUTPUT_TAX_ID : 0;
+        $this->OUTPUT_TAX_RATE  = $Data->OUTPUT_TAX_RATE ? $Data->OUTPUT_TAX_RATE : 0;
         $this->OUTPUT_TAX_AMOUNT = $Data->OUTPUT_TAX_AMOUNT ? $Data->OUTPUT_TAX_AMOUNT : 0;
         $this->OUTPUT_TAX_VAT_METHOD = $Data->OUTPUT_TAX_VAT_METHOD ? $Data->OUTPUT_TAX_VAT_METHOD : 0;
         $this->OUTPUT_TAX_ACCOUNT_ID = $Data->OUTPUT_TAX_ACCOUNT_ID ? $Data->OUTPUT_TAX_ACCOUNT_ID : 0;
-        $this->TAXABLE_AMOUNT = $Data->TAXABLE_AMOUNT ? $Data->TAXABLE_AMOUNT : 0;
+        $this->TAXABLE_AMOUNT   = $Data->TAXABLE_AMOUNT ? $Data->TAXABLE_AMOUNT : 0;
         $this->NONTAXABLE_AMOUNT = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }

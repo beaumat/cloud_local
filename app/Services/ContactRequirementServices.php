@@ -47,7 +47,7 @@ class ContactRequirementServices
     }
     public function GetCountRequirement(int $CONTACT_ID): int
     {
-        return ContactRequirements::where('CONTACT_ID', $CONTACT_ID)->where('IS_COMPLETE', 0)->where('NOT_APPLICABLE',0)->count();
+        return (int) ContactRequirements::where('CONTACT_ID', $CONTACT_ID)->where('IS_COMPLETE', 0)->where('NOT_APPLICABLE',0)->count();
     }
     public function GetList(int $CONTACT_ID)
     {

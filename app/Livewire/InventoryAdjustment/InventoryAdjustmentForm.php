@@ -13,6 +13,7 @@ use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
 use App\Services\ObjectServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -98,7 +99,7 @@ class InventoryAdjustmentForm extends Component
         try {
 
             $invAdjustment = (int) $this->objectServices->ObjectTypeID('INVENTORY_ADJUSTMENT');
-            
+
             $invAdjustmentItems = (int) $this->objectServices->ObjectTypeID('INVENTORY_ADJUSTMENT_ITEMS');
 
             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($invAdjustment, $this->ID) + 1;
@@ -122,14 +123,11 @@ class InventoryAdjustmentForm extends Component
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
             return false;
-
         }
-
     }
     public function posted()
     {
@@ -140,25 +138,25 @@ class InventoryAdjustmentForm extends Component
                 return;
             }
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             if (!$this->ItemInventory()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
             if (!$this->AccountJournal()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
 
             $this->inventoryAdjustmentServices->StatusUpdate($this->ID, 15);
             $this->STATUS = 15;
-            \DB::commit();
+            DB::commit();
             Session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -235,7 +233,7 @@ class InventoryAdjustmentForm extends Component
                     return;
                 }
 
-                \DB::beginTransaction();
+                DB::beginTransaction();
 
                 $this->ID = $this->inventoryAdjustmentServices->Store(
                     $this->CODE,
@@ -246,18 +244,15 @@ class InventoryAdjustmentForm extends Component
                     $this->NOTES
                 );
 
-                \DB::commit();
+                DB::commit();
                 return Redirect::route('companyinventory_adjustment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
                 $this->validate(
                     [
-
                         'CODE' => 'required|max:20|unique:stock_transfer,code,' . $this->ID,
                         'DATE' => 'required',
                         'LOCATION_ID' => 'required',
                         'ADJUSTMENT_TYPE_ID' => 'required|not_in:0'
-
                     ],
                     [],
                     [
@@ -276,7 +271,7 @@ class InventoryAdjustmentForm extends Component
                 }
 
 
-                \DB::beginTransaction();
+                DB::beginTransaction();
                 $this->inventoryAdjustmentServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -286,12 +281,12 @@ class InventoryAdjustmentForm extends Component
                     $this->NOTES,
 
                 );
-                \DB::commit();
+                DB::commit();
                 session()->flash('message', 'Successfully updated');
             }
             $this->updateCancel();
         } catch (\Exception $e) {
-            \DB::rollback();
+            DB::rollback();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

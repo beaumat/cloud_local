@@ -208,14 +208,8 @@ class BillPaymentServices
 
         return 0;
     }
-    public function billPaymentBills_Update(
-        int $ID,
-        int $CHECK_ID,
-        int $BILL_ID,
-        float $DISCOUNT,
-        float $AMOUNT_PAID
-
-    ) {
+    public function billPaymentBills_Update(int $ID, int $CHECK_ID, int $BILL_ID, float $DISCOUNT, float $AMOUNT_PAID)
+    {
         CheckBills::where('ID', $ID)
             ->where('CHECK_ID', $CHECK_ID)
             ->where('BILL_ID', $BILL_ID)

@@ -9,6 +9,7 @@ use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
 use App\Services\ObjectServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -112,17 +113,17 @@ class GeneralJournalForm extends Component
 
             if ($total_debit == $total_credit) {
 
-                \DB::beginTransaction();
+                DB::beginTransaction();
 
 
                 if (!$this->AccountJournal()) {
-                    \DB::rollBack();
+                    DB::rollBack();
                     return;
                 }
 
 
                 $this->generalJournalServices->StatusUpdate($this->ID, 15);
-                \DB::commit();
+                DB::commit();
 
                 $data = $this->generalJournalServices->get($this->ID);
                 if ($data) {
@@ -137,7 +138,7 @@ class GeneralJournalForm extends Component
             Session()->flash('error', 'Invalid disbalanced.');
 
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

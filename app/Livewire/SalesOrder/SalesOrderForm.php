@@ -2,7 +2,6 @@
 
 namespace App\Livewire\SalesOrder;
 
-use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
@@ -13,6 +12,7 @@ use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -58,17 +58,32 @@ class SalesOrderForm extends Component
     private $userServices;
     private $documentStatusServices;
     private $systemSettingServices;
-    private $accountServices;
-    private $scheduleServices;
     private $salesOrderServices;
     private $dateServices;
+
+
+
+
 
     public string $tab = "item";
     public function SelectTab(string $select)
     {
         $this->tab = $select;
     }
-
+    /**
+     * Boot method to initialize services.
+     *
+     * @param SalesOrderServices $salesOrderServices
+     * @param LocationServices $locationServices
+     * @param ContactServices $contactServices
+     * @param ShipViaServices $shipViaServices
+     * @param PaymentTermServices $paymentTermServices
+     * @param TaxServices $taxServices
+     * @param UserServices $userServices
+     * @param DocumentStatusServices $documentStatusServices
+     * @param SystemSettingServices $systemSettingServices
+     * @param DateServices $dateServices
+     */
     public function boot(
         SalesOrderServices $salesOrderServices,
         LocationServices $locationServices,
@@ -79,7 +94,6 @@ class SalesOrderForm extends Component
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
-        AccountServices $accountServices,
         DateServices $dateServices
     ) {
         $this->salesOrderServices = $salesOrderServices;
@@ -91,7 +105,6 @@ class SalesOrderForm extends Component
         $this->userServices = $userServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->accountServices = $accountServices;
         $this->dateServices = $dateServices;
     }
     public function LoadDropdown()
@@ -126,8 +139,7 @@ class SalesOrderForm extends Component
         $this->CLASS_ID = $Data->CLASS_ID ? $Data->CLASS_ID : 0;
         $this->DATE_NEEDED = $Data->DATE_NEEDED ? $Data->DATE_NEEDED : null;
         $this->PO_NUMBER = $Data->PO_NUMBER ?? '';
-        $this->DISCOUNT_DATE = $Data->DISCOUNT_DATE ?? null;
-        $this->DISCOUNT_PCT = $Data->DISCOUNT_PCT ?? 0;
+
         $this->NOTES = $Data->NOTES ?? '';
         $this->AMOUNT = $Data->AMOUNT;
         $this->STATUS = $Data->STATUS;
@@ -139,11 +151,6 @@ class SalesOrderForm extends Component
         $this->TAXABLE_AMOUNT = $Data->TAXABLE_AMOUNT ? $Data->TAXABLE_AMOUNT : 0;
         $this->NONTAXABLE_AMOUNT = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-    }
-
-    public function updatedPAYMENTTERMSID()
-    {
-        $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID);
     }
     public function mount($id = null)
     {
@@ -200,28 +207,23 @@ class SalesOrderForm extends Component
                 return;
             }
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $this->salesOrderServices->StatusUpdate($this->ID, 15);
-            \DB::commit();
+            DB::commit();
             $this->Modify = false;
 
-      
+
             $data = $this->salesOrderServices->get($this->ID);
             if ($data) {
                 $this->getInfo($data);
                 $this->Modify = false;
                 return;
             }
-            session()->flash('message','Successfully posted');
+            session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-
-
-
-
-
     }
     public function save()
     {
@@ -268,7 +270,6 @@ class SalesOrderForm extends Component
 
                 );
                 return Redirect::route('customerssales_order_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
 
                 $this->validate(

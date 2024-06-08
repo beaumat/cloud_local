@@ -5,6 +5,7 @@ namespace App\Livewire\PhilHealth;
 use App\Services\ContactServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class PrintSoa extends Component
@@ -201,7 +202,7 @@ class PrintSoa extends Component
                     $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE;
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE;
                 }
-                $conUser = $this->contactServices->get(\Auth::user()->contact_id, 2);
+                $conUser = $this->contactServices->get(Auth::user()->contact_id, 2);
                 if ($conUser) {
                     $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
                     $this->USER_NAME = $conUser->NAME ?? '';

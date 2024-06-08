@@ -17,6 +17,7 @@ use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -417,38 +418,34 @@ class InvoiceForm extends Component
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
             return false;
-
         }
-
     }
     public function getPosted()
     {
         try {
 
             $count = (int) $this->invoiceServices->CountItems($this->ID);
-
             if ($count == 0) {
                 session()->flash('error', 'Item not found.');
                 return;
             }
-            \DB::beginTransaction();
+            DB::beginTransaction();
             if (!$this->ItemInventory()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
             if (!$this->AccountJournal()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
             $this->invoiceServices->StatusUpdate($this->ID, 15);
-            \DB::commit();
+            DB::commit();
             $data = $this->invoiceServices->get($this->ID);
             if ($data) {
                 $this->getInfo($data);
@@ -457,11 +454,10 @@ class InvoiceForm extends Component
             }
             session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-
     }
     public function render()
     {

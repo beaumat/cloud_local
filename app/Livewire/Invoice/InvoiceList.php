@@ -5,6 +5,7 @@ namespace App\Livewire\Invoice;
 use App\Services\InvoiceServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -37,12 +38,12 @@ class InvoiceList extends Component
     public function delete($id)
     {
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $this->invoiceServices->Delete($id);
-            \DB::commit();
+            DB::commit();
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

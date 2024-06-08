@@ -25,6 +25,7 @@ class InventoryAdjustmentFormItems extends Component
     public float $QUANTITY;
     public float $UNIT_COST;
     public int $UNIT_ID;
+    public int $BASE_UNIT_ID;
     public float $UNIT_BASE_QUANTITY;
     public int $ACCOUNT_ID;
     public float $ASSET_ACCOUNT_ID;
@@ -63,23 +64,6 @@ class InventoryAdjustmentFormItems extends Component
         }
         $this->itemDescList = $this->itemServices->getByVendor(false);
     }
-    public function getAmount(): void
-    {
-        try {
-            if ($this->QUANTITY) {
-                $qty = $this->QUANTITY > 0 ? $this->QUANTITY : 1;
-                $this->AMOUNT = $qty * $this->UNIT_COST;
-                $this->RETAIL_VALUE = $qty * $this->UNIT_PRICE;
-            } else {
-                $this->QUANTITY = 1;
-                $this->AMOUNT = 0;
-                $this->RETAIL_VALUE = 0;
-            }
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-    }
-
     public function updatedquantity()
     {
         $this->getAmount();
@@ -114,9 +98,6 @@ class InventoryAdjustmentFormItems extends Component
     {
         $this->QUANTITY = 0;
         $this->UNIT_COST = 0;
-        $this->UNIT_PRICE = 0;
-        $this->AMOUNT = 0;
-        $this->RETAIL_VALUE = 0;
         $this->updatedcodeBase();
 
     }
@@ -153,9 +134,6 @@ class InventoryAdjustmentFormItems extends Component
             $this->UNIT_ID = 0;
             $this->UNIT_BASE_QUANTITY = 1;
             $this->UNIT_COST = 0;
-            $this->UNIT_PRICE = 0;
-            $this->AMOUNT = 0;
-            $this->RETAIL_VALUE = 0;
             $this->ITEM_CODE = '';
             $this->ITEM_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
@@ -185,7 +163,6 @@ class InventoryAdjustmentFormItems extends Component
             $this->editItemId = $data->ID;
             $this->lineQty = $data->QUANTITY;
             $this->lineUnitId = $data->UNIT_ID ?? 0;
-            $this->lineUnitCost = $data->UNIT_COST ?? 0;
             $this->lineItemId = $data->ITEM_ID;
             $this->lineBatchId = $data->BATCH_ID ?? 0;
             $this->getEditAmount();

@@ -14,6 +14,7 @@ use App\Services\ObjectServices;
 use App\Services\SystemSettingServices;
 use App\Services\UnitOfMeasureServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -79,7 +80,6 @@ class BuildAssemblyForm extends Component
         $this->documentTypeServices = $documentTypeServices;
         $this->objectServices = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
-
     }
     public function LoadDropdown()
     {
@@ -168,7 +168,7 @@ class BuildAssemblyForm extends Component
                     ]
                 );
 
-                \DB::beginTransaction();
+                DB::beginTransaction();
                 $this->ID = $this->buildAssemblyServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -181,10 +181,8 @@ class BuildAssemblyForm extends Component
                     $this->NOTES,
                     $this->ASSET_ACCOUNT_ID
                 );
-
-                \DB::commit();
+                DB::commit();
                 return Redirect::route('companybuild_assembly_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
 
                 $this->validate(
@@ -205,7 +203,7 @@ class BuildAssemblyForm extends Component
                     ]
                 );
 
-                \DB::beginTransaction();
+                DB::beginTransaction();
                 $this->AMOUNT = $this->buildAssemblyServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -216,12 +214,13 @@ class BuildAssemblyForm extends Component
                     $this->UNIT_BASE_QUANTITY,
                     $this->NOTES
                 );
-                \DB::commit();
+
+                DB::commit();
                 session()->flash('message', 'Successfully updated');
             }
             $this->updateCancel();
         } catch (\Exception $e) {
-           \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -271,14 +270,14 @@ class BuildAssemblyForm extends Component
         try {
 
             $buildAssembly = (int) $this->objectServices->ObjectTypeID('BUILD_ASSEMBLY');
-            
+
             $buildAssemblyItems = (int) $this->objectServices->ObjectTypeID('BUILD_ASSEMBLY_ITEMS');
 
             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($buildAssembly, $this->ID) + 1;
             //Main
             $buildAssemblyData = $this->buildAssemblyServices->getBuildAssemblyJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyData, $this->LOCATION_ID, $buildAssembly, $this->DATE);
-     
+
             //Item
             $buildAssemblyItemData = $this->buildAssemblyServices->getBuildAssemblyItemsJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyItemData, $this->LOCATION_ID, $buildAssemblyItems, $this->DATE);
@@ -293,38 +292,33 @@ class BuildAssemblyForm extends Component
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
             return false;
-
         }
-
     }
     public function posted()
     {
         try {
-
             $count = (int) $this->buildAssemblyServices->CountItems($this->ID);
-
             if ($count == 0) {
                 session()->flash('error', 'Item not found.');
                 return;
             }
-            \DB::beginTransaction();
+            DB::beginTransaction();
             if (!$this->ItemInventory()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
             if (!$this->AccountJournal()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
             $this->buildAssemblyServices->StatusUpdate($this->ID, 15);
-            \DB::commit();
+            DB::commit();
             $data = $this->buildAssemblyServices->get($this->ID);
             if ($data) {
                 $this->getInfo($data);
@@ -333,11 +327,10 @@ class BuildAssemblyForm extends Component
             }
             session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-
     }
     public function render()
     {

@@ -45,7 +45,7 @@ class SchedulerList extends Component
     // #[On('load-schedule-by-contact')]
     public function loadScheduleByContact()
     {
-        $this->scheduleList = $this->scheduleServices->ContactSchedule(0, $this->LOCATION_ID ?? 0);
+        $this->scheduleList = $this->scheduleServices->ContactSchedule(0, $this->LOCATION_ID ?? 0,0,15);
     }
     public function updatedlocationid()
     {

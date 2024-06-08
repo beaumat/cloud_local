@@ -105,10 +105,6 @@ class PaymentForm extends Component
         $this->STATUS = $data->STATUS ?? 0;
         $this->STATUS_DATE = $data->STATUS_DATE ?? null;
         $this->DEPOSITED = $data->DEPOSITED ?? null;
-        $this->FILE_NAME = $data->FILE_NAME ?? '';
-        $this->FILE_PATH = $data->FILE_PATH ?? '';
-        $this->IS_CONFIRM = $data->IS_CONFIRM ?? false;
-        $this->DATE_CONFIRM = $data->DATE_CONFIRM ?? '';
         $this->updatedpaymentmethodid();
         $this->Modify = false;
     }
@@ -154,11 +150,6 @@ class PaymentForm extends Component
         $this->STATUS = 0;
         $this->DEPOSITED = 0;
         $this->Modify = true;
-        $this->PDF = null;
-        $this->FILE_NAME = '';
-        $this->FILE_PATH = '';
-        $this->IS_CONFIRM = false;
-        $this->DATE_CONFIRM = '';
         $this->updatedpaymentmethodid();
     }
     public function updatedPdf()
@@ -166,11 +157,6 @@ class PaymentForm extends Component
         $this->validate([
             'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
         ]);
-    }
-    public function getConfirm()
-    {
-        // $this->paymentServices->ConfirmProccess($this->ID);
-        // return Redirect::route('transactionspayment_edit', ['id' => $this->ID])->with('message', 'Successfully confirm');
     }
     public function save()
     {

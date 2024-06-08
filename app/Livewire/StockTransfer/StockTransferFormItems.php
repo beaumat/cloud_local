@@ -24,6 +24,7 @@ class StockTransferFormItems extends Component
     public string $ITEM_DESCRIPTION;
     public float $QUANTITY;
     public int $UNIT_ID;
+    public int $BASE_UNIT_ID;
     public float $UNIT_BASE_QUANTITY;
     public float $UNIT_COST;
     public float $UNIT_PRICE;

@@ -21,11 +21,8 @@ class BuildAssemblyList extends Component
     private $buildAssemblyServices;
     private $locationServices;
     private $userServices;
-    public function boot(
-        BuildAssemblyServices $buildAssemblyServices,
-        LocationServices $locationServices,
-        UserServices $userServices
-    ) {
+    public function boot(BuildAssemblyServices $buildAssemblyServices, LocationServices $locationServices, UserServices $userServices)
+    {
         $this->buildAssemblyServices = $buildAssemblyServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -41,7 +38,6 @@ class BuildAssemblyList extends Component
         try {
             $this->buildAssemblyServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);

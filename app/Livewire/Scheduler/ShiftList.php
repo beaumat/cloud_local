@@ -19,7 +19,6 @@ class ShiftList extends Component
     {
         $this->scheduleServices = $scheduleServices;
     }
-
     public function mount($date, $location_id, $select_date)
     {   
   

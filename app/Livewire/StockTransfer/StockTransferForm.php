@@ -12,6 +12,7 @@ use App\Services\LocationServices;
 use App\Services\ObjectServices;
 use App\Services\StockTransferServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -158,23 +159,23 @@ class StockTransferForm extends Component
                 return;
             }   
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
             if (!$this->ItemInventory()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
             if (!$this->AccountJournal()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
             $this->stockTransferServices->StatusUpdate($this->ID, 15);
             $this->STATUS = 15;
-            \DB::commit();
+            DB::commit();
 
             Session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -255,7 +256,7 @@ class StockTransferForm extends Component
                     ]
                 );
 
-                \DB::beginTransaction();
+                DB::beginTransaction();
 
                 $this->ID = $this->stockTransferServices->Store(
                     $this->CODE,
@@ -267,7 +268,7 @@ class StockTransferForm extends Component
                     $this->ACCOUNT_ID
 
                 );
-                \DB::commit();
+                DB::commit();
                 return Redirect::route('companystock_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
             } else {
@@ -290,7 +291,7 @@ class StockTransferForm extends Component
                     ]
                 );
 
-                \DB::beginTransaction();
+                DB::beginTransaction();
                 $this->stockTransferServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -298,12 +299,12 @@ class StockTransferForm extends Component
                     $this->NOTES,
                     $this->PREPARED_BY_ID
                 );
-                \DB::commit();
+                DB::commit();
                 session()->flash('message', 'Successfully updated');
             }
             $this->updateCancel();
         } catch (\Exception $e) {
-            \DB::rollback();
+            DB::rollback();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

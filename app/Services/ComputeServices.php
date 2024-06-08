@@ -48,9 +48,7 @@ class ComputeServices
             $result = $this->computeTax($amount,  0, true);
         }
 
-
-
-        return   $result;
+        return $result;
     }
     public function taxCompute($itemResult, int $taxID): array
     {

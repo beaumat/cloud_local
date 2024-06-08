@@ -5,6 +5,7 @@ namespace App\Livewire\GeneralJournal;
 use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -39,13 +40,13 @@ class GeneralJournalList extends Component
     public function delete($id)
     {
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $this->generalJournalServices->Delete($id);
-            \DB::commit();
+            DB::commit();
             session()->flash('message', 'Successfully deleted.');
 
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

@@ -14,6 +14,7 @@ use App\Services\ObjectServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -112,7 +113,6 @@ class BillCreditForm extends Component
         $this->DATE = $data->DATE;
         $this->LOCATION_ID = $data->LOCATION_ID;
         $this->VENDOR_ID = $data->VENDOR_ID;
-        $this->CLASS_ID = $data->CLASS_ID ? $data->CLASS_ID : 0;
         $this->NOTES = $data->NOTES;
         $this->AMOUNT = $data->AMOUNT;
         $this->AMOUNT_APPLIED = $data->AMOUNT_APPLIED ?? 0;
@@ -153,7 +153,6 @@ class BillCreditForm extends Component
         $this->DATE = $this->dateServices->NowDate();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->VENDOR_ID = 0;
-        $this->CLASS_ID = 0;
         $this->NOTES = '';
         $this->AMOUNT = 0;
         $this->AMOUNT_APPLIED = 0;
@@ -357,19 +356,19 @@ class BillCreditForm extends Component
                 session()->flash('error', 'Item not found.');
                 return;
             }
-            \DB::beginTransaction();
+            DB::beginTransaction();
             if (!$this->ItemInventory()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
             if (!$this->AccountJournal()) {
-                \DB::rollBack();
+                DB::rollBack();
                 return;
             }
 
             $this->billCreditServices->StatusUpdate($this->ID, 15);
-            \DB::commit();
+            DB::commit();
             $data = $this->billCreditServices->get($this->ID);
             if ($data) {
                 $this->getInfo($data);
@@ -378,7 +377,7 @@ class BillCreditForm extends Component
             }
             session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
