@@ -16,60 +16,63 @@
                         <p> Dashboard </p>
                     </a>
                 </li>
-                <li class="nav-item {{ request()->is('patients*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->is('patients*') ? 'active ' : '' }}"> <i
-                            class="nav-icon fas fa-wheelchair "></i>
-                        <p> Patients <i class="fas fa-angle-left right"></i> </p>
-                    </a>
-                    <ul class="nav nav-treeview ">
-                        @can('patient.schedule.view')
-                            <li class="nav-item"> <a href="{{ route('patientsschedules') }}"
-                                    class="nav-link {{ request()->is('patients/schedules*') ? 'active' : '' }}"> <i
-                                        class="fas fa-calendar nav-icon"></i>
-                                    <p>Schedules</p>
-                                </a> </li>
-                        @endcan
-
-                        @can('patient.service-charges.view')
-                            <li class="nav-item"> <a href="{{ route('patientsservice_charges') }}"
-                                    class="nav-link {{ request()->is('patients/service-charges*') ? 'active' : '' }}"> <i
-                                        class="fas fa-file-invoice nav-icon"></i>
-                                    <p>Service Charge</p>
-                                </a> </li>
-                        @endcan
 
 
-                        @can('patient.payment.view')
-                            <li class="nav-item">
-                                <a href="{{ route('patientspayment') }}"
-                                    class="nav-link {{ request()->is('patients/payments*') ? 'active' : '' }}">
-                                    <i class="fas fa-money-bill-wave nav-icon"></i>
-                                    <p>Payments</p>
-                                </a>
-                            </li>
-                        @endcan
+                @if (Auth::user()->can('patient.schedule.view') ||
+                        Auth::user()->can('patient.service-charges.view') ||
+                        Auth::user()->can('patient.payment.view') ||
+                        Auth::user()->can('patient.treatment.view') ||
+                        Auth::user()->can('patient.philhealth.view'))
+                    <li id="patients" class="nav-item {{ request()->is('patients*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('patients*') ? 'active ' : '' }}"> <i
+                                class="nav-icon fas fa-wheelchair "></i>
+                            <p> Patients <i class="fas fa-angle-left right"></i> </p>
+                        </a>
 
-                        @can('patient.treatment.view')
-                            <li class="nav-item">
-                                <a href="{{ route('patientshemo') }}"
-                                    class="nav-link {{ request()->is('patients/hemodialysis-treatment*') ? 'active' : '' }}">
-                                    <i class="fas fa-medkit nav-icon"></i>
-                                    <p>Treatment</p>
-                                </a>
-                            </li>
-                        @endcan
+                        <ul class="nav nav-treeview">
+                            @can('patient.schedule.view')
+                                <li class="nav-item"> <a href="{{ route('patientsschedules') }}"
+                                        class="nav-link {{ request()->is('patients/schedules*') ? 'active' : '' }}"> <i
+                                            class="fas fa-calendar nav-icon"></i>
+                                        <p>Schedules</p>
+                                    </a> </li>
+                            @endcan
+                            @can('patient.service-charges.view')
+                                <li class="nav-item"> <a href="{{ route('patientsservice_charges') }}"
+                                        class="nav-link {{ request()->is('patients/service-charges*') ? 'active' : '' }}">
+                                        <i class="fas fa-file-invoice nav-icon"></i>
+                                        <p>Service Charge</p>
+                                    </a> </li>
+                            @endcan
+                            @can('patient.payment.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('patientspayment') }}"
+                                        class="nav-link {{ request()->is('patients/payments*') ? 'active' : '' }}">
+                                        <i class="fas fa-money-bill-wave nav-icon"></i>
+                                        <p>Payments</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('patient.treatment.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('patientshemo') }}"
+                                        class="nav-link {{ request()->is('patients/hemodialysis-treatment*') ? 'active' : '' }}">
+                                        <i class="fas fa-medkit nav-icon"></i>
+                                        <p>Treatment</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('patient.philhealth.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('patientsphic') }}"
+                                        class="nav-link {{ request()->is('patients/phil-health*') ? 'active' : '' }}">
+                                        <i class="fas fa-hospital-o nav-icon"></i>
+                                        <p>PhilHealth</p>
+                                    </a>
+                                </li>
+                            @endcan
 
-                        @can('patient.philhealth.view')
-                            <li class="nav-item">
-                                <a href="{{ route('patientsphic') }}"
-                                    class="nav-link {{ request()->is('patients/phil-health*') ? 'active' : '' }}">
-                                    <i class="fas fa-hospital-o nav-icon"></i>
-                                    <p>PhilHealth</p>
-                                </a>
-                            </li>
-                        @endcan
-
-                        {{-- <li class="nav-item">
+                            {{-- <li class="nav-item">
                             <a href="{{ route('patientssoa') }}"
                                 class="nav-link {{ request()->is('patients/statement-of-account*') ? 'active' : '' }}">
                                 <i class="fas fa-newspaper nav-icon"></i>
@@ -77,52 +80,72 @@
                             </a>
                         </li> --}}
 
-                    </ul>
-                </li>
-                <li class="nav-item {{ request()->is('customers*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->is('customers*') ? 'active ' : '' }}"> <i
-                            class="nav-icon fas fa-users "></i>
-                        <p> Customers <i class="fas fa-angle-left right"></i> </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('customerssales_order') }}" class="nav-link {{ request()->is('customers/sales-order*') ? 'active' : '' }}">
-                                <i class="fas fa-truck nav-icon"></i>
-                                <p>Sales Order</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('customersinvoice') }}"
-                                class="nav-link {{ request()->is('customers/invoice*') ? 'active' : '' }}">
-                                <i class="fas fa-sticky-note nav-icon"></i>
-                                <p>Invoice</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('customerspayment') }}"
-                                class="nav-link {{ request()->is('customers/payment*') ? 'active' : '' }}">
-                                <i class="fas fa-money nav-icon"></i>
-                                <p>Receive Payment</p>
-                            </a>
-                        </li>
+                        </ul>
+                    </li>
+                @endif
 
-                        <li class="nav-item">
-                            <a href="{{ route('customersstatement') }}"
-                                class="nav-link {{ request()->is('customers/statment*') ? 'active' : '' }}">
-                                <i class="fas fa-bar-chart nav-icon"></i>
-                                <p>Statement</p>
-                            </a>
-                        </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('customerscredit_memo') }}"
-                                class="nav-link {{ request()->is('customers/credit-memo*') ? 'active' : '' }}">
-                                <i class="fas fa-envelope nav-icon"></i>
-                                <p>Credit Memo</p>
-                            </a>
-                        </li>
+                @if (Auth::user()->can('customer.invoice.view') ||
+                        Auth::user()->can('customer.sales-order.view') ||
+                        Auth::user()->can('customer.credit-memo.view') ||
+                        Auth::user()->can('customer.received-payment.view') ||
+                        Auth::user()->can('customer.statement'))
+                    <li class="nav-item {{ request()->is('customers*') ? 'menu-open' : '' }}">
 
-                        {{-- <li class="nav-item">
+                        <a href="#" class="nav-link {{ request()->is('customers*') ? 'active ' : '' }}"> <i
+                                class="nav-icon fas fa-users "></i>
+                            <p> Customers <i class="fas fa-angle-left right"></i> </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+
+                            @can('customer.sales-order.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('customerssales_order') }}"
+                                        class="nav-link {{ request()->is('customers/sales-order*') ? 'active' : '' }}">
+                                        <i class="fas fa-truck nav-icon"></i>
+                                        <p>Sales Order</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('customer.invoice.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('customersinvoice') }}"
+                                        class="nav-link {{ request()->is('customers/invoice*') ? 'active' : '' }}">
+                                        <i class="fas fa-sticky-note nav-icon"></i>
+                                        <p>Invoice</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('customer.received-payment.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('customerspayment') }}"
+                                        class="nav-link {{ request()->is('customers/payment*') ? 'active' : '' }}">
+                                        <i class="fas fa-money nav-icon"></i>
+                                        <p>Receive Payment</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('customer.credit-memo.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('customerscredit_memo') }}"
+                                        class="nav-link {{ request()->is('customers/credit-memo*') ? 'active' : '' }}">
+                                        <i class="fas fa-envelope nav-icon"></i>
+                                        <p>Credit Memo</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('customer.statement')
+                                <li class="nav-item">
+                                    <a href="{{ route('customersstatement') }}"
+                                        class="nav-link {{ request()->is('customers/statment*') ? 'active' : '' }}">
+                                        <i class="fas fa-bar-chart nav-icon"></i>
+                                        <p>Statement</p>
+                                    </a>
+                                </li>
+                            @endcan
+
+                            {{-- <li class="nav-item">
                             <a href="{{ route('customerstax_credit') }}"
                                 class="nav-link {{ request()->is('customers/tax-credit*') ? 'active' : '' }}">
                                 <i class="fas fa-university nav-icon"></i>
@@ -130,121 +153,152 @@
                             </a>
                         </li> --}}
 
-                    </ul>
-                </li>
-                <li class="nav-item {{ request()->is('vendors*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->is('vendors*') ? 'active ' : '' }}">
-                        <i class="nav-icon fas fa-user-tie"></i>
-                        <p>
-                            Vendors
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('vendorspurchase_order') }}"
-                                class="nav-link {{ request()->is('vendors/purchase-order*') ? 'active' : '' }}">
-                                <i class="fas fa-shopping-cart nav-icon"></i>
-                                <p>Purchase Order</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('vendorsbills') }}"
-                                class="nav-link {{ request()->is('vendors/bills*') ? 'active' : '' }}">
-                                <i class="fas fa-file-invoice nav-icon"></i>
-                                <p>Bills</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('vendorsbill_payment') }}"
-                                class="nav-link {{ request()->is('vendors/bill-payments*') ? 'active' : '' }}">
-                                <i class="fas fa-money-bill nav-icon"></i>
-                                <p>Pay Bills</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('vendorsbill_credit') }}"
-                                class="nav-link {{ request()->is('vendors/bill-credits*') ? 'active' : '' }}">
-                                <i class="fas fa-credit-card nav-icon"></i>
-                                <p>Bill Credits</p>
-                            </a>
-                        </li>
-                        {{-- <li class="nav-item">
+                        </ul>
+                    </li>
+                @endif
+
+                @if (Auth::user()->can('permission:vendor.purchase-order.view') ||
+                        Auth::user()->can('permission:vendor.bill.view') ||
+                        Auth::user()->can('permission:vendor.bill-credit.view') ||
+                        Auth::user()->can('permission:vendor.bill-payment.view'))
+                    <li class="nav-item {{ request()->is('vendors*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('vendors*') ? 'active ' : '' }}">
+                            <i class="nav-icon fas fa-user-tie"></i>
+                            <p> Vendors <i class="right fas fa-angle-left"></i> </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+
+                            @can('permission:vendor.purchase-order.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('vendorspurchase_order') }}"
+                                        class="nav-link {{ request()->is('vendors/purchase-order*') ? 'active' : '' }}">
+                                        <i class="fas fa-shopping-cart nav-icon"></i>
+                                        <p>Purchase Order</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('permission:vendor.bill.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('vendorsbills') }}"
+                                        class="nav-link {{ request()->is('vendors/bills*') ? 'active' : '' }}">
+                                        <i class="fas fa-file-invoice nav-icon"></i>
+                                        <p>Bills</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('permission:vendor.bill-payment.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('vendorsbill_payment') }}"
+                                        class="nav-link {{ request()->is('vendors/bill-payments*') ? 'active' : '' }}">
+                                        <i class="fas fa-money-bill nav-icon"></i>
+                                        <p>Pay Bills</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('permission:vendor.bill-credit.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('vendorsbill_credit') }}"
+                                        class="nav-link {{ request()->is('vendors/bill-credits*') ? 'active' : '' }}">
+                                        <i class="fas fa-credit-card nav-icon"></i>
+                                        <p>Bill Credits</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-balance-scale nav-icon"></i>
                                 <p>Withholding Tax</p>
                             </a>
                         </li> --}}
-                    </ul>
-                </li>
-                <li class="nav-item {{ request()->is('company*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->is('company*') ? 'active ' : '' }}">
-                        <i class="nav-icon fa fa-building"></i>
-                        <p>
-                            Company
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('companystock_transfer') }}"
-                                class="nav-link {{ request()->is('company/stock-transfer*') ? 'active' : '' }}">
-                                <i class="fa fa-truck nav-icon"></i>
-                                <p>Stock Transfer</p>
-                            </a>
-                        </li>
+                        </ul>
+                    </li>
+                @endif
 
-                        <li class="nav-item">
-                            <a href="{{ route('companyinventory_adjustment') }}"
-                                class="nav-link {{ request()->is('company/inventory-adjustment*') ? 'active' : '' }}">
-                                <i class="fa fa-adjust nav-icon"></i>
-                                <p>Inventory Adjustment</p>
-                            </a>
-                        </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('companybuild_assembly') }}"
-                                class="nav-link {{ request()->is('company/build-assembly*') ? 'active' : '' }}">
-                                <i class="fa fa-cube nav-icon"></i>
-                                <p>Build Assembly</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('companygeneral_journal') }}"
-                                class="nav-link  {{ request()->is('company/general-journal*') ? 'active' : '' }}">
-                                <i class="fa fa-table nav-icon"></i>
-                                <p>General Journal</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa fa-university"></i>
-                        <p> Banking <i class="fas fa-angle-left right"></i> </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Deposit</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Fund Transfer</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Make Cheque</p>
-                            </a>
-                        </li>
+                @if (Auth::user()->can('permission:company.stock-transfer.view') ||
+                        Auth::user()->can('permission:company.build-assembly.view') ||
+                        Auth::user()->can('permission:company.inventory-adjustment.view') ||
+                        Auth::user()->can('permission:general-journal.view'))
+                    <li class="nav-item {{ request()->is('company*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('company*') ? 'active ' : '' }}">
+                            <i class="nav-icon fa fa-building"></i>
+                            <p> Company <i class="fas fa-angle-left right"></i> </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('companystock_transfer') }}"
+                                    class="nav-link {{ request()->is('company/stock-transfer*') ? 'active' : '' }}">
+                                    <i class="fa fa-truck nav-icon"></i>
+                                    <p>Stock Transfer</p>
+                                </a>
+                            </li>
 
-                    </ul>
-                </li>
+                            <li class="nav-item">
+                                <a href="{{ route('companyinventory_adjustment') }}"
+                                    class="nav-link {{ request()->is('company/inventory-adjustment*') ? 'active' : '' }}">
+                                    <i class="fa fa-adjust nav-icon"></i>
+                                    <p>Inventory Adjustment</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('companybuild_assembly') }}"
+                                    class="nav-link {{ request()->is('company/build-assembly*') ? 'active' : '' }}">
+                                    <i class="fa fa-cube nav-icon"></i>
+                                    <p>Build Assembly</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('companygeneral_journal') }}"
+                                    class="nav-link  {{ request()->is('company/general-journal*') ? 'active' : '' }}">
+                                    <i class="fa fa-table nav-icon"></i>
+                                    <p>General Journal</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+
+
+
+
+                @if (Auth::user()->can('permission:banking.deposit.view') ||
+                        Auth::user()->can('permission:banking.fund-transfer.view') ||
+                        Auth::user()->can('permission:banking.make-cheque.view'))
+                    <li class="nav-item {{ request()->is('banking*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('banking*') ? 'active ' : '' }}">
+                            <i class="nav-icon fa fa-university"></i>
+                            <p> Banking <i class="fas fa-angle-left right"></i> </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('bankingdeposit') }}"
+                                    class="nav-link  {{ request()->is('banking/deposit*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Deposit</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('bankingfund_transfer') }}"
+                                    class="nav-link  {{ request()->is('banking/fund-transfer*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Fund Transfer</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('bankingmake_cheque') }}"
+                                    class="nav-link  {{ request()->is('banking/make-cheque*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Make Cheque</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                @endif
+
+
+
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-line-chart"></i>

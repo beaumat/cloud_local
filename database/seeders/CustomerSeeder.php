@@ -26,19 +26,20 @@ class CustomerSeeder extends Seeder
         Permission::create(['name' => 'customer.invoice.delete']);
         Permission::create(['name' => 'customer.invoice.print']);
 
-        Permission::create(['name' => 'customer.invoice-payment.view']);
-        Permission::create(['name' => 'customer.invoice-payment.create']);
-        Permission::create(['name' => 'customer.invoice-payment.update']);
-        Permission::create(['name' => 'customer.invoice-payment.delete']);
-        Permission::create(['name' => 'customer.invoice-payment.print']);
+        Permission::create(['name' => 'customer.received-payment.view']);
+        Permission::create(['name' => 'customer.received-payment.create']);
+        Permission::create(['name' => 'customer.received-payment.update']);
+        Permission::create(['name' => 'customer.received-payment.delete']);
+        Permission::create(['name' => 'customer.received-payment.print']);
 
         Permission::create(['name' => 'customer.credit-memo.view']);
         Permission::create(['name' => 'customer.credit-memo.create']);
         Permission::create(['name' => 'customer.credit-memo.update']);
         Permission::create(['name' => 'customer.credit-memo.delete']);
         Permission::create(['name' => 'customer.credit-memo.print']);
-
         Permission::create(['name' => 'customer.statement.modify']);
+
+        Permission::create(['name' => 'customer.statement']);
 
     }
 }

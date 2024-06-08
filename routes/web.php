@@ -15,10 +15,12 @@ use App\Livewire\CreditMemo\CreditMemoList;
 use App\Livewire\Customer\CustomerForm;
 use App\Livewire\Customer\CustomerList;
 use App\Livewire\DashboardPage\Dashboard;
+use App\Livewire\Deposit\DepositList;
 use App\Livewire\Doctor\DoctorForm;
 use App\Livewire\Doctor\DoctorList;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
+use App\Livewire\FundTransfer\FundTransferList;
 use App\Livewire\GeneralJournal\GeneralJournalForm;
 use App\Livewire\GeneralJournal\GeneralJournalList;
 use App\Livewire\Hemodialysis\HemoForm;
@@ -98,6 +100,7 @@ use App\Livewire\User\UserList;
 use App\Livewire\User\UserRoles;
 use App\Livewire\Vendor\VendorForm;
 use App\Livewire\Vendor\VendorList;
+use App\Livewire\WriteCheck\WriteCheckList;
 
 /*
 |--------------------------------------------------------------------------
@@ -122,7 +125,7 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth'])->group(function () {
-    
+
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
     Route::prefix('/patients')->name('patients')->group(function () {
@@ -148,8 +151,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', HemoList::class)->name('hemo')->middleware(['permission:patient.treatment.view']);
             Route::get('/create', HemoForm::class)->name('hemo_create')->middleware(['permission:patient.treatment.create']);
             Route::get('/{id}/edit', HemoForm::class)->name('hemo_edit')->middleware(['permission:patient.treatment.view']);
-            Route::get('/{id}/print', PrintForm::class)->name('hemo_print')->middleware(['permission:patient.treatment.print']);
-            ;
+            Route::get('/{id}/print', PrintForm::class)->name('hemo_print')->middleware(['permission:patient.treatment.print']);;
         });
 
         Route::prefix('/phil-health')->group(function () {
@@ -167,58 +169,58 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('/customers')->name('customers')->group(function () {
         Route::prefix('/sales-order')->group(function () {
-            Route::get('/', SalesOrderList::class)->name('sales_order');
-            Route::get('/create', SalesOrderForm::class)->name('sales_order_create');
-            Route::get('/{id}/edit', SalesOrderForm::class)->name('sales_order_edit');
+            Route::get('/', SalesOrderList::class)->name('sales_order')->middleware(['permission:customer.sales-order.view']);
+            Route::get('/create', SalesOrderForm::class)->name('sales_order_create')->middleware(['permission:customer.sales-order.create']);
+            Route::get('/{id}/edit', SalesOrderForm::class)->name('sales_order_edit')->middleware(['permission:customer.sales-order.view']);
         });
+
         Route::prefix('/invoice')->group(function () {
-            Route::get('/', InvoiceList::class)->name('invoice');
-            Route::get('/create', InvoiceForm::class)->name('invoice_create');
-            Route::get('/{id}/edit', InvoiceForm::class)->name('invoice_edit');
+            Route::get('/', InvoiceList::class)->name('invoice')->middleware(['permission:customer.invoice.view']);
+            Route::get('/create', InvoiceForm::class)->name('invoice_create')->middleware(['permission:customer.invoice.create']);
+            Route::get('/{id}/edit', InvoiceForm::class)->name('invoice_edit')->middleware(['permission:customer.invoice.view']);
         });
         Route::prefix('/payment')->group(function () {
-            Route::get('/', PaymentList::class)->name('payment');
-            Route::get('/create', PaymentForm::class)->name('payment_create');
-            Route::get('/{id}/edit', PaymentForm::class)->name('payment_edit');
+            Route::get('/', PaymentList::class)->name('payment')->middleware(['permission:customer.received-payment.view']);
+            Route::get('/create', PaymentForm::class)->name('payment_create')->middleware(['permission:customer.received-payment.create']);
+            Route::get('/{id}/edit', PaymentForm::class)->name('payment_edit')->middleware(['permission:customer.received-payment.view']);
         });
         Route::prefix('/statement')->group(function () {
-            Route::get('/', Statement::class)->name('statement');
+            Route::get('/', Statement::class)->name('statement')->middleware(['permission:customer.statement']);
         });
         Route::prefix('/credit-memo')->group(function () {
-            Route::get('/', CreditMemoList::class)->name('credit_memo');
-            Route::get('/create', CreditMemoForm::class)->name('credit_memo_create');
-            Route::get('/{id}/edit', CreditMemoForm::class)->name('credit_memo_edit');
+            Route::get('/', CreditMemoList::class)->name('credit_memo')->middleware(['permission:customer.credit-memo.view']);
+            Route::get('/create', CreditMemoForm::class)->name('credit_memo_create')->middleware(['permission:customer.credit-memo.create']);
+            Route::get('/{id}/edit', CreditMemoForm::class)->name('credit_memo_edit')->middleware(['permission:customer.credit-memo.view']);
         });
         Route::prefix('/tax-credit')->group(function () {
             Route::get('/', TaxCreditList::class)->name('tax_credit');
         });
-
     });
 
     Route::prefix('/vendors')->name('vendors')->group(function () {
         Route::prefix('/purchase-order')->group(function () {
-            Route::get('/', PurchaseOrderList::class)->name('purchase_order');
-            Route::get('/create', PurchaseOrderForm::class)->name('purchase_order_create');
-            Route::get('/{id}/edit', PurchaseOrderForm::class)->name('purchase_order_edit');
+            Route::get('/', PurchaseOrderList::class)->name('purchase_order')->middleware(['permission:vendor.purchase-order.view']);
+            Route::get('/create', PurchaseOrderForm::class)->name('purchase_order_create')->middleware(['permission:vendor.purchase-order.create']);
+            Route::get('/{id}/edit', PurchaseOrderForm::class)->name('purchase_order_edit')->middleware(['permission:vendor.purchase-order.view']);
         });
 
         Route::prefix('/bills')->group(function () {
-            Route::get('/', BillingList::class)->name('bills');
-            Route::get('/create', BillingForm::class)->name('bills_create');
-            Route::get('/{id}/edit', BillingForm::class)->name('bills_edit');
+            Route::get('/', BillingList::class)->name('bills')->middleware(['permission:vendor.bill.view']);
+            Route::get('/create', BillingForm::class)->name('bills_create')->middleware(['permission:vendor.bill.create']);
+            Route::get('/{id}/edit', BillingForm::class)->name('bills_edit')->middleware(['permission:vendor.bill.view']);
         });
 
 
         Route::prefix('/bill-payments')->group(function () {
-            Route::get('/', BillPaymentList::class)->name('bill_payment');
-            Route::get('/create', BillPaymentForm::class)->name('bill_payment_create');
-            Route::get('/{id}/edit', BillPaymentForm::class)->name('bill_payment_edit');
+            Route::get('/', BillPaymentList::class)->name('bill_payment')->middleware(['permission:vendor.bill-payment.view']);
+            Route::get('/create', BillPaymentForm::class)->name('bill_payment_create')->middleware(['permission:vendor.bill-payment.create']);
+            Route::get('/{id}/edit', BillPaymentForm::class)->name('bill_payment_edit')->middleware(['permission:vendor.bill-payment.view']);
         });
 
         Route::prefix('/bill-credits')->group(function () {
-            Route::get('/', BillCreditList::class)->name('bill_credit');
-            Route::get('/create', BillCreditForm::class)->name('bill_credit_create');
-            Route::get('/{id}/edit', BillCreditForm::class)->name('bill_credit_edit');
+            Route::get('/', BillCreditList::class)->name('bill_credit')->middleware(['permission:vendor.bill-credit.view']);
+            Route::get('/create', BillCreditForm::class)->name('bill_credit_create')->middleware(['permission:vendor.bill-credit.create']);
+            Route::get('/{id}/edit', BillCreditForm::class)->name('bill_credit_edit')->middleware(['permission:vendor.bill-credit.view']);
         });
 
         Route::prefix('/withholding-tax')->group(function () {
@@ -227,31 +229,44 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('/company')->name('company')->group(function () {
         Route::prefix('/build-assembly')->group(function () {
-            Route::get('/', BuildAssemblyList::class)->name('build_assembly');
-            Route::get('/create', BuildAssemblyForm::class)->name('build_assembly_create');
-            Route::get('/{id}/edit', BuildAssemblyForm::class)->name('build_assembly_edit');
+            Route::get('/', BuildAssemblyList::class)->name('build_assembly')->middleware(['permission:company.build-assembly.view']);
+            Route::get('/create', BuildAssemblyForm::class)->name('build_assembly_create')->middleware(['permission:company.build-assembly.create']);
+            Route::get('/{id}/edit', BuildAssemblyForm::class)->name('build_assembly_edit')->middleware(['permission:company.build-assembly.view']);
         });
 
         Route::prefix('/general-journal')->group(function () {
-            Route::get('/', GeneralJournalList::class)->name('general_journal');
-            Route::get('/create', GeneralJournalForm::class)->name('general_journal_create');
-            Route::get('/{id}/edit', GeneralJournalForm::class)->name('general_journal_edit');
+            Route::get('/', GeneralJournalList::class)->name('general_journal')->middleware(['permission:company.general-journal.view']);
+            Route::get('/create', GeneralJournalForm::class)->name('general_journal_create')->middleware(['permission:company.general-journal.create']);
+            Route::get('/{id}/edit', GeneralJournalForm::class)->name('general_journal_edit')->middleware(['permission:company.general-journal.view']);
         });
 
         Route::prefix('/inventory-adjustment')->group(function () {
-            Route::get('/', InventoryAdjustmentList::class)->name('inventory_adjustment');
-            Route::get('/create', InventoryAdjustmentForm::class)->name('inventory_adjustment_create');
-            Route::get('/{id}/edit', InventoryAdjustmentForm::class)->name('inventory_adjustment_edit');
+            Route::get('/', InventoryAdjustmentList::class)->name('inventory_adjustment')->middleware(['permission:company.inventory-adjustment.view']);
+            Route::get('/create', InventoryAdjustmentForm::class)->name('inventory_adjustment_create')->middleware(['permission:company.inventory-adjustment.create']);
+            Route::get('/{id}/edit', InventoryAdjustmentForm::class)->name('inventory_adjustment_edit')->middleware(['permission:company.inventory-adjustment.view']);
         });
 
         Route::prefix('/stock-transfer')->group(function () {
-            Route::get('/', StockTransferList::class)->name('stock_transfer');
-            Route::get('/create', StockTransferForm::class)->name('stock_transfer_create');
-            Route::get('/{id}/edit', StockTransferForm::class)->name('stock_transfer_edit');
+            Route::get('/', StockTransferList::class)->name('stock_transfer')->middleware(['permission:company.stock-transfer.view']);
+            Route::get('/create', StockTransferForm::class)->name('stock_transfer_create')->middleware(['permission:company.stock-transfer.create']);
+            Route::get('/{id}/edit', StockTransferForm::class)->name('stock_transfer_edit')->middleware(['permission:company.stock-transfer.view']);
         });
     });
 
+    Route::prefix('/banking')->name('banking')->group(function () {
 
+        Route::prefix('/deposit')->group(function () {
+            Route::get('/', DepositList::class)->name('deposit')->middleware(['permission:company.deposit.view']);
+        });
+
+        Route::prefix('/fund-transfer')->group(function () {
+            Route::get('/', FundTransferList::class)->name('fund_transfer')->middleware(['permission:company.fund-transfer.view']);
+        });
+
+        Route::prefix('/make-cheque')->group(function () {
+            Route::get('/', WriteCheckList::class)->name('make_cheque')->middleware(['permission:company.make-cheque.view']);
+        });
+    });
 
     Route::prefix('/maintenance')->name('maintenance')->group(function () {
         Route::prefix('/contact')->name('contact')->group(function () {

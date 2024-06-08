@@ -15,32 +15,12 @@ class ScheduleStatusSeeder extends Seeder
     {
         try {
 
-            ScheduleStatus::create([
-                'ID' => 0,
-                'DESCRIPTION' => 'Waiting'
-
-            ]);
-            ScheduleStatus::create([
-                'ID' => 1,
-                'DESCRIPTION' => 'Present'
-
-            ]);
-            ScheduleStatus::create([
-                'ID' => 2,
-                'DESCRIPTION' => 'Absent'
-
-            ]);
-
-            ScheduleStatus::create([
-                'ID' => 3,
-                'DESCRIPTION' => 'Cancelled'
-
-            ]);
-
+            ScheduleStatus::create(['ID' => 0, 'DESCRIPTION' => 'Waiting']);
+            ScheduleStatus::create(['ID' => 1, 'DESCRIPTION' => 'Present']);
+            ScheduleStatus::create(['ID' => 2, 'DESCRIPTION' => 'Absent']);
+            ScheduleStatus::create(['ID' => 3, 'DESCRIPTION' => 'Cancelled']);
         } catch (\Throwable $th) {
             //throw $th;
         }
-
-
     }
 }
