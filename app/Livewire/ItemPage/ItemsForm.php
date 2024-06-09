@@ -187,33 +187,59 @@ class ItemsForm extends Component
     {
 
         switch ($this->TYPE) {
-            case 0:
+            case 0: // inventory item
                 $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
                 $this->COGS_ACCOUNT_ID = $this->accountServices->getByName('Cost of Goods Sold');
                 $this->ASSET_ACCOUNT_ID = $this->accountServices->getByName('Inventory Asset');
                 break;
-            case 1:
-                $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
-                $this->COGS_ACCOUNT_ID = $this->accountServices->getByName('Cost of Goods Sold');
-                $this->ASSET_ACCOUNT_ID = $this->accountServices->getByName('Inventory Asset');
-                break;
-
-            case 2:
+            case 1: // item assembly
                 $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
                 $this->COGS_ACCOUNT_ID = $this->accountServices->getByName('Cost of Goods Sold');
                 $this->ASSET_ACCOUNT_ID = $this->accountServices->getByName('Inventory Asset');
                 break;
 
-            case 3:
+            case 2: // non-inventory item
                 $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
-                $this->COGS_ACCOUNT_ID = $this->accountServices->getByName('Cost of Goods Sold');
-                $this->ASSET_ACCOUNT_ID = $this->accountServices->getByName('Inventory Asset');
+                $this->COGS_ACCOUNT_ID = 0;
+                $this->ASSET_ACCOUNT_ID = 0;
                 break;
 
-            case 4:
+            case 3: // services
                 $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
-                $this->COGS_ACCOUNT_ID = $this->accountServices->getByName('Cost of Goods Sold');
-                $this->ASSET_ACCOUNT_ID = $this->accountServices->getByName('Inventory Asset');
+                $this->COGS_ACCOUNT_ID = 0;
+                $this->ASSET_ACCOUNT_ID = 0;
+                break;
+
+            case 4: // Others
+                $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
+                $this->COGS_ACCOUNT_ID = 0;
+                $this->ASSET_ACCOUNT_ID = 0;
+                break;
+
+            case 5: // Sub Total
+                $this->GL_ACCOUNT_ID = 0;
+                $this->COGS_ACCOUNT_ID = 0;
+                $this->ASSET_ACCOUNT_ID = 0;
+                break;
+
+            case 6: // group
+                $this->GL_ACCOUNT_ID = 0;
+                $this->COGS_ACCOUNT_ID = 0;
+                $this->ASSET_ACCOUNT_ID = 0;
+                break;
+
+            case 7: // discount
+                $this->GL_ACCOUNT_ID =  $this->accountServices->getByName('Sales>Discounts Given');
+                $this->COGS_ACCOUNT_ID = 0;
+                $this->ASSET_ACCOUNT_ID = 0;
+
+                break;
+
+            case 8:
+                $this->GL_ACCOUNT_ID = 0;
+                $this->COGS_ACCOUNT_ID = 0;
+                $this->ASSET_ACCOUNT_ID = 0;
+
                 break;
         }
     }
@@ -348,12 +374,6 @@ class ItemsForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function render()
-    {
-
-        return view('livewire.item-page.items-form');
-    }
-
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -362,4 +382,11 @@ class ItemsForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    public function render()
+    {
+
+        return view('livewire.item-page.items-form');
+    }
+
+   
 }

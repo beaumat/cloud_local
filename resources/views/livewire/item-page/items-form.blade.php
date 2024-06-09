@@ -164,7 +164,7 @@
                                                                                             :vertical="true">
                                                                                     </div>
 
-                                                                                    @if ($TYPE === 0)
+                                                                                    @if ($TYPE == 0)
                                                                                         <div class="col-md-12">
                                                                                             <livewire:select-option
                                                                                                 name="PREFERRED_VENDOR_ID"
@@ -183,6 +183,8 @@
                                                                                                 titleName="Manufacturer"
                                                                                                 :vertical="true" />
                                                                                         </div>
+                                                                                    @endif
+                                                                                    @if ($TYPE <= 1)
                                                                                         <div class="col-md-12">
                                                                                             <livewire:select-option
                                                                                                 name="COGS_ACCOUNT_ID"
