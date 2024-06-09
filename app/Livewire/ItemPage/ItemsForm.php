@@ -13,6 +13,7 @@ use App\Models\Manufacturers;
 use App\Models\RateType;
 use App\Models\StockType;
 use App\Models\UnitOfMeasures;
+use App\Services\AccountServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
 use App\Services\ItemServices;
@@ -69,9 +70,11 @@ class ItemsForm extends Component
     public $units = [];
 
     private $itemServices;
-    public function boot(ItemServices $itemServices)
+    private $accountServices;
+    public function boot(ItemServices $itemServices, AccountServices $accountServices)
     {
         $this->itemServices = $itemServices;
+        $this->accountServices = $accountServices;
     }
     public function SelectTab($tab)
     {
@@ -101,9 +104,7 @@ class ItemsForm extends Component
         $this->SUB_CLASS_ID = 0;
         $this->TYPE = 0;
         $this->STOCK_TYPE = 0;
-        $this->GL_ACCOUNT_ID = 0;
-        $this->COGS_ACCOUNT_ID = 0;
-        $this->ASSET_ACCOUNT_ID = 0;
+
         $this->TAXABLE = false;
         $this->PREFERRED_VENDOR_ID = 0;
         $this->MANUFACTURER_ID = 0;
@@ -123,7 +124,7 @@ class ItemsForm extends Component
         $this->CUSTOM_FIELD3 = "";
         $this->CUSTOM_FIELD4 = "";
         $this->CUSTOM_FIELD5 = "";
-
+        $this->AccountInsert();
     }
     public function mount($id = null)
     {
@@ -182,16 +183,44 @@ class ItemsForm extends Component
 
         $this->ClearField();
     }
-    private function AccountInsert(){
+    private function AccountInsert()
+    {
 
-        $this->GL_ACCOUNT_ID = 0;
-        $this->COGS_ACCOUNT_ID = 0;
-        $this->ASSET_ACCOUNT_ID = 0;
+        switch ($this->TYPE) {
+            case 0:
+                $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
+                $this->COGS_ACCOUNT_ID = $this->accountServices->getByName('Cost of Goods Sold');
+                $this->ASSET_ACCOUNT_ID = $this->accountServices->getByName('Inventory Asset');
+                break;
+            case 1:
+                $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
+                $this->COGS_ACCOUNT_ID = $this->accountServices->getByName('Cost of Goods Sold');
+                $this->ASSET_ACCOUNT_ID = $this->accountServices->getByName('Inventory Asset');
+                break;
+
+            case 2:
+                $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
+                $this->COGS_ACCOUNT_ID = $this->accountServices->getByName('Cost of Goods Sold');
+                $this->ASSET_ACCOUNT_ID = $this->accountServices->getByName('Inventory Asset');
+                break;
+
+            case 3:
+                $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
+                $this->COGS_ACCOUNT_ID = $this->accountServices->getByName('Cost of Goods Sold');
+                $this->ASSET_ACCOUNT_ID = $this->accountServices->getByName('Inventory Asset');
+                break;
+
+            case 4:
+                $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales');
+                $this->COGS_ACCOUNT_ID = $this->accountServices->getByName('Cost of Goods Sold');
+                $this->ASSET_ACCOUNT_ID = $this->accountServices->getByName('Inventory Asset');
+                break;
+        }
     }
     public function updatedTYPE()
     {
         $this->itemGroup = ItemGroup::where('ITEM_TYPE', $this->TYPE)->get();
-
+        $this->AccountInsert();
     }
     public function updatedCLASSID()
     {
