@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Livewire\ItemPage;
+
 use App\Models\ItemUnits;
 use App\Models\PriceLevels;
 use App\Services\ItemUnitPriceLevelServices;
@@ -23,9 +25,15 @@ class ItemUnitPriceLevelUnit extends Component
     public bool $saveSuccess = false;
     public $editItemId = null;
     public bool $newRelated = false;
-    public function UpdatedUnitRelatedId(ItemUnitPriceLevelServices $itemUnitPriceLevelServices)
+
+    private $itemUnitPriceLevelServices;
+    public function boot(ItemUnitPriceLevelServices $itemUnitPriceLevelServices)
     {
-        $this->unitPriceLevels =  $itemUnitPriceLevelServices->Search($this->UnitRelatedId);
+        $this->itemUnitPriceLevelServices = $itemUnitPriceLevelServices;
+    }
+    public function UpdatedUnitRelatedId()
+    {
+        $this->unitPriceLevels =  $this->itemUnitPriceLevelServices->Search($this->UnitRelatedId);
     }
 
     #[On('reload-related')]
@@ -61,7 +69,7 @@ class ItemUnitPriceLevelUnit extends Component
         $this->priceLevels = PriceLevels::where('INACTIVE', '0')->get();
     }
 
-    public function saveItem(ItemUnitPriceLevelServices $itemUnitPriceLevelServices)
+    public function saveItem()
     {
         $this->validate(
             [
@@ -83,13 +91,9 @@ class ItemUnitPriceLevelUnit extends Component
         );
 
         try {
-            $itemUnitPriceLevelServices->Store(
-                $this->UnitRelatedId,
-                $this->PRICE_LEVEL_ID,
-                $this->CUSTOM_PRICE
-            );
+            $this->itemUnitPriceLevelServices->Store($this->UnitRelatedId, $this->PRICE_LEVEL_ID, $this->CUSTOM_PRICE);
 
-            $this->unitPriceLevels =  $itemUnitPriceLevelServices->Search($this->UnitRelatedId);
+            $this->unitPriceLevels =  $this->itemUnitPriceLevelServices->Search($this->UnitRelatedId);
             $this->CUSTOM_PRICE = 0;
             $this->PRICE_LEVEL_ID = 0;
             $this->saveSuccess = $this->saveSuccess ? false : true;
@@ -104,13 +108,13 @@ class ItemUnitPriceLevelUnit extends Component
         $this->newCustomPrice = $custPrice;
         $this->editItemId = $id;
     }
-    public function updateItem($id, ItemUnitPriceLevelServices $itemUnitPriceLevelServices)
+    public function updateItem($id)
     {
 
         try {
-            $itemUnitPriceLevelServices->Update($id, $this->newCustomPrice);
+            $this->itemUnitPriceLevelServices->Update($id, $this->newCustomPrice);
             $this->editItemId = null;
-            $this->unitPriceLevels =  $itemUnitPriceLevelServices->Search($this->UnitRelatedId);
+            $this->unitPriceLevels =  $this->itemUnitPriceLevelServices->Search($this->UnitRelatedId);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -120,23 +124,16 @@ class ItemUnitPriceLevelUnit extends Component
     {
         $this->editItemId = null;
     }
-    public function deleteItem($id, ItemUnitPriceLevelServices $itemUnitPriceLevelServices): void
+    public function deleteItem($id): void
     {
 
         try {
-            $itemUnitPriceLevelServices->Delete($id);
-            $this->unitPriceLevels =  $itemUnitPriceLevelServices->Search($this->UnitRelatedId);
+            $this->itemUnitPriceLevelServices->Delete($id);
+            $this->unitPriceLevels =  $this->itemUnitPriceLevelServices->Search($this->UnitRelatedId);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-    }
-
-    public function render(ItemUnitPriceLevelServices $itemUnitPriceLevelServices)
-    {
-       
-        $this->unitPriceLevels = $itemUnitPriceLevelServices->Search($this->UnitRelatedId);
-        return view('livewire.item-page.item-unit-price-level-unit');
     }
     #[On('clear-alert')]
     public function clearAlert()
@@ -145,5 +142,12 @@ class ItemUnitPriceLevelUnit extends Component
         // Clear session message and error
         session()->forget('message');
         session()->forget('error');
+    }
+    public function render()
+    {
+
+        $this->unitPriceLevels = $this->itemUnitPriceLevelServices->Search($this->UnitRelatedId);
+
+        return view('livewire.item-page.item-unit-price-level-unit');
     }
 }

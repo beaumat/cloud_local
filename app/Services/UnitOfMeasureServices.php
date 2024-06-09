@@ -13,7 +13,10 @@ class UnitOfMeasureServices
     {
         $this->object = $objectService;
     }
-
+    public function getList()
+    {
+        return UnitOfMeasures::where('INACTIVE', 0)->get();
+    }
     public function Store(string $NAME, string $SYMBOL, bool $INACTIVE): int
     {
         $ID = $this->object->ObjectNextID('UNIT_OF_MEASURE');

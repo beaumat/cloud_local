@@ -2,8 +2,8 @@
 
 namespace App\Livewire\ItemPage;
 
-use App\Models\PriceLevels;
 use App\Services\PriceLevelLineServices;
+use App\Services\PriceLevelServices;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -24,6 +24,14 @@ class ItemPriceLevelPanel extends Component
 
     public $editItemId = null;
 
+    private $priceLevelLineServices;
+    private $priceLevelServices;
+    public function boot(PriceLevelLineServices $priceLevelLineServices, PriceLevelServices $priceLevelServices)
+    {
+        $this->priceLevelLineServices = $priceLevelLineServices;
+        $this->priceLevelServices = $priceLevelServices;
+    }
+
     public function mount($itemId)
     {
         $this->itemId = $itemId;
@@ -31,11 +39,11 @@ class ItemPriceLevelPanel extends Component
     }
     public function reloadPriceLevel()
     {
-        $this->priceLevels = PriceLevels::query()->select('ID', 'DESCRIPTION')->where('INACTIVE', '0')->get();
+        $this->priceLevels = $this->priceLevelServices->getDropdown();
     }
-    public function saveItem(PriceLevelLineServices $priceLevelLineServices)
+    public function saveItem()
     {
-    
+
         $this->validate(
             [
                 'PRICE_LEVEL_ID' => [
@@ -54,8 +62,8 @@ class ItemPriceLevelPanel extends Component
         );
 
         try {
-            $priceLevelLineServices->Store($this->PRICE_LEVEL_ID, $this->itemId, $this->CUSTOM_PRICE);
-            $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
+            $this->priceLevelLineServices->Store($this->PRICE_LEVEL_ID, $this->itemId, $this->CUSTOM_PRICE);
+            $this->priceLevelList = $this->priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
             $this->CUSTOM_PRICE = 0;
             $this->PRICE_LEVEL_ID = 0;
             $this->saveSuccess = $this->saveSuccess ? false : true;
@@ -70,44 +78,43 @@ class ItemPriceLevelPanel extends Component
         $this->newCustomPrice = $custPrice;
         $this->editItemId = $id;
     }
-    public function updateItem($id, PriceLevelLineServices $priceLevelLineServices)
+    public function updateItem($id)
     {
 
         try {
-            $priceLevelLineServices->Update($id, $this->newCustomPrice);
+            $this->priceLevelLineServices->Update($id, $this->newCustomPrice);
             $this->editItemId = null;
-            $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
+            $this->priceLevelList = $this->priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
-    public function cancelItem():void
+    public function cancelItem(): void
     {
         $this->editItemId = null;
     }
-    public function deleteItem($id, PriceLevelLineServices $priceLevelLineServices): void
+    public function deleteItem($id): void
     {
 
         try {
-            $priceLevelLineServices->Delete($id);
-            $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
+            $this->priceLevelLineServices->Delete($id);
+            $this->priceLevelList = $this->riceLevelLineServices->LoadPriceLevelByItem($this->itemId);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
-    public function render(PriceLevelLineServices $priceLevelLineServices)
-    {
-        $this->priceLevelList = $priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
-        return view('livewire.item-page.item-price-level-panel');
-    }
-
     #[On('clear-alert')]
     public function clearAlert()
     {
         $this->resetErrorBag();
         session()->forget('message');
         session()->forget('error');
+    }
+    public function render()
+    {
+        $this->priceLevelList = $this->priceLevelLineServices->LoadPriceLevelByItem($this->itemId);
+        return view('livewire.item-page.item-price-level-panel');
     }
 }

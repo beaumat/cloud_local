@@ -1,15 +1,20 @@
 <?php
 
 namespace App\Services;
+
 use App\Models\StockBin;
 
-class StockBinServices {
+class StockBinServices
+{
     private $object;
     public function __construct(ObjectServices $objectService)
     {
         $this->object = $objectService;
     }
-
+    public function getList()
+    {
+        return StockBin::query()->select(['ID', 'DESCRIPTION'])->get();
+    }
     public function Store(string $CODE, string $DESCRIPTION): int
     {
         $ID = $this->object->ObjectNextID('STOCK_BIN');
@@ -47,5 +52,4 @@ class StockBinServices {
                 ->get();
         }
     }
-    
 }

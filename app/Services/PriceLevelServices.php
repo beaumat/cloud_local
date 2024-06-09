@@ -12,7 +12,10 @@ class PriceLevelServices
     {
         $this->object = $objectService;
     }
-
+    public function getDropdown()
+    {
+        return PriceLevels::query()->select('ID', 'DESCRIPTION')->where('INACTIVE', '0')->get();
+    }
     public function Store(string $CODE, string $DESCRIPTION, int $TYPE, float $RATE, int $ITEM_GROUP_ID, bool $INACTIVE): int
     {
         $ID = $this->object->ObjectNextID('PRICE_LEVEL');

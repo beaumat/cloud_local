@@ -18,6 +18,7 @@ class ItemServices
     public function get($ID): object
     {
         return items::where('ID', $ID)->first();
+        
     }
     public function getCost(int $ID): float
     {
@@ -108,12 +109,7 @@ class ItemServices
         int $SHIPPING_UNIT_ID,
         int $SALES_UNIT_ID,
         bool $PRINT_INDIVIDUAL_ITEMS,
-        bool $INACTIVE,
-        string $CUSTOM_FIELD1,
-        string $CUSTOM_FIELD2,
-        string $CUSTOM_FIELD3,
-        string $CUSTOM_FIELD4,
-        string $CUSTOM_FIELD5
+        bool $INACTIVE
     ): int {
         $ID = $this->object->ObjectNextID('ITEM');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('ITEM');
@@ -143,12 +139,7 @@ class ItemServices
             'SHIPPING_UNIT_ID' => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
             'SALES_UNIT_ID' => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
             'PRINT_INDIVIDUAL_ITEMS' => $PRINT_INDIVIDUAL_ITEMS,
-            'INACTIVE' => $INACTIVE,
-            'CUSTOM_FIELD1' => $CUSTOM_FIELD1,
-            'CUSTOM_FIELD2' => $CUSTOM_FIELD2,
-            'CUSTOM_FIELD3' => $CUSTOM_FIELD3,
-            'CUSTOM_FIELD4' => $CUSTOM_FIELD4,
-            'CUSTOM_FIELD5' => $CUSTOM_FIELD5
+            'INACTIVE' => $INACTIVE
         ]);
 
         return $ID;
@@ -179,12 +170,7 @@ class ItemServices
         int $SHIPPING_UNIT_ID,
         int $SALES_UNIT_ID,
         bool $PRINT_INDIVIDUAL_ITEMS,
-        bool $INACTIVE,
-        string $CUSTOM_FIELD1,
-        string $CUSTOM_FIELD2,
-        string $CUSTOM_FIELD3,
-        string $CUSTOM_FIELD4,
-        string $CUSTOM_FIELD5
+        bool $INACTIVE
     ): void {
 
         Items::where('ID', $ID)->update([
@@ -211,12 +197,7 @@ class ItemServices
             'SHIPPING_UNIT_ID' => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
             'SALES_UNIT_ID' => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
             'PRINT_INDIVIDUAL_ITEMS' => $PRINT_INDIVIDUAL_ITEMS,
-            'INACTIVE' => $INACTIVE,
-            'CUSTOM_FIELD1' => $CUSTOM_FIELD1,
-            'CUSTOM_FIELD2' => $CUSTOM_FIELD2,
-            'CUSTOM_FIELD3' => $CUSTOM_FIELD3,
-            'CUSTOM_FIELD4' => $CUSTOM_FIELD4,
-            'CUSTOM_FIELD5' => $CUSTOM_FIELD5
+            'INACTIVE' => $INACTIVE
         ]);
     }
 

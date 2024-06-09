@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-               
+
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -25,7 +25,8 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <input type="text" wire:model.live.debounce.150ms='search'
-                                        class="form-control form-control-sm text-xs mb-1 bg-light" placeholder="Search" />
+                                        class="form-control form-control-sm text-xs mb-1 bg-light"
+                                        placeholder="Search" />
                                 </div>
                                 <div class="col-md-8 text-right">
                                     <h5 class="m-0">
@@ -50,14 +51,20 @@
                                         <th class="text-center">INACTIVE</th>
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenanceinventoryitem_create') }}"
-                                                class="text-white btn-sm"> <i class="fas fa-plus"></i></a>
+                                                class="text-white btn-sm"> <i class="fas fa-plus"></i>
+                                            </a>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($items as $list)
                                         <tr>
-                                            <td> {{ $list->CODE }}</td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}">
+                                                    {{ $list->CODE }}
+                                                </a>
+                                            </td>
                                             <td> {{ $list->DESCRIPTION }}</td>
                                             <td> {{ $list->ITEM_TYPE }} </td>
                                             <td class="text-center"> {{ $list->TAXABLE ? 'Yes' : 'No' }} </td>

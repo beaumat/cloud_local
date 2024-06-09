@@ -6,7 +6,6 @@ use App\Models\Accounts;
 use App\Models\Contacts;
 use App\Models\ItemClass;
 use App\Models\ItemGroup;
-use App\Models\Items;
 use App\Models\ItemSubClass;
 use App\Models\ItemType;
 use App\Models\Manufacturers;
@@ -51,11 +50,7 @@ class ItemsForm extends Component
     public int $SALES_UNIT_ID;
     public bool $PRINT_INDIVIDUAL_ITEMS;
     public bool $INACTIVE;
-    public string $CUSTOM_FIELD1;
-    public string $CUSTOM_FIELD2;
-    public string $CUSTOM_FIELD3;
-    public string $CUSTOM_FIELD4;
-    public string $CUSTOM_FIELD5;
+
     public $itemType = [];
     public $stockType = [];
     public $itemGroup = [];
@@ -119,11 +114,6 @@ class ItemsForm extends Component
         $this->SALES_UNIT_ID = 0;
         $this->PRINT_INDIVIDUAL_ITEMS = true;
         $this->INACTIVE = false;
-        $this->CUSTOM_FIELD1 = "";
-        $this->CUSTOM_FIELD2 = "";
-        $this->CUSTOM_FIELD3 = "";
-        $this->CUSTOM_FIELD4 = "";
-        $this->CUSTOM_FIELD5 = "";
         $this->AccountInsert();
     }
     public function mount($id = null)
@@ -133,7 +123,7 @@ class ItemsForm extends Component
 
         if (is_numeric($id)) {
 
-            $item = Items::where('ID', $id)->first();
+            $item = $this->itemServices->get($id);
 
             if ($item) {
                 $this->ID = $item->ID;
@@ -161,11 +151,6 @@ class ItemsForm extends Component
                 $this->SALES_UNIT_ID = $item->SALES_UNIT_ID ? $item->SALES_UNIT_ID : 0;
                 $this->PRINT_INDIVIDUAL_ITEMS = $item->PRINT_INDIVIDUAL_ITEMS ? $item->PRINT_INDIVIDUAL_ITEMS : false;
                 $this->INACTIVE = $item->INACTIVE;
-                $this->CUSTOM_FIELD1 = $item->CUSTOM_FIELD1 ? $item->CUSTOM_FIELD1 : '';
-                $this->CUSTOM_FIELD2 = $item->CUSTOM_FIELD2 ? $item->CUSTOM_FIELD2 : '';
-                $this->CUSTOM_FIELD3 = $item->CUSTOM_FIELD3 ? $item->CUSTOM_FIELD3 : '';
-                $this->CUSTOM_FIELD4 = $item->CUSTOM_FIELD4 ? $item->CUSTOM_FIELD4 : '';
-                $this->CUSTOM_FIELD5 = $item->CUSTOM_FIELD5 ? $item->CUSTOM_FIELD5 : '';
 
                 $getSubClass = ItemSubClass::where('ID', $this->SUB_CLASS_ID)->first();
 
@@ -322,12 +307,7 @@ class ItemsForm extends Component
                     $this->SHIPPING_UNIT_ID,
                     $this->SALES_UNIT_ID,
                     $this->PRINT_INDIVIDUAL_ITEMS,
-                    $this->INACTIVE,
-                    $this->CUSTOM_FIELD1,
-                    $this->CUSTOM_FIELD2,
-                    $this->CUSTOM_FIELD3,
-                    $this->CUSTOM_FIELD4,
-                    $this->CUSTOM_FIELD5
+                    $this->INACTIVE
                 );
 
                 $Message = 'Successfully created.';
@@ -359,12 +339,8 @@ class ItemsForm extends Component
                     $this->SHIPPING_UNIT_ID,
                     $this->SALES_UNIT_ID,
                     $this->PRINT_INDIVIDUAL_ITEMS,
-                    $this->INACTIVE,
-                    $this->CUSTOM_FIELD1,
-                    $this->CUSTOM_FIELD2,
-                    $this->CUSTOM_FIELD3,
-                    $this->CUSTOM_FIELD4,
-                    $this->CUSTOM_FIELD5
+                    $this->INACTIVE
+                 
                 );
                 $Message = 'Successfully updated.';
             }
@@ -387,6 +363,4 @@ class ItemsForm extends Component
 
         return view('livewire.item-page.items-form');
     }
-
-   
 }

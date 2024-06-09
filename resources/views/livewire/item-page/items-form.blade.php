@@ -12,20 +12,21 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <h3 class="card-title">
                                 {{ $ID === 0 ? 'Create' : 'Edit' }} <a class="text-light"
-                                    href="{{ route('maintenanceinventoryitem') }}"> Items </a> </h3>
+                                    href="{{ route('maintenanceinventoryitem') }}"> Items </a>
+                            </h3>
                         </div>
                         <div class="container-fluid">
                             <div class="card card-tabs mt-2 ">
                                 <div class="card-header p-0 pt-1 border-bottom-0">
                                     <ul class="nav nav-tabs text-sm" id="custom-tabs-three-tab" role="tablist">
-
                                         <li class="nav-item">
                                             <a wire:click="SelectTab('gen')"
                                                 class="nav-link @if ($activeTab == 'gen') active @endif"
                                                 id="custom-tabs-three-gen1-tab" data-toggle="pill"
                                                 href="#custom-tabs-three-gen1" role="tab"
-                                                aria-controls="custom-tabs-three-gen1" aria-selected="true">General
-                                                Infomation</a>
+                                                aria-controls="custom-tabs-three-gen1" aria-selected="true">
+                                                General Infomation
+                                            </a>
                                         </li>
                                         @if ($TYPE == 1 || $TYPE == 6)
                                             <li class="nav-item">
@@ -43,7 +44,6 @@
                                                 </a>
                                             </li>
                                         @endif
-
 
                                         @if ($TYPE < 2)
                                             <li class="nav-item">
@@ -125,7 +125,7 @@
                                                                             <livewire:custom-check-box
                                                                                 name="PRINT_INDIVIDUAL_ITEMS"
                                                                                 titleName="Print Individual Items"
-                                                                                wire:model='PRINT_INDIVIDUAL_ITEMS'>
+                                                                                wire:model='PRINT_INDIVIDUAL_ITEMS' />
                                                                         </div>
                                                                     @endif
                                                                 </div>
@@ -141,7 +141,7 @@
                                                                                                 name="COST"
                                                                                                 titleName="Cost"
                                                                                                 wire:model='COST'
-                                                                                                :vertical="true">
+                                                                                                :vertical="true" />
                                                                                         </div>
                                                                                     @endif
                                                                                     <div class="col-md-12">
@@ -151,7 +151,7 @@
                                                                                             :zero="true"
                                                                                             titleName="Item Group"
                                                                                             wire:model='GROUP_ID'
-                                                                                            :vertical="true">
+                                                                                            :vertical="true" />
                                                                                     </div>
 
                                                                                     <div class="col-md-12">
@@ -161,7 +161,7 @@
                                                                                             :zero="true"
                                                                                             titleName="Stock Type"
                                                                                             wire:model='STOCK_TYPE'
-                                                                                            :vertical="true">
+                                                                                            :vertical="true" />
                                                                                     </div>
 
                                                                                     @if ($TYPE == 0)
@@ -209,7 +209,7 @@
                                                                                             name="RATE"
                                                                                             titleName="Rate"
                                                                                             wire:model='RATE'
-                                                                                            :vertical="true">
+                                                                                            :vertical="true" />
                                                                                     </div>
                                                                                 @endif
 
@@ -260,15 +260,15 @@
                                                                                                 :zero="true"
                                                                                                 titleName="Income Accounts"
                                                                                                 wire:model='GL_ACCOUNT_ID'
-                                                                                                :vertical="true">
-                                                                                            @else
-                                                                                                <livewire:select-option
-                                                                                                    name="GL_ACCOUNT_ID"
-                                                                                                    :options="$accounts"
-                                                                                                    :zero="true"
-                                                                                                    titleName="GL Accounts"
-                                                                                                    wire:model='GL_ACCOUNT_ID'
-                                                                                                    :vertical="true">
+                                                                                                :vertical="true" />
+                                                                                        @else
+                                                                                            <livewire:select-option
+                                                                                                name="GL_ACCOUNT_ID"
+                                                                                                :options="$accounts"
+                                                                                                :zero="true"
+                                                                                                titleName="GL Accounts"
+                                                                                                wire:model='GL_ACCOUNT_ID'
+                                                                                                :vertical="true" />
                                                                                         @endif
 
                                                                                     </div>
@@ -277,7 +277,7 @@
                                                                                         <livewire:custom-check-box
                                                                                             name="TAXABLE"
                                                                                             titleName="Taxable"
-                                                                                            wire:model='TAXABLE'>
+                                                                                            wire:model='TAXABLE' />
                                                                                     </div>
                                                                                 @endif
                                                                             </div>
@@ -290,7 +290,7 @@
                                                                                 :options="$rateType" :zero="false"
                                                                                 titleName="Rate Type"
                                                                                 wire:model='RATE_TYPE'
-                                                                                :vertical="true">
+                                                                                :vertical="true" />
                                                                         </div>
                                                                     @endif
                                                                     @if ($TYPE <= 4 || $TYPE === 7)
@@ -311,13 +311,13 @@
                                                                                     <livewire:text-input name="NOTES"
                                                                                         titleName="Notes"
                                                                                         wire:model='NOTES'
-                                                                                        :vertical="true">
+                                                                                        :vertical="true" />
                                                                                 </div>
                                                                                 <div class="col-md-12">
                                                                                     <livewire:custom-check-box
                                                                                         name="INACTIVE"
                                                                                         titleName="Inactive"
-                                                                                        wire:model='INACTIVE'>
+                                                                                        wire:model='INACTIVE' />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -327,7 +327,7 @@
                                                                                 <livewire:custom-check-box
                                                                                     name="INACTIVE"
                                                                                     titleName="Inactive"
-                                                                                    wire:model='INACTIVE'>
+                                                                                    wire:model='INACTIVE' />
                                                                             </div>
                                                                         </div>
 
@@ -342,7 +342,7 @@
                                                                                         :zero="true"
                                                                                         titleName="Base Unit"
                                                                                         wire:model='BASE_UNIT_ID'
-                                                                                        :vertical="true">
+                                                                                        :vertical="true" />
                                                                                 </div>
                                                                                 <div class="col-md-12">
                                                                                     <livewire:select-option
@@ -351,7 +351,7 @@
                                                                                         :zero="true"
                                                                                         titleName="Purchases Unit"
                                                                                         wire:model='PURCHASES_UNIT_ID'
-                                                                                        :vertical="true">
+                                                                                        :vertical="true" />
                                                                                 </div>
                                                                                 <div class="col-md-12">
                                                                                     <livewire:select-option
@@ -360,7 +360,7 @@
                                                                                         :zero="true"
                                                                                         titleName="Shipping Unit"
                                                                                         wire:model='SHIPPING_UNIT_ID'
-                                                                                        :vertical="true">
+                                                                                        :vertical="true" />
                                                                                 </div>
                                                                                 <div class="col-md-12">
                                                                                     <livewire:select-option
@@ -369,14 +369,12 @@
                                                                                         :zero="true"
                                                                                         titleName="Sales Unit"
                                                                                         wire:model='SALES_UNIT_ID'
-                                                                                        :vertical="true">
+                                                                                        :vertical="true" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     @endif
                                                                 </div>
-
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -399,7 +397,6 @@
                                                                     class="btn btn-primary btn-sm">
                                                                     <i class="fas fa-plus"></i></a>
                                                             @endif
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -438,9 +435,7 @@
                                                     <div class="col-md-12 mt-2 mb-2">
                                                         @livewire('ItemPage.ItemUnitPanel', ['itemId' => $ID])
                                                     </div>
-
                                                 </div>
-
                                             </div>
                                         @endif
                                         @if ($TYPE < 5)
@@ -453,7 +448,6 @@
                                     </div>
                                 </div>
 
-                                <!-- /.card -->
                             </div>
                         </div>
 

@@ -2,9 +2,9 @@
 
 namespace App\Livewire\ItemPage;
 
-use App\Models\Locations;
-use App\Models\UnitOfMeasures;
 use App\Services\ItemLocationUnitServices;
+use App\Services\LocationServices;
+use App\Services\UnitOfMeasureServices;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -26,10 +26,20 @@ class ItemUnitLocationDefault extends Component
     public int $newPURCHASES_UNIT_ID;
     public int $newSALES_UNIT_ID;
     public int $newSHIPPING_UNIT_ID;
+
+    private $itemLocationUnitServices;
+    private $locationServices;
+    private $unitOfMeasureServices;
+    public function boot(ItemLocationUnitServices $itemLocationUnitServices, LocationServices $locationServices, UnitOfMeasureServices $unitOfMeasureServices)
+    {
+        $this->itemLocationUnitServices = $itemLocationUnitServices;
+        $this->locationServices = $locationServices;
+        $this->unitOfMeasureServices  = $unitOfMeasureServices;
+    }
     public function dropDownload()
     {
-        $this->locationList = Locations::where('INACTIVE', '0')->get();
-        $this->unitList = UnitOfMeasures::where('INACTIVE', '0')->get();
+        $this->locationList = $this->locationServices->getList();
+        $this->unitList =  $this->unitOfMeasureServices->getList();
     }
     public function mount($itemId)
     {
@@ -37,7 +47,7 @@ class ItemUnitLocationDefault extends Component
         $this->dropDownload();
     }
 
-    public function saveItem(ItemLocationUnitServices $itemLocationUnitServices)
+    public function saveItem()
     {
         $this->validate(
             [
@@ -60,14 +70,7 @@ class ItemUnitLocationDefault extends Component
             ]
         );
         try {
-            $itemLocationUnitServices->Store(
-                $this->itemId,
-                $this->LOCATION_ID,
-                $this->PURCHASES_UNIT_ID,
-                $this->SALES_UNIT_ID,
-                $this->SHIPPING_UNIT_ID
-            );
-
+            $this->itemLocationUnitServices->Store($this->itemId, $this->LOCATION_ID, $this->PURCHASES_UNIT_ID, $this->SALES_UNIT_ID, $this->SHIPPING_UNIT_ID);
             $this->dropDownload();
             $this->LOCATION_ID = 0;
             $this->PURCHASES_UNIT_ID = 0;
@@ -75,9 +78,7 @@ class ItemUnitLocationDefault extends Component
             $this->SHIPPING_UNIT_ID = 0;
 
             $this->saveSuccess = $this->saveSuccess ? false : true;
-            $this->unitLocationList = $itemLocationUnitServices->Search($this->itemId);
-
-
+            $this->unitLocationList = $this->itemLocationUnitServices->Search($this->itemId);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -90,7 +91,7 @@ class ItemUnitLocationDefault extends Component
         $this->newSHIPPING_UNIT_ID = $ship_id;
         $this->editItemId = $id;
     }
-    public function updateItem($id, ItemLocationUnitServices $itemLocationUnitServices): void
+    public function updateItem($id): void
     {
 
         $this->validate(
@@ -108,9 +109,9 @@ class ItemUnitLocationDefault extends Component
         );
 
         try {
-            $itemLocationUnitServices->Update($id, $this->newPURCHASES_UNIT_ID, $this->newSALES_UNIT_ID, $this->newSHIPPING_UNIT_ID);
+            $this->itemLocationUnitServices->Update($id, $this->newPURCHASES_UNIT_ID, $this->newSALES_UNIT_ID, $this->newSHIPPING_UNIT_ID);
             $this->editItemId = null;
-            $this->unitLocationList = $itemLocationUnitServices->Search($this->itemId);
+            $this->unitLocationList = $this->itemLocationUnitServices->Search($this->itemId);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -120,21 +121,14 @@ class ItemUnitLocationDefault extends Component
     {
         $this->editItemId = null;
     }
-    public function deleteItem(int $ID, ItemLocationUnitServices $itemLocationUnitServices): void
+    public function deleteItem(int $ID): void
     {
         try {
-            $itemLocationUnitServices->Delete($ID);
+            $this->itemLocationUnitServices->Delete($ID);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-    }
-
-    public function render(ItemLocationUnitServices $itemLocationUnitServices)
-    {
-        $this->unitLocationList = $itemLocationUnitServices->Search($this->itemId);
-
-        return view('livewire.item-page.item-unit-location-default');
     }
     #[On('clear-alert')]
     public function clearAlert()
@@ -143,5 +137,10 @@ class ItemUnitLocationDefault extends Component
         // Clear session message and error
         session()->forget('message');
         session()->forget('error');
+    }
+    public function render()
+    {
+        $this->unitLocationList = $this->itemLocationUnitServices->Search($this->itemId);
+        return view('livewire.item-page.item-unit-location-default');
     }
 }

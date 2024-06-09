@@ -5,6 +5,8 @@ namespace App\Livewire\ItemPage;
 use App\Models\Locations;
 use App\Models\StockBin;
 use App\Services\ItemPreferenceServices;
+use App\Services\LocationServices;
+use App\Services\StockBinServices;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -22,8 +24,6 @@ class ItemInventoryPanel extends Component
     public float $ONHAND_MAX_LIMIT = 0;
     public int $STOCK_BIN_ID = 0;
 
-
-
     public float $NEW_ORDER_POINT = 0;
     public float $NEW_ORDER_QTY = 0;
     public int $NEW_ORDER_LEADTIME = 0;
@@ -34,6 +34,15 @@ class ItemInventoryPanel extends Component
     public $saveSuccess = false;
     public $itemPreferenceList = [];
     public $editItemId = null;
+    private $itemPreferenceServices;
+    private $locationServices;
+    private $stockBinServices;
+    public function boot(ItemPreferenceServices $itemPreferenceServices, LocationServices $locationServices, StockBinServices $stockBinServices)
+    {
+        $this->itemPreferenceServices = $itemPreferenceServices;
+        $this->locationServices = $locationServices;
+        $this->stockBinServices = $stockBinServices;
+    }
     public function mount($itemId)
     {
         $this->itemId = $itemId;
@@ -41,10 +50,10 @@ class ItemInventoryPanel extends Component
     }
     public function loadDropdown()
     {
-        $this->locationList = Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
-        $this->stockBinList = StockBin::query()->select(['ID', 'DESCRIPTION'])->get();
+        $this->locationList =  $this->locationServices->getList();
+        $this->stockBinList =  $this->stockBinServices->getList();
     }
-    public function saveItem(ItemPreferenceServices $itemPreferenceServices)
+    public function saveItem()
     {
         $this->validate(
             [
@@ -64,16 +73,7 @@ class ItemInventoryPanel extends Component
         );
 
         try {
-
-            $itemPreferenceServices->Store(
-                $this->itemId,
-                $this->LOCATION_ID,
-                $this->ORDER_POINT,
-                $this->ORDER_QTY,
-                $this->ORDER_LEADTIME,
-                $this->ONHAND_MAX_LIMIT,
-                $this->STOCK_BIN_ID
-            );
+            $this->temPreferenceServices->Store($this->itemId, $this->LOCATION_ID, $this->ORDER_POINT, $this->ORDER_QTY, $this->ORDER_LEADTIME, $this->ONHAND_MAX_LIMIT, $this->STOCK_BIN_ID);
             $this->LOCATION_ID = 0;
             $this->ORDER_POINT = 0;
             $this->ORDER_QTY = 0;
@@ -83,7 +83,7 @@ class ItemInventoryPanel extends Component
 
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->loadDropdown();
-            $this->itemPreferenceList = $itemPreferenceServices->Search($this->itemId);
+            $this->itemPreferenceList = $this->itemPreferenceServices->Search($this->itemId);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -91,8 +91,6 @@ class ItemInventoryPanel extends Component
     }
     public function editItem($id, $orderPoint, $orderQty, $orderLeadtime, $maxlimit, $bin_id = null)
     {
-
-
         $this->NEW_ORDER_POINT = $orderPoint ?  $orderPoint : 0;
         $this->NEW_ORDER_QTY = $orderQty ? $orderQty : 0;
         $this->NEW_ORDER_LEADTIME = $orderLeadtime ? $orderLeadtime : 0;
@@ -100,32 +98,21 @@ class ItemInventoryPanel extends Component
         $this->NEW_STOCK_BIN_ID = $bin_id ? $bin_id : 0;
         $this->editItemId = $id;
     }
-    public function updateItem($id, ItemPreferenceServices $itemPreferenceServices)
+    public function updateItem($id)
     {
         $this->validate(
             [
                 'NEW_ORDER_POINT' => 'required|not_in:0',
             ],
-            [
-                'NEW_ORDER_POINT.required' => 'The Order Point field is required.',
-                'NEW_ORDER_POINT.not_in' => 'The Order Point field is required.',
-            ],
+            [],
             [
                 'ORDER_POINT' => 'Order Point',
             ]
         );
         try {
-            $itemPreferenceServices->Update(
-                $id,
-                $this->itemId,
-                $this->NEW_ORDER_POINT,
-                $this->NEW_ORDER_QTY,
-                $this->NEW_ORDER_LEADTIME,
-                $this->NEW_ONHAND_MAX_LIMIT,
-                $this->NEW_STOCK_BIN_ID
-            );
+            $this->itemPreferenceServices->Update($id, $this->itemId, $this->NEW_ORDER_POINT, $this->NEW_ORDER_QTY, $this->NEW_ORDER_LEADTIME, $this->NEW_ONHAND_MAX_LIMIT, $this->NEW_STOCK_BIN_ID);
             $this->editItemId = null;
-            $this->itemPreferenceList = $itemPreferenceServices->Search($this->itemId);
+            $this->itemPreferenceList = $this->itemPreferenceServices->Search($this->itemId);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -135,12 +122,12 @@ class ItemInventoryPanel extends Component
     {
         $this->editItemId = null;
     }
-    public function deleteItem($id, ItemPreferenceServices $itemPreferenceServices): void
+    public function deleteItem($id): void
     {
 
         try {
-            $itemPreferenceServices->Delete($id);
-            $this->itemPreferenceList = $itemPreferenceServices->Search($this->itemId);
+            $this->itemPreferenceServices->Delete($id);
+            $this->itemPreferenceList = $this->itemPreferenceServices->Search($this->itemId);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -154,10 +141,9 @@ class ItemInventoryPanel extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function render(ItemPreferenceServices $itemPreferenceServices)
+    public function render()
     {
-        $this->itemPreferenceList = $itemPreferenceServices->Search($this->itemId);
-
+        $this->itemPreferenceList = $this->itemPreferenceServices->Search($this->itemId);
         return view('livewire.item-page.item-inventory-panel');
     }
 }
