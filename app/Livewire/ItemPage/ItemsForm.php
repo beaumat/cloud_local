@@ -183,7 +183,10 @@ class ItemsForm extends Component
         $this->ClearField();
     }
     private function AccountInsert(){
-        
+
+        $this->GL_ACCOUNT_ID = 0;
+        $this->COGS_ACCOUNT_ID = 0;
+        $this->ASSET_ACCOUNT_ID = 0;
     }
     public function updatedTYPE()
     {
