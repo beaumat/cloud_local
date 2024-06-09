@@ -182,6 +182,9 @@ class ItemsForm extends Component
 
         $this->ClearField();
     }
+    private function AccountInsert(){
+        
+    }
     public function updatedTYPE()
     {
         $this->itemGroup = ItemGroup::where('ITEM_TYPE', $this->TYPE)->get();
