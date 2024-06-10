@@ -25,7 +25,7 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <h3 class="card-title"> {{ $ID === 0 ? 'Create' : 'Edit' }}</h3>
                         </div>
-                        <form id="quickForm" wire:submit.prevent='save'>
+                        <form id="quickForm" wire:submit.prevent="save">
                             <div class="card-body">
                                 <div class="form-group">
                                     <div class="row">

@@ -90,18 +90,18 @@ class ItemSubClassForm extends Component
             session()->flash('error', $$errorMessage);
         }
     }
-    public function render()
-    {
-        return view('livewire.item-sub-class.item-sub-class-form');
-    }
     #[On('clear-alert')]
     public function clearAlert()
     {
         $this->resetErrorBag();
-        // Clear session message and error
         session()->forget('message');
         session()->forget('error');
     }
+    public function render()
+    {
+        return view('livewire.item-sub-class.item-sub-class-form');
+    }
+   
 
 
 

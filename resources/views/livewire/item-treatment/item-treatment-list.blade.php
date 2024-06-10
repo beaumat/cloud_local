@@ -72,7 +72,13 @@
                                             <td> {{ $list->ITEM_NAME }}</td>
                                             <td> {{ $list->SYMBOL }}</td>
                                             <td> {{ $list->NO_OF_USED }}</td>
-                                            <td> {{ $list->INACTIVE }}</td>
+                                            <td>
+                                                @if ($list->INACTIVE)
+                                                    YES
+                                                @else
+                                                    NO
+                                                @endif
+                                            </td>
                                             <td class="text-center">
                                                 <a href="{{ route('maintenanceothersitem_treatment_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
@@ -83,7 +89,6 @@
                                                     class="btn-sm text-danger">
                                                     <i class="fas fa-times" aria-hidden="true"></i>
                                                 </a>
-
                                             </td>
                                         </tr>
                                     @endforeach

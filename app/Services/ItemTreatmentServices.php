@@ -11,17 +11,23 @@ class ItemTreatmentServices
     {
         $this->object = $objectService;
     }
-    public function Store(int $LOCATION_ID, int $ITEM_ID, int $UNIT_ID, int $NO_OF_USED)
+    public function Get(int $Id)
     {
-        $ID = $this->object->ObjectNextID('ITEM_TREATMENT');
+        return ItemTreatment::where('ID', $Id)->first();
+    }
+    public function Store(int $LOCATION_ID, int $ITEM_ID, int $UNIT_ID, int $NO_OF_USED): int
+    {
+        $ID =  (int) $this->object->ObjectNextID('ITEM_TREATMENT');
         ItemTreatment::create([
             'ID'                => $ID,
             'LOCATION_ID'       => $LOCATION_ID,
             'ITEM_ID'           => $ITEM_ID,
             'UNIT_ID'           => $UNIT_ID > 0 ? $UNIT_ID : null,
             'NO_OF_USED'        => $NO_OF_USED,
-            'INACTIVE'          => 0
+            'INACTIVE'          => false
         ]);
+
+        return $ID;
     }
 
     public function Update(int $ID, int $LOCATION_ID, int $ITEM_ID, int $UNIT_ID, int $NO_OF_USED, bool $INACTIVE)
@@ -48,7 +54,9 @@ class ItemTreatmentServices
                 'item_treatment.ID',
                 'l.NAME as LOCATION_NAME',
                 'i.DESCRIPTION as ITEM_NAME',
-                'u.SYMBOL'
+                'u.SYMBOL',
+                'item_treatment.NO_OF_USED',
+                'item_treatment.INACTIVE'
             ])
             ->join('location as l', 'l.ID', '=', 'item_treatment.LOCATION_ID')
             ->join('item as i', 'i.ID', '=', 'item_treatment.ITEM_ID')

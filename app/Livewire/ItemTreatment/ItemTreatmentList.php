@@ -4,8 +4,10 @@ namespace App\Livewire\ItemTreatment;
 
 use App\Services\ItemTreatmentServices;
 use App\Services\LocationServices;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title("Item Treatment")]
 class ItemTreatmentList extends Component
 {
 
