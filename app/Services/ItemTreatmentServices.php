@@ -51,7 +51,7 @@ class ItemTreatmentServices
                 'u.SYMBOL'
             ])
             ->join('location as l', 'l.ID', '=', 'item_treatment.LOCATION_ID')
-            ->join('item as i', 'item.ID', '=', 'item_treatment.ITEM_ID')
+            ->join('item as i', 'i.ID', '=', 'item_treatment.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', 'item_treatment.UNIT_ID')
             ->when($locationId, function ($query) use (&$locationId) {
                 $query->where('item_treatment.LOCATION_ID', '=', $locationId);

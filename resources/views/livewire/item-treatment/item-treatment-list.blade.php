@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenanceinventoryitem_sub_class') }}"> Item Treatment </a>
+                    <h5 class="m-0"><a href="{{ route('maintenanceothersitem_treatment') }}"> Item Treatment </a>
                     </h5>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
@@ -25,8 +25,30 @@
 
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <input type="text" wire:model.live.debounce.150ms='search' class="w-100 form-control form-control-sm" placeholder="Search" />
+                                <div class="col-md-12 mb-2">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <div class="mt-0">
+                                                <label class="text-sm">Search:</label>
+                                                <input type="text" wire:model.live.debounce.150ms='search'
+                                                    class="w-100 form-control form-control-sm" placeholder="Search" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mt-0">
+                                                <label class="text-sm">Location:</label>
+                                                <select name="location" wire:model.live='locationid'
+                                                    class="form-control form-control-sm">
+                                                    <option value="0"> All Location</option>
+                                                    @foreach ($locationList as $item)
+                                                        <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
@@ -35,20 +57,24 @@
                                         <th>LOCATION</th>
                                         <th>ITEM</th>
                                         <th>UNIT</th>
+                                        <th>No. of Used</th>
+                                        <th>Inactive</th>
                                         <th class="text-center col-1 bg-success">
-                                            <a href="{{ route('maintenanceinventoryitem_sub_class_create') }}"
+                                            <a href="{{ route('maintenanceothersitem_treatment_create') }}"
                                                 class="text-white btn-sm"> <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
-                                    @foreach ($itemSubClass as $list)
+                                    @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ $list->CODE }}</td>
-                                            <td> {{ $list->DESCRIPTION }}</td>
-                                            <td> {{ $list->CLASS }}</td>
+                                            <td> {{ $list->LOCATION_NAME }}</td>
+                                            <td> {{ $list->ITEM_NAME }}</td>
+                                            <td> {{ $list->SYMBOL }}</td>
+                                            <td> {{ $list->NO_OF_USED }}</td>
+                                            <td> {{ $list->INACTIVE }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('maintenanceothersitem_treatment_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
@@ -62,7 +88,6 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                     </div>

@@ -16,7 +16,7 @@
                         <p> Dashboard </p>
                     </a>
                 </li>
-                
+
                 @if (Auth::user()->can('patient.schedule.view') ||
                         Auth::user()->can('patient.service-charges.view') ||
                         Auth::user()->can('patient.payment.view') ||
@@ -784,6 +784,14 @@
                                         class="nav-link {{ request()->is('maintenance/others/item-active-list*') ? 'active' : '' }}">
                                         <i class="fa fa-sort-numeric-asc nav-icon"></i>
                                         <p>Active items</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="{{ route('maintenanceothersitem_treatment') }}"
+                                        class="nav-link {{ request()->is('maintenance/others/item-treatment*') ? 'active' : '' }}">
+                                        <i class="fa fa-sort-numeric-asc nav-icon"></i>
+                                        <p>Item Treatment</p>
                                     </a>
                                 </li>
                             </ul>
