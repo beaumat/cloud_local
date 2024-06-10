@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\PaymentTerms;
@@ -7,37 +8,43 @@ use Carbon\Carbon;
 class PaymentTermServices
 {
     private $object;
-    public function __construct(ObjectServices $objectService)
+    private $dateServices;
+    public function __construct(ObjectServices $objectService, DateServices $dateServices)
     {
         $this->object = $objectService;
+        $this->dateServices = $dateServices;
     }
     public function getDueDate(int $ID)
     {
-        $currentDate = Carbon::now();
+        $currentDate = $this->dateServices->Now();
+
         $NET_DUE = PaymentTerms::where('INACTIVE', '0')->where('ID', $ID)->first()->NET_DUE;
-      
+
         $netDueDate = $currentDate->addDays($NET_DUE);
+
         return $netDueDate->format('Y-m-d');
     }
     public function getList()
     {
-        return PaymentTerms::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->get();
+        $result = PaymentTerms::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->get();
+        return  $result;
     }
     public function Store(string $CODE, string $DESCRIPTION, int $TYPE, int $NET_DUE, float $DISCOUNT_PCT, int $DISCOUNT_DUE, int $DATE_MONTH_PARAM, int $DATE_DAY_PARAM, int $DATE_MIN_DAYS, bool $INACTIVE): int
     {
         $ID = $this->object->ObjectNextID('PAYMENT_TERMS');
+
         PaymentTerms::create([
-            'ID' => $ID,
-            'CODE' => $CODE,
-            'DESCRIPTION' => $DESCRIPTION,
-            'TYPE' => $TYPE,
-            'NET_DUE' => $NET_DUE,
-            'DISCOUNT_PCT' => $DISCOUNT_PCT,
-            'DISCOUNT_DUE' => $DISCOUNT_DUE,
-            'DATE_MONTH_PARAM' => $DATE_MONTH_PARAM,
-            'DATE_DAY_PARAM' => $DATE_DAY_PARAM,
-            'DATE_MIN_DAYS' => $DATE_MIN_DAYS,
-            'INACTIVE' => $INACTIVE
+            'ID'                => $ID,
+            'CODE'              => $CODE,
+            'DESCRIPTION'       => $DESCRIPTION,
+            'TYPE'              => $TYPE,
+            'NET_DUE'           => $NET_DUE,
+            'DISCOUNT_PCT'      => $DISCOUNT_PCT,
+            'DISCOUNT_DUE'      => $DISCOUNT_DUE,
+            'DATE_MONTH_PARAM'  => $DATE_MONTH_PARAM,
+            'DATE_DAY_PARAM'    => $DATE_DAY_PARAM,
+            'DATE_MIN_DAYS'     => $DATE_MIN_DAYS,
+            'INACTIVE'          => $INACTIVE
 
         ]);
         return $ID;
@@ -45,18 +52,19 @@ class PaymentTermServices
 
     public function Update(int $ID, string $CODE, string $DESCRIPTION, int $TYPE, int $NET_DUE, float $DISCOUNT_PCT, int $DISCOUNT_DUE, int $DATE_MONTH_PARAM, int $DATE_DAY_PARAM, int $DATE_MIN_DAYS, bool $INACTIVE): void
     {
-        PaymentTerms::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DESCRIPTION' => $DESCRIPTION,
-            'TYPE' => $TYPE,
-            'NET_DUE' => $NET_DUE,
-            'DISCOUNT_PCT' => $DISCOUNT_PCT,
-            'DISCOUNT_DUE' => $DISCOUNT_DUE,
-            'DATE_MONTH_PARAM' => $DATE_MONTH_PARAM,
-            'DATE_DAY_PARAM' => $DATE_DAY_PARAM,
-            'DATE_MIN_DAYS' => $DATE_MIN_DAYS,
-            'INACTIVE' => $INACTIVE
-        ]);
+        PaymentTerms::where('ID', $ID)
+            ->update([
+                'CODE'              => $CODE,
+                'DESCRIPTION'       => $DESCRIPTION,
+                'TYPE'              => $TYPE,
+                'NET_DUE'           => $NET_DUE,
+                'DISCOUNT_PCT'      => $DISCOUNT_PCT,
+                'DISCOUNT_DUE'      => $DISCOUNT_DUE,
+                'DATE_MONTH_PARAM'  => $DATE_MONTH_PARAM,
+                'DATE_DAY_PARAM'    => $DATE_DAY_PARAM,
+                'DATE_MIN_DAYS'     => $DATE_MIN_DAYS,
+                'INACTIVE'          => $INACTIVE
+            ]);
     }
 
     public function Delete(int $ID): void
@@ -82,5 +90,4 @@ class PaymentTermServices
             ->orderBy('payment_terms.ID', 'desc')
             ->get();
     }
-
 }

@@ -69,6 +69,7 @@ use App\Livewire\ItemPage\ItemsForm;
 use App\Livewire\ItemPage\ItemsList;
 use App\Livewire\ItemSubClassPage\ItemSubClassForm;
 use App\Livewire\ItemSubClassPage\ItemSubClassList;
+use App\Livewire\ItemTreatment\ItemTreatmentList;
 use App\Livewire\Location\LocationForm;
 use App\Livewire\Location\LocationList;
 use App\Livewire\LocationGroup\LocationGroupForm;
@@ -404,6 +405,12 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('/item-active-list')->group(function () {
                 Route::get('/', ItemActiveList::class)->name('item-active-list');
+            });
+
+            Route::prefix('/item-treatment')->group(function () {
+                Route::get('/', ItemTreatmentList::class)->name('item_treatment');
+                Route::get('/create', ItemTreatmentList::class)->name('item_treatment_create');
+                Route::get('/{id}/edit', ItemTreatmentList::class)->name('item_treatment_edit');
             });
         });
 

@@ -15,12 +15,12 @@ class ItemTreatmentServices
     {
         $ID = $this->object->ObjectNextID('ITEM_TREATMENT');
         ItemTreatment::create([
-            'ID' => $ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'ITEM_ID' => $ITEM_ID,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'NO_OF_USED' => $NO_OF_USED,
-            'INACTIVE' => 0
+            'ID'                => $ID,
+            'LOCATION_ID'       => $LOCATION_ID,
+            'ITEM_ID'           => $ITEM_ID,
+            'UNIT_ID'           => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'NO_OF_USED'        => $NO_OF_USED,
+            'INACTIVE'          => 0
         ]);
     }
 
@@ -28,11 +28,11 @@ class ItemTreatmentServices
     {
         ItemTreatment::where('ID', $ID)
             ->update([
-                'LOCATION_ID' => $LOCATION_ID,
-                'ITEM_ID' => $ITEM_ID,
-                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'NO_OF_USED' => $NO_OF_USED,
-                'INACTIVE' =>  $INACTIVE
+                'LOCATION_ID'       => $LOCATION_ID,
+                'ITEM_ID'           => $ITEM_ID,
+                'UNIT_ID'           => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'NO_OF_USED'        => $NO_OF_USED,
+                'INACTIVE'          =>  $INACTIVE
             ]);
     }
 
@@ -41,34 +41,29 @@ class ItemTreatmentServices
         ItemTreatment::where('ID', $ID)->delete();
     }
 
-    public function Search($search)
+    public function Search($search, $locationId)
     {
+        $result = ItemTreatment::query()
+            ->select([
+                'item_treatment.ID',
+                'l.NAME as LOCATION_NAME',
+                'i.DESCRIPTION as ITEM_NAME',
+                'u.SYMBOL'
+            ])
+            ->join('location as l', 'l.ID', '=', 'item_treatment.LOCATION_ID')
+            ->join('item as i', 'item.ID', '=', 'item_treatment.ITEM_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', 'item_treatment.UNIT_ID')
+            ->when($locationId, function ($query) use (&$locationId) {
+                $query->where('item_treatment.LOCATION_ID', '=', $locationId);
+            })
+            ->when($search, function ($query) use (&$search) {
+                $query->where('l.NAME', 'like', '%' . $search . '%')
+                    ->orWhere('i.DESCRIPTION', 'like', '%' . $search . '%')
+                    ->orWhere('u.NAME', 'like', '%' . $search . '%');
+            })
+            ->orderBy('item_treatment.ID', 'desc')
+            ->get();
 
-        if (!$search) {
-            return ItemTreatment::query()
-                ->select([
-                    'item_treatment.ID',
-                    'item_class.DESCRIPTION as CLASS'
-                ])
-                ->join('location as l', 'l.ID', '=', 'item_treatment.LOCATION_ID')
-                ->join('item as i', 'item.ID', '=', 'item_treatment.ITEM_ID')
-                ->leftJoin('unit_of_measure as u', 'u.ID', 'item_treatment.UNIT_ID')
-                ->orderBy('item_sub_class.ID', 'desc')
-                ->get();
-        } else {
-            // return ItemSubClass::query()
-            //     ->select([
-            //         'item_sub_class.ID',
-            //         'item_sub_class.CODE',
-            //         'item_sub_class.DESCRIPTION',
-            //         'item_class.DESCRIPTION as CLASS'
-            //     ])
-            //     ->join('item_class', 'item_class.ID', '=', 'item_sub_class.CLASS_ID')
-            //     ->where('item_sub_class.CODE', 'like', '%' . $search . '%')
-            //     ->orWhere('item_sub_class.DESCRIPTION', 'like', '%' . $search . '%')
-            //     ->orWhere('item_class.DESCRIPTION', 'like', '%' . $search . '%')
-            //     ->orderBy('item_sub_class.ID', 'desc')
-            //     ->get();
-        }
+        return $result;
     }
 }

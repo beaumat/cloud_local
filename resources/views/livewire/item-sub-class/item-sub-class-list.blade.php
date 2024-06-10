@@ -17,7 +17,6 @@
     </div>
     <!-- Main content -->
     <section class="content">
-
         <div class="container-fluid">
             <div class="row">
                 @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])

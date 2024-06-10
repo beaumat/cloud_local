@@ -14,30 +14,32 @@ class ItemSubClassList extends Component
     public $itemSubClass = [];
     public $search = '';
 
-    public function updatedsearch(ItemSubClassServices $itemSubClassServices)
+    private $itemSubClassServices;
+    public function boot(ItemSubClassServices $itemSubClassServices)
     {
-        $this->itemSubClass =  $itemSubClassServices->Search($this->search);
+        $this->itemSubClassServices = $itemSubClassServices;
     }
-    public function delete($id, ItemSubClassServices $itemSubClassServices)
+    public function updatedsearch()
+    {
+        $this->itemSubClass =  $this->itemSubClassServices->Search($this->search);
+    }
+    public function delete($id)
     {
         try {
-            $itemSubClassServices->Delete($id);
+            $this->itemSubClassServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->itemSubClass =  $itemSubClassServices->Search($this->search);
+            $this->itemSubClass =  $this->itemSubClassServices->Search($this->search);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
 
-    public function mount(ItemSubClassServices $itemSubClassServices)
+    public function mount()
     {
-        $this->itemSubClass =  $itemSubClassServices->Search($this->search);
+        $this->itemSubClass =  $this->itemSubClassServices->Search($this->search);
     }
-    public function render()
-    {
-        return view('livewire.item-sub-class.item-sub-class-list');
-    }
+
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -47,7 +49,8 @@ class ItemSubClassList extends Component
         session()->forget('error');
     }
 
-
-
-
+    public function render()
+    {
+        return view('livewire.item-sub-class.item-sub-class-list');
+    }
 }

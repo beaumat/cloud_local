@@ -25,7 +25,8 @@ class PaymentServices
     }
     public function get($ID)
     {
-        return Payment::where('ID', $ID)->first();
+        $result =  Payment::where('ID', $ID)->first();
+        return $result;
     }
     public function getTotalPay(int $INVOICE_ID, int $EXECPT_PAYMENT_ID): float
     {
@@ -40,91 +41,59 @@ class PaymentServices
         }
 
         return 0;
-
     }
-    public function Store(
-        string $CODE,
-        $DATE,
-        int $CUSTOMER_ID,
-        int $LOCATION_ID,
-        float $AMOUNT,
-        float $AMOUNT_APPLIED,
-        int $PAYMENT_METHOD_ID,
-        string $CARD_NO,
-        $CARD_EXPIRY_DATE,
-        string $RECEIPT_REF_NO,
-        $RECEIPT_DATE,
-        string $NOTES,
-        int $UNDEPOSITED_FUNDS_ACCOUNT_ID,
-        int $OVERPAYMENT_ACCOUNT_ID,
-        bool $DEPOSITED,
-        int $ACCOUNTS_RECEIVABLE_ID
-
-    ): int {
+    public function Store(string $CODE, $DATE, int $CUSTOMER_ID, int $LOCATION_ID, float $AMOUNT, float $AMOUNT_APPLIED, int $PAYMENT_METHOD_ID, string $CARD_NO, $CARD_EXPIRY_DATE, string $RECEIPT_REF_NO, $RECEIPT_DATE, string $NOTES, int $UNDEPOSITED_FUNDS_ACCOUNT_ID, int $OVERPAYMENT_ACCOUNT_ID, bool $DEPOSITED, int $ACCOUNTS_RECEIVABLE_ID): int
+    {
 
         $ID = (int) $this->object->ObjectNextID('PAYMENT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PAYMENT');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Payment::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'CUSTOMER_ID' => $CUSTOMER_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'AMOUNT' => $AMOUNT,
-            'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
-            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'CARD_NO' => $CARD_NO,
-            'CARD_EXPIRY_DATE' => $CARD_EXPIRY_DATE ?? null,
-            'RECEIPT_REF_NO' => $RECEIPT_REF_NO,
-            'RECEIPT_DATE' => $RECEIPT_DATE ?? null,
-            'NOTES' => $NOTES,
+            'ID'                    => $ID,
+            'RECORDED_ON'           => $this->dateServices->Now(),
+            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                  => $DATE,
+            'CUSTOMER_ID'           => $CUSTOMER_ID,
+            'LOCATION_ID'           => $LOCATION_ID,
+            'AMOUNT'                => $AMOUNT,
+            'AMOUNT_APPLIED'        => $AMOUNT_APPLIED,
+            'PAYMENT_METHOD_ID'     => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+            'CARD_NO'               => $CARD_NO,
+            'CARD_EXPIRY_DATE'      => $CARD_EXPIRY_DATE ?? null,
+            'RECEIPT_REF_NO'        => $RECEIPT_REF_NO,
+            'RECEIPT_DATE'          => $RECEIPT_DATE ?? null,
+            'NOTES'                 => $NOTES,
             'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
             'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-            'STATUS' => 2,
-            'STATUS_DATE' => $this->dateServices->NowDate(),
-            'DEPOSITED' => $DEPOSITED,
+            'STATUS'                => 0,
+            'STATUS_DATE'           => $this->dateServices->NowDate(),
+            'DEPOSITED'             => $DEPOSITED,
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID
         ]);
+
         return $ID;
     }
-    public function Update(
-        int $ID,
-        string $CODE,
-        $DATE,
-        int $CUSTOMER_ID,
-        int $LOCATION_ID,
-        float $AMOUNT,
-        int $PAYMENT_METHOD_ID,
-        string $CARD_NO,
-        $CARD_EXPIRY_DATE,
-        string $RECEIPT_REF_NO,
-        $RECEIPT_DATE,
-        string $NOTES,
-        int $UNDEPOSITED_FUNDS_ACCOUNT_ID,
-        int $OVERPAYMENT_ACCOUNT_ID,
-        bool $DEPOSITED,
-        int $ACCOUNTS_RECEIVABLE_ID
-    ) {
-        Payment::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DATE' => $DATE,
-            'CUSTOMER_ID' => $CUSTOMER_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'AMOUNT' => $AMOUNT,
-            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'CARD_NO' => $CARD_NO,
-            'CARD_EXPIRY_DATE' => $CARD_EXPIRY_DATE ?? null,
-            'RECEIPT_REF_NO' => $RECEIPT_REF_NO,
-            'RECEIPT_DATE' => $RECEIPT_DATE ?? null,
-            'NOTES' => $NOTES,
-            'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
-            'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-            'DEPOSITED' => $DEPOSITED,
-            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID
-        ]);
+    public function Update(int $ID, string $CODE, $DATE, int $CUSTOMER_ID, int $LOCATION_ID, float $AMOUNT, int $PAYMENT_METHOD_ID, string $CARD_NO, $CARD_EXPIRY_DATE, string $RECEIPT_REF_NO, $RECEIPT_DATE, string $NOTES, int $UNDEPOSITED_FUNDS_ACCOUNT_ID, int $OVERPAYMENT_ACCOUNT_ID, bool $DEPOSITED, int $ACCOUNTS_RECEIVABLE_ID)
+    {
+        Payment::where('ID', $ID)
+            ->update([
+                'CODE'              => $CODE,
+                'DATE'              => $DATE,
+                'CUSTOMER_ID'       => $CUSTOMER_ID,
+                'LOCATION_ID'       => $LOCATION_ID,
+                'AMOUNT'            => $AMOUNT,
+                'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+                'CARD_NO'           => $CARD_NO,
+                'CARD_EXPIRY_DATE'  => $CARD_EXPIRY_DATE ?? null,
+                'RECEIPT_REF_NO'        => $RECEIPT_REF_NO,
+                'RECEIPT_DATE'          => $RECEIPT_DATE ?? null,
+                'NOTES'                 => $NOTES,
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
+                'OVERPAYMENT_ACCOUNT_ID'    => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
+                'DEPOSITED'                 => $DEPOSITED,
+                'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID
+            ]);
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
