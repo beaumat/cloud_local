@@ -11,7 +11,6 @@ use Livewire\Component;
 class ItemTreatmentList extends Component
 {
 
-
     public $search;
     public $locationId;
     public $locationList = [];
