@@ -134,7 +134,7 @@
                     @endif
                 </div>
                 <div class="col-md-6 text-right">
-                    @livewire('Hemodialysis.AddDefaultModal')
+                    @livewire('Hemodialysis.AddDefaultModal', ['HEMO_ID' => $HEMO_ID, 'LOCATION_ID' => $LOCATION_ID])
                 </div>
             </div>
         </div>

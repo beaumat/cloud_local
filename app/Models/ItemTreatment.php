@@ -15,9 +15,11 @@ class ItemTreatment extends Model
         'ID',
         'LOCATION_ID',
         'ITEM_ID',
+        'QUANTITY',
         'UNIT_ID',
         'NO_OF_USED',
-        'INACTIVE'
+        'INACTIVE',
+        'IS_AUTO'
 
     ];
 }

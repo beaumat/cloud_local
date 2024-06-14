@@ -256,7 +256,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('/banking')->name('banking')->group(function () {
-
         Route::prefix('/deposit')->group(function () {
             Route::get('/', DepositList::class)->name('deposit')->middleware(['permission:company.deposit.view']);
         });

@@ -4,6 +4,7 @@ namespace App\Livewire\Hemodialysis;
 
 use App\Services\HemoServices;
 use App\Services\ItemServices;
+use App\Services\ItemTreatmentServices;
 use App\Services\UnitOfMeasureServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -16,21 +17,26 @@ class InventoryTreatment extends Component
     public int $HEMO_ID;
     #[Reactive]
     public int $STATUS;
+    #[Reactive]
+    public int $LOCATION_ID;
+
     public int $openStatus = 0;
     public bool $saveSuccess = false;
     public $dataList = [];
     private $hemoServices;
     private $itemServices;
     private $unitOfMeasureServices;
-
+    private $itemTreatmentServices;
     public function boot(
         HemoServices $hemoServices,
         ItemServices $itemServices,
-        UnitOfMeasureServices $unitOfMeasureServices
+        UnitOfMeasureServices $unitOfMeasureServices,
+        ItemTreatmentServices $itemTreatmentServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->itemServices = $itemServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
+        $this->itemTreatmentServices = $itemTreatmentServices;
     }
 
     public string $ITEM_CODE;
@@ -64,7 +70,7 @@ class InventoryTreatment extends Component
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
-     
+
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
@@ -75,10 +81,10 @@ class InventoryTreatment extends Component
     public function updatedcodeBase()
     {
         if ($this->codeBase) {
-            $this->itemCodeList = $this->itemServices->getInventoryItem(true);
+            $this->itemCodeList = $this->itemTreatmentServices->getItemList(true, $this->LOCATION_ID);
             return;
         }
-        $this->itemDescList = $this->itemServices->getInventoryItem(false);
+        $this->itemDescList = $this->itemTreatmentServices->getItemList(false, $this->LOCATION_ID);
     }
     public function deleteItem(int $ID, int $ITEM_ID)
     {
@@ -128,6 +134,7 @@ class InventoryTreatment extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    #[On('refresh-item-treatment')]
     public function render()
     {
         if ($this->lineItemId > 0) {

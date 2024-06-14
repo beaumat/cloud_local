@@ -15,14 +15,14 @@ use Livewire\Component;
 #[Title("Item Treatment")]
 class ItemTreatmentForm extends Component
 {
-
     public int $ID;
     public int $LOCATION_ID;
     public int $ITEM_ID;
+    public float $QUANTITY;
     public int $UNIT_ID;
-    public  int $NO_OF_USED;
-    public  bool $INACTIVE;
-
+    public int $NO_OF_USED;
+    public bool $INACTIVE;
+    public bool $IS_AUTO;
     public $locationList = [];
     public $itemList = [];
     public $unitList = [];
@@ -44,7 +44,7 @@ class ItemTreatmentForm extends Component
         $this->locationList = $this->locationServices->getList();
         $this->itemList = $this->itemServices->getInventoryItem(false);
         $this->unitList = [];
-        
+
         if (is_numeric($id)) {
             $data = $this->itemTreatmentServices->Get($id);
 
@@ -52,9 +52,11 @@ class ItemTreatmentForm extends Component
                 $this->ID = $data->ID;
                 $this->LOCATION_ID  = $data->LOCATION_ID;
                 $this->ITEM_ID =  $data->ITEM_ID;
+                $this->QUANTITY = $data->QUANTITY ?? 0;
                 $this->UNIT_ID = $data->UNIT_ID ?? 0;
                 $this->NO_OF_USED = $data->NO_OF_USED;
                 $this->INACTIVE = $data->INACTIVE;
+                $this->IS_AUTO = $data->IS_AUTO;
                 return;
             }
 
@@ -64,10 +66,12 @@ class ItemTreatmentForm extends Component
 
         $this->ID = 0;
         $this->LOCATION_ID = 0;
+        $this->QUANTITY = 1;
         $this->ITEM_ID = 0;
         $this->UNIT_ID = 0;
         $this->NO_OF_USED = 0;
         $this->INACTIVE = false;
+        $this->IS_AUTO =  false;
     }
 
 
@@ -90,11 +94,11 @@ class ItemTreatmentForm extends Component
         try {
             DB::beginTransaction();
             if ($this->ID === 0) {
-                $this->ID = $this->itemTreatmentServices->Store($this->LOCATION_ID, $this->ITEM_ID, $this->UNIT_ID, $this->NO_OF_USED);
+                $this->ID = $this->itemTreatmentServices->Store($this->LOCATION_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, $this->NO_OF_USED, $this->IS_AUTO);
                 DB::commit();
                 return Redirect::route('maintenanceothersitem_treatment_edit', ['id' => $this->ID])->with('message', 'Successfully created.');
             } else {
-                $this->itemTreatmentServices->Update($this->ID, $this->LOCATION_ID, $this->ITEM_ID, $this->UNIT_ID, $this->NO_OF_USED, $this->INACTIVE);
+                $this->itemTreatmentServices->Update($this->ID, $this->LOCATION_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, $this->NO_OF_USED, $this->INACTIVE, $this->IS_AUTO);
                 DB::commit();
                 session()->flash('message', 'Successfully updated.');
             }

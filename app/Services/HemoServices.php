@@ -20,10 +20,12 @@ class HemoServices
         $this->user = $userServices;
         $this->systemSettingServices = $systemSettingServices;
     }
+
     public function Get(int $ID)
     {
         return Hemodialysis::where('ID', $ID)->first();
     }
+
     public function GetPost(int $CONTACT_ID, int $LOCATION_ID, string $DATE)
     {
         return Hemodialysis::where('CUSTOMER_ID', $CONTACT_ID)
@@ -365,6 +367,48 @@ class HemoServices
     private function getLine($HEMO_ID): int
     {
         return (int) HemodialysisItems::where('HEMO_ID', $HEMO_ID)->max('LINE_NO');
+    }
+    private function getGetLastitemNew(int $ITEM_ID, $LOCATION_ID, $PATIENT_ID, $DATE_TREATMENT): string
+    {
+
+
+
+        $result = HemodialysisItems::query()
+            ->select([
+                'h.DATE'
+            ])
+            ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->where('hemodialysis_items.ITEM_ID', $ITEM_ID)
+            ->where('h.LOCATION_ID', $LOCATION_ID)
+            ->where('h.CUSTOMER_ID', $PATIENT_ID)
+            ->where('hemodialysis_items.IS_NEW', true)
+            ->where('h.DATE', '<', $DATE_TREATMENT)
+            ->orderBy('h.DATE', 'desc')
+            ->first();
+
+        return $result->DATE  ?? '';
+    }
+    public function getItemTotalUsed(int $ITEM_ID, $LOCATION_ID, $PATIENT_ID, $DATE_TREATMENT): int
+    {
+        $newitembyDate = $this->getGetLastitemNew($ITEM_ID, $LOCATION_ID, $PATIENT_ID, $DATE_TREATMENT);
+
+        if (!$newitembyDate) {
+
+            return 0;
+        }
+
+        $result_new = HemodialysisItems::query()
+            ->select([
+                DB::raw('count(*) as total_count')
+            ])
+            ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->where('hemodialysis_items.ITEM_ID', $ITEM_ID)
+            ->where('h.LOCATION_ID', $LOCATION_ID)
+            ->where('h.CUSTOMER_ID', $PATIENT_ID)
+            ->whereBetween('h.DATE', [$newitembyDate, $DATE_TREATMENT])
+            ->first();
+
+        return  (int) $result_new->total_count ?? 0;
     }
     public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW)
     {

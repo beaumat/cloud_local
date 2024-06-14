@@ -18,7 +18,6 @@ class ItemServices
     public function get($ID): object
     {
         return items::where('ID', $ID)->first();
-        
     }
     public function getCost(int $ID): float
     {
