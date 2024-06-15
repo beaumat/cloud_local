@@ -17,8 +17,6 @@ class ItemTreatmentServices
     {
         return ItemTreatment::where('ID', $Id)->first();
     }
-
-    
     public function Store(int $LOCATION_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, int $NO_OF_USED, bool $IS_AUTO): int
     {
         $ID =  (int) $this->object->ObjectNextID('ITEM_TREATMENT');

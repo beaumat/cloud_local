@@ -19,7 +19,6 @@ class InventoryTreatment extends Component
     public int $STATUS;
     #[Reactive]
     public int $LOCATION_ID;
-
     public int $openStatus = 0;
     public bool $saveSuccess = false;
     public $dataList = [];
@@ -121,11 +120,66 @@ class InventoryTreatment extends Component
         $this->updatedcodeBase();
         $this->saveSuccess = $this->saveSuccess ? false : true;
     }
-    public $lineItemId = null;
+    public $lineId = null;
+    public int $lineItemId = 0;
     public float $lineQty;
     public int $lineUnitId;
-    public $lineIsNew;
+    public bool $lineIsNew;
 
+    public function editItem(int $editId)
+    {
+
+        $data = $this->hemoServices->ItemGet($editId);
+        if ($data) {
+            $this->lineId = $data->ID;
+            $this->lineItemId = $data->ITEM_ID;
+            $this->lineUnitId = $data->UNIT_ID ?? 0;
+            $this->lineQty = $data->QUANTITY ?? 0;
+            $this->lineIsNew = $data->IS_NEW;
+
+
+            if ($this->lineItemId > 0) {
+                $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
+            }
+        }
+    }
+
+    public function cancelItem()
+    {
+        $this->lineId = null;
+        $this->lineItemId = 0;
+        $this->lineUnitId = 0;
+        $this->lineQty = 0;
+        $this->lineIsNew = false;
+    }
+
+    public function updateItem()
+    {
+
+        $this->validate(
+            [
+                'lineQty' => 'required|not_in:0',
+            ],
+            [],
+            [
+                'lineQty' => 'Quantity'
+            ]
+        );
+
+
+        $this->hemoServices->ItemUpdate(
+            $this->lineId,
+            $this->HEMO_ID,
+            $this->lineItemId,
+            $this->lineQty,
+            $this->lineUnitId,
+            1,
+            $this->lineIsNew,
+        );
+
+        session()->flash('message', 'Successfully updated');
+        $this->cancelItem();
+    }
 
     #[On('clear-alert')]
     public function clearAlert()
@@ -137,12 +191,9 @@ class InventoryTreatment extends Component
     #[On('refresh-item-treatment')]
     public function render()
     {
-        if ($this->lineItemId > 0) {
-            $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
-        }
-
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
         $this->dataList = $this->hemoServices->ItemView($this->HEMO_ID);
+        
         return view('livewire.hemodialysis.inventory-treatment');
     }
 }

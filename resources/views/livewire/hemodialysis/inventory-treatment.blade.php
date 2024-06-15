@@ -24,7 +24,7 @@
                                 <th class="col-1 text-center">Quantity</th>
                                 <th class="col-1">Unit</th>
                                 <th class="col-1 text-center">New</th>
-                                <th class="col-2">Action</th>
+                                <th class="col-2 text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody class="text-xs">
@@ -32,20 +32,67 @@
                                 <tr>
                                     <td>{{ $list->CODE }}</td>
                                     <td>{{ $list->DESCRIPTION }}</td>
-                                    <td class="text-center">{{ number_format($list->QUANTITY, 0) }}</td>
-                                    <td></td>
+
+
                                     <td class="text-center">
-                                        @if ($list->IS_NEW)
-                                            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                        @if ($lineId == $list->ID)
+                                            <input type="number" step="0.01"
+                                                class="form-control form-control-sm mt-2 text-right" name="lineQty"
+                                                wire:model='lineQty' />
+                                        @else
+                                            {{ number_format($list->QUANTITY, 0) }}
                                         @endif
+
+
                                     </td>
                                     <td>
-                                        <button title="Delete" id="deletebtn"
-                                            wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }})'
-                                            wire:confirm="Are you sure you want to delete this?"
-                                            class="text-danger btn btn-danger btn-sm w-100">
-                                            <i class="fas fa-times text-white" aria-hidden="true"></i>
-                                        </button>
+                                        @if ($lineId == $list->ID)
+                                            <select wire:model='lineUnitId' name="lineUnitId"
+                                                class="text-sm form-control form-control-sm mt-2">
+                                                @foreach ($editUnitList as $listitem)
+                                                    <option value="{{ $listitem->ID }}">{{ $listitem->SYMBOL }}</option>
+                                                @endforeach
+                                            </select>
+                                        @else
+                                            {{ $list->SYMBOL }}
+                                        @endif
+
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($lineId == $list->ID)
+                                            <input type="checkbox" class="text-lg mt-2" wire:model='lineIsNew'
+                                                name="lineIsNew" />
+                                        @else
+                                            @if ($list->IS_NEW)
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            @endif
+                                        @endif
+
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($lineId == $list->ID)
+                                            <button title="Update" id="updatebtn" wire:click="updateItem()"
+                                                class="btn btn-sm  btn-success w-25">
+                                                <i class="fas fa-check text-white" aria-hidden="true"></i>
+                                            </button>
+                                            <button title="Cancel" id="cancelbtn" href="#"
+                                                wire:click="cancelItem()" class="btn btn-sm btn-warning w-25">
+                                                <i class="fas fa-ban text-white" aria-hidden="true"></i>
+                                            </button>
+                                        @else
+                                            <button title="Edit" id="editbtn"
+                                                wire:click='editItem({{ $list->ID }})'
+                                                class="btn btn-sm btn-info w-25">
+                                                <i class="fas fa-edit text-white" aria-hidden="true"></i>
+                                            </button>
+                                            <button title="Delete" id="deletebtn"
+                                                wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }})'
+                                                wire:confirm="Are you sure you want to delete this?"
+                                                class="btn btn-danger btn-sm w-25">
+                                                <i class="fas fa-times text-white" aria-hidden="true"></i>
+                                            </button>
+                                        @endif
+
                                     </td>
                                 </tr>
                             @endforeach

@@ -434,7 +434,7 @@ class HemoServices
             ->where('ITEM_ID', $ITEM_ID)
             ->update([
                 'QUANTITY' => $QUANTITY,
-                'UNIT_ID' => $UNIT_ID,
+                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
                 'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
                 'IS_NEW' => $IS_NEW
             ]);
@@ -446,6 +446,13 @@ class HemoServices
             ->where('ITEM_ID', $ITEM_ID)
             ->delete();
     }
+    public function ItemGet(int $ID)
+    {
+        $result = HemodialysisItems::where('ID', $ID)->first();
+
+        return $result;
+    }
+
     public function ItemView(int $HEMO_ID)
     {
         $result = HemodialysisItems::query()
@@ -457,9 +464,13 @@ class HemoServices
                 'hemodialysis_items.UNIT_BASE_QUANTITY',
                 'hemodialysis_items.IS_NEW',
                 'item.CODE',
-                'item.DESCRIPTION'
+                'item.DESCRIPTION',
+                'u.NAME as UNIT_NAME',
+                'u.SYMBOL'
+
             ])
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'hemodialysis_items.UNIT_ID')
             ->where('hemodialysis_items.HEMO_ID', $HEMO_ID)
             ->get();
 

@@ -73,15 +73,18 @@
                             @if ($editItemId === $list->ID)
                                 <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
                                     class="text-success btn btn-sm btn-link"> <i class="fas fa-check"
-                                        aria-hidden="true"></i> </button>
+                                        aria-hidden="true"></i>
+                                </button>
                                 <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
                                     class="text-warning btn btn-sm btn-link"> <i class="fas fa-ban"
-                                        aria-hidden="true"></i> </button>
+                                        aria-hidden="true"></i>
+                                </button>
                             @else
                                 <button title="Edit" id="editbtn"
                                     wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
-                                    class="text-info btn btn-sm btn-link"> <i class="fas fa-edit"
-                                        aria-hidden="true"></i> </button>
+                                    class="text-info btn btn-sm btn-link">
+                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                </button>
                                 <button title="Delete" id="deletebtn" wire:click='deleteItem({{ $list->ID }})'
                                     wire:confirm="Are you sure you want to delete this?"
                                     class="text-danger btn btn-sm btn-link"> <i class="fas fa-times"
