@@ -22,16 +22,31 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <input type="text" wire:model.live.debounce.150ms='search'
-                                        class="form-control form-control-sm text-xs mb-1 bg-light"
-                                        placeholder="Search" />
-                                </div>
-                                <div class="col-md-8 text-right">
-                                    <h5 class="m-0">
-                                        <a href="{{ route('maintenanceinventoryitem') }}"> Items </a>
-                                    </h5>
+                             <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <div class="mt-0">
+                                                <label class="text-sm">Search:</label>
+                                                <input type="text" wire:model.live.debounce.150ms='search'
+                                                    class="w-100 form-control form-control-sm" placeholder="Search" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mt-0">
+                                                <label class="text-sm">Location:</label>
+                                                <select name="location" wire:model.live='LOCATION_ID'
+                                                    class="form-control form-control-sm">
+
+                                                    @foreach ($locationList as $item)
+                                                        <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
@@ -40,15 +55,10 @@
                                         <th>CODE</th>
                                         <th>DESCRIPTION</th>
                                         <th>TYPE</th>
-
-                                        <th>GROUP</th>
-                                        <th>CLASS</th>
-                                        <th>SUB</th>
-
-                                        <th>ON HAND</th>
+                                        <th class="text-center">QTY ON-HAND</th>
                                         <th class="text-right">RATE</th>
                                         <th class="text-right">COST</th>
-                                        <th class="text-center">INACTIVE</th>
+
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenanceinventoryitem_create') }}"
                                                 class="text-white btn-sm"> <i class="fas fa-plus"></i></a>
@@ -60,16 +70,12 @@
                                         <tr>
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ $list->DESCRIPTION }}</td>
-                                            <td> {{ $list->TYPE_DESC }} </td>
-                                            <td> {{ $list->GROUP_DESC }}</td>
-                                            <td> {{ $list->CLASS_DESC }}</td>
-                                            <td> {{ $list->SUB_CLASS_DESC }}</td>
-                                            <td class="text-right"> {{ number_format($list->QTY_ON_HAND, 0) }}</td>
+                                            <td> {{ $list->TYPE }} </td>
+                                            <td class="text-center"> {{ number_format($list->QTY_ON_HAND, 0) }}</td>
                                             <td class="text-right">
-                                                {{ $list->UNIT_PRICE ? number_format($list->UNIT_PRICE, 2) : '' }}</td>
+                                                {{ $list->RATE ? number_format($list->RATE, 2) : '' }}</td>
                                             <td class="text-right">
-                                                {{ $list->UNIT_COST ? number_format($list->UNIT_COST, 2) : '' }}</td>
-                                            <td class="text-center"> {{ $list->INACTIVE ? 'Yes' : 'No' }}</td>
+                                                {{ $list->COST ? number_format($list->COST, 2) : '' }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
