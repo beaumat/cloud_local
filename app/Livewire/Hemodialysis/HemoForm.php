@@ -3,11 +3,11 @@
 namespace App\Livewire\Hemodialysis;
 
 use App\Services\ContactServices;
+use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
-use Carbon\Carbon;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
@@ -27,10 +27,7 @@ class HemoForm extends Component
     public string $STATUS_DESCRIPTION;
     public $patientList = [];
     public $locationList = [];
-    private $hemoServices;
-    private $locationServices;
-    private $contactServices;
-    private $userServices;
+   
     public int $CUSTOMER_ID;
     public string $DATE;
     public string $CODE;
@@ -68,21 +65,26 @@ class HemoForm extends Component
 
     // end old
 
-
+    private $hemoServices;
+    private $locationServices;
+    private $contactServices;
+    private $userServices;
     private $uploadServices;
-
+    private $dateServices;
     public function boot(
         HemoServices $hemoServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        UploadServices $uploadServices
+        UploadServices $uploadServices,
+        DateServices $dateServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
         $this->userServices = $userServices;
         $this->uploadServices = $uploadServices;
+        $this->dateServices = $dateServices;
     }
 
     public function reloadData($data)
@@ -129,7 +131,7 @@ class HemoForm extends Component
         }
 
         $this->ID = 0;
-        $this->DATE = Carbon::now()->format('Y-m-d');
+        $this->DATE = $this->dateServices->NowDate();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->CUSTOMER_ID = 0;
         $this->CODE = '';
