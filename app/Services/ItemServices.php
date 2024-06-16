@@ -245,4 +245,40 @@ class ItemServices
             ->orderBy('item.ID', 'desc')
             ->paginate($perPage);
     }
+    
+    public function  getActiveItems($search, int $locationId, int $perPage)
+    {
+        $items = DB::table('item')
+        ->select(
+          [
+            'item.ID',
+            'item.CODE',
+            'item.DESCRIPTION',
+            'item.RATE',
+            'item.COST',
+            't.DESCRIPTION as TYPE'
+          ]
+        )
+        ->selectSub(function ($query) use (&$locationId) {
+          $query->from('item_inventory')
+            ->select('item_inventory.ENDING_QUANTITY')
+            ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
+            ->where('item_inventory.LOCATION_ID', $locationId)
+            ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
+            ->limit(1);
+        }, 'QTY_ON_HAND')
+        ->leftJoin('item_type_map as t', 't.ID', '=', 'item.TYPE')
+        ->where('item.TYPE', '<', 2)
+        ->where('item.INACTIVE', 0)
+        ->when($search, function ($query) use (&$search) {
+            $query->where('item.CODE', 'like', '%' . $search . '%')
+                ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
+                ->orWhere('t.DESCRIPTION', 'like', '%' . $search . '%');
+              
+        })
+        ->orderBy('item.ID', 'desc')
+        ->paginate($perPage);
+  
+      return $items;
+    }
 }

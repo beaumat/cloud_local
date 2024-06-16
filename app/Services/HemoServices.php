@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Contacts;
 use App\Models\Hemodialysis;
 use App\Models\HemodialysisItems;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HemoServices
@@ -14,11 +13,13 @@ class HemoServices
     private $object;
     private $user;
     private $systemSettingServices;
-    public function __construct(ObjectServices $objectService, UserServices $userServices, SystemSettingServices $systemSettingServices)
+    private $dateServices;
+    public function __construct(ObjectServices $objectService, UserServices $userServices, SystemSettingServices $systemSettingServices, DateServices $dateServices)
     {
         $this->object = $objectService;
         $this->user = $userServices;
         $this->systemSettingServices = $systemSettingServices;
+        $this->dateServices = $dateServices;
     }
 
     public function Get(int $ID)
@@ -83,7 +84,7 @@ class HemoServices
             ->select(DB::raw('MIN(DATE) AS first_date, MAX(DATE) AS last_date'))
             ->where('CUSTOMER_ID', $CONTACT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
-            ->where('STATUS_ID', '2')
+            ->where('STATUS_ID', 2)
             ->first();
 
         if ($dates) {
@@ -143,7 +144,7 @@ class HemoServices
 
         Hemodialysis::create([
             'ID' => $ID,
-            'RECORDED_ON' => Carbon::now(),
+            'RECORDED_ON' => $this->dateServices->Now(),
             'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DATE' => $DATE,
             'CUSTOMER_ID' => $CUSTOMER_ID,
@@ -152,7 +153,7 @@ class HemoServices
             'NO_OF_TREATMENT' => $NO_OF_TREATMENT,
             'MACHINE_NO' => $MACHINE_NO,
             'STATUS_ID' => 1,
-            'STATUS_DATE' => Carbon::now(),
+            'STATUS_DATE' =>  $this->dateServices->Now(),
         ]);
 
         return $ID;
@@ -188,7 +189,7 @@ class HemoServices
             ->update([
                 'PRE_WEIGHT' => $PRE_WEIGHT,
                 'PRE_BLOOD_PRESSURE' => $PRE_BLOOD_PRESSURE,
-                'PRE_BLOOD_PRESSURE2' => $PRE_BLOOD_PRESSURE,
+                'PRE_BLOOD_PRESSURE2' => $PRE_BLOOD_PRESSURE2,
                 'PRE_HEART_RATE' => $PRE_HEART_RATE,
                 'PRE_O2_SATURATION' => $PRE_O2_SATURATION,
                 'PRE_TEMPERATURE' => $PRE_TEMPERATURE,
@@ -203,11 +204,11 @@ class HemoServices
 
             ]);
 
-        if ($TIME_START != "" && $TIME_END != "") {
-            $this->statusUpdate($ID, 2);
-        } else {
-            $this->statusUpdate($ID, 1);
-        }
+        // if ($TIME_START != "" && $TIME_END != "") {
+        //     $this->statusUpdate($ID, 2);
+        // } else {
+        //     $this->statusUpdate($ID, 1);
+        // }
     }
 
     public function UpdateFile(int $ID, $FILE_NAME, $FILE_PATH)
@@ -218,18 +219,13 @@ class HemoServices
         ]);
     }
 
-    private function statusUpdate(int $ID, int $STATUS)
+    public function StatusUpdate(int $ID, int $STATUS)
     {
         // Check if already done
-        $STATUS_ID = Hemodialysis::where('ID', $ID)->first()->STATUS_ID;
-
-        if ($STATUS_ID == 1) { // if DRAFT ONLY
-            Hemodialysis::where('ID', $ID)
-                ->update([
-                    'STATUS_ID' => $STATUS,
-                    'STATUS_DATE' => Carbon::now(),
-                ]);
-        }
+        Hemodialysis::where('ID', $ID)->update([
+            'STATUS_ID' => $STATUS,
+            'STATUS_DATE' =>  $this->dateServices->Now(),
+        ]);
     }
     public function Delete(int $id)
     {
@@ -467,7 +463,6 @@ class HemoServices
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
                 'u.SYMBOL'
-
             ])
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'hemodialysis_items.UNIT_ID')
@@ -477,7 +472,10 @@ class HemoServices
         return $result;
     }
 
-
+    public function CountItems(int $HEMO_ID): int
+    {
+        return (int) HemodialysisItems::where('HEMO_ID', $HEMO_ID)->count();
+    }
     public function ItemInventory(int $ID)
     {
         $result = HemodialysisItems::query()

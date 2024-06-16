@@ -3,31 +3,41 @@
 namespace App\Livewire\List;
 
 use App\Services\DateServices;
+use App\Services\ItemServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('Active Item List')]
 class ItemActiveList extends Component
 {
+
+  use WithPagination;
+  protected $paginationTheme = 'bootstrap';
+  public $search = '';
+  public int $perPage = 15;
+
   private $userServices;
   private $dateServices;
   private $locationServices;
   public int $LOCATION_ID;
   public $locationList = [];
   public $DATE;
-
-
+  private $itemServices;
   public function boot(
     UserServices $userServices,
     DateServices $dateServices,
-    LocationServices $locationServices
+    LocationServices $locationServices,
+    ItemServices $itemServices
+
   ) {
     $this->userServices = $userServices;
     $this->dateServices = $dateServices;
     $this->locationServices = $locationServices;
+    $this->itemServices = $itemServices;
   }
   public function mount()
   {
@@ -36,37 +46,13 @@ class ItemActiveList extends Component
     $this->locationList = $this->locationServices->getList();
     $this->LOCATION_ID = $this->userServices->getLocationDefault();
   }
-  public function getItems($locationId)
+  public function getItems()
   {
-    $items = DB::table('item')
-      ->select(
-        [
-          'item.ID',
-          'item.CODE',
-          'item.DESCRIPTION',
-          'item.RATE',
-          'item.COST',
-          't.DESCRIPTION as TYPE'
-        ]
-      )
-      ->selectSub(function ($query) use (&$locationId) {
-        $query->from('item_inventory')
-          ->select('item_inventory.ENDING_QUANTITY')
-          ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
-          ->where('item_inventory.LOCATION_ID', $locationId)
-          ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
-          ->limit(1);
-      }, 'QTY_ON_HAND')
-      ->leftJoin('item_type_map as t', 't.ID', '=', 'item.TYPE')
-      ->where('item.TYPE', '<', 2)
-      ->where('item.INACTIVE', 0)
-      ->get();
-
-    return $items;
+    return $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->perPage);
   }
   public function render()
   {
-    $dataList = $this->getItems($this->LOCATION_ID);
+    $dataList = $this->getItems();
     return view('livewire.list.item-active-list', ['dataList' => $dataList]);
   }
 }

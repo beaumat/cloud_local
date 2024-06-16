@@ -19,7 +19,7 @@ class InventoryTreatment extends Component
     public int $STATUS;
     #[Reactive]
     public int $LOCATION_ID;
-    public int $openStatus = 0;
+    public int $openStatus = 1; // draft default
     public bool $saveSuccess = false;
     public $dataList = [];
     private $hemoServices;

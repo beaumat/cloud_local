@@ -4,10 +4,13 @@ namespace App\Livewire\Hemodialysis;
 
 use App\Services\ContactServices;
 use App\Services\DateServices;
+use App\Services\DocumentTypeServices;
 use App\Services\HemoServices;
+use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
@@ -24,10 +27,11 @@ class HemoForm extends Component
     public int $ID;
     public bool $Modify;
     public int $STATUS;
+    public int $openStatus = 1; // draft default
     public string $STATUS_DESCRIPTION;
     public $patientList = [];
     public $locationList = [];
-   
+
     public int $CUSTOMER_ID;
     public string $DATE;
     public string $CODE;
@@ -68,13 +72,18 @@ class HemoForm extends Component
     private $userServices;
     private $uploadServices;
     private $dateServices;
+
+    private $itemInventoryServices;
+    private $documentTypeServices;
     public function boot(
         HemoServices $hemoServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
         UserServices $userServices,
         UploadServices $uploadServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        ItemInventoryServices $itemInventoryServices,
+        DocumentTypeServices $documentTypeServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
@@ -82,6 +91,8 @@ class HemoForm extends Component
         $this->userServices = $userServices;
         $this->uploadServices = $uploadServices;
         $this->dateServices = $dateServices;
+        $this->itemInventoryServices = $itemInventoryServices;
+        $this->documentTypeServices = $documentTypeServices;
     }
 
     public function reloadData($data)
@@ -108,8 +119,13 @@ class HemoForm extends Component
         $this->TIME_END = $data->TIME_END ?? "";
         $this->FILE_NAME = $data->FILE_NAME ?? "";
         $this->FILE_PATH = $data->FILE_PATH ?? "";
-        $this->STATUS = $data->STATUS ?? 0;
+        $this->STATUS = $data->STATUS_ID ?? 0;
         $this->getPreviousTreatment();
+    }
+    public string $tab = "info";
+    public function SelectTab(string $tab)
+    {
+        $this->tab = $tab;
     }
     public function mount($id = null)
     {
@@ -153,9 +169,7 @@ class HemoForm extends Component
     }
     public function getPreviousTreatment()
     {
-
         $data = $this->hemoServices->GetLastTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
-
         if ($data) {
             $this->OLD_PRE_WEIGHT = $data->PRE_WEIGHT ?? "";
             $this->OLD_PRE_BLOOD_PRESSURE = $data->PRE_BLOOD_PRESSURE ?? "";
@@ -256,14 +270,15 @@ class HemoForm extends Component
                 $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
                 return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
-                $this->hemoServices->PreUpdate($this->ID, $this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
+                // $this->hemoServices->PreUpdate($this->ID, $this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
+
+                $this->update_all();
+                $this->Modify = false;
             }
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-
-        $this->Modify = false;
     }
     public function updatedPdf()
     {
@@ -271,7 +286,50 @@ class HemoForm extends Component
             'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
         ]);
     }
+    private function ItemInventory(): bool
+    {
+        try {
+            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Hemodialysis');
 
+            $data = $this->hemoServices->ItemInventory($this->ID);
+            if ($data) {
+                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+            }
+            return true;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
+    public function getPosted()
+    {
+
+        try {
+
+            $count = (int) $this->hemoServices->CountItems($this->ID);
+
+            if ($count == 0) {
+                session()->flash('error', 'Item not found.');
+                return;
+            }
+
+            DB::beginTransaction();
+            if (!$this->ItemInventory()) {
+                DB::rollBack();
+                return;
+            }
+            $this->hemoServices->StatusUpdate($this->ID, 2);
+            DB::commit();
+
+            return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully posted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $message = "Caught a Throwable: " . $th->getMessage();
+
+            session()->flash("error", $message);
+        }
+    }
     public function render()
     {
         return view('livewire.hemodialysis.hemo-form');

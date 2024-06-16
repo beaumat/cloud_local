@@ -1,17 +1,7 @@
 <section class="content">
     <!-- Default box -->
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title text-sm"> Inventory</h3>
-            <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                    <i class="fas fa-minus"></i>
-                </button>
-                {{-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                    <i class="fas fa-times"></i>
-                </button> --}}
-            </div>
-        </div>
+
         <div class="card-body p-2">
             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
             <div class="row" @if ($HEMO_ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
@@ -24,7 +14,9 @@
                                 <th class="col-1 text-center">Quantity</th>
                                 <th class="col-1">Unit</th>
                                 <th class="col-1 text-center">New</th>
-                                <th class="col-2 text-center">Action</th>
+                                @if ($STATUS == $openStatus)
+                                    <th class="col-2 text-center">Action</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="text-xs">
@@ -69,31 +61,33 @@
                                         @endif
 
                                     </td>
-                                    <td class="text-center">
-                                        @if ($lineId == $list->ID)
-                                            <button title="Update" id="updatebtn" wire:click="updateItem()"
-                                                class="btn btn-sm  btn-success w-25">
-                                                <i class="fas fa-check text-white" aria-hidden="true"></i>
-                                            </button>
-                                            <button title="Cancel" id="cancelbtn" href="#"
-                                                wire:click="cancelItem()" class="btn btn-sm btn-warning w-25">
-                                                <i class="fas fa-ban text-white" aria-hidden="true"></i>
-                                            </button>
-                                        @else
-                                            <button title="Edit" id="editbtn"
-                                                wire:click='editItem({{ $list->ID }})'
-                                                class="btn btn-sm btn-info w-25">
-                                                <i class="fas fa-edit text-white" aria-hidden="true"></i>
-                                            </button>
-                                            <button title="Delete" id="deletebtn"
-                                                wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }})'
-                                                wire:confirm="Are you sure you want to delete this?"
-                                                class="btn btn-danger btn-sm w-25">
-                                                <i class="fas fa-times text-white" aria-hidden="true"></i>
-                                            </button>
-                                        @endif
+                                    @if ($STATUS == $openStatus)
+                                        <td class="text-center">
+                                            @if ($lineId == $list->ID)
+                                                <button title="Update" id="updatebtn" wire:click="updateItem()"
+                                                    class="btn btn-sm  btn-success w-25">
+                                                    <i class="fas fa-check text-white" aria-hidden="true"></i>
+                                                </button>
+                                                <button title="Cancel" id="cancelbtn" href="#"
+                                                    wire:click="cancelItem()" class="btn btn-sm btn-warning w-25">
+                                                    <i class="fas fa-ban text-white" aria-hidden="true"></i>
+                                                </button>
+                                            @else
+                                                <button title="Edit" id="editbtn"
+                                                    wire:click='editItem({{ $list->ID }})'
+                                                    class="btn btn-sm btn-info w-25">
+                                                    <i class="fas fa-edit text-white" aria-hidden="true"></i>
+                                                </button>
+                                                <button title="Delete" id="deletebtn"
+                                                    wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }})'
+                                                    wire:confirm="Are you sure you want to delete this?"
+                                                    class="btn btn-danger btn-sm w-25">
+                                                    <i class="fas fa-times text-white" aria-hidden="true"></i>
+                                                </button>
+                                            @endif
 
-                                    </td>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                             @if ($STATUS == $openStatus)

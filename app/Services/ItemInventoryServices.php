@@ -50,18 +50,7 @@ class ItemInventoryServices
         ]);
     }
 
-    private function Update(
-        int $ITEM_ID,
-        int $LOCATION_ID,
-        int $SOURCE_REF_TYPE,
-        int $SOURCE_REF_ID,
-        string $SOURCE_REF_DATE,
-        float $QUANTITY,
-        float $COST = 0,
-        float $ENDING_QUANTITY = 0,
-        float $ENDING_UNIT_COST = 0,
-        float $ENDING_COST = 0
-    ) {
+    private function Update( int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $QUANTITY, float $COST = 0, float $ENDING_QUANTITY = 0, float $ENDING_UNIT_COST = 0, float $ENDING_COST = 0 ) {
 
         ItemInventory::where('ITEM_ID', $ITEM_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
@@ -225,7 +214,6 @@ class ItemInventoryServices
             if (!$isExists) {
 
                 $PREV = $this->getPreviousItemInventory($LOCATION_ID, $ITEM_ID, $BATCH_ID, $SOURCE_REF_DATE);
-
 
                 $PREVIOUS_ID = (int) $PREV['ID'];
                 $NEXT_ID = $PREV['NEXT_ID'];
