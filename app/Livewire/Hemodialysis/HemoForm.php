@@ -83,7 +83,8 @@ class HemoForm extends Component
         UploadServices $uploadServices,
         DateServices $dateServices,
         ItemInventoryServices $itemInventoryServices,
-        DocumentTypeServices $documentTypeServices
+        DocumentTypeServices $documentTypeServices,
+        
     ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
@@ -166,6 +167,7 @@ class HemoForm extends Component
         $this->FILE_NAME = '';
         $this->FILE_PATH = '';
         $this->STATUS = 0;
+        $this->STATUS_DESCRIPTION = '';
     }
     public function getPreviousTreatment()
     {
