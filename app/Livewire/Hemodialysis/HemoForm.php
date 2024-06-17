@@ -294,6 +294,7 @@ class HemoForm extends Component
             $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Hemodialysis');
 
             $data = $this->hemoServices->ItemInventory($this->ID);
+        
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
             }

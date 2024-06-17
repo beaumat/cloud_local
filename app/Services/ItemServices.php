@@ -206,7 +206,6 @@ class ItemServices
     }
     public function Search($search, int $perPage)
     {
-
         return Items::query()
             ->select([
                 'item.ID',
@@ -265,6 +264,7 @@ class ItemServices
             ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
             ->where('item_inventory.LOCATION_ID', $locationId)
             ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
+            ->orderBy('item_inventory.ID', 'DESC')
             ->limit(1);
         }, 'QTY_ON_HAND')
         ->leftJoin('item_type_map as t', 't.ID', '=', 'item.TYPE')

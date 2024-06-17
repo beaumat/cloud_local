@@ -23,7 +23,7 @@
                             @foreach ($dataList as $list)
                                 <tr>
                                     <td>{{ $list->CODE }}</td>
-                                    <td>{{ $list->DESCRIPTION }}</td>
+                                <td>{{ $list->DESCRIPTION }}</td>
 
 
                                     <td class="text-center">

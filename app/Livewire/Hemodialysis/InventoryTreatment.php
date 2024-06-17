@@ -26,12 +26,8 @@ class InventoryTreatment extends Component
     private $itemServices;
     private $unitOfMeasureServices;
     private $itemTreatmentServices;
-    public function boot(
-        HemoServices $hemoServices,
-        ItemServices $itemServices,
-        UnitOfMeasureServices $unitOfMeasureServices,
-        ItemTreatmentServices $itemTreatmentServices
-    ) {
+    public function boot(HemoServices $hemoServices, ItemServices $itemServices, UnitOfMeasureServices $unitOfMeasureServices, ItemTreatmentServices $itemTreatmentServices)
+    {
         $this->hemoServices = $hemoServices;
         $this->itemServices = $itemServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
@@ -65,11 +61,9 @@ class InventoryTreatment extends Component
         $this->ITEM_DESCRIPTION = '';
         $this->unitList = [];
         $this->IS_NEW = true;
-
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
-
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
@@ -193,7 +187,7 @@ class InventoryTreatment extends Component
     {
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
         $this->dataList = $this->hemoServices->ItemView($this->HEMO_ID);
-        
+
         return view('livewire.hemodialysis.inventory-treatment');
     }
 }

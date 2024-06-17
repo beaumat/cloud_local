@@ -175,7 +175,7 @@ class ItemInventoryServices
 
     private function InvItemExists(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_ID, int $SOURCE_REF_TYPE, string $SOURCE_REF_DATE): bool
     {
-        return ItemInventory::query()
+       return (bool) ItemInventory::query()
             ->where('ITEM_ID', $ITEM_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('SOURCE_REF_ID', $SOURCE_REF_ID)

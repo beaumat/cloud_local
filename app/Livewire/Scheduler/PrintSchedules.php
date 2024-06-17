@@ -39,7 +39,7 @@ class PrintSchedules extends Component
     }
     public function updatedweeklyId()
     {
-        $this->reloadWeekly();
+        // $this->reloadWeekly();
     }
 
 

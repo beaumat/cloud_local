@@ -107,7 +107,7 @@
                                         @if ($ID > 0 && $STATUS > 1)
                                             @can('patient.treatment.create')
                                                 <a id="new" title="Create"
-                                                    href="{{ route('patientsservice_charges_create') }}"
+                                                    href="{{ route('patientshemo_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endcan
                                         @endif
