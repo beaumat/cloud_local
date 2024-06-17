@@ -55,10 +55,10 @@
                                         <th>CODE</th>
                                         <th>DESCRIPTION</th>
                                         <th>TYPE</th>
+                                        <th>GROUP</th>
+                                        <th>CLASS</th>
+                                        <th>SUB-CLASS</th>
                                         <th class="text-center">QTY ON-HAND</th>
-                                        <th class="text-right">RATE</th>
-                                        <th class="text-right">COST</th>
-
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenanceinventoryitem_create') }}"
                                                 class="text-white btn-sm"> <i class="fas fa-plus"></i></a>
@@ -71,11 +71,12 @@
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ $list->DESCRIPTION }}</td>
                                             <td> {{ $list->TYPE }} </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                             <td class="text-center"> {{ number_format($list->QTY_ON_HAND, 0) }}</td>
-                                            <td class="text-right">
-                                                {{ $list->RATE ? number_format($list->RATE, 2) : '' }}</td>
-                                            <td class="text-right">
-                                                {{ $list->COST ? number_format($list->COST, 2) : '' }}</td>
+
+
                                             <td class="text-center">
                                                 <a href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
