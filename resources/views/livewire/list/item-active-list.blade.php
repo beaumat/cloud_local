@@ -71,6 +71,8 @@
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ $list->DESCRIPTION }}</td>
                                             <td> {{ $list->TYPE }} </td>
+
+                                            
                                             <td class="text-center"> {{ number_format($list->QTY_ON_HAND, 0) }}</td>
                                             <td class="text-right">
                                                 {{ $list->RATE ? number_format($list->RATE, 2) : '' }}</td>
