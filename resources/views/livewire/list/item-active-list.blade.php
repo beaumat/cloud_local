@@ -28,7 +28,7 @@
                                         <div class="col-md-9">
                                             <div class="mt-0">
                                                 <label class="text-sm">Search:</label>
-                                                <input type="text" wire:model.live.debounce.150ms='search'
+                                                <input type="text" wire:model.live.debounce.120ms='search'
                                                     class="w-100 form-control form-control-sm" placeholder="Search" />
                                             </div>
                                         </div>
@@ -59,10 +59,7 @@
                                         <th>CLASS</th>
                                         <th>SUB-CLASS</th>
                                         <th class="text-center">QTY ON-HAND</th>
-                                        <th class="text-center col-1 bg-success">
-                                            <a href="{{ route('maintenanceinventoryitem_create') }}"
-                                                class="text-white btn-sm"> <i class="fas fa-plus"></i></a>
-                                        </th>
+
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -71,26 +68,15 @@
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ $list->DESCRIPTION }}</td>
                                             <td> {{ $list->TYPE }} </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-
-                                            
-                                            <td class="text-center"> {{ number_format($list->QTY_ON_HAND, 0) }}</td>
-
-
+                                            <td> {{ $list->GROUP_NAME }}</td>
+                                            <td> {{ $list->CLASS_NAME }}</td>
+                                            <td> {{ $list->SUB_NAME }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                                </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+                                                <a href="#"
+                                                    wire:click='OnClick({{ $list->ID }})'>{{ number_format($list->QTY_ON_HAND ?? 0) }}</a>
 
                                             </td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -98,9 +84,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-md-6">
-                    {{ $dataList->links() }}
-                </div>
+                @livewire('List.InventoryDetailsModal')
             </div>
         </div>
     </section>

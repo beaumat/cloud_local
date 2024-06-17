@@ -212,7 +212,7 @@ class ItemServices
                 'item.CODE',
                 'item.DESCRIPTION',
                 'item.TAXABLE',
-                DB::raw("(CASE WHEN item.TYPE = 6 THEN (SELECT sum(c.RATE * c.QUANTITY) FROM item_components as c WHERE c.ITEM_ID = item.ID) ELSE item.RATE END) as RATE"),
+                DB::raw('(CASE WHEN item.TYPE = 6 THEN (SELECT sum(c.RATE * c.QUANTITY) FROM item_components as c WHERE c.ITEM_ID = item.ID) ELSE item.RATE END) as RATE'),
                 'item.COST',
                 'item.INACTIVE',
                 'item.COST',
@@ -244,42 +244,46 @@ class ItemServices
             ->orderBy('item.ID', 'desc')
             ->paginate($perPage);
     }
-    
-    public function  getActiveItems($search, int $locationId, int $perPage)
+
+    public function getActiveItems($search, int $locationId)
     {
         $items = DB::table('item')
-        ->select(
-          [
-            'item.ID',
-            'item.CODE',
-            'item.DESCRIPTION',
-            'item.RATE',
-            'item.COST',
-            't.DESCRIPTION as TYPE'
-          ]
-        )
-        ->selectSub(function ($query) use (&$locationId) {
-          $query->from('item_inventory')
-            ->select('item_inventory.ENDING_QUANTITY')
-            ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
-            ->where('item_inventory.LOCATION_ID', $locationId)
-            ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
-            ->orderBy('item_inventory.ID', 'DESC')
-            ->limit(1);
-        }, 'QTY_ON_HAND')
-        ->leftJoin('item_type_map as t', 't.ID', '=', 'item.TYPE')
-        ->leftJoin('item_group as g','g.ID','=','item.GROUP_ID')
-        ->where('item.TYPE', '<', 2)
-        ->where('item.INACTIVE', 0)
-        ->when($search, function ($query) use (&$search) {
-            $query->where('item.CODE', 'like', '%' . $search . '%')
-                ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
-                ->orWhere('t.DESCRIPTION', 'like', '%' . $search . '%');
-              
-        })
-        ->orderBy('item.ID', 'desc')
-        ->paginate($perPage);
-  
-      return $items;
+            ->select(
+                [
+                    'item.ID',
+                    'item.CODE',
+                    'item.DESCRIPTION',
+                    'item.RATE',
+                    'item.COST',
+                    't.DESCRIPTION as TYPE',
+                    'g.DESCRIPTION as GROUP_NAME',
+                    'c.DESCRIPTION as CLASS_NAME',
+                    's.DESCRIPTION as SUB_NAME'
+                ]
+            )
+            ->selectSub(function ($query) use (&$locationId) {
+                $query->from('item_inventory')
+                    ->select('item_inventory.ENDING_QUANTITY')
+                    ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
+                    ->where('item_inventory.LOCATION_ID', $locationId)
+                    ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
+                    ->orderBy('item_inventory.ID', 'DESC')
+                    ->limit(1);
+            }, 'QTY_ON_HAND')
+            ->leftJoin('item_type_map as t', 't.ID', '=', 'item.TYPE')
+            ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')
+            ->leftJoin('item_sub_class as s', 's.ID', '=', 'item.SUB_CLASS_ID')
+            ->leftJoin('item_class as c', 'c.ID', '=', 's.CLASS_ID')
+            ->where('item.TYPE', '<', 2)
+            ->where('item.INACTIVE', 0)
+            ->when($search, function ($query) use (&$search) {
+                $query->where('item.CODE', 'like', '%' . $search . '%')
+                    ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
+                    ->orWhere('t.DESCRIPTION', 'like', '%' . $search . '%');
+            })
+            ->orderBy('item.ID', 'desc')
+            ->get();
+
+        return $items;
     }
 }

@@ -6,20 +6,18 @@ use App\Services\DateServices;
 use App\Services\ItemServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
-use Illuminate\Support\Facades\DB;
+
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Livewire\WithPagination;
+
 
 #[Title('Active Item List')]
 class ItemActiveList extends Component
 {
 
-  use WithPagination;
-  protected $paginationTheme = 'bootstrap';
-  public $search = '';
-  public int $perPage = 15;
 
+
+  public $search = '';
   private $userServices;
   private $dateServices;
   private $locationServices;
@@ -27,6 +25,14 @@ class ItemActiveList extends Component
   public $locationList = [];
   public $DATE;
   private $itemServices;
+  public $dataList = [];
+
+  public function OnClick(int $ID)
+  {
+
+    $this->dispatch('open-modal', result: ['ITEM_ID'=> $ID,'LOCATION_ID' => $this->LOCATION_ID, 'showModal' => true]);
+    
+  }
   public function boot(
     UserServices $userServices,
     DateServices $dateServices,
@@ -46,13 +52,10 @@ class ItemActiveList extends Component
     $this->locationList = $this->locationServices->getList();
     $this->LOCATION_ID = $this->userServices->getLocationDefault();
   }
-  public function getItems()
-  {
-    return $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->perPage);
-  }
+
   public function render()
   {
-    $dataList = $this->getItems();
-    return view('livewire.list.item-active-list', ['dataList' => $dataList]);
+    $this->dataList = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID);
+    return view('livewire.list.item-active-list');
   }
 }

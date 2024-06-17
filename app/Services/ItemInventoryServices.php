@@ -50,7 +50,8 @@ class ItemInventoryServices
         ]);
     }
 
-    private function Update( int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $QUANTITY, float $COST = 0, float $ENDING_QUANTITY = 0, float $ENDING_UNIT_COST = 0, float $ENDING_COST = 0 ) {
+    private function Update(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $QUANTITY, float $COST = 0, float $ENDING_QUANTITY = 0, float $ENDING_UNIT_COST = 0, float $ENDING_COST = 0)
+    {
 
         ItemInventory::where('ITEM_ID', $ITEM_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
@@ -175,7 +176,7 @@ class ItemInventoryServices
 
     private function InvItemExists(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_ID, int $SOURCE_REF_TYPE, string $SOURCE_REF_DATE): bool
     {
-       return (bool) ItemInventory::query()
+        return (bool) ItemInventory::query()
             ->where('ITEM_ID', $ITEM_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('SOURCE_REF_ID', $SOURCE_REF_ID)
@@ -299,5 +300,26 @@ class ItemInventoryServices
                 );
             }
         }
+    }
+
+    public function getDetails(int $ITEM_ID, int $LOCATION_ID)
+    {
+        $result = ItemInventory::query()
+            ->select([
+                'item_inventory.ID',
+                't.DESCRIPTION as TYPE',
+                'item_inventory.SOURCE_REF_DATE',
+                'item_inventory.QUANTITY',
+                'item_inventory.ENDING_QUANTITY'
+            ])
+            ->join('document_type_map as t', 't.ID', '=', 'item_inventory.SOURCE_REF_TYPE')
+            ->where('ITEM_ID', $ITEM_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->orderBy('item_inventory.SOURCE_REF_DATE', 'asc')
+            ->orderBy('item_inventory.ID', 'asc')
+            ->get();
+
+
+        return $result;
     }
 }
