@@ -268,6 +268,7 @@ class ItemServices
             ->limit(1);
         }, 'QTY_ON_HAND')
         ->leftJoin('item_type_map as t', 't.ID', '=', 'item.TYPE')
+        ->leftJoin('item_group as g','g.ID','=','item.GROUP_ID')
         ->where('item.TYPE', '<', 2)
         ->where('item.INACTIVE', 0)
         ->when($search, function ($query) use (&$search) {
