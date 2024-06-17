@@ -30,11 +30,13 @@
 
                         <ul class="nav nav-treeview">
                             @can('patient.schedule.view')
-                                <li class="nav-item"> <a href="{{ route('patientsschedules') }}"
+                                <li class="nav-item">
+                                    <a href="{{ route('patientsschedules') }}"
                                         class="nav-link {{ request()->is('patients/schedules*') ? 'active' : '' }}"> <i
                                             class="fas fa-calendar nav-icon"></i>
                                         <p>Schedules</p>
-                                    </a> </li>
+                                    </a>
+                                </li>
                             @endcan
                             @can('patient.service-charges.view')
                                 <li class="nav-item"> <a href="{{ route('patientsservice_charges') }}"
@@ -292,7 +294,7 @@
                 @endif
 
 
-
+                {{-- 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-line-chart"></i>
@@ -561,7 +563,8 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
+
                 <li class="nav-item {{ request()->is('maintenance*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('maintenance*') ? 'active ' : '' }}">
                         <i class="nav-icon fa fa-cog"></i>
@@ -570,54 +573,80 @@
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+
+
                     <ul class="nav nav-treeview">
-                        <li class="nav-item {{ request()->is('maintenance/contact*') ? 'menu-open' : '' }}">
-                            <a href="#"
-                                class="nav-link {{ request()->is('maintenance/contact*') ? 'active' : '' }}">
-                                <i class="fa fa-address-book nav-icon"></i>
-                                <p>
-                                    Contacts
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('maintenancecontactcustomer') }}"
-                                        class="nav-link {{ request()->is('maintenance/contact/customer*') ? 'active' : '' }}">
-                                        <i class="fa fa-file nav-icon"></i>
-                                        <p>Customer</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('maintenancecontactvendor') }}"
-                                        class="nav-link {{ request()->is('maintenance/contact/vendor*') ? 'active' : '' }}">
-                                        <i class="fa fa-file nav-icon"></i>
-                                        <p>Vendor</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('maintenancecontactemployees') }}"
-                                        class="nav-link {{ request()->is('maintenance/contact/employees*') ? 'active' : '' }}">
-                                        <i class="fa fa-file nav-icon"></i>
-                                        <p>Employees</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('maintenancecontactpatients') }}"
-                                        class="nav-link {{ request()->is('maintenance/contact/patients*') ? 'active' : '' }}">
-                                        <i class="fa fa-file nav-icon"></i>
-                                        <p>Patients</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('maintenancecontactdoctors') }}"
-                                        class="nav-link {{ request()->is('maintenance/contact/doctors*') ? 'active' : '' }}">
-                                        <i class="fa fa-file nav-icon"></i>
-                                        <p>Doctors</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        @if (Auth::user()->can('contact.customer.view') ||
+                                Auth::user()->can('contact.vendor.view') ||
+                                Auth::user()->can('contact.employee.view') ||
+                                Auth::user()->can('contact.patient.view') ||
+                                Auth::user()->can('contact.doctor.view'))
+                            <li class="nav-item {{ request()->is('maintenance/contact*') ? 'menu-open' : '' }}">
+                                <a href="#"
+                                    class="nav-link {{ request()->is('maintenance/contact*') ? 'active' : '' }}">
+                                    <i class="fa fa-address-book nav-icon"></i>
+                                    <p>
+                                        Contacts
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    @can('contact.customer.view')
+                                        <li class="nav-item">
+                                            <a href="{{ route('maintenancecontactcustomer') }}"
+                                                class="nav-link {{ request()->is('maintenance/contact/customer*') ? 'active' : '' }}">
+                                                <i class="fa fa-file nav-icon"></i>
+                                                <p>Customer</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+
+                                    @can('contact.vendor.view')
+                                        <li class="nav-item">
+                                            <a href="{{ route('maintenancecontactvendor') }}"
+                                                class="nav-link {{ request()->is('maintenance/contact/vendor*') ? 'active' : '' }}">
+                                                <i class="fa fa-file nav-icon"></i>
+                                                <p>Vendor</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+
+                                    @can('contact.employee.view')
+                                        <li class="nav-item">
+                                            <a href="{{ route('maintenancecontactemployees') }}"
+                                                class="nav-link {{ request()->is('maintenance/contact/employees*') ? 'active' : '' }}">
+                                                <i class="fa fa-file nav-icon"></i>
+                                                <p>Employees</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+
+                                    @can('contact.patient.view')
+                                        <li class="nav-item">
+                                            <a href="{{ route('maintenancecontactpatients') }}"
+                                                class="nav-link {{ request()->is('maintenance/contact/patients*') ? 'active' : '' }}">
+                                                <i class="fa fa-file nav-icon"></i>
+                                                <p>Patients</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+
+                                    @can('contact.doctor.view')
+                                        <li class="nav-item">
+                                            <a href="{{ route('maintenancecontactdoctors') }}"
+                                                class="nav-link {{ request()->is('maintenance/contact/doctors*') ? 'active' : '' }}">
+                                                <i class="fa fa-file nav-icon"></i>
+                                                <p>Doctors</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+
+
+
+                                </ul>
+                            </li>
+                        @endif
+
                         <li class="nav-item {{ request()->is('maintenance/financial*') ? 'menu-open' : '' }}">
                             <a href="#"
                                 class="nav-link {{ request()->is('maintenance/financial*') ? 'active' : '' }}">
@@ -822,7 +851,6 @@
                                         <p>Roles & Permission</p>
                                     </a>
                                 </li>
-
                                 <li class="nav-item">
                                     <a href="{{ route('maintenancesettingslocation') }}"
                                         class="nav-link {{ request()->is('maintenance/settings/location*') ? 'active' : '' }}">
@@ -830,7 +858,6 @@
                                         <p>Location</p>
                                     </a>
                                 </li>
-
                                 <li class="nav-item">
                                     <a href="{{ route('maintenancesettingslocation_group') }}"
                                         class="nav-link {{ request()->is('maintenance/settings/location-group*') ? 'active' : '' }}">
@@ -838,7 +865,6 @@
                                         <p>Location Group</p>
                                     </a>
                                 </li>
-
                                 <li class="nav-item">
                                     <a href="{{ route('maintenancesettingsoption') }}"
                                         class="nav-link {{ request()->is('maintenance/settings/option*') ? 'active' : '' }}">
@@ -846,12 +872,10 @@
                                         <p>Options</p>
                                     </a>
                                 </li>
-
                             </ul>
                         </li>
                     </ul>
                 </li>
-
             </ul>
         </nav>
 

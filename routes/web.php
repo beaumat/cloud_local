@@ -271,33 +271,34 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('/maintenance')->name('maintenance')->group(function () {
         Route::prefix('/contact')->name('contact')->group(function () {
+
             Route::prefix('/customer')->group(function () {
-                Route::get('/', CustomerList::class)->name('customer');
-                Route::get('/create', CustomerForm::class)->name('customer_create');
-                Route::get('/{id}/edit', CustomerForm::class)->name('customer_edit');
+                Route::get('/', CustomerList::class)->name('customer')->middleware(['permission:contact.customer.view']);
+                Route::get('/create', CustomerForm::class)->name('customer_create')->middleware(['permission:contact.customer.create']);
+                Route::get('/{id}/edit', CustomerForm::class)->name('customer_edit')->middleware(['permission:contact.customer.view']);
             });
             Route::prefix('/vendor')->group(function () {
-                Route::get('/', VendorList::class)->name('vendor');
-                Route::get('/create', VendorForm::class)->name('vendor_create');
-                Route::get('/{id}/edit', VendorForm::class)->name('vendor_edit');
+                Route::get('/', VendorList::class)->name('vendor')->middleware(['permission:contact.vendor.view']);
+                Route::get('/create', VendorForm::class)->name('vendor_create')->middleware(['permission:contact.vendor.create']);
+                Route::get('/{id}/edit', VendorForm::class)->name('vendor_edit')->middleware(['permission:contact.customer.view']);
             });
 
             Route::prefix('/employees')->group(function () {
-                Route::get('/', EmployeeList::class)->name('employees');
-                Route::get('/create', EmployeeForm::class)->name('employees_create');
-                Route::get('/{id}/edit', EmployeeForm::class)->name('employees_edit');
+                Route::get('/', EmployeeList::class)->name('employees')->middleware(['permission:contact.employee.view']);
+                Route::get('/create', EmployeeForm::class)->name('employees_create')->middleware(['permission:contact.employee.create']);
+                Route::get('/{id}/edit', EmployeeForm::class)->name('employees_edit')->middleware(['permission:contact.employee.view']);
             });
 
             Route::prefix('/patients')->group(function () {
-                Route::get('/', PatientList::class)->name('patients');
-                Route::get('/create', PatientForm::class)->name('patients_create');
-                Route::get('/{id}/edit', PatientForm::class)->name('patients_edit');
+                Route::get('/', PatientList::class)->name('patients')->middleware(['permission:contact.patient.view']);
+                Route::get('/create', PatientForm::class)->name('patients_create')->middleware(['permission:contact.patient.create']);
+                Route::get('/{id}/edit', PatientForm::class)->name('patients_edit')->middleware(['permission:contact.patient.view']);
             });
 
             Route::prefix('/doctors')->group(function () {
-                Route::get('/', DoctorList::class)->name('doctors');
-                Route::get('/create', DoctorForm::class)->name('doctors_create');
-                Route::get('/{id}/edit', DoctorForm::class)->name('doctors_edit');
+                Route::get('/', DoctorList::class)->name('doctors')->middleware(['permission:contact.doctor.view']);
+                Route::get('/create', DoctorForm::class)->name('doctors_create')->middleware(['permission:contact.doctor.create']);
+                Route::get('/{id}/edit', DoctorForm::class)->name('doctors_edit')->middleware(['permission:contact.doctor.view']);
             });
         });
 

@@ -7,8 +7,7 @@
         <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
             <div class="modal-content text-left">
                 <div class="modal-header">Inventory Item Details</div>
-                <div class="modal-body">
-               
+                <div class="modal-body"> 
                 </div>
                 <div class="modal-footer">
                     {{-- <button type="button" wire:click='create()' class="btn btn-success btn-sm">Create</button> --}}

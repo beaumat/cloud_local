@@ -7,18 +7,36 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
         </li>
-        <li class="nav-item dropdown">
-            <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                class="nav-link dropdown-toggle">Contacts</a>
-            <ul aria-labelledby="dropdownSubMenu2" class="border-0 shadow dropdown-menu">
-                <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a></li>
-                <li><a href="{{ route('maintenancecontactdoctors') }}" class="dropdown-item"> Doctors</a></li>
-                <div class="dropdown-divider"></div>
-                <li><a href="{{ route('maintenancecontactcustomer') }}" class="dropdown-item">Customers</a></li>
-                <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Vendors</a></li>
-                <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
-            </ul>
-        </li>
+
+        @if (Auth::user()->can('contact.customer.view') ||
+                Auth::user()->can('contact.vendor.view') ||
+                Auth::user()->can('contact.employee.view') ||
+                Auth::user()->can('contact.patient.view') ||
+                Auth::user()->can('contact.doctor.view'))
+            <li class="nav-item dropdown">
+                <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" class="nav-link dropdown-toggle">Contacts</a>
+                <ul aria-labelledby="dropdownSubMenu2" class="border-0 shadow dropdown-menu">
+                    @can('contact.patient.view')
+                        <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a></li>
+                    @endcan
+                    @can('contact.doctor.view')
+                        <li><a href="{{ route('maintenancecontactdoctors') }}" class="dropdown-item"> Doctors</a></li>
+                    @endcan
+                    @can('contact.customer.view')
+                        <li><a href="{{ route('maintenancecontactcustomer') }}" class="dropdown-item">Customers</a></li>
+                    @endcan
+                    @can('contact.vendor.view')
+                        <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Vendors</a></li>
+                    @endcan
+                    @can('contact.employee.view')
+                        <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
+                    @endcan
+
+                </ul>
+            </li>
+        @endif
+
         <li class="nav-item dropdown">
             <a id="dropdownSubMenu3" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                 class="nav-link dropdown-toggle">Files</a>
