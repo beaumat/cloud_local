@@ -165,9 +165,7 @@ class GenerateModal extends Component
     }
     public function render()
     {
-
         $this->LoadContact();
-
         return view('livewire.scheduler.generate-modal');
     }
 }

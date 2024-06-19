@@ -16,15 +16,24 @@
                 </div>
 
                 <div class="col-6 text-right">
-                    <b>PHIC NO.:</b> <u class="text-primary font-weight-bold"> @if($PHIC_NO){{ $PHIC_NO }}@else &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @endif</u>
+                    <b>PHIC NO.:</b> <u class="text-primary font-weight-bold">
+                        @if ($PHIC_NO)
+                            {{ $PHIC_NO }}
+                        @else
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        @endif
+                    </u>
                 </div>
                 <div class="col-12 top-line left-line right-line">
                     <div class="row font-weight-bold" id="firstfloor">
-                        <div class="col-4">NAME: <label class="text-primary font-weight-bold h5">{{ $FULL_NAME }}</label></div>
-                        <div class="col-1">AGE: <label class="text-primary font-weight-bold">{{ $AGE }}</label></div>
+                        <div class="col-4">NAME: <label
+                                class="text-primary font-weight-bold h5">{{ $FULL_NAME }}</label></div>
+                        <div class="col-1">AGE: <label
+                                class="text-primary font-weight-bold">{{ $AGE }}</label></div>
                         <div class="col-3">NO. OF TREATMENT:</div>
                         <div class="col-2">MACHINE NO. :</div>
-                        <div class="col-2">DATE: <label class="text-primary font-weight-bold">{{ \Carbon\Carbon::parse($DATE)->format('m/d/Y') }}</label>
+                        <div class="col-2">DATE: <label
+                                class="text-primary font-weight-bold">{{ \Carbon\Carbon::parse($DATE)->format('m/d/Y') }}</label>
                         </div>
                     </div>
                 </div>
@@ -73,51 +82,53 @@
                                 </div>
                                 <div class="col-12 bottom-line-hide">
                                     <div class="row text-center up-space">
-                                        <div class="col-6">
-                                            _______
+                                        <div class="col-6 ">
+                                            <div class="bottom-line2">&nbsp;{{ $OLD_PRE_WEIGHT }}</div>
                                         </div>
                                         <div class="col-6">
-                                            _______
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 bottom-line-hide">
-                                    <div class="row text-center">
-                                        <div class="col-6">
-                                            _______
-                                        </div>
-                                        <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;{{ $OLD_POST_WEIGHT }}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 bottom-line-hide">
                                     <div class="row text-center">
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">
+                                               &nbsp; {{ $OLD_PRE_BLOOD_PRESSURE }}.{{ $OLD_PRE_BLOOD_PRESSURE2 }}</div>
                                         </div>
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">
+                                                &nbsp;{{ $OLD_POST_BLOOD_PRESSURE }}.{{ $OLD_POST_BLOOD_PRESSURE2 }}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 bottom-line-hide">
                                     <div class="row text-center">
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;{{ $OLD_PRE_HEART_RATE }}</div>
                                         </div>
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;{{ $OLD_POST_HEART_RATE }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 bottom-line-hide">
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <div class="bottom-line2">&nbsp;{{ $OLD_PRE_O2_SATURATION }}</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="bottom-line2">&nbsp;{{ $OLD_POST_O2_SATURATION }}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 ">
                                     <div class="row text-center">
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;{{ $OLD_PRE_TEMPERATURE }}</div>
                                         </div>
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;{{ $OLD_POST_TEMPERATURE }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -142,50 +153,50 @@
                                 <div class="col-12 bottom-line-hide">
                                     <div class="row text-center up-space">
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;</div>
                                         </div>
                                         <div class="col-6">
-                                            _______
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 bottom-line-hide">
-                                    <div class="row text-center">
-                                        <div class="col-6">
-                                            _______
-                                        </div>
-                                        <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 bottom-line-hide">
                                     <div class="row text-center">
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;</div>
                                         </div>
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 bottom-line-hide">
                                     <div class="row text-center">
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;</div>
                                         </div>
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 bottom-line-hide">
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <div class="bottom-line2">&nbsp;</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="bottom-line2">&nbsp;</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 ">
                                     <div class="row text-center">
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;</div>
                                         </div>
                                         <div class="col-6">
-                                            _______
+                                            <div class="bottom-line2">&nbsp;</div>
                                         </div>
                                     </div>
                                 </div>

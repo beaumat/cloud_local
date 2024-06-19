@@ -128,7 +128,9 @@ class HemoServices
                 'hemodialysis.PRE_BLOOD_PRESSURE2',
                 'hemodialysis.PRE_HEART_RATE',
                 'hemodialysis.PRE_O2_SATURATION',
-                'hemodialysis.PRE_TEMPERATURE'
+                'hemodialysis.PRE_TEMPERATURE',
+                'hemodialysis.CUSTOMER_ID',
+                'hemodialysis.LOCATION_ID'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->where('hemodialysis.ID', $ID)

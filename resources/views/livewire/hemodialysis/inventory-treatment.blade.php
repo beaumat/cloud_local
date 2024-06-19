@@ -23,7 +23,7 @@
                             @foreach ($dataList as $list)
                                 <tr>
                                     <td>{{ $list->CODE }}</td>
-                                <td>{{ $list->DESCRIPTION }}</td>
+                                    <td>{{ $list->DESCRIPTION }}</td>
 
 
                                     <td class="text-center">
@@ -175,7 +175,9 @@
                     @endif
                 </div>
                 <div class="col-md-6 text-right">
-                    @livewire('Hemodialysis.AddDefaultModal', ['HEMO_ID' => $HEMO_ID, 'LOCATION_ID' => $LOCATION_ID])
+                    @if ($STATUS == $openStatus)
+                        @livewire('Hemodialysis.AddDefaultModal', ['HEMO_ID' => $HEMO_ID, 'LOCATION_ID' => $LOCATION_ID])
+                    @endif
                 </div>
             </div>
         </div>

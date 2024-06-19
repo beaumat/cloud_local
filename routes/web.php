@@ -257,15 +257,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('/banking')->name('banking')->group(function () {
         Route::prefix('/deposit')->group(function () {
-            Route::get('/', DepositList::class)->name('deposit')->middleware(['permission:company.deposit.view']);
+            Route::get('/', DepositList::class)->name('deposit')->middleware(['permission:banking.deposit.view']);
         });
 
         Route::prefix('/fund-transfer')->group(function () {
-            Route::get('/', FundTransferList::class)->name('fund_transfer')->middleware(['permission:company.fund-transfer.view']);
+            Route::get('/', FundTransferList::class)->name('fund_transfer')->middleware(['permission:banking.fund-transfer.view']);
         });
 
         Route::prefix('/make-cheque')->group(function () {
-            Route::get('/', WriteCheckList::class)->name('make_cheque')->middleware(['permission:company.make-cheque.view']);
+            Route::get('/', WriteCheckList::class)->name('make_cheque')->middleware(['permission:banking.make-cheque.view']);
         });
     });
 
