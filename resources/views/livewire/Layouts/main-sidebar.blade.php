@@ -1,5 +1,4 @@
 <aside class="main-sidebar  sidebar-light-info elevation-4 text-xs">
-    <!-- Brand Logo -->
     <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="" class="brand-image img-circle elevation-3"
             style="opacity: .8">
@@ -16,7 +15,6 @@
                         <p> Dashboard </p>
                     </a>
                 </li>
-
                 @if (Auth::user()->can('patient.schedule.view') ||
                         Auth::user()->can('patient.service-charges.view') ||
                         Auth::user()->can('patient.payment.view') ||
@@ -48,18 +46,11 @@
                         Auth::user()->can('banking.make-cheque.view'))
                     @livewire('Layouts.BankingMenu')
                 @endif
-
-
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa fa-line-chart"></i>
-                        <p>
-                            Reports
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
+                    <a href="#" class="nav-link"> <i class="nav-icon fa fa-line-chart"></i>
+                        <p> Reports <i class="right fas fa-angle-left"></i> </p>
                     </a>
                     <ul class="nav nav-treeview">
-
                         @livewire('Layouts.ReportsFinancial')
                         @livewire('Layouts.ReportsSales')
                         @livewire('Layouts.ReportsReceivables')
@@ -69,10 +60,8 @@
                         @livewire('Layouts.ReportsInventory')
                         @livewire('Layouts.ReportsAccounting')
                         @livewire('Layouts.ReportsDocuments')
-
                     </ul>
                 </li>
-
                 <li class="nav-item {{ request()->is('maintenance*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('maintenance*') ? 'active ' : '' }}">
                         <i class="nav-icon fa fa-cog"></i>
@@ -81,8 +70,6 @@
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-
-
                     <ul class="nav nav-treeview">
                         @if (Auth::user()->can('contact.customer.view') ||
                                 Auth::user()->can('contact.vendor.view') ||
@@ -91,17 +78,29 @@
                                 Auth::user()->can('contact.doctor.view'))
                             @livewire('Layouts.MaintenanceContacts')
                         @endif
-                        
                         @livewire('Layouts.MaintenanceFinancials')
-                        @livewire('Layouts.MaintenanceInventory')
+
+                        @if (Auth::user()->can('items.view') ||
+                                Auth::user()->can('item-class.view') ||
+                                Auth::user()->can('item-sub-class.view') ||
+                                Auth::user()->can('item-group.view') ||
+                                Auth::user()->can('manufacturer.view') ||
+                                Auth::user()->can('ship-via.view') ||
+                                Auth::user()->can('unit-of-measure.view') ||
+                                Auth::user()->can('inventory-adjustment-type.view') ||
+                                Auth::user()->can('stock-bin.view') ||
+                                Auth::user()->can('price-level.view'))
+                                
+                            @livewire('Layouts.MaintenanceInventory')
+                        @endif
+
+
+
                         @livewire('Layouts.MaintenanceOthers')
                         @livewire('Layouts.MaintenanceSettings')
-
-
                     </ul>
                 </li>
             </ul>
         </nav>
-
     </div>
 </aside>
