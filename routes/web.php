@@ -331,6 +331,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('/inventory')->name('inventory')->group(function () {
             Route::prefix('/items')->group(function () {
+                // ok
                 Route::get('/', ItemsList::class)->name('item')->middleware(['permission:items.view']);
                 Route::get('/create', ItemsForm::class)->name('item_create')->middleware(['permission:items.create']);
                 Route::get('/{id}/edit', ItemsForm::class)->name('item_edit')->middleware(['permission:items.edit']);
