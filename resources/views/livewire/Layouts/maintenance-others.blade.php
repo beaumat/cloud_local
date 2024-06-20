@@ -1,10 +1,7 @@
        <li id="others" class="nav-item {{ request()->is('maintenance/others*') ? 'menu-open' : '' }}">
            <a href="#" class="nav-link {{ request()->is('maintenance/others*') ? 'active' : '' }}">
                <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
-               <p>
-                   Others
-                   <i class="right fas fa-angle-left"></i>
-               </p>
+               <p> Others <i class="right fas fa-angle-left"></i> </p>
            </a>
            <ul class="nav nav-treeview">
                <li class="nav-item">

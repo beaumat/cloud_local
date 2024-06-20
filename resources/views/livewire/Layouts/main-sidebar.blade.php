@@ -65,10 +65,7 @@
                 <li class="nav-item {{ request()->is('maintenance*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('maintenance*') ? 'active ' : '' }}">
                         <i class="nav-icon fa fa-cog"></i>
-                        <p>
-                            Maintenance
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
+                        <p> Maintenance <i class="right fas fa-angle-left"></i> </p>
                     </a>
                     <ul class="nav nav-treeview">
                         @if (Auth::user()->can('contact.customer.view') ||
@@ -93,11 +90,10 @@
                                 
                             @livewire('Layouts.MaintenanceInventory')
                         @endif
-
-
-
                         @livewire('Layouts.MaintenanceOthers')
+
                         @livewire('Layouts.MaintenanceSettings')
+                        
                     </ul>
                 </li>
             </ul>
