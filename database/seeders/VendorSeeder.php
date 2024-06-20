@@ -19,19 +19,19 @@ class VendorSeeder extends Seeder
         Permission::create(['name' => 'vendor.purchase-order.print']);
 
         Permission::create(['name' => 'vendor.bill.view']);
-        Permission::create(['name' => 'vendor.biil.create']);
+        Permission::create(['name' => 'vendor.bill.create']);
         Permission::create(['name' => 'vendor.bill.update']);
         Permission::create(['name' => 'vendor.bill.delete']);
         Permission::create(['name' => 'vendor.bill.print']);
 
         Permission::create(['name' => 'vendor.bill-credit.view']);
-        Permission::create(['name' => 'vendor.biil-credit.create']);
+        Permission::create(['name' => 'vendor.bill-credit.create']);
         Permission::create(['name' => 'vendor.bill-credit.update']);
         Permission::create(['name' => 'vendor.bill-credit.delete']);
         Permission::create(['name' => 'vendor.bill-credit.print']);
 
         Permission::create(['name' => 'vendor.bill-payment.view']);
-        Permission::create(['name' => 'vendor.biil-payment.create']);
+        Permission::create(['name' => 'vendor.bill-payment.create']);
         Permission::create(['name' => 'vendor.bill-payment.update']);
         Permission::create(['name' => 'vendor.bill-payment.delete']);
         Permission::create(['name' => 'vendor.bill-payment.print']);

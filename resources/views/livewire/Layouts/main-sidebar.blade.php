@@ -75,8 +75,12 @@
                                 Auth::user()->can('contact.doctor.view'))
                             @livewire('Layouts.MaintenanceContacts')
                         @endif
-                        @livewire('Layouts.MaintenanceFinancials')
-
+                        @if (Auth::user()->can('chart-of-account.view') ||
+                                Auth::user()->can('payment-method.view') ||
+                                Auth::user()->can('payment-term.view') ||
+                                Auth::user()->can('tax-list.view'))
+                            @livewire('Layouts.MaintenanceFinancials')
+                        @endif
                         @if (Auth::user()->can('items.view') ||
                                 Auth::user()->can('item-class.view') ||
                                 Auth::user()->can('item-sub-class.view') ||
@@ -87,13 +91,27 @@
                                 Auth::user()->can('inventory-adjustment-type.view') ||
                                 Auth::user()->can('stock-bin.view') ||
                                 Auth::user()->can('price-level.view'))
-                                
                             @livewire('Layouts.MaintenanceInventory')
                         @endif
-                        @livewire('Layouts.MaintenanceOthers')
+                        @if (Auth::user()->can('others.shift.view') ||
+                                Auth::user()->can('others.hemodialysis-machine.view') ||
+                                Auth::user()->can('others.requirement.view') ||
+                                Auth::user()->can('others.item-active-list.view') ||
+                                Auth::user()->can('others.item-treatment.view'))
+                            @livewire('Layouts.MaintenanceOthers')
+                        @endif
 
-                        @livewire('Layouts.MaintenanceSettings')
-                        
+                        @if (Auth::user()->can('users') ||
+                                Auth::user()->can('roles-and-permission') ||
+                                Auth::user()->can('location.view') ||
+                                Auth::user()->can('location-group.view') ||
+                                Auth::user()->can('option'))
+                                
+                            @livewire('Layouts.MaintenanceSettings')
+                        @endif
+
+
+
                     </ul>
                 </li>
             </ul>

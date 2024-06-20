@@ -13,9 +13,25 @@ class MaintenanceFinancialSeeder extends Seeder
      */
     public function run(): void
     {
-        Permission::create(['name' => 'items.view']);
-        Permission::create(['name' => 'items.create']);
-        Permission::create(['name' => 'items.edit']);
-        Permission::create(['name' => 'items.delete']);
+        Permission::create(['name' => 'chart-of-account.view']);
+        Permission::create(['name' => 'chart-of-account.create']);
+        Permission::create(['name' => 'chart-of-account.edit']);
+        Permission::create(['name' => 'chart-of-account.delete']);
+
+        Permission::create(['name' => 'payment-method.view']);
+        Permission::create(['name' => 'payment-method.create']);
+        Permission::create(['name' => 'payment-method.edit']);
+        Permission::create(['name' => 'payment-method.delete']);
+
+        Permission::create(['name' => 'payment-term.view']);
+        Permission::create(['name' => 'payment-term.create']);
+        Permission::create(['name' => 'payment-term.edit']);
+        Permission::create(['name' => 'payment-term.delete']);
+
+        Permission::create(['name' => 'tax-list.view']);
+        Permission::create(['name' => 'tax-list.create']);
+        Permission::create(['name' => 'tax-list.edit']);
+        Permission::create(['name' => 'tax-list.delete']);
+
     }
 }

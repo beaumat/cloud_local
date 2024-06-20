@@ -271,7 +271,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('/maintenance')->name('maintenance')->group(function () {
         Route::prefix('/contact')->name('contact')->group(function () {
-
             Route::prefix('/customer')->group(function () {
                 Route::get('/', CustomerList::class)->name('customer')->middleware(['permission:contact.customer.view']);
                 Route::get('/create', CustomerForm::class)->name('customer_create')->middleware(['permission:contact.customer.create']);
@@ -305,27 +304,27 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/financial')->name('financial')->group(function () {
 
             Route::prefix('/chart-of-account')->group(function () {
-                Route::get('/', ChartOfAccountList::class)->name('coa');
-                Route::get('/create', ChartOfAccountForm::class)->name('coa_create');
-                Route::get('/{id}/edit', ChartOfAccountForm::class)->name('coa_edit');
+                Route::get('/', ChartOfAccountList::class)->name('coa')->middleware(['permission:chart-of-account.view']);
+                Route::get('/create', ChartOfAccountForm::class)->name('coa_create')->middleware(['permission:chart-of-account.create']);
+                Route::get('/{id}/edit', ChartOfAccountForm::class)->name('coa_edit')->middleware(['permission:chart-of-account.view']);
             });
 
             Route::prefix('/payment-method')->group(function () {
-                Route::get('/', PaymentMethodList::class)->name('payment_method');
-                Route::get('/create', PaymentMethodForm::class)->name('payment_method_create');
-                Route::get('/{id}/edit', PaymentMethodForm::class)->name('payment_method_edit');
+                Route::get('/', PaymentMethodList::class)->name('payment_method')->middleware(['permission:payment-method.view']);
+                Route::get('/create', PaymentMethodForm::class)->name('payment_method_create')->middleware(['permission:payment-method.create']);
+                Route::get('/{id}/edit', PaymentMethodForm::class)->name('payment_method_edit')->middleware(['permission:payment-method.view']);
             });
 
             Route::prefix('/payment-term')->group(function () {
-                Route::get('/', PaymentTermList::class)->name('payment_term');
-                Route::get('/create', PaymentTermForm::class)->name('payment_term_create');
-                Route::get('/{id}/edit', PaymentTermForm::class)->name('payment_term_edit');
+                Route::get('/', PaymentTermList::class)->name('payment_term')->middleware(['permission:payment-term.view']);
+                Route::get('/create', PaymentTermForm::class)->name('payment_term_create')->middleware(['permission:payment-term.create']);
+                Route::get('/{id}/edit', PaymentTermForm::class)->name('payment_term_edit')->middleware(['permission:payment-term.view']);
             });
 
             Route::prefix('/tax-list')->group(function () {
-                Route::get('/', TaxList::class)->name('tax_list');
-                Route::get('/create', TaxForm::class)->name('tax_list_create');
-                Route::get('/{id}/edit', TaxForm::class)->name('tax_list_edit');
+                Route::get('/', TaxList::class)->name('tax_list')->middleware(['permission:tax-list.view']);
+                Route::get('/create', TaxForm::class)->name('tax_list_create')->middleware(['permission:tax-list.create']);
+                Route::get('/{id}/edit', TaxForm::class)->name('tax_list_edit')->middleware(['permission:tax-list.view']);
             });
         });
 
@@ -388,31 +387,31 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('/others')->name('others')->group(function () {
             Route::prefix('/shift')->group(function () {
-                Route::get('/', ShiftList::class)->name('shift');
-                Route::get('/create', ShiftForm::class)->name('shift_create');
-                Route::get('/{id}/edit', ShiftForm::class)->name('shift_edit');
+                Route::get('/', ShiftList::class)->name('shift')->middleware(['permission:others.shift.view']);
+                Route::get('/create', ShiftForm::class)->name('shift_create')->middleware(['permission:others.shift.create']);
+                Route::get('/{id}/edit', ShiftForm::class)->name('shift_edit')->middleware(['permission:others.shift.view']);
             });
 
             Route::prefix('/hemodialysis-machine')->group(function () {
-                Route::get('/', HemoMachineList::class)->name('hemo_machine');
-                Route::get('/create', HemoMachineForm::class)->name('hemo_machine_create');
-                Route::get('/{id}/edit', HemoMachineForm::class)->name('hemo_machine_edit');
+                Route::get('/', HemoMachineList::class)->name('hemo_machine')->middleware(['permission:others.hemodialysis-machine.view']);
+                Route::get('/create', HemoMachineForm::class)->name('hemo_machine_create')->middleware(['permission:others.hemodialysis-machine.create']);
+                Route::get('/{id}/edit', HemoMachineForm::class)->name('hemo_machine_edit')->middleware(['permission:others.hemodialysis-machine.view']);
             });
 
             Route::prefix('/requirement')->group(function () {
-                Route::get('/', RequirementList::class)->name('requirement');
-                Route::get('/create', RequirementForm::class)->name('requirement_create');
-                Route::get('/{id}/edit', RequirementForm::class)->name('requirement_edit');
-            });
-
-            Route::prefix('/item-active-list')->group(function () {
-                Route::get('/', ItemActiveList::class)->name('item-active-list');
+                Route::get('/', RequirementList::class)->name('requirement')->middleware(['permission:others.requirement.view']);
+                Route::get('/create', RequirementForm::class)->name('requirement_create')->middleware(['permission:others.requirement.create']);
+                Route::get('/{id}/edit', RequirementForm::class)->name('requirement_edit')->middleware(['permission:others.requirement.view']);
             });
 
             Route::prefix('/item-treatment')->group(function () {
-                Route::get('/', ItemTreatmentList::class)->name('item_treatment');
-                Route::get('/create', ItemTreatmentForm::class)->name('item_treatment_create');
-                Route::get('/{id}/edit', ItemTreatmentForm::class)->name('item_treatment_edit');
+                Route::get('/', ItemTreatmentList::class)->name('item_treatment')->middleware(['permission:others.item-treatment.view']);
+                Route::get('/create', ItemTreatmentForm::class)->name('item_treatment_create')->middleware(['permission:others.item-treatment.view']);
+                Route::get('/{id}/edit', ItemTreatmentForm::class)->name('item_treatment_edit')->middleware(['permission:others.item-treatment.view']);
+            });
+
+            Route::prefix('/item-active-list')->group(function () {
+                Route::get('/', ItemActiveList::class)->name('item-active-list')->middleware(['permission:others.item-active-list.view']);
             });
         });
 
@@ -441,7 +440,7 @@ Route::middleware(['auth'])->group(function () {
             });
 
             Route::prefix('/option')->group(function () {
-                Route::get('/', OptionSettings::class)->name('option');
+                Route::get('/', OptionSettings::class)->name('option')->middleware(['permission:option']);
             });
         });
     });
