@@ -73,8 +73,6 @@ class ItemTreatmentForm extends Component
         $this->INACTIVE = false;
         $this->IS_AUTO =  false;
     }
-
-
     public function save()
     {
 
