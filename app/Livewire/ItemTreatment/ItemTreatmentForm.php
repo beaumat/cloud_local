@@ -31,8 +31,12 @@ class ItemTreatmentForm extends Component
     private $itemServices;
     private $locationServices;
     private $unitOfMeasureServices;
-    public function boot(ItemTreatmentServices $itemTreatmentServices, ItemServices $itemServices, LocationServices $locationServices, UnitOfMeasureServices $unitOfMeasureServices)
-    {
+    public function boot(
+        ItemTreatmentServices $itemTreatmentServices,
+        ItemServices $itemServices,
+        LocationServices $locationServices,
+        UnitOfMeasureServices $unitOfMeasureServices
+    ) {
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->itemServices = $itemServices;
         $this->locationServices = $locationServices;
@@ -115,6 +119,8 @@ class ItemTreatmentForm extends Component
     }
     public function render()
     {
+        $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
+      
         return view('livewire.item-treatment.item-treatment-form');
     }
 }

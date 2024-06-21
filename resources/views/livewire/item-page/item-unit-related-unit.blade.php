@@ -15,7 +15,7 @@
                     </th>
                 </tr>
             </thead>
-            <tbody class="text-sm">
+            <tbody class="text-xs">
                 @foreach ($unitRelatedList as $list)
                     <tr>
                         <td> {{ $list->NAME }}</td>
@@ -25,7 +25,7 @@
                                 <input type="number" wire:model="newQUANTITY"
                                     class="form-control form-control-sm text-right">
                             @else
-                                {{ number_format($list->QUANTITY, 1) }}
+                                {{ $list->QUANTITY }}
                             @endif
                         </td>
                         <td class="text-right">
@@ -69,17 +69,19 @@
                     </tr>
                 @endforeach
                 <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
-                    <tr>
+                    <tr class="text-xs">
                         <td>
                             @if ($saveSuccess)
                                 <livewire:select-option name="UNIT_ID1" titleName="Units" :options="$units"
-                                    :zero="true" wire:model='UNIT_ID' :vertical="false" :withLabel="false" />
+                                    :zero="true" wire:model.live='UNIT_ID' :vertical="false" :withLabel="false" />
                             @else
                                 <livewire:select-option name="UNIT_ID2" titleName="Units" :options="$units"
-                                    :zero="true" wire:model='UNIT_ID' :vertical="false" :withLabel="false" />
+                                    :zero="true" wire:model.live='UNIT_ID' :vertical="false" :withLabel="false" />
                             @endif
                         </td>
-                        <td></td>
+                        <td>
+                            <label class="mt-3"> {{ $UNIT_SYMBOL }}</label>
+                        </td>
                         <td>
                             <livewire:number-input name="QUANTITY" titleName="Quantity" wire:model='QUANTITY'
                                 :vertical="false" :withLabel="false" />
@@ -93,7 +95,7 @@
                                 :vertical="false" :withLabel="false" />
                         </td>
                         <td>
-                            <div class="mt-2">                            
+                            <div class="mt-2">
                                 <button type="submit" wire:loading.attr='hidden'
                                     class="text-white btn btn-success btn-sm w-100">
                                     <i class="fas fa-plus"></i>

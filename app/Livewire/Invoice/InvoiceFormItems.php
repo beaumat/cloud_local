@@ -31,7 +31,6 @@ class InvoiceFormItems extends Component
     public float $QUANTITY;
     public int $UNIT_ID;
     public int $BASE_UNIT_ID;
-    public float $UNIT_BASE_QUANTITY;
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -124,7 +123,7 @@ class InvoiceFormItems extends Component
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
-        $this->UNIT_BASE_QUANTITY = 1;
+
         $this->QUANTITY = 1;
         $this->RATE = 0;
         $this->ITEM_CODE = '';
@@ -154,9 +153,6 @@ class InvoiceFormItems extends Component
                 $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);
             }
         }
-
-
-
     }
     public function getGroupPrice(int $item_id)
     {
@@ -167,7 +163,6 @@ class InvoiceFormItems extends Component
                 ->first();
 
             return $totalSum->total;
-
         } catch (\Throwable $th) {
             return 0;
         }
@@ -178,7 +173,6 @@ class InvoiceFormItems extends Component
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
-
     }
     public function saveItem()
     {
@@ -205,12 +199,14 @@ class InvoiceFormItems extends Component
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
 
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
+
             $this->invoiceServices->ItemStore(
                 $this->INVOICE_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
                 $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
-                $this->UNIT_BASE_QUANTITY,
+                (float) $unitRelated['QUANTITY'],
                 $this->RATE,
                 $this->RATE_TYPE,
                 $this->AMOUNT,
@@ -234,7 +230,6 @@ class InvoiceFormItems extends Component
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
-            $this->UNIT_BASE_QUANTITY = 1;
             $this->RATE = 0;
             $this->RATE_TYPE = 0;
             $this->AMOUNT = 0;
@@ -246,7 +241,6 @@ class InvoiceFormItems extends Component
             $this->CLASS_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -255,7 +249,6 @@ class InvoiceFormItems extends Component
     public function updatedlineqty()
     {
         $this->getEditAmount();
-
     }
     public function updatedlinerate()
     {
@@ -290,6 +283,18 @@ class InvoiceFormItems extends Component
     public function updateItem(int $Id)
     {
 
+        $this->validate(
+            [    
+                'lineQty' => 'required|not_in:0',
+            ],
+            [],
+            [
+                'lineQty' => 'Quantity',
+            ]
+        );
+
+        
+
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
 
@@ -298,13 +303,17 @@ class InvoiceFormItems extends Component
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
+
+
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
+
             $this->invoiceServices->ItemUpdate(
                 $Id,
                 $this->INVOICE_ID,
                 $this->lineItemId,
                 $this->lineQty,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
-                1,
+                (float)  $unitRelated['QUANTITY'],
                 $this->lineRate,
                 0,
                 $this->lineAmount,
@@ -325,7 +334,6 @@ class InvoiceFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax = false;
             $this->lineItemId = 0;
-
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -340,10 +348,7 @@ class InvoiceFormItems extends Component
     public function deleteItem($Id)
     {
         try {
-            $this->invoiceServices->ItemDelete(
-                $Id,
-                $this->INVOICE_ID
-            );
+            $this->invoiceServices->ItemDelete($Id, $this->INVOICE_ID);
 
             $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
             $this->dispatch('update-amount', result: $getResult);
@@ -361,8 +366,12 @@ class InvoiceFormItems extends Component
     }
     public function getReload()
     {
-        $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
+        if ($this->editItemId) {
+            $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
+        }
+
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
+
         $this->itemList = $this->invoiceServices->ItemView($this->INVOICE_ID);
     }
     public function render()

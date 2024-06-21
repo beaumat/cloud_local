@@ -30,7 +30,6 @@ class ServiceChargeFormItems extends Component
     public float $QUANTITY;
     public int $UNIT_ID;
     public int $BASE_UNIT_ID;
-    public float $UNIT_BASE_QUANTITY;
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -95,7 +94,6 @@ class ServiceChargeFormItems extends Component
             return;
         }
         $this->itemDescList = $this->itemServices->getByCustomer(false);
-
     }
     public function getAmount(): void
     {
@@ -122,7 +120,6 @@ class ServiceChargeFormItems extends Component
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
-        $this->UNIT_BASE_QUANTITY = 1;
         $this->QUANTITY = 1;
         $this->RATE = 0;
         $this->ITEM_CODE = '';
@@ -130,7 +127,7 @@ class ServiceChargeFormItems extends Component
         $this->TAXABLE = false;
         $this->AMOUNT = 0;
         $this->unitList = [];
-        $this->RATE_TYPE = 0; 
+        $this->RATE_TYPE = 0;
         $this->CLASS_DESCRIPTION = '';
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
@@ -143,17 +140,14 @@ class ServiceChargeFormItems extends Component
                 $this->INCOME_ACCOUNT_ID = $item->GL_ACCOUNT_ID ?? 0;
                 $this->COGS_ACCOUNT_ID = $item->COGS_ACCOUNT_ID ?? 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
-           
+
                 $this->GROUP_LINE_ID = false;
                 $this->PRINT_IN_FORMS = false;
                 $this->PRICE_LEVEL_ID = 0;
                 $this->getAmount();
-                $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);    
+                $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);
             }
         }
-
-
-
     }
     public function getGroupPrice(int $item_id)
     {
@@ -164,7 +158,6 @@ class ServiceChargeFormItems extends Component
                 ->first();
 
             return $totalSum->total;
-
         } catch (\Throwable $th) {
             return 0;
         }
@@ -175,7 +168,6 @@ class ServiceChargeFormItems extends Component
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
-
     }
     public function saveItem()
     {
@@ -201,13 +193,13 @@ class ServiceChargeFormItems extends Component
                 $this->TAXABLE_AMOUNT = $tax_result['TAXABLE_AMOUNT'];
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
-
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
             $this->serviceChargeServices->ItemStore(
                 $this->SERVICE_CHARGES_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
                 $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
-                $this->UNIT_BASE_QUANTITY,
+                (float) $unitRelated['QUANTITY'],
                 $this->RATE,
                 $this->RATE_TYPE,
                 $this->AMOUNT,
@@ -228,7 +220,7 @@ class ServiceChargeFormItems extends Component
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
-            $this->UNIT_BASE_QUANTITY = 1;
+
             $this->RATE = 0;
             $this->RATE_TYPE = 0;
             $this->AMOUNT = 0;
@@ -240,7 +232,6 @@ class ServiceChargeFormItems extends Component
             $this->CLASS_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -249,7 +240,6 @@ class ServiceChargeFormItems extends Component
     public function updatedlineqty()
     {
         $this->getEditAmount();
-
     }
     public function updatedlinerate()
     {
@@ -284,6 +274,18 @@ class ServiceChargeFormItems extends Component
     public function updateItem(int $Id)
     {
 
+        $this->validate(
+            [    
+                'lineQty' => 'required|not_in:0',
+            ],
+            [],
+            [
+                'lineQty' => 'Quantity',
+            ]
+        );
+
+        
+
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
 
@@ -292,13 +294,15 @@ class ServiceChargeFormItems extends Component
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
+
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
             $this->serviceChargeServices->ItemUpdate(
                 $Id,
                 $this->SERVICE_CHARGES_ID,
                 $this->lineItemId,
                 $this->lineQty,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
-                1,
+                (float) $unitRelated['QUANTITY'],
                 $this->lineRate,
                 0,
                 $this->lineAmount,
@@ -318,7 +322,6 @@ class ServiceChargeFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax = false;
             $this->lineItemId = 0;
-
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();

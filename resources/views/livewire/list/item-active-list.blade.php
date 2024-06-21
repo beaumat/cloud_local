@@ -73,7 +73,7 @@
                                             <td> {{ $list->SUB_NAME }}</td>
                                             <td class="text-center">
                                                 <a href="#"
-                                                    wire:click='OnClick({{ $list->ID }})'>{{ number_format($list->QTY_ON_HAND ?? 0) }}</a>
+                                                    wire:click='OnClick({{ $list->ID }})'>{{ number_format($list->QTY_ON_HAND ?? 0,2) }}</a>
 
                                             </td>
 

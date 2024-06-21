@@ -44,7 +44,6 @@ class InventoryTreatment extends Component
     public int $UNIT_ID = 0;
     public $unitList = [];
     public $editUnitList = [];
-    public float $UNIT_BASE_QUANTITY;
     public bool $IS_NEW;
     public int $BASE_UNIT_ID;
     public function mount()
@@ -55,7 +54,7 @@ class InventoryTreatment extends Component
     public function updatedItemId()
     {
         $this->UNIT_ID = 0;
-        $this->UNIT_BASE_QUANTITY = 1;
+
         $this->QUANTITY = 1;
         $this->ITEM_CODE = '';
         $this->ITEM_DESCRIPTION = '';
@@ -97,8 +96,8 @@ class InventoryTreatment extends Component
                 'QUANTITY' => 'Quantity'
             ]
         );
-
-        $this->hemoServices->ItemStore($this->HEMO_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, $this->UNIT_BASE_QUANTITY, $this->IS_NEW);
+        $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
+        $this->hemoServices->ItemStore($this->HEMO_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, (float) $unitRelated['QUANTITY'], $this->IS_NEW);
         $this->resetInsert();
         session()->flash('message', 'Successfully added');
     }
@@ -160,6 +159,7 @@ class InventoryTreatment extends Component
             ]
         );
 
+        $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
 
         $this->hemoServices->ItemUpdate(
             $this->lineId,
@@ -167,7 +167,7 @@ class InventoryTreatment extends Component
             $this->lineItemId,
             $this->lineQty,
             $this->lineUnitId,
-            1,
+            (float)  $unitRelated['QUANTITY'],
             $this->lineIsNew,
         );
 

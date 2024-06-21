@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Items;
 use App\Models\ItemUnits;
 use App\Models\UnitOfMeasures;
+use Illuminate\Support\Facades\DB;
 
 class UnitOfMeasureServices
 {
@@ -16,6 +17,10 @@ class UnitOfMeasureServices
     public function getList()
     {
         return UnitOfMeasures::where('INACTIVE', 0)->get();
+    }
+    public function get(int $ID)
+    {
+        return UnitOfMeasures::where('ID', $ID)->first();
     }
     public function Store(string $NAME, string $SYMBOL, bool $INACTIVE): int
     {
@@ -70,5 +75,60 @@ class UnitOfMeasureServices
             ->get();
 
         return $result;
+    }
+    public function GetItemUnitDetails(int $ITEM_ID, int $UNIT_ID)
+    {
+        $itemId = $ITEM_ID;
+        $sId = $UNIT_ID;
+
+        // Define the raw SQL query
+        $query = "
+    SELECT 
+      s.ID,
+      s.QUANTITY,
+      s.RATE 
+    FROM
+      (
+        (SELECT 
+          u.ID,
+          1 as QUANTITY,
+          item.RATE 
+        FROM
+          item 
+          LEFT JOIN unit_of_measure AS u 
+            ON u.ID = item.BASE_UNIT_ID 
+        WHERE item.ID = :itemId1) 
+        UNION
+        ALL 
+        (SELECT 
+          u.ID,
+          item_units.QUANTITY,
+          item_units.RATE 
+        FROM
+          item_units 
+          LEFT JOIN unit_of_measure AS u 
+            ON u.ID = item_units.UNIT_ID 
+        WHERE item_units.ITEM_ID = :itemId2)
+      ) as s 
+    WHERE s.ID = :sId
+";
+
+        // Execute the query using DB::select with bindings
+        $result = collect(DB::select($query, [
+            'itemId1' => $itemId,
+            'itemId2' => $itemId,
+            'sId' => $sId,
+        ]))->first();
+
+        if ($result) {
+            return [
+                'QUANTITY' => $result->QUANTITY ?? 1,
+                'RATE' => $result->RATE ?? 0
+            ];
+        }
+        return [
+            'QUANTITY' =>  1,
+            'RATE' =>  0
+        ];
     }
 }

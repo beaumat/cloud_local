@@ -16,7 +16,7 @@ class StockTransferFormItems extends Component
     #[Reactive]
     public int $STATUS;
     #[Reactive]
-    public int $openStatus ;
+    public int $openStatus;
 
     public int $ID;
     public int $ITEM_ID = 0;
@@ -25,7 +25,7 @@ class StockTransferFormItems extends Component
     public float $QUANTITY;
     public int $UNIT_ID;
     public int $BASE_UNIT_ID;
-    public float $UNIT_BASE_QUANTITY;
+
     public float $UNIT_COST;
     public float $UNIT_PRICE;
     public float $AMOUNT;
@@ -97,7 +97,6 @@ class StockTransferFormItems extends Component
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
-        $this->UNIT_BASE_QUANTITY = 1;
         $this->QUANTITY = 1;
         $this->UNIT_COST = 0;
         $this->UNIT_PRICE = 0;
@@ -134,7 +133,6 @@ class StockTransferFormItems extends Component
         $this->AMOUNT = 0;
         $this->RETAIL_VALUE = 0;
         $this->updatedcodeBase();
-
     }
     public function saveItem()
     {
@@ -154,12 +152,14 @@ class StockTransferFormItems extends Component
 
         try {
 
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
+
             $this->stockTransferServices->ItemStore(
                 $this->STOCK_TRANSFER_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
                 $this->UNIT_ID,
-                $this->UNIT_BASE_QUANTITY,
+                (float) $unitRelated['QUANTITY'],
                 $this->UNIT_COST,
                 $this->UNIT_PRICE,
                 $this->BATCH_ID,
@@ -169,7 +169,6 @@ class StockTransferFormItems extends Component
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
-            $this->UNIT_BASE_QUANTITY = 1;
             $this->UNIT_COST = 0;
             $this->UNIT_PRICE = 0;
             $this->AMOUNT = 0;
@@ -226,15 +225,25 @@ class StockTransferFormItems extends Component
 
     public function updateItem()
     {
+        $this->validate(
+            [    
+                'lineQty' => 'required|not_in:0',
+            ],
+            [],
+            [
+                'lineQty' => 'Quantity',
+            ]
+        );
 
         try {
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
             $this->stockTransferServices->ItemUpdate(
                 $this->editItemId,
                 $this->STOCK_TRANSFER_ID,
                 $this->lineItemId,
                 $this->lineQty,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
-                1,
+                (float) $unitRelated['QUANTITY'],
                 $this->lineUnitCost,
                 $this->lineUnitPrice,
                 $this->lineBatchId
@@ -242,7 +251,6 @@ class StockTransferFormItems extends Component
             );
             $this->dispatch('update-amount');
             $this->cancelItem();
-
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -260,7 +268,6 @@ class StockTransferFormItems extends Component
         $this->lineRetailValue = 0;
         $this->lineItemId = 0;
         $this->lineBatchId = 0;
-
     }
 
     public function deleteItem($Id)

@@ -12,7 +12,8 @@ class ItemUnitServices
         $this->object = $objectService;
     }
     public function Store(int $ITEM_ID, int $UNIT_ID, float $QUANTITY, float $RATE, string $BARCODE)
-    {
+    {   
+    
         $ID = $this->object->ObjectNextID('ITEM_UNITS');
 
         ItemUnits::create([
@@ -20,7 +21,7 @@ class ItemUnitServices
             'ITEM_ID'   => $ITEM_ID,
             'UNIT_ID'   => $UNIT_ID,
             'QUANTITY'  => $QUANTITY,
-            'RATE'      => $RATE,
+            'RATE'      => $RATE ,
             'BARCODE'   => $BARCODE
         ]);
     }

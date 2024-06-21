@@ -2,9 +2,9 @@
 
 namespace App\Livewire\ItemPage;
 
-use App\Models\UnitOfMeasures;
 use App\Services\ItemUnitServices;
 use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -15,45 +15,50 @@ class ItemUnitRelatedUnit extends Component
     #[Reactive]
     public int $itemId = 0;
     public int $UNIT_ID;
+    public string $UNIT_SYMBOL;
     public float $QUANTITY;
     public float $RATE;
     public string $BARCODE;
-
     public bool $saveSuccess = false;
     public $units = [];
     public $unitRelatedList = [];
-
     public $editItemId = null;
-
     public float $newQUANTITY;
     public float $newRATE;
     public string $newBARCODE;
-
     private $unitOfMeasureServices;
     private $itemUnitServices;
     public function boot(UnitOfMeasureServices $unitOfMeasureServices, ItemUnitServices $itemUnitServices)
     {
-
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemUnitServices = $itemUnitServices;
+    }
+    private function getEmpty()
+    {
+        $this->UNIT_ID = 0;
+        $this->QUANTITY = 0;
+        $this->RATE = 0;
+        $this->BARCODE = '';
+        $this->UNIT_SYMBOL = '';
     }
     public function mount($itemId)
     {
 
         $this->itemId = $itemId;
-        $this->dowpDownLoad();
-        $this->UNIT_ID = 0;
-        $this->QUANTITY = 0;
-        $this->RATE = 0;
-        $this->BARCODE = '';
+        $this->getEmpty();
     }
-    public function dowpDownLoad()
-    {
-        $this->units = $this->unitOfMeasureServices->getList();
+
+
+    public function updatedUNITID()
+    {   
+        $data = $this->unitOfMeasureServices->get($this->UNIT_ID);
+        if($data) {
+            $this->UNIT_SYMBOL =  $data->SYMBOL ?? '';
+        }
+
     }
     public function saveItem()
     {
-
         $this->validate(
             [
                 'UNIT_ID' => [
@@ -63,27 +68,25 @@ class ItemUnitRelatedUnit extends Component
                     }),
                 ],
                 'QUANTITY' => 'required|not_in:0,unit_id',
-                'RATE' => 'required|not_in:0,unit_id',
             ],
             [],
             [
                 'UNIT_ID' => 'Unit',
                 'QUANTITY' => 'Quantity',
-                'RATE' => 'Rate'
+
             ]
         );
         try {
+       
+            DB::beginTransaction();
             $this->itemUnitServices->Store($this->itemId, $this->UNIT_ID, $this->QUANTITY, $this->RATE, $this->BARCODE);
-
-            $this->dowpDownLoad();
-            $this->UNIT_ID = 0;
-            $this->QUANTITY = 0;
-            $this->RATE = 0;
-            $this->BARCODE = '';
+            DB::commit();
+            $this->getEmpty();
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->unitRelatedList = $this->itemUnitServices->Search($this->itemId);
             $this->dispatch('reload-related');
         } catch (\Exception $e) {
+            DB::rollBack(); 
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -98,16 +101,14 @@ class ItemUnitRelatedUnit extends Component
     }
     public function updateItem($id): void
     {
-
         $this->validate(
             [
                 'newQUANTITY' => 'required|not_in:0,unit_id',
-                'newRATE' => 'required|not_in:0,unit_id',
+        
             ],
             [],
             [
-                'newQUANTITY' => 'Quantity',
-                'newRATE' => 'Rate'
+                'newQUANTITY' => 'Quantity'
             ]
         );
 
@@ -135,12 +136,6 @@ class ItemUnitRelatedUnit extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function render()
-    {
-        $this->unitRelatedList = $this->itemUnitServices->Search($this->itemId);
-
-        return view('livewire.item-page.item-unit-related-unit');
-    }
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -148,5 +143,13 @@ class ItemUnitRelatedUnit extends Component
         // Clear session message and error
         session()->forget('message');
         session()->forget('error');
+    }
+    public function render()
+    {
+        $this->units = $this->unitOfMeasureServices->getList();
+
+        $this->unitRelatedList = $this->itemUnitServices->Search($this->itemId);
+
+        return view('livewire.item-page.item-unit-related-unit');
     }
 }

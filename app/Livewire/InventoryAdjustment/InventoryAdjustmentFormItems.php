@@ -26,7 +26,6 @@ class InventoryAdjustmentFormItems extends Component
     public float $UNIT_COST;
     public int $UNIT_ID;
     public int $BASE_UNIT_ID;
-    public float $UNIT_BASE_QUANTITY;
     public int $ACCOUNT_ID;
     public float $ASSET_ACCOUNT_ID;
 
@@ -71,7 +70,6 @@ class InventoryAdjustmentFormItems extends Component
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
-        $this->UNIT_BASE_QUANTITY = 1;
         $this->QUANTITY = 1;
         $this->UNIT_COST = 0;
 
@@ -99,7 +97,6 @@ class InventoryAdjustmentFormItems extends Component
         $this->QUANTITY = 0;
         $this->UNIT_COST = 0;
         $this->updatedcodeBase();
-
     }
     public function saveItem()
     {
@@ -111,12 +108,14 @@ class InventoryAdjustmentFormItems extends Component
             [],
             [
                 'ITEM_ID' => 'Item',
-                'QUANTITY' => 'Quantitity',
+                'QUANTITY' => 'Quantity',
 
             ]
         );
 
         try {
+
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
 
             $this->inventoryAdjustmentServices->ItemStore(
                 $this->INVENTORY_ADJUSTMENT_ID,
@@ -126,13 +125,12 @@ class InventoryAdjustmentFormItems extends Component
                 $this->ASSET_ACCOUNT_ID,
                 $this->BATCH_ID,
                 $this->UNIT_ID,
-                $this->UNIT_BASE_QUANTITY
+                (float) $unitRelated['QUANTITY']
             );
 
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
-            $this->UNIT_BASE_QUANTITY = 1;
             $this->UNIT_COST = 0;
             $this->ITEM_CODE = '';
             $this->ITEM_DESCRIPTION = '';
@@ -172,19 +170,33 @@ class InventoryAdjustmentFormItems extends Component
     public function updateItem()
     {
 
+
+        $this->validate(
+            [    
+                'lineQty' => 'required|not_in:0',
+            ],
+            [],
+            [
+                'lineQty' => 'Quantity',
+            ]
+        );
+
+        
         try {
+
+
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
             $this->inventoryAdjustmentServices->ItemUpdate(
                 $this->editItemId,
                 $this->INVENTORY_ADJUSTMENT_ID,
                 $this->lineItemId,
-                $this->lineQty, 
+                $this->lineQty,
                 $this->lineUnitCost,
                 $this->lineBatchId,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
-                1
+                (float) $unitRelated['QUANTITY']
             );
             $this->cancelItem();
-
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -198,7 +210,6 @@ class InventoryAdjustmentFormItems extends Component
         $this->lineUnitId = 0;
         $this->lineItemId = 0;
         $this->lineBatchId = 0;
-
     }
 
     public function deleteItem($Id)

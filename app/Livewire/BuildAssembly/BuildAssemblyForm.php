@@ -34,7 +34,6 @@ class BuildAssemblyForm extends Component
     public float $AMOUNT;
     public int $UNIT_ID;
     public int $BATCH_ID;
-    public int $UNIT_BASE_QUANTITY;
     public int $STATUS;
     public string $STATUS_DESCRIPTION;
     public $itemList = [];
@@ -106,7 +105,6 @@ class BuildAssemblyForm extends Component
         $this->BATCH_ID = $data->BATCH_ID ?? 0;
         $this->QUANTITY = $data->QUANTITY ?? 1;
         $this->UNIT_ID = $data->UNIT_ID ?? 0;
-        $this->UNIT_BASE_QUANTITY = $data->UNIT_BASE_QUANTITY ?? 1;
         $this->STATUS = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
@@ -137,7 +135,6 @@ class BuildAssemblyForm extends Component
         $this->QUANTITY = 0;
         $this->BATCH_ID = 0;
         $this->UNIT_ID = 0;
-        $this->UNIT_BASE_QUANTITY = 1;
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = "";
     }
@@ -168,6 +165,8 @@ class BuildAssemblyForm extends Component
                     ]
                 );
 
+                $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ASSEMBLY_ITEM_ID, $this->UNIT_ID ?? 0);
+
                 DB::beginTransaction();
                 $this->ID = $this->buildAssemblyServices->Store(
                     $this->CODE,
@@ -177,7 +176,7 @@ class BuildAssemblyForm extends Component
                     $this->QUANTITY,
                     $this->BATCH_ID,
                     $this->UNIT_ID,
-                    $this->UNIT_BASE_QUANTITY,
+                    (float) $unitRelated['QUANTITY'],
                     $this->NOTES,
                     $this->ASSET_ACCOUNT_ID
                 );
@@ -202,7 +201,7 @@ class BuildAssemblyForm extends Component
                         'QUANTITY' => 'Quantity'
                     ]
                 );
-
+                $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ASSEMBLY_ITEM_ID, $this->UNIT_ID ?? 0);
                 DB::beginTransaction();
                 $this->AMOUNT = $this->buildAssemblyServices->Update(
                     $this->ID,
@@ -211,7 +210,7 @@ class BuildAssemblyForm extends Component
                     $this->QUANTITY,
                     $this->BATCH_ID,
                     $this->UNIT_ID,
-                    $this->UNIT_BASE_QUANTITY,
+                    (float) $unitRelated['QUANTITY'],
                     $this->NOTES
                 );
 

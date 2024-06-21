@@ -28,7 +28,7 @@ class BillingFormItems extends Component
     public float $QUANTITY;
     public int $UNIT_ID;
     public int $BASE_UNIT_ID;
-    public float $UNIT_BASE_QUANTITY;
+
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -106,7 +106,7 @@ class BillingFormItems extends Component
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
-        $this->UNIT_BASE_QUANTITY = 1;
+
         $this->QUANTITY = 1;
         $this->RATE = 0;
         $this->ITEM_CODE = '';
@@ -124,7 +124,6 @@ class BillingFormItems extends Component
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->PURCHASE_DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
-                $this->BASE_UNIT_ID = $item->BASE_UNIT_ID ? $item->BASE_UNIT_ID : 1;
                 $this->ACCOUNT_ID = $item->ASSET_ACCOUNT_ID;
                 $this->PO_ITEM_ID = 0;
                 $this->CLASS_ID = 0;
@@ -132,6 +131,7 @@ class BillingFormItems extends Component
             }
         }
     }
+
     public function mount()
     {
         $this->QUANTITY = 0;
@@ -157,6 +157,7 @@ class BillingFormItems extends Component
 
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
+
             $tax_result = $this->computeServices->ItemComputeTax($this->AMOUNT, $this->TAXABLE, $this->TAX_ID, $taxRate);
 
             if ($tax_result) {
@@ -164,12 +165,13 @@ class BillingFormItems extends Component
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
 
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID);
             $this->billingServices->ItemStore(
                 $this->BILL_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
                 $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
-                $this->UNIT_BASE_QUANTITY,
+                (float) $unitRelated['QUANTITY'],
                 $this->RATE,
                 $this->RATE_TYPE,
                 $this->AMOUNT,
@@ -187,7 +189,6 @@ class BillingFormItems extends Component
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
-            $this->UNIT_BASE_QUANTITY = 1;
             $this->RATE = 0;
             $this->RATE_TYPE = 0;
             $this->AMOUNT = 0;
@@ -242,6 +243,16 @@ class BillingFormItems extends Component
     public function updateItem(int $Id)
     {
 
+        $this->validate(
+            [
+                'lineQty' => 'required|not_in:0',
+            ],
+            [],
+            [
+                'lineQty' => 'Quantity',
+            ]
+        );
+
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
 
@@ -250,13 +261,14 @@ class BillingFormItems extends Component
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId);
             $this->billingServices->ItemUpdate(
                 $Id,
                 $this->BILL_ID,
                 $this->lineItemId,
                 $this->lineQty,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
-                1,
+                (float) $unitRelated['QUANTITY'],
                 $this->lineRate,
                 $this->lineAmount,
                 $this->lineTax,
@@ -284,15 +296,10 @@ class BillingFormItems extends Component
     {
         $this->editItemId = null;
     }
-
     public function deleteItem(int $Id)
     {
         try {
-            $this->billingServices->ItemDelete(
-                $Id,
-                $this->BILL_ID
-            );
-
+            $this->billingServices->ItemDelete($Id, $this->BILL_ID);
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
             $this->dispatch('update-amount', result: $getResult);
         } catch (\Exception $e) {
@@ -309,7 +316,9 @@ class BillingFormItems extends Component
     }
     public function getReload()
     {
-        $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
+        if ($this->editItemId) {
+            $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
+        }
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
         $this->itemList = $this->billingServices->ItemView($this->BILL_ID);
     }

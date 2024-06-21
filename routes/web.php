@@ -116,12 +116,9 @@ use App\Livewire\WriteCheck\WriteCheckList;
 */
 
 Route::get('/', function () {
-
     if (auth()->check()) {
-
         return redirect()->route('dashboard');
     }
-
     return redirect()->route('login');
 });
 
@@ -442,6 +439,36 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/option')->group(function () {
                 Route::get('/', OptionSettings::class)->name('option')->middleware(['permission:option']);
             });
+        });
+    });
+
+    Route::prefix('/reports')->name('reports')->group(function () {
+        Route::prefix('/financial')->group(function () {
+
+        });
+        Route::prefix('/sales')->group(function () {
+
+        });
+        Route::prefix('/receivables')->group(function () {
+
+        });
+        Route::prefix('/purchases')->group(function () {
+
+        });
+        Route::prefix('/expenses')->group(function () {
+
+        });
+        Route::prefix('/payables')->group(function () {
+
+        });
+        Route::prefix('/inventory')->group(function () {
+
+        });
+        Route::prefix('/accounting')->group(function () {
+
+        });
+        Route::prefix('/documents')->group(function () {
+
         });
     });
 });

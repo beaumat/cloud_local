@@ -14,7 +14,7 @@ use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class CreditMemoFormItems extends Component
-{ 
+{
     #[Reactive]
     public int $CREDIT_MEMO_ID;
     #[Reactive]
@@ -30,7 +30,6 @@ class CreditMemoFormItems extends Component
     public float $QUANTITY;
     public int $UNIT_ID;
     public int $BASE_UNIT_ID;
-    public float $UNIT_BASE_QUANTITY;
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -122,7 +121,6 @@ class CreditMemoFormItems extends Component
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
-        $this->UNIT_BASE_QUANTITY = 1;
         $this->QUANTITY = 1;
         $this->RATE = 0;
         $this->ITEM_CODE = '';
@@ -147,14 +145,11 @@ class CreditMemoFormItems extends Component
                 $this->GROUP_LINE_ID = false;
                 $this->PRINT_IN_FORMS = false;
                 $this->PRICE_LEVEL_ID = 0;
-      
+
                 $this->getAmount();
                 $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);
             }
         }
-
-
-
     }
     public function getGroupPrice(int $item_id)
     {
@@ -165,7 +160,6 @@ class CreditMemoFormItems extends Component
                 ->first();
 
             return $totalSum->total;
-
         } catch (\Throwable $th) {
             return 0;
         }
@@ -176,7 +170,6 @@ class CreditMemoFormItems extends Component
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
-
     }
     public function saveItem()
     {
@@ -189,7 +182,7 @@ class CreditMemoFormItems extends Component
             [],
             [
                 'ITEM_ID' => 'Item',
-                'QUANTITY' => 'Quantitity',
+                'QUANTITY' => 'Quantity',
                 'RATE' => 'Price'
             ]
         );
@@ -203,12 +196,14 @@ class CreditMemoFormItems extends Component
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
 
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
+
             $this->creditMemoServices->ItemStore(
                 $this->CREDIT_MEMO_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
                 $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
-                $this->UNIT_BASE_QUANTITY,
+                (float) $unitRelated['QUANTITY'],
                 $this->RATE,
                 $this->RATE_TYPE,
                 $this->AMOUNT,
@@ -230,7 +225,6 @@ class CreditMemoFormItems extends Component
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
-            $this->UNIT_BASE_QUANTITY = 1;
             $this->RATE = 0;
             $this->RATE_TYPE = 0;
             $this->AMOUNT = 0;
@@ -242,7 +236,6 @@ class CreditMemoFormItems extends Component
             $this->CLASS_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -284,6 +277,20 @@ class CreditMemoFormItems extends Component
 
     public function updateItem(int $Id)
     {
+
+
+        $this->validate(
+            [
+                'lineQty' => 'required|not_in:0',
+            ],
+            [],
+            [
+                'lineQty' => 'Quantity',
+            ]
+        );
+
+
+
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
             $tax_result = $this->computeServices->ItemComputeTax($this->lineAmount, $this->lineTax, $this->TAX_ID, $taxRate);
@@ -291,14 +298,16 @@ class CreditMemoFormItems extends Component
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
-     
+
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
+
             $this->creditMemoServices->ItemUpdate(
                 $Id,
                 $this->CREDIT_MEMO_ID,
                 $this->lineItemId,
                 $this->lineQty,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
-                1,
+                (float) $unitRelated['QUANTITY'],
                 $this->lineRate,
                 0,
                 $this->lineAmount,
@@ -319,7 +328,6 @@ class CreditMemoFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax = false;
             $this->lineItemId = 0;
-
         } catch (\Exception $e) {
 
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -359,7 +367,7 @@ class CreditMemoFormItems extends Component
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
         $this->itemList = $this->creditMemoServices->ItemView($this->CREDIT_MEMO_ID);
     }
-    
+
     public function render()
     {
         $this->getReload();

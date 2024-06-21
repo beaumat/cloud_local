@@ -28,7 +28,6 @@ class PurchaseOrderFormItems extends Component
     public float $QUANTITY;
     public int $UNIT_ID;
     public int $BASE_UNIT_ID;
-    public float $UNIT_BASE_QUANTITY;
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -105,7 +104,6 @@ class PurchaseOrderFormItems extends Component
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
-        $this->UNIT_BASE_QUANTITY = 1;
         $this->QUANTITY = 1;
         $this->RATE = 0;
         $this->ITEM_CODE = '';
@@ -161,12 +159,15 @@ class PurchaseOrderFormItems extends Component
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
 
+
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
+
             $this->purchaseOrderServices->ItemStore(
                 $this->PO_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
                 $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
-                $this->UNIT_BASE_QUANTITY,
+                (float) $unitRelated['QUANTITY'],
                 $this->RATE,
                 $this->RATE_TYPE,
                 $this->AMOUNT,
@@ -183,7 +184,6 @@ class PurchaseOrderFormItems extends Component
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
-            $this->UNIT_BASE_QUANTITY = 1;
             $this->RATE = 0;
             $this->RATE_TYPE = 0;
             $this->AMOUNT = 0;
@@ -238,6 +238,17 @@ class PurchaseOrderFormItems extends Component
     public function updateItem(int $Id)
     {
 
+
+        $this->validate(
+            [    
+                'lineQty' => 'required|not_in:0',
+            ],
+            [],
+            [
+                'lineQty' => 'Quantity',
+            ]
+        );
+        
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
 
@@ -246,13 +257,16 @@ class PurchaseOrderFormItems extends Component
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
+
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
+
             $this->purchaseOrderServices->ItemUpdate(
                 $Id,
                 $this->PO_ID,
                 $this->lineItemId,
                 $this->lineQty,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
-                1,
+                (float) $unitRelated['QUANTITY'],
                 $this->lineRate,
                 $this->lineAmount,
                 $this->lineTax,

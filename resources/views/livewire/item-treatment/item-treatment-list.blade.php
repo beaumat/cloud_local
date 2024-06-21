@@ -57,7 +57,7 @@
                                         <th>Location</th>
                                         <th>Item </th>
                                         <th>Default Qty</th>
-                                        <th>Unit</th>
+                                        <th>UOM</th>
                                         <th>No. of Used</th>
                                         <th>Inactive</th>
                                         <th>Auto</th>
