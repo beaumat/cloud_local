@@ -180,6 +180,10 @@ class BuildAssemblyForm extends Component
                     $this->NOTES,
                     $this->ASSET_ACCOUNT_ID
                 );
+
+
+
+                
                 DB::commit();
                 return Redirect::route('companybuild_assembly_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
