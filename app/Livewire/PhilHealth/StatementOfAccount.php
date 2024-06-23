@@ -89,7 +89,7 @@ class StatementOfAccount extends Component
             $this->GOV_TOTAL = $this->GOV_SUB_TOTAL;
             $this->P1_TOTAL = $this->P1_SUB_TOTAL + $this->PROFESSIONAL_FEE_SUB_TOTAL;
             $this->P2_TOTAL = $this->P2_SUB_TOTAL;
-
+        
             $total_discount = (float) $this->VAT_TOTAL + $this->SP_TOTAL + $this->GOV_TOTAL;
             $total_benefits = (float) $this->P1_TOTAL + $this->P2_TOTAL;
 
@@ -161,6 +161,7 @@ class StatementOfAccount extends Component
                 // $this->P2_SUPPLIES = $data->P2_SUPPLIES;
                 // $this->P2_OTHERS = $data->P2_OTHERS;
                 $this->P2_SUB_TOTAL = $data->P2_SUB_TOTAL;
+          
                 $this->OP_ROOM_N_BOARD = $data->OP_ROOM_N_BOARD;
                 $this->OP_DRUG_N_MEDICINE = $data->OP_DRUG_N_MEDICINE;
                 $this->OP_LAB_N_DIAGNOSTICS = $data->OP_LAB_N_DIAGNOSTICS;
@@ -181,8 +182,6 @@ class StatementOfAccount extends Component
                 // $this->OTHER_NAME = $data->OTHER_NAME;
                 return;
             }
-
-
         }
         $this->CHARGES_ROOM_N_BOARD = 0;
         $this->CHARGES_DRUG_N_MEDICINE = $this->DRUG_N_MEDINE_AMOUNT;

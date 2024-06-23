@@ -19,7 +19,7 @@
                        <a href="{{ route('vendorsbills') }}"
                            class="nav-link {{ request()->is('vendors/bills*') ? 'active' : '' }}">
                            <i class="fas fa-file-invoice nav-icon"></i>
-                           <p>Bills</p>
+                           <p>Add Stock</p>
                        </a>
                    </li>
                @endcan

@@ -380,7 +380,7 @@ class HemoServices
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.CUSTOMER_ID', $PATIENT_ID)
             ->where('hemodialysis_items.IS_NEW', true)
-            ->where('h.DATE', '<', $DATE_TREATMENT)
+            ->where('h.DATE', '<=', $DATE_TREATMENT)
             ->orderBy('h.DATE', 'desc')
             ->first();
 
@@ -491,6 +491,7 @@ class HemoServices
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
             ->whereIn('item.TYPE', ['0', '1'])
             ->where('hemodialysis_items.HEMO_ID', $ID)
+            ->where('hemodialysis_items.IS_NEW', 1)
             ->get();
 
         return $result;

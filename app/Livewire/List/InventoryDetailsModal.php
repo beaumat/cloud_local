@@ -10,14 +10,11 @@ use Livewire\Component;
 
 class InventoryDetailsModal extends Component
 {
-
-
     public int $ITEM_ID;
     public int $LOCATION_ID;
     public string $ITEM_NAME;
     public $dataList = [];
     public bool $showModal = false;
-
     private $itemInventoryServices;
     private $itemServices;
     public function boot(ItemInventoryServices $itemInventoryServices, ItemServices $itemServices)
@@ -25,15 +22,10 @@ class InventoryDetailsModal extends Component
         $this->itemInventoryServices = $itemInventoryServices;
         $this->itemServices = $itemServices;
     }
-
-
-
-
     public function closeModal()
     {
         $this->showModal = false;
     }
-
     #[On("open-modal")]
     public function showingModa($result)
     {
@@ -56,8 +48,6 @@ class InventoryDetailsModal extends Component
     public function render()
     {
         if ($this->showModal) {
-
-
             $this->dataList = $this->itemInventoryServices->getDetails($this->ITEM_ID, $this->LOCATION_ID);
         }
 

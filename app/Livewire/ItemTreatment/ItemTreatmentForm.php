@@ -117,10 +117,20 @@ class ItemTreatmentForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    public function UpdatedItemId()
+    {
+        $data = $this->itemServices->get($this->ITEM_ID);
+
+        if ($data) {
+            $this->UNIT_ID = $data->BASE_UNIT_ID ?? 0;
+        } else {
+            $this->UNIT_ID = 0;
+        }
+    }
     public function render()
     {
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
-      
+
         return view('livewire.item-treatment.item-treatment-form');
     }
 }

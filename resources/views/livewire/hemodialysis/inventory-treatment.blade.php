@@ -48,7 +48,6 @@
                                         @else
                                             {{ $list->SYMBOL }}
                                         @endif
-
                                     </td>
                                     <td class="text-center">
                                         @if ($lineId == $list->ID)
@@ -59,31 +58,30 @@
                                                 <i class="fa fa-check-square-o" aria-hidden="true"></i>
                                             @endif
                                         @endif
-
                                     </td>
                                     @if ($STATUS == $openStatus)
                                         <td class="text-center">
                                             @if ($lineId == $list->ID)
                                                 <button title="Update" id="updatebtn" wire:click="updateItem()"
-                                                    class="btn btn-sm  btn-success w-25">
-                                                    <i class="fas fa-check text-white" aria-hidden="true"></i>
+                                                    class="btn-sm w-25">
+                                                    <i class="fas fa-check text-success" aria-hidden="true"></i>
                                                 </button>
                                                 <button title="Cancel" id="cancelbtn" href="#"
-                                                    wire:click="cancelItem()" class="btn btn-sm btn-warning w-25">
-                                                    <i class="fas fa-ban text-white" aria-hidden="true"></i>
+                                                    wire:click="cancelItem()" class="btn-sm w-25">
+                                                    <i class="fas fa-ban text-warning" aria-hidden="true"></i>
                                                 </button>
                                             @else
-                                                <button title="Edit" id="editbtn"
+                                                <a href="#" title="Edit" id="editbtn"
                                                     wire:click='editItem({{ $list->ID }})'
-                                                    class="btn btn-sm btn-info w-25">
-                                                    <i class="fas fa-edit text-white" aria-hidden="true"></i>
-                                                </button>
-                                                <button title="Delete" id="deletebtn"
+                                                    class="btn-sm text-primary">
+                                                    <i class="fas fa-edit " aria-hidden="true"></i>
+                                                </a>
+                                                <a  href="#" title="Delete" id="deletebtn"
                                                     wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn btn-danger btn-sm w-25">
-                                                    <i class="fas fa-times text-white" aria-hidden="true"></i>
-                                                </button>
+                                                    class="btn-sm text-danger w-25">
+                                                    <i class="fas fa-times " aria-hidden="true"></i>
+                                                </a>
                                             @endif
 
                                         </td>

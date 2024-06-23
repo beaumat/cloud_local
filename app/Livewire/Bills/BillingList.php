@@ -9,7 +9,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title('Bills')]
+#[Title('Add Stock')]
 class BillingList extends Component
 {
 

@@ -13,7 +13,7 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Type</th>
-                                    <th>Ref</th>
+
                                     <th>Quantity</th>
                                     <th>Ending</th>
                                 </tr>
@@ -22,8 +22,13 @@
                                 @foreach ($dataList as $list)
                                     <tr>
                                         <td>{{ $list->SOURCE_REF_DATE }}</td>
-                                        <td>{{ $list->TYPE }}</td>
-                                        <td></td>
+                                        <td>
+                                            @if ($list->TYPE == 'Bill')
+                                                Add Stock
+                                            @else
+                                                {{ $list->TYPE }}
+                                            @endif
+                                        </td>
                                         <td> {{ number_format($list->QUANTITY, 1) }}</td>
                                         <td> {{ number_format($list->ENDING_QUANTITY, 1) }}</td>
                                     </tr>

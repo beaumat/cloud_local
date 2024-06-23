@@ -106,7 +106,6 @@ class BillingFormItems extends Component
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
-
         $this->QUANTITY = 1;
         $this->RATE = 0;
         $this->ITEM_CODE = '';
@@ -124,7 +123,8 @@ class BillingFormItems extends Component
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->PURCHASE_DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
-                $this->ACCOUNT_ID = $item->ASSET_ACCOUNT_ID;
+                $this->ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
+                $this->UNIT_ID = $item->BASE_UNIT_ID ?? 0;
                 $this->PO_ITEM_ID = 0;
                 $this->CLASS_ID = 0;
                 $this->getAmount();

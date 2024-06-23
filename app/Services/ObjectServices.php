@@ -54,7 +54,7 @@ class ObjectServices
 
             dd("$TABLE_NAME table not found . please try again");
             // Auto Create
-
+            
             return 1;
         }
     }

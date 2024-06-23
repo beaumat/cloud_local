@@ -211,12 +211,12 @@
                                             Medicines</a>
                                     </li>
 
-                                    {{-- <li class="nav-item"> 
-                                        <a class="nav-link @if ($tab == 'cf1') active @endif"
-                                            id="custom-tabs-four-cf1-tab" wire:click="SelectTab('cf1')"
-                                            data-toggle="pill" href="#custom-tabs-four-cf1" role="tab"
-                                            aria-controls="custom-tabs-four-cf1" aria-selected="true">CF-1 Form</a>
-                                    </li> --}}
+                                    <li class="nav-item">
+                                        <a class="nav-link @if ($tab == 'payment') active @endif"
+                                            id="custom-tabs-four-payment-tab" wire:click="SelectTab('payment')"
+                                            data-toggle="pill" href="#custom-tabs-four-payment" role="tab"
+                                            aria-controls="custom-tabs-four-payment" aria-selected="true">Payments</a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -254,17 +254,16 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="tab-pane fade @if ($tab == 'cf1') show active @endif"
-                                        id="custom-tabs-four-cf1" role="tabpanel"
-                                        aria-labelledby="custom-tabs-four-cf1-tab">
+                                    <div class="tab-pane fade @if ($tab == 'payment') show active @endif"
+                                        id="custom-tabs-four-payment" role="tabpanel"
+                                        aria-labelledby="custom-tabs-four-payment-tab">
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-
-                                                @livewire('PhilHealth.Cf1Form')
+                                                @livewire('PhilHealth.PaymentList', ['PHILHEALTH_ID' => $ID])
                                             </div>
                                         </div>
-                                    </div> --}}
+                                    </div>
 
                                 </div>
                             </div>

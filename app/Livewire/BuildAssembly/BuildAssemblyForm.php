@@ -182,8 +182,6 @@ class BuildAssemblyForm extends Component
                 );
 
 
-
-                
                 DB::commit();
                 return Redirect::route('companybuild_assembly_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
@@ -337,6 +335,7 @@ class BuildAssemblyForm extends Component
     }
     public function render()
     {
+        $this->updatedASSEMBLYITEMID();
         return view('livewire.build-assembly.build-assembly-form');
     }
 }

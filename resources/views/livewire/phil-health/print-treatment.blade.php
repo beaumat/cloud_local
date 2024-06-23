@@ -1,6 +1,5 @@
 <div>
-  
-    </style>
+
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -10,11 +9,9 @@
                         <b class="print-address1 text-center">RDL Building F. Torres Street, Davao City <br />Telephone
                             #:285-2403; Mobile #: 09258678600/9175041322 <br /> Email:
                             avidadavao.torres@yahoo.com.ph</b>
-
                     </div>
                 </div>
                 <div class="col-12">
-
                     <div class="row">
                         <div class="col-12 text-center">
                             <b class="h4">HEMODIALYSIS TREATMENT SUMMARY</b>
@@ -43,9 +40,7 @@
                                 <div class="col-9 bottom-line"> {{ $FINAL_DIAGNOSIS }}</div>
                             </div>
                         </div>
-
                         <div class="col-6">
-
                         </div>
                     </div>
                 </div>

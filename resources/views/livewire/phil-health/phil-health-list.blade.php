@@ -48,14 +48,16 @@
                                 <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>No.</th>
-                                        <th class="col-1">Date</th>
+                                        <th>Date</th>
                                         <th class="col-3">Patients</th>
-                                        <th class="col-1">Admitted On</th>
-                                        <th class="col-1">Discharges ON</th>
-                                        <th class="col-1">No. of Treatment </th>
-                                        <th class="col-1">Total Charge</th>
-                                        <th class="col-1">Location</th>
-                                        <th class="col-1">Status</th>
+                                        <th>Admitted</th>
+                                        <th>Discharges</th>
+                                        <th>No. of Treatment </th>
+                                        <th>Total Charge</th>
+                                        <th>First Case </th>
+                                        <th>Collection</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
                                         <th class="text-center col-2 bg-success">
                                             @can('patient.philhealth.create')
                                                 <a href="{{ route('patientsphic_create') }}"
@@ -63,7 +65,6 @@
                                                     <i class="fas fa-plus"></i> New
                                                 </a>
                                             @endcan
-
                                         </th>
                                     </tr>
                                 </thead>
@@ -82,16 +83,20 @@
                                             <td> {{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
                                             <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
                                             <td class="text-right"> {{ number_format($list->CHARGE_TOTAL, 2) }}</td>
+                                            <td class="text-right"> {{ number_format($list->P1_TOTAL, 2) }}</td>
+                                            <td class="text-right"> {{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
-                                            <td> {{ $list->STATUS }}</td>
-
+                                            <td
+                                                class="
+                                                 @if ($list->STATUS == 'Paid') text-success @else text-danger @endif
+                                                ">
+                                                {{ $list->STATUS }}</td>
                                             <td class="text-center">
                                                 @can('patient.philhealth.print')
                                                     <a target="_BLANK" title="Soa"
                                                         href="{{ route('patientsphic_print', ['id' => $list->ID]) }}"
                                                         class="btn-sm text-primary"> <i class="fa fa-file-pdf-o"
                                                             aria-hidden="true"></i></a>
-
                                                     <a target="_BLANK" title="Philheath Form"
                                                         href="{{ route('patientsphic_print_form', ['id' => $list->ID]) }}"
                                                         class="btn-sm text-danger"> <i class="fa fa-file-pdf-o"

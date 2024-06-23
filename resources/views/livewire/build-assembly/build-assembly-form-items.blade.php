@@ -5,10 +5,13 @@
         <thead class="text-xs bg-sky">
             <tr>
                 <th class="col-1">Code</th>
-                <th class="col-5">Description</th>
+                <th class="col-4">Description</th>
+                <th class="col-1">Unit Base</th>
                 <th class="col-1">Qty</th>
-                <th class="col-1">Amount</th>
-                <th class ="col-1">Qty On-Hand</th>
+                {{-- <th class="col-1">Amount</th> --}}
+                @if (!$IS_POSTED)
+                    <th class ="col-1">On-Hand</th>
+                @endif
             </tr>
         </thead>
         <tbody class="text-xs">
@@ -16,15 +19,15 @@
                 <tr>
                     <td>{{ $list->CODE }}</td>
                     <td>{{ $list->DESCRIPTION }}</td>
+                    <td>{{ $list->UNIT_BASE }}</td>
                     <td class="text-right">
-                        {{ number_format($list->QUANTITY, 0) }}
+                        {{ number_format($list->QUANTITY, 2) }}
                     </td>
-                    <td class="text-right">
-                        {{ number_format($list->AMOUNT, 2) }}
-                    </td>
-                    <td class="text-right">
-                        {{ number_format($list->QTY_OHAND, 2) }}
-                    </td>
+                    @if (!$IS_POSTED)
+                        <td class="text-right">
+                            {{ number_format($list->OTY_OHAND, 2) }}
+                        </td>
+                    @endif
                 </tr>
             @endforeach
         </tbody>

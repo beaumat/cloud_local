@@ -140,7 +140,7 @@ class BuildAssemblyServices
             $QTY = (float) $item->QUANTITY * $QUANTITY;
             $AMOUNT = (float) ($item->RATE * $item->QUANTITY) * $QUANTITY;
             $TOTAL = $TOTAL + $AMOUNT;
-            $this->ComponentStore($BUILD_ASSEMBLY_ID, $item->COMPONENT_ID, $QTY, $AMOUNT, 0, $item->ASSET_ACCOUNT_ID);
+            $this->ComponentStore($BUILD_ASSEMBLY_ID, $item->COMPONENT_ID, $QTY, $AMOUNT, 0, $item->ASSET_ACCOUNT_ID ?? 0);
         }
 
         return $TOTAL;
@@ -152,8 +152,8 @@ class BuildAssemblyServices
             ->select([
                 'build_assembly_items.ID',
                 'build_assembly_items.ITEM_ID',
-                DB::raw('(select QUANTITY from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ' ) as QUANTITY'),
-                DB::raw('(select RATE from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ' ) as RATE'),
+                DB::raw('(select QUANTITY from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ') as QUANTITY'),
+                DB::raw('(select RATE from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ') as RATE'),
             ])
             ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
             ->where('build_assembly_items.BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
@@ -202,7 +202,7 @@ class BuildAssemblyServices
     {
         return (int) BuildAssemblyItems::where('BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)->count();
     }
-    public function ComponentList(int $BUILD_ASSEMBLY_ID)
+    public function ComponentList(int $BUILD_ASSEMBLY_ID, int $locationId)
     {
 
         $result = BuildAssemblyItems::query()
@@ -214,10 +214,20 @@ class BuildAssemblyServices
                 'item.DESCRIPTION',
                 'item.CODE',
                 'build_assembly_items.ID',
-                DB::raw(' 0 as OTY_OHAND')
-
+                'u.NAME as UNIT_BASE'
             ])
+            ->selectSub(function ($query) use (&$locationId) {
+
+                $query->from('item_inventory')
+                    ->select('item_inventory.ENDING_QUANTITY')
+                    ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
+                    ->where('item_inventory.LOCATION_ID', $locationId)
+                    ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
+                    ->orderBy('item_inventory.ID', 'DESC')
+                    ->limit(1);
+            }, 'OTY_OHAND')
             ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'item.BASE_UNIT_ID')
             ->where('build_assembly_items.BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
             ->get();
 

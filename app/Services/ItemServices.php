@@ -231,6 +231,7 @@ class ItemServices
             ->leftJoin('item_group', 'item_group.ID', '=', 'item.GROUP_ID')
             ->leftJoin('stock_type_map', 'stock_type_map.ID', '=', 'item.STOCK_TYPE')
             ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'item.BASE_UNIT_ID')
+            ->where('item.INACTIVE', 0)
             ->when($search, function ($query) use (&$search) {
                 $query->where('item.CODE', 'like', '%' . $search . '%')
                     ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
@@ -258,7 +259,8 @@ class ItemServices
                     't.DESCRIPTION as TYPE',
                     'g.DESCRIPTION as GROUP_NAME',
                     'c.DESCRIPTION as CLASS_NAME',
-                    's.DESCRIPTION as SUB_NAME'
+                    's.DESCRIPTION as SUB_NAME',
+                    'u.NAME as UNIT_NAME'
                 ]
             )
             ->selectSub(function ($query) use (&$locationId) {
@@ -274,6 +276,7 @@ class ItemServices
             ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')
             ->leftJoin('item_sub_class as s', 's.ID', '=', 'item.SUB_CLASS_ID')
             ->leftJoin('item_class as c', 'c.ID', '=', 's.CLASS_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', 'item.BASE_UNIT_ID')
             ->where('item.TYPE', '<', 2)
             ->where('item.INACTIVE', 0)
             ->when($search, function ($query) use (&$search) {

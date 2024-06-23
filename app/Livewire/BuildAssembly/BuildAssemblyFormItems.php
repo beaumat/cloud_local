@@ -14,7 +14,8 @@ class BuildAssemblyFormItems extends Component
     public int $LOCATION_ID;
     #[Reactive]
     public int $ASSEMBLY_ITEM_ID;
-
+    #[Reactive]
+    public bool $IS_POSTED;
     private $buildAssemblyService;
     public function boot(BuildAssemblyServices $buildAssemblyServices)
     {
@@ -22,7 +23,7 @@ class BuildAssemblyFormItems extends Component
     }
     public function render()
     {
-        $dataList = $this->buildAssemblyService->ComponentList($this->BUILD_ASSEMBLY_ID);
+        $dataList = $this->buildAssemblyService->ComponentList($this->BUILD_ASSEMBLY_ID, $this->LOCATION_ID);
 
         return view('livewire.build-assembly.build-assembly-form-items', ['dataList' => $dataList]);
     }

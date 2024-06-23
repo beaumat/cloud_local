@@ -34,7 +34,11 @@ class ContactServices
     {
         return contacts::where('ID', $ID)->where('TYPE', $TYPE)->first();
     }
-
+    
+    public function getFirstFromListByID( int $TYPE)
+    {
+        return contacts::where('TYPE', $TYPE)->first()->ID;
+    }
     public function getList(int $Type): object
     {
         return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();

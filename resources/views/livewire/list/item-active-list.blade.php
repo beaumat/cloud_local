@@ -55,6 +55,7 @@
                                         <th>CODE</th>
                                         <th>DESCRIPTION</th>
                                         <th>TYPE</th>
+                                        <th>UNIT</th>
                                         <th>GROUP</th>
                                         <th>CLASS</th>
                                         <th>SUB-CLASS</th>
@@ -68,13 +69,13 @@
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ $list->DESCRIPTION }}</td>
                                             <td> {{ $list->TYPE }} </td>
+                                            <td> {{ $list->UNIT_NAME }} </td>
                                             <td> {{ $list->GROUP_NAME }}</td>
                                             <td> {{ $list->CLASS_NAME }}</td>
                                             <td> {{ $list->SUB_NAME }}</td>
                                             <td class="text-center">
                                                 <a href="#"
-                                                    wire:click='OnClick({{ $list->ID }})'>{{ number_format($list->QTY_ON_HAND ?? 0,2) }}</a>
-
+                                                    wire:click='OnClick({{ $list->ID }})'>{{ number_format($list->QTY_ON_HAND ?? 0, 2) }}</a>
                                             </td>
 
                                         </tr>

@@ -12,7 +12,7 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('vendorsbills') }}"> Bills </a>
+                                    <a class="text-white" href="{{ route('vendorsbills') }}"> Add Stock </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)
@@ -212,27 +212,13 @@
                                 <div class="col-md-6 text-left">
                                     <div class="row">
                                         <div class="col-md-2">
-                                            @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID])
+                                            {{-- @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID]) --}}
                                         </div>
                                         <div class="col-md-2">
-                                            @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID])
+                                            {{-- @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID]) --}}
                                         </div>
                                     </div>
 
-                                    {{-- @if ($STATUS == 0)
-                                        <button class="btn btn-sm btn-success" wire:click='getSubmit'
-                                            wire:confirm="Are you sure you want to submit?"
-                                            @if ($ID === 0 || $STATUS > 0 || $AMOUNT == 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            Submit
-                                        </button>
-                                    @endif
-
-                                    @if ($STATUS == 2)
-                                        <button class="btn btn-sm btn-danger" wire:click='getVoid'
-                                            wire:confirm="Are you sure you want to void?">
-                                            Void
-                                        </button>
-                                    @endif --}}
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">

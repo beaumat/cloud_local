@@ -276,7 +276,7 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/vendor')->group(function () {
                 Route::get('/', VendorList::class)->name('vendor')->middleware(['permission:contact.vendor.view']);
                 Route::get('/create', VendorForm::class)->name('vendor_create')->middleware(['permission:contact.vendor.create']);
-                Route::get('/{id}/edit', VendorForm::class)->name('vendor_edit')->middleware(['permission:contact.customer.view']);
+                Route::get('/{id}/edit', VendorForm::class)->name('vendor_edit')->middleware(['permission:contact.vendor.view']);
             });
 
             Route::prefix('/employees')->group(function () {

@@ -106,7 +106,7 @@ class PrintCsf extends Component
                 $this->PATIENT_MIDDLENAME = $contact->MIDDLE_NAME;
                 $this->PATIENT_EXTENSION = $contact->SALUTATION;
                 $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
-                $this->PATIENT_GENDER = $contact->GENDER;
+                // $this->PATIENT_GENDER = $contact->GENDER;
                 $this->IS_PATIENT = $contact->IS_PATIENT;
 
                 if ($this->IS_PATIENT) {

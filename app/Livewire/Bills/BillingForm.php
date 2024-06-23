@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-#[Title('Bills')]
+#[Title('Add Stock')]
 class BillingForm extends Component
 {
 
@@ -172,7 +172,7 @@ class BillingForm extends Component
         $this->DISCOUNT_DATE = '';
         $this->DISCOUNT_PCT = 0;
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->VENDOR_ID = 0;
+        $this->VENDOR_ID = $this->contactServices->getFirstFromListByID(0);
         $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
         $this->NOTES = '';
         $this->AMOUNT = 0;
@@ -242,14 +242,11 @@ class BillingForm extends Component
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
             return false;
-
         }
-
     }
     public function getPosted()
     {
@@ -287,7 +284,6 @@ class BillingForm extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-
     }
     public function save()
     {
@@ -335,7 +331,6 @@ class BillingForm extends Component
                 );
 
                 return Redirect::route('vendorsbills_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
 
                 $this->validate(
@@ -362,7 +357,7 @@ class BillingForm extends Component
                 $this->getTax();
                 $this->billingServices->Update(
                     $this->ID,
-                    $this->CODE,          
+                    $this->CODE,
                     $this->VENDOR_ID,
                     $this->PAYMENT_TERMS_ID,
                     $this->DUE_DATE,
@@ -393,7 +388,6 @@ class BillingForm extends Component
             $this->AMOUNT = $list['AMOUNT'];
             $this->BALANCE_DUE = $list['AMOUNT'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
-
         }
     }
     public function updateCancel()

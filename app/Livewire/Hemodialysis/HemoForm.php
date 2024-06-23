@@ -7,7 +7,9 @@ use App\Services\DateServices;
 use App\Services\DocumentTypeServices;
 use App\Services\HemoServices;
 use App\Services\ItemInventoryServices;
+use App\Services\ItemTreatmentServices;
 use App\Services\LocationServices;
+use App\Services\UnitOfMeasureServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
@@ -75,6 +77,8 @@ class HemoForm extends Component
 
     private $itemInventoryServices;
     private $documentTypeServices;
+    private $itemTreatmentServices;
+    private $unitOfMeasureServices;
     public function boot(
         HemoServices $hemoServices,
         ContactServices $contactServices,
@@ -84,7 +88,8 @@ class HemoForm extends Component
         DateServices $dateServices,
         ItemInventoryServices $itemInventoryServices,
         DocumentTypeServices $documentTypeServices,
-        
+        ItemTreatmentServices $itemTreatmentServices,
+        UnitOfMeasureServices $unitOfMeasureServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
@@ -94,6 +99,8 @@ class HemoForm extends Component
         $this->dateServices = $dateServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->documentTypeServices = $documentTypeServices;
+        $this->itemTreatmentServices = $itemTreatmentServices;
+        $this->unitOfMeasureServices = $unitOfMeasureServices;
     }
 
     public function reloadData($data)
@@ -245,9 +252,34 @@ class HemoForm extends Component
             $this->Modify = false;
             return;
         }
-
-
         $this->Modify = false;
+    }
+    public function addItem(int $ItemTreatmentId)
+    {
+        $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
+        if ($data) {
+            $gotNew = true;
+            
+            if ($data->NO_OF_USED > 1) {
+                $hemoData =  $this->hemoServices->Get($this->ID);
+                if ($hemoData) {
+                    $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $this->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
+                    if ($totalused == 0) {
+                        $gotNew = true;
+                    } elseif ($totalused < $data->NO_OF_USED) {
+                        $gotNew = false;
+                    }
+                }
+            }
+
+            try {
+                $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
+                $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];   
+                $this->hemoServices->ItemStore($this->ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
+            } catch (\Throwable $th) {
+                session()->flash('error', $th->getMessage());
+            }
+        }
     }
     public function save()
     {
@@ -268,16 +300,27 @@ class HemoForm extends Component
         );
 
         try {
+            DB::beginTransaction();
             if ($this->ID == 0) {
+             
                 $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
+       
+  
+                $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);
+                foreach ($dataList as $item) {
+                    $this->addItem($item->ID);
+                }
+                DB::commit();
                 return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 // $this->hemoServices->PreUpdate($this->ID, $this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
 
                 $this->update_all();
+                DB::commit();
                 $this->Modify = false;
             }
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -294,7 +337,7 @@ class HemoForm extends Component
             $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Hemodialysis');
 
             $data = $this->hemoServices->ItemInventory($this->ID);
-        
+
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
             }

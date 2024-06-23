@@ -32,7 +32,7 @@
                                             <input type="number" wire:model="newQty"
                                                 class="form-control form-control-sm text-right">
                                         @else
-                                            {{ number_format($list->QUANTITY, 1) }}
+                                            {{ number_format($list->QUANTITY, 2) }}
                                         @endif
                                     </td>
                                     <td class="text-right">

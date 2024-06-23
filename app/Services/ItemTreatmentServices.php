@@ -118,6 +118,27 @@ class ItemTreatmentServices
         return $result;
     }
 
+    public function AutoItemList(int $locationId)
+    {
+        $result = ItemTreatment::query()
+            ->select([
+                'item_treatment.ID',
+                'l.NAME as LOCATION_NAME',
+                'i.DESCRIPTION as ITEM_NAME',
+                'u.SYMBOL',
+                'item_treatment.NO_OF_USED',
+                'item_treatment.INACTIVE'
+            ])
+            ->join('location as l', 'l.ID', '=', 'item_treatment.LOCATION_ID')
+            ->join('item as i', 'i.ID', '=', 'item_treatment.ITEM_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', 'item_treatment.UNIT_ID')
+            ->where('item_treatment.LOCATION_ID', $locationId)
+            ->where('item_treatment.IS_AUTO', 1)
+            ->orderBy('item_treatment.ID', 'desc')
+            ->get();
+
+        return $result;
+    }
 
 
     public function getItemList(bool $isCode, int $locationId)

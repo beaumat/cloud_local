@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\Hemodialysis;
-use App\Models\PatientDoctor;
 use App\Models\PhilHealth;
-use App\Models\PhilhealthDrugsMedicines;
+use App\Models\Hemodialysis;
+use Livewire\WithPagination;
+use App\Models\PatientDoctor;
+use App\Models\PhilhealthPayment;
 use App\Models\PhilHealthProfFee;
 use Illuminate\Support\Facades\DB;
-use Livewire\WithPagination;
+use App\Models\PhilhealthDrugsMedicines;
 
 class PhilHealthServices
 {
@@ -332,8 +333,9 @@ class PhilHealthServices
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL ')
-
+                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
+                'philhealth.P1_TOTAL',
+                'philhealth.PAYMENT_AMOUNT'
             ])
             ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -450,7 +452,7 @@ class PhilHealthServices
         string $CONT_FREQUENCY,
         float $CONT_TOTAL_COST
     ) {
-        PhilhealthDrugsMedicines::where('ID', $ID,)->update([
+        PhilhealthDrugsMedicines::where('ID', $ID)->update([
             'PHILHEALTH_ID' => $PHILHEALTH_ID,
             'GENERIC_NAME' => $GENERIC_NAME,
             'QUANTITY' => $QUANTITY,
@@ -497,5 +499,77 @@ class PhilHealthServices
     public function GetDrugMedicine(int $ID): object
     {
         return PhilhealthDrugsMedicines::where('ID', $ID)->first();
+    }
+    public function PaymentGet(int $ID)
+    {
+        return PhilhealthPayment::where('ID', $ID)->first();
+    }
+    public function PaymentStore(int $PHILHEALTH_ID, string $RECEIVED_DATE, float $AMOUNT)
+    {
+        $ID = $this->object->ObjectNextID('PHILHEALTH_PAYMENT');
+
+        PhilhealthPayment::create([
+            'ID' => $ID,
+            'PHILHEALTH_ID' => $PHILHEALTH_ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'RECEIVED_DATE' => $RECEIVED_DATE,
+            'AMOUNT' => $AMOUNT
+        ]);
+    }
+    public function PaymentUpdate(int $ID, int $PHILHEALTH_ID, string $RECEIVED_DATE, float $AMOUNT)
+    {
+
+        PhilhealthPayment::where('ID', $ID)
+            ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
+            ->update([
+                'RECEIVED_DATE' => $RECEIVED_DATE,
+                'AMOUNT' => $AMOUNT
+            ]);
+    }
+    public function PaymentDelete(int $ID, int $PHILHEALTH_ID)
+    {
+
+        PhilhealthPayment::where('ID', $ID)
+            ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
+            ->delete();
+    }
+    public function PaymentList(int $PHILHEALTH_ID)
+    {
+        $result =  PhilhealthPayment::query()
+            ->select([
+                'ID',
+                'RECORDED_ON',
+                'RECEIVED_DATE',
+                'AMOUNT'
+            ])
+            ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
+            ->get();
+
+        return $result;
+    }
+    public function UpdatePayment(int $PHILHEALTH_ID)
+    {
+        $data = $this->get($PHILHEALTH_ID);
+        if ($data) {
+
+            $pay =  PhilhealthPayment::query()
+                ->select([
+                    DB::raw('SUM(AMOUNT) as TOTAL'),
+
+                ])
+                ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
+                ->first();
+
+            if ((float) $pay->TOTAL >= (float) $data->P1_TOTAL) {
+                $STATUS_ID = 11; // Paid
+            } else {
+                $STATUS_ID = 1; //PENDING
+            }
+            PhilHealth::where('ID', $PHILHEALTH_ID)
+                ->update([
+                    'PAYMENT_AMOUNT' =>  $pay->TOTAL,
+                    'STATUS_ID' => $STATUS_ID
+                ]);
+        }
     }
 }

@@ -73,7 +73,6 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-
                                                 </div>
                                             </div>
                                         </div>
@@ -104,6 +103,7 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-md-12">
+                                            
                                                     @if ($Modify)
                                                         <livewire:text-input name="NOTES" titleName="Notes"
                                                             :isDisabled=false wire:model='NOTES' :vertical="false" />
@@ -123,7 +123,7 @@
                                         @if ($STATUS == 0)
                                             @if ($Modify)
                                                 <button type="submit" class="btn btn-sm btn-primary">
-                                                     <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
                                                 @if ($ID > 0)
@@ -182,7 +182,7 @@
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
 
-                                            @livewire('BuildAssembly.BuildAssemblyFormItems', ['BUILD_ASSEMBLY_ID' => $ID, 'ASSEMBLY_ITEM_ID' => $ASSEMBLY_ITEM_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                            @livewire('BuildAssembly.BuildAssemblyFormItems', ['BUILD_ASSEMBLY_ID' => $ID, 'ASSEMBLY_ITEM_ID' => $ASSEMBLY_ITEM_ID, 'LOCATION_ID' => $LOCATION_ID,'IS_POSTED' => $STATUS === 0 ? false : true  ])
 
                                         </div>
                                     </div>
