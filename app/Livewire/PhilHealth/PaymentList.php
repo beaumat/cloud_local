@@ -18,6 +18,7 @@ class PaymentList extends Component
     public $RECEIVED_DATE;
     public int $i = 0;
     public float $AMOUNT;
+    public string $REF_NO;
     public float $P1_TOTAL = 0;
     public float $PAYMENT_AMOUNT = 0;
     public float $BALANCE = 0;
@@ -33,21 +34,24 @@ class PaymentList extends Component
     public $editId = null;
     public string $editReceivedDate;
     public float $editAmount;
+    public string $editRefNo;
     public function Store()
     {
 
         $this->validate(
             [
                 'RECEIVED_DATE' => 'required',
+                'REF_NO' => 'required',
                 'AMOUNT' => 'required|not_in:0'
             ],
             [],
             [
                 'RECEIVED_DATE' => 'Receive Date',
+                'REF_NO' => 'OR No.',
                 'AMOUNT' => 'Amount'
             ]
         );
-        $this->philHealthServices->PaymentStore($this->PHILHEALTH_ID, $this->RECEIVED_DATE, $this->AMOUNT);
+        $this->philHealthServices->PaymentStore($this->PHILHEALTH_ID, $this->RECEIVED_DATE, $this->AMOUNT, $this->REF_NO);
         $this->philHealthServices->UpdatePayment($this->PHILHEALTH_ID);
         $this->RECEIVED_DATE  = null;
         $this->AMOUNT = 0;
@@ -59,6 +63,7 @@ class PaymentList extends Component
             $this->editId = $data->ID;
             $this->editReceivedDate = $data->RECEIVED_DATE;
             $this->editAmount = $data->AMOUNT;
+            $this->editRefNo = $data->REF_NO ?? '';
         }
     }
     public function Cancel()
@@ -66,6 +71,7 @@ class PaymentList extends Component
         $this->editId =  null;
         $this->editReceivedDate = '';
         $this->editAmount = 0;
+        $this->editRefNo = '';
     }
     public function Update()
     {
@@ -75,16 +81,18 @@ class PaymentList extends Component
             [
 
                 'editReceivedDate' => 'required',
-                'editAmount' => 'required|not_in:0'
+                'editAmount' => 'required|not_in:0',
+                'editRefNo' => 'required'
             ],
             [],
             [
                 'editReceivedDate' => 'Receive Date',
-                'editAmount' => 'Amount'
+                'editAmount' => 'Amount',
+                'editRefNo' => 'OR No.'
             ]
         );
 
-        $this->philHealthServices->PaymentUpdate($this->editId, $this->PHILHEALTH_ID, $this->editReceivedDate, $this->editAmount);
+        $this->philHealthServices->PaymentUpdate($this->editId, $this->PHILHEALTH_ID, $this->editReceivedDate, $this->editAmount, $this->editRefNo);
         $this->philHealthServices->UpdatePayment($this->PHILHEALTH_ID);
         $this->Cancel();
     }

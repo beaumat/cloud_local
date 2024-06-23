@@ -504,7 +504,7 @@ class PhilHealthServices
     {
         return PhilhealthPayment::where('ID', $ID)->first();
     }
-    public function PaymentStore(int $PHILHEALTH_ID, string $RECEIVED_DATE, float $AMOUNT)
+    public function PaymentStore(int $PHILHEALTH_ID, string $RECEIVED_DATE, float $AMOUNT, string $REF_NO)
     {
         $ID = $this->object->ObjectNextID('PHILHEALTH_PAYMENT');
 
@@ -513,22 +513,23 @@ class PhilHealthServices
             'PHILHEALTH_ID' => $PHILHEALTH_ID,
             'RECORDED_ON' => $this->dateServices->Now(),
             'RECEIVED_DATE' => $RECEIVED_DATE,
-            'AMOUNT' => $AMOUNT
+            'AMOUNT' => $AMOUNT,
+            'REF_NO' => $REF_NO
         ]);
     }
-    public function PaymentUpdate(int $ID, int $PHILHEALTH_ID, string $RECEIVED_DATE, float $AMOUNT)
+    public function PaymentUpdate(int $ID, int $PHILHEALTH_ID, string $RECEIVED_DATE, float $AMOUNT, string $REF_NO)
     {
 
         PhilhealthPayment::where('ID', $ID)
             ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
             ->update([
                 'RECEIVED_DATE' => $RECEIVED_DATE,
-                'AMOUNT' => $AMOUNT
+                'AMOUNT' => $AMOUNT,
+                'REF_NO' => $REF_NO
             ]);
     }
     public function PaymentDelete(int $ID, int $PHILHEALTH_ID)
     {
-
         PhilhealthPayment::where('ID', $ID)
             ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
             ->delete();
@@ -540,7 +541,8 @@ class PhilHealthServices
                 'ID',
                 'RECORDED_ON',
                 'RECEIVED_DATE',
-                'AMOUNT'
+                'AMOUNT',
+                'REF_NO'
             ])
             ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
             ->get();
@@ -555,7 +557,6 @@ class PhilHealthServices
             $pay =  PhilhealthPayment::query()
                 ->select([
                     DB::raw('SUM(AMOUNT) as TOTAL'),
-
                 ])
                 ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
                 ->first();

@@ -3,10 +3,11 @@
     <div class="col-md-8">
         <table class="table table-sm table-bordered table-hover">
             <thead class="text-xs">
-                <tr class="text-center bg-sky text-white">
+                <tr class="bg-sky text-white">
                     <th class="col-1">No.</th>
                     <th class="col-4 text-left">Received Date</th>
-                    <th class="col-4 text-left">Amount</th>
+                    <th class="col-2">Official Receipt No. </th>
+                    <th class="col-2 text-left">Amount</th>
                     <th class="col-3 text-center">Action</th>
                 </tr>
             </thead>
@@ -23,6 +24,14 @@
                                     class="form-control form-control-sm" />
                             @else
                                 {{ \Carbon\Carbon::parse($list->RECEIVED_DATE)->format('m/d/Y') }}
+                            @endif
+                        </td>
+                        <td class="text-left">
+                            @if ($editId == $list->ID)
+                                <input type="text" name="editRefNo" wire:model='editRefNo'
+                                    class="form-control form-control-sm" />
+                            @else
+                                {{ $list->REF_NO }}
                             @endif
                         </td>
                         <td class="text-right">
@@ -61,7 +70,6 @@
                 @endforeach
                 <form id="quickForm" wire:submit.prevent='Store'>
                     <tr>
-
                         <td></td>
                         <td>
                             <div class="mt-2">
@@ -69,7 +77,6 @@
                                     class="form-control form-control-sm" />
                             </div>
                         </td>
-
                         <td>
                             <div class="mt-2">
                                 <input type="number" name="AMOUNT" wire:model='AMOUNT'

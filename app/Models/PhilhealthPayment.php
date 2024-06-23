@@ -17,5 +17,6 @@ class PhilhealthPayment extends Model
         'RECORDED_ON',
         'RECEIVED_DATE',
         'AMOUNT',
+        'REF_NO'
     ];
 }
