@@ -8,7 +8,6 @@ use Livewire\WithPagination;
 
 class ItemServices
 {
-
     use WithPagination;
     private $object;
     public function __construct(ObjectServices $objectService)
@@ -30,7 +29,9 @@ class ItemServices
     public function updateCost(int $ID, float $COST)
     {
         items::where('ID', $ID)
-            ->update(['COST' => $COST]);
+            ->update([
+                'COST' => $COST
+            ]);
     }
     public function AssemblyItem()
     {
@@ -110,35 +111,35 @@ class ItemServices
         bool $PRINT_INDIVIDUAL_ITEMS,
         bool $INACTIVE
     ): int {
+
         $ID = $this->object->ObjectNextID('ITEM');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('ITEM');
-
         Items::create([
-            'ID' => $ID,
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
-            'DESCRIPTION' => $DESCRIPTION,
-            'PURCHASE_DESCRIPTION' => $PURCHASE_DESCRIPTION,
-            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-            'SUB_CLASS_ID' => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
-            'TYPE' => $TYPE,
-            'STOCK_TYPE' => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
-            'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
-            'COGS_ACCOUNT_ID' => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
-            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-            'TAXABLE' => $TAXABLE,
-            'PREFERRED_VENDOR_ID' => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
-            'MANUFACTURER_ID' => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
-            'RATE' => $RATE,
-            'COST' => $COST > 0 ? $COST : null,
-            'RATE_TYPE' => $RATE_TYPE,
-            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'NOTES' => $NOTES,
-            'BASE_UNIT_ID' => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
-            'PURCHASES_UNIT_ID' => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
-            'SHIPPING_UNIT_ID' => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
-            'SALES_UNIT_ID' => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
-            'PRINT_INDIVIDUAL_ITEMS' => $PRINT_INDIVIDUAL_ITEMS,
-            'INACTIVE' => $INACTIVE
+            'ID'                        => $ID,
+            'CODE'                      => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
+            'DESCRIPTION'               => $DESCRIPTION,
+            'PURCHASE_DESCRIPTION'      => $PURCHASE_DESCRIPTION,
+            'GROUP_ID'                  => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'SUB_CLASS_ID'              => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
+            'TYPE'                      => $TYPE,
+            'STOCK_TYPE'                => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
+            'GL_ACCOUNT_ID'             => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
+            'COGS_ACCOUNT_ID'           => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
+            'ASSET_ACCOUNT_ID'          => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'TAXABLE'                   => $TAXABLE,
+            'PREFERRED_VENDOR_ID'       => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
+            'MANUFACTURER_ID'           => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
+            'RATE'                      => $RATE,
+            'COST'                      => $COST > 0 ? $COST : 0,
+            'RATE_TYPE'                 => $RATE_TYPE,
+            'PAYMENT_METHOD_ID'         => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+            'NOTES'                     => $NOTES,
+            'BASE_UNIT_ID'              => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
+            'PURCHASES_UNIT_ID'         => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
+            'SHIPPING_UNIT_ID'          => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
+            'SALES_UNIT_ID'             => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
+            'PRINT_INDIVIDUAL_ITEMS'    => $PRINT_INDIVIDUAL_ITEMS,
+            'INACTIVE'                  => $INACTIVE
         ]);
 
         return $ID;
@@ -172,32 +173,33 @@ class ItemServices
         bool $INACTIVE
     ): void {
 
-        Items::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DESCRIPTION' => $DESCRIPTION,
-            'PURCHASE_DESCRIPTION' => $PURCHASE_DESCRIPTION,
-            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-            'SUB_CLASS_ID' => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
-            'TYPE' => $TYPE,
-            'STOCK_TYPE' => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
-            'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
-            'COGS_ACCOUNT_ID' => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
-            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-            'TAXABLE' => $TAXABLE,
-            'PREFERRED_VENDOR_ID' => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
-            'MANUFACTURER_ID' => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
-            'RATE' => $RATE,
-            'COST' => $COST > 0 ? $COST : null,
-            'RATE_TYPE' => $RATE_TYPE,
-            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'NOTES' => $NOTES,
-            'BASE_UNIT_ID' => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
-            'PURCHASES_UNIT_ID' => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
-            'SHIPPING_UNIT_ID' => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
-            'SALES_UNIT_ID' => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
-            'PRINT_INDIVIDUAL_ITEMS' => $PRINT_INDIVIDUAL_ITEMS,
-            'INACTIVE' => $INACTIVE
-        ]);
+        Items::where('ID', $ID)
+            ->update([
+                'CODE'                      => $CODE,
+                'DESCRIPTION'               => $DESCRIPTION,
+                'PURCHASE_DESCRIPTION'      => $PURCHASE_DESCRIPTION,
+                'GROUP_ID'                  => $GROUP_ID > 0 ? $GROUP_ID : null,
+                'SUB_CLASS_ID'              => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
+                'TYPE'                      => $TYPE,
+                'STOCK_TYPE'                => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
+                'GL_ACCOUNT_ID'             => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
+                'COGS_ACCOUNT_ID'           => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
+                'ASSET_ACCOUNT_ID'          => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+                'TAXABLE'                   => $TAXABLE,
+                'PREFERRED_VENDOR_ID'       => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
+                'MANUFACTURER_ID'           => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
+                'RATE'                      => $RATE,
+                'COST'                      => $COST > 0 ? $COST : null,
+                'RATE_TYPE'                 => $RATE_TYPE,
+                'PAYMENT_METHOD_ID'         => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+                'NOTES'                     => $NOTES,
+                'BASE_UNIT_ID'              => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
+                'PURCHASES_UNIT_ID'         => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
+                'SHIPPING_UNIT_ID'          => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
+                'SALES_UNIT_ID'             => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
+                'PRINT_INDIVIDUAL_ITEMS'    => $PRINT_INDIVIDUAL_ITEMS,
+                'INACTIVE'                  => $INACTIVE
+            ]);
     }
 
     public function Delete(int $ID): void

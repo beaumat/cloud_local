@@ -45,8 +45,8 @@ class PrintCf4Back extends Component
         $this->getMed($id);
 
         $data = $this->philHealthServices->get($id);
-        if ($data) {
 
+        if ($data) {
             $getData = $this->hemoServices->GetSummary(
                 $data->CONTACT_ID,
                 $data->LOCATION_ID,
@@ -62,21 +62,31 @@ class PrintCf4Back extends Component
             for ($i = $r; $i < 15; $i++) {
                 $this->dateList[$i] = null;
             }
-
-
-
         }
         $fee = $this->philHealthServices->getProfFee($id);
         foreach ($fee as $list) {
             $this->DR_NAME = $list->NAME;
             return;
         }
-
-
     }
     public function getMed(int $ID)
     {
+        for ($i = 0; $i < 8; $i++) {
+            // first Initialize default value.
+            $this->dataMed[$i]['GENERIC_NAME'] = '';
+            $this->dataMed[$i]['QUANTITY'] = '';
+            $this->dataMed[$i]['DOSSAGE'] = '';
+            $this->dataMed[$i]['ROUTE'] = '';
+            $this->dataMed[$i]['FREQUENCY'] = '';
+            $this->dataMed[$i]['TOTAL_COST'] = '';
 
+            $this->dataMed[$i]['CONT_GENERIC_NAME'] = '';
+            $this->dataMed[$i]['CONT_QUANTITY'] = '';
+            $this->dataMed[$i]['CONT_DOSSAGE'] = '';
+            $this->dataMed[$i]['CONT_ROUTE'] = '';
+            $this->dataMed[$i]['CONT_FREQUENCY'] = '';
+            $this->dataMed[$i]['CONT_TOTAL_COST'] = '';
+        }
 
         $dt = $this->philHealthServices->DrugMedicineList($ID);
         $r = 0;
@@ -85,11 +95,11 @@ class PrintCf4Back extends Component
             if ($r == 7) {
                 return;
             }
-            $this->dataMed[$r]['GENERIC_NAME'] = $list->GENERIC_NAME;
-            $this->dataMed[$r]['QUANTITY'] = number_format($list->QUANTITY, 0);
-            $this->dataMed[$r]['DOSSAGE'] = $list->DOSSAGE;
-            $this->dataMed[$r]['ROUTE'] = $list->ROUTE;
-            $this->dataMed[$r]['FREQUENCY'] = $list->FREQUENCY;
+            $this->dataMed[$r]['GENERIC_NAME'] = $list->GENERIC_NAME ?? '';
+            $this->dataMed[$r]['QUANTITY'] = number_format($list->QUANTITY ?? 0, 0);
+            $this->dataMed[$r]['DOSSAGE'] = $list->DOSSAGE ?? '';
+            $this->dataMed[$r]['ROUTE'] = $list->ROUTE ?? '';
+            $this->dataMed[$r]['FREQUENCY'] = $list->FREQUENCY ?? '';
             $this->dataMed[$r]['TOTAL_COST'] = number_format($list->TOTAL_COST, 2);
 
             $this->dataMed[$r]['CONT_GENERIC_NAME'] = $list->CONT_GENERIC_NAME;

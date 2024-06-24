@@ -5,6 +5,7 @@ namespace App\Livewire\BillPayments;
 use App\Services\BillPaymentServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -40,12 +41,12 @@ class BillPaymentList extends Component
     {
 
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $this->billPaymentServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            \DB::commit();
+            DB::commit();
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

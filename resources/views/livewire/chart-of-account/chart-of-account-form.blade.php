@@ -3,6 +3,7 @@
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-sm-6">
+                    {{ $ID == 0 ? 'Create' : '' }}
                     <h5 class="m-0"><a href="{{ route('maintenancefinancialcoa') }}"> Chart Of Accounts </a></h5>
                 </div>
                 <div class="col-sm-6">
@@ -28,23 +29,23 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <livewire:text-input name="TAG" titleName="Code" wire:model='TAG'/>
+                                            <livewire:text-input name="TAG" titleName="Code" wire:model='TAG' />
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'/>
+                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' />
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:select-option name="TYPE" :options="$accountTypes"
-                                                :zero="false" titleName="Type"
-                                                wire:model.live='TYPE' :key="$accountTypes->pluck('ID')->join('_')"/>
+                                            <livewire:select-option name="TYPE" :options="$accountTypes" :zero="false"
+                                                titleName="Type" wire:model.live='TYPE' :key="$accountTypes->pluck('ID')->join('_')" />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:select-option name="GROUP_ACCOUNT_ID" :options="$accountGroups"
                                                 :zero="true" titleName="Group Account"
-                                                wire:model.live='GROUP_ACCOUNT_ID' :key="$accountGroups->pluck('ID')->join('_')"/>
+                                                wire:model.live='GROUP_ACCOUNT_ID' :key="$accountGroups->pluck('ID')->join('_')" />
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:text-input name="BANK_ACCOUNT_NO" titleName="Bank Account No." wire:model='BANK_ACCOUNT_NO'/>
+                                            <livewire:text-input name="BANK_ACCOUNT_NO" titleName="Bank Account No."
+                                                wire:model='BANK_ACCOUNT_NO' />
                                         </div>
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="INACTIVE" titleName="Inactive"

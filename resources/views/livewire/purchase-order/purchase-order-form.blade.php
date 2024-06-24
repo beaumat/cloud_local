@@ -12,8 +12,8 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('vendorspurchase_order') }}"> Purchase Order
-                                    </a>
+                                        {{ $ID == 0 ? 'Create' : '' }}
+                                    <a class="text-white" href="{{ route('vendorspurchase_order') }}"> Purchase Order </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)

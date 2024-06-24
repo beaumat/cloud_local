@@ -5,7 +5,6 @@ namespace App\Livewire\List;
 use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class InventoryDetailsModal extends Component

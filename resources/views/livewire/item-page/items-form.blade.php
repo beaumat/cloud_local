@@ -11,8 +11,8 @@
                     <div class="card">
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <h3 class="card-title">
-                                {{ $ID === 0 ? 'Create' : 'Edit' }} <a class="text-light"
-                                    href="{{ route('maintenanceinventoryitem') }}"> Items </a>
+                                {{ $ID == 0 ? 'Create' : '' }}
+                                <a class="text-light" href="{{ route('maintenanceinventoryitem') }}"> Items </a>
                             </h3>
                         </div>
                         <div class="container-fluid">

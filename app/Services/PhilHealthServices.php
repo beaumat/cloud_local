@@ -80,25 +80,22 @@ class PhilHealthServices
             $OP_SUB_TOTAL = (float) $C_SUB_TOTAL - $P1_SUB_TOTAL;
 
             $PROFESSIONAL_FEE_SUB_TOTAL = $this->autoMakeProfFee($data->ID, $data->CONTACT_ID, $NO_OF_TREATMENT);
-
             $CHARGE_TOTAL = $PROFESSIONAL_FEE_SUB_TOTAL + $C_SUB_TOTAL;
-
             $P1_TOTAL = $PROFESSIONAL_FEE_SUB_TOTAL + $P1_SUB_TOTAL;
-
             $OP_TOTAL = $PROFESSIONAL_FEE_SUB_TOTAL + $OP_SUB_TOTAL;
 
             PhilHealth::where('ID', $data->ID)
                 ->update([
-                    'CHARGES_DRUG_N_MEDICINE' => $DRUG_MED,
-                    'CHARGES_OPERATING_ROOM_FEE' => $OPERATE_FEE,
-                    'CHARGES_SUPPLIES' => $SUP,
-                    'CHARGES_SUB_TOTAL' => $C_SUB_TOTAL,
-                    'P1_SUB_TOTAL' => $P1_SUB_TOTAL,
-                    'OP_SUB_TOTAL' => $OP_SUB_TOTAL,
-                    'PROFESSIONAL_FEE_SUB_TOTAL' => $PROFESSIONAL_FEE_SUB_TOTAL,
-                    'CHARGE_TOTAL' => $CHARGE_TOTAL,
-                    'P1_TOTAL' => $P1_TOTAL,
-                    'OP_TOTAL' => $OP_TOTAL
+                    'CHARGES_DRUG_N_MEDICINE'       => $DRUG_MED,
+                    'CHARGES_OPERATING_ROOM_FEE'    => $OPERATE_FEE,
+                    'CHARGES_SUPPLIES'              => $SUP,
+                    'CHARGES_SUB_TOTAL'             => $C_SUB_TOTAL,
+                    'P1_SUB_TOTAL'                  => $P1_SUB_TOTAL,
+                    'OP_SUB_TOTAL'                  => $OP_SUB_TOTAL,
+                    'PROFESSIONAL_FEE_SUB_TOTAL'    => $PROFESSIONAL_FEE_SUB_TOTAL,
+                    'CHARGE_TOTAL'                  => $CHARGE_TOTAL,
+                    'P1_TOTAL'                      => $P1_TOTAL,
+                    'OP_TOTAL'                      => $OP_TOTAL
                 ]);
         }
 
@@ -121,20 +118,21 @@ class PhilHealthServices
         string $SECOND_CASE_RATE
     ) {
 
-        PhilHealth::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DATE' => $DATE,
-            'LOCATION_ID' => $LOCATION_ID,
-            'CONTACT_ID' => $CONTACT_ID,
-            'DATE_ADMITTED' => $DATE_ADMITTED,
-            'TIME_ADMITTED' => $TIME_ADMITTED,
-            'DATE_DISCHARGED' => $DATE_DISCHARGED,
-            'TIME_DISCHARGED' => $TIME_DISCHARGED,
-            'FINAL_DIAGNOSIS' => $FINAL_DIAGNOSIS,
-            'OTHER_DIAGNOSIS' => $OTHER_DIAGNOSIS,
-            'FIRST_CASE_RATE' => $FIRST_CASE_RATE,
-            'SECOND_CASE_RATE' => $SECOND_CASE_RATE
-        ]);
+        PhilHealth::where('ID', $ID)
+            ->update([
+                'CODE'              => $CODE,
+                'DATE'              => $DATE,
+                'LOCATION_ID'       => $LOCATION_ID,
+                'CONTACT_ID'        => $CONTACT_ID,
+                'DATE_ADMITTED'     => $DATE_ADMITTED,
+                'TIME_ADMITTED'     => $TIME_ADMITTED,
+                'DATE_DISCHARGED'   => $DATE_DISCHARGED,
+                'TIME_DISCHARGED'   => $TIME_DISCHARGED,
+                'FINAL_DIAGNOSIS'   => $FINAL_DIAGNOSIS,
+                'OTHER_DIAGNOSIS'   => $OTHER_DIAGNOSIS,
+                'FIRST_CASE_RATE'   => $FIRST_CASE_RATE,
+                'SECOND_CASE_RATE'  => $SECOND_CASE_RATE
+            ]);
     }
     public function preSave(
         string $CODE,
@@ -155,22 +153,22 @@ class PhilHealthServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         PhilHealth::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'LOCATION_ID' => $LOCATION_ID,
-            'CONTACT_ID' => $CONTACT_ID,
-            'DATE_ADMITTED' => $DATE_ADMITTED,
-            'TIME_ADMITTED' => $TIME_ADMITTED,
-            'DATE_DISCHARGED' => $DATE_DISCHARGED,
-            'TIME_DISCHARGED' => $TIME_DISCHARGED,
-            'FINAL_DIAGNOSIS' => $FINAL_DIAGNOSIS,
-            'OTHER_DIAGNOSIS' => $OTHER_DIAGNOSIS,
-            'FIRST_CASE_RATE' => $FIRST_CASE_RATE,
-            'SECOND_CASE_RATE' => $SECOND_CASE_RATE,
-            'STATUS_ID' => 1,
-            'STATUS_DATETIME' => $this->dateServices->Now(),
+            'ID'                => $ID,
+            'RECORDED_ON'       => $this->dateServices->Now(),
+            'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'              => $DATE,
+            'LOCATION_ID'       => $LOCATION_ID,
+            'CONTACT_ID'        => $CONTACT_ID,
+            'DATE_ADMITTED'     => $DATE_ADMITTED,
+            'TIME_ADMITTED'     => $TIME_ADMITTED,
+            'DATE_DISCHARGED'   => $DATE_DISCHARGED,
+            'TIME_DISCHARGED'   => $TIME_DISCHARGED,
+            'FINAL_DIAGNOSIS'   => $FINAL_DIAGNOSIS,
+            'OTHER_DIAGNOSIS'   => $OTHER_DIAGNOSIS,
+            'FIRST_CASE_RATE'   => $FIRST_CASE_RATE,
+            'SECOND_CASE_RATE'  => $SECOND_CASE_RATE,
+            'STATUS_ID'         => 1,
+            'STATUS_DATETIME'   => $this->dateServices->Now(),
         ]);
 
         return $ID;
@@ -246,72 +244,72 @@ class PhilHealthServices
     ) {
 
         PhilHealth::where('ID', $ID)->update([
-            'CHARGES_ROOM_N_BOARD' => $CHARGES_ROOM_N_BOARD,
-            'CHARGES_DRUG_N_MEDICINE' => $CHARGES_DRUG_N_MEDICINE,
-            'CHARGES_LAB_N_DIAGNOSTICS' => $CHARGES_LAB_N_DIAGNOSTICS,
-            'CHARGES_OPERATING_ROOM_FEE' => $CHARGES_OPERATING_ROOM_FEE,
-            'CHARGES_SUPPLIES' => $CHARGES_SUPPLIES,
-            'CHARGES_OTHERS' => $CHARGES_OTHERS,
-            'CHARGES_SUB_TOTAL' => $CHARGES_SUB_TOTAL,
-            'OTHER_SPECIFY' => $OTHER_SPECIFY,
-            'VAT_ROOM_N_BOARD' => $VAT_ROOM_N_BOARD,
-            'VAT_DRUG_N_MEDICINE' => $VAT_DRUG_N_MEDICINE,
-            'VAT_LAB_N_DIAGNOSTICS' => $VAT_LAB_N_DIAGNOSTICS,
-            'VAT_OPERATING_ROOM_FEE' => $VAT_OPERATING_ROOM_FEE,
-            'VAT_SUPPLIES' => $VAT_SUPPLIES,
-            'VAT_OTHERS' => $VAT_OTHERS,
-            'VAT_SUB_TOTAL' => $VAT_SUB_TOTAL,
-            'SP_ROOM_N_BOARD' => $SP_ROOM_N_BOARD,
-            'SP_DRUG_N_MEDICINE' => $SP_DRUG_N_MEDICINE,
-            'SP_LAB_N_DIAGNOSTICS' => $SP_LAB_N_DIAGNOSTICS,
-            'SP_OPERATING_ROOM_FEE' => $SP_OPERATING_ROOM_FEE,
-            'SP_SUPPLIES' => $SP_SUPPLIES,
-            'SP_OTHERS' => $SP_OTHERS,
-            'SP_SUB_TOTAL' => $SP_SUB_TOTAL,
-            'GOV_ROOM_N_BOARD' => $GOV_ROOM_N_BOARD,
-            'GOV_DRUG_N_MEDICINE' => $GOV_DRUG_N_MEDICINE,
-            'GOV_LAB_N_DIAGNOSTICS' => $GOV_LAB_N_DIAGNOSTICS,
-            'GOV_OPERATING_ROOM_FEE' => $GOV_OPERATING_ROOM_FEE,
-            'GOV_SUPPLIES' => $GOV_SUPPLIES,
-            'GOV_OTHERS' => $GOV_OTHERS,
-            'GOV_SUB_TOTAL' => $GOV_SUB_TOTAL,
-            'GOV_PCSO' => $GOV_PCSO,
-            'GOV_DSWD' => $GOV_DSWD,
-            'GOV_DOH' => $GOV_DOH,
-            'GOV_HMO' => $GOV_HMO,
-            'GOV_LINGAP' => $GOV_LINGAP,
-            'P1_ROOM_N_BOARD' => $P1_ROOM_N_BOARD,
-            'P1_DRUG_N_MEDICINE' => $P1_DRUG_N_MEDICINE,
-            'P1_LAB_N_DIAGNOSTICS' => $P1_LAB_N_DIAGNOSTICS,
-            'P1_OPERATING_ROOM_FEE' => $P1_OPERATING_ROOM_FEE,
-            'P1_SUPPLIES' => $P1_SUPPLIES,
-            'P1_OTHERS' => $P1_OTHERS,
-            'P1_SUB_TOTAL' => $P1_SUB_TOTAL,
-            'P2_ROOM_N_BOARD' => $P2_ROOM_N_BOARD,
-            'P2_DRUG_N_MEDICINE' => $P2_DRUG_N_MEDICINE,
-            'P2_LAB_N_DIAGNOSTICS' => $P2_LAB_N_DIAGNOSTICS,
-            'P2_OPERATING_ROOM_FEE' => $P2_OPERATING_ROOM_FEE,
-            'P2_SUPPLIES' => $P2_SUPPLIES,
-            'P2_OTHERS' => $P2_OTHERS,
-            'P2_SUB_TOTAL' => $P2_SUB_TOTAL,
-            'OP_ROOM_N_BOARD' => $OP_ROOM_N_BOARD,
-            'OP_DRUG_N_MEDICINE' => $OP_DRUG_N_MEDICINE,
-            'OP_LAB_N_DIAGNOSTICS' => $OP_LAB_N_DIAGNOSTICS,
-            'OP_OPERATING_ROOM_FEE' => $OP_OPERATING_ROOM_FEE,
-            'OP_SUPPLIES' => $OP_SUPPLIES,
-            'OP_OTHERS' => $OP_OTHERS,
-            'OP_SUB_TOTAL' => $OP_SUB_TOTAL,
-            'PROFESSIONAL_FEE_SUB_TOTAL' => $PROFESSIONAL_FEE_SUB_TOTAL,
-            'CHARGE_TOTAL' => $CHARGE_TOTAL,
-            'VAT_TOTAL' => $VAT_TOTAL,
-            'SP_TOTAL' => $SP_TOTAL,
-            'GOV_TOTAL' => $GOV_TOTAL,
-            'P1_TOTAL' => $P1_TOTAL,
-            'P2_TOTAL' => $P2_TOTAL,
-            'OP_TOTAL' => $OP_TOTAL,
-            'PREPARED_BY_ID' => $PREPARED_BY_ID == 0 ? null : $PREPARED_BY_ID,
-            'DATE_SIGNED' => $DATE_SIGNED == '' ? null : $DATE_SIGNED,
-            'OTHER_NAME' => $OTHER_NAME ?? null,
+            'CHARGES_ROOM_N_BOARD'          => $CHARGES_ROOM_N_BOARD,
+            'CHARGES_DRUG_N_MEDICINE'       => $CHARGES_DRUG_N_MEDICINE,
+            'CHARGES_LAB_N_DIAGNOSTICS'     => $CHARGES_LAB_N_DIAGNOSTICS,
+            'CHARGES_OPERATING_ROOM_FEE'    => $CHARGES_OPERATING_ROOM_FEE,
+            'CHARGES_SUPPLIES'              => $CHARGES_SUPPLIES,
+            'CHARGES_OTHERS'                => $CHARGES_OTHERS,
+            'CHARGES_SUB_TOTAL'             => $CHARGES_SUB_TOTAL,
+            'OTHER_SPECIFY'                 => $OTHER_SPECIFY,
+            'VAT_ROOM_N_BOARD'              => $VAT_ROOM_N_BOARD,
+            'VAT_DRUG_N_MEDICINE'           => $VAT_DRUG_N_MEDICINE,
+            'VAT_LAB_N_DIAGNOSTICS'         => $VAT_LAB_N_DIAGNOSTICS,
+            'VAT_OPERATING_ROOM_FEE'        => $VAT_OPERATING_ROOM_FEE,
+            'VAT_SUPPLIES'                  => $VAT_SUPPLIES,
+            'VAT_OTHERS'                    => $VAT_OTHERS,
+            'VAT_SUB_TOTAL'                 => $VAT_SUB_TOTAL,
+            'SP_ROOM_N_BOARD'               => $SP_ROOM_N_BOARD,
+            'SP_DRUG_N_MEDICINE'            => $SP_DRUG_N_MEDICINE,
+            'SP_LAB_N_DIAGNOSTICS'          => $SP_LAB_N_DIAGNOSTICS,
+            'SP_OPERATING_ROOM_FEE'         => $SP_OPERATING_ROOM_FEE,
+            'SP_SUPPLIES'                   => $SP_SUPPLIES,
+            'SP_OTHERS'                     => $SP_OTHERS,
+            'SP_SUB_TOTAL'                  => $SP_SUB_TOTAL,
+            'GOV_ROOM_N_BOARD'              => $GOV_ROOM_N_BOARD,
+            'GOV_DRUG_N_MEDICINE'           => $GOV_DRUG_N_MEDICINE,
+            'GOV_LAB_N_DIAGNOSTICS'         => $GOV_LAB_N_DIAGNOSTICS,
+            'GOV_OPERATING_ROOM_FEE'        => $GOV_OPERATING_ROOM_FEE,
+            'GOV_SUPPLIES'                  => $GOV_SUPPLIES,
+            'GOV_OTHERS'                    => $GOV_OTHERS,
+            'GOV_SUB_TOTAL'                 => $GOV_SUB_TOTAL,
+            'GOV_PCSO'                      => $GOV_PCSO,
+            'GOV_DSWD'                      => $GOV_DSWD,
+            'GOV_DOH'                       => $GOV_DOH,
+            'GOV_HMO'                       => $GOV_HMO,
+            'GOV_LINGAP'                    => $GOV_LINGAP,
+            'P1_ROOM_N_BOARD'               => $P1_ROOM_N_BOARD,
+            'P1_DRUG_N_MEDICINE'            => $P1_DRUG_N_MEDICINE,
+            'P1_LAB_N_DIAGNOSTICS'          => $P1_LAB_N_DIAGNOSTICS,
+            'P1_OPERATING_ROOM_FEE'         => $P1_OPERATING_ROOM_FEE,
+            'P1_SUPPLIES'                   => $P1_SUPPLIES,
+            'P1_OTHERS'                     => $P1_OTHERS,
+            'P1_SUB_TOTAL'                  => $P1_SUB_TOTAL,
+            'P2_ROOM_N_BOARD'               => $P2_ROOM_N_BOARD,
+            'P2_DRUG_N_MEDICINE'            => $P2_DRUG_N_MEDICINE,
+            'P2_LAB_N_DIAGNOSTICS'          => $P2_LAB_N_DIAGNOSTICS,
+            'P2_OPERATING_ROOM_FEE'         => $P2_OPERATING_ROOM_FEE,
+            'P2_SUPPLIES'                   => $P2_SUPPLIES,
+            'P2_OTHERS'                     => $P2_OTHERS,
+            'P2_SUB_TOTAL'                  => $P2_SUB_TOTAL,
+            'OP_ROOM_N_BOARD'               => $OP_ROOM_N_BOARD,
+            'OP_DRUG_N_MEDICINE'            => $OP_DRUG_N_MEDICINE,
+            'OP_LAB_N_DIAGNOSTICS'          => $OP_LAB_N_DIAGNOSTICS,
+            'OP_OPERATING_ROOM_FEE'         => $OP_OPERATING_ROOM_FEE,
+            'OP_SUPPLIES'                   => $OP_SUPPLIES,
+            'OP_OTHERS'                     => $OP_OTHERS,
+            'OP_SUB_TOTAL'                  => $OP_SUB_TOTAL,
+            'PROFESSIONAL_FEE_SUB_TOTAL'    => $PROFESSIONAL_FEE_SUB_TOTAL,
+            'CHARGE_TOTAL'                  => $CHARGE_TOTAL,
+            'VAT_TOTAL'                     => $VAT_TOTAL,
+            'SP_TOTAL'                      => $SP_TOTAL,
+            'GOV_TOTAL'                     => $GOV_TOTAL,
+            'P1_TOTAL'                      => $P1_TOTAL,
+            'P2_TOTAL'                      => $P2_TOTAL,
+            'OP_TOTAL'                      => $OP_TOTAL,
+            'PREPARED_BY_ID'                => $PREPARED_BY_ID == 0 ? null : $PREPARED_BY_ID,
+            'DATE_SIGNED'                   => $DATE_SIGNED == '' ? null : $DATE_SIGNED,
+            'OTHER_NAME'                    => $OTHER_NAME ?? null,
         ]);
     }
     public function Delete(int $ID)
@@ -419,20 +417,20 @@ class PhilHealthServices
 
         PhilhealthDrugsMedicines::create([
             'ID' => $ID,
-            'PHILHEALTH_ID' => $PHILHEALTH_ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'GENERIC_NAME' => $GENERIC_NAME,
-            'QUANTITY' => $QUANTITY,
-            'DOSSAGE' => $DOSSAGE,
-            'ROUTE' => $ROUTE,
-            'FREQUENCY' => $FREQUENCY,
-            'TOTAL_COST' => $TOTAL_COST,
-            'CONT_GENERIC_NAME' => $CONT_GENERIC_NAME,
-            'CONT_QUANTITY' => $CONT_QUANTITY,
-            'CONT_DOSSAGE' => $CONT_DOSSAGE,
-            'CONT_ROUTE' => $CONT_ROUTE,
-            'CONT_FREQUENCY' => $CONT_FREQUENCY,
-            'CONT_TOTAL_COST' => $CONT_TOTAL_COST
+            'PHILHEALTH_ID'         => $PHILHEALTH_ID,
+            'RECORDED_ON'           => $this->dateServices->Now(),
+            'GENERIC_NAME'          => $GENERIC_NAME,
+            'QUANTITY'              => $QUANTITY,
+            'DOSSAGE'               => $DOSSAGE,
+            'ROUTE'                 => $ROUTE,
+            'FREQUENCY'             => $FREQUENCY,
+            'TOTAL_COST'            => $TOTAL_COST,
+            'CONT_GENERIC_NAME'     => $CONT_GENERIC_NAME,
+            'CONT_QUANTITY'         => $CONT_QUANTITY,
+            'CONT_DOSSAGE'          => $CONT_DOSSAGE,
+            'CONT_ROUTE'            => $CONT_ROUTE,
+            'CONT_FREQUENCY'        => $CONT_FREQUENCY,
+            'CONT_TOTAL_COST'       => $CONT_TOTAL_COST
 
         ]);
     }
@@ -453,19 +451,19 @@ class PhilHealthServices
         float $CONT_TOTAL_COST
     ) {
         PhilhealthDrugsMedicines::where('ID', $ID)->update([
-            'PHILHEALTH_ID' => $PHILHEALTH_ID,
-            'GENERIC_NAME' => $GENERIC_NAME,
-            'QUANTITY' => $QUANTITY,
-            'DOSSAGE' => $DOSSAGE,
-            'ROUTE' => $ROUTE,
-            'FREQUENCY' => $FREQUENCY,
-            'TOTAL_COST' => $TOTAL_COST,
-            'CONT_GENERIC_NAME' => $CONT_GENERIC_NAME,
-            'CONT_QUANTITY' => $CONT_QUANTITY,
-            'CONT_DOSSAGE' => $CONT_DOSSAGE,
-            'CONT_ROUTE' => $CONT_ROUTE,
-            'CONT_FREQUENCY' => $CONT_FREQUENCY,
-            'CONT_TOTAL_COST' => $CONT_TOTAL_COST
+            'PHILHEALTH_ID'         => $PHILHEALTH_ID,
+            'GENERIC_NAME'          => $GENERIC_NAME,
+            'QUANTITY'              => $QUANTITY,
+            'DOSSAGE'               => $DOSSAGE,
+            'ROUTE'                 => $ROUTE,
+            'FREQUENCY'             => $FREQUENCY,
+            'TOTAL_COST'            => $TOTAL_COST,
+            'CONT_GENERIC_NAME'     => $CONT_GENERIC_NAME,
+            'CONT_QUANTITY'         => $CONT_QUANTITY,
+            'CONT_DOSSAGE'          => $CONT_DOSSAGE,
+            'CONT_ROUTE'            => $CONT_ROUTE,
+            'CONT_FREQUENCY'        => $CONT_FREQUENCY,
+            'CONT_TOTAL_COST'       => $CONT_TOTAL_COST
 
         ]);
     }
@@ -509,12 +507,12 @@ class PhilHealthServices
         $ID = $this->object->ObjectNextID('PHILHEALTH_PAYMENT');
 
         PhilhealthPayment::create([
-            'ID' => $ID,
+            'ID'            => $ID,
             'PHILHEALTH_ID' => $PHILHEALTH_ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
+            'RECORDED_ON'   => $this->dateServices->Now(),
             'RECEIVED_DATE' => $RECEIVED_DATE,
-            'AMOUNT' => $AMOUNT,
-            'REF_NO' => $REF_NO
+            'AMOUNT'        => $AMOUNT,
+            'REF_NO'        => $REF_NO
         ]);
     }
     public function PaymentUpdate(int $ID, int $PHILHEALTH_ID, string $RECEIVED_DATE, float $AMOUNT, string $REF_NO)
@@ -524,8 +522,8 @@ class PhilHealthServices
             ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
             ->update([
                 'RECEIVED_DATE' => $RECEIVED_DATE,
-                'AMOUNT' => $AMOUNT,
-                'REF_NO' => $REF_NO
+                'AMOUNT'        => $AMOUNT,
+                'REF_NO'        => $REF_NO
             ]);
     }
     public function PaymentDelete(int $ID, int $PHILHEALTH_ID)

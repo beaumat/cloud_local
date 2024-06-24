@@ -6,9 +6,10 @@
                 <div class="col-12 text-center mb-4">
                     <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
                     <div class="text-center">
-                        <b class="print-address1 text-center">RDL Building F. Torres Street, Davao City <br />Telephone
-                            #:285-2403; Mobile #: 09258678600/9175041322 <br /> Email:
-                            avidadavao.torres@yahoo.com.ph</b>
+                        <b class="print-address1 text-center">
+                            RDL Building F. Torres Street, Davao City <br />
+                            Telephone #:285-2403; Mobile #: 09258678600/9175041322 <br />
+                            Email:avidadavao.torres@yahoo.com.ph</b>
                     </div>
                 </div>
                 <div class="col-12">
@@ -29,7 +30,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-3 text-right">ATTENDING PHYSICIAN : </div>
-                                <div class="col-6 bottom-line"> {{ $PHYSICIAN}} </div>
+                                <div class="col-6 bottom-line"> {{ $PHYSICIAN }} </div>
                             </div>
                             <div class="row">
                                 <div class="col-3 text-right"> FIRST CASE RATE : </div>
@@ -71,9 +72,7 @@
 
                             @for ($n = $i; $n < 16; $n++)
                                 <tr class="blackbox">
-                                    <td>
-                                        <u class="h4">{{ $n }}</u>
-                                    </td>
+                                    <td> <u class="h4">{{ $n }}</u> </td>
                                     <td class="left-line">
                                         <h4></h4>
                                     </td>

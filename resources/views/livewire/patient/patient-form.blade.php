@@ -3,6 +3,7 @@
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-sm-6">
+                    {{ $ID == 0 ? 'Create' : '' }}
                     <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}"> Patients Profile</a></h5>
                 </div>
                 <div class="col-sm-6">
@@ -54,8 +55,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                
-                                                <livewire:select-option name="PATIENT_TYPE_ID" :options="$patientTypeList"
+
+                                            <livewire:select-option name="PATIENT_TYPE_ID" :options="$patientTypeList"
                                                 :zero="true" titleName="Type" wire:model='PATIENT_TYPE_ID' />
                                         </div>
                                     </div>

@@ -24,8 +24,6 @@
                                 <tr>
                                     <td>{{ $list->CODE }}</td>
                                     <td>{{ $list->DESCRIPTION }}</td>
-
-
                                     <td class="text-center">
                                         @if ($lineId == $list->ID)
                                             <input type="number" step="0.01"
@@ -34,8 +32,6 @@
                                         @else
                                             {{ number_format($list->QUANTITY, 0) }}
                                         @endif
-
-
                                     </td>
                                     <td>
                                         @if ($lineId == $list->ID)

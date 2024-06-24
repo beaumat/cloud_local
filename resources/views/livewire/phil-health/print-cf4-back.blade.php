@@ -596,7 +596,6 @@
                     </div>
                     <div class="row top-line2 ">
                         <br />
-
                         &nbsp; <strong class="h6"> {{ $dataMed[6]['GENERIC_NAME'] }} </strong>
                     </div>
 

@@ -12,6 +12,7 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
+                                    {{ $ID == 0 ? 'Create' : '' }}
                                     <a class="text-white" href="{{ route('companybuild_assembly') }}"> Build Assembly
                                     </a>
                                 </div>
@@ -103,7 +104,6 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-md-12">
-                                            
                                                     @if ($Modify)
                                                         <livewire:text-input name="NOTES" titleName="Notes"
                                                             :isDisabled=false wire:model='NOTES' :vertical="false" />
@@ -182,7 +182,7 @@
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
 
-                                            @livewire('BuildAssembly.BuildAssemblyFormItems', ['BUILD_ASSEMBLY_ID' => $ID, 'ASSEMBLY_ITEM_ID' => $ASSEMBLY_ITEM_ID, 'LOCATION_ID' => $LOCATION_ID,'IS_POSTED' => $STATUS === 0 ? false : true  ])
+                                            @livewire('BuildAssembly.BuildAssemblyFormItems', ['BUILD_ASSEMBLY_ID' => $ID, 'ASSEMBLY_ITEM_ID' => $ASSEMBLY_ITEM_ID, 'LOCATION_ID' => $LOCATION_ID, 'IS_POSTED' => $STATUS === 0 ? false : true])
 
                                         </div>
                                     </div>

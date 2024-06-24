@@ -12,6 +12,7 @@ use App\Services\DocumentTypeServices;
 use App\Services\LocationServices;
 use App\Services\ObjectServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -188,13 +189,12 @@ class BillPaymentForm extends Component
                 $this->billPaymentServices->Update(
                     $this->ID,
                     $this->CODE,
-                    $this->DATE,
                     $this->BANK_ACCOUNT_ID,
                     $this->PAY_TO_ID,
                     $this->LOCATION_ID,
                     $this->AMOUNT,
-                    $this->NOTES,
-
+                    $this->NOTES
+ 
                 );
                 session()->flash('message', 'Successfully updated');
             }
@@ -216,7 +216,7 @@ class BillPaymentForm extends Component
     {
         try {
 
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             $check = (int) $this->objectServices->ObjectTypeID('CHECK');
             $checkbills = (int) $this->objectServices->ObjectTypeID('CHECK_BILLS');
@@ -236,7 +236,7 @@ class BillPaymentForm extends Component
 
             if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
                 $this->billPaymentServices->StatusUpdate($this->ID, 15);
-                \DB::commit();
+                DB::commit();
                 $data = $this->billPaymentServices->get($this->ID);
                 if ($data) {
                     $this->getInfo($data);
@@ -246,10 +246,10 @@ class BillPaymentForm extends Component
                 session()->flash('message', 'Successfully posted');
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
-            \DB::rollBack();
+            DB::rollBack();
             
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
