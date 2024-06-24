@@ -332,16 +332,28 @@
                                 @endif
                             </td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="discount"></td>
                             <td class="text-right font-weight-bold text-xs ">
-                                @if ($list->AMOUNT > 0)
-                                    {{ number_format($list->AMOUNT, 2) }}
+                                @if ($list->DISCOUNT > 0)
+                                    {{ number_format($list->DISCOUNT, 2) }}
                                 @endif
                             </td>
                             <td></td>
+                            <td class="discount">
+                                @if ($list->DISCOUNT > 0)
+                                    {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }}
+                                @endif
+                            </td>
+                            <td class="text-right font-weight-bold text-xs ">
+                                @if ($list->FIRST_CASE > 0)
+                                    {{ number_format($list->FIRST_CASE, 2) }}
+                                @endif
+                            </td>
                             <td></td>
+                            <td class="text-right">
+                                @if ($list->FIRST_CASE > 0)
+                                    {{ number_format($list->AMOUNT - $list->DISCOUNT - $list->FIRST_CASE, 2) }}
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
 

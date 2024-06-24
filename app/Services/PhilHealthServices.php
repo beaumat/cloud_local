@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\PhilHealth;
 use App\Models\Hemodialysis;
-use Livewire\WithPagination;
 use App\Models\PatientDoctor;
 use App\Models\PhilhealthPayment;
 use App\Models\PhilHealthProfFee;
@@ -13,21 +12,24 @@ use App\Models\PhilhealthDrugsMedicines;
 
 class PhilHealthServices
 {
-    use WithPagination;
-
+    private float $DISCOUNT_PERCENT = 20;
     public float $P1_PHIC_AMOUNT = 2250;
     public float $DRUG_N_MEDINE_AMOUNT = 1100.00;
     public float $OPERATING_ROOM_FEE_AMOUNT = 370;
     public float $ROOM_FEE = 700;
     public float $SUPPLIES = 780;
-    public float $PROF_FEE_AMOUNT = 350;
-    private float $TOTAL_FEE = 0;
+    public float $PROF_FEE_AMOUNT = 450;
+    public float $PROF_FEE_FIRST_CASE = 350;
+
     private $object;
     private $dateServices;
     private $systemSettingServices;
 
-    public function __construct(ObjectServices $objectService, DateServices $dateServices, SystemSettingServices $systemSettingServices)
-    {
+    public function __construct(
+        ObjectServices $objectService,
+        DateServices $dateServices,
+        SystemSettingServices $systemSettingServices
+    ) {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
@@ -36,23 +38,34 @@ class PhilHealthServices
     {
         return PhilHealth::where('ID', $ID)->first();
     }
-    public function autoMakeProfFee(int $PHIC_ID, int $CONTACT_ID, int $COUNT): float
+    public function autoMakeProfFee(int $PHIC_ID, int $PATIENT_ID, int $COUNT)
     {
-        $this->TOTAL_FEE = 0;
-        $data = PatientDoctor::query()->select(['DOCTOR_ID'])->where("PATIENT_ID", $CONTACT_ID)->get();
+        $TOTAL_FEE = 0;
+        $TOTAL_DISC = 0;
+        $TOTAL_FIRST_CASE = 0;
+        $data = PatientDoctor::query()->select(['DOCTOR_ID'])->where("PATIENT_ID", $PATIENT_ID)->get();
         if ($data) {
             foreach ($data as $list) {
                 $isDataExists = PhilHealthProfFee::where('PHIC_ID', $PHIC_ID)->where('CONTACT_ID', $list->DOCTOR_ID)->first();
-                $AMOUNT = $this->PROF_FEE_AMOUNT * $COUNT;
+                $AMOUNT = (float) $this->PROF_FEE_AMOUNT * $COUNT;
+                $FIRST_CASE = (float) $this->PROF_FEE_FIRST_CASE * $COUNT;
+                $DISCOUNT = $AMOUNT * ($this->DISCOUNT_PERCENT / 100);
                 if (!$isDataExists) {
-                    $this->StoreProfFee($PHIC_ID, $list->DOCTOR_ID, $AMOUNT);
+                    $this->StoreProfFee($PHIC_ID, $list->DOCTOR_ID, $AMOUNT, $DISCOUNT, $FIRST_CASE);
                 } else {
-                    $this->UpdateProfFee($isDataExists->ID, $AMOUNT);
+                    $this->UpdateProfFee($isDataExists->ID, $AMOUNT, $DISCOUNT, $FIRST_CASE);
                 }
-                $this->TOTAL_FEE = $this->TOTAL_FEE + $AMOUNT;
+                $TOTAL_FEE = $TOTAL_FEE + $AMOUNT;
+                $TOTAL_DISC = $TOTAL_DISC + $DISCOUNT;
+                $TOTAL_FIRST_CASE = $TOTAL_FIRST_CASE +  $FIRST_CASE;
             }
         }
-        return $this->TOTAL_FEE;
+
+        return [
+            'TOTAL_FEE' => $TOTAL_FEE,
+            'TOTAL_DISCOUNT' => $TOTAL_DISC,
+            'TOTAL_FIRST_CASE' => $TOTAL_FIRST_CASE
+        ];
     }
     public function getNumberOfTreatment(int $CONTACT_ID, int $LOCATION_ID, string $DATE_ADMITTED, string $DATE_DISCHARGED): int
     {
@@ -72,30 +85,40 @@ class PhilHealthServices
         if ($data) {
 
             $NO_OF_TREATMENT = $this->getNumberOfTreatment($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
+
             $DRUG_MED = (float) $this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT;
             $OPERATE_FEE = (float) ($this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT) + ($this->ROOM_FEE * $NO_OF_TREATMENT);
             $SUP = (float) $this->SUPPLIES * $NO_OF_TREATMENT;
             $C_SUB_TOTAL = (float) $DRUG_MED + $OPERATE_FEE + $SUP;
+            $SP_SUB_TOTAL = (float)  $C_SUB_TOTAL *  ($this->DISCOUNT_PERCENT / 100);
             $P1_SUB_TOTAL = (float) $this->P1_PHIC_AMOUNT * $NO_OF_TREATMENT;
             $OP_SUB_TOTAL = (float) $C_SUB_TOTAL - $P1_SUB_TOTAL;
 
-            $PROFESSIONAL_FEE_SUB_TOTAL = $this->autoMakeProfFee($data->ID, $data->CONTACT_ID, $NO_OF_TREATMENT);
+            $profArray = $this->autoMakeProfFee($data->ID, $data->CONTACT_ID, $NO_OF_TREATMENT);
+            $PROFESSIONAL_FEE_SUB_TOTAL  = (float) $profArray['TOTAL_FEE'];
+            $PROFESSIONAL_DISCOUNT_SUB_TOTAL = (float) $profArray['TOTAL_DISCOUNT'];
+            $PROFESSIONAL_P1_SUB_TOTAL = (float) $profArray['TOTAL_FIRST_CASE'];
             $CHARGE_TOTAL = $PROFESSIONAL_FEE_SUB_TOTAL + $C_SUB_TOTAL;
+            $SP_TOTAL = $PROFESSIONAL_DISCOUNT_SUB_TOTAL;
             $P1_TOTAL = $PROFESSIONAL_FEE_SUB_TOTAL + $P1_SUB_TOTAL;
-            $OP_TOTAL = $PROFESSIONAL_FEE_SUB_TOTAL + $OP_SUB_TOTAL;
+            $OP_TOTAL = $PROFESSIONAL_FEE_SUB_TOTAL + $OP_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL;
 
             PhilHealth::where('ID', $data->ID)
                 ->update([
-                    'CHARGES_DRUG_N_MEDICINE'       => $DRUG_MED,
-                    'CHARGES_OPERATING_ROOM_FEE'    => $OPERATE_FEE,
-                    'CHARGES_SUPPLIES'              => $SUP,
-                    'CHARGES_SUB_TOTAL'             => $C_SUB_TOTAL,
-                    'P1_SUB_TOTAL'                  => $P1_SUB_TOTAL,
-                    'OP_SUB_TOTAL'                  => $OP_SUB_TOTAL,
-                    'PROFESSIONAL_FEE_SUB_TOTAL'    => $PROFESSIONAL_FEE_SUB_TOTAL,
-                    'CHARGE_TOTAL'                  => $CHARGE_TOTAL,
-                    'P1_TOTAL'                      => $P1_TOTAL,
-                    'OP_TOTAL'                      => $OP_TOTAL
+                    'CHARGES_DRUG_N_MEDICINE'           => $DRUG_MED,
+                    'CHARGES_OPERATING_ROOM_FEE'        => $OPERATE_FEE,
+                    'CHARGES_SUPPLIES'                  => $SUP,
+                    'CHARGES_SUB_TOTAL'                 => $C_SUB_TOTAL,
+                    'SP_SUB_TOTAL'                      => $SP_SUB_TOTAL,
+                    'P1_SUB_TOTAL'                      => $P1_SUB_TOTAL,
+                    'OP_SUB_TOTAL'                      => $OP_SUB_TOTAL,
+                    'PROFESSIONAL_FEE_SUB_TOTAL'        => $PROFESSIONAL_FEE_SUB_TOTAL,
+                    'PROFESSIONAL_DISCOUNT_SUB_TOTAL'   => $PROFESSIONAL_DISCOUNT_SUB_TOTAL,
+                    'PROFESSIONAL_P1_SUB_TOTAL'         => $PROFESSIONAL_P1_SUB_TOTAL,
+                    'CHARGE_TOTAL'                      => $CHARGE_TOTAL,
+                    'SP_TOTAL'                          => $SP_TOTAL,
+                    'P1_TOTAL'                          => $P1_TOTAL,
+                    'OP_TOTAL'                          => $OP_TOTAL
                 ]);
         }
 
@@ -231,6 +254,7 @@ class PhilHealthServices
         float $OP_OTHERS,
         float $OP_SUB_TOTAL,
         float $PROFESSIONAL_FEE_SUB_TOTAL,
+        float $PROFESSIONAL_DISCOUNT_SUB_TOTAL,
         float $CHARGE_TOTAL,
         float $VAT_TOTAL,
         float $SP_TOTAL,
@@ -300,6 +324,7 @@ class PhilHealthServices
             'OP_OTHERS'                     => $OP_OTHERS,
             'OP_SUB_TOTAL'                  => $OP_SUB_TOTAL,
             'PROFESSIONAL_FEE_SUB_TOTAL'    => $PROFESSIONAL_FEE_SUB_TOTAL,
+            'PROFESSIONAL_DISCOUNT_SUB_TOTAL' => $PROFESSIONAL_DISCOUNT_SUB_TOTAL,
             'CHARGE_TOTAL'                  => $CHARGE_TOTAL,
             'VAT_TOTAL'                     => $VAT_TOTAL,
             'SP_TOTAL'                      => $SP_TOTAL,
@@ -314,6 +339,7 @@ class PhilHealthServices
     }
     public function Delete(int $ID)
     {
+        PhilhealthPayment::where('PHILHEALTH_ID', $ID)->delete();
         PhilhealthDrugsMedicines::where('PHILHEALTH_ID', $ID)->delete();
         PhilHealthProfFee::where('PHIC_ID', $ID)->delete();
         PhilHealth::where('ID', $ID)->delete();
@@ -361,6 +387,8 @@ class PhilHealthServices
             'philhealth_prof_fee.ID',
             'philhealth_prof_fee.CONTACT_ID',
             'philhealth_prof_fee.AMOUNT',
+            'philhealth_prof_fee.DISCOUNT',
+            'philhealth_prof_fee.FIRST_CASE',
             'c.NAME',
             'c.PIN'
         ])
@@ -373,24 +401,30 @@ class PhilHealthServices
     {
         return (int) PhilHealthProfFee::where('PHIC_ID', $Id)->max('LINE_NO');
     }
-    public function StoreProfFee(int $PHIC_ID, int $CONTACT_ID, float $AMOUNT)
+    public function StoreProfFee(int $PHIC_ID, int $CONTACT_ID, float $AMOUNT, float $DISCOUNT, float $FIRST_CASE)
     {
         $ID = $this->object->ObjectNextID('PHILHEALTH_PROF_FEE');
         $LINE_NO = $this->getLine($PHIC_ID) + 1;
 
         PhilHealthProfFee::create([
-            'ID' => $ID,
-            'PHIC_ID' => $PHIC_ID,
+            'ID'         => $ID,
+            'PHIC_ID'    => $PHIC_ID,
             'CONTACT_ID' => $CONTACT_ID,
-            'AMOUNT' => $AMOUNT,
-            'LINE_NO' => $LINE_NO,
+            'AMOUNT'     => $AMOUNT,
+            'LINE_NO'    => $LINE_NO,
+            'DISCOUNT'   => $DISCOUNT,
+            'FIRST_CASE' => $FIRST_CASE
+
+
         ]);
     }
-    public function UpdateProfFee(int $ID, float $AMOUNT)
+    public function UpdateProfFee(int $ID, float $AMOUNT, float $DISCOUNT, float $FIRST_CASE)
     {
         PhilHealthProfFee::where('ID', $ID)
             ->update([
-                'AMOUNT' => $AMOUNT
+                'AMOUNT'        => $AMOUNT,
+                'DISCOUNT'      => $DISCOUNT,
+                'FIRST_CASE'    => $FIRST_CASE
             ]);
     }
 

@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Livewire\PhilHealth;
+
 use App\Services\PhilHealthServices;
 use Livewire\Component;
 
@@ -8,6 +10,7 @@ class StatementOfAccount extends Component
 
     public $i = 0;
     public int $ID;
+    public int $NO_OF_TREATMENT;
     public float $CHARGES_ROOM_N_BOARD;
     public float $CHARGES_DRUG_N_MEDICINE;
     public float $CHARGES_LAB_N_DIAGNOSTICS;
@@ -65,6 +68,9 @@ class StatementOfAccount extends Component
 
     private $philHealthServices;
     public $feeList = [];
+
+
+
     public function ComputeTotal()
     {
         try {
@@ -89,30 +95,31 @@ class StatementOfAccount extends Component
             $this->GOV_TOTAL = $this->GOV_SUB_TOTAL;
             $this->P1_TOTAL = $this->P1_SUB_TOTAL + $this->PROFESSIONAL_FEE_SUB_TOTAL;
             $this->P2_TOTAL = $this->P2_SUB_TOTAL;
-        
+
             $total_discount = (float) $this->VAT_TOTAL + $this->SP_TOTAL + $this->GOV_TOTAL;
             $total_benefits = (float) $this->P1_TOTAL + $this->P2_TOTAL;
 
             $this->OP_TOTAL = ($this->CHARGE_TOTAL - $total_discount) - $total_benefits;
-
         } catch (\Throwable $th) {
             //throw $th;
         }
-
-
     }
 
     public function boot(PhilHealthServices $philHealthServices)
     {
         $this->philHealthServices = $philHealthServices;
-
     }
 
     public function PreLoad($ID)
     {
         if (is_numeric($ID)) {
             $data = $this->philHealthServices->get($ID);
+
+
+
             if ($data) {
+
+                // $this->NO_OF_TREATMENT = $this->philHealthServices->getNumberOfTreatment($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $this->CHARGES_ROOM_N_BOARD = $data->CHARGES_ROOM_N_BOARD;
                 $this->CHARGES_DRUG_N_MEDICINE = $data->CHARGES_DRUG_N_MEDICINE;
                 $this->CHARGES_LAB_N_DIAGNOSTICS = $data->CHARGES_LAB_N_DIAGNOSTICS;
@@ -161,7 +168,7 @@ class StatementOfAccount extends Component
                 // $this->P2_SUPPLIES = $data->P2_SUPPLIES;
                 // $this->P2_OTHERS = $data->P2_OTHERS;
                 $this->P2_SUB_TOTAL = $data->P2_SUB_TOTAL;
-          
+
                 $this->OP_ROOM_N_BOARD = $data->OP_ROOM_N_BOARD;
                 $this->OP_DRUG_N_MEDICINE = $data->OP_DRUG_N_MEDICINE;
                 $this->OP_LAB_N_DIAGNOSTICS = $data->OP_LAB_N_DIAGNOSTICS;
@@ -270,10 +277,11 @@ class StatementOfAccount extends Component
     {
         $this->i = 0;
         $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
-
     }
     public function render()
-    {
+    {   
+
+
         $this->ComputeTotal();
         $this->PreLoad($this->ID);
         return view('livewire.phil-health.statement-of-account');

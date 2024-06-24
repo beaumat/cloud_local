@@ -84,6 +84,7 @@ class PhilHealth extends Model
         'OP_OTHERS',
         'OP_SUB_TOTAL',
         'PROFESSIONAL_FEE_SUB_TOTAL',
+        'PROFESSIONAL_DISCOUNT_SUB_TOTAL',
         'CHARGE_TOTAL',
         'VAT_TOTAL',
         'SP_TOTAL',

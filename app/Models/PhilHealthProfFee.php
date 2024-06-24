@@ -17,7 +17,9 @@ class PhilHealthProfFee extends Model
         'PHIC_ID',
         'LINE_NO',
         'CONTACT_ID',
-        'AMOUNT'
+        'AMOUNT',
+        'DISCOUNT',
+        'FIRST_CASE'
     ];
 
 }
