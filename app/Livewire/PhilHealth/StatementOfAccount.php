@@ -55,6 +55,8 @@ class StatementOfAccount extends Component
     public float $OP_OTHERS;
     public float $OP_SUB_TOTAL;
     public float $PROFESSIONAL_FEE_SUB_TOTAL;
+    public float $PROFESSIONAL_DISCOUNT_SUB_TOTAL;
+
     public float $CHARGE_TOTAL;
     public float $VAT_TOTAL;
     public float $SP_TOTAL;
@@ -66,44 +68,51 @@ class StatementOfAccount extends Component
     public string $DATE_SIGNED;
     public string $OTHER_NAME;
 
+
+
+
+    public float $AD_SUB_TOTAL;
+    public  float $AD_TOTAL = 0;
     private $philHealthServices;
     public $feeList = [];
 
 
 
-    public function ComputeTotal()
-    {
-        try {
-            $this->CHARGES_SUB_TOTAL = $this->CHARGES_ROOM_N_BOARD + $this->CHARGES_DRUG_N_MEDICINE + $this->CHARGES_LAB_N_DIAGNOSTICS + $this->CHARGES_OPERATING_ROOM_FEE + $this->CHARGES_SUPPLIES + $this->CHARGES_OTHERS;
-            $this->VAT_SUB_TOTAL = $this->VAT_ROOM_N_BOARD + $this->VAT_DRUG_N_MEDICINE + $this->VAT_LAB_N_DIAGNOSTICS + $this->VAT_OPERATING_ROOM_FEE + $this->VAT_SUPPLIES + $this->VAT_OTHERS;
-            $this->SP_SUB_TOTAL = $this->SP_ROOM_N_BOARD + $this->SP_DRUG_N_MEDICINE + $this->SP_LAB_N_DIAGNOSTICS + $this->SP_OPERATING_ROOM_FEE + $this->SP_SUPPLIES + $this->SP_OTHERS;
-            $this->GOV_SUB_TOTAL = $this->GOV_ROOM_N_BOARD + $this->GOV_DRUG_N_MEDICINE + $this->GOV_LAB_N_DIAGNOSTICS + $this->GOV_OPERATING_ROOM_FEE + $this->GOV_SUPPLIES + $this->GOV_OTHERS;
-
-            // $sub_total_discount = (float) $this->VAT_SUB_TOTAL + $this->SP_SUB_TOTAL + $this->GOV_SUB_TOTAL;
+    // public function ComputeTotal()
+    // {
+    //     try {
+    //         $this->CHARGES_SUB_TOTAL = $this->CHARGES_ROOM_N_BOARD + $this->CHARGES_DRUG_N_MEDICINE + $this->CHARGES_LAB_N_DIAGNOSTICS + $this->CHARGES_OPERATING_ROOM_FEE + $this->CHARGES_SUPPLIES + $this->CHARGES_OTHERS;
+    //         $this->VAT_SUB_TOTAL = $this->VAT_ROOM_N_BOARD + $this->VAT_DRUG_N_MEDICINE + $this->VAT_LAB_N_DIAGNOSTICS + $this->VAT_OPERATING_ROOM_FEE + $this->VAT_SUPPLIES + $this->VAT_OTHERS;
+    //         $this->SP_SUB_TOTAL = $this->SP_ROOM_N_BOARD + $this->SP_DRUG_N_MEDICINE + $this->SP_LAB_N_DIAGNOSTICS + $this->SP_OPERATING_ROOM_FEE + $this->SP_SUPPLIES + $this->SP_OTHERS;
+    //         $this->GOV_SUB_TOTAL = $this->GOV_ROOM_N_BOARD + $this->GOV_DRUG_N_MEDICINE + $this->GOV_LAB_N_DIAGNOSTICS + $this->GOV_OPERATING_ROOM_FEE + $this->GOV_SUPPLIES + $this->GOV_OTHERS;
 
 
-            // $this->P1_SUB_TOTAL = $this->P1_ROOM_N_BOARD + $this->P1_DRUG_N_MEDICINE + $this->P1_LAB_N_DIAGNOSTICS + $this->P1_OPERATING_ROOM_FEE + $this->P1_SUPPLIES + $this->P1_OTHERS + $this->P1_PHIC_AMOUNT;
-            // $this->P2_SUB_TOTAL = $this->P2_ROOM_N_BOARD + $this->P2_DRUG_N_MEDICINE + $this->P2_LAB_N_DIAGNOSTICS + $this->P2_OPERATING_ROOM_FEE + $this->P2_SUPPLIES + $this->P2_OTHERS;
-            // $sub_total_benefits = (float) $this->P1_SUB_TOTAL + $this->P2_SUB_TOTAL;
 
-            // $otherTotal = (float) $this->OP_ROOM_N_BOARD + $this->OP_DRUG_N_MEDICINE + $this->OP_LAB_N_DIAGNOSTICS + $this->OP_OPERATING_ROOM_FEE + $this->OP_SUPPLIES + $this->OP_OTHERS;
-            // $this->OP_SUB_TOTAL = ($this->CHARGES_SUB_TOTAL - $sub_total_discount) - $sub_total_benefits;
+    //         // $sub_total_discount = (float) $this->VAT_SUB_TOTAL + $this->SP_SUB_TOTAL + $this->GOV_SUB_TOTAL;
 
-            $this->CHARGE_TOTAL = $this->CHARGES_SUB_TOTAL + $this->PROFESSIONAL_FEE_SUB_TOTAL;
-            $this->VAT_TOTAL = $this->VAT_SUB_TOTAL;
-            $this->SP_TOTAL = $this->SP_SUB_TOTAL;
-            $this->GOV_TOTAL = $this->GOV_SUB_TOTAL;
-            $this->P1_TOTAL = $this->P1_SUB_TOTAL + $this->PROFESSIONAL_FEE_SUB_TOTAL;
-            $this->P2_TOTAL = $this->P2_SUB_TOTAL;
 
-            $total_discount = (float) $this->VAT_TOTAL + $this->SP_TOTAL + $this->GOV_TOTAL;
-            $total_benefits = (float) $this->P1_TOTAL + $this->P2_TOTAL;
+    //         // $this->P1_SUB_TOTAL = $this->P1_ROOM_N_BOARD + $this->P1_DRUG_N_MEDICINE + $this->P1_LAB_N_DIAGNOSTICS + $this->P1_OPERATING_ROOM_FEE + $this->P1_SUPPLIES + $this->P1_OTHERS + $this->P1_PHIC_AMOUNT;
+    //         // $this->P2_SUB_TOTAL = $this->P2_ROOM_N_BOARD + $this->P2_DRUG_N_MEDICINE + $this->P2_LAB_N_DIAGNOSTICS + $this->P2_OPERATING_ROOM_FEE + $this->P2_SUPPLIES + $this->P2_OTHERS;
+    //         // $sub_total_benefits = (float) $this->P1_SUB_TOTAL + $this->P2_SUB_TOTAL;
 
-            $this->OP_TOTAL = ($this->CHARGE_TOTAL - $total_discount) - $total_benefits;
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-    }
+    //         // $otherTotal = (float) $this->OP_ROOM_N_BOARD + $this->OP_DRUG_N_MEDICINE + $this->OP_LAB_N_DIAGNOSTICS + $this->OP_OPERATING_ROOM_FEE + $this->OP_SUPPLIES + $this->OP_OTHERS;
+    //         // $this->OP_SUB_TOTAL = ($this->CHARGES_SUB_TOTAL - $sub_total_discount) - $sub_total_benefits;
+
+    //         $this->CHARGE_TOTAL = $this->CHARGES_SUB_TOTAL + $this->PROFESSIONAL_FEE_SUB_TOTAL;
+    //         $this->VAT_TOTAL = $this->VAT_SUB_TOTAL;
+    //         $this->SP_TOTAL = $this->SP_SUB_TOTAL;
+    //         $this->GOV_TOTAL = $this->GOV_SUB_TOTAL;
+    //         $this->P1_TOTAL = $this->P1_SUB_TOTAL + $this->PROFESSIONAL_FEE_SUB_TOTAL;
+    //         $this->P2_TOTAL = $this->P2_SUB_TOTAL;
+
+    //         $total_discount = (float) $this->VAT_TOTAL + $this->SP_TOTAL + $this->GOV_TOTAL;
+    //         $total_benefits = (float) $this->P1_TOTAL + $this->P2_TOTAL;
+
+    //         $this->OP_TOTAL = ($this->CHARGE_TOTAL - $total_discount) - $total_benefits;
+    //     } catch (\Throwable $th) {
+    //         //throw $th;
+    //     }
+    // }
 
     public function boot(PhilHealthServices $philHealthServices)
     {
@@ -177,6 +186,7 @@ class StatementOfAccount extends Component
                 $this->OP_OTHERS = $data->OP_OTHERS;
                 $this->OP_SUB_TOTAL = $data->OP_SUB_TOTAL;
                 $this->PROFESSIONAL_FEE_SUB_TOTAL = $data->PROFESSIONAL_FEE_SUB_TOTAL;
+                $this->PROFESSIONAL_DISCOUNT_SUB_TOTAL = $data->PROFESSIONAL_DISCOUNT_SUB_TOTAL;
                 $this->CHARGE_TOTAL = $data->CHARGE_TOTAL;
                 $this->VAT_TOTAL = $data->VAT_TOTAL;
                 $this->SP_TOTAL = $data->SP_TOTAL;
@@ -186,6 +196,8 @@ class StatementOfAccount extends Component
                 $this->OP_TOTAL = $data->OP_TOTAL;
                 $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
                 $this->DATE_SIGNED = $data->DATE_SIGNED ?? '';
+                $this->AD_SUB_TOTAL = $data->AD_SUB_TOTAL;
+                $this->AD_TOTAL = $data->AD_TOTAL;
                 // $this->OTHER_NAME = $data->OTHER_NAME;
                 return;
             }
@@ -246,6 +258,7 @@ class StatementOfAccount extends Component
         $this->OP_OTHERS = 0;
         $this->OP_SUB_TOTAL = 0;
         $this->PROFESSIONAL_FEE_SUB_TOTAL = 0;
+        $this->PROFESSIONAL_DISCOUNT_SUB_TOTAL = 0;
         $this->CHARGE_TOTAL = 0;
         $this->VAT_TOTAL = 0;
         $this->SP_TOTAL = 0;
@@ -256,6 +269,8 @@ class StatementOfAccount extends Component
         $this->PREPARED_BY_ID = 0;
         $this->DATE_SIGNED = '';
         $this->OTHER_NAME = '';
+        $this->AD_SUB_TOTAL = 0;
+        $this->AD_TOTAL  = 0;
     }
     public function UpdatedID()
     {
@@ -279,11 +294,12 @@ class StatementOfAccount extends Component
         $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
     }
     public function render()
-    {   
+    {
 
 
-        $this->ComputeTotal();
+
         $this->PreLoad($this->ID);
+
         return view('livewire.phil-health.statement-of-account');
     }
 }

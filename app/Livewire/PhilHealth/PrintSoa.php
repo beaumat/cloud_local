@@ -72,6 +72,8 @@ class PrintSoa extends Component
     public float $OP_OTHERS;
     public float $OP_SUB_TOTAL;
     public float $PROFESSIONAL_FEE_SUB_TOTAL;
+    public float $PROFESSIONAL_DISCOUNT_SUB_TOTAL;
+    public float $PROFESSIONAL_P1_SUB_TOTAL;
     public float $CHARGE_TOTAL;
     public float $VAT_TOTAL;
     public float $SP_TOTAL;
@@ -79,6 +81,12 @@ class PrintSoa extends Component
     public float $P1_TOTAL;
     public float $P2_TOTAL;
     public float $OP_TOTAL;
+
+
+    public float $AD_SUB_TOTAL;
+    public  float $AD_TOTAL = 0;
+
+
     public int $PREPARED_BY_ID;
     public string $DATE_SIGNED;
     public string $OTHER_NAME;
@@ -178,6 +186,8 @@ class PrintSoa extends Component
                 $this->OP_OTHERS = $data->OP_OTHERS;
                 $this->OP_SUB_TOTAL = $data->OP_SUB_TOTAL;
                 $this->PROFESSIONAL_FEE_SUB_TOTAL = $data->PROFESSIONAL_FEE_SUB_TOTAL;
+                $this->PROFESSIONAL_DISCOUNT_SUB_TOTAL = $data->PROFESSIONAL_DISCOUNT_SUB_TOTAL;
+                $this->PROFESSIONAL_P1_SUB_TOTAL = $data->PROFESSIONAL_P1_SUB_TOTAL;
                 $this->CHARGE_TOTAL = $data->CHARGE_TOTAL;
                 $this->VAT_TOTAL = $data->VAT_TOTAL;
                 $this->SP_TOTAL = $data->SP_TOTAL;
@@ -185,6 +195,10 @@ class PrintSoa extends Component
                 $this->P1_TOTAL = $data->P1_TOTAL;
                 $this->P2_TOTAL = $data->P2_TOTAL;
                 $this->OP_TOTAL = $data->OP_TOTAL;
+
+                $this->AD_SUB_TOTAL = $data->AD_SUB_TOTAL;
+                $this->AD_TOTAL = $data->AD_TOTAL;
+
                 $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
                 $this->DATE_SIGNED = $data->DATE_SIGNED ?? '';
                 $this->OTHER_NAME = $data->OTHER_NAME ?? '';

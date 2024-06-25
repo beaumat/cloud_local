@@ -291,7 +291,12 @@
                             {{ number_format($GOV_SUB_TOTAL, 2) }}
                         @endif
                     </td>
-                    <td></td> {{-- after discount --}}
+                    <td class="text-right font-weight-bold">
+
+                        @if ($AD_SUB_TOTAL > 0)
+                            {{ number_format($AD_SUB_TOTAL, 2) }}
+                        @endif
+                    </td> {{-- after discount --}}
                     <td class="text-right font-weight-bold">
                         @if ($P1_SUB_TOTAL > 0)
                             {{ number_format($P1_SUB_TOTAL, 2) }}
@@ -338,7 +343,7 @@
                                 @endif
                             </td>
                             <td></td>
-                            <td class="discount">
+                            <td class="discount text-right font-weight-bold">
                                 @if ($list->DISCOUNT > 0)
                                     {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }}
                                 @endif
@@ -412,8 +417,8 @@
                         @endif
                     </td>
                     <td class="text-right font-weight-bold">
-                        @if (0 > 0)
-                            {{ number_format(0, 2) }}
+                        @if ($AD_TOTAL > 0)
+                            {{ number_format($AD_TOTAL, 2) }}
                         @endif
                     </td>
                     <td class="text-right font-weight-bold">
@@ -428,7 +433,7 @@
                     </td>
                     <td class="text-right font-weight-bold">
                         @if ($OP_TOTAL > 0)
-                            {{ number_format($CHARGE_TOTAL - $P1_TOTAL, 2) }}
+                            {{ number_format($OP_TOTAL, 2) }}
                         @endif
                     </td>
 

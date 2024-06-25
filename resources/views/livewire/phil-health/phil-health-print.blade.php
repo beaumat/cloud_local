@@ -9,7 +9,7 @@
         <div class="page-break"></div>
         @livewire('PhilHealth.PrintTreatment', ['PRINT_ID' => $ID])
         <div class="page-break"></div>
-        @livewire('PhilHealth.PrintComputation', ['PRINT_ID' => $ID])
+        {{-- @livewire('PhilHealth.PrintComputation', ['PRINT_ID' => $ID]) --}}
     @endforeach
 
 </div>

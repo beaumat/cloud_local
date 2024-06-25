@@ -95,7 +95,9 @@ class PhilHealth extends Model
         'PREPARED_BY_ID',
         'DATE_SIGNED',
         'OTHER_NAME',
-        'PAYMENT_AMOUNT'
+        'PAYMENT_AMOUNT',
+        'AD_SUB_TOTAL',
+        'AD_TOTAL'
     ];
 
 }
