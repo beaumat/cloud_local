@@ -19,6 +19,8 @@ class Schedules extends Model
         'SCHED_STATUS',
         'STATUS_LOG',
         'LOCATION_ID',
-        'HEMO_MACHINE_ID'
+        'HEMO_MACHINE_ID',
+        'CREATED_AT',
+        'UPDATED_AT'
     ];
 }

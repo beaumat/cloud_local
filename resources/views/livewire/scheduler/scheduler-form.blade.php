@@ -65,12 +65,13 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                
+
                                 <div class="form-group">
-                                    <livewire:dropdown-option name="scheduleStatusId" :isDisabled=false titleName="Status"
-                                    :options="$scheduleStatusList" :zero="false" wire:model.live='scheduleStatusId' />
+                                    <livewire:dropdown-option name="scheduleStatusId" :isDisabled=false
+                                        titleName="Status" :options="$scheduleStatusList" :zero="false"
+                                        wire:model.live='scheduleStatusId' />
                                 </div>
-                        
+
                                 <div class="form-group">
                                     <table class="table table-sm table-bordered table-hover">
                                         <thead class="bg-sky text-xs">
@@ -83,18 +84,19 @@
                                         <tbody class="text-xs">
                                             @foreach ($scheduleList as $list)
                                                 <tr>
-                                                    <td>{{ \Carbon\Carbon::parse($list->SCHED_DATE)->format('m/d/Y') }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($list->SCHED_DATE)->format('m/d/Y') }}
+                                                    </td>
                                                     <td>{{ $list->SHIFT }}</td>
                                                     <td>{{ $list->STATUS }}</td>
-    
+
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                     <div class="text-xs"> {{ $scheduleList->links() }}</div>
                                 </div>
-                       
-                        
+
+
                             </div>
                         </div>
                     </div>

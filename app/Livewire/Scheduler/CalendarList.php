@@ -3,6 +3,7 @@
 namespace App\Livewire\Scheduler;
 
 use Carbon\Carbon;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class CalendarList extends Component

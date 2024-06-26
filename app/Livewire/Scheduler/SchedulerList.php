@@ -43,15 +43,23 @@ class SchedulerList extends Component
         $this->scheduleServices = $scheduleServices;
     }
     // #[On('load-schedule-by-contact')]
+
+    #[On('make-reload')]
     public function loadScheduleByContact()
     {
-        $this->scheduleList = $this->scheduleServices->ContactSchedule(0, $this->LOCATION_ID ?? 0,0,15);
+
+        // $this->reloadContactList(Carbon::now()->format('Y-m-d'));
+        // try {
+        //     $this->scheduleList = $this->scheduleServices->ContactSchedule(0, $this->LOCATION_ID ?? 0, 0, 15);
+        // } catch (\Exception $e) {
+        //     //throw $th;
+        // }
     }
     public function updatedlocationid()
     {
+        
         $this->reloadComponent();
-        $this->loadScheduleByContact();
-
+        $this->dispatch('make-reload');
     }
     #[On('back-load')]
     public function DateSet($Date)
@@ -61,15 +69,23 @@ class SchedulerList extends Component
     }
     public function reloadContactList($Date)
     {
+        try {
 
-        $date = Carbon::createFromFormat('Y-m-d', $Date);
-        $this->schedContact = $this->scheduleServices->scheduleList($date, $this->LOCATION_ID);
-        $this->DATE = $date;
-        $this->reloadComponent();
+            $date = Carbon::createFromFormat('Y-m-d', $Date);
+            $this->schedContact = $this->scheduleServices->scheduleList($date, $this->LOCATION_ID);
+            $this->DATE = $date;
+            $this->reloadComponent();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
     public function reloadComponent()
     {
-        $this->refreshComponent = !$this->refreshComponent;
+        try {
+            $this->refreshComponent = !$this->refreshComponent;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
     public function updatedyear()
     {
@@ -84,20 +100,20 @@ class SchedulerList extends Component
     }
     public function mount()
     {
+        $this->locationList = $this->locationServices->getList();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->monthList = $this->dateServices->MonthList();
         $this->todayMonth();
         $this->reloadContactList(Carbon::now()->format('Y-m-d'));
     }
 
-  
+
     public function todayMonth()
     {
         $this->year = Carbon::now()->year;
         $this->month = Carbon::now()->month;
         $this->reloadComponent();
         $this->dispatch('back-load', Date: Carbon::now()->format('Y-m-d'));
-
     }
     public function nextMonth()
     {
@@ -105,7 +121,6 @@ class SchedulerList extends Component
         $this->month = $this->month == 12 ? 1 : $this->month + 1;
         $this->year = $this->month == 1 ? $this->year + 1 : $this->year;
         $this->reloadComponent();
-
     }
     public function previousMonth()
     {
@@ -121,7 +136,8 @@ class SchedulerList extends Component
     }
     public function render()
     {
-        $this->locationList = $this->locationServices->getList();
+     
+
         return view('livewire.scheduler.scheduler-list');
     }
 }

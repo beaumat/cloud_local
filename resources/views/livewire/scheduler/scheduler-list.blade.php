@@ -29,7 +29,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
 
-                                        
+
                                         @can('patient.schedule.modify')
                                             <a href="{{ route('patientsschedules_setup') }}" class="btn btn-info btn-sm">
                                                 <i class="fa fa-cog" aria-hidden="true"></i> Setup</a>
@@ -129,6 +129,7 @@
 
                                     <livewire:scheduler.calendar-list :year="$year" :month="$month"
                                         :locationid="$LOCATION_ID" :key="$refreshComponent" :date="$DATE" />
+
                                 </div>
                             </div>
                         </div>

@@ -106,11 +106,8 @@
                                 Auth::user()->can('location.view') ||
                                 Auth::user()->can('location-group.view') ||
                                 Auth::user()->can('option'))
-                                
                             @livewire('Layouts.MaintenanceSettings')
                         @endif
-
-
 
                     </ul>
                 </li>

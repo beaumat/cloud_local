@@ -23,9 +23,11 @@ class ScheduleServices
 
 
     private $object;
-    public function __construct(ObjectServices $objectService)
+    private $dateServices;
+    public function __construct(ObjectServices $objectService, DateServices $dateServices)
     {
         $this->object = $objectService;
+        $this->dateServices = $dateServices;
     }
     public function getInfo(int $Id)
     {
@@ -89,11 +91,9 @@ class ScheduleServices
                 ->where('SCHED_DATE', $Date)
                 ->where('LOCATION_ID', $LOCATION_ID)
                 ->first();
-
         } catch (\Throwable $th) {
             return null;
         }
-
     }
     public function Delete(int $ID, int $LOCATION_ID)
     {
@@ -108,7 +108,8 @@ class ScheduleServices
                 'SHIFT_ID' => $SHIFT_ID,
                 'SCHED_STATUS' => $STATUS,
                 'STATUS_LOG' => $LOG,
-                'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID
+                'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID,
+                'UPDATED_AT' => $this->dateServices->Now()
             ]);
     }
     public function CheckingType(int $SHIFT_ID, int $CONTACT_ID, string $DATE, int $LOCATION_ID, int $HEMO_MACHINE_ID): int
@@ -122,7 +123,6 @@ class ScheduleServices
 
 
         return $totalCount;
-
     }
     public function Store(int $SHIFT_ID, int $CONTACT_ID, string $DATE, int $STATUS, $LOG, int $LOCATION_ID, int $HEMO_MACHINE_ID)
     {
@@ -137,7 +137,9 @@ class ScheduleServices
             'SCHED_STATUS' => $STATUS,
             'STATUS_LOG' => $LOG,
             'LOCATION_ID' => $LOCATION_ID,
-            'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID
+            'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID,
+            'CREATED_AT' => $this->dateServices->Now(),
+            'UPDATED_AT' => $this->dateServices->Now()
         ]);
     }
 
@@ -185,7 +187,6 @@ class ScheduleServices
     public function ScheduleStatusList()
     {
         return ScheduleStatus::query()->get();
-
     }
     public function AutoGenerateSchedule(int $PATIENT_ID, int $LOCATION_ID, int $YEAR, int $MONTH, array $weekDate = [], $shiftList)
     {
@@ -296,8 +297,6 @@ class ScheduleServices
                     // Handle unexpected day
                     break;
             }
-
-
         }
     }
     public function PatientWeeklySchedule($SHIFT_ID, $DATE, $LOCATION_ID)
@@ -311,7 +310,6 @@ class ScheduleServices
                 $demandOutput[] = ['ID' => $run, 'PATIENT_NAME' => '', 'TYPE_ID' => $list->ID];
                 $run++;
             }
-
         }
 
         $result = Schedules::query()
