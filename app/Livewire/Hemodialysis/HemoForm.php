@@ -9,6 +9,7 @@ use App\Services\HemoServices;
 use App\Services\ItemInventoryServices;
 use App\Services\ItemTreatmentServices;
 use App\Services\LocationServices;
+use App\Services\ScheduleServices;
 use App\Services\UnitOfMeasureServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
@@ -79,6 +80,7 @@ class HemoForm extends Component
     private $documentTypeServices;
     private $itemTreatmentServices;
     private $unitOfMeasureServices;
+    private $scheduleServices;
     public function boot(
         HemoServices $hemoServices,
         ContactServices $contactServices,
@@ -89,7 +91,8 @@ class HemoForm extends Component
         ItemInventoryServices $itemInventoryServices,
         DocumentTypeServices $documentTypeServices,
         ItemTreatmentServices $itemTreatmentServices,
-        UnitOfMeasureServices $unitOfMeasureServices
+        UnitOfMeasureServices $unitOfMeasureServices,
+        ScheduleServices $scheduleServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
@@ -101,6 +104,7 @@ class HemoForm extends Component
         $this->documentTypeServices = $documentTypeServices;
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
+        $this->scheduleServices = $scheduleServices;
     }
 
     public function reloadData($data)
@@ -259,7 +263,7 @@ class HemoForm extends Component
         $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
         if ($data) {
             $gotNew = true;
-            
+
             if ($data->NO_OF_USED > 1) {
                 $hemoData =  $this->hemoServices->Get($this->ID);
                 if ($hemoData) {
@@ -274,7 +278,7 @@ class HemoForm extends Component
 
             try {
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
-                $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];   
+                $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
                 $this->hemoServices->ItemStore($this->ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
             } catch (\Throwable $th) {
                 session()->flash('error', $th->getMessage());
@@ -302,10 +306,10 @@ class HemoForm extends Component
         try {
             DB::beginTransaction();
             if ($this->ID == 0) {
-             
+
                 $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
-       
-  
+
+
                 $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);
                 foreach ($dataList as $item) {
                     $this->addItem($item->ID);
@@ -335,9 +339,7 @@ class HemoForm extends Component
     {
         try {
             $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Hemodialysis');
-
             $data = $this->hemoServices->ItemInventory($this->ID);
-
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
             }
@@ -366,6 +368,7 @@ class HemoForm extends Component
                 return;
             }
             $this->hemoServices->StatusUpdate($this->ID, 2);
+            $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 1); //PRESENT
             DB::commit();
 
             return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully posted');

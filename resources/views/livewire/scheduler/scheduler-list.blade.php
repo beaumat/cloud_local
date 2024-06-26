@@ -76,7 +76,7 @@
 
                                         @foreach ($schedContact as $list)
                                             <tr>
-                                                <td> {{ $list->SHIFT }}</td>
+                                                <td>{{ $list->SHIFT }}</td>
                                                 <td>{{ $list->CONTACT_NAME }}</td>
                                                 <td>{{ $list->STATUS }}</td>
                                             </tr>

@@ -97,7 +97,9 @@ class ScheduleServices
     }
     public function Delete(int $ID, int $LOCATION_ID)
     {
-        Schedules::where('ID', $ID)->where('LOCATION_ID', $LOCATION_ID)->delete();
+        Schedules::where('ID', $ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->delete();
     }
     public function Update(int $CONTACT_ID, string $DATE, int $SHIFT_ID, int $STATUS, $LOG, int $LOCATION_ID, int $HEMO_MACHINE_ID)
     {
@@ -109,6 +111,16 @@ class ScheduleServices
                 'SCHED_STATUS' => $STATUS,
                 'STATUS_LOG' => $LOG,
                 'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID,
+                'UPDATED_AT' => $this->dateServices->Now()
+            ]);
+    }
+    public function StatusUpdate(int $CONTACT_ID, string $DATE, int $LOCATION_ID, int $STATUS)
+    {
+        Schedules::where('CONTACT_ID', $CONTACT_ID)
+            ->where('SCHED_DATE', $DATE)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->update([
+                'SCHED_STATUS' => $STATUS,
                 'UPDATED_AT' => $this->dateServices->Now()
             ]);
     }

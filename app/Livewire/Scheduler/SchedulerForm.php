@@ -123,6 +123,7 @@ class SchedulerForm extends Component
         $this->locationList = $this->locationServices->getList();
 
         $scheduleList = $this->scheduleServices->ContactSchedule($this->CONTACT_ID ?? 0, $this->LOCATION_ID ?? 0, $this->scheduleStatusId, 10);
+        
         return view('livewire.scheduler.scheduler-form', ['scheduleList' => $scheduleList]);
     }
 

@@ -39,7 +39,6 @@ class ServiceChargeServices
             return (float) ($data->AMOUNT - $data->PAID_AMOUNT);
         }
         return 0;
-
     }
     public function getServiceChargeList(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID): object
     {
@@ -72,8 +71,6 @@ class ServiceChargeServices
             ->get();
 
         return $result;
-
-
     }
     public function get(int $ID): object
     {
@@ -181,7 +178,8 @@ class ServiceChargeServices
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
-                's.DESCRIPTION as STATUS'
+                's.DESCRIPTION as STATUS',
+                's.ID as STATUS_ID'
             ])
             ->join('contact as c', 'c.ID', '=', 'service_charges.PATIENT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -374,7 +372,6 @@ class ServiceChargeServices
             ->first();
 
         return $result->pay;
-
     }
     public function updateServiceChargesItemPaid(int $SERVICE_CHARGES_ITEM_ID)
     {
@@ -389,7 +386,6 @@ class ServiceChargeServices
 
             $this->updateServiceChargesBalance($data->SERVICE_CHARGES_ID);
         }
-
     }
     public function getPaidItemCharge(int $SERVICE_CHARGES_ITEM_ID): float
     {
@@ -400,7 +396,6 @@ class ServiceChargeServices
             ->first();
 
         return $result->pay;
-
     }
     public function updateServiceChargesBalance(int $SERVICE_CHARGES_ID)
     {
@@ -459,5 +454,4 @@ class ServiceChargeServices
             }
         }
     }
-
 }

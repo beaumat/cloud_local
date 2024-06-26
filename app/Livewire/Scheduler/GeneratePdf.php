@@ -6,7 +6,6 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-
 class GeneratePdf extends Component
 {
     #[Reactive]

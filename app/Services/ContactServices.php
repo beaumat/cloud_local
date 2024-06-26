@@ -34,10 +34,16 @@ class ContactServices
     {
         return contacts::where('ID', $ID)->where('TYPE', $TYPE)->first();
     }
-    
-    public function getFirstFromListByID( int $TYPE)
+
+    public function getFirstFromListByID(int $TYPE): int
     {
-        return contacts::where('TYPE', $TYPE)->first()->ID;
+        // Temporary
+        $data = contacts::where('TYPE', $TYPE)->first();
+
+        if ($data) {
+            return (int) $data->ID;
+        }
+        return 0;
     }
     public function getList(int $Type): object
     {
@@ -352,7 +358,7 @@ class ContactServices
             })
             ->orderBy('contact.ID', 'desc')
             ->paginate($perPage);
-            
+
         return $result;
     }
 

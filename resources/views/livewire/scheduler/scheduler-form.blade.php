@@ -28,7 +28,6 @@
                                         {{-- <h4 class="card-title">{{ __('Schedules Setup') }}</h4> --}}
                                     </div>
                                     <div class="col-md-6 text-right">
-
                                         <a href="{{ route('patientsschedules') }}" class="btn btn-info btn-sm">
                                             <i class="fa fa-table" aria-hidden="true"></i>
                                             List</a>
