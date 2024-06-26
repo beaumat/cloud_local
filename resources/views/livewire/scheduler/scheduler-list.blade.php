@@ -1,7 +1,4 @@
 <div class="content-wrapper">
-
-
-
     <div class="content-header">
         <div class="container-fluid">
             <div class="row ">
@@ -126,10 +123,8 @@
                                             </button>
                                         </div>
                                     </div>
-
                                     <livewire:scheduler.calendar-list :year="$year" :month="$month"
                                         :locationid="$LOCATION_ID" :key="$refreshComponent" :date="$DATE" />
-
                                 </div>
                             </div>
                         </div>
