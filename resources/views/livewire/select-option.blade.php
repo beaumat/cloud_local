@@ -14,19 +14,21 @@
                             &nbsp;
                         </option>
                     @endif
-                    @foreach ($options as $option)
-                        <option value="{{ $option->ID }}">
-                            @if ($option->DESCRIPTION)
-                                {{ $option->DESCRIPTION }}
-                            @else
-                                @if ($option->NAME)
-                                    {{ $option->NAME }}
+                    @if ($options)
+                        @foreach ($options as $option)
+                            <option value="{{ $option->ID }}">
+                                @if ($option->DESCRIPTION)
+                                    {{ $option->DESCRIPTION }}
                                 @else
-                                    {{ $option->CODE }}
+                                    @if ($option->NAME)
+                                        {{ $option->NAME }}
+                                    @else
+                                        {{ $option->CODE }}
+                                    @endif
                                 @endif
-                            @endif
-                        </option>
-                    @endforeach
+                            </option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
         </div>
@@ -41,19 +43,21 @@
                     &nbsp;
                 </option>
             @endif
-            @foreach ($options as $option)
-                <option value="{{ $option->ID }}">
-                    @if ($option->DESCRIPTION)
-                        {{ $option->DESCRIPTION }}
-                    @else
-                        @if ($option->NAME)
-                            {{ $option->NAME }}
+            @if ($options)
+                @foreach ($options as $option)
+                    <option value="{{ $option->ID }}">
+                        @if ($option->DESCRIPTION)
+                            {{ $option->DESCRIPTION }}
                         @else
-                            {{ $option->CODE }}
+                            @if ($option->NAME)
+                                {{ $option->NAME }}
+                            @else
+                                {{ $option->CODE }}
+                            @endif
                         @endif
-                    @endif
-                </option>
-            @endforeach
+                    </option>
+                @endforeach
+            @endif
         </select>
     @endif
 
