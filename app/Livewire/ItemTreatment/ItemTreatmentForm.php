@@ -91,8 +91,7 @@ class ItemTreatmentForm extends Component
                 'ITEM_ID' => 'Item',
             ]
         );
-
-
+        
         try {
             DB::beginTransaction();
             if ($this->ID === 0) {

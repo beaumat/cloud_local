@@ -21,13 +21,11 @@
 
 <body class="hold-transition login-page">
     <div class="login-box">
-
         <div class="login-logo">
-
-            <img src="{{ asset('dist/img/x1_250.jpg') }}" alt="" class="brand-image elevation-0"
+            <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="" class="brand-image elevation-0"
                 style="opacity: .8">
-            <br />
-            <a href="#"><b>X</b>ONE</a>
+            
+            <a href="#" class="text-lg text-info"><b>Web</b> System.</a>
         </div>
         <div class="card">
             <div class="card-body login-card-body">
