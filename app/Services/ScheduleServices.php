@@ -381,7 +381,6 @@ class ScheduleServices
             ->join('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
             ->join('shift AS s', 's.ID', '=', 'schedules.SHIFT_ID')
             ->join('hemodialysis_machine as hm', 'hm.ID', '=', 'schedules.HEMO_MACHINE_ID')
-            ->join('patient_status as ps', 'ps.ID', '=', 'c.PATIENT_STATUS_ID')
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('hemodialysis as h')
