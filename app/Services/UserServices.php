@@ -20,9 +20,9 @@ class UserServices
 
             return intval(Auth::user()->location_id) > 0 ? (int) Auth::user()->location_id : 0;
         }
-
-        return intval(Auth::user()->location_id) > 0 ? (int) Auth::user()->location_id : $this->systemSetting->GetValue('DefaultLocationId');
-
+        $locId = Auth::user()->location_id;
+        
+        return intval($locId) > 0 ? (int)$locId : $this->systemSetting->GetValue('DefaultLocationId');
     }
     public function UserId(): int
     {

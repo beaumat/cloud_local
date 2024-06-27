@@ -111,7 +111,7 @@
                                             <div class="tab-pane fade @if ($selectTab == 'gen') show active @endif"
                                                 id="custom-content-below-general-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-general-info-tab">
-                                                <div class="container-fluid">
+                                                <div class="container-fluid text-xs">
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="FIRST_NAME"

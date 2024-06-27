@@ -54,7 +54,7 @@ class ObjectServices
 
             dd("$TABLE_NAME table not found . please try again");
             // Auto Create
-            
+
             return 1;
         }
     }
@@ -80,13 +80,17 @@ class ObjectServices
 
     public function GetSequence(int $Type, $LocationId): string
     {
+
+      
         $data = ObjectCodeSequence::where('OBJECT_TYPE', $Type)->where('LOCATION_ID', $LocationId)->first();
+
         if ($data) {
             $this->SetSequence($data->ID, $data->NEXT_SEQUENCE, $data->INCREMENT);
             return $this->codeFormat($LocationId, $data->NEXT_SEQUENCE, $data->WIDTH, $data->POSTFIX, $data->PREFIX);
         }
 
-        $this->NewSequence(2, $Type, $LocationId, 1, null, null, 4);
+        $this->NewSequence(2, $Type, (int) $LocationId, 1, null, null, 4);
+
         return $this->codeFormat($LocationId, 1, 4, '', '');
     }
     public function SetSequence(int $ID, int $NEXT_SEQUENCE, int $INCREMENT)
