@@ -3,6 +3,7 @@
 namespace App\Livewire\Scheduler;
 
 use App\Models\Shift;
+use App\Services\HemodialysisMachineServices;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -20,13 +21,17 @@ class Calendar extends Component
     public $daysInMonth;
     public $daysInPreviousMonth;
     public int $dayCounter = 1;
-
     public int $CONTACT_ID;
     public int $LOCATION_ID;
     public int $HEMO_MACHINE_ID;
-
+    public  $hemoMachineList = [];
     public string $contactName;
     public int $SHIFT_ID = 0;
+    private $hemodialysisMachineServices;
+    public function boot(HemodialysisMachineServices $hemodialysisMachineServices)
+    {
+        $this->hemodialysisMachineServices = $hemodialysisMachineServices;
+    }
     public function mount(int $year, int $month, $contactid = null, $locationid = null, $hemomachineid = null)
     {
         $this->year = $year;
@@ -51,7 +56,6 @@ class Calendar extends Component
         }
 
         $this->reloadData();
-
     }
     public function updatedmonth()
     {
@@ -61,6 +65,7 @@ class Calendar extends Component
     {
         $this->today = Carbon::now()->format('Y-m-d');
         $this->reloadData();
+        $this->hemoMachineList =  $this->hemodialysisMachineServices->GetList($this->LOCATION_ID);
 
         return view('livewire.scheduler.calendar');
     }

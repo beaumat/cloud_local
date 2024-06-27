@@ -2,8 +2,11 @@
 
 namespace App\Livewire\Scheduler;
 
+use App\Services\ContactServices;
 use App\Services\HemodialysisMachineServices;
 use App\Services\ScheduleServices;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class Shift extends Component
@@ -14,14 +17,18 @@ class Shift extends Component
     public int $SHIFT_ID = 0;
     private $scheduleServices;
     private $hemodialysisMachineServices;
+    private $contactServices;
     public int $LOCATION_ID;
     public int $HEMO_MACHINE_ID;
     public int $STATUS_ID;
+    #[Reactive]
+    public $hemoMachineList  = [];
 
-    public function boot(ScheduleServices $scheduleServices, HemodialysisMachineServices $hemodialysisMachineServices)
+    public function boot(ScheduleServices $scheduleServices, HemodialysisMachineServices $hemodialysisMachineServices, ContactServices $contactServices)
     {
         $this->scheduleServices = $scheduleServices;
         $this->hemodialysisMachineServices = $hemodialysisMachineServices;
+        $this->contactServices = $contactServices;
     }
     public function mount($id, $contact_id, $shiftList, $location_id, $hemo_machine_id)
     {
@@ -29,62 +36,73 @@ class Shift extends Component
         $this->CONTACT_ID = $contact_id;
         $this->$shiftList = $shiftList;
         $this->LOCATION_ID = $location_id;
-        $this->HEMO_MACHINE_ID = $hemo_machine_id;
-        $schedule = $this->scheduleServices->get($this->CONTACT_ID, $id, $this->LOCATION_ID);
-        if ($schedule) {
-            $this->SHIFT_ID = $schedule->SHIFT_ID;
-            $this->STATUS_ID = $schedule->SCHED_STATUS;
-        }
+        $data = $this->scheduleServices->get($this->CONTACT_ID, $id, $this->LOCATION_ID);
+        if ($data) {
+            $this->SHIFT_ID = $data->SHIFT_ID ?? 0;
+            $this->STATUS_ID = $data->SCHED_STATUS ?? 0;
+            $this->HEMO_MACHINE_ID = $data->HEMO_MACHINE_ID ?? 0;
+        } else {
 
+            $this->HEMO_MACHINE_ID = $hemo_machine_id;
+        }
     }
     public function CheckingIsMaximumCapacity(string $DATE, int $CONTACT_ID, int $LOCATION_ID, int $SHIFT_ID, int $HEMO_M_ID): bool
     {
         $count = (int) $this->scheduleServices->CheckingType($SHIFT_ID, $CONTACT_ID, $DATE, $LOCATION_ID, $HEMO_M_ID);
+
         $capacity = (int) $this->hemodialysisMachineServices->GetCapacity($HEMO_M_ID);
- 
+
         if ($count < $capacity) {
             return false;
         } else {
             return true;
         }
-
     }
-    public function save(int $shift_id, $date)
+    public function openList()
+    {
+        $this->dispatch('open-shift-monitoring', reglist: ['SHIFT_ID' => $this->SHIFT_ID, 'CONTACT_ID' => $this->CONTACT_ID, 'LOCATION_ID' => $this->LOCATION_ID, 'DATE' => $this->ID]);
+    }
+    public function UpdatedHemoMachineId()
+    {
+        $scheduleData = $this->scheduleServices->get($this->CONTACT_ID, $this->ID, $this->LOCATION_ID);
+
+        if ($scheduleData) {
+            $this->scheduleServices->UpdateHemoMachine($scheduleData->CONTACT_ID, $this->ID, $scheduleData->LOCATION_ID, $this->HEMO_MACHINE_ID);
+            $this->contactServices->UpdatePatientType($this->CONTACT_ID, $this->HEMO_MACHINE_ID);
+            $this->dispatch('load-schedule-by-contact');
+        }
+    }
+    public function save(int $shift_id)
     {
         if ($this->CONTACT_ID > 0) {
             try {
-                $schedule = $this->scheduleServices->get($this->CONTACT_ID, $date, $this->LOCATION_ID);
-                if ($schedule) {
+                $scheduleData = $this->scheduleServices->get($this->CONTACT_ID, $this->ID, $this->LOCATION_ID);
+
+                if ($scheduleData) {
 
                     if ($shift_id == 0) {
-                        $this->scheduleServices->Delete($schedule->ID, $this->LOCATION_ID);
+                        $this->scheduleServices->Delete($scheduleData->ID, $this->LOCATION_ID);
                     } else {
-                        //
-                        $isMaximum = $this->CheckingIsMaximumCapacity($date, $this->CONTACT_ID, $this->LOCATION_ID, $shift_id, $this->HEMO_MACHINE_ID);
-
+                        $isMaximum = $this->CheckingIsMaximumCapacity($this->ID, $this->CONTACT_ID, $this->LOCATION_ID, $shift_id, $this->HEMO_MACHINE_ID);
                         if ($isMaximum) {
-                          
                             return true;
                         }
-
-                        $this->scheduleServices->Update($this->CONTACT_ID, $date, $shift_id, $schedule->SCHED_STATUS, $schedule->STATUS_LOG, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);
+                        $this->scheduleServices->Update($this->CONTACT_ID, $this->ID, $shift_id, $scheduleData->SCHED_STATUS, $scheduleData->STATUS_LOG, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);
                     }
                 } elseif ($shift_id != 0) {
 
-                    $isMaximum = $this->CheckingIsMaximumCapacity($date, $this->CONTACT_ID, $this->LOCATION_ID, $shift_id, $this->HEMO_MACHINE_ID);
+                    $isMaximum = $this->CheckingIsMaximumCapacity($this->ID, $this->CONTACT_ID, $this->LOCATION_ID, $shift_id, $this->HEMO_MACHINE_ID);
                     if ($isMaximum) {
-              
                         return true;
                     }
 
-                    $this->scheduleServices->Store($shift_id, $this->CONTACT_ID, $date, 0, null, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);
+                    $this->scheduleServices->Store($shift_id, $this->CONTACT_ID, $this->ID, 0, null, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);
                 }
                 $this->dispatch('load-schedule-by-contact');
             } catch (\Exception $e) {
                 dd($e->getMessage());
             }
         }
-
     }
 
     public function render()

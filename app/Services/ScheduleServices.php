@@ -114,6 +114,16 @@ class ScheduleServices
                 'UPDATED_AT' => $this->dateServices->Now()
             ]);
     }
+    public function UpdateHemoMachine(int $CONTACT_ID, string $DATE, int $LOCATION_ID, int $HEMO_MACHINE_ID)
+    {
+        Schedules::where('CONTACT_ID', $CONTACT_ID)
+            ->where('SCHED_DATE', $DATE)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->update([
+                'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID,
+                'UPDATED_AT' => $this->dateServices->Now()
+            ]);
+    }
     public function StatusUpdate(int $CONTACT_ID, string $DATE, int $LOCATION_ID, int $STATUS)
     {
         Schedules::where('CONTACT_ID', $CONTACT_ID)
@@ -163,10 +173,12 @@ class ScheduleServices
                 'schedules.SHIFT_ID',
                 'schedules.SCHED_STATUS',
                 's.DESCRIPTION as STATUS',
-                't.NAME as SHIFT'
+                't.NAME as SHIFT',
+                'h.DESCRIPTION as TYPE'
             ])
             ->leftJoin('schedule_status as s', 's.ID', '=', 'schedules.SCHED_STATUS')
             ->leftJoin('shift as t', 't.ID', '=', 'schedules.SHIFT_ID')
+            ->leftJoin('hemodialysis_machine as h', 'h.ID', '=', 'schedules.HEMO_MACHINE_ID')
             ->where('schedules.CONTACT_ID', $CONTACT_ID)
             ->where('schedules.LOCATION_ID', $LOCATION_ID)
             ->where('schedules.SCHED_STATUS', $STATUS_ID)

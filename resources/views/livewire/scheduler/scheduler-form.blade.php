@@ -77,15 +77,22 @@
                                             <tr>
                                                 <th>Date</th>
                                                 <th>Shift</th>
+                                                <th>Type</th>
                                                 <th>Status</th>
+
                                             </tr>
                                         </thead>
                                         <tbody class="text-xs">
                                             @foreach ($scheduleList as $list)
                                                 <tr>
-                                                    <td>{{ \Carbon\Carbon::parse($list->SCHED_DATE)->format('m/d/Y') }}
+                                                    <td>
+                                                        <a href="#"
+                                                            wire:click="openMonitor({{ $list->SHIFT_ID }},'{{ $list->SCHED_DATE }}')">
+                                                            {{ \Carbon\Carbon::parse($list->SCHED_DATE)->format('m/d/Y') }}
+                                                        </a>
                                                     </td>
                                                     <td>{{ $list->SHIFT }}</td>
+                                                    <td>{{ $list->TYPE }}</td>
                                                     <td>{{ $list->STATUS }}</td>
 
                                                 </tr>
@@ -142,14 +149,16 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- /.card-body -->
+
                     </div>
-                    <!-- /.card -->
+
                 </div>
-                <!-- /.col -->
+
             </div>
             <!-- /.row -->
         </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
+
+    @livewire('Scheduler.ShiftMonitoring')
 </div>

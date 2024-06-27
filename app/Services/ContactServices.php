@@ -170,8 +170,6 @@ class ContactServices
             "CUSTOM_FIELD3" => $CUSTOM_FIELD3,
             "CUSTOM_FIELD4" => $CUSTOM_FIELD4,
             "CUSTOM_FIELD5" => $CUSTOM_FIELD5
-
-
         ]);
 
         return $ID;
@@ -265,6 +263,10 @@ class ContactServices
     public function Delete(int $ID): void
     {
         Contacts::where('ID', $ID)->delete();
+    }
+    public function UpdatePatientType(int $ID, int $TYPE)
+    {
+        Contacts::where('ID', $ID)->update(['PATIENT_TYPE_ID' => $TYPE]);
     }
     public function Search($search, int $TYPE, int $perPage, int $locationId = 0)
     {

@@ -23,7 +23,6 @@ class SchedulerList extends Component
     public $LOCATION_ID;
     public $locationList = [];
     private $locationServices;
-
     private $userServices;
     private $dateServices;
     private $scheduleServices;
@@ -31,12 +30,8 @@ class SchedulerList extends Component
     public $scheduleList = [];
     public $DATE;
 
-    public function boot(
-        LocationServices $locationServices,
-        UserServices $userServices,
-        DateServices $dateServices,
-        ScheduleServices $scheduleServices
-    ) {
+    public function boot(LocationServices $locationServices, UserServices $userServices, DateServices $dateServices, ScheduleServices $scheduleServices)
+    {
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->dateServices = $dateServices;
@@ -57,7 +52,7 @@ class SchedulerList extends Component
     }
     public function updatedlocationid()
     {
-        
+
         $this->reloadComponent();
         $this->dispatch('make-reload');
     }
@@ -136,7 +131,7 @@ class SchedulerList extends Component
     }
     public function render()
     {
-     
+
 
         return view('livewire.scheduler.scheduler-list');
     }

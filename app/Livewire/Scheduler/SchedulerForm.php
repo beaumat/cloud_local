@@ -62,13 +62,10 @@ class SchedulerForm extends Component
             return;
         }
         $this->HEMO_MACHINE_ID = 0;
-
-
     }
     public function updatedlocationid()
     {
         $this->reloadComponent();
-
     }
     public function reloadComponent()
     {
@@ -114,7 +111,10 @@ class SchedulerForm extends Component
         $this->year = $this->month == 12 ? $this->year - 1 : $this->year;
         $this->reloadComponent();
     }
-
+    public function openMonitor(string $SHIFT_ID, string $DATE)
+    {
+        $this->dispatch('open-shift-monitoring', reglist: ['SHIFT_ID' => $SHIFT_ID, 'CONTACT_ID' => $this->CONTACT_ID, 'LOCATION_ID' => $this->LOCATION_ID, 'DATE' => $DATE]);
+    }
     #[On('load-schedule-by-contact')]
     public function render()
     {
@@ -123,9 +123,7 @@ class SchedulerForm extends Component
         $this->locationList = $this->locationServices->getList();
 
         $scheduleList = $this->scheduleServices->ContactSchedule($this->CONTACT_ID ?? 0, $this->LOCATION_ID ?? 0, $this->scheduleStatusId, 10);
-        
+
         return view('livewire.scheduler.scheduler-form', ['scheduleList' => $scheduleList]);
     }
-
 }
-
