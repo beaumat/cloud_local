@@ -24,7 +24,7 @@
 
         <div class="login-logo">
 
-            <img src="{{ asset('dist/img/x1_250.png') }}" alt="" class="brand-image elevation-0"
+            <img src="{{ asset('dist/img/x1_250.jpg') }}" alt="" class="brand-image elevation-0"
                 style="opacity: .8">
             <br />
             <a href="#"><b>X</b>ONE</a>

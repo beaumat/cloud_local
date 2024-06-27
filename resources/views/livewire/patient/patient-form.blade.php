@@ -3,8 +3,7 @@
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-sm-6">
-                    {{ $ID == 0 ? 'Create' : '' }}
-                    <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}"> Patients Profile</a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}">  Patients Profile</a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -391,11 +390,6 @@
                                                                             </div>
                                                                         </div>
 
-
-
-
-
-
                                                                     </div>
                                                                     {{-- --}}
                                                                 </div>
@@ -521,7 +515,7 @@
                                             <div class="tab-pane fade @if ($selectTab == 'doctor') show active @endif"
                                                 id="custom-content-below-doctor-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-doctor-info-tab">
-                                                <div class="container-fluid">
+                                                <div class="container-fluid"   @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @livewire('Patient.DoctorPanel', ['ID' => $ID])
                                                     <div class="form-group row">
                                                         <div class="col-md-6">
@@ -541,7 +535,7 @@
                                             <div class="tab-pane fade @if ($selectTab == 'requirements') show active @endif"
                                                 id="custom-content-below-requirements-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-requirements-info-tab">
-                                                <div class="container-fluid">
+                                                <div class="container-fluid"   @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID])
                                                 </div>
                                             </div>
