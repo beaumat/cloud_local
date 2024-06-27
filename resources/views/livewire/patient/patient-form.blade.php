@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}">  Patients Profile</a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}"> Patients Profile</a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -155,21 +155,27 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-md-1">
-                                                            <livewire:date-input name="DATE_OF_BIRTH"
-                                                                titleName="Date of Birth"
-                                                                wire:model.live='DATE_OF_BIRTH' />
-                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="row">
+                                                                <div class="col-md-10">
+                                                                    <livewire:date-input name="DATE_OF_BIRTH"
+                                                                        titleName="Date of Birth"
+                                                                        wire:model.live='DATE_OF_BIRTH' />
 
-                                                        <div class="col-md-1">
-                                                            <div class="form-group mt-2">
-                                                                <label class=" col-form-label">Age</label>
-                                                                <div class="row">
-                                                                    <label
-                                                                        class="col-12 form-check-label">{{ $age }}</label>
+
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <div class="form-group mt-2">
+                                                                        <label class=" col-form-label">Age</label>
+                                                                        <div class="text-center">
+                                                                            <i> {{ $age }}</i>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+
+
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="CONTACT_PERSON"
                                                                 titleName="Patients Representative Name"
@@ -515,7 +521,8 @@
                                             <div class="tab-pane fade @if ($selectTab == 'doctor') show active @endif"
                                                 id="custom-content-below-doctor-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-doctor-info-tab">
-                                                <div class="container-fluid"   @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="container-fluid"
+                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @livewire('Patient.DoctorPanel', ['ID' => $ID])
                                                     <div class="form-group row">
                                                         <div class="col-md-6">
@@ -535,7 +542,8 @@
                                             <div class="tab-pane fade @if ($selectTab == 'requirements') show active @endif"
                                                 id="custom-content-below-requirements-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-requirements-info-tab">
-                                                <div class="container-fluid"   @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="container-fluid"
+                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID])
                                                 </div>
                                             </div>
