@@ -7,7 +7,7 @@
             <div class="modal-dialog modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title">Schedule on {{ $DATE }}</h6>
+                        <h6 class="modal-title">Schedule on <input type='date' class="text-xs w-50" wire:model.live='DATE' /></h6>
                         <button type="button" class="close" wire:click="closeModal">
                             <span aria-hidden="true">&times;</span>
                         </button>

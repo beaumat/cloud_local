@@ -2,10 +2,13 @@
 
 namespace App\Livewire\Hemodialysis;
 
+use App\Services\DateServices;
 use App\Services\HemoServices;
+use App\Services\ItemTreatmentServices;
 use App\Services\ScheduleServices;
 use App\Services\ShiftServices;
-use Illuminate\Support\Carbon;
+use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -26,12 +29,45 @@ class ScheduleModal extends Component
     public $shiftList = [];
     public int $SHIFT_ID = 0;
     private $shiftServices;
-    public function boot(ScheduleServices $scheduleServices, HemoServices $hemoServices, ShiftServices $shiftServices)
+    private $dateServices;
+    private $itemTreatmentServices;
+    private $unitOfMeasureServices;
+    public function boot(ScheduleServices $scheduleServices, HemoServices $hemoServices, ShiftServices $shiftServices, DateServices $dateServices, ItemTreatmentServices $itemTreatmentServices, UnitOfMeasureServices $unitOfMeasureServices)
     {
         $this->scheduleServices = $scheduleServices;
         $this->hemoServices = $hemoServices;
         $this->shiftServices = $shiftServices;
+        $this->dateServices = $dateServices;
+        $this->itemTreatmentServices = $itemTreatmentServices;
+        $this->unitOfMeasureServices = $unitOfMeasureServices;
     }
+    public function addItem(int $ItemTreatmentId, int $ID)
+    {
+        $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
+        if ($data) {
+            $gotNew = true;
+            if ($data->NO_OF_USED > 1) {
+                $hemoData =  $this->hemoServices->Get($ID);
+                if ($hemoData) {
+                    $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $this->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
+                    if ($totalused == 0) {
+                        $gotNew = true;
+                    } elseif ($totalused < $data->NO_OF_USED) {
+                        $gotNew = false;
+                    }
+                }
+            }
+
+            try {
+                $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
+                $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+                $this->hemoServices->ItemStore($ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
+            } catch (\Throwable $th) {
+                session()->flash('error', $th->getMessage());
+            }
+        }
+    }
+
     public function create()
     {
         $isDone = false;
@@ -41,14 +77,25 @@ class ScheduleModal extends Component
             if ($isSelect) {
                 $data = $this->scheduleServices->getInfo($scheId);
                 if ($data) {
-                    $id = (int) $this->hemoServices->PreSave(Carbon::now()->format('Y-m-d'), "", $data->CONTACT_ID, $this->LOCATION_ID);
-                    if ($this->ids == "") {
-                        $this->ids = $id;
-                    } else {
-                        $this->ids = $this->ids . "," . $id;
-                    }
+                    try {
+                        DB::beginTransaction();
+                        $id = (int) $this->hemoServices->PreSave($this->DATE, "", $data->CONTACT_ID, $this->LOCATION_ID);
+                        $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);
+                        foreach ($dataList as $item) {
+                            $this->addItem($item->ID, $id);
+                        }
 
-                    $isDone = true;
+                        if ($this->ids == "") {
+                            $this->ids = $id;
+                        } else {
+                            $this->ids = $this->ids . "," . $id;
+                        }
+                        DB::commit();
+                        $isDone = true;
+                    } catch (\Throwable $th) {
+                        //throw $th;
+                        DB::rollBack();
+                    }
                 }
             }
         }
@@ -76,7 +123,7 @@ class ScheduleModal extends Component
     }
     public function openModal()
     {
-
+        $this->DATE = $this->dateServices->NowDate();
         $this->showModal = true;
     }
     #[On('schedule-modal-close')]
@@ -87,10 +134,7 @@ class ScheduleModal extends Component
     public function render()
     {
         $this->shiftList = $this->shiftServices->List();
-
-        $this->DATE = Carbon::now()->format('M/d/Y');
-        
-        $this->dataList = $this->scheduleServices->GetScheduleList(Carbon::now()->format('Y-m-d'), $this->LOCATION_ID, $this->SHIFT_ID);
+        $this->dataList = $this->scheduleServices->GetScheduleList($this->DATE, $this->LOCATION_ID, $this->SHIFT_ID);
 
         return view('livewire.hemodialysis.schedule-modal');
     }
