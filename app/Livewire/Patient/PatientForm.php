@@ -541,7 +541,7 @@ class PatientForm extends Component
                     $this->DATE_OF_BIRTH,
                     $this->NICKNAME,
                     $this->HIRE_DATE,
-                    null,
+                    $this->LOCATION_ID,
                     null
                 );
 
