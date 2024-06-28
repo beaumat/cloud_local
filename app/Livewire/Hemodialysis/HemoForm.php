@@ -258,7 +258,7 @@ class HemoForm extends Component
         }
         $this->Modify = false;
     }
-  
+
     public function save()
     {
         $this->validate(
@@ -284,7 +284,7 @@ class HemoForm extends Component
                 $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
                 $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);
                 foreach ($dataList as $item) {
-                    $this->addItem($item->ID);
+                    $this->addItem($item->ID, $this->ID);
                 }
                 DB::commit();
                 return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -307,6 +307,33 @@ class HemoForm extends Component
             'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
         ]);
     }
+    public function addItem(int $ItemTreatmentId, int $ID)
+    {
+        $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
+        if ($data) {
+            $gotNew = true;
+            if ($data->NO_OF_USED > 1) {
+                $hemoData =  $this->hemoServices->Get($ID);
+                if ($hemoData) {
+                    $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $this->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
+                    if ($totalused == 0) {
+                        $gotNew = true;
+                    } elseif ($totalused < $data->NO_OF_USED) {
+                        $gotNew = false;
+                    }
+                }
+            }
+
+            try {
+                $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
+                $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+                $this->hemoServices->ItemStore($ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
+            } catch (\Throwable $th) {
+                session()->flash('error', $th->getMessage());
+            }
+        }
+    }
+
     private function ItemInventory(): bool
     {
         try {
