@@ -52,8 +52,7 @@ new #[Layout('layouts.guest')] class extends Component {
         <div class="row">
             <!-- /.col -->
             <div class="col-12">
-
-                <x-primary-button class="text-md btn btn-sm btn-success btn-block">
+                <x-primary-button class="text-md btn btn-sm btn-info btn-block">
                     {{ __('Log-In') }}
                 </x-primary-button>
             </div>

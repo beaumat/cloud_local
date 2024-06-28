@@ -124,7 +124,6 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth'])->group(function () {
-
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::prefix('/patients')->name('patients')->group(function () {
         Route::prefix('/schedules')->group(function () {
