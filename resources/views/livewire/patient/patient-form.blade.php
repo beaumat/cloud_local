@@ -42,7 +42,7 @@
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:select-option name="LOCATION_ID" :options="$locationList"
-                                                :zero="true" titleName="Branch" wire:model='LOCATION_ID' />
+                                                :zero="false" titleName="Branch" wire:model='LOCATION_ID' />
                                         </div>
                                         <div class="col-md-1">
                                             <div class="row">
