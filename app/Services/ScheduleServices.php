@@ -72,7 +72,8 @@ class ScheduleServices
             ->select([
                 'schedules.CONTACT_ID',
                 'c.LAST_NAME aS CONTACT_NAME',
-                't.DESCRIPTION as STATUS'
+                't.DESCRIPTION as STATUS',
+                'schedules.HEMO_MACHINE_ID'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
             ->leftJoin('schedule_status as t', 't.ID', '=', 'schedules.SCHED_STATUS')

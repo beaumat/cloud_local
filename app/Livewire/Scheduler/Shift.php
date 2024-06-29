@@ -84,17 +84,19 @@ class Shift extends Component
                         $this->scheduleServices->Delete($scheduleData->ID, $this->LOCATION_ID);
                     } else {
                         $isMaximum = $this->CheckingIsMaximumCapacity($this->ID, $this->CONTACT_ID, $this->LOCATION_ID, $shift_id, $this->HEMO_MACHINE_ID);
-                        if ($isMaximum) {
-                            return true;
-                        }
+                        // if ($isMaximum) {
+                        //     return true;
+                        // }
+
                         $this->scheduleServices->Update($this->CONTACT_ID, $this->ID, $shift_id, $scheduleData->SCHED_STATUS, $scheduleData->STATUS_LOG, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);
                     }
                 } elseif ($shift_id != 0) {
 
                     $isMaximum = $this->CheckingIsMaximumCapacity($this->ID, $this->CONTACT_ID, $this->LOCATION_ID, $shift_id, $this->HEMO_MACHINE_ID);
-                    if ($isMaximum) {
-                        return true;
-                    }
+
+                    // if ($isMaximum) {
+                    //     return true;
+                    // }
 
                     $this->scheduleServices->Store($shift_id, $this->CONTACT_ID, $this->ID, 0, null, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);
                 }

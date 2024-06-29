@@ -30,7 +30,6 @@ class ShiftList extends Component
     public function getList()
     {
         $this->totalPatientsByShift = $this->scheduleServices->DailyContactSchedule($this->Date, $this->LOCATION_ID);
-
     }
     public function render()
     {

@@ -12,9 +12,11 @@
                                 </tr>
                             </thead>
                             <tbody class="text-xs">
-                                @foreach ($contactList as $list)
-                                    <tr class="@if ($list['CONTACT_ID'] == $CONTACT_ID) bg-warning @endif">
-                                        <td>{{ $list['ID'] }}</td>
+                                @foreach ($dataList as $list)
+                                    <tr
+                                        class="{{ $list['EXTRA_CLASS'] }} @if ($list['CONTACT_ID'] == $CONTACT_ID) font-weight-bolder @endif">
+                                        <td>
+                                            {{ $list['ID'] }}</td>
                                         <td>{{ $list['NAME'] }}</td>
                                     </tr>
                                 @endforeach
