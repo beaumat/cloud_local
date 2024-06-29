@@ -146,6 +146,8 @@ class PatientForm extends Component
     public $patientStatusList = [];
     public string $DATE_ADMISSION;
 
+
+
     public function boot(
         ContactServices $contactServices,
         LocationServices $locationServices,
@@ -160,6 +162,13 @@ class PatientForm extends Component
         $this->dateServices = $dateServices;
     }
 
+    public $refreshToggle = false;
+
+    #[On('refresh-requirements')]
+    public function refreshComponent()
+    {
+        $this->refreshToggle = !$this->refreshToggle;
+    }
     public function mount($id = null)
     {
         $this->taxList = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', 3)->orderBy('ID', 'desc')->get();
@@ -342,7 +351,6 @@ class PatientForm extends Component
         $this->MEMBER_BIRTH_DATE = null;
         $this->MEMBER_GENDER = 0;
 
-
         $this->MEMBER_UNIT_ROOM_FLOOR = '';
         $this->MEMBER_BUILDING_NAME = '';
         $this->MEMBER_LOT_BLK_HOUSE_BLDG = '';
@@ -377,7 +385,6 @@ class PatientForm extends Component
 
         $this->IS_DEPENDENT = false;
         $this->PIN_DEPENDENT = '';
-
     }
     public function updatedADMITTED()
     {
@@ -472,7 +479,10 @@ class PatientForm extends Component
                 'FIRST_NAME' => 'required',
                 'LAST_NAME' => 'required',
                 'DATE_OF_BIRTH' => 'required',
-                'HEIGHT' => 'required|not_in:0'
+                'HEIGHT' => 'required|not_in:0',
+                'LOCATION_ID' =>  'required|not_in:0',
+                'DATE_ADMISSION' => 'required',
+                'PATIENT_TYPE_ID' => 'required|not_in:0'
             ],
             [
                 'HEIGHT' => 'Height is required'
@@ -482,7 +492,10 @@ class PatientForm extends Component
                 'FIRST_NAME' => 'Firstname',
                 'LAST_NAME' => 'Lastname',
                 'DATE_OF_BIRTH' => 'Date of Birth',
-                'HEIGHT' => 'Height'
+                'HEIGHT' => 'Height',
+                'LOCATION_ID' => 'Branch',
+                'DATE_ADMISSION' => 'Date Admission',
+                'PATIENT_TYPE_ID' => 'Type'
             ]
         );
 
@@ -501,7 +514,6 @@ class PatientForm extends Component
                 session()->flash('error', 'Invalid (PIN Dependent). must 12 character only.');
                 return;
             }
-
         }
 
         try {

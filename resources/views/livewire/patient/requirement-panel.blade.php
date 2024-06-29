@@ -22,6 +22,17 @@
                             </td>
                         </tr>
                     @endforeach
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button type='button' wire:click='markAsCompleted()' class="btn btn-xs btn-info w-100">
+                                Check All </button>
+                        </td>
+                        <td>
+                            <button type='button' wire:click='markAsNotApplicable()'
+                                class="btn btn-xs btn-warning w-100"> Check All</button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

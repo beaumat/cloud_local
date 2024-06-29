@@ -46,7 +46,7 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Profile No.</th>
                                         <th class="col-2">PATIENT NAME</th>
                                         <th>SEX</th>
                                         <th class="col-1">DATE OF BIRTH</th>
@@ -67,7 +67,12 @@
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr class="@if (!$list->IS_COMPLETE) text-secondary @endif">
-                                            <td> {{ $list->ACCOUNT_NO }}</td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('maintenancecontactpatients_edit', ['id' => $list->ID]) }}">
+                                                    {{ $list->ACCOUNT_NO }}
+                                                </a>
+                                            </td>
                                             <td> {{ $list->NAME }}</td>
                                             <td> {{ $list->GENDER }}</td>
                                             <td> {{ \Carbon\Carbon::parse($list->DATE_OF_BIRTH)->format('M/d/Y') }}</td>
@@ -96,11 +101,15 @@
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+
+                                                @can('contact.patient.delete')
+                                                    <a href="#" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn-sm text-danger">
+                                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                                    </a>
+                                                @endcan
+
                                             </td>
                                         </tr>
                                     @endforeach

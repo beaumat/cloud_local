@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}"> Patients Profile</a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancecontactpatients') }}"> Patients</a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -30,11 +30,11 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             <livewire:text-input name="NAME" titleName="Patients Name"
-                                                wire:model='NAME' :isDisabled='true' />
+                                                wire:model='NAME' :isDisabled='true' maxlength='100' />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:text-input name="ACCOUNT_NO" titleName="Profile No."
-                                                wire:model='ACCOUNT_NO' />
+                                                wire:model='ACCOUNT_NO' maxlength='20' />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:date-input name="DATE_ADMISSION" titleName="Date Admission"
@@ -54,7 +54,6 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-
                                             <livewire:select-option name="PATIENT_TYPE_ID" :options="$patientTypeList"
                                                 :zero="true" titleName="Type" wire:model='PATIENT_TYPE_ID' />
                                         </div>
@@ -63,9 +62,8 @@
                                 {{-- TAB --}}
                                 <div class="card card-primary card-outline card-outline-tabs">
                                     <div class="card-header p-0 border-bottom-0">
-                                        <ul class="nav nav-tabs text-sm p-1" id="custom-content-below-tab"
+                                        <ul class="nav nav-tabs text-xs p-1" id="custom-content-below-tab"
                                             role="tablist">
-
                                             <li class="nav-item">
                                                 <a wire:click="SelectTab('gen')"
                                                     class="nav-link @if ($selectTab == 'gen') active @endif"
@@ -115,21 +113,24 @@
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="FIRST_NAME"
-                                                                titleName="First Name" wire:model='FIRST_NAME' />
+                                                                titleName="First Name" wire:model='FIRST_NAME'
+                                                                maxlength='50' />
                                                         </div>
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="LAST_NAME"
-                                                                titleName="Last Name" wire:model='LAST_NAME' />
+                                                                titleName="Last Name" wire:model='LAST_NAME'
+                                                                maxlength='50' />
                                                         </div>
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="MIDDLE_NAME"
-                                                                titleName="Middle Name" wire:model='MIDDLE_NAME' />
+                                                                titleName="Middle Name" wire:model='MIDDLE_NAME'
+                                                                maxlength='50' />
                                                         </div>
 
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="SALUTATION"
                                                                 titleName="Extension (ex. JR,SR,III)"
-                                                                wire:model='SALUTATION' />
+                                                                wire:model='SALUTATION' maxlength='10' />
                                                         </div>
                                                         <div class="col-md-1">
                                                             <livewire:number-input name="HEIGHT"
@@ -154,15 +155,12 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <div class="col-md-2">
                                                             <div class="row">
                                                                 <div class="col-md-10">
                                                                     <livewire:date-input name="DATE_OF_BIRTH"
                                                                         titleName="Date of Birth"
                                                                         wire:model.live='DATE_OF_BIRTH' />
-
-
                                                                 </div>
                                                                 <div class="col-2">
                                                                     <div class="form-group mt-2">
@@ -179,19 +177,21 @@
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="CONTACT_PERSON"
                                                                 titleName="Patients Representative Name"
-                                                                wire:model='CONTACT_PERSON' />
+                                                                wire:model='CONTACT_PERSON' maxlength='50' />
                                                         </div>
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="EMAIL" titleName="Email"
-                                                                wire:model='EMAIL' />
+                                                                wire:model='EMAIL' maxlength='100' />
                                                         </div>
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="TELEPHONE_NO"
-                                                                titleName="Telephone No." wire:model='TELEPHONE_NO' />
+                                                                titleName="Telephone No." wire:model='TELEPHONE_NO'
+                                                                maxlength='150' />
                                                         </div>
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="MOBILE_NO"
-                                                                titleName="Mobile No." wire:model='MOBILE_NO' />
+                                                                titleName="Mobile No." wire:model='MOBILE_NO'
+                                                                maxlength='20' />
                                                         </div>
 
 
@@ -204,53 +204,60 @@
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_UNIT_ROOM_FLOOR"
                                                                         titleName="Unit/Room#/Floor"
-                                                                        wire:model='ADDRESS_UNIT_ROOM_FLOOR' />
+                                                                        wire:model='ADDRESS_UNIT_ROOM_FLOOR'
+                                                                        maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_BUILDING_NAME"
                                                                         titleName="Building Name"
-                                                                        wire:model='ADDRESS_BUILDING_NAME' />
+                                                                        wire:model='ADDRESS_BUILDING_NAME'
+                                                                        maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <livewire:text-input
                                                                         name="ADDRESS_LOT_BLK_HOUSE_BLDG"
                                                                         titleName="Lot/Blk/House/Bldg No."
-                                                                        wire:model='ADDRESS_LOT_BLK_HOUSE_BLDG' />
+                                                                        wire:model='ADDRESS_LOT_BLK_HOUSE_BLDG'
+                                                                        maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <livewire:text-input name="ADDRESS_STREET"
-                                                                        titleName="Street"
-                                                                        wire:model='ADDRESS_STREET' />
+                                                                        titleName="Street" wire:model='ADDRESS_STREET'
+                                                                        maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_SUB_VALL"
                                                                         titleName="Subdivision/Village"
-                                                                        wire:model='ADDRESS_SUB_VALL' />
+                                                                        wire:model='ADDRESS_SUB_VALL'
+                                                                        maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <livewire:text-input name="ADDRESS_BRGY"
-                                                                        titleName="Barangay"
-                                                                        wire:model='ADDRESS_BRGY' />
+                                                                        titleName="Barangay" wire:model='ADDRESS_BRGY'
+                                                                        maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_CITY_MUNI"
                                                                         titleName="City/Municipality"
-                                                                        wire:model='ADDRESS_CITY_MUNI' />
+                                                                        wire:model='ADDRESS_CITY_MUNI'
+                                                                        maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <livewire:text-input name="ADDRESS_PROVINCE"
                                                                         titleName="Province"
-                                                                        wire:model='ADDRESS_PROVINCE' />
+                                                                        wire:model='ADDRESS_PROVINCE'
+                                                                        maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_COUNTRY"
                                                                         titleName="Country"
-                                                                        wire:model='ADDRESS_COUNTRY' />
+                                                                        wire:model='ADDRESS_COUNTRY' maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_ZIP_CODE"
                                                                         titleName="Zip Code"
-                                                                        wire:model='ADDRESS_ZIP_CODE' />
+                                                                        wire:model='ADDRESS_ZIP_CODE'
+                                                                        maxlength='10' />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -265,17 +272,17 @@
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="PIN"
                                                                 titleName="PhilHealth Number of Member"
-                                                                wire:model='PIN' :isDisabled='false' />
+                                                                wire:model='PIN' :isDisabled='false' maxlength='12' />
                                                         </div>
                                                         <div class="col-md-5">
                                                             <livewire:text-input name="FIRST_CASE_RATE"
                                                                 titleName="First Case Rate"
-                                                                wire:model='FIRST_CASE_RATE' />
+                                                                wire:model='FIRST_CASE_RATE' maxlength='20' />
                                                         </div>
                                                         <div class="col-md-5">
                                                             <livewire:text-input name="SECOND_CASE_RATE"
                                                                 titleName="Second Case Rate"
-                                                                wire:model='SECOND_CASE_RATE' />
+                                                                wire:model='SECOND_CASE_RATE' maxlength='20' />
                                                         </div>
                                                         <div class="col-md-3">
                                                             <livewire:custom-check-box name="IS_PATIENT"
@@ -295,7 +302,8 @@
                                                             @if ($IS_PATIENT == false && $IS_DEPENDENT == true)
                                                                 <livewire:text-input name="PIN_DEPENDENT"
                                                                     titleName="PhilHealth Identification Number (PIN) of Dependent"
-                                                                    wire:model='PIN_DEPENDENT' :isDisabled='false' />
+                                                                    wire:model='PIN_DEPENDENT' :isDisabled='false'
+                                                                    maxlength='12' />
                                                             @endif
                                                         </div>
                                                         @if (!$IS_PATIENT)
@@ -306,23 +314,27 @@
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_FIRST_NAME"
                                                                             titleName="First Name"
-                                                                            wire:model='MEMBER_FIRST_NAME' />
+                                                                            wire:model='MEMBER_FIRST_NAME'
+                                                                            maxlength='50' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_LAST_NAME"
                                                                             titleName="Last Name"
-                                                                            wire:model='MEMBER_LAST_NAME' />
+                                                                            wire:model='MEMBER_LAST_NAME'
+                                                                            maxlength='50' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_MIDDLE_NAME"
                                                                             titleName="Middle Name"
-                                                                            wire:model='MEMBER_MIDDLE_NAME' />
+                                                                            wire:model='MEMBER_MIDDLE_NAME'
+                                                                            maxlength='50' />
                                                                     </div>
 
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_EXTENSION"
                                                                             titleName="Extension (ex. JR,SR,III)"
-                                                                            wire:model='MEMBER_EXTENSION' />
+                                                                            wire:model='MEMBER_EXTENSION'
+                                                                            maxlength='10' />
                                                                     </div>
 
                                                                     <div class="col-md-2">
@@ -408,54 +420,63 @@
                                                                         <livewire:text-input
                                                                             name="MEMBER_UNIT_ROOM_FLOOR"
                                                                             titleName="Unit/Room#/Floor"
-                                                                            wire:model='MEMBER_UNIT_ROOM_FLOOR' />
+                                                                            wire:model='MEMBER_UNIT_ROOM_FLOOR'
+                                                                            maxlength='40' />
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <livewire:text-input
                                                                             name="MEMBER_BUILDING_NAME"
                                                                             titleName="Building Name"
-                                                                            wire:model='MEMBER_BUILDING_NAME' />
+                                                                            wire:model='MEMBER_BUILDING_NAME'
+                                                                            maxlength='40' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input
                                                                             name="MEMBER_LOT_BLK_HOUSE_BLDG"
                                                                             titleName="Lot/Blk/House/Bldg No."
-                                                                            wire:model='MEMBER_LOT_BLK_HOUSE_BLDG' />
+                                                                            wire:model='MEMBER_LOT_BLK_HOUSE_BLDG'
+                                                                            maxlength='40' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_STREET"
                                                                             titleName="Street"
-                                                                            wire:model='MEMBER_STREET' />
+                                                                            wire:model='MEMBER_STREET'
+                                                                            maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <livewire:text-input name="MEMBER_SUB_VALL"
                                                                             titleName="Subdivision/Village"
-                                                                            wire:model='MEMBER_SUB_VALL' />
+                                                                            wire:model='MEMBER_SUB_VALL'
+                                                                            maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_BRGY"
                                                                             titleName="Barangay"
-                                                                            wire:model='MEMBER_BRGY' />
+                                                                            wire:model='MEMBER_BRGY' maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <livewire:text-input name="MEMBER_CITY_MUNI"
                                                                             titleName="City/Municipality"
-                                                                            wire:model='MEMBER_CITY_MUNI' />
+                                                                            wire:model='MEMBER_CITY_MUNI'
+                                                                            maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_PROVINCE"
                                                                             titleName="Province"
-                                                                            wire:model='MEMBER_PROVINCE' />
+                                                                            wire:model='MEMBER_PROVINCE'
+                                                                            maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <livewire:text-input name="MEMBER_COUNTRY"
                                                                             titleName="Country"
-                                                                            wire:model='MEMBER_COUNTRY' />
+                                                                            wire:model='MEMBER_COUNTRY'
+                                                                            maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <livewire:text-input name="MEMBER_ZIP_CODE"
                                                                             titleName="Zip Code"
-                                                                            wire:model='MEMBER_ZIP_CODE' />
+                                                                            wire:model='MEMBER_ZIP_CODE'
+                                                                            maxlength='10' />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -466,17 +487,20 @@
                                                                     <div class="col-md-4">
                                                                         <livewire:text-input name="MEMBER_TEL_NO"
                                                                             titleName="Tel No."
-                                                                            wire:model='MEMBER_TEL_NO' />
+                                                                            wire:model='MEMBER_TEL_NO'
+                                                                            maxlength='20' />
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <livewire:text-input name="MEMBER_MOBILE"
                                                                             titleName="Mobile No."
-                                                                            wire:model='MEMBER_MOBILE' />
+                                                                            wire:model='MEMBER_MOBILE'
+                                                                            maxlength='20' />
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <livewire:text-input name="MEMBER_EMAIL"
                                                                             titleName="Email Address"
-                                                                            wire:model='MEMBER_EMAIL' />
+                                                                            wire:model='MEMBER_EMAIL'
+                                                                            maxlength='20' />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -499,18 +523,19 @@
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="PEN"
                                                                         titleName="PhilHealth Employer Number (PEN):"
-                                                                        wire:model='PEN' :isDisabled='false' />
+                                                                        wire:model='PEN' :isDisabled='false'
+                                                                        maxlength='12' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="PEN_CONTACT"
                                                                         titleName="Contact No."
-                                                                        wire:model='PEN_CONTACT' />
+                                                                        wire:model='PEN_CONTACT' maxlength='20' />
                                                                 </div>
 
                                                                 <div class="col-md-8">
                                                                     <livewire:text-input name="COMPANY_NAME"
                                                                         titleName="Business Name"
-                                                                        wire:model='COMPANY_NAME' />
+                                                                        wire:model='COMPANY_NAME' maxlength='100' />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -523,17 +548,19 @@
                                                 aria-labelledby="custom-content-below-doctor-info-tab">
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+
                                                     @livewire('Patient.DoctorPanel', ['ID' => $ID])
+
                                                     <div class="form-group row">
                                                         <div class="col-md-6">
                                                             <livewire:text-input name="FINAL_DIAGNOSIS"
                                                                 titleName="Final Diagnosis"
-                                                                wire:model='FINAL_DIAGNOSIS' />
+                                                                wire:model='FINAL_DIAGNOSIS' maxlength='60' />
                                                         </div>
                                                         <div class="col-md-6">
                                                             <livewire:text-input name="OTHER_DIAGNOSIS"
                                                                 titleName="Other Diagnosis"
-                                                                wire:model='OTHER_DIAGNOSIS' />
+                                                                wire:model='OTHER_DIAGNOSIS' maxlength='60' />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -544,7 +571,13 @@
                                                 aria-labelledby="custom-content-below-requirements-info-tab">
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID])
+
+                                                    @if ($refreshToggle)
+                                                        @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key('p1'))
+                                                    @else
+                                                        @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key('p2'))
+                                                    @endif
+
                                                 </div>
                                             </div>
 
@@ -554,7 +587,10 @@
                                 <div class="card-footer">
                                     <div class="row">
                                         <div class="col-md-6 col-6">
+
+
                                             <button type="submit"
+                                                @if ($ID > 0) @cannot('contact.patient.update')  disabled  @endcan @endif
                                                 class="btn btn-sm btn-success">{{ $ID === 0 ? 'Save' : 'Update' }}</button>
                                         </div>
                                         <div class="text-right col-6 col-md-6">

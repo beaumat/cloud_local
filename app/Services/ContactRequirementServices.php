@@ -35,19 +35,31 @@ class ContactRequirementServices
         ContactRequirements::where('ID', $ID)
             ->update([
                 'IS_COMPLETE' => $VALUE,
-                'DATE_COMPLETED' => $VALUE ? Carbon::now()->format('Y-m-d') : null
+                'DATE_COMPLETED' => $VALUE ? Carbon::now()->format('Y-m-d') : null,
+                'NOT_APPLICABLE' => false
             ]);
     }
     public function UpdateNotApplicable(int $ID, bool $VALUE)
     {
         ContactRequirements::where('ID', $ID)
             ->update([
+                'IS_COMPLETE' =>  false,
+                'DATE_COMPLETED' => null,
                 'NOT_APPLICABLE' => $VALUE
+            ]);
+    }
+    public function UpdateMarking(int $ID, bool $IS_COMPLETE, bool $NOT_APPLICABLE)
+    {
+        ContactRequirements::where('ID', $ID)
+            ->update([
+                'IS_COMPLETE' =>  $IS_COMPLETE,
+                'DATE_COMPLETED' => $IS_COMPLETE ? Carbon::now()->format('Y-m-d') : null,
+                'NOT_APPLICABLE' => $NOT_APPLICABLE
             ]);
     }
     public function GetCountRequirement(int $CONTACT_ID): int
     {
-        return (int) ContactRequirements::where('CONTACT_ID', $CONTACT_ID)->where('IS_COMPLETE', 0)->where('NOT_APPLICABLE',0)->count();
+        return (int) ContactRequirements::where('CONTACT_ID', $CONTACT_ID)->where('IS_COMPLETE', 0)->where('NOT_APPLICABLE', 0)->count();
     }
     public function GetList(int $CONTACT_ID)
     {

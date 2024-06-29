@@ -8,20 +8,22 @@
                 <th class="col-1 text-center">Action </th>
             </tr>
         </thead>
-        <tbody >
+        <tbody class="text-xs">
             @foreach ($dataList as $list)
                 <tr>
-                    <td><label class="text-sm text-dark">{{ $list->PIN }}</label></td>
-                    <td><label class="text-sm text-dark">{{ $list->NAME }}</label> </td>
+                    <td><label>{{ $list->PIN }}</label></td>
+                    <td><label>{{ $list->NAME }}</label> </td>
                     <td>
-                        <button type="button" wire:click='delete({{ $list->ID }})'
-                            wire:confirm="Are you sure you want to delete this?" class="btn btn-sm text-xs btn-danger w-100 ">
+                        <button type="button"
+                            @if ($ID > 0) @cannot('contact.patient.delete')  disabled  @endcan @endif
+                            wire:click='delete({{ $list->ID }})' wire:confirm="Are you sure you want to delete this?"
+                            class="btn btn-sm text-xs btn-danger w-100 ">
                             <i class="fas fa-times" aria-hidden="true"></i>
                         </button>
                     </td>
                 </tr>
             @endforeach
-            <tr class="text-lg">
+            <tr>
                 <td></td>
                 <td>
                     @if ($saveSuccess)

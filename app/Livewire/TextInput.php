@@ -14,13 +14,15 @@ class TextInput extends Component
     public bool $vertical;
     public bool $withLabel;
     public bool $isDisabled;
-    public function mount($name, $titleName, $vertical = false, $withLabel = true, $isDisabled = false)
+    public  int $maxlength;
+    public function mount($name, $titleName, $vertical = false, $withLabel = true, $isDisabled = false, int $maxlength = 20)
     {
         $this->titleName = $titleName;
         $this->name = $name;
         $this->vertical = $vertical;
         $this->withLabel = $withLabel;
         $this->isDisabled = $isDisabled;
+        $this->maxlength = $maxlength;
     }
     public function render()
     {
