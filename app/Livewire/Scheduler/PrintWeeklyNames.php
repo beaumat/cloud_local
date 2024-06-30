@@ -31,6 +31,7 @@ class PrintWeeklyNames extends Component
         $this->totalCapacity = 0;
         $type = $this->hemodialysisMachineServices->GetList($location);
         $this->color_batch_id  = 0;
+    
         foreach ($type as $item) { // type machine
 
             $noCapacity = (int) $item->CAPACITY;

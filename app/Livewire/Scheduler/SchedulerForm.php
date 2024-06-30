@@ -8,7 +8,6 @@ use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\ScheduleServices;
 use App\Services\UserServices;
-use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -84,8 +83,8 @@ class SchedulerForm extends Component
     }
     private function resetDate()
     {
-        $this->month = Carbon::now()->month;
-        $this->year = Carbon::now()->year;
+        $this->month = $this->dateServices->NowMonth();
+        $this->year =  $this->dateServices->NowYear();
     }
     public function mount()
     {
@@ -121,9 +120,7 @@ class SchedulerForm extends Component
 
         $this->contactList = $this->contactServices->getList(3);
         $this->locationList = $this->locationServices->getList();
-
         $scheduleList = $this->scheduleServices->ContactSchedule($this->CONTACT_ID ?? 0, $this->LOCATION_ID ?? 0, $this->scheduleStatusId, 10);
-
         return view('livewire.scheduler.scheduler-form', ['scheduleList' => $scheduleList]);
     }
 }

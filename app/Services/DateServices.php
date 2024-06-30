@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 use Carbon\Carbon;
 
 class DateServices
@@ -12,6 +13,14 @@ class DateServices
     public function Now()
     {
         return Carbon::now();
+    }
+    public function NowMonth(): int
+    {
+        return  Carbon::now()->month;
+    }
+    public function NowYear(): int
+    {
+        return Carbon::now()->year;
     }
     public function WeeklyList(): array
     {
