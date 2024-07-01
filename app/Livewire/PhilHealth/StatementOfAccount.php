@@ -196,8 +196,8 @@ class StatementOfAccount extends Component
                 $this->OP_TOTAL = $data->OP_TOTAL;
                 $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
                 $this->DATE_SIGNED = $data->DATE_SIGNED ?? '';
-                $this->AD_SUB_TOTAL = $data->AD_SUB_TOTAL;
-                $this->AD_TOTAL = $data->AD_TOTAL;
+                $this->AD_SUB_TOTAL = $data->AD_SUB_TOTAL ?? 0;
+                $this->AD_TOTAL = $data->AD_TOTAL ?? 0;
                 // $this->OTHER_NAME = $data->OTHER_NAME;
                 return;
             }

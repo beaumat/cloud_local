@@ -49,12 +49,20 @@ class DoctorPanel extends Component
 
 
         if ($this->DOCTOR_ID == 0) {
-
             session()->flash('error', 'Please select.');
             return;
         }
 
+
+        if ($this->patientDoctorServices->AlreadyExists($this->ID)) {
+            session()->flash('error', 'Nephro already added.');
+            return;
+        }
         try {
+
+
+
+
 
             $this->patientDoctorServices->Store($this->ID, $this->DOCTOR_ID);
             $this->DOCTOR_ID = 0;

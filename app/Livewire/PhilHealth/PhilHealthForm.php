@@ -86,7 +86,6 @@ class PhilHealthForm extends Component
 
         if (is_numeric($id)) {
             $data = $this->philHealthServices->get($id);
-
             if ($data) {
                 $this->ID = $data->ID;
                 $this->CODE = $data->CODE;

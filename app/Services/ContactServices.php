@@ -339,7 +339,8 @@ class ContactServices
                     'contact.DATE_OF_BIRTH',
                     'contact.DATE_ADMISSION',
                     DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH, CURDATE()) AS AGE'),
-                    'l.NAME as LOCATION_NAME'
+                    'l.NAME as LOCATION_NAME',
+                    DB::raw('(select d.PRINT_NAME_AS  from patient_doctor  as pd join contact as d on d.ID = pd.DOCTOR_ID where pd.PATIENT_ID = contact.ID limit 1) as DOCTOR_NAME ')
                 ]
             )
             ->join('contact_type_map as t', function ($join) use (&$TYPE) {

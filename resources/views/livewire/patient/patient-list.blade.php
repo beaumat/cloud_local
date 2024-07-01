@@ -52,7 +52,7 @@
                                         <th class="col-1">DATE OF BIRTH</th>
                                         <th>AGE</th>
                                         <th class="col-1">PHILHEALTH NO.</th>
-                                        <th class="col-1">MOBILE NO.</th>
+                                        <th class="col-2">NEPHRO</th>
                                         <th class="col-1">ADMISSION</th>
                                         <th class="col-1">LOCATION</th>
                                         <th class="text-center">REQ. STATUS</th>
@@ -78,7 +78,7 @@
                                             <td> {{ \Carbon\Carbon::parse($list->DATE_OF_BIRTH)->format('M/d/Y') }}</td>
                                             <td> {{ $list->AGE }}</td>
                                             <td> {{ $list->PIN }}</td>
-                                            <td> {{ $list->MOBILE_NO }}</td>
+                                            <td> {{ $list->DOCTOR_NAME }}</td>
                                             <td> {{ \Carbon\Carbon::parse($list->DATE_ADMISSION)->format('M/d/Y') }}
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }}</td>

@@ -40,4 +40,9 @@ class PatientDoctorServices
 
         PatientDoctor::where('ID', $ID)->delete();
     }
+
+    public function AlreadyExists(int $CONTACT_ID): bool
+    {
+        return PatientDoctor::where('PATIENT_ID', $CONTACT_ID)->exists();
+    }
 }
