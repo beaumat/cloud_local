@@ -203,6 +203,39 @@ class ServiceChargeServices
         return $result;
     }
 
+    public function PatientRecord($search, int $contact_id, int $perPage)
+    {
+        $result = ServiceCharges::query()
+            ->select([
+                'service_charges.ID',
+                'service_charges.CODE',
+                'service_charges.DATE',
+                'service_charges.AMOUNT',
+                'service_charges.BALANCE_DUE',
+                'service_charges.OUTPUT_TAX_RATE',
+                'service_charges.NOTES',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+                's.ID as STATUS_ID'
+            ])
+            ->join('location as l', 'l.ID', '=', 'service_charges.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'service_charges.STATUS')
+            ->where('service_charges.PATIENT_ID', $contact_id)
+            ->when($search, function ($query) use ($search) {
+                
+                $query->where(function ($q) use ($search) {
+                    $q->where('service_charges.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('service_charges.AMOUNT', 'like', '%' . $search . '%')
+                        ->orWhere('service_charges.NOTES', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('service_charges.ID', 'desc')
+            ->paginate($perPage);
+
+
+        return $result;
+    }
+
     private function getLine($Id): int
     {
         return (int) ServiceChargesItems::where('SERVICE_CHARGES_ID', $Id)->max('LINE_NO');

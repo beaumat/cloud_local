@@ -161,7 +161,7 @@ class HemoServices
         return $ID;
     }
 
-    
+
     public function PreUpdate(int $ID, string $DATE, string $CODE, int $CUSTOMER_ID, int $LOCATION_ID)
     {
         Hemodialysis::where('ID', $ID)->update([
@@ -306,6 +306,44 @@ class HemoServices
                 $query->where('hemodialysis.CODE', 'like', '%' . $search . '%')
                     ->orWhere('c.NAME', 'like', '%' . $search . '%')
                     ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+            })
+            ->orderBy('ID', 'desc')
+            ->orderBy('hemodialysis.ID', 'desc')
+            ->paginate($perPage);
+    }
+
+    public function PatientRecord($search, int $CONTACT_ID, int $perPage)
+    {
+        return Hemodialysis::query()
+            ->select([
+                'hemodialysis.ID',
+                'hemodialysis.CODE',
+                'hemodialysis.DATE',
+                'l.NAME as LOCATION_NAME',
+                'hemodialysis.PRE_WEIGHT',
+                'hemodialysis.PRE_BLOOD_PRESSURE',
+                'hemodialysis.PRE_BLOOD_PRESSURE2',
+                'hemodialysis.PRE_HEART_RATE',
+                'hemodialysis.PRE_O2_SATURATION',
+                'hemodialysis.PRE_TEMPERATURE',
+                'hemodialysis.POST_WEIGHT',
+                'hemodialysis.POST_BLOOD_PRESSURE',
+                'hemodialysis.POST_BLOOD_PRESSURE2',
+                'hemodialysis.POST_HEART_RATE',
+                'hemodialysis.POST_O2_SATURATION',
+                'hemodialysis.POST_TEMPERATURE',
+                'hemodialysis.TIME_START',
+                'hemodialysis.TIME_END',
+                's.DESCRIPTION as STATUS',
+                'hemodialysis.FILE_PATH'
+            ])
+            ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')
+            ->join('location as l', 'l.ID', '=', 'hemodialysis.LOCATION_ID')
+            ->where('hemodialysis.CUSTOMER_ID', $CONTACT_ID)
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('hemodialysis.CODE', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy('ID', 'desc')
             ->orderBy('hemodialysis.ID', 'desc')

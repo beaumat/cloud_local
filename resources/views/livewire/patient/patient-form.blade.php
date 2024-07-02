@@ -79,7 +79,7 @@
                                                     href="#custom-content-below-phic-info" role="tab"
                                                     aria-controls="custom-content-below-phic-info"
                                                     aria-selected="false">
-                                                    Philhealth
+                                                    Philhealth Info
                                                 </a>
                                             </li>
                                             <li class="nav-item">
@@ -100,6 +100,46 @@
                                                     aria-controls="custom-content-below-requirements-info"
                                                     aria-selected="false">
                                                     Requirements
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('charges')"
+                                                    class="nav-link @if ($selectTab == 'charges') active @endif"
+                                                    id="custom-content-below-charges-info-tab" data-toggle="pill"
+                                                    href="#custom-content-below-charges-info" role="tab"
+                                                    aria-controls="custom-content-below-charges-info"
+                                                    aria-selected="false">
+                                                    Charges Record
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('assistance')"
+                                                    class="nav-link @if ($selectTab == 'assistance') active @endif"
+                                                    id="custom-content-below-assistance-info-tab" data-toggle="pill"
+                                                    href="#custom-content-below-assistance-info" role="tab"
+                                                    aria-controls="custom-content-below-assistance-info"
+                                                    aria-selected="false">
+                                                    Assistance Record
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('treatment')"
+                                                    class="nav-link @if ($selectTab == 'treatment') active @endif"
+                                                    id="custom-content-below-treatment-info-tab" data-toggle="pill"
+                                                    href="#custom-content-below-treatment-info" role="tab"
+                                                    aria-controls="custom-content-below-treatment-info"
+                                                    aria-selected="false">
+                                                    Treatment Record
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('philhealth')"
+                                                    class="nav-link @if ($selectTab == 'philhealth') active @endif"
+                                                    id="custom-content-below-philhealth-info-tab" data-toggle="pill"
+                                                    href="#custom-content-below-philhealth-info" role="tab"
+                                                    aria-controls="custom-content-below-philhealth-info"
+                                                    aria-selected="false">
+                                                    Philhealth Record
                                                 </a>
                                             </li>
                                         </ul>
@@ -172,8 +212,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
-
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="CONTACT_PERSON"
                                                                 titleName="Patients Representative Name"
@@ -413,8 +451,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-12 p-1 mt-2 border-top ">
-                                                                <label class="text-info text-xs">
-                                                                    Member Address:</label>
+                                                                <label class="text-info text-xs"> Member
+                                                                    Address:</label>
                                                                 <div class="row">
                                                                     <div class="col-md-2">
                                                                         <livewire:text-input
@@ -481,8 +519,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-12 p-1 mt-2 border-top ">
-                                                                <label class="text-info text-xs">
-                                                                    Member Contact:</label>
+                                                                <label class="text-info text-xs"> Member
+                                                                    Contact:</label>
                                                                 <div class="row">
                                                                     <div class="col-md-4">
                                                                         <livewire:text-input name="MEMBER_TEL_NO"
@@ -548,9 +586,7 @@
                                                 aria-labelledby="custom-content-below-doctor-info-tab">
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-
                                                     @livewire('Patient.DoctorPanel', ['ID' => $ID])
-
                                                     <div class="form-group row">
                                                         <div class="col-md-6">
                                                             <livewire:text-input name="FINAL_DIAGNOSIS"
@@ -581,14 +617,52 @@
                                                 </div>
                                             </div>
 
+                                            <div class="tab-pane fade @if ($selectTab == 'charges') show active @endif"
+                                                id="custom-content-below-charges-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-charges-info-tab">
+                                                <div class="container-fluid"
+                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+
+                                                    @livewire('Patient.ChargesRecord', ['CONTACT_ID' => $ID])
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane fade @if ($selectTab == 'assistance') show active @endif"
+                                                id="custom-content-below-assistance-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-assistance-info-tab">
+                                                <div class="container-fluid"
+                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                    @livewire('Patient.AssistanceRecord', ['CONTACT_ID' => $ID])
+
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane fade @if ($selectTab == 'treatment') show active @endif"
+                                                id="custom-content-below-treatment-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-treatment-info-tab">
+                                                <div class="container-fluid"
+                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+
+                                                    @livewire('Patient.TreatmentRecord', ['CONTACT_ID' => $ID])
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade @if ($selectTab == 'philhealth') show active @endif"
+                                                id="custom-content-below-philhealth-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-philhealth-info-tab">
+                                                <div class="container-fluid"
+                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+
+                                                    @livewire('Patient.PhilhealthRecord', ['CONTACT_ID' => $ID])
+                                                </div>
+                                            </div>
+
+
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-footer">
                                     <div class="row">
                                         <div class="col-md-6 col-6">
-
-
                                             <button type="submit"
                                                 @if ($ID > 0) @cannot('contact.patient.update')  disabled  @endcan @endif
                                                 class="btn btn-sm btn-success">{{ $ID === 0 ? 'Save' : 'Update' }}</button>
