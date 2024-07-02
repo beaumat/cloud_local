@@ -301,7 +301,8 @@ class ServiceChargeServices
                 'i.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
                 'u.SYMBOL',
-                'c.DESCRIPTION as CLASS_DESCRIPTION'
+                'c.DESCRIPTION as CLASS_DESCRIPTION',
+                DB::raw('(select count(*) from patient_payment_charges where SERVICE_CHARGES_ITEM_ID = service_charges_items.ID) as count_pay'),
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'service_charges_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'service_charges_items.UNIT_ID')

@@ -11,9 +11,9 @@
                 <th class="col-1">Rate</th>
                 <th class="col-1">Amount</th>
                 <th class="text-center">Tax</th>
-                @if ($STATUS == $openStatus)
-                    <th class="text-center col-2">Action</th>
-                @endif
+                {{-- @if ($STATUS == $openStatus) --}}
+                <th class="text-center col-2">Action</th>
+                {{-- @endif --}}
             </tr>
         </thead>
         <tbody class="text-xs">
@@ -69,18 +69,20 @@
                             @endif
                         @endif
                     </td>
-                    @if ($STATUS == $openStatus)
-                        <td class="text-center">
-                            @if ($editItemId === $list->ID)
-                                <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
-                                    class="text-success btn btn-sm btn-link">
-                                    <i class="fas fa-check" aria-hidden="true"></i>
-                                </button>
-                                <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
-                                    class="text-warning btn btn-sm btn-link">
-                                    <i class="fas fa-ban" aria-hidden="true"></i>
-                                </button>
-                            @else
+                    {{-- @if ($STATUS == $openStatus) --}}
+
+                    <td class="text-center">
+                        @if ($editItemId === $list->ID)
+                            <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
+                                class="text-success btn btn-sm btn-link">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                            </button>
+                            <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
+                                class="text-warning btn btn-sm btn-link">
+                                <i class="fas fa-ban" aria-hidden="true"></i>
+                            </button>
+                        @else
+                            @if ($list->count_pay == 0)
                                 <button title="Edit" id="editbtn"
                                     wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
                                     class="text-info btn btn-sm btn-link">
@@ -91,104 +93,103 @@
                                     class="text-danger btn btn-sm btn-link">
                                     <i class="fas fa-times" aria-hidden="true"></i>
                                 </button>
+                            @else
+                                <label class="text-primary" >Payment Applied </label>
                             @endif
-                        </td>
-                    @endif
+                        @endif
+                    </td>
+                    {{-- @endif --}}
                 </tr>
             @endforeach
 
             {{-- INSERT FORM --}}
-            @if ($STATUS == $openStatus)
-                <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
-                    <tr>
-                        <td>
-                            @if ($saveSuccess)
-                                @if ($codeBase)
-                                    <livewire:select-option name="ITEM_ID1" titleName="Item Code" :options="$itemCodeList"
-                                        :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
-                                @else
-                                    <label class="mt-2"> {{ $ITEM_CODE }}</label>
-                                @endif
+            {{-- @if ($STATUS == $openStatus) --}}
+            <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
+                <tr class="text-xs">
+                    <td>
+                        @if ($saveSuccess)
+                            @if ($codeBase)
+                                <livewire:select-option name="ITEM_ID1" titleName="Item Code" :options="$itemCodeList"
+                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false" />
                             @else
-                                @if ($codeBase)
-                                    <livewire:select-option name="ITEM_ID2" titleName="Item Code" :options="$itemCodeList"
-                                        :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
-                                @else
-                                    <label class="mt-2"> {{ $ITEM_CODE }}</label>
-                                @endif
+                                <label class="mt-2"> {{ $ITEM_CODE }}</label>
                             @endif
-                        </td>
-                        <td>
-                            @if ($saveSuccess)
-                                @if (!$codeBase)
-                                    <livewire:select-option name="ITEM_ID3" titleName="Item Description"
-                                        :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
-                                @else
-                                    <label class="mt-2"> {{ $ITEM_DESCRIPTION }}</label>
-                                @endif
+                        @else
+                            @if ($codeBase)
+                                <livewire:select-option name="ITEM_ID2" titleName="Item Code" :options="$itemCodeList"
+                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false" />
                             @else
-                                @if (!$codeBase)
-                                    <livewire:select-option name="ITEM_ID4" titleName="Item Description"
-                                        :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID'
-                                        :vertical="false" :withLabel="false" />
-                                @else
-                                    <label class="mt-2"> {{ $ITEM_DESCRIPTION }}</label>
-                                @endif
+                                <label class="mt-2"> {{ $ITEM_CODE }}</label>
                             @endif
-                        </td>
-                        <td class="text-sm"> <label class="mt-2"> {{ $CLASS_DESCRIPTION }}</label></td>
-                        <td>
+                        @endif
+                    </td>
+                    <td>
+                        @if ($saveSuccess)
+                            @if (!$codeBase)
+                                <livewire:select-option name="ITEM_ID3" titleName="Item Description" :options="$itemDescList"
+                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false" />
+                            @else
+                                <label class="mt-2"> {{ $ITEM_DESCRIPTION }}</label>
+                            @endif
+                        @else
+                            @if (!$codeBase)
+                                <livewire:select-option name="ITEM_ID4" titleName="Item Description" :options="$itemDescList"
+                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false"
+                                    :withLabel="false" />
+                            @else
+                                <label class="mt-2"> {{ $ITEM_DESCRIPTION }}</label>
+                            @endif
+                        @endif
+                    </td>
+                    <td class="text-sm"> <label class="mt-2"> {{ $CLASS_DESCRIPTION }}</label></td>
+                    <td>
 
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
-                                name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
-                                @if ($ITEM_ID == 0) readonly @endif />
-                        </td>
-                        <td>
-                            <select wire:model='UNIT_ID' name="UNIT_ID"
-                                class="text-sm form-control form-control-sm mt-2"
-                                @if ($ITEM_ID == 0) readonly @endif>
-                                @foreach ($unitList as $list)
-                                    <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
+                        <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
+                            name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
+                            @if ($ITEM_ID == 0) readonly @endif />
+                    </td>
+                    <td>
+                        <select wire:model='UNIT_ID' name="UNIT_ID" class="text-sm form-control form-control-sm mt-2"
+                            @if ($ITEM_ID == 0) readonly @endif>
+                            @foreach ($unitList as $list)
+                                <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
 
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
-                                name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
-                        </td>
-                        <td class="text-right">
-                            <label class="mt-2">{{ number_format($AMOUNT, 2) }}</label>
-                        </td>
-                        <td class="text-center">
-                            <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
-                                @if ($ITEM_ID == 0) disabled @endif />
-                        </td>
-                        <td>
-                            <div class="mt-2">
-                                <button type="submit" wire:loading.attr='hidden'
-                                    @if ($ITEM_ID == 0) disabled @endif
-                                    class="text-white btn bg-sky btn-sm w-100">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <div wire:loading.delay>
-                                    <span class="spinner"></span>
-                                </div>
+                        <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
+                            name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
+                    </td>
+                    <td class="text-right">
+                        <label class="mt-2">{{ number_format($AMOUNT, 2) }}</label>
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
+                            @if ($ITEM_ID == 0) disabled @endif />
+                    </td>
+                    <td>
+                        <div class="mt-2">
+                            <button type="submit" wire:loading.attr='hidden'
+                                @if ($ITEM_ID == 0) disabled @endif
+                                class="text-white btn bg-sky btn-sm w-100">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <div wire:loading.delay>
+                                <span class="spinner"></span>
                             </div>
-                        </td>
+                        </div>
+                    </td>
 
-                    </tr>
+                </tr>
 
-                </form>
-            @endif
+            </form>
+            {{-- @endif --}}
 
         </tbody>
 
     </table>
-    @if ($STATUS == $openStatus)
-        <livewire:custom-check-box name="codeBase" titleName="Use choose item code" wire:model.live='codeBase' />
-    @endif
+    {{-- @if ($STATUS == $openStatus) --}}
+    <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase' />
+    {{-- @endif --}}
 </div>
