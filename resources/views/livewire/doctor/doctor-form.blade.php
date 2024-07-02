@@ -28,7 +28,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' />
+                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' maxlength='50' />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:text-input name="ACCOUNT_NO" titleName="Doctor ID"
@@ -121,7 +121,7 @@
                                                         </div>
                                                         <div class="col-md-12">
                                                             <livewire:text-input name="PRINT_NAME_AS"
-                                                                titleName="Print As" wire:model='PRINT_NAME_AS' />
+                                                                titleName="Print As" wire:model='PRINT_NAME_AS'  maxlength='50' />
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="row">
