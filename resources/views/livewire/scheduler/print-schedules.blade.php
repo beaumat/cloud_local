@@ -14,10 +14,9 @@
                                     <label for="WEEK_LEVEL" class="text-xs">Week Levels</label>
                                     <select wire:model.live='WEEKLY_ID' id="WEEK_LEVEL"
                                         class="form-control form-control-sm">
-
                                         @foreach ($weekLevels as $option)
                                             <option value="{{ $option['ID'] }}">
-                                                {{ $option['DESCRIPTION'] }}
+                                                {{ $option['DESCRIPTION'] }} ({{ $option['TOTAL'] }})
                                             </option>
                                         @endforeach
                                     </select>
@@ -25,7 +24,6 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-12">
-
                                     <label for="SHIFT_ID" class="text-xs">Selected Shift</label>
                                     <select wire:model.live='SHIFT_ID' id="SHIFT_ID"
                                         class="form-control form-control-sm">

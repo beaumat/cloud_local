@@ -414,4 +414,9 @@ class ScheduleServices
 
         return $result;
     }
+
+    public function getCountScheduleList($DATE_FROM, $DATE_TO, int $LOCATION_ID): int
+    {
+        return  Schedules::query()->whereBetween('SCHED_DATE', [$DATE_FROM, $DATE_TO])->where('LOCATION_ID', $LOCATION_ID)->count();
+    }
 }
