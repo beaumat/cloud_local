@@ -14,6 +14,7 @@ class ObjectServices
         try {
 
             return ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first()->ID;
+            
         } catch (\Exception $e) {
             //throw $th;
             dd("$TABLE_NAME :" . $e->getMessage());
@@ -81,17 +82,17 @@ class ObjectServices
     public function GetSequence(int $Type, $LocationId): string
     {
 
-      
         $data = ObjectCodeSequence::where('OBJECT_TYPE', $Type)->where('LOCATION_ID', $LocationId)->first();
 
         if ($data) {
             $this->SetSequence($data->ID, $data->NEXT_SEQUENCE, $data->INCREMENT);
+
             return $this->codeFormat($LocationId, $data->NEXT_SEQUENCE, $data->WIDTH, $data->POSTFIX, $data->PREFIX);
         }
 
-        $this->NewSequence(2, $Type, (int) $LocationId, 1, null, null, 4);
+        $this->NewSequence(1, $Type, (int) $LocationId, 1, null, null, 4);
 
-        return $this->codeFormat($LocationId, 1, 4, '', '');
+        return $this->GetSequence($Type, $LocationId);
     }
     public function SetSequence(int $ID, int $NEXT_SEQUENCE, int $INCREMENT)
     {
@@ -110,7 +111,7 @@ class ObjectServices
         ObjectCodeSequence::create([
             'NEXT_SEQUENCE'     => $NEXT_SEQUENCE,
             'OBJECT_TYPE'       => $OBJECT_TYPE,
-            'LOCATION_ID'       => $LOCATION_ID,
+            'LOCATION_ID'       => $LOCATION_ID > 0 ? $LOCATION_ID : null,
             'INCREMENT'         => $INCREMENT,
             'PREFIX'            => $PREFIX,
             'POSTFIX'           => $POSTFIX,
