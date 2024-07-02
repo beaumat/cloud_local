@@ -107,7 +107,8 @@
                                                                     <div class="col-md-6">
                                                                         <livewire:text-input name="DESCRIPTION"
                                                                             titleName="Description"
-                                                                            wire:model='DESCRIPTION' :vertical="true">
+                                                                            wire:model='DESCRIPTION' :vertical="true"
+                                                                            maxlength='50'>
                                                                     </div>
 
                                                                     @if ($TYPE === 0)
@@ -116,7 +117,7 @@
                                                                                 name="PURCHASE_DESCRIPTION"
                                                                                 titleName="Purchase Description"
                                                                                 wire:model='PURCHASE_DESCRIPTION'
-                                                                                :vertical="true">
+                                                                                :vertical="true" maxlength='50'>
                                                                         </div>
                                                                     @endif
 
@@ -311,7 +312,8 @@
                                                                                     <livewire:text-input name="NOTES"
                                                                                         titleName="Notes"
                                                                                         wire:model='NOTES'
-                                                                                        :vertical="true" />
+                                                                                        :vertical="true"
+                                                                                        maxlength='100' />
                                                                                 </div>
                                                                                 <div class="col-md-12">
                                                                                     <livewire:custom-check-box
