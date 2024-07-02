@@ -46,11 +46,14 @@ class HemoList extends Component
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
+    public function refreshList()
+    {
+        $this->dispatch('refresh-list');
+    }
     #[On('refresh-list')]
     public function render()
     {
         $dataList = $this->hemoServices->Search($this->search, $this->locationid, $this->perPage);
         return view('livewire.hemodialysis.hemo-list', ['dataList' => $dataList]);
-
     }
 }
