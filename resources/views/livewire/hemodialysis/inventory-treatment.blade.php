@@ -164,7 +164,7 @@
                 </div>
                 <div class="col-md-6">
                     @if ($STATUS == $openStatus)
-                        <livewire:custom-check-box name="codeBase" titleName="Use choose item code"
+                        <livewire:custom-check-box name="codeBase" titleName="Use item code"
                             wire:model.live='codeBase' />
                     @endif
                 </div>

@@ -377,28 +377,58 @@ class PhilHealthServices
             })
             ->join('document_status_map as s', 's.ID', '=', 'philhealth.STATUS_ID')
             ->when($search, function ($query) use (&$search) {
-                $query->where('philhealth.CODE', 'like', '%' . $search . '%')
-                    ->orWhere('philhealth.CHARGE_TOTAL', 'like', '%' . $search . '%')
-                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                $query->where(function ($q) use ($search) {
+                    $q->where('philhealth.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('philhealth.CHARGE_TOTAL', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy('philhealth.ID', 'desc')
             ->paginate($perPage);
     }
 
-
+    public function PatientRecord($search, int $contact_id, int $perPage)
+    {
+        return PhilHealth::query()
+            ->select([
+                'philhealth.ID',
+                'philhealth.CODE',
+                'philhealth.DATE',
+                'philhealth.DATE_ADMITTED',
+                'philhealth.DATE_DISCHARGED',
+                'philhealth.CHARGE_TOTAL',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
+                'philhealth.P1_TOTAL',
+                'philhealth.PAYMENT_AMOUNT'
+            ])
+            ->join('location as l', 'l.ID', '=', 'philhealth.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'philhealth.STATUS_ID')
+            ->where('philhealth.CONTACT_ID', '=', $contact_id)
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('philhealth.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('philhealth.CHARGE_TOTAL', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('philhealth.ID', 'desc')
+            ->paginate($perPage);
+    }
 
     public function getProfFee($ID)
     {
-        return PhilHealthProfFee::query()->select([
-            'philhealth_prof_fee.ID',
-            'philhealth_prof_fee.CONTACT_ID',
-            'philhealth_prof_fee.AMOUNT',
-            'philhealth_prof_fee.DISCOUNT',
-            'philhealth_prof_fee.FIRST_CASE',
-            'c.PRINT_NAME_AS as NAME',
-            'c.PIN'
-        ])
+        return PhilHealthProfFee::query()
+            ->select([
+                'philhealth_prof_fee.ID',
+                'philhealth_prof_fee.CONTACT_ID',
+                'philhealth_prof_fee.AMOUNT',
+                'philhealth_prof_fee.DISCOUNT',
+                'philhealth_prof_fee.FIRST_CASE',
+                'c.PRINT_NAME_AS as NAME',
+                'c.PIN'
+            ])
             ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
             ->where('PHIC_ID', $ID)
             ->orderBy('LINE_NO', 'asc')

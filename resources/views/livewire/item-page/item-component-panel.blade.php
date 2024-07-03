@@ -8,7 +8,7 @@
                 <div class="card-body ">
 
                     <div class="col-md-12 mb-2">
-                        <livewire:custom-check-box name="codeBase" titleName="Use choose item code"
+                        <livewire:custom-check-box name="codeBase" titleName="Use item code"
                             wire:model.live='codeBase' />
                     </div>
 

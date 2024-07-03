@@ -13,15 +13,14 @@
                                              class="w-100 form-control form-control-sm" placeholder="Search" />
                                      </div>
                                  </div>
-
                              </div>
                          </div>
                      </div>
                      <table class="table table-sm table-bordered table-hover">
                          <thead class="text-xs bg-sky">
                              <tr>
-                                 <th class="col-1">NO.</th>
-                                 <th>DATE</th>
+                                 <th class="col-1">No.</th>
+                                 <th>Date</th>
                                  <th class="text-center ">W</th>
                                  <th class="text-center ">B.P</th>
                                  <th class="text-center ">H.R</th>
@@ -31,9 +30,7 @@
                                  <th class="text-center ">End</th>
                                  <th class="col-1">Location</th>
                                  <th> Status</th>
-                                 <th class="text-center bg-success">
-                                     Action
-                                 </th>
+
                              </tr>
                          </thead>
                          <tbody class="text-xs">
@@ -71,29 +68,7 @@
                                      </td>
                                      <td> {{ $list->LOCATION_NAME }} </td>
                                      <td> {{ $list->STATUS }} </td>
-                                     <td class="text-center">
-                                         @can('patient.treatment.print')
-                                             <a target="_blank"
-                                                 href="{{ route('patientshemo_print', ['id' => $list->ID]) }}"
-                                                 class="btn-sm text-primary">
-                                                 <i class="fa fa-print" aria-hidden="true"></i>
-                                             </a>
 
-                                             @if ($list->FILE_PATH)
-                                                 <a href="{{ asset('storage/' . $list->FILE_PATH) }}" target="_blank"
-                                                     class="btn-sm text-danger">
-                                                     <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                 </a>
-                                             @else
-                                                 <a href="#" class="btn-sm text-secondary">
-                                                     <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                 </a>
-                                             @endif
-                                         @endcan
-
-
-
-                                     </td>
                                  </tr>
                              @endforeach
                          </tbody>

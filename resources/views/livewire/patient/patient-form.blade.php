@@ -109,7 +109,7 @@
                                                     href="#custom-content-below-charges-info" role="tab"
                                                     aria-controls="custom-content-below-charges-info"
                                                     aria-selected="false">
-                                                    Charges Record
+                                                    Service Charges Record
                                                 </a>
                                             </li>
                                             <li class="nav-item">

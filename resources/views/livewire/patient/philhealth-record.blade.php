@@ -1,3 +1,96 @@
-<div>
-    {{-- Care about people's approval and you will be their prisoner. --}}
-</div>
+ <div class="row">
+     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+     <div class="col-12">
+         <div class="card">
+             <div class="card-body">
+                 <div class="row">
+                     <div class="col-md-12 mb-2">
+                         <div class="row">
+                             <div class="col-md-12">
+                                 <div class="mt-0">
+                                     <label class="text-sm">Search:</label>
+                                     <input type="text" wire:model.live.debounce.150ms='search'
+                                         class="w-100 form-control form-control-sm" placeholder="Search" />
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 <table class="table table-sm table-bordered table-hover">
+                     <thead class="text-xs bg-sky">
+                         <tr>
+                             <th>No.</th>
+                             <th>Date</th>
+                             <th>Admitted</th>
+                             <th>Discharges</th>
+                             <th>No. of Treatment </th>
+                             <th>Total Charge</th>
+                             <th>First Case </th>
+                             <th>Collection</th>
+                             <th>Location</th>
+                             <th>Status</th>
+                             <th class="text-center col-2 bg-success">
+                                 Action
+                             </th>
+                         </tr>
+                     </thead>
+                     <tbody class="text-xs">
+                         @foreach ($dataList as $list)
+                             <tr>
+                                 <td>
+                                     <a target="_BLANK" href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
+                                         class="text-primary">
+                                         {{ $list->CODE }}
+                                     </a>
+                                 </td>
+                                 <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
+
+                                 <td> {{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
+                                 <td> {{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
+                                 <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
+                                 <td class="text-right"> {{ number_format($list->CHARGE_TOTAL, 2) }}</td>
+                                 <td class="text-right"> {{ number_format($list->P1_TOTAL, 2) }}</td>
+                                 <td class="text-right"> {{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
+                                 <td> {{ $list->LOCATION_NAME }}</td>
+                                 <td
+                                     class="
+                                                 @if ($list->STATUS == 'Paid') text-success @else text-danger @endif
+                                                ">
+                                     {{ $list->STATUS }}</td>
+                                 <td class="text-center">
+                                     @can('patient.philhealth.print')
+                                         <a target="_BLANK" title="Soa"
+                                             href="{{ route('patientsphic_print', ['id' => $list->ID]) }}"
+                                             class="btn-sm text-primary"> <i class="fa fa-file-pdf-o"
+                                                 aria-hidden="true"></i></a>
+                                         <a target="_BLANK" title="Philheath Form"
+                                             href="{{ route('patientsphic_print_form', ['id' => $list->ID]) }}"
+                                             class="btn-sm text-danger"> <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                         </a>
+                                     @endcan
+
+                                     <a href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
+                                         class="btn-sm text-info">
+                                         <i class="fas fa-edit" aria-hidden="true"></i>
+                                     </a>
+
+                                     @can('patient.philhealth.delete')
+                                         <a href="#" wire:click='delete({{ $list->ID }})'
+                                             wire:confirm="Are you sure you want to delete this?"
+                                             class="btn-sm text-danger">
+                                             <i class="fas fa-times" aria-hidden="true"></i>
+                                         </a>
+                                     @endcan
+                                 </td>
+                             </tr>
+                         @endforeach
+
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+     </div>
+     <div class="col-6 col-md-6">
+         {{ $dataList->links() }}
+     </div>
+ </div>

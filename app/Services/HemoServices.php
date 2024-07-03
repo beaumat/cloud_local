@@ -303,9 +303,11 @@ class HemoServices
                 }
             })
             ->when($search, function ($query) use (&$search) {
-                $query->where('hemodialysis.CODE', 'like', '%' . $search . '%')
-                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                $query->where(function ($q) use ($search) {
+                    $q->where('hemodialysis.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy('ID', 'desc')
             ->orderBy('hemodialysis.ID', 'desc')

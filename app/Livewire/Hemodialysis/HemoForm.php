@@ -280,7 +280,6 @@ class HemoForm extends Component
         try {
             DB::beginTransaction();
             if ($this->ID == 0) {
-
                 $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
                 $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);
                 foreach ($dataList as $item) {
@@ -290,7 +289,6 @@ class HemoForm extends Component
                 return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 // $this->hemoServices->PreUpdate($this->ID, $this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
-
                 $this->update_all();
                 DB::commit();
                 $this->Modify = false;
@@ -351,12 +349,51 @@ class HemoForm extends Component
     }
     public function getPosted()
     {
+        $this->validate(
+            [
+                'PRE_WEIGHT'            => 'required|not_in:0',
+                'PRE_BLOOD_PRESSURE'    => 'required|not_in:0',
+                'PRE_BLOOD_PRESSURE2'   => 'required|not_in:0',
+                'PRE_HEART_RATE'        => 'required|not_in:0',
+                'PRE_O2_SATURATION'     => 'required',
+                'PRE_TEMPERATURE'       => 'required',
+
+                'POST_WEIGHT'           => 'required|not_in:0',
+                'POST_BLOOD_PRESSURE'   => 'required|not_in:0',
+                'POST_BLOOD_PRESSURE2'  => 'required|not_in:0',
+                'POST_HEART_RATE'       => 'required|not_in:0',
+                'POST_O2_SATURATION'    => 'required',
+                'POST_TEMPERATURE'      => 'required',
+
+                'TIME_START'            => 'required',
+                'TIME_END'              => 'required',
+            ],
+            [],
+            [
+                'PRE_WEIGHT'            => 'Pre weight',
+                'PRE_BLOOD_PRESSURE'    => 'Pre Blood Pressure[1]',
+                'PRE_BLOOD_PRESSURE2'   => 'Pre Blood Pressure[2]',
+                'PRE_HEART_RATE'        => 'Pre Heart Rate',
+                'PRE_O2_SATURATION'     => 'Pre 02 Saturation',
+                'PRE_TEMPERATURE'       => 'Pre Temperature',
+                'POST_WEIGHT'           => 'Post Weight',
+                'POST_BLOOD_PRESSURE'   => 'Post Blood Pressure[1]',
+                'POST_BLOOD_PRESSURE2'  => 'Post Blood Pressure[2]',
+                'POST_HEART_RATE'       => 'Post Heart Rate',
+                'POST_O2_SATURATION'    => 'Post 02 Saturation',
+                'POST_TEMPERATURE'      => 'Post Temperature',
+                'TIME_START'            => 'Time Start Notes',
+                'TIME_END'              => 'Time End Notes'
+
+            ]
+        );
+
 
         try {
 
-            $count = (int) $this->hemoServices->CountItems($this->ID);
+            $ITEM_COUNT = (int) $this->hemoServices->CountItems($this->ID);
 
-            if ($count == 0) {
+            if ($ITEM_COUNT == 0) {
                 session()->flash('error', 'Item not found.');
                 return;
             }

@@ -196,6 +196,6 @@
         </tbody>
     </table>
     @if ($STATUS == $openStatus)
-        <livewire:custom-check-box name="codeBase" titleName="Use choose item code" wire:model.live='codeBase' />
+        <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase' />
     @endif
 </div>
