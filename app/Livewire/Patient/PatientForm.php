@@ -336,7 +336,7 @@ class PatientForm extends Component
         $this->ADDRESS_BRGY = '';
         $this->ADDRESS_CITY_MUNI = '';
         $this->ADDRESS_PROVINCE = '';
-        $this->ADDRESS_COUNTRY = '';
+        $this->ADDRESS_COUNTRY = 'PHILIPPINES';
         $this->ADDRESS_ZIP_CODE = '';
         $this->PIN = '';
         $this->PEN = '';
