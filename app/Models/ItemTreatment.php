@@ -19,7 +19,8 @@ class ItemTreatment extends Model
         'UNIT_ID',
         'NO_OF_USED',
         'INACTIVE',
-        'IS_AUTO'
-
+        'IS_AUTO',
+        'IS_REQUIRED',
+        'NEW_TREATMENT_QTY'
     ];
 }

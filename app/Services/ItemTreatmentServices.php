@@ -17,8 +17,16 @@ class ItemTreatmentServices
     {
         return ItemTreatment::where('ID', $Id)->first();
     }
-    public function Store(int $LOCATION_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, int $NO_OF_USED, bool $IS_AUTO): int
-    {
+    public function Store(
+        int $LOCATION_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        int $NO_OF_USED,
+        bool $IS_AUTO,
+        bool $IS_REQUIRED,
+        float $NEW_TREATMENT_QTY
+    ): int {
         $ID =  (int) $this->object->ObjectNextID('ITEM_TREATMENT');
         ItemTreatment::create([
             'ID'                => $ID,
@@ -28,14 +36,26 @@ class ItemTreatmentServices
             'UNIT_ID'           => $UNIT_ID > 0 ? $UNIT_ID : null,
             'NO_OF_USED'        => $NO_OF_USED,
             'INACTIVE'          => false,
-            'IS_AUTO'           => $IS_AUTO
+            'IS_AUTO'           => $IS_AUTO,
+            'IS_REQUIRED'       =>  $IS_REQUIRED,
+            'NEW_TREATMENT_QTY' => $NEW_TREATMENT_QTY
         ]);
 
         return $ID;
     }
 
-    public function Update(int $ID, int $LOCATION_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, int $NO_OF_USED, bool $INACTIVE, bool $IS_AUTO)
-    {
+    public function Update(
+        int $ID,
+        int $LOCATION_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        int $NO_OF_USED,
+        bool $INACTIVE,
+        bool $IS_AUTO,
+        bool $IS_REQUIRED,
+        float $NEW_TREATMENT_QTY
+    ) {
         ItemTreatment::where('ID', $ID)
             ->update([
                 'LOCATION_ID'       => $LOCATION_ID,
@@ -44,7 +64,9 @@ class ItemTreatmentServices
                 'UNIT_ID'           => $UNIT_ID > 0 ? $UNIT_ID : null,
                 'NO_OF_USED'        => $NO_OF_USED,
                 'INACTIVE'          => $INACTIVE,
-                'IS_AUTO'           => $IS_AUTO
+                'IS_AUTO'           => $IS_AUTO,
+                'IS_REQUIRED'       => $IS_REQUIRED,
+                'NEW_TREATMENT_QTY' => $NEW_TREATMENT_QTY
             ]);
     }
 
@@ -64,7 +86,9 @@ class ItemTreatmentServices
                 'item_treatment.NO_OF_USED',
                 'item_treatment.INACTIVE',
                 'item_treatment.QUANTITY',
-                'item_treatment.IS_AUTO'
+                'item_treatment.IS_AUTO',
+                'item_treatment.IS_REQUIRED',
+                'item_treatment.NEW_TREATMENT_QTY'
             ])
             ->join('location as l', 'l.ID', '=', 'item_treatment.LOCATION_ID')
             ->join('item as i', 'i.ID', '=', 'item_treatment.ITEM_ID')

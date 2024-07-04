@@ -19,8 +19,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' =>
-                session('message'), 'error' => session('error')])
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
@@ -41,8 +40,8 @@
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
-                                                    <option value="{{ $item->ID }}"> {{ $item->NAME }}
-                                                    </option>
+                                                        <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -61,6 +60,8 @@
                                         <th>No. of Used</th>
                                         <th>Inactive</th>
                                         <th>Auto</th>
+                                        <th>Is Req.</th>
+                                        <th>New Treat. Qty</th>
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenanceothersitem_treatment_create') }}"
                                                 class="text-white btn-sm"> <i class="fas fa-plus"></i></a>
@@ -69,38 +70,46 @@
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
-                                    <tr>
-                                        <td> {{ $list->LOCATION_NAME }}</td>
-                                        <td> {{ $list->ITEM_NAME }}</td>
-                                        <td> {{ $list->QUANTITY }}</td>
-                                        <td> {{ $list->SYMBOL }}</td>
-                                        <td> {{ $list->NO_OF_USED }}</td>
-                                        <td>
-                                            @if ($list->INACTIVE)
-                                            YES
-                                            @else
-                                            NO
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($list->IS_AUTO)
-                                            YES
-                                            @else
-                                            NO
-                                            @endif
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="{{ route('maintenanceothersitem_treatment_edit', ['id' => $list->ID]) }}"
-                                                class="btn-sm text-info">
-                                                <i class="fas fa-edit" aria-hidden="true"></i>
-                                            </a>
-                                            <a href="#" wire:click='delete({{ $list->ID }})'
-                                                wire:confirm="Are you sure you want to delete this?"
-                                                class="btn-sm text-danger">
-                                                <i class="fas fa-times" aria-hidden="true"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td> {{ $list->LOCATION_NAME }}</td>
+                                            <td> {{ $list->ITEM_NAME }}</td>
+                                            <td> {{ $list->QUANTITY }}</td>
+                                            <td> {{ $list->SYMBOL }}</td>
+                                            <td> {{ $list->NO_OF_USED }}</td>
+                                            <td>
+                                                @if ($list->INACTIVE)
+                                                    YES
+                                                @else
+                                                    NO
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($list->IS_AUTO)
+                                                    YES
+                                                @else
+                                                    NO
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($list->IS_REQUIRED)
+                                                    YES
+                                                @else
+                                                    NO
+                                                @endif
+                                            </td>
+                                            <td> {{ $list->NEW_TREATMENT_QTY }}</td>
+                                            <td class="text-center">
+                                                <a href="{{ route('maintenanceothersitem_treatment_edit', ['id' => $list->ID]) }}"
+                                                    class="btn-sm text-info">
+                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                </a>
+                                                <a href="#" wire:click='delete({{ $list->ID }})'
+                                                    wire:confirm="Are you sure you want to delete this?"
+                                                    class="btn-sm text-danger">
+                                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>

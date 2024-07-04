@@ -23,6 +23,8 @@ class ItemTreatmentForm extends Component
     public int $NO_OF_USED;
     public bool $INACTIVE;
     public bool $IS_AUTO;
+    public bool $IS_REQUIRED;
+    public float $NEW_TREATMENT_QTY;
     public $locationList = [];
     public $itemList = [];
     public $unitList = [];
@@ -61,6 +63,8 @@ class ItemTreatmentForm extends Component
                 $this->NO_OF_USED = $data->NO_OF_USED;
                 $this->INACTIVE = $data->INACTIVE;
                 $this->IS_AUTO = $data->IS_AUTO;
+                $this->IS_REQUIRED = $data->IS_REQUIRED;
+                $this->NEW_TREATMENT_QTY = $data->NEW_TREATMENT_QTY ?? 0;
                 return;
             }
 
@@ -76,6 +80,8 @@ class ItemTreatmentForm extends Component
         $this->NO_OF_USED = 0;
         $this->INACTIVE = false;
         $this->IS_AUTO =  false;
+        $this->IS_REQUIRED = false;
+        $this->NEW_TREATMENT_QTY = 0;
     }
     public function save()
     {
@@ -91,15 +97,15 @@ class ItemTreatmentForm extends Component
                 'ITEM_ID' => 'Item',
             ]
         );
-        
+
         try {
             DB::beginTransaction();
             if ($this->ID === 0) {
-                $this->ID = $this->itemTreatmentServices->Store($this->LOCATION_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, $this->NO_OF_USED, $this->IS_AUTO);
+                $this->ID = $this->itemTreatmentServices->Store($this->LOCATION_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, $this->NO_OF_USED, $this->IS_AUTO, $this->IS_REQUIRED, $this->NEW_TREATMENT_QTY);
                 DB::commit();
                 return Redirect::route('maintenanceothersitem_treatment_edit', ['id' => $this->ID])->with('message', 'Successfully created.');
             } else {
-                $this->itemTreatmentServices->Update($this->ID, $this->LOCATION_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, $this->NO_OF_USED, $this->INACTIVE, $this->IS_AUTO);
+                $this->itemTreatmentServices->Update($this->ID, $this->LOCATION_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, $this->NO_OF_USED, $this->INACTIVE, $this->IS_AUTO, $this->IS_REQUIRED, $this->NEW_TREATMENT_QTY);
                 DB::commit();
                 session()->flash('message', 'Successfully updated.');
             }

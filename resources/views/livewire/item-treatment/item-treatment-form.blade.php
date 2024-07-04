@@ -72,6 +72,15 @@
                                             <livewire:custom-check-box name="IS_AUTO" titleName="Is Auto"
                                                 wire:model='IS_AUTO' />
                                         </div>
+                                        <div class="col-md-2">
+                                            <livewire:custom-check-box name="IS_REQUIRED" titleName="Is Required"
+                                                wire:model='IS_REQUIRED' />
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <livewire:number-input name="NEW_TREATMENT_QTY"
+                                                titleName="New Treatment Qty" wire:model='NEW_TREATMENT_QTY' />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -75,7 +75,6 @@ class HemoForm extends Component
     private $userServices;
     private $uploadServices;
     private $dateServices;
-
     private $itemInventoryServices;
     private $documentTypeServices;
     private $itemTreatmentServices;
@@ -134,6 +133,7 @@ class HemoForm extends Component
         $this->STATUS = $data->STATUS_ID ?? 0;
         $this->getPreviousTreatment();
     }
+    public bool $IsPostedButton;
     public string $tab = "info";
     public function SelectTab(string $tab)
     {
@@ -141,6 +141,7 @@ class HemoForm extends Component
     }
     public function mount($id = null)
     {
+        $this->IsPostedButton = false;
         $this->patientList = $this->contactServices->getList(3);
         $this->locationList = $this->locationServices->getList();
         $this->Modify = true;

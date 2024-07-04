@@ -9,10 +9,10 @@
                     <table class="table table-sm table-bordered table-hover">
                         <thead class="text-xs bg-sky">
                             <tr>
-                                <th class="col-2">Code</th>
-                                <th>Description</th>
-                                <th class="col-1 text-center">Quantity</th>
-                                <th class="col-1">Unit</th>
+                                <th>Code</th>
+                                <th class="col-4">Description</th>
+                                <th class="col-2 text-center">Qty</th>
+                                <th class="col-2">Unit</th>
                                 <th class="col-1 text-center">New</th>
                                 @if ($STATUS == $openStatus)
                                     <th class="col-2 text-center">Action</th>
@@ -87,7 +87,7 @@
                             @if ($STATUS == $openStatus)
                                 <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
                                     <tr>
-                                        <td class="text-md">
+                                        <td class="text-xs">
                                             @if ($saveSuccess)
                                                 @if ($codeBase)
                                                     <livewire:select-option name="ITEM_ID1" titleName="Item Code"
@@ -133,7 +133,7 @@
                                         </td>
                                         <td>
                                             <select wire:model='UNIT_ID' name="UNIT_ID"
-                                                class="text-sm form-control form-control-sm mt-2"
+                                                class="form-control form-control-sm mt-2"
                                                 @if ($ITEM_ID == 0) readonly @endif>
                                                 @foreach ($unitList as $list)
                                                     <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>

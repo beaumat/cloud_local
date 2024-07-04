@@ -45,7 +45,7 @@ class InventoryTreatment extends Component
     public $unitList = [];
     public $editUnitList = [];
     public bool $IS_NEW;
-    public int $BASE_UNIT_ID;
+
     public function mount()
     {
         $this->codeBase = false;
@@ -65,7 +65,7 @@ class InventoryTreatment extends Component
             if ($item) {
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
-                $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
+                $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
             }
         }
     }
