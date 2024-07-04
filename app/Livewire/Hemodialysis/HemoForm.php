@@ -277,6 +277,50 @@ class HemoForm extends Component
             ]
         );
 
+        if ($this->ID > 0) {
+            //Make it restricted
+            $this->validate(
+                [
+                    'PRE_WEIGHT'            => 'required|not_in:0',
+                    'PRE_BLOOD_PRESSURE'    => 'required|not_in:0',
+                    'PRE_BLOOD_PRESSURE2'   => 'required|not_in:0',
+                    'PRE_HEART_RATE'        => 'required|not_in:0',
+                    'PRE_O2_SATURATION'     => 'required',
+                    'PRE_TEMPERATURE'       => 'required',
+
+                    'POST_WEIGHT'           => 'required|not_in:0',
+                    'POST_BLOOD_PRESSURE'   => 'required|not_in:0',
+                    'POST_BLOOD_PRESSURE2'  => 'required|not_in:0',
+                    'POST_HEART_RATE'       => 'required|not_in:0',
+                    'POST_O2_SATURATION'    => 'required',
+                    'POST_TEMPERATURE'      => 'required',
+
+                    'TIME_START'            => 'required',
+                    'TIME_END'              => 'required',
+                ],
+                [],
+                [
+                    'PRE_WEIGHT'            => 'Pre weight',
+                    'PRE_BLOOD_PRESSURE'    => 'Pre Blood Pressure[1]',
+                    'PRE_BLOOD_PRESSURE2'   => 'Pre Blood Pressure[2]',
+                    'PRE_HEART_RATE'        => 'Pre Heart Rate',
+                    'PRE_O2_SATURATION'     => 'Pre 02 Saturation',
+                    'PRE_TEMPERATURE'       => 'Pre Temperature',
+                    'POST_WEIGHT'           => 'Post Weight',
+                    'POST_BLOOD_PRESSURE'   => 'Post Blood Pressure[1]',
+                    'POST_BLOOD_PRESSURE2'  => 'Post Blood Pressure[2]',
+                    'POST_HEART_RATE'       => 'Post Heart Rate',
+                    'POST_O2_SATURATION'    => 'Post 02 Saturation',
+                    'POST_TEMPERATURE'      => 'Post Temperature',
+                    'TIME_START'            => 'Time Start Notes',
+                    'TIME_END'              => 'Time End Notes'
+
+                ]
+            );
+        }
+
+
+
         try {
             DB::beginTransaction();
             if ($this->ID == 0) {
@@ -411,7 +455,6 @@ class HemoForm extends Component
         } catch (\Throwable $th) {
             DB::rollBack();
             $message = "Caught a Throwable: " . $th->getMessage();
-
             session()->flash("error", $message);
         }
     }

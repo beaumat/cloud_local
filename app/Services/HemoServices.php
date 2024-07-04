@@ -538,4 +538,35 @@ class HemoServices
 
         return $result;
     }
+
+    public function getTreatmentID(int $CONTACT_ID, string $DATE, int $LOCATION_ID)
+    {
+        $result = Hemodialysis::query()
+            ->select([
+                'ID',
+                'TIME_START',
+                'TIME_END'
+            ])
+            ->where('CUSTOMER_ID', $CONTACT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('DATE', $DATE)
+            ->where('STATUS_ID', 1)
+            ->first();
+
+
+
+        if ($result) {
+            return [
+                'ID' =>         $result->ID,
+                'TIME_START' => $result->TIME_START,
+                'TIME_END' =>   $result->TIME_END
+            ];
+        }
+
+        return [
+            'ID' => 0,
+            'TIME_START' => null,
+            'TIME_END' => null
+        ];
+    }
 }

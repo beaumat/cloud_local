@@ -419,4 +419,22 @@ class ScheduleServices
     {
         return  Schedules::query()->whereBetween('SCHED_DATE', [$DATE_FROM, $DATE_TO])->where('LOCATION_ID', $LOCATION_ID)->count();
     }
+
+    public function getWaitingList(string $Date)
+    {
+        $data = Schedules::query()
+            ->select([
+                'SHIFT_ID',
+                'CONTACT_ID',
+                'LOCATION_ID',
+                'HEMO_MACHINE_ID',
+                'SCHED_DATE'
+            ])
+            ->where('SCHED_STATUS', 0)
+            ->where('SCHED_DATE', '<', $Date)
+            ->orderBy('SCHED_DATE', 'asc')
+            ->get();
+
+        return $data;
+    }
 }
