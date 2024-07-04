@@ -431,7 +431,7 @@ class ScheduleServices
                 'SCHED_DATE'
             ])
             ->where('SCHED_STATUS', 0)
-            ->where('SCHED_DATE', '<', $Date)
+            ->where('SCHED_DATE', '<=', $Date)
             ->orderBy('SCHED_DATE', 'asc')
             ->get();
 

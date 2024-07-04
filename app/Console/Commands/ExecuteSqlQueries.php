@@ -51,7 +51,7 @@ class ExecuteSqlQueries extends Command
     public function handle()
     {
         //
-        // artisan schedule:run
+        // $ php artisan schedule:work = must run per minute
         Log::info('Schedule executed start');
         $this->timerServices->getExecute();
         Log::info('Schedule executed stop');
