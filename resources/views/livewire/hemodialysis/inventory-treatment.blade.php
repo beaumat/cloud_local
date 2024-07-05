@@ -6,12 +6,10 @@
             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
             <div class="row" @if ($HEMO_ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                 @if ($ActiveRequired)
-
-                    {{-- Required Items --}}
                     @if ($STATUS == $openStatus)
                         <div class="col-md-12">
                             @foreach ($ItemRequiredList as $list)
-                                <button wire:click='addItem({{ $list->ID }})' class="btn btn-info btn-md m-1">
+                                <button wire:click='addItem({{ $list->ID }})' class="btn btn-warning btn-md m-1">
                                     {{ $list->ITEM_NAME }}
                                 </button>
                             @endforeach
@@ -93,7 +91,6 @@
                                                     <i class="fas fa-times " aria-hidden="true"></i>
                                                 </a>
                                             @endif
-
                                         </td>
                                     @endif
                                 </tr>

@@ -530,7 +530,8 @@ class HemoServices
                 'item.CODE',
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
-                'u.SYMBOL'
+                'u.SYMBOL',
+                DB::raw('')
             ])
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'hemodialysis_items.UNIT_ID')

@@ -3,7 +3,6 @@
 namespace App\Livewire\Hemodialysis;
 
 use App\Services\ContactServices;
-use App\Services\DateServices;
 use App\Services\DocumentTypeServices;
 use App\Services\HemoServices;
 use App\Services\ItemInventoryServices;
@@ -13,11 +12,11 @@ use App\Services\ScheduleServices;
 use App\Services\UnitOfMeasureServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 
 #[Title('Hemodialysis Treatment')]
@@ -135,6 +134,7 @@ class HemoForm extends Component
 
     public bool $ActiveRequired;
 
+    public bool $IsDocmentUploaded;
     private function LoadDropDown()
     {
         $this->patientList = $this->contactServices->getList(3);
@@ -144,6 +144,7 @@ class HemoForm extends Component
     {
         $this->ActiveRequired = true;
         $this->IsPostedButton = false;
+        $this->IsDocmentUploaded = false;
         $this->Modify = true;
 
         if (is_numeric($id)) {
@@ -239,7 +240,6 @@ class HemoForm extends Component
         );
 
         if ($this->PDF != null) {
-
             $this->uploadServices->RemoveIfExists($this->FILE_PATH);
             $returnData = $this->uploadServices->Treatment($this->PDF);
             $this->hemoServices->UpdateFile($this->ID, $returnData['filename'] . '.' . $returnData['extension'], $returnData['new_path']);
@@ -263,6 +263,7 @@ class HemoForm extends Component
     }
     public function updateCancel()
     {
+        $this->clearAlert();
         $data = $this->hemoServices->Get($this->ID);
         if ($data) {
             $this->reloadData($data);
@@ -458,6 +459,13 @@ class HemoForm extends Component
             $message = "Caught a Throwable: " . $th->getMessage();
             session()->flash("error", $message);
         }
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
     }
     public function render()
     {
