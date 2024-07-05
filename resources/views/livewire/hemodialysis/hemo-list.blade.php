@@ -123,7 +123,7 @@
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }} </td>
                                             <td
-                                                class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success @else bg-danger @endif ">
+                                                class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success  @elseif ($list->STATUS_ID == 4) bg-secondary @else bg-danger @endif ">
                                                 {{ $list->STATUS }} </td>
                                             <td class="text-center">
                                                 @can('patient.treatment.print')
