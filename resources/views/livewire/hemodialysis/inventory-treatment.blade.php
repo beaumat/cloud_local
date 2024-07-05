@@ -6,14 +6,17 @@
             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
             <div class="row" @if ($HEMO_ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                 @if ($ActiveRequired)
-                {{-- Required Items --}}
-                    <div class="col-md-12">
-                        @foreach ($ItemRequiredList as $list)
-                            <button wire:click='addItem({{ $list->ID }})' class="btn btn-info btn-md m-1">
-                                {{ $list->ITEM_NAME }}
-                            </button>
-                        @endforeach
-                    </div>
+
+                    {{-- Required Items --}}
+                    @if ($STATUS == $openStatus)
+                        <div class="col-md-12">
+                            @foreach ($ItemRequiredList as $list)
+                                <button wire:click='addItem({{ $list->ID }})' class="btn btn-info btn-md m-1">
+                                    {{ $list->ITEM_NAME }}
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
                 @endif
 
                 <div class="col-md-12">
