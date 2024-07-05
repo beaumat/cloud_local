@@ -84,23 +84,28 @@
                                                         aria-hidden="true"></i> Cancel</button>
                                             @endif
                                         @else
-                                            @if ($STATUS == 1)
+                                            @if ($STATUS == 1 || $STATUS == 4)
                                                 <button type="button" wire:click='getModify()'
-                                                    class="btn btn-sm btn-info"
-                                                    @if ($STATUS > 1) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                    class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
-
-                                                @if ($IsPostedButton == true)
-                                                    @if ($ID > 0 && $STATUS == 1)
+                                                @can('patient.treatment.update')
+                                                    @if (($ID > 0 && $STATUS == 1) || ($ID > 0 && $STATUS == 4))
                                                         <button type="button" wire:click='getPosted()'
                                                             class="btn btn-sm btn-warning"
                                                             wire:confirm="Are you sure you want to post?">
                                                             <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                         </button>
                                                     @endif
-                                                @endif
-
+                                                @endcan
+                                            @else
+                                                @can('patient.treatment.update')
+                                                    <button type="button" class="btn btn-sm btn-secondary"
+                                                        wire:confirm="Are you sure you want to un-posted?"
+                                                        wire:click='getUnposted()'>
+                                                        Unposted
+                                                    </button>
+                                                @endcan
                                             @endif
                                         @endif
                                     </div>
@@ -404,7 +409,7 @@
                     </div>
                     <div class="col-sm-6 col-md-6"
                         @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                        @livewire('Hemodialysis.InventoryTreatment', ['HEMO_ID' => $ID, 'STATUS' => $STATUS, 'LOCATION_ID' => $LOCATION_ID,'ActiveRequired' => $ActiveRequired])
+                        @livewire('Hemodialysis.InventoryTreatment', ['HEMO_ID' => $ID, 'STATUS' => $STATUS, 'LOCATION_ID' => $LOCATION_ID, 'ActiveRequired' => $ActiveRequired])
                     </div>
                 </div>
             </div>

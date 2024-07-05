@@ -131,7 +131,7 @@ class HemoForm extends Component
         $this->TIME_END = $data->TIME_END ?? "";
         $this->FILE_NAME = $data->FILE_NAME ?? "";
         $this->FILE_PATH = $data->FILE_PATH ?? "";
-        $this->STATUS = $data->STATUS_ID ?? 0;
+        $this->STATUS = $data->STATUS_ID ?? 1;
         $this->getPreviousTreatment();
     }
     public bool $IsPostedButton;
@@ -149,6 +149,10 @@ class HemoForm extends Component
             $data = $this->hemoServices->Get($id);
             if ($data) {
                 $this->reloadData($data);
+                $statusData = DB::table('hemo_status')->select('description')->where('ID', $data->STATUS_ID)->first();
+                if ($statusData) {
+                    $this->STATUS_DESCRIPTION = $statusData->description ?? '';
+                }
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
@@ -248,7 +252,7 @@ class HemoForm extends Component
     {
 
 
-        if ($this->ActiveRequired == true) {
+        if ($this->ActiveRequired == true && $this->STATUS == 1) {
             $isRequiredItemAdded = $this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->ID);
             if (!$isRequiredItemAdded) {
                 session()->flash('error', ' You must select either CVC KIT or AVF KIT. before to modify.');
@@ -355,6 +359,7 @@ class HemoForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+
     public function updatedPdf()
     {
         $this->validate([
@@ -416,6 +421,12 @@ class HemoForm extends Component
             return false;
         }
     }
+    public function getUnposted()
+    {
+        $this->hemoServices->StatusUpdate($this->ID, 4);
+        $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 0);
+        return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully unposted');
+    }
     public function getPosted()
     {
         $this->validate(
@@ -462,16 +473,21 @@ class HemoForm extends Component
 
             $ITEM_COUNT = (int) $this->hemoServices->CountItems($this->ID);
 
-            if ($ITEM_COUNT == 0) {
-                session()->flash('error', 'Item not found.');
-                return;
+            DB::beginTransaction();
+            if ($this->STATUS == 1) {
+
+                if ($ITEM_COUNT == 0) {
+                    DB::rollBack();
+                    session()->flash('error', 'Item not found.');
+                    return;
+                }
+
+                if (!$this->ItemInventory()) {
+                    DB::rollBack();
+                    return;
+                }
             }
 
-            DB::beginTransaction();
-            if (!$this->ItemInventory()) {
-                DB::rollBack();
-                return;
-            }
             $this->hemoServices->StatusUpdate($this->ID, 2);
             $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 1); //PRESENT
             DB::commit();
