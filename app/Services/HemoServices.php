@@ -569,12 +569,13 @@ class HemoServices
             ->select([
                 'ID',
                 'TIME_START',
-                'TIME_END'
+                'TIME_END',
+                'STATUS_ID'
             ])
             ->where('CUSTOMER_ID', $CONTACT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('DATE', $DATE)
-            ->where('STATUS_ID', 1)
+            ->whereBetween('STATUS_ID', [1, 4])
             ->first();
 
 
@@ -583,14 +584,16 @@ class HemoServices
             return [
                 'ID' =>         $result->ID,
                 'TIME_START' => $result->TIME_START,
-                'TIME_END' =>   $result->TIME_END
+                'TIME_END' =>   $result->TIME_END,
+                'STATUS_ID' =>  $result->STATUS_ID ?? 0
             ];
         }
 
         return [
             'ID' => 0,
             'TIME_START' => null,
-            'TIME_END' => null
+            'TIME_END' => null,
+            'STATUS_ID' => 0
         ];
     }
 

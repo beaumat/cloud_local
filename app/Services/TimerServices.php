@@ -27,7 +27,7 @@ class TimerServices
     }
 
     public function getExecute()
-    {       
+    {
         // $ php artisan schedule:work = must run per minute
 
         $schedlist = $this->scheduleServices->getWaitingList($this->dateServices->NowDate());
@@ -42,9 +42,10 @@ class TimerServices
         try {
 
             $data = $this->hemoServices->getTreatmentID($CONTACT_ID, $DATE, $LOCATION_ID);
-            $ID = (int)     $data['ID']; //HEMO_ID
-            $TIME_START =   $data['TIME_START'];
-            $TIME_END =     $data['TIME_END'];
+            $ID         = (int) $data['ID']; //HEMO_ID
+            $TIME_START =       $data['TIME_START'];
+            $TIME_END   =       $data['TIME_END'];
+            $STATUS_ID  = (int) $data['STATUS_ID'];
             
             DB::beginTransaction();
             if ($ID > 0) {
@@ -56,20 +57,21 @@ class TimerServices
                     return;
                 }
 
-                if (!$this->ItemInventory($ID, $DATE, $LOCATION_ID)) {
-                    Log::error('rollback executing Schedule executed in getPosted(ItemInventory): [' . $CONTACT_ID . ',' . $LOCATION_ID . ', ' . $DATE . ']');
-                    DB::rollBack();
-                    return;
+                if ($STATUS_ID == 1) {
+                    if (!$this->ItemInventory($ID, $DATE, $LOCATION_ID)) {
+                        Log::error('rollback executing Schedule executed in getPosted(ItemInventory): [' . $CONTACT_ID . ',' . $LOCATION_ID . ', ' . $DATE . ']');
+                        DB::rollBack();
+                        return;
+                    }
                 }
+
 
                 $this->hemoServices->StatusUpdate($ID, 2); // POSTED
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 1); //PRESENT
                 DB::commit();
-
             } else {
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 3); // CANCELLED
                 DB::commit();
-       
             }
         } catch (\Exception $e) {
             DB::rollBack();
