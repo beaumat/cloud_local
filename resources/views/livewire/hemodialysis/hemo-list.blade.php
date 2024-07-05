@@ -151,11 +151,17 @@
                                                 </a>
 
                                                 @can('patient.treatment.delete')
-                                                    <a href="#" wire:click='delete({{ $list->ID }})'
-                                                        wire:confirm="Are you sure you want to delete this?"
-                                                        class="btn-sm text-danger">
-                                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                                    </a>
+                                                    @if ($list->STATUS_ID == 1)
+                                                        <a href="#" wire:click='delete({{ $list->ID }})'
+                                                            wire:confirm="Are you sure you want to delete this?"
+                                                            class="btn-sm text-danger">
+                                                            <i class="fas fa-times" aria-hidden="true"></i>
+                                                        </a>
+                                                    @else
+                                                        <a class="btn-sm text-secondary">
+                                                            <i class="fas fa-times" aria-hidden="true"></i>
+                                                        </a>
+                                                    @endif
                                                 @endcan
 
                                             </td>
