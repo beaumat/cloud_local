@@ -350,14 +350,17 @@ class ContactServices
             ->leftJoin('gender_map', 'gender_map.ID', '=', 'contact.GENDER')
             ->leftJoin('location as l', 'l.ID', '=', 'contact.LOCATION_ID')
             ->when($search, function ($query) use (&$search) {
-                $query->where('contact.NAME', 'like', '%' . $search . '%');
-                $query->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%');
-                $query->orWhere('contact.COMPANY_NAME', 'like', '%' . $search . '%');
-                $query->orWhere('contact.FIRST_NAME', 'like', '%' . $search . '%');
-                $query->orWhere('contact.LAST_NAME', 'like', '%' . $search . '%');
-                $query->orWhere('contact.PRINT_NAME_AS', 'like', '%' . $search . '%');
-                $query->orWhere('contact.MOBILE_NO', 'like', '%' . $search . '%');
-                $query->orWhere('contact.EMAIL', 'like', '%' . $search . '%');
+                $query->where(function ($q) use ($search) {
+                    $q->where('contact.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%')
+                        ->orWhere('contact.PIN', 'like', '%' . $search . '%')
+                        ->orWhere('contact.COMPANY_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('contact.FIRST_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('contact.LAST_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('contact.PRINT_NAME_AS', 'like', '%' . $search . '%')
+                        ->orWhere('contact.MOBILE_NO', 'like', '%' . $search . '%')
+                        ->orWhere('contact.EMAIL', 'like', '%' . $search . '%');
+                });
             })
             ->when($locationId > 0, function ($query) use (&$locationId) {
                 $query->where('contact.LOCATION_ID', $locationId);
