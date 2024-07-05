@@ -75,7 +75,6 @@ class HemoForm extends Component
     private $contactServices;
     private $userServices;
     private $uploadServices;
-    private $dateServices;
     private $itemInventoryServices;
     private $documentTypeServices;
     private $itemTreatmentServices;
@@ -87,7 +86,6 @@ class HemoForm extends Component
         LocationServices $locationServices,
         UserServices $userServices,
         UploadServices $uploadServices,
-        DateServices $dateServices,
         ItemInventoryServices $itemInventoryServices,
         DocumentTypeServices $documentTypeServices,
         ItemTreatmentServices $itemTreatmentServices,
@@ -99,7 +97,6 @@ class HemoForm extends Component
         $this->contactServices = $contactServices;
         $this->userServices = $userServices;
         $this->uploadServices = $uploadServices;
-        $this->dateServices = $dateServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->documentTypeServices = $documentTypeServices;
         $this->itemTreatmentServices = $itemTreatmentServices;
@@ -137,17 +134,22 @@ class HemoForm extends Component
     public bool $IsPostedButton;
 
     public bool $ActiveRequired;
+
+    private function LoadDropDown()
+    {
+        $this->patientList = $this->contactServices->getList(3);
+        $this->locationList = $this->locationServices->getList();
+    }
     public function mount($id = null)
     {
         $this->ActiveRequired = true;
         $this->IsPostedButton = false;
-        $this->patientList = $this->contactServices->getList(3);
-        $this->locationList = $this->locationServices->getList();
         $this->Modify = true;
 
         if (is_numeric($id)) {
             $data = $this->hemoServices->Get($id);
             if ($data) {
+                $this->LoadDropDown();
                 $this->reloadData($data);
                 $statusData = DB::table('hemo_status')->select('description')->where('ID', $data->STATUS_ID)->first();
                 if ($statusData) {
@@ -158,13 +160,12 @@ class HemoForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('patientshemo')->with('error', $errorMessage);
         }
-
+        $this->LoadDropDown();
         $this->ID = 0;
-        $this->DATE = $this->dateServices->NowDate();
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->CUSTOMER_ID = 0;
         $this->CODE = '';
-
         $this->PRE_WEIGHT = "";
         $this->PRE_BLOOD_PRESSURE = "";
         $this->PRE_BLOOD_PRESSURE2 = "";
@@ -240,9 +241,7 @@ class HemoForm extends Component
         if ($this->PDF != null) {
 
             $this->uploadServices->RemoveIfExists($this->FILE_PATH);
-
             $returnData = $this->uploadServices->Treatment($this->PDF);
-
             $this->hemoServices->UpdateFile($this->ID, $returnData['filename'] . '.' . $returnData['extension'], $returnData['new_path']);
         }
 
@@ -366,45 +365,6 @@ class HemoForm extends Component
             'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
         ]);
     }
-    // public function addItem(int $ItemTreatmentId, $hemoData)
-    // {
-    //     $data = $this->itemTreatmentServices->Get($ItemTreatmentId); // get item treatment details
-    //     if ($data) {
-    //         $gotNew = true;
-    //         if ($data->NO_OF_USED > 1) {
-    //             if ($hemoData) {
-    //                 $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $hemoData->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
-    //                 if ($totalused == 0) {
-    //                     $gotNew = true;
-    //                 } elseif ($totalused < $data->NO_OF_USED) {
-    //                     $gotNew = false;
-    //                 }
-    //             }
-    //         }
-
-
-    //         $NEW_TREATMENT_QTY = (float) $data->NEW_TREATMENT_QTY ?? 0;
-    //         $QTY = 0;
-    //         if ($NEW_TREATMENT_QTY > 0) {
-    //             $isNew = (bool)  $this->hemoServices->IsNewHemo($hemoData->CUSTOMER_ID, $hemoData->LOCATION_ID, $hemoData->DATE);
-    //             if ($isNew == true) {
-    //                 $QTY = $NEW_TREATMENT_QTY;
-    //             } else {
-    //                 $QTY = (float) $data->QUANTITY;
-    //             }
-    //         } else {
-    //             $QTY = (float) $data->QUANTITY;
-    //         }
-
-    //         try {
-    //             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
-    //             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-    //             $this->hemoServices->ItemStore($hemoData->ID, $data->ITEM_ID, $QTY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
-    //         } catch (\Throwable $th) {
-    //             session()->flash('error', $th->getMessage());
-    //         }
-    //     }
-    // }
 
     private function ItemInventory(): bool
     {

@@ -10,9 +10,19 @@ use Illuminate\Support\Facades\Auth;
 class UserServices
 {
     private $systemSetting;
-    public function __construct(SystemSettingServices $systemSettingServices)
+    private $dateServices;
+    public function __construct(SystemSettingServices $systemSettingServices, DateServices $dateServices)
     {
         $this->systemSetting = $systemSettingServices;
+        $this->dateServices = $dateServices;
+    }
+    public function getTransactionDateDefault(): string
+    {
+        if (Auth::user()->trans_date == null) {
+            return  $this->dateServices->NowDate();
+        }
+
+        return Auth::user()->trans_date;
     }
     public function getLocationDefault(): int
     {
@@ -20,15 +30,16 @@ class UserServices
 
             return intval(Auth::user()->location_id) > 0 ? (int) Auth::user()->location_id : 0;
         }
+
         $locId = Auth::user()->location_id;
-        
+
         return intval($locId) > 0 ? (int)$locId : $this->systemSetting->GetValue('DefaultLocationId');
     }
     public function UserId(): int
     {
         return (int) Auth::user()->id;
     }
-    public function Store(string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id): int
+    public function Store(string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id, string $trans_date): int
     {
 
         $user = User::create([
@@ -39,7 +50,8 @@ class UserServices
             'remember_token' => Str::random(10),
             'contact_id' => $Contact_id ? $Contact_id : null,
             'inactive' => $Inactive,
-            'location_id' => $Location_id > 0 ? $Location_id : 0
+            'location_id' => $Location_id > 0 ? $Location_id : 0,
+            'trans_date' => $trans_date == '' ? null : $trans_date
         ]);
 
         return $user->id;
@@ -48,7 +60,7 @@ class UserServices
 
     }
 
-    public function Update(int $id, string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id): void
+    public function Update(int $id, string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id, string $trans_date): void
     {
         if ($Password) {
             User::where('id', $id)->update([
@@ -56,7 +68,8 @@ class UserServices
                 'password' => Hash::make($Password),
                 'contact_id' => $Contact_id ? $Contact_id : null,
                 'inactive' => $Inactive,
-                'location_id' => $Location_id > 0 ? $Location_id : 0
+                'location_id' => $Location_id > 0 ? $Location_id : 0,
+                'trans_date' => $trans_date == '' ? null : $trans_date
             ]);
 
             return;
@@ -66,7 +79,8 @@ class UserServices
             'name' => $Username,
             'contact_id' => $Contact_id ? $Contact_id : null,
             'inactive' => $Inactive,
-            'location_id' => $Location_id > 0 ? $Location_id : 0
+            'location_id' => $Location_id > 0 ? $Location_id : 0,
+            'trans_date' => $trans_date == '' ? null : $trans_date
         ]);
     }
 
@@ -85,7 +99,8 @@ class UserServices
                         'users.name',
                         'contact.name as employee',
                         'users.inactive',
-                        'l.NAME as location'
+                        'l.NAME as location',
+                        'users.trans_date'
                     ]
                 )
                 ->leftJoin('contact', 'contact.id', '=', 'users.contact_id')

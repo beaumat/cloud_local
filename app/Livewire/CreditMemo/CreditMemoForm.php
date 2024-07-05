@@ -5,7 +5,6 @@ namespace App\Livewire\CreditMemo;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\CreditMemoServices;
-use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\SystemSettingServices;
@@ -54,7 +53,7 @@ class CreditMemoForm extends Component
     private $accountServices;
     private $scheduleServices;
     private $creditMemoServices;
-    private $dateServices;
+
     public string $tab = "item";
     public function SelectTab(string $select)
     {
@@ -69,7 +68,6 @@ class CreditMemoForm extends Component
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
         AccountServices $accountServices,
-        DateServices $dateServices
     ) {
         $this->creditMemoServices = $creditMemoServices;
         $this->locationServices = $locationServices;
@@ -79,7 +77,6 @@ class CreditMemoForm extends Component
         $this->documentStatusServices = $documentStatusServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
-        $this->dateServices = $dateServices;
     }
 
     public function LoadDropdown()
@@ -125,10 +122,8 @@ class CreditMemoForm extends Component
 
     public function mount($id = null)
     {
-        $currentDate = $this->dateServices->Now();
-        $this->DATE = $currentDate->format('Y-m-d');
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-
+      
+  
         if (is_numeric($id)) {
             $this->LoadDropdown();
             $data = $this->creditMemoServices->get($id);
@@ -140,14 +135,14 @@ class CreditMemoForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('customerscredit_memo')->with('error', $errorMessage);
         }
-
+        $this->DATE = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
         $this->CUSTOMER_ID = 0;
         $this->SALES_REP_ID = 0;
-
         $this->CLASS_ID = 0;
         $this->NOTES = '';
         $this->AMOUNT = 0;

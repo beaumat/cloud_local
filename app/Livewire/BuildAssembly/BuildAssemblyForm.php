@@ -4,7 +4,6 @@ namespace App\Livewire\BuildAssembly;
 
 use App\Services\AccountJournalServices;
 use App\Services\BuildAssemblyServices;
-use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\DocumentTypeServices;
 use App\Services\ItemInventoryServices;
@@ -46,7 +45,6 @@ class BuildAssemblyForm extends Component
     private $userServices;
     private $documentStatusServices;
     private $systemSettingServices;
-    private $dateServices;
     private $unitOfMeasureServices;
     private $itemInventoryServices;
     private $documentTypeServices;
@@ -60,7 +58,6 @@ class BuildAssemblyForm extends Component
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
-        DateServices $dateServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         ItemInventoryServices $itemInventoryServices,
         DocumentTypeServices $documentTypeServices,
@@ -73,7 +70,7 @@ class BuildAssemblyForm extends Component
         $this->userServices = $userServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->dateServices = $dateServices;
+
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->documentTypeServices = $documentTypeServices;
@@ -110,11 +107,11 @@ class BuildAssemblyForm extends Component
     }
     public function mount($id = null)
     {
-        $this->LoadDropdown();
 
         if (is_numeric($id)) {
             $PO = $this->buildAssemblyServices->get($id);
             if ($PO) {
+                $this->LoadDropdown();
                 $this->getInfo($PO);
                 $this->Modify = false;
                 return;
@@ -122,11 +119,11 @@ class BuildAssemblyForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('companybuild_assembly')->with('error', $errorMessage);
         }
-
+        $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
-        $this->DATE = $this->dateServices->NowDate();
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->ASSEMBLY_ITEM_ID = 0;
         $this->ASSET_ACCOUNT_ID = 21;

@@ -121,11 +121,12 @@ class PurchaseOrderForm extends Component
     }
     public function mount($id = null)
     {
-        $this->LoadDropdown();
+
 
         if (is_numeric($id)) {
             $PO = $this->purchaseOrderServices->get($id);
             if ($PO) {
+                $this->LoadDropdown();
                 $this->getInfo($PO);
                 $this->Modify = false;
                 return;
@@ -133,12 +134,11 @@ class PurchaseOrderForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('vendorspurchase_order')->with('error', $errorMessage);
         }
-
+        $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
-        $currentDate = Carbon::now();
-        $this->DATE = $currentDate->format('Y-m-d');
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->DATE_EXPECTED = '';
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->VENDOR_ID = 0;

@@ -79,14 +79,19 @@ class PhilHealthForm extends Component
         $this->DATE_DISCHARGED = '';
         $this->TIME_DISCHARGED = '';
     }
-    public function mount($id = null)
+    private function LoadDropDown()
     {
         $this->locationList = $this->locationServices->getList();
         $this->patientList = $this->contactServices->getList(3);
+    }
+    public function mount($id = null)
+    {
+
 
         if (is_numeric($id)) {
             $data = $this->philHealthServices->get($id);
             if ($data) {
+                $this->LoadDropDown();
                 $this->ID = $data->ID;
                 $this->CODE = $data->CODE;
                 $this->DATE = $data->DATE;
@@ -107,10 +112,10 @@ class PhilHealthForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('patientsphic')->with('error', $errorMessage);
         }
-
+        $this->LoadDropDown();
         $this->ID = 0;
         $this->CODE = '';
-        $this->DATE = Carbon::now()->format('Y-m-d');
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->CONTACT_ID = 0;
         $this->DATE_ADMITTED = null;

@@ -3,8 +3,6 @@
 namespace App\Livewire\InventoryAdjustment;
 
 use App\Services\AccountJournalServices;
-use App\Services\ContactServices;
-use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\DocumentTypeServices;
 use App\Services\InventoryAdjustmentServices;
@@ -37,7 +35,6 @@ class InventoryAdjustmentForm extends Component
     private $inventoryAdjustmentServices;
     private $locationServices;
     private $userServices;
-    private $dateServices;
     public int $STATUS;
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
@@ -52,7 +49,6 @@ class InventoryAdjustmentForm extends Component
         InventoryAdjustmentServices $inventoryAdjustmentServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        DateServices $dateServices,
         DocumentStatusServices $documentStatusServices,
         InventoryAdjustmentTypeServices $inventoryAdjustmentTypeServices,
         ItemInventoryServices $itemInventoryServices,
@@ -63,7 +59,6 @@ class InventoryAdjustmentForm extends Component
         $this->inventoryAdjustmentServices = $inventoryAdjustmentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
-        $this->dateServices = $dateServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->inventoryAdjustmentTypeServices = $inventoryAdjustmentTypeServices;
         $this->itemInventoryServices = $itemInventoryServices;
@@ -175,10 +170,11 @@ class InventoryAdjustmentForm extends Component
     }
     public function mount($id = null)
     {
-        $this->LoadDropdown();
+
         if (is_numeric($id)) {
             $data = $this->inventoryAdjustmentServices->Get($id);
             if ($data) {
+                $this->LoadDropdown();
                 $this->getInfo($data);
                 $this->Modify = false;
                 return;
@@ -186,11 +182,11 @@ class InventoryAdjustmentForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('companyinventory_adjustment')->with('error', $errorMessage);
         }
-
+        $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
-        $this->DATE = $this->dateServices->NowDate();
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->ADJUSTMENT_TYPE_ID = 0;
         $this->NOTES = '';
@@ -207,7 +203,6 @@ class InventoryAdjustmentForm extends Component
         try {
 
             if ($this->ID == 0) {
-
                 $this->validate(
                     [
 
@@ -295,6 +290,7 @@ class InventoryAdjustmentForm extends Component
     public function updateCancel()
     {
         $BA = $this->inventoryAdjustmentServices->get($this->ID);
+
         if ($BA) {
             $this->getInfo($BA);
         }

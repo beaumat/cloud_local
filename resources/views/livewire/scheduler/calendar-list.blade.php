@@ -27,9 +27,7 @@
                             <b class="@if ($today == $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-' . str_pad($currentDay, 2, '0', STR_PAD_LEFT)) text-primary @endif text-sm">
                                 {{ $currentDay }}
                             </b>
-
                             @livewire('Scheduler.shift-list', ['date' => $year . '-' . $month . '-' . $currentDay, 'location_id' => $LOCATION_ID, 'select_date' => $date])
-
                         </td>
                     @elseif ($currentDay <= 0)
                         @if ($month == 1)

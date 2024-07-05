@@ -4,13 +4,9 @@ namespace App\Livewire\Payment;
 
 use App\Services\AccountServices;
 use App\Services\ContactServices;
-use App\Services\DateServices;
-use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\PaymentMethodServices;
 use App\Services\PaymentServices;
-use App\Services\SystemSettingServices;
-use App\Services\UploadServices;
 use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -47,8 +43,6 @@ class PaymentForm extends Component
     private $paymentServices;
     private $locationServices;
     private $userServices;
-    private $documentStatusServices;
-    private $systemSettingServices;
     private $accountServices;
     private $paymentMethodServices;
     private $contactServices;
@@ -58,31 +52,23 @@ class PaymentForm extends Component
     public bool $showReceiptNo = false;
     public bool $showReceiptDate = false;
     public bool $showFileName = false;
-    private $uploadServices;
-    private $dateServices;
+
+
     public function boot(
         PaymentServices $paymentServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        DocumentStatusServices $documentStatusServices,
-        SystemSettingServices $systemSettingServices,
         AccountServices $accountServices,
         PaymentMethodServices $paymentMethodServices,
         ContactServices $contactServices,
-        UploadServices $uploadServices,
-        DateServices $dateServices
+
     ) {
         $this->paymentServices = $paymentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
-        $this->documentStatusServices = $documentStatusServices;
-        $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
         $this->paymentMethodServices = $paymentMethodServices;
         $this->contactServices = $contactServices;
-        $this->uploadServices = $uploadServices;
-        $this->dateServices = $dateServices;
-
     }
     public function getInfo($data)
     {
@@ -114,25 +100,28 @@ class PaymentForm extends Component
     {
         $this->AMOUNT_APPLIED = (float) $this->paymentServices->UpdatePaymentApplied($this->ID);
     }
-    public function mount($id = null)
+    private  function LoadDropDown()
     {
         $this->contactList = $this->contactServices->getList(1);
         $this->locationList = $this->locationServices->getList();
         $this->paymentMethodList = $this->paymentMethodServices->getListNonPatient();
+    }
+    public function mount($id = null)
+    {
 
         if (is_numeric($id)) {
             $data = $this->paymentServices->get($id);
             if ($data) {
+                $this->LoadDropDown();
                 $this->getInfo($data);
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('customerspayment')->with('error', $errorMessage);
         }
-
-
+        $this->LoadDropDown();
         $this->ID = 0;
-        $this->DATE = $this->dateServices->NowDate();
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->CODE = '';
         $this->CUSTOMER_ID = 0;
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
@@ -204,7 +193,6 @@ class PaymentForm extends Component
 
 
                 return Redirect::route('customerspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
 
                 $this->paymentServices->Update(
@@ -240,7 +228,6 @@ class PaymentForm extends Component
             $this->getInfo($data);
         }
         $this->Modify = false;
-
     }
     public function updatedpaymentmethodid()
     {
@@ -304,8 +291,6 @@ class PaymentForm extends Component
                     break;
             }
         }
-
-
     }
     public function render()
     {

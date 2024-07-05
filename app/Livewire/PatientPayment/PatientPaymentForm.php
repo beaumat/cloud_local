@@ -4,7 +4,6 @@ namespace App\Livewire\PatientPayment;
 
 use App\Services\AccountServices;
 use App\Services\ContactServices;
-use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\PatientPaymentServices;
@@ -65,7 +64,7 @@ class PatientPaymentForm extends Component
     public bool $showReceiptDate = false;
     public bool $showFileName = false;
     private $uploadServices;
-    private $dateServices;
+
     public function boot(
         PatientPaymentServices $patientPaymentServices,
         LocationServices $locationServices,
@@ -76,7 +75,7 @@ class PatientPaymentForm extends Component
         PaymentMethodServices $paymentMethodServices,
         ContactServices $contactServices,
         UploadServices $uploadServices,
-        DateServices $dateServices
+
     ) {
         $this->patientPaymentServices = $patientPaymentServices;
         $this->locationServices = $locationServices;
@@ -87,8 +86,6 @@ class PatientPaymentForm extends Component
         $this->paymentMethodServices = $paymentMethodServices;
         $this->contactServices = $contactServices;
         $this->uploadServices = $uploadServices;
-        $this->dateServices = $dateServices;
-
     }
     public function getInfo($data)
     {
@@ -124,15 +121,21 @@ class PatientPaymentForm extends Component
     {
         $this->AMOUNT_APPLIED = (float) $this->patientPaymentServices->UpdatePaymentChargesApplied($this->ID);
     }
-    public function mount($id = null)
+    private function LoadDropDown()
     {
         $this->contactList = $this->contactServices->getList(3);
         $this->locationList = $this->locationServices->getList();
         $this->paymentMethodList = $this->paymentMethodServices->getList();
+    }
+    public function mount($id = null)
+    {
+
 
         if (is_numeric($id)) {
             $data = $this->patientPaymentServices->get($id);
             if ($data) {
+
+                $this->LoadDropDown();
                 $this->getInfo($data);
                 return;
             }
@@ -140,9 +143,9 @@ class PatientPaymentForm extends Component
             return Redirect::route('patientspayment')->with('error', $errorMessage);
         }
 
-
+        $this->LoadDropDown();
         $this->ID = 0;
-        $this->DATE = $this->dateServices->NowDate();
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->CODE = '';
         $this->PATIENT_ID = 0;
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
@@ -182,6 +185,7 @@ class PatientPaymentForm extends Component
     {
 
         $getType = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
+
         $PAYMENT_TYPE = (int) $getType->PAYMENT_TYPE;
 
         if ($PAYMENT_TYPE == 10 && $this->ID == 0) {
@@ -203,10 +207,9 @@ class PatientPaymentForm extends Component
                     'LOCATION_ID' => 'Location',
                     'AMOUNT' => 'Amount',
                     'RECEIPT_REF_NO' => 'GL Reference No.',
-                    'RECEIPT_DATE' => 'GL Date' 
+                    'RECEIPT_DATE' => 'GL Date'
                 ]
             );
-
         } else {
 
             $this->validate(
@@ -255,7 +258,6 @@ class PatientPaymentForm extends Component
                 }
 
                 return Redirect::route('patientspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
 
                 $this->patientPaymentServices->Update(
@@ -314,7 +316,6 @@ class PatientPaymentForm extends Component
             $this->getInfo($data);
         }
         $this->Modify = false;
-
     }
     public function updatedpaymentmethodid()
     {
@@ -378,8 +379,6 @@ class PatientPaymentForm extends Component
                     break;
             }
         }
-
-
     }
     public function render()
     {

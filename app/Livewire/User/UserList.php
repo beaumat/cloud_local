@@ -11,27 +11,26 @@ class UserList extends Component
 {
     public $users = [];
     public $search = '';
-    public function updatedsearch(UserServices $userServices)
+    private $userServices;
+    public function boot(UserServices $userServices)
     {
-        $this->users = $userServices->Search($this->search);
+        $this->userServices = $userServices;
     }
-    public function delete($id, UserServices $userServices)
+    public function delete($id)
     {
         try {
-            $userServices->Delete($id);
+            $this->userServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->users = $userServices->Search($this->search);
+            $this->users = $this->userServices->Search($this->search);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $$errorMessage);
         }
     }
-    public function mount(UserServices $userServices)
-    {
-        $this->users = $userServices->Search($this->search);
-    }
     public function render()
-    {
+    {   
+
+        $this->users = $this->userServices->Search($this->search);
         return view('livewire.user.user-list');
     }
 }

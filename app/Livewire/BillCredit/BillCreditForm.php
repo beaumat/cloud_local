@@ -5,7 +5,6 @@ namespace App\Livewire\BillCredit;
 use App\Services\AccountJournalServices;
 use App\Services\BillCreditServices;
 use App\Services\ContactServices;
-use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\DocumentTypeServices;
 use App\Services\ItemInventoryServices;
@@ -52,7 +51,6 @@ class BillCreditForm extends Component
     private $userServices;
     private $documentStatusServices;
     private $systemSettingServices;
-    private $dateServices;
     private $objectServices;
     private $documentTypeServices;
     private $itemInventoryServices;
@@ -71,7 +69,6 @@ class BillCreditForm extends Component
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
-        DateServices $dateServices,
         ObjectServices $objectServices,
         DocumentTypeServices $documentTypeServices,
         ItemInventoryServices $itemInventoryServices,
@@ -84,7 +81,7 @@ class BillCreditForm extends Component
         $this->userServices = $userServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->dateServices = $dateServices;
+
         $this->documentTypeServices = $documentTypeServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->accountJournalServices = $accountJournalServices;
@@ -126,7 +123,6 @@ class BillCreditForm extends Component
         $this->ACCOUNTS_PAYABLE_ID = $data->ACCOUNTS_PAYABLE_ID;
 
         if ($this->billCreditServices->isItemTab($data->ID)) {
-
             $this->tab = "item";
             return;
         }
@@ -134,10 +130,11 @@ class BillCreditForm extends Component
     }
     public function mount($id = null)
     {
-        $this->LoadDropdown();
+
         if (is_numeric($id)) {
             $data = $this->billCreditServices->get($id);
             if ($data) {
+                $this->LoadDropdown();
                 $this->getInfo($data);
 
                 $this->Modify = false;
@@ -146,11 +143,12 @@ class BillCreditForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('vendorsbills')->with('error', $errorMessage);
         }
+        $this->LoadDropdown();
         $this->tab = "item";
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
-        $this->DATE = $this->dateServices->NowDate();
+        $this->DATE =  $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->VENDOR_ID = 0;
         $this->NOTES = '';
@@ -210,7 +208,6 @@ class BillCreditForm extends Component
                 );
 
                 return Redirect::route('vendorsbill_credit_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
 
                 $this->validate(
@@ -266,7 +263,6 @@ class BillCreditForm extends Component
         foreach ($result as $list) {
             $this->AMOUNT = $list['AMOUNT'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
-
         }
         $this->AMOUNT_APPLIED = 0;
     }
@@ -336,14 +332,11 @@ class BillCreditForm extends Component
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
             return false;
-
         }
-
     }
     public function getPosted()
     {
@@ -381,7 +374,6 @@ class BillCreditForm extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-
     }
     public function render()
     {

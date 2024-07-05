@@ -23,7 +23,8 @@ class User extends Authenticatable
         'password',
         'contact_id',
         'inactive',
-        'location_id'
+        'location_id',
+        'trans_date'
     ];
 
     /**

@@ -25,22 +25,16 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-md-12">
-
-
                                         @can('patient.schedule.modify')
                                             <a href="{{ route('patientsschedules_setup') }}" class="btn btn-info btn-sm">
                                                 <i class="fa fa-cog" aria-hidden="true"></i> Setup</a>
                                         @endcan
-
                                         @can('patient.schedule.print')
                                             <button wire:click="openModalPrint" class="btn btn-success btn-sm">
                                                 <i class="fa fa-print" aria-hidden="true"></i> Print
                                             </button>
                                         @endcan
-
                                     </div>
-
-
                                 </div>
                             </div>
                             <div class="card-body">

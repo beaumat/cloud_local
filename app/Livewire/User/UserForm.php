@@ -21,8 +21,14 @@ class UserForm extends Component
     public int $contact_id;
     public bool $inactive;
     public int $location_id;
+    public $trans_date;
     public $employees = [];
     public $locationList = [];
+    private $userServices;
+    public function boot(UserServices $userServices)
+    {
+        $this->userServices = $userServices;
+    }
     public function mount($id = null)
     {
         $this->employees = Contacts::query()
@@ -47,6 +53,7 @@ class UserForm extends Component
                 $this->contact_id = $user->contact_id ? $user->contact_id : 0;
                 $this->inactive = $user->inactive;
                 $this->location_id = $user->location_id ? $user->location_id : 0;
+                $this->trans_date =  $user->trans_date ?? null;
                 return;
             }
 
@@ -60,10 +67,11 @@ class UserForm extends Component
         $this->contact_id = 0;
         $this->inactive = false;
         $this->location_id  = 0;
+        $this->trans_date = null;
     }
 
 
-    public function save(UserServices $userServices)
+    public function save()
     {
         if ($this->id === 0) {
             $this->validate(
@@ -115,10 +123,10 @@ class UserForm extends Component
 
         try {
             if ($this->id === 0) {
-                $this->id = $userServices->Store($this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id);
+                $this->id = $this->userServices->Store($this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date);
                 session()->flash('message', 'Successfully created.');
             } else {
-                $userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id);
+                $this->userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date);
                 session()->flash('message', 'Successfully updated.');
             }
         } catch (\Exception $e) {

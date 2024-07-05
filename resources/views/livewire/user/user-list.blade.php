@@ -35,7 +35,7 @@
                                         <th>Employee</th>
                                         <th>Location</th>
                                         <th>Inactive</th>
-
+                                        <th>Trans Date</th>
                                         <th class="text-center col-1">
                                             <a href="{{ route('maintenancesettingsusers_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
@@ -51,14 +51,16 @@
                                             <td>
                                                 @if ($list->inactive)
                                                     <strong class="text-danger">Yes</strong>
-                                                @else                     
+                                                @else
                                                     <strong class="text-primary">No</strong>
                                                 @endif
                                             </td>
+                                            <td> {{ $list->trans_date }}</td>
                                             <td class="text-center">
-                                                 <a href="{{ route('maintenancesettingsusers_role', ['id' => $list->id]) }}" class="btn-sm text-primary" title="Permission">
+                                                <a href="{{ route('maintenancesettingsusers_role', ['id' => $list->id]) }}"
+                                                    class="btn-sm text-primary" title="Permission">
                                                     <i class="fa fa-shield" aria-hidden="true"></i>
-                                                 </a>
+                                                </a>
                                                 <a href="{{ route('maintenancesettingsusers_edit', ['id' => $list->id]) }}"
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>

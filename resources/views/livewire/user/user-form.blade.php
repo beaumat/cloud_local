@@ -62,7 +62,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        
+
                                         <div class="col-md-8"></div>
                                         <div class="col-md-4">
                                             <br />
@@ -78,6 +78,10 @@
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="inactive" titleName="Inactive"
                                                 wire:model='inactive' />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <livewire:date-input name="trans_date" titleName="Transaction Date Default"
+                                                wire:model='trans_date' :isDisabled="false" />
                                         </div>
                                     </div>
                                 </div>

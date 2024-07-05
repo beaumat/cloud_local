@@ -62,7 +62,7 @@ class ServiceChargeForm extends Component
     private $accountServices;
     private $scheduleServices;
     private $serviceChargeServices;
-    private $dateServices;
+ 
     public string $tab = "item";
     public function SelectTab(string $select)
     {
@@ -79,8 +79,7 @@ class ServiceChargeForm extends Component
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
         AccountServices $accountServices,
-        ScheduleServices $scheduleServices,
-        DateServices $dateServices
+        ScheduleServices $scheduleServices
 
     ) {
         $this->serviceChargeServices = $serviceChargeServices;
@@ -94,7 +93,7 @@ class ServiceChargeForm extends Component
         $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
         $this->scheduleServices = $scheduleServices;
-        $this->dateServices = $dateServices;
+ 
     }
 
     public function LoadDropdown(bool $isAllContact)
@@ -152,14 +151,12 @@ class ServiceChargeForm extends Component
     }
     public function mount($id = null)
     {
-        $currentDate = $this->dateServices->Now();
-        $this->DATE = $currentDate->format('Y-m-d');
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-
-        if (is_numeric($id)) {
-            $this->LoadDropdown(true);
+    
+        if (is_numeric($id)) { 
             $data = $this->serviceChargeServices->get($id);
             if ($data) {
+
+                $this->LoadDropdown(true);       
                 $this->getInfo($data);
                 $this->Modify = false;
                 return;
@@ -167,7 +164,8 @@ class ServiceChargeForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('patientsservice_charges')->with('error', $errorMessage);
         }
-
+        $this->DATE = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->LoadDropdown(false);
         $this->Modify = true;
         $this->ID = 0;

@@ -5,7 +5,6 @@ namespace App\Livewire\Invoice;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
-use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\DocumentTypeServices;
 use App\Services\InvoiceServices;
@@ -71,7 +70,6 @@ class InvoiceForm extends Component
     private $accountServices;
     private $scheduleServices;
     private $invoiceServices;
-    private $dateServices;
     private $itemInventoryServices;
     private $documentTypeServices;
     private $objectServices;
@@ -94,7 +92,6 @@ class InvoiceForm extends Component
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
         AccountServices $accountServices,
-        DateServices $dateServices,
         ItemInventoryServices $itemInventoryServices,
         DocumentTypeServices $documentTypeServices,
         ObjectServices $objectServices,
@@ -110,7 +107,6 @@ class InvoiceForm extends Component
         $this->documentStatusServices = $documentStatusServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
-        $this->dateServices = $dateServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->documentTypeServices = $documentTypeServices;
         $this->objectServices = $objectServices;
@@ -170,14 +166,11 @@ class InvoiceForm extends Component
     }
     public function mount($id = null)
     {
-        $currentDate = $this->dateServices->Now();
-        $this->DATE = $currentDate->format('Y-m-d');
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
 
         if (is_numeric($id)) {
-            $this->LoadDropdown();
             $data = $this->invoiceServices->get($id);
             if ($data) {
+                $this->LoadDropdown();
                 $this->getInfo($data);
                 $this->Modify = false;
                 return;
@@ -186,6 +179,8 @@ class InvoiceForm extends Component
             return Redirect::route('customersinvoice')->with('error', $errorMessage);
         }
 
+        $this->DATE = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;

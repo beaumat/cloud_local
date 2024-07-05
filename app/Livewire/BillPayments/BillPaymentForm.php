@@ -6,9 +6,7 @@ use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\BillPaymentServices;
 use App\Services\ContactServices;
-use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
-use App\Services\DocumentTypeServices;
 use App\Services\LocationServices;
 use App\Services\ObjectServices;
 use App\Services\UserServices;
@@ -42,10 +40,8 @@ class BillPaymentForm extends Component
     private $contactServices;
     private $locationServices;
     private $userServices;
-    private $dateServices;
     private $accountServices;
     private $documentStatusServices;
-    private $documentTypeServices;
     private $objectServices;
     private $accountJournalServices;
     public function boot(
@@ -53,10 +49,8 @@ class BillPaymentForm extends Component
         ContactServices $contactServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        DateServices $dateServices,
         AccountServices $accountServices,
         DocumentStatusServices $documentStatusServices,
-        DocumentTypeServices $documentTypeServices,
         ObjectServices $objectServices,
         AccountJournalServices $accountJournalServices
     ) {
@@ -64,10 +58,8 @@ class BillPaymentForm extends Component
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
-        $this->dateServices = $dateServices;
         $this->accountServices = $accountServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->documentTypeServices = $documentTypeServices;
         $this->objectServices = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
     }
@@ -77,26 +69,30 @@ class BillPaymentForm extends Component
     {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->UpdateBillPaymentApplied($this->ID);
     }
-    public function mount($id = null)
+    private function LoadDropDown()
     {
         $this->contactList = $this->contactServices->getList(0);
         $this->locationList = $this->locationServices->getList();
         $this->accountList = $this->accountServices->getBankAccount();
+    }
+    public function mount($id = null)
+    {
 
         if (is_numeric($id)) {
             $data = $this->billPaymentServices->Get($id);
             if ($data) {
+                $this->LoadDropDown();
                 $this->getInfo($data);
 
                 return;
             }
-
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('vendorsbill_payment')->with('error', $errorMessage);
         }
+        $this->LoadDropDown();
         $this->ID = 0;
         $this->CODE = '';
-        $this->DATE = $this->dateServices->NowDate();
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->AMOUNT = 0;
         $this->NOTES = '';
@@ -118,8 +114,6 @@ class BillPaymentForm extends Component
         $this->STATUS = $data->STATUS;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
         $this->Modify = false;
-
-
     }
     public function getModify()
     {
@@ -194,7 +188,7 @@ class BillPaymentForm extends Component
                     $this->LOCATION_ID,
                     $this->AMOUNT,
                     $this->NOTES
- 
+
                 );
                 session()->flash('message', 'Successfully updated');
             }
@@ -247,7 +241,6 @@ class BillPaymentForm extends Component
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             DB::rollBack();
-            
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();

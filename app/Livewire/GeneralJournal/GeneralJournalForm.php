@@ -3,7 +3,6 @@
 namespace App\Livewire\GeneralJournal;
 
 use App\Services\AccountJournalServices;
-use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
@@ -30,7 +29,6 @@ class GeneralJournalForm extends Component
     private $generalJournalServices;
     private $locationServices;
     private $userServices;
-    private $dateServices;
     public int $STATUS;
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
@@ -42,7 +40,6 @@ class GeneralJournalForm extends Component
         GeneralJournalServices $generalJournalServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        DateServices $dateServices,
         DocumentStatusServices $documentStatusServices,
         ObjectServices $objectServices,
         AccountJournalServices $accountJournalServices
@@ -50,7 +47,6 @@ class GeneralJournalForm extends Component
         $this->generalJournalServices = $generalJournalServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
-        $this->dateServices = $dateServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->objectServices = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
@@ -157,11 +153,12 @@ class GeneralJournalForm extends Component
     }
     public function mount($id = null)
     {
-        $this->LoadDropdown();
+
 
         if (is_numeric($id)) {
             $data = $this->generalJournalServices->Get($id);
             if ($data) {
+                $this->LoadDropdown();
                 $this->getInfo($data);
                 $this->Modify = false;
                 return;
@@ -169,11 +166,11 @@ class GeneralJournalForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('companygeneral_journal')->with('error', $errorMessage);
         }
-
+        $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
-        $this->DATE = $this->dateServices->NowDate();
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->ADJUSTING_ENTRY = false;
         $this->NOTES = '';

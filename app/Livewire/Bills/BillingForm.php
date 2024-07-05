@@ -150,10 +150,11 @@ class BillingForm extends Component
 
     public function mount($id = null)
     {
-        $this->LoadDropdown();
+
         if (is_numeric($id)) {
             $Bill = $this->billingServices->get($id);
             if ($Bill) {
+                $this->LoadDropdown();
                 $this->getInfo($Bill);
 
                 $this->Modify = false;
@@ -162,12 +163,12 @@ class BillingForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('vendorsbills')->with('error', $errorMessage);
         }
+        $this->LoadDropdown();
         $this->tab = "item";
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
-        $currentDate = Carbon::now();
-        $this->DATE = $currentDate->format('Y-m-d');
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->DUE_DATE = '';
         $this->DISCOUNT_DATE = '';
         $this->DISCOUNT_PCT = 0;

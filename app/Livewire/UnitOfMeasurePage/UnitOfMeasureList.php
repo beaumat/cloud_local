@@ -11,6 +11,11 @@ class UnitOfMeasureList extends Component
 {   
     public $unitOfMeasure = [];
     public $search = '';
+    private $unitOfMeasureServices;
+    public function boot(UnitOfMeasureServices $unitOfMeasureServices)
+    {
+        $this->unitOfMeasureServices = $unitOfMeasureServices;
+    }
 
     #[On('clear-alert')]
     public function clearAlert()
@@ -20,28 +25,20 @@ class UnitOfMeasureList extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function updatedsearch(UnitOfMeasureServices $unitOfMeasureServices)
-    {
-        $this->unitOfMeasure = $unitOfMeasureServices->Search($this->search);
-    }
-    public function delete($id, UnitOfMeasureServices $unitOfMeasureServices)
+
+    public function delete(int $id)
     {
         try {
-            $unitOfMeasureServices->Delete($id);
+            $this->unitOfMeasureServices->Delete($id);
             session()->flash('message', 'Successfully deleted');
-            $this->unitOfMeasure = $unitOfMeasureServices->Search($this->search);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
-    public function mount(UnitOfMeasureServices $unitOfMeasureServices)
-    {
-        $this->unitOfMeasure = $unitOfMeasureServices->Search($this->search);
-    }
     public function render()
     {
-
+        $this->unitOfMeasure = $this->unitOfMeasureServices->Search($this->search);
         return view('livewire.unit-of-measure.unit-of-measure-list');
     }
 }

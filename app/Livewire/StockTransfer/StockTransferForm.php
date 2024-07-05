@@ -4,7 +4,6 @@ namespace App\Livewire\StockTransfer;
 
 use App\Services\AccountJournalServices;
 use App\Services\ContactServices;
-use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\DocumentTypeServices;
 use App\Services\ItemInventoryServices;
@@ -41,7 +40,6 @@ class StockTransferForm extends Component
     private $stockTransferServices;
     private $locationServices;
     private $userServices;
-    private $dateServices;
     public int $STATUS;
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
@@ -54,7 +52,6 @@ class StockTransferForm extends Component
         StockTransferServices $stockTransferServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        DateServices $dateServices,
         DocumentStatusServices $documentStatusServices,
         ContactServices $contactServices,
         DocumentTypeServices $documentTypeServices,
@@ -65,7 +62,6 @@ class StockTransferForm extends Component
         $this->stockTransferServices = $stockTransferServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
-        $this->dateServices = $dateServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->contactServices = $contactServices;
         $this->documentTypeServices = $documentTypeServices;
@@ -202,10 +198,11 @@ class StockTransferForm extends Component
     }
     public function mount($id = null)
     {
-        $this->LoadDropdown();
+     
         if (is_numeric($id)) {
             $data = $this->stockTransferServices->Get($id);
             if ($data) {
+                $this->LoadDropdown();
                 $this->getInfo($data);
                 $this->Modify = false;
                 return;
@@ -213,11 +210,11 @@ class StockTransferForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('companystock_transfer')->with('error', $errorMessage);
         }
-
+        $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
-        $this->DATE = $this->dateServices->NowDate();
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->transferList = $this->locationServices->getListExcept($this->LOCATION_ID);
         $this->TRANSFER_TO_ID = 0;
