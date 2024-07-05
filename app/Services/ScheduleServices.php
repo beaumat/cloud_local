@@ -192,7 +192,7 @@ class ScheduleServices
     }
     public function DailyContactSchedule($Date, $LOCATION_ID)
     {
-        return Schedules::query()
+        $subQuery = Schedules::query()
             ->select([
                 'schedules.SHIFT_ID',
                 DB::raw('IF(schedules.SCHED_STATUS = 0, COUNT(*), 0) AS W'),
@@ -205,8 +205,21 @@ class ScheduleServices
             ->where('c.TYPE', 3)
             ->whereDate('schedules.SCHED_DATE', $Date)
             ->where('schedules.LOCATION_ID', $LOCATION_ID)
-            ->groupBy(['schedules.SHIFT_ID', 'schedules.SCHED_STATUS'])
+            ->groupBy(['schedules.SHIFT_ID', 'schedules.SCHED_STATUS']);
+
+        $result = DB::table(DB::raw("({$subQuery->toSql()}) as sched"))
+            ->mergeBindings($subQuery->getQuery()) // you need to merge bindings
+            ->select([
+                'sched.SHIFT_ID',
+                DB::raw('SUM(sched.W) AS W'),
+                DB::raw('SUM(sched.P) AS P'),
+                DB::raw('SUM(sched.A) AS A'),
+                DB::raw('SUM(sched.C) AS C')
+            ])
+            ->groupBy('sched.SHIFT_ID')
             ->get();
+
+        return $result;
     }
 
     public function ScheduleStatusList()
