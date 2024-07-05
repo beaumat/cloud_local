@@ -76,7 +76,7 @@
                                         <th class="text-center ">Start</th>
                                         <th class="text-center ">End</th>
                                         <th class="col-1">Location</th>
-                                        <th> Status</th>
+                                        <th class="text-center"> Status</th>
                                         <th class="text-center bg-success">
                                             @can('patient.treatment.create')
                                                 <a href="{{ route('patientshemo_create') }}"
@@ -122,7 +122,9 @@
                                                 @endif
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }} </td>
-                                            <td> {{ $list->STATUS }} </td>
+                                            <td
+                                                class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success @else bg-danger @endif ">
+                                                {{ $list->STATUS }} </td>
                                             <td class="text-center">
                                                 @can('patient.treatment.print')
                                                     <a target="_blank"

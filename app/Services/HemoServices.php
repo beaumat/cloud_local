@@ -315,6 +315,7 @@ class HemoServices
                 'hemodialysis.TIME_START',
                 'hemodialysis.TIME_END',
                 's.DESCRIPTION as STATUS',
+                'hemodialysis.STATUS_ID',
                 'hemodialysis.FILE_PATH'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
