@@ -5,6 +5,17 @@
         <div class="card-body p-2">
             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
             <div class="row" @if ($HEMO_ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                @if ($ActiveRequired)
+                {{-- Required Items --}}
+                    <div class="col-md-12">
+                        @foreach ($ItemRequiredList as $list)
+                            <button wire:click='addItem({{ $list->ID }})' class="btn btn-info btn-md m-1">
+                                {{ $list->ITEM_NAME }}
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
+
                 <div class="col-md-12">
                     <table class="table table-sm table-bordered table-hover">
                         <thead class="text-xs bg-sky">
@@ -72,7 +83,7 @@
                                                     class="btn-sm text-primary">
                                                     <i class="fas fa-edit " aria-hidden="true"></i>
                                                 </a>
-                                                <a  href="#" title="Delete" id="deletebtn"
+                                                <a href="#" title="Delete" id="deletebtn"
                                                     wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
                                                     class="btn-sm text-danger w-25">

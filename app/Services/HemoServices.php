@@ -14,19 +14,42 @@ class HemoServices
     private $user;
     private $systemSettingServices;
     private $dateServices;
-    public function __construct(ObjectServices $objectService, UserServices $userServices, SystemSettingServices $systemSettingServices, DateServices $dateServices)
-    {
+    private $itemTreatmentServices;
+    private $unitOfMeasureServices;
+    public function __construct(
+        ObjectServices $objectService,
+        UserServices $userServices,
+        SystemSettingServices $systemSettingServices,
+        DateServices $dateServices,
+        ItemTreatmentServices $itemTreatmentServices,
+        UnitOfMeasureServices $unitOfMeasureServices
+    ) {
         $this->object = $objectService;
         $this->user = $userServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
+        $this->itemTreatmentServices = $itemTreatmentServices;
+        $this->unitOfMeasureServices = $unitOfMeasureServices;
     }
 
     public function Get(int $ID)
     {
         return Hemodialysis::where('ID', $ID)->first();
     }
+    public function IsNewHemo(int $CONTACT_ID, int $LOCATION_ID, string $DATE): bool
+    {
+        $count = Hemodialysis::where('CUSTOMER_ID', $CONTACT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('DATE', '<', $DATE)
+            ->where('STATUS_ID', 2)
+            ->count();
 
+        if ($count == 0) {
+            return true;
+        }
+
+        return false;
+    }
     public function GetPost(int $CONTACT_ID, int $LOCATION_ID, string $DATE)
     {
         return Hemodialysis::where('CUSTOMER_ID', $CONTACT_ID)
@@ -568,5 +591,43 @@ class HemoServices
             'TIME_START' => null,
             'TIME_END' => null
         ];
+    }
+
+    public function AddItem(int $ItemTreatmentId, $hemoData)
+    {
+        $data = $this->itemTreatmentServices->Get($ItemTreatmentId); // get item treatment details
+        if ($data) {
+            $gotNew = true;
+            if ($data->NO_OF_USED > 1) {
+                if ($hemoData) {
+                    $totalused = (int)  $this->getItemTotalUsed($data->ITEM_ID, $hemoData->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
+                    if ($totalused == 0) {
+                        $gotNew = true;
+                    } elseif ($totalused < $data->NO_OF_USED) {
+                        $gotNew = false;
+                    }
+                }
+            }
+            $NEW_TREATMENT_QTY = (float) $data->NEW_TREATMENT_QTY ?? 0;
+            $QTY = 0;
+            if ($NEW_TREATMENT_QTY > 0) {
+                $isNew = (bool)  $this->IsNewHemo($hemoData->CUSTOMER_ID, $hemoData->LOCATION_ID, $hemoData->DATE);
+                if ($isNew == true) {
+                    $QTY = $NEW_TREATMENT_QTY;
+                } else {
+                    $QTY = (float) $data->QUANTITY;
+                }
+            } else {
+                $QTY = (float) $data->QUANTITY;
+            }
+
+            try {
+                $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
+                $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+                $this->ItemStore($hemoData->ID, $data->ITEM_ID, $QTY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
+            } catch (\Throwable $th) {
+                session()->flash('error', $th->getMessage());
+            }
+        }
     }
 }

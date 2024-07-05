@@ -12,7 +12,8 @@ use Livewire\Component;
 
 class InventoryTreatment extends Component
 {
-
+    #[Reactive]
+    public bool $ActiveRequired;
     #[Reactive]
     public int $HEMO_ID;
     #[Reactive]
@@ -26,8 +27,12 @@ class InventoryTreatment extends Component
     private $itemServices;
     private $unitOfMeasureServices;
     private $itemTreatmentServices;
-    public function boot(HemoServices $hemoServices, ItemServices $itemServices, UnitOfMeasureServices $unitOfMeasureServices, ItemTreatmentServices $itemTreatmentServices)
-    {
+    public function boot(
+        HemoServices $hemoServices,
+        ItemServices $itemServices,
+        UnitOfMeasureServices $unitOfMeasureServices,
+        ItemTreatmentServices $itemTreatmentServices
+    ) {
         $this->hemoServices = $hemoServices;
         $this->itemServices = $itemServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
@@ -46,6 +51,7 @@ class InventoryTreatment extends Component
     public $editUnitList = [];
     public bool $IS_NEW;
 
+    public $ItemRequiredList = [];
     public function mount()
     {
         $this->codeBase = false;
@@ -129,8 +135,6 @@ class InventoryTreatment extends Component
             $this->lineUnitId = $data->UNIT_ID ?? 0;
             $this->lineQty = $data->QUANTITY ?? 0;
             $this->lineIsNew = $data->IS_NEW;
-
-
             if ($this->lineItemId > 0) {
                 $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
             }
@@ -182,12 +186,52 @@ class InventoryTreatment extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    public function loadItemRequired()
+    {
+        if ($this->ActiveRequired) {
+
+            if ($this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->HEMO_ID)) {
+
+                $this->ItemRequiredList =  [];
+                return;
+            }
+            
+            $this->ItemRequiredList =  $this->itemTreatmentServices->getItemRequired($this->LOCATION_ID, $this->HEMO_ID);
+        }
+    }
+    public function addItem(int $ItemTreatmentId)
+    {
+        $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
+        if ($data) {
+            $gotNew = true;
+            if ($data->NO_OF_USED > 1) {
+                $hemoData =  $this->hemoServices->Get($this->HEMO_ID);
+                if ($hemoData) {
+                    $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $this->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
+                    if ($totalused == 0) {
+                        $gotNew = true;
+                    } elseif ($totalused < $data->NO_OF_USED) {
+                        $gotNew = false;
+                    }
+                }
+            }
+            try {
+                $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
+                $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+                $this->hemoServices->ItemStore($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
+                $this->dispatch('refresh-item-treatment');
+            } catch (\Throwable $th) {
+
+                session()->flash('error', $th->getMessage());
+            }
+        }
+    }
     #[On('refresh-item-treatment')]
     public function render()
     {
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
         $this->dataList = $this->hemoServices->ItemView($this->HEMO_ID);
-
+        $this->loadItemRequired();
         return view('livewire.hemodialysis.inventory-treatment');
     }
 }

@@ -164,7 +164,55 @@ class ItemTreatmentServices
         return $result;
     }
 
+    public function getItemRequired(int $locationId, int $hemoId)
+    {
+        $result = ItemTreatment::query()
+            ->select([
+                'item_treatment.ID',
+                'l.NAME as LOCATION_NAME',
+                'i.DESCRIPTION as ITEM_NAME',
+                'u.SYMBOL',
+                'item_treatment.NO_OF_USED',
+                'item_treatment.INACTIVE'
+            ])
+            ->join('location as l', 'l.ID', '=', 'item_treatment.LOCATION_ID')
+            ->join('item as i', 'i.ID', '=', 'item_treatment.ITEM_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', 'item_treatment.UNIT_ID')
+            ->where('item_treatment.LOCATION_ID', '=', $locationId)
+            ->whereNotExists(function ($query) use (&$hemoId) {
+                $query->select(DB::raw(1))
+                    ->from('hemodialysis_items as hi')
+                    ->whereRaw('hi.ITEM_ID = i.ID')
+                    ->where('hi.HEMO_ID', $hemoId);
+            })
+            ->where('item_treatment.IS_REQUIRED', true)
+            ->orderBy('item_treatment.ID', 'desc')
+            ->get();
 
+        return $result;
+    }
+    public function getRequiredSuccess(int $locationId, int $hemoId): bool
+    {
+        // $total_required = (int) ItemTreatment::where('IS_REQUIRED',true)->where('INACTIVE',false)->count();
+
+        $total_exists = (int) ItemTreatment::query()
+            ->join('item as i', 'i.ID', '=', 'item_treatment.ITEM_ID')
+            ->where('item_treatment.LOCATION_ID', '=', $locationId)
+            ->whereExists(function ($query) use (&$hemoId) {
+                $query->select(DB::raw(1))
+                    ->from('hemodialysis_items as hi')
+                    ->whereRaw('hi.ITEM_ID = i.ID')
+                    ->where('hi.HEMO_ID', $hemoId);
+            })
+            ->where('item_treatment.IS_REQUIRED', true)
+            ->count();
+
+
+        if ($total_exists > 0) {
+            return true;
+        }
+        return false;
+    }
     public function getItemList(bool $isCode, int $locationId)
     {
 
@@ -189,4 +237,6 @@ class ItemTreatmentServices
             ->whereIn('item.TYPE', ['0', '1'])
             ->get();
     }
+
+    
 }

@@ -13,6 +13,7 @@ use App\Services\ScheduleServices;
 use App\Services\UnitOfMeasureServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -134,13 +135,11 @@ class HemoForm extends Component
         $this->getPreviousTreatment();
     }
     public bool $IsPostedButton;
-    public string $tab = "info";
-    public function SelectTab(string $tab)
-    {
-        $this->tab = $tab;
-    }
+
+    public bool $ActiveRequired;
     public function mount($id = null)
     {
+        $this->ActiveRequired = true;
         $this->IsPostedButton = false;
         $this->patientList = $this->contactServices->getList(3);
         $this->locationList = $this->locationServices->getList();
@@ -247,6 +246,16 @@ class HemoForm extends Component
     }
     public function getModify()
     {
+
+
+        if ($this->ActiveRequired == true) {
+            $isRequiredItemAdded = $this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->ID);
+            if (!$isRequiredItemAdded) {
+                session()->flash('error', ' You must select either CVC KIT or AVF KIT. before to modify.');
+                return;
+            }
+        }
+
         $this->Modify = true;
     }
     public function updateCancel()
@@ -313,8 +322,8 @@ class HemoForm extends Component
                     'POST_HEART_RATE'       => 'Post Heart Rate',
                     'POST_O2_SATURATION'    => 'Post 02 Saturation',
                     'POST_TEMPERATURE'      => 'Post Temperature',
-                    'TIME_START'            => 'Time Start Notes',
-                    'TIME_END'              => 'Time End Notes'
+                    'TIME_START'            => 'Time Start',
+                    'TIME_END'              => 'Time End'
 
                 ]
             );
@@ -325,10 +334,12 @@ class HemoForm extends Component
         try {
             DB::beginTransaction();
             if ($this->ID == 0) {
+
                 $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
-                $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);
+                $hemoData =  $this->hemoServices->Get($this->ID);
+                $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
                 foreach ($dataList as $item) {
-                    $this->addItem($item->ID, $this->ID);
+                    $this->hemoServices->AddItem($item->ID,  $hemoData);
                 }
                 DB::commit();
                 return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -350,32 +361,45 @@ class HemoForm extends Component
             'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
         ]);
     }
-    public function addItem(int $ItemTreatmentId, int $ID)
-    {
-        $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
-        if ($data) {
-            $gotNew = true;
-            if ($data->NO_OF_USED > 1) {
-                $hemoData =  $this->hemoServices->Get($ID);
-                if ($hemoData) {
-                    $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $this->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
-                    if ($totalused == 0) {
-                        $gotNew = true;
-                    } elseif ($totalused < $data->NO_OF_USED) {
-                        $gotNew = false;
-                    }
-                }
-            }
+    // public function addItem(int $ItemTreatmentId, $hemoData)
+    // {
+    //     $data = $this->itemTreatmentServices->Get($ItemTreatmentId); // get item treatment details
+    //     if ($data) {
+    //         $gotNew = true;
+    //         if ($data->NO_OF_USED > 1) {
+    //             if ($hemoData) {
+    //                 $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $hemoData->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
+    //                 if ($totalused == 0) {
+    //                     $gotNew = true;
+    //                 } elseif ($totalused < $data->NO_OF_USED) {
+    //                     $gotNew = false;
+    //                 }
+    //             }
+    //         }
 
-            try {
-                $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
-                $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-                $this->hemoServices->ItemStore($ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
-            } catch (\Throwable $th) {
-                session()->flash('error', $th->getMessage());
-            }
-        }
-    }
+
+    //         $NEW_TREATMENT_QTY = (float) $data->NEW_TREATMENT_QTY ?? 0;
+    //         $QTY = 0;
+    //         if ($NEW_TREATMENT_QTY > 0) {
+    //             $isNew = (bool)  $this->hemoServices->IsNewHemo($hemoData->CUSTOMER_ID, $hemoData->LOCATION_ID, $hemoData->DATE);
+    //             if ($isNew == true) {
+    //                 $QTY = $NEW_TREATMENT_QTY;
+    //             } else {
+    //                 $QTY = (float) $data->QUANTITY;
+    //             }
+    //         } else {
+    //             $QTY = (float) $data->QUANTITY;
+    //         }
+
+    //         try {
+    //             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
+    //             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+    //             $this->hemoServices->ItemStore($hemoData->ID, $data->ITEM_ID, $QTY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
+    //         } catch (\Throwable $th) {
+    //             session()->flash('error', $th->getMessage());
+    //         }
+    //     }
+    // }
 
     private function ItemInventory(): bool
     {
@@ -427,8 +451,8 @@ class HemoForm extends Component
                 'POST_HEART_RATE'       => 'Post Heart Rate',
                 'POST_O2_SATURATION'    => 'Post 02 Saturation',
                 'POST_TEMPERATURE'      => 'Post Temperature',
-                'TIME_START'            => 'Time Start Notes',
-                'TIME_END'              => 'Time End Notes'
+                'TIME_START'            => 'Time Start',
+                'TIME_END'              => 'Time End'
 
             ]
         );

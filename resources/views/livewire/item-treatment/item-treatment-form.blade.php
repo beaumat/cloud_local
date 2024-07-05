@@ -38,7 +38,6 @@
                                                 titleName="Item Name" wire:model.live='ITEM_ID' />
                                         </div>
                                         <div class="col-md-2">
-
                                             <livewire:number-input name="QUANTITY" titleName="Default Qty"
                                                 wire:model='QUANTITY' />
                                         </div>
@@ -56,9 +55,7 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-
                                             </div>
-
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:number-input name="NO_OF_USED" titleName="No. of Used"

@@ -404,7 +404,7 @@
                     </div>
                     <div class="col-sm-6 col-md-6"
                         @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                        @livewire('Hemodialysis.InventoryTreatment', ['HEMO_ID' => $ID, 'STATUS' => $STATUS, 'LOCATION_ID' => $LOCATION_ID])
+                        @livewire('Hemodialysis.InventoryTreatment', ['HEMO_ID' => $ID, 'STATUS' => $STATUS, 'LOCATION_ID' => $LOCATION_ID,'ActiveRequired' => $ActiveRequired])
                     </div>
                 </div>
             </div>

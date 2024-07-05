@@ -41,32 +41,33 @@ class ScheduleModal extends Component
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
     }
-    public function addItem(int $ItemTreatmentId, int $ID)
-    {
-        $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
-        if ($data) {
-            $gotNew = true;
-            if ($data->NO_OF_USED > 1) {
-                $hemoData =  $this->hemoServices->Get($ID);
-                if ($hemoData) {
-                    $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $this->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
-                    if ($totalused == 0) {
-                        $gotNew = true;
-                    } elseif ($totalused < $data->NO_OF_USED) {
-                        $gotNew = false;
-                    }
-                }
-            }
+    // public function addItem(int $ItemTreatmentId, int $ID)
+    // {
+    //     $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
+    //     if ($data) {
+    //         $gotNew = true;
+    //         $hemoData =  $this->hemoServices->Get($ID);
+    //         if ($data->NO_OF_USED > 1) {
 
-            try {
-                $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
-                $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-                $this->hemoServices->ItemStore($ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
-            } catch (\Throwable $th) {
-                session()->flash('error', $th->getMessage());
-            }
-        }
-    }
+    //             if ($hemoData) {
+    //                 $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $this->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
+    //                 if ($totalused == 0) {
+    //                     $gotNew = true;
+    //                 } elseif ($totalused < $data->NO_OF_USED) {
+    //                     $gotNew = false;
+    //                 }
+    //             }
+    //         }
+
+    //         try {
+    //             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
+    //             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+    //             $this->hemoServices->ItemStore($ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
+    //         } catch (\Throwable $th) {
+    //             session()->flash('error', $th->getMessage());
+    //         }
+    //     }
+    // }
 
     public function create()
     {
@@ -80,9 +81,10 @@ class ScheduleModal extends Component
                     try {
                         DB::beginTransaction();
                         $id = (int) $this->hemoServices->PreSave($this->DATE, "", $data->CONTACT_ID, $this->LOCATION_ID);
-                        $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);
+                        $hemoData =  $this->hemoServices->Get($id);
+                        $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
                         foreach ($dataList as $item) {
-                            $this->addItem($item->ID, $id);
+                            $this->hemoServices->AddItem($item->ID,  $hemoData);
                         }
 
                         if ($this->ids == "") {
