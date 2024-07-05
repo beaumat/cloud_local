@@ -531,10 +531,15 @@ class HemoServices
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
                 'u.SYMBOL',
-                DB::raw('')
+                't.NO_OF_USED'
             ])
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'hemodialysis_items.UNIT_ID')
+            ->leftJoin('item_treatment as t', function ($q) {
+                $q->on('t.ITEM_ID', '=', 'hemodialysis_items.ITEM_ID');
+                $q->on('t.LOCATION_ID', '=', 'h.LOCATION_ID');
+            })
             ->where('hemodialysis_items.HEMO_ID', $HEMO_ID)
             ->get();
 
@@ -563,7 +568,26 @@ class HemoServices
 
         return $result;
     }
+    public function UsageHistory(int $ITEM_ID, int $CONTACT_ID, string $DATE, int $LOCATION_ID)
+    {
 
+        $result = HemodialysisItems::query()
+            ->select([
+                'h.DATE',
+                'hemodialysis_items.IS_NEW',
+                'hemodialysis_items.QUANTITY'
+            ])
+            ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->where('hemodialysis_items.ITEM_ID', $ITEM_ID)
+            ->where('h.CUSTOMER_ID', $CONTACT_ID)
+            ->where('h.LOCATION_ID', $LOCATION_ID)
+            ->where('h.DATE', '<=', $DATE)
+            ->where('h.STATUS_ID', 2)
+            ->orderBy('h.DATE', 'asc')
+            ->get();
+
+        return $result;
+    }
     public function getTreatmentID(int $CONTACT_ID, string $DATE, int $LOCATION_ID)
     {
         $result = Hemodialysis::query()

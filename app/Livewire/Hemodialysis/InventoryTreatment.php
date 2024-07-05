@@ -195,13 +195,14 @@ class InventoryTreatment extends Component
                 $this->ItemRequiredList =  [];
                 return;
             }
-            
+
             $this->ItemRequiredList =  $this->itemTreatmentServices->getItemRequired($this->LOCATION_ID, $this->HEMO_ID);
         }
     }
     public function addItem(int $ItemTreatmentId)
     {
         $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
+
         if ($data) {
             $gotNew = true;
             if ($data->NO_OF_USED > 1) {
@@ -233,5 +234,20 @@ class InventoryTreatment extends Component
         $this->dataList = $this->hemoServices->ItemView($this->HEMO_ID);
         $this->loadItemRequired();
         return view('livewire.hemodialysis.inventory-treatment');
+    }
+
+    public function OpenUsageHistory(int $ITEM_ID)
+    {
+        $data = $this->hemoServices->get($this->HEMO_ID);
+        if ($data) {
+            $result = [
+                'DATE' => $data->DATE,
+                'LOCATION_ID' => $data->LOCATION_ID,
+                'ITEM_ID' => $ITEM_ID,
+                'CONTACT_ID' => $data->CUSTOMER_ID
+            ];
+
+            $this->dispatch('usage-modal-open', result: $result);
+        }
     }
 }

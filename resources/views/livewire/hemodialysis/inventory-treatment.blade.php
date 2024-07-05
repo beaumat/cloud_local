@@ -24,7 +24,7 @@
                                 <th>Code</th>
                                 <th class="col-4">Description</th>
                                 <th class="col-2 text-center">Qty</th>
-                                <th class="col-2">Unit</th>
+                                <th class="text-center">Unit</th>
                                 <th class="col-1 text-center">New</th>
                                 @if ($STATUS == $openStatus)
                                     <th class="col-2 text-center">Action</th>
@@ -34,23 +34,50 @@
                         <tbody class="text-xs">
                             @foreach ($dataList as $list)
                                 <tr>
-                                    <td>{{ $list->CODE }}</td>
-                                    <td>{{ $list->DESCRIPTION }}</td>
+                                    <td>
+                                        @if ($list->NO_OF_USED > 1)
+                                            <a wire:click='OpenUsageHistory({{ $list->ITEM_ID }})' href="#"
+                                                class="font-weight-bold text-info">
+                                                {{ $list->CODE }}
+                                            </a>
+                                        @else
+                                            {{ $list->CODE }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($list->NO_OF_USED > 1)
+                                            <a wire:click='OpenUsageHistory({{ $list->ITEM_ID }})' href="#"
+                                                class="font-weight-bold text-info">
+                                                {{ $list->DESCRIPTION }}
+                                            </a>
+                                        @else
+                                            {{ $list->DESCRIPTION }}
+                                        @endif
+
+                                    </td>
                                     <td class="text-center">
                                         @if ($lineId == $list->ID)
                                             <input type="number" step="0.01"
                                                 class="form-control form-control-sm mt-2 text-right" name="lineQty"
                                                 wire:model='lineQty' />
                                         @else
-                                            {{ number_format($list->QUANTITY, 0) }}
+                                            @if ($list->NO_OF_USED > 1)
+                                                <a wire:click='OpenUsageHistory({{ $list->ITEM_ID }})' href="#"
+                                                    class="font-weight-bold text-info">
+                                                    {{ number_format($list->QUANTITY, 0) }}
+                                                </a>
+                                            @else
+                                                {{ number_format($list->QUANTITY, 0) }}
+                                            @endif
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if ($lineId == $list->ID)
                                             <select wire:model='lineUnitId' name="lineUnitId"
                                                 class="text-sm form-control form-control-sm mt-2">
                                                 @foreach ($editUnitList as $listitem)
-                                                    <option value="{{ $listitem->ID }}">{{ $listitem->SYMBOL }}</option>
+                                                    <option value="{{ $listitem->ID }}">{{ $listitem->SYMBOL }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         @else
@@ -189,4 +216,6 @@
         <!-- /.card-body -->
     </div>
     <!-- /.card -->
+
+    @livewire('Hemodialysis.ModalUsage')
 </section>
