@@ -138,7 +138,7 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <table class="table  table-sm table-bordered table-hover">
-                                    <thead class="text-xs bg-sky">
+                                    <thead class="text-xs bg-primary">
                                         <tr>
                                             <th class="col-4">Title</th>
                                             <th class="text-center col-4">Last
@@ -176,7 +176,7 @@
                                     </thead>
                                     <tbody class="text-xs">
                                         <tr>
-                                            <td class="text-primary">WEIGHT</td>
+                                            <td class="font-weight-bold">WEIGHT</td>
                                             <td>
                                                 <div class="row" id="LAST">
                                                     <div class="col-md-6 text-center">
@@ -206,7 +206,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-primary">BLOOD PRESSURE</td>
+                                            <td class="font-weight-bold">BLOOD PRESSURE</td>
                                             <td>
                                                 <div class="row" id="LAST">
                                                     <div class="col-md-6 text-center">
@@ -258,7 +258,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-primary">HEART RATE</td>
+                                            <td class="font-weight-bold">HEART RATE</td>
                                             <td>
                                                 <div class="row" id="LAST">
                                                     <div class="col-md-6 text-center">
@@ -287,7 +287,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-primary">O2 SATURATION</td>
+                                            <td class="font-weight-bold">O2 SATURATION</td>
                                             <td>
                                                 <div class="row" id="LAST">
                                                     <div class="col-md-6 text-center">
@@ -316,7 +316,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-primary">TEMPERATURE</td>
+                                            <td class="font-weight-bold">TEMPERATURE</td>
                                             <td>
                                                 <div class="row" id="LAST">
                                                     <div class="col-md-6 text-center">

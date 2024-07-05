@@ -21,7 +21,7 @@
 
                 <div class="col-md-12">
                     <table class="table table-sm table-bordered table-hover">
-                        <thead class="text-xs bg-sky">
+                        <thead class="text-xs bg-info ">
                             <tr>
                                 <th>Code</th>
                                 <th class="col-4">Description</th>
