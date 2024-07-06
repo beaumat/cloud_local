@@ -254,7 +254,7 @@ class HemoForm extends Component
         if ($this->ActiveRequired == true && $this->STATUS == 1) {
             $isRequiredItemAdded = $this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->ID);
             if (!$isRequiredItemAdded) {
-                session()->flash('error', ' You must select either CVC KIT or AVF KIT. before to modify.');
+                session()->flash('error', ' You must select either a CVC Kit or an AVF Kit before making modifications.');
                 return;
             }
         }
