@@ -316,7 +316,8 @@ class HemoServices
                 'hemodialysis.TIME_END',
                 's.DESCRIPTION as STATUS',
                 'hemodialysis.STATUS_ID',
-                'hemodialysis.FILE_PATH'
+                'hemodialysis.FILE_PATH',
+                DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where  sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC')
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')

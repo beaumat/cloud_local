@@ -320,12 +320,14 @@ class HemoForm extends Component
                     'PRE_HEART_RATE'        => 'Pre Heart Rate',
                     'PRE_O2_SATURATION'     => 'Pre 02 Saturation',
                     'PRE_TEMPERATURE'       => 'Pre Temperature',
+                    
                     'POST_WEIGHT'           => 'Post Weight',
                     'POST_BLOOD_PRESSURE'   => 'Post Blood Pressure[1]',
                     'POST_BLOOD_PRESSURE2'  => 'Post Blood Pressure[2]',
                     'POST_HEART_RATE'       => 'Post Heart Rate',
                     'POST_O2_SATURATION'    => 'Post 02 Saturation',
                     'POST_TEMPERATURE'      => 'Post Temperature',
+
                     'TIME_START'            => 'Time Start',
                     'TIME_END'              => 'Time End'
 

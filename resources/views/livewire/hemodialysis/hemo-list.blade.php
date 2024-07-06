@@ -65,7 +65,7 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">NO.</th>
+                                        <th>NO.</th>
                                         <th>DATE</th>
                                         <th class="col-2">PATIENT NAME</th>
                                         <th class="text-center ">W</th>
@@ -77,6 +77,7 @@
                                         <th class="text-center ">End</th>
                                         <th class="col-1">Location</th>
                                         <th class="text-center"> Status</th>
+                                        <th class="text-center"> SC</th>
                                         <th class="text-center bg-success">
                                             @can('patient.treatment.create')
                                                 <a href="{{ route('patientshemo_create') }}"
@@ -125,6 +126,15 @@
                                             <td
                                                 class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success  @elseif ($list->STATUS_ID == 4) bg-secondary @else bg-danger @endif ">
                                                 {{ $list->STATUS }} </td>
+                                            <td class="text-center">
+                                                @if ($list->IS_SC)
+                                                <i class="fa fa-check text-success" aria-hidden="true"></i>
+
+                                                @else
+                                                <i class="fa fa-times text-danger" aria-hidden="true"></i>
+
+                                                @endif
+                                            </td>
                                             <td class="text-center">
                                                 @can('patient.treatment.print')
                                                     <a target="_blank"
