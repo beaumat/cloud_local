@@ -62,7 +62,7 @@ class ServiceChargeForm extends Component
     private $accountServices;
     private $scheduleServices;
     private $serviceChargeServices;
- 
+
     public string $tab = "item";
     public function SelectTab(string $select)
     {
@@ -93,7 +93,6 @@ class ServiceChargeForm extends Component
         $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
         $this->scheduleServices = $scheduleServices;
- 
     }
 
     public function LoadDropdown(bool $isAllContact)
@@ -151,12 +150,12 @@ class ServiceChargeForm extends Component
     }
     public function mount($id = null)
     {
-    
-        if (is_numeric($id)) { 
+
+        if (is_numeric($id)) {
             $data = $this->serviceChargeServices->get($id);
             if ($data) {
 
-                $this->LoadDropdown(true);       
+                $this->LoadDropdown(true);
                 $this->getInfo($data);
                 $this->Modify = false;
                 return;
@@ -218,6 +217,13 @@ class ServiceChargeForm extends Component
                     ]
                 );
 
+
+                if ($this->serviceChargeServices->ServicesChargesExists($this->DATE, $this->PATIENT_ID, $this->LOCATION_ID)) {
+                    session()->flash('error', 'A service charge for this patient already exists for the date ' . date('M/d/Y', strtotime($this->DATE)) . '.');
+                    return;
+                }
+
+
                 $this->getTax();
                 $this->ID = (int) $this->serviceChargeServices->Store(
                     $this->CODE,
@@ -274,18 +280,18 @@ class ServiceChargeForm extends Component
                 $this->serviceChargeServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
 
                 $getResult = $this->serviceChargeServices->ReComputed($this->ID);
-                
+
                 $this->getUpdateAmount($getResult);
-                
+
                 session()->flash('message', 'Successfully updated');
             }
 
             $data = $this->serviceChargeServices->get($this->ID);
-            
+
             if ($data) {
                 $this->getInfo($data);
             }
-            
+
             $this->Modify = false;
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();

@@ -51,22 +51,21 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">Ref No.</th>
+                                        <th>Ref No.</th>
                                         <th class="col-1">Date</th>
-                                        <th>Patients</th>
+                                        <th class="col-4">Patients</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Amount</th>
                                         <th class="col-1">Balance</th>
-                                        <th class="col-1">Tax</th>
-                                        <th class="col-1">Status</th>
+                                        {{-- <th class="col-1">Tax</th> --}}
+                                        <th class=" col-1 text-center">Status</th>
+                                        <th class=" col-1 text-center">Treatment</th>
                                         @can('patient.service-charges.create')
-                                            <th class="text-center col-1 bg-success">
-
+                                            <th class="text-center col-1 bg-primary">
                                                 <a href="{{ route('patientsservice_charges_create') }}"
                                                     class="text-white btn btn-xs w-100">
                                                     <i class="fas fa-plus"></i> New
                                                 </a>
-
                                             </th>
                                         @endcan
                                     </tr>
@@ -86,8 +85,15 @@
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->BALANCE_DUE, 2) }}</td>
-                                            <td> {{ $list->TAX_NAME }}</td>
-                                            <td> {{ $list->STATUS }}</td>
+                                            {{-- <td> {{ $list->TAX_NAME }}</td> --}}
+                                            <td
+                                                class="text-center
+                                            @if ($list->STATUS_ID == 0) bg-warning @elseif ($list->STATUS_ID == 2) bg-primary  @elseif ($list->STATUS_ID == 11) bg-success @else bg-secondary @endif
+                                            ">
+                                                {{ $list->STATUS }}</td>
+                                            <td
+                                                class="text-center @if ($list->TR_STATUS == 'Draft') bg-warning  @elseif ($list->TR_STATUS == 'Posted') bg-success  @elseif ($list->TR_STATUS == 'Unposted') bg-secondary @else bg-danger @endif ">
+                                                {{ $list->TR_STATUS }}</td>
                                             @can('patient.service-charges.create')
                                                 <td class="text-center">
                                                     <a href="{{ route('patientsservice_charges_edit', ['id' => $list->ID]) }}"
@@ -103,7 +109,6 @@
                                                             </a>
                                                         @endcan
                                                     @else
-                                                       
                                                     @endif
                                                 </td>
                                             @endcan

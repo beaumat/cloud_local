@@ -163,7 +163,10 @@ class ServiceChargeServices
         ServiceChargesItems::where('SERVICE_CHARGES_ID', $ID)->delete();
         ServiceCharges::where('ID', $ID)->delete();
     }
-
+    public function ServicesChargesExists(string $DATE, int $PATIENT_ID, int $LOCATION_ID): bool
+    {
+        return  ServiceCharges::where('DATE', $DATE)->where('PATIENT_ID', $PATIENT_ID)->where('LOCATION_ID', $LOCATION_ID)->exists();
+    }
     public function Search($search, int $locationId, int $perPage)
     {
         $result = ServiceCharges::query()
@@ -179,7 +182,8 @@ class ServiceChargeServices
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
                 's.DESCRIPTION as STATUS',
-                's.ID as STATUS_ID'
+                's.ID as STATUS_ID',
+                DB::raw('(select s.DESCRIPTION from hemodialysis as h join hemo_status as s on s.ID = h.STATUS_ID where h.CUSTOMER_ID = service_charges.PATIENT_ID and h.DATE = service_charges.DATE and h.LOCATION_ID = service_charges.LOCATION_ID limit 1 ) as TR_STATUS')
             ])
             ->join('contact as c', 'c.ID', '=', 'service_charges.PATIENT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -222,7 +226,7 @@ class ServiceChargeServices
             ->join('document_status_map as s', 's.ID', '=', 'service_charges.STATUS')
             ->where('service_charges.PATIENT_ID', $contact_id)
             ->when($search, function ($query) use ($search) {
-                
+
                 $query->where(function ($q) use ($search) {
                     $q->where('service_charges.CODE', 'like', '%' . $search . '%')
                         ->orWhere('service_charges.AMOUNT', 'like', '%' . $search . '%')
