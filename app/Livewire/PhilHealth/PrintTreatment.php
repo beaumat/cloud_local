@@ -209,11 +209,6 @@ class PrintTreatment extends Component
                 }
 
                 $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
-
-
-
-
-
                 $PF = $this->philHealthServices->getProfFee($ID);
                 foreach ($PF as $p) {
                     $this->PHYSICIAN = $p->NAME;

@@ -89,14 +89,21 @@ class HemoServices
     {
         $dataList = Hemodialysis::query()
             ->select([
-                'ID',
-                'CODE',
-                'DATE'
+                'hemodialysis.ID',
+                'hemodialysis.CODE',
+                'hemodialysis.DATE'
             ])
-            ->where('CUSTOMER_ID', $CONTACT_ID)
-            ->where('LOCATION_ID', $LOCATION_ID)
-            ->where('STATUS_ID', '2')
-            ->whereBetween('DATE', [$DATE_START, $DATE_END])
+            ->join('service_charges as s', function ($join) {
+                $join->on('s.PATIENT_ID', '=', 'hemodialysis.CUSTOMER_ID');
+                $join->on('s.LOCATION_ID', '=', 'hemodialysis.LOCATION_ID');
+                $join->on('s.DATE', '=', 'hemodialysis.DATE');
+            })
+            ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
+            ->where('sci.ITEM_ID', 2)
+            ->where('hemodialysis.CUSTOMER_ID', $CONTACT_ID)
+            ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
+            ->where('hemodialysis.STATUS_ID', '2')
+            ->whereBetween('hemodialysis.DATE', [$DATE_START, $DATE_END])
             ->get();
 
         return $dataList;
@@ -379,13 +386,21 @@ class HemoServices
     public function QuickFilterByDateRange(string $DATE_FORM, string $DATE_TO, $LOCATION_ID)
     {
         $result = Contacts::query()
-            ->select(
+            ->select([
                 'contact.ID',
                 'contact.NAME as PATIENT',
                 'contact.PIN',
                 DB::raw('count(h.ID) as TOTAL_HEMO')
-            )
+
+            ])
             ->join('hemodialysis as h', 'h.CUSTOMER_ID', '=', 'contact.ID')
+            ->join('service_charges as s', function ($join) {
+                $join->on('s.PATIENT_ID', '=', 'h.CUSTOMER_ID');
+                $join->on('s.LOCATION_ID', '=', 'h.LOCATION_ID');
+                $join->on('s.DATE', '=', 'h.DATE');
+            })
+            ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
+            ->where('sci.ITEM_ID', 2)
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.STATUS_ID', 2)
             ->whereBetween('h.DATE', [$DATE_FORM, $DATE_TO])

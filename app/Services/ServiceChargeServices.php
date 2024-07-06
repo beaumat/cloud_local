@@ -235,8 +235,6 @@ class ServiceChargeServices
             })
             ->orderBy('service_charges.ID', 'desc')
             ->paginate($perPage);
-
-
         return $result;
     }
 
