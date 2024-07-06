@@ -201,7 +201,7 @@ class ServiceChargeServices
                     ->orWhere('c.NAME', 'like', '%' . $search . '%')
                     ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
             })
-            ->orderBy('service_charges.ID', 'desc')
+            ->orderBy('service_charges.DATE', 'desc')
             ->paginate($perPage);
 
         return $result;
