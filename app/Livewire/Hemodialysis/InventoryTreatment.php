@@ -60,7 +60,6 @@ class InventoryTreatment extends Component
     public function updatedItemId()
     {
         $this->UNIT_ID = 0;
-
         $this->QUANTITY = 1;
         $this->ITEM_CODE = '';
         $this->ITEM_DESCRIPTION = '';
@@ -84,9 +83,23 @@ class InventoryTreatment extends Component
         }
         $this->itemDescList = $this->itemTreatmentServices->getItemList(false, $this->LOCATION_ID);
     }
-    public function deleteItem(int $ID, int $ITEM_ID)
+    public function deleteItem(int $ID, int $ITEM_ID, int  $UNIT_ID = 0)
     {
+
+
         $this->hemoServices->ItemDelete($ID, $this->HEMO_ID, $ITEM_ID);
+
+        //Trigger Item
+        $ITEM_TREATMENT_ID = (int)  $this->itemTreatmentServices->getItemTreatmentID($ITEM_ID, $this->LOCATION_ID,  $UNIT_ID);
+
+        if ($ITEM_TREATMENT_ID > 0) {
+
+            $dataList = $this->itemTreatmentServices->listItemTrigger($ITEM_TREATMENT_ID);
+
+            foreach ($dataList as $item) {
+                $this->hemoServices->ItemDelete2($this->HEMO_ID, $item->ITEM_ID, $item->UNIT_ID);
+            }
+        }
         session()->flash('message', 'Successfully deleted');
     }
     public function saveItem()
@@ -220,6 +233,16 @@ class InventoryTreatment extends Component
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
                 $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
                 $this->hemoServices->ItemStore($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
+
+                // TRIGGER START
+                $dataTrigger = $this->itemTreatmentServices->listItemTrigger($ItemTreatmentId);
+                foreach ($dataTrigger  as $list) {
+                    $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
+                    $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+                    $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true);
+                }
+                // TRIGGER END
+
                 $this->dispatch('refresh-item-treatment');
             } catch (\Throwable $th) {
 

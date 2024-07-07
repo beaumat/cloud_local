@@ -51,8 +51,6 @@ class SchedulerListShiftDetails extends Component
             $extra_class = (string) $this->colorServices->getColorClass($this->color_batch_id);
             $this->totalCapacity = $this->totalCapacity + $noCapacity; // total capacity
             $data = $this->scheduleServices->scheduleListByShift($this->DATE, $this->LOCATION_ID, $this->SHIFT_ID, $item->ID);  // the  list of reg schedule
-
-
             if ($data->count() >  $noCapacity  && $this->prev_capacity  > $this->total_set) {
                 $adjust = $data->count() - $noCapacity;
                 $n = $n - $adjust;

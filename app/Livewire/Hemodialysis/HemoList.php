@@ -13,7 +13,6 @@ use Livewire\WithPagination;
 #[Title('Hemodialysis Treatment')]
 class HemoList extends Component
 {
-
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     protected $queryString = ['search' => ['except' => '']];

@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Hemodialysis;
 
-use App\Models\HemodialysisItems;
 use App\Services\HemoServices;
 use App\Services\ItemTreatmentServices;
 use App\Services\UnitOfMeasureServices;
@@ -47,6 +46,15 @@ class ItemTreatment extends Component
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
                 $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
                 $this->hemoServices->ItemStore($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
+                // TRIGGER START
+                $dataTrigger = $this->itemTreatmentServices->listItemTrigger($ItemTreatmentId);
+                foreach ($dataTrigger  as $list) {
+                    $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
+                    $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+                    $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true);
+                }
+                // TRIGGER END
+
                 $this->dispatch('refresh-item-treatment');
             } catch (\Throwable $th) {
 

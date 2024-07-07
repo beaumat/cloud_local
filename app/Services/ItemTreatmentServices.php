@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Items;
 use App\Models\ItemTreatment;
+use App\Models\ItemTreatmentTrigger;
 use Illuminate\Support\Facades\DB;
 
 class ItemTreatmentServices
@@ -238,5 +239,55 @@ class ItemTreatmentServices
             ->get();
     }
 
-    
+    public function storeItemTrigger(int $ITEM_TREATMENT_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID)
+    {
+        $ID =  (int) $this->object->ObjectNextID('ITEM_TREATMENT_TRIGGER');
+
+        ItemTreatmentTrigger::create([
+            'ID' => $ID,
+            'ITEM_TREATMENT_ID' => $ITEM_TREATMENT_ID,
+            'ITEM_ID' => $ITEM_ID,
+            'QUANTITY' => $QUANTITY,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+
+        ]);
+    }
+
+    public function deleteItemTrigger(int $ID)
+    {
+        ItemTreatmentTrigger::where('ID', $ID)->delete();
+    }
+
+    public function listItemTrigger(int $ITEM_TREATMENT_ID)
+    {
+        $result =  ItemTreatmentTrigger::query()
+            ->select([
+                'item_treatment_trigger.ID',
+                'item_treatment_trigger.QUANTITY',
+                'item_treatment_trigger.ITEM_ID',
+                'item_treatment_trigger.UNIT_ID',
+                'u.SYMBOL',
+                'i.DESCRIPTION as ITEM_NAME'
+
+            ])
+            ->join('item as i', 'i.ID', '=', 'item_treatment_trigger.ITEM_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'item_treatment_trigger.UNIT_ID')
+            ->where('item_treatment_trigger.ITEM_TREATMENT_ID', $ITEM_TREATMENT_ID)
+            ->get();
+
+        return $result;
+    }
+
+    public function getItemTreatmentID(int $ITEM_ID, int $LOCATION_ID, int $UNIT_ID): int
+    {
+        $result = ItemTreatment::where('ITEM_ID', $ITEM_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('UNIT_ID', $UNIT_ID)
+            ->first();
+        if ($result) {
+            return $result->ID;
+        }
+
+        return 0;
+    }
 }

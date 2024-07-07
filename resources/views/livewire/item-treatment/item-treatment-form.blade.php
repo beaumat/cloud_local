@@ -49,8 +49,12 @@
                                                 <div class="col-md-12">
                                                     <select wire:model='UNIT_ID' name="UNIT_ID"
                                                         class="text-sm form-control form-control-sm mt-2">
+                                                        <option value="0">
+
+                                                        </option>
                                                         @foreach ($unitList as $list)
-                                                            <option value="{{ $list->ID }}">{{ $list->SYMBOL }}
+                                                            <option value="{{ $list->ID }}">
+                                                                {{ $list->SYMBOL }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -106,7 +110,9 @@
                 <!--/.col (left) -->
                 <!-- right column -->
                 <div class="col-md-6">
-
+                    @if ($ID > 0)
+                        @livewire('ItemTreatment.ItemTriggerModal', ['ITEM_TREATMENT_ID' => $ID])
+                    @endif
                 </div>
                 <!--/.col (right) -->
             </div>

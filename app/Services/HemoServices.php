@@ -341,7 +341,7 @@ class HemoServices
                         ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
-            ->orderBy('ID', 'desc')
+            ->orderBy('hemodialysis.DATE', 'desc')
             ->orderBy('hemodialysis.ID', 'desc')
             ->paginate($perPage);
     }
@@ -524,6 +524,13 @@ class HemoServices
         HemodialysisItems::where('ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
             ->where('ITEM_ID', $ITEM_ID)
+            ->delete();
+    }
+    public function ItemDelete2(int $HEMO_ID, int $ITEM_ID, int $UNIT_ID)
+    {
+        HemodialysisItems::where('HEMO_ID', $HEMO_ID)
+            ->where('ITEM_ID', $ITEM_ID)
+            ->where('UNIT_ID', $UNIT_ID)
             ->delete();
     }
     public function ItemGet(int $ID)

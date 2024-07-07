@@ -112,7 +112,7 @@
                                                     <i class="fas fa-edit " aria-hidden="true"></i>
                                                 </a>
                                                 <a href="#" title="Delete" id="deletebtn"
-                                                    wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }})'
+                                                    wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }}, {{ $list->UNIT_ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
                                                     class="btn-sm text-danger w-25">
                                                     <i class="fas fa-times " aria-hidden="true"></i>
