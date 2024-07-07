@@ -12,9 +12,8 @@
                          <td>{{ $list['ID'] }}</td>
                          <td>{{ $list['NAME'] }}</td>
                          <td
-                           class="@if($list['STATUS'] =='Present') text-success font-weight-bold @elseif ($list['STATUS'] == 'Absent' || $list['STATUS'] == 'Cancelled' )  text-danger font-weight-bold @endif"  
-                         
-                         >{{ $list['STATUS'] }}</td>
+                             class="@if ($list['STATUS'] == 'Present') text-success font-weight-bold @elseif ($list['STATUS'] == 'Absent')  text-danger font-weight-bold @elseif($list['STATUS'] == 'Cancelled') text-secondary font-weight-bold @endif">
+                             {{ $list['STATUS'] }}</td>
                      </tr>
                  @endforeach
              </tbody>
