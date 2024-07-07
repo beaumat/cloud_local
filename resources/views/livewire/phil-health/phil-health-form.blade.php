@@ -12,7 +12,7 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                        {{ $ID == 0 ? 'Create' : '' }}
+                                    {{ $ID == 0 ? 'Create' : '' }}
                                     <a class="text-white" href="{{ route('patientsphic') }}">
                                         Philhealth
                                     </a>
@@ -40,9 +40,7 @@
                                                             :options="$patientList" :zero="true" :isDisabled=true
                                                             wire:model.live='CONTACT_ID' />
                                                     @endif
-
                                                 </div>
-
                                                 <div class="col-md-6">
                                                     @if ($Modify)
                                                         <livewire:date-input name="DATE_ADMITTED"
@@ -121,7 +119,6 @@
                                                             :isDisabled="true" />
                                                     @endif
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -161,7 +158,6 @@
                                                     class="btn btn-sm btn-primary"> Print Form </a>
                                             @endif
                                         @endcan
-
                                         @can('patient.philhealth.create')
                                             @if ($ID > 0 && $STATUS > 0)
                                                 <a id="new" title="Create"

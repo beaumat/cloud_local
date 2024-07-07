@@ -3,6 +3,7 @@
 namespace App\Livewire\PhilHealth;
 
 use App\Services\ContactServices;
+use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -81,8 +82,6 @@ class PrintSoa extends Component
     public float $P1_TOTAL;
     public float $P2_TOTAL;
     public float $OP_TOTAL;
-
-
     public float $AD_SUB_TOTAL;
     public  float $AD_TOTAL = 0;
 
@@ -90,17 +89,19 @@ class PrintSoa extends Component
     public int $PREPARED_BY_ID;
     public string $DATE_SIGNED;
     public string $OTHER_NAME;
-    public string $ADDRESS;
-
+    public string $ADDRESS1;
+    public string $ADDRESS2;
     private $philHealthServices;
     private $contactServices;
-
+    private $locationServices;
     public $feeList = [];
     public $i;
-    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices)
+    public int $NO_OF_TREATMENT;
+    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, LocationServices $locationServices)
     {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
+        $this->locationServices = $locationServices;
     }
 
     public function profFeeList($PHIC_ID)
@@ -208,25 +209,53 @@ class PrintSoa extends Component
                 if ($contact) {
                     $this->PATIENT_NAME = $contact->NAME;
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
-                    $this->ADDRESS = $contact->POSTAL_ADDRESS;
+                    $this->ADDRESS1 = $this->GetAddress1($contact);
+                    $this->ADDRESS2 = $this->GetAddress2($contact);
                     $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
                     $this->FINAL_DIAGNOSIS = $contact->FINAL_DIAGNOSIS ?? '';
                     $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
-                    $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
+                    $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
                 }
-                $conUser = $this->contactServices->get(Auth::user()->contact_id, 2);
-                if ($conUser) {
-                    $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
-                    $this->USER_NAME = $conUser->NAME ?? '';
-                }
 
+                $locDate = $this->locationServices->get($this->LOCATION_ID);
+                if ($locDate) {
+
+                    $conUser = $this->contactServices->get($locDate->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                    if ($conUser) {
+                        $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
+                        $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
+                    }
+                }
+                $this->NO_OF_TREATMENT = (int) $this->philHealthServices->getNumberOfTreatment($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED, $this->DATE_DISCHARGED);
                 $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
                 return;
             }
         }
     }
+    public function GetAddress1($contact): string
+    {
+        $ADDRESS_UNIT_ROOM_FLOOR    =   $contact->ADDRESS_UNIT_ROOM_FLOOR ?? '';
+        $ADDRESS_BUILDING_NAME      =   $contact->ADDRESS_BUILDING_NAME ?? '';
+        $ADDRESS_LOT_BLK_HOUSE_BLDG =   $contact->ADDRESS_LOT_BLK_HOUSE_BLDG ?? '';
+        $ADDRESS_STREET             =   $contact->ADDRESS_STREET ?? '';
+        $ADDRESS_SUB_VALL           =   $contact->ADDRESS_SUB_VALL ?? '';
+        $ADDRESS_BRGY               =   $contact->ADDRESS_BRGY ?? '';
 
+
+        $ADDRESS =  $ADDRESS_UNIT_ROOM_FLOOR . ' ' . $ADDRESS_BUILDING_NAME . ' ' . $ADDRESS_LOT_BLK_HOUSE_BLDG . ' ' . $ADDRESS_STREET  . ' ' . $ADDRESS_SUB_VALL . ' ' . $ADDRESS_BRGY;
+        return  trim($ADDRESS);
+    }
+
+    public function GetAddress2($contact): string
+    {
+        $ADDRESS_CITY_MUNI          =   $contact->ADDRESS_CITY_MUNI ?? '';
+        $ADDRESS_PROVINCE           =   $contact->ADDRESS_PROVINCE ?? '';
+        $ADDRESS_COUNTRY            =   $contact->ADDRESS_COUNTRY ?? '';
+        $ADDRESS_ZIP_CODE           =   $contact->ADDRESS_ZIP_CODE ?? '';
+        $ADDRESS =  $ADDRESS_CITY_MUNI . ', ' . $ADDRESS_PROVINCE  . ', ' . $ADDRESS_COUNTRY . ' ' . $ADDRESS_ZIP_CODE;
+        return  trim($ADDRESS);
+    }
     public function render()
     {
         return view('livewire.phil-health.print-soa');

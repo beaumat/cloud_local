@@ -13,7 +13,6 @@
     <tbody class="text-xs">
         @for ($i = 0; $i < 6; $i++)
             <tr>
-
                 @for ($j = 0; $j < 7; $j++)
                     @php
                         $currentDay = $i * 7 + $j - $startDayOfWeek + 1;
@@ -21,7 +20,6 @@
                         $isExtraDay =
                             !$isCurrentMonth && (($i == 0 && $j < $startDayOfWeek) || $currentDay > $daysInMonth);
                     @endphp
-
                     @if ($isCurrentMonth)
                         <td wire:click="getsched('{{ $year . '-' . $month . '-' . $currentDay }}')">
                             <b class="@if ($today == $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-' . str_pad($currentDay, 2, '0', STR_PAD_LEFT)) text-primary @endif text-sm">

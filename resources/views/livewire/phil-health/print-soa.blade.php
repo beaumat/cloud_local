@@ -15,19 +15,24 @@
                         <div class="col-6">
                             <b class="bottom-line">PHILHEALTH ACCREDITED:</b>
                             <div class="row mt-4">
-                                <div class="col-3">Patient`s Name : </div>
-                                <div class="col-9 bottom-line">
+                                <div class="col-4">PATIENT`S NAME : </div>
+                                <div class="col-8 bottom-line">
                                     <div class="row">
-                                        <div class="col-10"> {{ $PATIENT_NAME }}</div>
-                                        <div class="col-2 text-right">Age: {{ $AGE }}</div>
+                                        <div class="col-9"> {{ $PATIENT_NAME }}</div>
+                                        <div class="col-3 text-right">Age: {{ $AGE }}</div>
                                     </div>
                                 </div>
-                                <div class="col-3">Address : </div>
-                                <div class="col-9 bottom-line"> {{ $ADDRESS }}</div>
-                                <div class="col-3">Final Diagnosis : </div>
-                                <div class="col-9 bottom-line"> {{ $FINAL_DIAGNOSIS }}</div>
-                                <div class="col-3">Other Diagnosis : </div>
-                                <div class="col-9 bottom-line"> {{ $OTHER_DIAGNOSIS }}</div>
+                                <div class="col-4">ADDRESS : </div>
+                                <div class="col-8 bottom-line text-xs"> {{ $ADDRESS1 }}</div>
+                                <div class="col-4"> </div>
+                                <div class="col-8 bottom-line text-xs"> {{ $ADDRESS2 }}</div>
+                                <div class="col-4">FINAL DIAGNOSIS : </div>
+                                <div class="col-8 bottom-line"> {{ $FINAL_DIAGNOSIS }}</div>
+                                <div class="col-4">OTHER DIAGNOSIS : </div>
+                                <div class="col-8 bottom-line"> {{ $OTHER_DIAGNOSIS }}</div>
+                                <div class="col-4">TREATMENT DATES : </div>
+                                <div class="col-8 bottom-line">
+                                    {{ \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') }}</div>
                             </div>
                         </div>
 
@@ -37,18 +42,21 @@
                                 <div class="col-7 bottom-line"> {{ $CODE }}</div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-5">Date & Time Admitted:</div>
+                                <div class="col-5">DATE & TIME ADMITTED :</div>
                                 <div class="col-7 bottom-line">
                                     {{ \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') }}
                                     {{ \Carbon\Carbon::parse($TIME_ADMITTED)->format('h:i:s A') }}</div>
-                                <div class="col-5">Date & Time Discharged:</div>
+                                <div class="col-5">DATE & TIME DISCHARGED :</div>
                                 <div class="col-7 bottom-line">
                                     {{ \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') }}
                                     {{ \Carbon\Carbon::parse($TIME_DISCHARGED)->format('h:i:s A') }}</div>
-                                <div class="col-5">First Case Rate:</div>
+                                <div class="col-12"> <br /></div>
+                                <div class="col-5">FIRST CASE RATE :</div>
                                 <div class="col-7 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
-                                <div class="col-5">Second Case Rate:</div>
+                                <div class="col-5">SECOND CASE RATE :</div>
                                 <div class="col-7 bottom-line"> {{ $SECOND_CASE_RATE }}</div>
+                                <div class="col-5">NO. OF TREATMENT :</div>
+                                <div class="col-7 bottom-line text-center font-weight-bold"> {{ $NO_OF_TREATMENT }}</div>
                             </div>
                         </div>
                     </div>
@@ -593,7 +601,8 @@
                                         {{ $USER_NAME }}</strong>
                                 </div>
                                 <div class="col-7 text-center">PHIC IN-Charge</div>
-                                <div class="col-12 ">Date Signed: {{ $DATE_SIGNED }}</div>
+                                <div class="col-12 ">Date Signed:
+                                    {{ \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') }}</div>
                                 <div class="col-12 ">CONTACT No. {{ $USER_CONTACT }}</div>
                             </div>
                         </div>
@@ -606,7 +615,8 @@
                                 <div class="col-12 ">(Signature over printed name)</div>
                                 <div class="col-12 text-xs">Relationship of member of authorized representative</div>
                                 <div class="col-12 bottom-line">&nbsp;</div>
-                                <div class="col-12 ">Date Signed: {{ $DATE_SIGNED }}</div>
+                                <div class="col-12 ">Date Signed:
+                                    {{ \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') }}</div>
                                 <div class="col-12 ">CONTACT No. {{ $PATIENT_CONTACT }}</div>
                             </div>
                         </div>

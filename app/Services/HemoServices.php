@@ -104,6 +104,7 @@ class HemoServices
             ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
             ->where('hemodialysis.STATUS_ID', '2')
             ->whereBetween('hemodialysis.DATE', [$DATE_START, $DATE_END])
+            ->orderBy('hemodialysis.DATE', 'asc')
             ->get();
 
         return $dataList;

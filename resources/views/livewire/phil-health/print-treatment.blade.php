@@ -34,7 +34,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-3 text-right"> FIRST CASE RATE : </div>
-                                <div class="col-9 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
+                                <div class="col-6 bottom-line">  {{ $FIRST_CASE_RATE }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-3 text-right"> DIAGNOSIS : </div>
