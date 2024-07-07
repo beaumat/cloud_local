@@ -131,8 +131,6 @@ class SchedulerList extends Component
     }
     public function render()
     {
-
-
         return view('livewire.scheduler.scheduler-list');
     }
 }

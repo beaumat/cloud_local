@@ -57,31 +57,66 @@
                                     </div>
                                 </div>
 
+                                <div class="col-md-12">
+                                    {{-- <div class="card card-primary card-outline card-outline-tabs">
+                                        <div class="card-header p-0 border-bottom-0">
+                                            <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link @if ($tab == 's1st') active @endif"
+                                                        id="custom-tabs-four-s1st-tab" wire:click="SelectTab('s1st')"
+                                                        data-toggle="pill" href="#custom-tabs-four-s1st" role="tab"
+                                                        aria-controls="custom-tabs-four-s1st"
+                                                        aria-selected="true">1st</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link @if ($tab == 's2nd') active @endif"
+                                                        id="custom-tabs-four-s2nd-tab" wire:click="SelectTab('s2nd')"
+                                                        data-toggle="pill" href="#custom-tabs-four-s2nd" role="tab"
+                                                        aria-controls="custom-tabs-four-s2nd"
+                                                        aria-selected="true">2nd</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link @if ($tab == 's3rd') active @endif"
+                                                        id="custom-tabs-four-s3rd-tab" wire:click="SelectTab('s3rd')"
+                                                        data-toggle="pill" href="#custom-tabs-four-s3rd" role="tab"
+                                                        aria-controls="custom-tabs-four-s3rd"
+                                                        aria-selected="true">3rd</a>
+                                                </li>
 
-                                <table class="table table-sm mt-2">
-                                    <thead class="text-xs bg-sky">
-                                        <tr>
-                                            <th>Shift</th>
-                                            <th>Patient</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-xs">
+                                            </ul>
+                                        </div>
+                                        <div class="card-body">
 
-                                        @foreach ($schedContact as $list)
+                                        </div>
+                                    </div>
+                                    <table class="table table-sm mt-2">
+                                        <thead class="text-xs bg-sky">
                                             <tr>
-                                                <td>{{ $list->SHIFT }}</td>
-                                                <td>{{ $list->CONTACT_NAME }}</td>
-                                                <td>{{ $list->STATUS }}</td>
+                                                <th>Shift</th>
+                                                <th>Patient</th>
+                                                <th>Status</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody class="text-xs">
+
+                                            @foreach ($schedContact as $list)
+                                                <tr>
+                                                    <td>{{ $list->SHIFT }}</td>
+                                                    <td>{{ $list->CONTACT_NAME }}</td>
+                                                    <td>{{ $list->STATUS }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table> --}}
+
+                                    @livewire('Scheduler.SchedulerListShift', ['LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE->format('Y-m-d')])
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-9">
                     <div class="card card-primary">
                         <div class="card-body bg-white">
