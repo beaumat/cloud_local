@@ -63,55 +63,88 @@
                         @livewire('Layouts.ReportsDocuments')
                     </ul>
                 </li>
-                <li class="nav-item {{ request()->is('maintenance*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->is('maintenance*') ? 'active ' : '' }}">
-                        <i class="nav-icon fa fa-cog"></i>
-                        <p> Maintenance <i class="right fas fa-angle-left"></i> </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        @if (Auth::user()->can('contact.customer.view') ||
-                                Auth::user()->can('contact.vendor.view') ||
-                                Auth::user()->can('contact.employee.view') ||
-                                Auth::user()->can('contact.patient.view') ||
-                                Auth::user()->can('contact.doctor.view'))
-                            @livewire('Layouts.MaintenanceContacts')
-                        @endif
-                        @if (Auth::user()->can('chart-of-account.view') ||
-                                Auth::user()->can('payment-method.view') ||
-                                Auth::user()->can('payment-term.view') ||
-                                Auth::user()->can('tax-list.view'))
-                            @livewire('Layouts.MaintenanceFinancials')
-                        @endif
-                        @if (Auth::user()->can('items.view') ||
-                                Auth::user()->can('item-class.view') ||
-                                Auth::user()->can('item-sub-class.view') ||
-                                Auth::user()->can('item-group.view') ||
-                                Auth::user()->can('manufacturer.view') ||
-                                Auth::user()->can('ship-via.view') ||
-                                Auth::user()->can('unit-of-measure.view') ||
-                                Auth::user()->can('inventory-adjustment-type.view') ||
-                                Auth::user()->can('stock-bin.view') ||
-                                Auth::user()->can('price-level.view'))
-                            @livewire('Layouts.MaintenanceInventory')
-                        @endif
-                        @if (Auth::user()->can('others.shift.view') ||
-                                Auth::user()->can('others.hemodialysis-machine.view') ||
-                                Auth::user()->can('others.requirement.view') ||
-                                Auth::user()->can('others.item-active-list.view') ||
-                                Auth::user()->can('others.item-treatment.view'))
-                            @livewire('Layouts.MaintenanceOthers')
-                        @endif
 
-                        @if (Auth::user()->can('users') ||
-                                Auth::user()->can('roles-and-permission') ||
-                                Auth::user()->can('location.view') ||
-                                Auth::user()->can('location-group.view') ||
-                                Auth::user()->can('option'))
-                            @livewire('Layouts.MaintenanceSettings')
-                        @endif
 
-                    </ul>
-                </li>
+                @if (Auth::user()->can('contact.customer.view') ||
+                        Auth::user()->can('contact.vendor.view') ||
+                        Auth::user()->can('contact.employee.view') ||
+                        Auth::user()->can('contact.patient.view') ||
+                        Auth::user()->can('contact.doctor.view') ||
+                        Auth::user()->can('chart-of-account.view') ||
+                        Auth::user()->can('payment-method.view') ||
+                        Auth::user()->can('payment-term.view') ||
+                        Auth::user()->can('tax-list.view') ||
+                        Auth::user()->can('items.view') ||
+                        Auth::user()->can('item-class.view') ||
+                        Auth::user()->can('item-sub-class.view') ||
+                        Auth::user()->can('item-group.view') ||
+                        Auth::user()->can('manufacturer.view') ||
+                        Auth::user()->can('ship-via.view') ||
+                        Auth::user()->can('unit-of-measure.view') ||
+                        Auth::user()->can('inventory-adjustment-type.view') ||
+                        Auth::user()->can('stock-bin.view') ||
+                        Auth::user()->can('price-level.view') ||
+                        Auth::user()->can('others.shift.view') ||
+                        Auth::user()->can('others.hemodialysis-machine.view') ||
+                        Auth::user()->can('others.requirement.view') ||
+                        Auth::user()->can('others.item-active-list.view') ||
+                        Auth::user()->can('others.item-treatment.view') ||
+                        Auth::user()->can('users') ||
+                        Auth::user()->can('roles-and-permission') ||
+                        Auth::user()->can('location.view') ||
+                        Auth::user()->can('location-group.view') ||
+                        Auth::user()->can('option'))
+
+
+                    <li class="nav-item {{ request()->is('maintenance*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('maintenance*') ? 'active ' : '' }}">
+                            <i class="nav-icon fa fa-cog"></i>
+                            <p> Maintenance <i class="right fas fa-angle-left"></i> </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if (Auth::user()->can('contact.customer.view') ||
+                                    Auth::user()->can('contact.vendor.view') ||
+                                    Auth::user()->can('contact.employee.view') ||
+                                    Auth::user()->can('contact.patient.view') ||
+                                    Auth::user()->can('contact.doctor.view'))
+                                @livewire('Layouts.MaintenanceContacts')
+                            @endif
+                            @if (Auth::user()->can('chart-of-account.view') ||
+                                    Auth::user()->can('payment-method.view') ||
+                                    Auth::user()->can('payment-term.view') ||
+                                    Auth::user()->can('tax-list.view'))
+                                @livewire('Layouts.MaintenanceFinancials')
+                            @endif
+                            @if (Auth::user()->can('items.view') ||
+                                    Auth::user()->can('item-class.view') ||
+                                    Auth::user()->can('item-sub-class.view') ||
+                                    Auth::user()->can('item-group.view') ||
+                                    Auth::user()->can('manufacturer.view') ||
+                                    Auth::user()->can('ship-via.view') ||
+                                    Auth::user()->can('unit-of-measure.view') ||
+                                    Auth::user()->can('inventory-adjustment-type.view') ||
+                                    Auth::user()->can('stock-bin.view') ||
+                                    Auth::user()->can('price-level.view'))
+                                @livewire('Layouts.MaintenanceInventory')
+                            @endif
+                            @if (Auth::user()->can('others.shift.view') ||
+                                    Auth::user()->can('others.hemodialysis-machine.view') ||
+                                    Auth::user()->can('others.requirement.view') ||
+                                    Auth::user()->can('others.item-active-list.view') ||
+                                    Auth::user()->can('others.item-treatment.view'))
+                                @livewire('Layouts.MaintenanceOthers')
+                            @endif
+                            @if (Auth::user()->can('users') ||
+                                    Auth::user()->can('roles-and-permission') ||
+                                    Auth::user()->can('location.view') ||
+                                    Auth::user()->can('location-group.view') ||
+                                    Auth::user()->can('option'))
+                                @livewire('Layouts.MaintenanceSettings')
+                            @endif
+
+                        </ul>
+                    </li>
+                @endif
             </ul>
         </nav>
     </div>
