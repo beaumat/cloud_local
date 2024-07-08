@@ -46,24 +46,26 @@
                         Auth::user()->can('banking.make-cheque.view'))
                     @livewire('Layouts.BankingMenu')
                 @endif
-                <li class="nav-item">
-                    <a href="#" class="nav-link"> <i class="nav-icon fa fa-line-chart"></i>
-                        <p> Reports <i class="right fas fa-angle-left"></i> </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        @livewire('Layouts.ReportsPatients')
-                        @livewire('Layouts.ReportsFinancial')
-                        @livewire('Layouts.ReportsSales')
-                        @livewire('Layouts.ReportsReceivables')
-                        @livewire('Layouts.ReportsPurchases')
-                        @livewire('Layouts.ReportsExpenses')
-                        @livewire('Layouts.ReportsPayables')
-                        @livewire('Layouts.ReportsInventory')
-                        @livewire('Layouts.ReportsAccounting')
-                        @livewire('Layouts.ReportsDocuments')
-                    </ul>
-                </li>
 
+                @if (Auth::user()->name == 'admin')
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"> <i class="nav-icon fa fa-line-chart"></i>
+                            <p> Reports <i class="right fas fa-angle-left"></i> </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @livewire('Layouts.ReportsPatients')
+                            @livewire('Layouts.ReportsFinancial')
+                            @livewire('Layouts.ReportsSales')
+                            @livewire('Layouts.ReportsReceivables')
+                            @livewire('Layouts.ReportsPurchases')
+                            @livewire('Layouts.ReportsExpenses')
+                            @livewire('Layouts.ReportsPayables')
+                            @livewire('Layouts.ReportsInventory')
+                            @livewire('Layouts.ReportsAccounting')
+                            @livewire('Layouts.ReportsDocuments')
+                        </ul>
+                    </li>
+                @endif
 
                 @if (Auth::user()->can('contact.customer.view') ||
                         Auth::user()->can('contact.vendor.view') ||
