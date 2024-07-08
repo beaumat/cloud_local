@@ -67,7 +67,7 @@ class UserForm extends Component
         $this->contact_id = 0;
         $this->inactive = false;
         $this->location_id  = 0;
-        $this->trans_date = null;
+        $this->trans_date = '';
     }
 
 
@@ -123,10 +123,10 @@ class UserForm extends Component
 
         try {
             if ($this->id === 0) {
-                $this->id = $this->userServices->Store($this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date);
+                $this->id = $this->userServices->Store($this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '');
                 session()->flash('message', 'Successfully created.');
             } else {
-                $this->userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date);
+                $this->userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '');
                 session()->flash('message', 'Successfully updated.');
             }
         } catch (\Exception $e) {
