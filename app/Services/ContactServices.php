@@ -47,6 +47,13 @@ class ContactServices
     }
     public function getList(int $Type): object
     {
+        if ($Type == 3) {
+            return Contacts::query()
+                ->select([
+                    'ID',
+                    DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME")
+                ])->where('TYPE', $Type)->where('INACTIVE', '0')->orderBy('LAST_NAME', 'asc')->get();
+        }
         return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();
     }
     public function calculateUserAge($dateString)

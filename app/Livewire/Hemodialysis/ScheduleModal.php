@@ -137,7 +137,6 @@ class ScheduleModal extends Component
     {
         $this->shiftList = $this->shiftServices->List();
         $this->dataList = $this->scheduleServices->GetScheduleList($this->DATE, $this->LOCATION_ID, $this->SHIFT_ID);
-
         return view('livewire.hemodialysis.schedule-modal');
     }
 }

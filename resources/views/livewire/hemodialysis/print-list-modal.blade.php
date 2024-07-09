@@ -17,13 +17,39 @@
                     <div class="modal-body">
                         <div>
                             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+
+
+                            <div class="form-group row">
+                                <div class="col-3 text-left">
+                                    <label class="text-xs">Date :</label>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    <livewire:date-input name="DATE" :withLabel="false" titleName="Date" wi
+                                        wire:model.live='DATE' :isDisabled="false" />
+                                </div>
+                                <div class="col-3 text-left">
+                                    <label class="text-xs">Select :</label>
+                                </div>
+                                <div class="col-9">
+                                    <select class="form-control form-control-sm text-xs text-left"
+                                        wire:model.live='SHIFT_ID'>
+                                        <option value="0"> All Shift </option>
+                                        @foreach ($shiftList as $list)
+                                            <option value="{{ $list->ID }}"> {{ $list->NAME }} Shift</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
                                         <th></th>
                                         <th class="col-2 text-left">ID No.</th>
                                         <th class="col-2 text-left">Date</th>
-                                        <th class="col-8 text-left">Patient Name</th>
+                                        <th class="col-7 text-left">Patient Name</th>
+                                        <th class="col-1">Shift</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -44,7 +70,9 @@
                                             <td class="text-left">
                                                 <label for=""> {{ $list->PATIENT_NAME }}</label>
                                             </td>
-
+                                            <td class="text-left">
+                                                <label for=""> {{ $list->SHIFT }}</label>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

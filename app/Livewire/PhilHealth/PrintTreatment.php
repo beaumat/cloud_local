@@ -4,6 +4,7 @@ namespace App\Livewire\PhilHealth;
 
 use App\Services\ContactServices;
 use App\Services\HemoServices;
+use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -87,16 +88,20 @@ class PrintTreatment extends Component
     public string $OTHER_NAME;
     public string $ADDRESS;
     public string $PHYSICIAN;
+    public string $ADMINISTRATOR_NAME;
     private $philHealthServices;
     private $contactServices;
     private $hemoServices;
+    private $locationServices;
+
     public $hemoList = [];
     public $i;
-    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, HemoServices $hemoServices)
+    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, HemoServices $hemoServices, LocationServices $locationServices)
     {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->hemoServices = $hemoServices;
+        $this->locationServices = $locationServices;
     }
 
 
@@ -122,7 +127,7 @@ class PrintTreatment extends Component
                 $this->TIME_ADMITTED = $data->TIME_ADMITTED;
                 $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
                 $this->TIME_DISCHARGED = $data->TIME_DISCHARGED;
-               
+
 
                 $this->CHARGES_ROOM_N_BOARD = $data->CHARGES_ROOM_N_BOARD;
                 $this->CHARGES_DRUG_N_MEDICINE = $data->CHARGES_DRUG_N_MEDICINE;
@@ -197,16 +202,36 @@ class PrintTreatment extends Component
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS = $contact->POSTAL_ADDRESS;
                     $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
-                    $this->FINAL_DIAGNOSIS = $contact->FINAL_DIAGNOSIS ?? '';
+                    $this->FINAL_DIAGNOSIS =  $this->philHealthServices->DEFAULT_DIAGNOSIS .  $contact->FINAL_DIAGNOSIS ?? '';
                     $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                     $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
                 }
-                $conUser = $this->contactServices->get(Auth::user()->contact_id, 2);
-                if ($conUser) {
-                    $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
-                    $this->USER_NAME = $conUser->NAME ?? '';
+                // $conUser = $this->contactServices->get(Auth::user()->contact_id, 2);
+                // if ($conUser) {
+                //     $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
+                //     $this->USER_NAME = $conUser->NAME ?? '';
+                // }
+
+
+                $locDate = $this->locationServices->get($this->LOCATION_ID);
+                if ($locDate) {
+
+                    $conPHIC = $this->contactServices->get($locDate->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                    if ($conPHIC) {
+                        $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
+                        $this->USER_NAME = $conPHIC->PRINT_NAME_AS ?? '';
+                    }
+
+                    // $HCI_MANAGER_ID
+
+                    $conMgr = $this->contactServices->get($locDate->HCI_MANAGER_ID ?? 0, 2); // Employee
+                    if ($conMgr) {
+                        // $this->USER_CONTACT = $conMgr->MOBILE_NO ?? '';
+                        $this->ADMINISTRATOR_NAME = $conMgr->PRINT_NAME_AS ?? '';
+                    }
                 }
+
 
                 $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
                 $PF = $this->philHealthServices->getProfFee($ID);
@@ -216,10 +241,7 @@ class PrintTreatment extends Component
 
                 return;
             }
-
-
         }
-
     }
     public function render()
     {

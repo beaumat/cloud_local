@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Hemodialysis;
 
+use App\Services\DateServices;
 use App\Services\HemoServices;
+use App\Services\ShiftServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -21,9 +23,17 @@ class PrintListModal extends Component
     public string $search = '';
     public string $id;
     private $hemoServices;
-    public function boot(HemoServices $hemoServices)
+
+    public $shiftList = [];
+    private $shiftServices;
+    public int $SHIFT_ID = 0;
+    public string $DATE;
+    private $dateServices;
+    public function boot(HemoServices $hemoServices, ShiftServices $shiftServices, DateServices $dateServices)
     {
         $this->hemoServices = $hemoServices;
+        $this->shiftServices = $shiftServices;
+        $this->dateServices = $dateServices;
     }
     public function print()
     {
@@ -39,13 +49,11 @@ class PrintListModal extends Component
                     } else {
                         $this->id = $this->id . "," . $hemoId;
                     }
-
                 } catch (\Throwable $th) {
 
                     return;
                 }
             }
-
         }
 
         if (!$gotSelect) {
@@ -54,11 +62,10 @@ class PrintListModal extends Component
         $url = route('patientshemo_print', ['id' => $this->id]);
         $this->dispatch('openNewTab', data: $url);
         $this->closeModal();
-
     }
     public function mount()
     {
-
+        $this->DATE = $this->dateServices->NowDate();
     }
     public function openModal()
     {
@@ -71,7 +78,9 @@ class PrintListModal extends Component
     }
     public function render()
     {
-        $this->hemoList = $this->hemoServices->SearchList($this->search, $this->LOCATION_ID);
+
+        $this->shiftList = $this->shiftServices->List();
+        $this->hemoList = $this->hemoServices->SearchListbyShift($this->search, $this->LOCATION_ID, $this->SHIFT_ID, $this->DATE);
 
         return view('livewire.hemodialysis.print-list-modal');
     }

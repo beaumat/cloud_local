@@ -275,7 +275,7 @@ class HemoServices
                 'hemodialysis.ID',
                 'hemodialysis.CODE',
                 'hemodialysis.DATE',
-                'c.NAME as PATIENT_NAME'
+                'CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as PATIENT_NAME'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
@@ -289,12 +289,54 @@ class HemoServices
                     ->orWhere('c.NAME', 'like', '%' . $search . '%')
                     ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
             })
+
             ->orderBy('ID', 'desc')
             ->orderBy('hemodialysis.ID', 'desc')
             ->get();
 
         return $result;
     }
+
+    public function SearchListbyShift($search, int $LOCATION_ID, int $SHIFT_ID, string $DATE)
+    {
+
+        $result = Hemodialysis::query()
+            ->select([
+                'hemodialysis.ID',
+                'hemodialysis.CODE',
+                'hemodialysis.DATE',
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as PATIENT_NAME"),
+                'sh.NAME as SHIFT'
+            ])
+            ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
+            ->join('schedules as s', function ($join) {
+                $join->On('s.CONTACT_ID', 'hemodialysis.CUSTOMER_ID');
+                $join->On('s.SCHED_DATE', 'hemodialysis.DATE');
+                $join->On('s.LOCATION_ID', 'hemodialysis.LOCATION_ID');
+            })
+            ->join('shift AS sh', 'sh.ID', '=', 's.SHIFT_ID')
+            ->join('location as l', function ($join) use (&$LOCATION_ID) {
+                $join->on('l.ID', '=', 'hemodialysis.LOCATION_ID');
+                if ($LOCATION_ID > 0) {
+                    $join->where('l.ID', $LOCATION_ID);
+                }
+            })
+            ->when($search, function ($query) use (&$search) {
+                $query->where('hemodialysis.CODE', 'like', '%' . $search . '%')
+                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+            })
+            ->when($SHIFT_ID > 0, function ($query) use (&$SHIFT_ID) {
+                $query->where('s.SHIFT_ID', $SHIFT_ID);
+            })
+            ->where('hemodialysis.DATE', $DATE)
+            ->orderBy('ID', 'desc')
+            ->orderBy('hemodialysis.ID', 'desc')
+            ->get();
+
+        return $result;
+    }
+
     public function getPrevousEntry(int $LOCATION_ID, string $Date, int $CONTACT_ID)
     {
         return Hemodialysis::where('');

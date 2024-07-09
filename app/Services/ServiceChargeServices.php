@@ -178,7 +178,7 @@ class ServiceChargeServices
                 'service_charges.BALANCE_DUE',
                 'service_charges.OUTPUT_TAX_RATE',
                 'service_charges.NOTES',
-                'c.NAME as CONTACT_NAME',
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as CONTACT_NAME"),
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
                 's.DESCRIPTION as STATUS',

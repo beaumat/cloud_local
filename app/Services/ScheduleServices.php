@@ -368,7 +368,7 @@ class ScheduleServices
             ->where('hm.LOCATION_ID', $LOCATION_ID)
             ->where('schedules.SCHED_DATE', $DATE)
             ->orderBy('hm.ID')
-            ->orderBy('c.DATE_ADMISSION')
+            ->orderBy('c.LAST_NAME')
             ->get();
 
 
@@ -397,7 +397,7 @@ class ScheduleServices
                 'hm.DESCRIPTION as PATIENT_TYPE',
                 'hm.CAPACITY',
                 'hm.ID as TYPE_ID',
-                'c.NAME as PATIENT_NAME',
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as PATIENT_NAME"),
                 'c.LONG_HRS_DURATION',
                 'c.ADMITTED',
                 'c.ID as PATIENT_ID',
@@ -419,7 +419,7 @@ class ScheduleServices
             ->when($SHIFT_ID > 0, function ($query) use (&$SHIFT_ID) {
                 $query->where('schedules.SHIFT_ID', $SHIFT_ID);
             })
-            ->orderBy('c.DATE_ADMISSION')
+            ->orderBy('c.LAST_NAME')
             ->orderBy('hm.ID')
             ->orderBy('s.ID')
             ->get();

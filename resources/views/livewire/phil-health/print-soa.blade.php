@@ -18,24 +18,23 @@
                                 <div class="col-4">PATIENT`S NAME : </div>
                                 <div class="col-8 bottom-line">
                                     <div class="row">
-                                        <div class="col-9"> {{ $PATIENT_NAME }}</div>
+                                        <div class="col-9">  &nbsp; {{ $PATIENT_NAME }}</div>
                                         <div class="col-3 text-right">Age: {{ $AGE }}</div>
                                     </div>
                                 </div>
                                 <div class="col-4">ADDRESS : </div>
-                                <div class="col-8 bottom-line text-xs"> {{ $ADDRESS1 }}</div>
-                                <div class="col-4"> </div>
-                                <div class="col-8 bottom-line text-xs"> {{ $ADDRESS2 }}</div>
+                                <div class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS1 }}</div>
+                                <div class="col-4">  &nbsp;</div>
+                                <div class="col-8 bottom-line text-xs">  &nbsp; {{ $ADDRESS2 }}</div>
                                 <div class="col-4">FINAL DIAGNOSIS : </div>
-                                <div class="col-8 bottom-line"> {{ $FINAL_DIAGNOSIS }}</div>
+                                <div class="col-8 bottom-line text-xs">  &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
                                 <div class="col-4">OTHER DIAGNOSIS : </div>
-                                <div class="col-8 bottom-line"> {{ $OTHER_DIAGNOSIS }}</div>
+                                <div class="col-8 bottom-line text-xs">  &nbsp; {{ $OTHER_DIAGNOSIS }}</div>
                                 <div class="col-4">TREATMENT DATES : </div>
-                                <div class="col-8 bottom-line">
+                                <div class="col-8 bottom-line ">  &nbsp;
                                     {{ \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') }}</div>
                             </div>
                         </div>
-
                         <div class="col-6">
                             <div class="row">
                                 <div class="col-5"> Soa Reference No. : </div>
@@ -54,7 +53,7 @@
                                 <div class="col-5">FIRST CASE RATE :</div>
                                 <div class="col-7 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
                                 <div class="col-5">SECOND CASE RATE :</div>
-                                <div class="col-7 bottom-line"> {{ $SECOND_CASE_RATE }}</div>
+                                <div class="col-7 bottom-line"> &nbsp; {{ $SECOND_CASE_RATE }}</div>
                                 <div class="col-5">NO. OF TREATMENT :</div>
                                 <div class="col-7 bottom-line text-center font-weight-bold"> {{ $NO_OF_TREATMENT }}</div>
                             </div>

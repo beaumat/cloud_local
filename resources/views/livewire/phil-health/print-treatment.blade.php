@@ -100,7 +100,7 @@
                             <div class="form-group row  mt-4">
                                 <div class="col-12">Noted by:</div>
                                 <div class="col-7 text-center"><strong class="bottom-line">
-                                        Milagros "Ging" B. Peñano
+                                        {{ $ADMINISTRATOR_NAME }}
                                     </strong>
                                 </div>
                                 <div class="col-7 text-center"><i>Administrator</i></div>
