@@ -24,6 +24,7 @@ class PrintListModal extends Component
     public string $id;
     private $hemoServices;
 
+    public bool $SelectAll = false;
     public $shiftList = [];
     private $shiftServices;
     public int $SHIFT_ID = 0;
@@ -63,6 +64,28 @@ class PrintListModal extends Component
         $this->dispatch('openNewTab', data: $url);
         $this->closeModal();
     }
+    public function updatedShiftId()
+    {
+        $this->SelectAll = false;
+        $this->reset('hemoSelected');
+    }
+
+    public function updatedDate()
+    {
+        $this->SelectAll = false;
+        $this->reset('hemoSelected');
+    }
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            foreach ($this->hemoList as $list) {
+                $this->hemoSelected[$list->ID] = true;
+            }
+        } else {
+
+            $this->reset('hemoSelected');
+        }
+    }
     public function mount()
     {
         $this->DATE = $this->dateServices->NowDate();
@@ -70,6 +93,8 @@ class PrintListModal extends Component
     public function openModal()
     {
         $this->showModal = true;
+        $this->SelectAll = false;
+        $this->reset('hemoSelected');
     }
     #[On('print-list-modal-close')]
     public function closeModal()

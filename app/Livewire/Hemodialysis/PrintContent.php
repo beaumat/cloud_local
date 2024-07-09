@@ -19,9 +19,6 @@ class PrintContent extends Component
     public int $AGE = 0;
     private $hemoServices;
     private $contactServices;
-
-
-
     public string $OLD_PRE_WEIGHT;
     public string $OLD_PRE_BLOOD_PRESSURE;
     public string $OLD_PRE_BLOOD_PRESSURE2;

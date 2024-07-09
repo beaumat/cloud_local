@@ -1,6 +1,6 @@
 <div>
-    <button wire:click="openModal" class="btn btn-primary btn-sm text-xs ">
-        Schedule
+    <button wire:click="openModal" class="btn btn-info btn-sm " title="Schedule Create Form">
+               <i class="fa fa-calendar" aria-hidden="true"></i>
     </button>
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">

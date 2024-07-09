@@ -131,9 +131,7 @@ class HemoForm extends Component
         $this->getPreviousTreatment();
     }
     public bool $IsPostedButton;
-
     public bool $ActiveRequired;
-
     public bool $IsDocmentUploaded;
     private function LoadDropDown()
     {

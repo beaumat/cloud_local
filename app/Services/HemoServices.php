@@ -493,9 +493,6 @@ class HemoServices
     }
     private function getGetLastitemNew(int $ITEM_ID, $LOCATION_ID, $PATIENT_ID, $DATE_TREATMENT): string
     {
-
-
-
         $result = HemodialysisItems::query()
             ->select([
                 'h.DATE'

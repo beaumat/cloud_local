@@ -94,11 +94,11 @@
                                     <div class="row text-center">
                                         <div class="col-6">
                                             <div class="bottom-line2">
-                                               &nbsp; {{ $OLD_PRE_BLOOD_PRESSURE }}.{{ $OLD_PRE_BLOOD_PRESSURE2 }}</div>
+                                               &nbsp; {{ $OLD_PRE_BLOOD_PRESSURE }}/{{ $OLD_PRE_BLOOD_PRESSURE2 }}</div>
                                         </div>
                                         <div class="col-6">
                                             <div class="bottom-line2">
-                                                &nbsp;{{ $OLD_POST_BLOOD_PRESSURE }}.{{ $OLD_POST_BLOOD_PRESSURE2 }}</div>
+                                                &nbsp;{{ $OLD_POST_BLOOD_PRESSURE }}/{{ $OLD_POST_BLOOD_PRESSURE2 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +133,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                         <div class="col-2 left-line">
                             <div class="row">

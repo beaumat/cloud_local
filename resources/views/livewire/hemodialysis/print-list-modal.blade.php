@@ -1,7 +1,7 @@
 <div>
 
-    <button wire:click="openModal" class="btn btn-info btn-sm text-xs ">
-        Print
+    <button wire:click="openModal" class="btn btn-warning btn-sm " title="Multiple Select Print Form">
+        <i class="fa fa-print" aria-hidden="true"></i>
     </button>
 
     @if ($showModal)
@@ -17,8 +17,6 @@
                     <div class="modal-body">
                         <div>
                             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-
-
                             <div class="form-group row">
                                 <div class="col-3 text-left">
                                     <label class="text-xs">Date :</label>
@@ -45,10 +43,9 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th></th>
-                                        <th class="col-2 text-left">ID No.</th>
-                                        <th class="col-2 text-left">Date</th>
-                                        <th class="col-7 text-left">Patient Name</th>
+                                        <th> <input class="text-lg" type="checkbox" wire:model.live="SelectAll" /></th>
+                                        <th class="col-2 text-left">No.</th>
+                                        <th class="col-9 text-left">Patient Name</th>
                                         <th class="col-1">Shift</th>
                                     </tr>
                                 </thead>
@@ -56,17 +53,12 @@
                                     @foreach ($hemoList as $list)
                                         <tr>
                                             <td class="text-center">
-                                                <input class="text-lg" type="checkbox"
-                                                    wire:model.live="hemoSelected.{{ $list->ID }}" />
+                                                <input class="text-lg" type="checkbox"     wire:model.live="hemoSelected.{{ $list->ID }}"  />
                                             </td>
                                             <td class="text-left">
                                                 <label for=""> {{ $list->CODE }}</label>
                                             </td>
-                                            <td class="text-left">
-                                                <label for="">
-                                                    {{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }}
-                                                </label>
-                                            </td>
+
                                             <td class="text-left">
                                                 <label for=""> {{ $list->PATIENT_NAME }}</label>
                                             </td>
@@ -81,9 +73,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-info btn-sm" wire:click='print'> <i class="fas fa-plus"></i> Print
+                        <button class="btn btn-warning btn-sm" wire:click='print'>
+                            <i class="fa fa-print" aria-hidden="true"></i> Preview
                         </button>
-                        <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">Close</button>
+                        <button type="button" class="btn btn-danger btn-sm" wire:click="closeModal">Close</button>
                     </div>
                 </div>
             </div>

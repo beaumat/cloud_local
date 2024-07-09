@@ -7,7 +7,6 @@ use App\Services\HemoServices;
 use App\Services\ItemTreatmentServices;
 use App\Services\ScheduleServices;
 use App\Services\ShiftServices;
-use App\Services\UnitOfMeasureServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -31,43 +30,14 @@ class ScheduleModal extends Component
     private $shiftServices;
     private $dateServices;
     private $itemTreatmentServices;
-    private $unitOfMeasureServices;
-    public function boot(ScheduleServices $scheduleServices, HemoServices $hemoServices, ShiftServices $shiftServices, DateServices $dateServices, ItemTreatmentServices $itemTreatmentServices, UnitOfMeasureServices $unitOfMeasureServices)
+    public function boot(ScheduleServices $scheduleServices, HemoServices $hemoServices, ShiftServices $shiftServices, DateServices $dateServices, ItemTreatmentServices $itemTreatmentServices)
     {
         $this->scheduleServices = $scheduleServices;
         $this->hemoServices = $hemoServices;
         $this->shiftServices = $shiftServices;
         $this->dateServices = $dateServices;
         $this->itemTreatmentServices = $itemTreatmentServices;
-        $this->unitOfMeasureServices = $unitOfMeasureServices;
     }
-    // public function addItem(int $ItemTreatmentId, int $ID)
-    // {
-    //     $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
-    //     if ($data) {
-    //         $gotNew = true;
-    //         $hemoData =  $this->hemoServices->Get($ID);
-    //         if ($data->NO_OF_USED > 1) {
-
-    //             if ($hemoData) {
-    //                 $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $this->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
-    //                 if ($totalused == 0) {
-    //                     $gotNew = true;
-    //                 } elseif ($totalused < $data->NO_OF_USED) {
-    //                     $gotNew = false;
-    //                 }
-    //             }
-    //         }
-
-    //         try {
-    //             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
-    //             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-    //             $this->hemoServices->ItemStore($ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
-    //         } catch (\Throwable $th) {
-    //             session()->flash('error', $th->getMessage());
-    //         }
-    //     }
-    // }
 
     public function create()
     {
@@ -123,10 +93,18 @@ class ScheduleModal extends Component
             $this->reset('scheduleSelected');
         }
     }
+
+    public function updatedShiftId()
+    {
+        $this->SelectAll = false;
+        $this->reset('scheduleSelected');
+    }
     public function openModal()
     {
         $this->DATE = $this->dateServices->NowDate();
         $this->showModal = true;
+        $this->SelectAll = false;
+        $this->reset('scheduleSelected');
     }
     #[On('schedule-modal-close')]
     public function closeModal()
