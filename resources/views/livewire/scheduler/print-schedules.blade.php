@@ -58,7 +58,7 @@
                                     'month' => $MONTH,
                                     'shift' => $SHIFT_ID,
                                 ]) }}"
-                                class="btn btn-sm btn-primary"> Print </a>
+                                class="btn btn-sm btn-primary"> Preview </a>
                             <button class="btn btn-sm btn-danger" wire:click='closeModal'>Cancel</button>
                         </div>
                     </div>

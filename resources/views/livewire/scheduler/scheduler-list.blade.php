@@ -30,8 +30,8 @@
                                                 <i class="fa fa-cog" aria-hidden="true"></i> Setup</a>
                                         @endcan
                                         @can('patient.schedule.print')
-                                            <button wire:click="openModalPrint" class="btn btn-success btn-sm">
-                                                <i class="fa fa-print" aria-hidden="true"></i> Print
+                                            <button wire:click="openModalPrint" class="btn btn-primary btn-sm">
+                                                <i class="fa fa-print" aria-hidden="true"></i> Preview
                                             </button>
                                         @endcan
                                     </div>
