@@ -82,7 +82,7 @@ class ScheduleServices
             ->where('schedules.LOCATION_ID', $LOCATION_ID)
             ->where('schedules.SHIFT_ID', $shiftId)
             ->where('schedules.HEMO_MACHINE_ID', $hemoId)
-            ->orderBy('c.DATE_ADMISSION')
+            ->orderBy('c.LAST_NAME')
             ->get();
     }
     public function get($ContactId, $Date, int $LOCATION_ID)
