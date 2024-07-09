@@ -348,7 +348,7 @@ class HemoServices
                 'hemodialysis.ID',
                 'hemodialysis.CODE',
                 'hemodialysis.DATE',
-                'c.NAME as CONTACT_NAME',
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as CONTACT_NAME"),
                 'l.NAME as LOCATION_NAME',
                 'hemodialysis.PRE_WEIGHT',
                 'hemodialysis.PRE_BLOOD_PRESSURE',
