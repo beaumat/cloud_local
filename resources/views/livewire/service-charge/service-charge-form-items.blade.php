@@ -72,11 +72,11 @@
                     {{-- @if ($STATUS == $openStatus) --}}
 
                     <td class="text-center">
-                  
-                            <button class="text-primary btn btn-sm btn-link"
-                                wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})">
-                                <i class="fa fa-paypal" aria-hidden="true"></i>
-                        
+
+                        <button class="text-primary btn btn-sm btn-link"
+                            wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})">
+                            <i class="fa fa-paypal" aria-hidden="true"></i>
+
                         </button>
                         @if ($editItemId === $list->ID)
                             <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
@@ -99,8 +99,6 @@
                                     class="text-danger btn btn-sm btn-link">
                                     <i class="fas fa-times" aria-hidden="true"></i>
                                 </button>
-                            @else
-                                <label class="text-primary">Payment Applied </label>
                             @endif
                         @endif
                     </td>
