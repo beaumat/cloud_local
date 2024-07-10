@@ -93,8 +93,10 @@ class PaymentAvailable extends Component
 
         $this->showModal = true;
         foreach ($this->dataList as $list) {
-            $this->paymentAmounts[$list->ID] = (float)  $this->SERVICE_CHARGES_ITEM_AMOUNT;
-            return;
+            if ($list->IS_COUNT == 0) {
+                $this->paymentAmounts[$list->ID] = (float)  $this->SERVICE_CHARGES_ITEM_AMOUNT;
+                return;
+            }
         }
     }
 

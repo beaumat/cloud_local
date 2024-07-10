@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\PatientPaymentCharges;
@@ -8,7 +9,7 @@ use Livewire\WithPagination;
 
 class PatientPaymentServices
 {
-    
+
     use WithPagination;
     private $object;
     private $dateServices;
@@ -331,17 +332,14 @@ class PatientPaymentServices
                 'patient_payment.DATE',
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
                 'patient_payment.AMOUNT',
-                'patient_payment.AMOUNT_APPLIED'
+                'patient_payment.AMOUNT_APPLIED',
+                DB::raw("(select count( *) from patient_payment_charges as d where d.PATIENT_PAYMENT_ID = patient_payment.ID and d.service_charges_item_id =  " . $serviceCharges_Item_Id . "  ) as IS_COUNT ")
             ])
             ->leftJoin('payment_method', 'payment_method.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('patient_payment.PATIENT_ID', $PATIENT_ID)
             ->where('patient_payment.LOCATION_ID', $LOCATION_ID)
             ->whereRaw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED) > 0')
-            ->whereNotExists(function ($query) use (&$serviceCharges_Item_Id) {
-                $query->select(DB::raw(1))
-                    ->from('patient_payment_charges as hi')
-                    ->where('hi.SERVICE_CHARGES_ITEM_ID', $serviceCharges_Item_Id);
-            })
+
             ->get();
 
         return $result;

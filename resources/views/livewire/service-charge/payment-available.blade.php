@@ -32,7 +32,7 @@
                             </thead>
                             <tbody class="text-xs">
                                 @foreach ($dataList as $list)
-                                    @if ($gotInsert == false)
+                                    @if ($list->IS_COUNT == 0)
                                         <tr>
                                             <td class="col-1">{{ $list->PAYMENT_METHOD }}</td>
                                             <td class="col-2">{{ $list->DATE }}</td>
@@ -50,10 +50,6 @@
                                                     <i class="fas fa-plus"></i></button>
                                             </td>
                                         </tr>
-
-                                        @php
-                                            $gotInsert == true;
-                                        @endphp
                                     @endif
                                 @endforeach
                             </tbody>
