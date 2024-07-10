@@ -72,6 +72,12 @@
                     {{-- @if ($STATUS == $openStatus) --}}
 
                     <td class="text-center">
+                        @if ($list->count_pay == 0)
+                            <button class="text-primary btn btn-sm btn-link"
+                                wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})">
+                                <i class="fa fa-paypal" aria-hidden="true"></i>
+                        @endif
+                        </button>
                         @if ($editItemId === $list->ID)
                             <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
                                 class="text-success btn btn-sm btn-link">
@@ -94,7 +100,7 @@
                                     <i class="fas fa-times" aria-hidden="true"></i>
                                 </button>
                             @else
-                                <label class="text-primary" >Payment Applied </label>
+                                <label class="text-primary">Payment Applied </label>
                             @endif
                         @endif
                     </td>
@@ -192,4 +198,6 @@
     {{-- @if ($STATUS == $openStatus) --}}
     <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase' />
     {{-- @endif --}}
+
+    @livewire('ServiceCharge.PaymentAvailable', ['SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID])
 </div>

@@ -202,24 +202,7 @@ class HemoServices
         ]);
     }
 
-    public function Update(
-        int $ID,
-        string $PRE_WEIGHT,
-        string $PRE_BLOOD_PRESSURE,
-        string $PRE_BLOOD_PRESSURE2,
-        string $PRE_HEART_RATE,
-        string $PRE_O2_SATURATION,
-        string $PRE_TEMPERATURE,
-        string $POST_WEIGHT,
-        string $POST_BLOOD_PRESSURE,
-        string $POST_BLOOD_PRESSURE2,
-        string $POST_HEART_RATE,
-        string $POST_O2_SATURATION,
-        string $POST_TEMPERATURE,
-        string $TIME_START,
-        string $TIME_END
-
-    ) {
+    public function Update( int $ID, string $PRE_WEIGHT, string $PRE_BLOOD_PRESSURE, string $PRE_BLOOD_PRESSURE2, string $PRE_HEART_RATE, string $PRE_O2_SATURATION, string $PRE_TEMPERATURE, string $POST_WEIGHT, string $POST_BLOOD_PRESSURE, string $POST_BLOOD_PRESSURE2, string $POST_HEART_RATE, string $POST_O2_SATURATION, string $POST_TEMPERATURE, string $TIME_START, string $TIME_END  ) {
         Hemodialysis::where('ID', $ID)
             ->update([
                 'PRE_WEIGHT' => $PRE_WEIGHT,

@@ -65,7 +65,12 @@
     </table>
 
     @can('patient.payment.create')
-        <a target="_BLANK" class="btn btn-success btn-xs" href="{{ route('patientspayment_create') }}"> <i
-                class="fas fa-plus"></i> Create Payment</a>
+        <div class="row">
+            <div class="col-1">
+                <a target="_BLANK" class="btn btn-success btn-xs" href="{{ route('patientspayment_create') }}">
+                    <i class="fas fa-plus"></i> Create Payment
+                </a>
+            </div>
+        </div>
     @endcan
 </div>

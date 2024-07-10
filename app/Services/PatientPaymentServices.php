@@ -8,7 +8,7 @@ use Livewire\WithPagination;
 
 class PatientPaymentServices
 {
-
+    
     use WithPagination;
     private $object;
     private $dateServices;
@@ -301,7 +301,7 @@ class PatientPaymentServices
 
         return $result;
     }
-    public function PaymentAvailableList(int $PATIENT_PAYMENT_ID, int $LOCATION_ID)
+    public function PaymentAvailableList(int $PATIENT_ID, int $LOCATION_ID)
     {
 
         $result = PatientPayments::query()
@@ -314,7 +314,7 @@ class PatientPaymentServices
                 'patient_payment.AMOUNT_APPLIED'
             ])
             ->leftJoin('payment_method', 'payment_method.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
-            ->where('patient_payment.PATIENT_ID', $PATIENT_PAYMENT_ID)
+            ->where('patient_payment.PATIENT_ID', $PATIENT_ID)
             ->where('patient_payment.LOCATION_ID', $LOCATION_ID)
             ->whereRaw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED) > 0')
             ->get();

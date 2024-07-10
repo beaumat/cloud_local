@@ -20,8 +20,6 @@
                                 @livewire('Hemodialysis.PrintListModal', ['LOCATION_ID' => $locationid])
                             </div>
                         @endcan
-
-
                     </div>
                 </div>
             </div>

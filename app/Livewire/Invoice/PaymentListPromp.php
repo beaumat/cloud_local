@@ -30,6 +30,7 @@ class PaymentListPromp extends Component
     public function render()
     {
         $this->dataList = $this->invoiceServices->PaymentHistory($this->INVOICE_ID);
+        
         return view('livewire.invoice.payment-list-promp');
     }
 }

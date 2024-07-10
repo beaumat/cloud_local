@@ -116,6 +116,14 @@ class ServiceChargeFormItems extends Component
     {
         $this->getAmount();
     }
+    public function openPayment(int $ID, float $AMOUNT)
+    {
+        $itemdata = [
+            'SERVICE_CHARGES_ITEM_ID' => $ID,
+            'SERVICE_CHARGES_ITEM_AMOUNT' => $AMOUNT
+        ];
+        $this->dispatch('payment-avaliable-prompt', itemdata: $itemdata);
+    }
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
@@ -274,7 +282,7 @@ class ServiceChargeFormItems extends Component
     {
 
         $this->validate(
-            [    
+            [
                 'lineQty' => 'required|not_in:0',
             ],
             [],
@@ -283,7 +291,7 @@ class ServiceChargeFormItems extends Component
             ]
         );
 
-        
+
 
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
