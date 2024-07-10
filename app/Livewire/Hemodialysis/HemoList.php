@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Hemodialysis;
 
+use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
@@ -24,11 +25,15 @@ class HemoList extends Component
     private $locationServices;
     private $userServices;
 
-    public function boot(HemoServices $hemoServices, LocationServices $locationServices, UserServices $userServices)
+    public string $DATE_FROM;
+    public string $DATE_TO;
+    private $dateServices;
+    public function boot(HemoServices $hemoServices, LocationServices $locationServices, UserServices $userServices, DateServices $dateServices)
     {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
+        $this->dateServices = $dateServices;
     }
     public function delete($id)
     {
@@ -42,6 +47,9 @@ class HemoList extends Component
     }
     public function mount()
     {
+
+        $this->DATE_FROM = $this->dateServices->NowDate();
+        $this->DATE_TO = $this->dateServices->NowDate();
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
@@ -52,7 +60,13 @@ class HemoList extends Component
     #[On('refresh-list')]
     public function render()
     {
-        $dataList = $this->hemoServices->Search($this->search, $this->locationid, $this->perPage);
+        $dataList = $this->hemoServices->Search(
+            $this->search,
+            $this->locationid,
+            $this->perPage,
+            $this->DATE_FROM == '' ? $this->dateServices->NowDate() : $this->DATE_FROM,
+            $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO
+        );
         return view('livewire.hemodialysis.hemo-list', ['dataList' => $dataList]);
     }
 }

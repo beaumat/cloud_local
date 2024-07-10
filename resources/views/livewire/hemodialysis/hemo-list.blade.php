@@ -37,7 +37,7 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-9">
+                                        <div class="col-md-6">
                                             <div class="mt-0">
                                                 <label class="text-sm"> <a href="#"
                                                         wire:click='refreshList()'>Search:</a> </label>
@@ -45,7 +45,17 @@
                                                     class="w-100 form-control form-control-sm" placeholder="Search" />
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class ="col-md-2">
+                                            <label class="text-sm">Date From:</label>
+                                            <input type="date" class="form-control form-control-sm"
+                                                wire:model.live='DATE_FROM' />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="text-sm">Date To:</label>
+                                            <input type="date" class="form-control form-control-sm"
+                                                wire:model.live='DATE_TO' />
+                                        </div>
+                                        <div class="col-md-2">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
                                                 <select name="location" wire:model.live='locationid'
@@ -128,11 +138,9 @@
                                                 {{ $list->STATUS }} </td>
                                             <td class="text-center">
                                                 @if ($list->IS_SC)
-                                                <i class="fa fa-check text-success" aria-hidden="true"></i>
-
+                                                    <i class="fa fa-check text-success" aria-hidden="true"></i>
                                                 @else
-                                                <i class="fa fa-times text-danger" aria-hidden="true"></i>
-
+                                                    <i class="fa fa-times text-danger" aria-hidden="true"></i>
                                                 @endif
                                             </td>
                                             <td class="text-center">

@@ -55,7 +55,6 @@
                                                         <livewire:text-input name="Code" titleName="Reference No."
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
-
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($ID == 0)

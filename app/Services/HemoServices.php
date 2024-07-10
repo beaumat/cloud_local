@@ -341,7 +341,7 @@ class HemoServices
     {
         return Hemodialysis::where('');
     }
-    public function Search($search, int $LOCATION_ID, int $perPage)
+    public function Search($search, int $LOCATION_ID, int $perPage, $DateFrom, $DateTo)
     {
         return Hemodialysis::query()
             ->select([
@@ -384,6 +384,7 @@ class HemoServices
                         ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
+            ->whereBetween('hemodialysis.DATE', [$DateFrom, $DateTo])
             ->orderBy('hemodialysis.DATE', 'desc')
             ->orderBy('hemodialysis.ID', 'desc')
             ->paginate($perPage);

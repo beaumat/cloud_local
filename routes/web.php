@@ -79,6 +79,8 @@ use App\Livewire\ManufacturerPage\ManufacturerForm;
 use App\Livewire\ManufacturerPage\ManufacturerList;
 use App\Livewire\Patient\PatientForm;
 use App\Livewire\Patient\PatientList;
+use App\Livewire\PatientReport\PatientSalesReport;
+use App\Livewire\PatientReport\PatientSalesReportPrint;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
 use App\Livewire\PaymentMethod\PaymentMethodList;
 use App\Livewire\PaymentTerm\PaymentTermForm;
@@ -441,32 +443,29 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('/reports')->name('reports')->group(function () {
+        Route::prefix('/patients')->group(function () {
+            Route::prefix('/sales')->group(function () {
+                Route::get('/', PatientSalesReport::class)->name('patient_sales_report'); //->middleware(['permission:patient-sales-report']);
+                Route::get('/print', PatientSalesReportPrint::class)->name('patient_sales_report_print');
+            });
+        });
         Route::prefix('/financial')->group(function () {
-
         });
         Route::prefix('/sales')->group(function () {
-
         });
         Route::prefix('/receivables')->group(function () {
-
         });
         Route::prefix('/purchases')->group(function () {
-
         });
         Route::prefix('/expenses')->group(function () {
-
         });
         Route::prefix('/payables')->group(function () {
-
         });
         Route::prefix('/inventory')->group(function () {
-
         });
         Route::prefix('/accounting')->group(function () {
-
         });
         Route::prefix('/documents')->group(function () {
-
         });
     });
 });

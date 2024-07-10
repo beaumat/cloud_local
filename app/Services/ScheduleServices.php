@@ -20,8 +20,6 @@ class ScheduleServices
     private bool $SAT;
     private bool $SUN;
 
-
-
     private $object;
     private $dateServices;
     public function __construct(ObjectServices $objectService, DateServices $dateServices)

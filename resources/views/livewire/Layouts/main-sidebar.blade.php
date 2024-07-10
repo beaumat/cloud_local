@@ -48,8 +48,8 @@
                 @endif
 
                 @if (Auth::user()->name == 'admin')
-                    <li class="nav-item">
-                        <a href="#" class="nav-link"> <i class="nav-icon fa fa-line-chart"></i>
+                    <li class="nav-item {{ request()->is('reports*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}"> <i class="nav-icon fa fa-line-chart"></i>
                             <p> Reports <i class="right fas fa-angle-left"></i> </p>
                         </a>
                         <ul class="nav nav-treeview">
