@@ -18,11 +18,11 @@ class PaymentAvailable extends Component
     public $paymentAmounts = [];
     public int $PATIENT_ID;
     public float $SERVICE_CHARGES_ITEM_AMOUNT;
-
+    public float $GOT_APPLIED;
     public $showModal = false;
     private $patientPaymentServices;
     public $dataList = [];
-
+    public float $PAY_AVAILABLE;
     public bool $gotInsert = false;
     private  $serviceChargeServices;
     public function boot(PatientPaymentServices $patientPaymentServices, ServiceChargeServices $serviceChargeServices)
@@ -54,8 +54,6 @@ class PaymentAvailable extends Component
 
         if ($payData) {
             $balance = $payData->AMOUNT ?? 0  - $payData->AMOUNT_APPLIED ?? 0;
-
-
             if ($balance < $AMOUNT_APPLIED) {
                 session()->flash('error', 'The remaining balance is too low.');
                 return;
@@ -63,18 +61,14 @@ class PaymentAvailable extends Component
 
             try {
                 DB::beginTransaction();
-                $ID = (int) $this->patientPaymentServices->PaymentChargeStore($PATIENT_PAYMENT_ID,    $this->SERVICE_CHARGES_ITEM_ID, 0, $AMOUNT_APPLIED, 0, 0);
-                $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ID);
-                $this->patientPaymentServices->PaymentChargesUpdate($ID, $PATIENT_PAYMENT_ID,     $this->SERVICE_CHARGES_ITEM_ID, 0, $AMOUNT_APPLIED);
-
+                $this->patientPaymentServices->PaymentChargeStore($PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $AMOUNT_APPLIED, 0, 0);
                 DB::commit();
+                $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ID);
+                $this->patientPaymentServices->UpdatePaymentChargesApplied($PATIENT_PAYMENT_ID);
                 $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
                 $this->dispatch('update-amount', result: $getResult);
                 $this->closeModal();
             } catch (\Throwable $th) {
-
-
-
                 DB::rollBack();
                 session()->flash('error', $th->getMessage());
             }
@@ -88,13 +82,20 @@ class PaymentAvailable extends Component
         $this->reset('paymentAmounts');
         $this->SERVICE_CHARGES_ITEM_ID = (int) $itemdata['SERVICE_CHARGES_ITEM_ID'];
         $this->SERVICE_CHARGES_ITEM_AMOUNT = (float) $itemdata['SERVICE_CHARGES_ITEM_AMOUNT'];
+        $this->GOT_APPLIED = (float) $this->patientPaymentServices->GetPaymentRemainingItem($this->SERVICE_CHARGES_ITEM_ID);
         $data = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
         $this->dataList =  $this->patientPaymentServices->PaymentAvailableList_SC($data->PATIENT_ID, $data->LOCATION_ID, $this->SERVICE_CHARGES_ITEM_ID);
 
         $this->showModal = true;
         foreach ($this->dataList as $list) {
             if ($list->IS_COUNT == 0) {
-                $this->paymentAmounts[$list->ID] = (float)  $this->SERVICE_CHARGES_ITEM_AMOUNT;
+
+                $AMOUNT         =  (float) $list->AMOUNT ?? 0;
+                $AMOUNT_APPLIED =  (float) $list->AMOUNT_APPLIED ?? 0;
+                $BALANCE        =  (float) $AMOUNT - $AMOUNT_APPLIED;
+                $RECOMMENDED    =  (float) $this->SERVICE_CHARGES_ITEM_AMOUNT - $this->GOT_APPLIED;
+                $PAY_AVAILABLE  =  (float) $BALANCE > $RECOMMENDED ?  $RECOMMENDED :  $BALANCE;
+                $this->paymentAmounts[$list->ID] = (float)  $PAY_AVAILABLE;
                 return;
             }
         }

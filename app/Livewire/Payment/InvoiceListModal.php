@@ -112,11 +112,9 @@ class InvoiceListModal extends Component
                     if ($ID > 0) {
                         $this->paymentServices->PaymentInvoiceUpdate($ID, $this->PAYMENT_ID, $chargeId, 0, $chargeAmount);
                         $this->invoiceServices->updateInvoiceBalance($chargeId);
-
                     } else {
                         $this->paymentServices->PaymentInvoiceStore($this->PAYMENT_ID, $chargeId, 0, $chargeAmount, 0, 0);
                         $this->invoiceServices->updateInvoiceBalance($chargeId);
-
                     }
                     $this->dispatch('reset-payment');
                 }

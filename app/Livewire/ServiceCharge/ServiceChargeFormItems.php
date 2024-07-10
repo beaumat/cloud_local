@@ -117,7 +117,7 @@ class ServiceChargeFormItems extends Component
         $this->getAmount();
     }
     public function openPayment(int $ID, float $AMOUNT)
-    {
+    {   
         $itemdata = [
             'SERVICE_CHARGES_ITEM_ID' => $ID,
             'SERVICE_CHARGES_ITEM_AMOUNT' => $AMOUNT

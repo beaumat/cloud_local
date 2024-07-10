@@ -53,7 +53,7 @@
                             </a>
                         @endif
                         <a href="#" title="Delete" id="deletebtn"
-                            wire:click='delete({{ $list->ID }}, {{ $list->PATIENT_PAYMENT_ID }})'
+                            wire:click='delete({{ $list->ID }}, {{ $list->PATIENT_PAYMENT_ID }}, {{ $list->SERVICE_CHARGES_ITEM_ID }})'
                             wire:confirm="Are you sure you want to delete this?" class="btn-sm text-danger">
                             <i class="fas fa-times" aria-hidden="true"></i>
                         </a>
