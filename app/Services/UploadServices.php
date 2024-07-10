@@ -34,13 +34,13 @@ class UploadServices
 
         return $dataReturn;
     }
-    public function Treatment($PDF)
+    public function Treatment($Image)
     {
-        $tempPath = $PDF->store('public/temp', 'public');
+        $tempPath = $Image->store('public/temp', 'public');
 
         $randomFilename = Str::random(40);
 
-        $extension = $PDF->extension();
+        $extension = $Image->extension();
 
         $newPath = 'treatment/' . $randomFilename . '.' . $extension;
 
@@ -54,5 +54,7 @@ class UploadServices
 
         return $dataReturn;
     }
+
+
 
 }
