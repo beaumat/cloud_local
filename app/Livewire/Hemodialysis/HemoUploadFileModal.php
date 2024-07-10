@@ -34,7 +34,6 @@ class HemoUploadFileModal extends Component
     public function uploadImages()
     {
         $this->qrCodeNotReadData = [];
-        
         $this->validate([
             'images.*' => 'image|max:1024', // 1MB Max per image
         ]);
@@ -42,14 +41,11 @@ class HemoUploadFileModal extends Component
         foreach ($this->images as $image) {
             // Store the image
             $path = $image->store('images', 'public');
-
             // Get the absolute path to the stored image
             $absolutePath = storage_path('app/public/' . $path);
-
             // Read QR code from the stored image
             $qrcode = new QrReader($absolutePath);
             $text = $qrcode->text();
-
             // Store QR code data along with just the filename
             $this->qrCodeData[] = [
                 'code' => $text,
