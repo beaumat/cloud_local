@@ -2,11 +2,17 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 text-center mb-4">
+                <div class="col-2">
+                    @livewire('GenerateQRCode', ['code' => $CODE])
+                </div>
+                <div class="col-8 text-center mb-4">
                     <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
                     <div class="print-address">
                         <b>RDL Building F. Torres Street, Davao City</b>
                     </div>
+                </div>
+                <div class="col-2">
+
                 </div>
                 <div class="col-12 text-center">
                     <b class="print-title">HEMODIALYSIS TREATMENT SHEET</b>
@@ -26,12 +32,12 @@
                 </div>
                 <div class="col-12 top-line left-line right-line">
                     <div class="row font-weight-bold" id="firstfloor">
-                        <div class="col-4">NAME: 
-                        <label class="text-primary font-weight-bold text-uppercase">{{ $FULL_NAME }}</label>
-                                </div>
-                        <div class="col-1">AGE: 
-                       
-                       </div>
+                        <div class="col-4">NAME:
+                            <label class="text-primary font-weight-bold text-uppercase">{{ $FULL_NAME }}</label>
+                        </div>
+                        <div class="col-1">AGE:
+
+                        </div>
                         <div class="col-3">NO. OF TREATMENT: <label
                                 class="text-primary font-weight-bold">{{ $NO_OF_TREATMENT }}</label></div>
                         <div class="col-2">MACHINE NO. :</div>
