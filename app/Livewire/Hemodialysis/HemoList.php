@@ -18,7 +18,7 @@ class HemoList extends Component
     protected $paginationTheme = 'bootstrap';
     protected $queryString = ['search' => ['except' => '']];
     public $search = '';
-    public int $perPage = 25;
+    public int $perPage = 100;
     public int $locationid;
     public $locationList = [];
     private $hemoServices;
