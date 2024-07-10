@@ -35,8 +35,8 @@
                         <div class="col-4">NAME:
                             <label class="text-primary font-weight-bold text-uppercase">{{ $FULL_NAME }}</label>
                         </div>
-                        <div class="col-1">AGE:
-
+                        <div class="col-1">AGE: 
+           <label class="text-primary font-weight-bold text-uppercase">{{ $AGE }}</label>
                         </div>
                         <div class="col-3">NO. OF TREATMENT: <label
                                 class="text-primary font-weight-bold">{{ $NO_OF_TREATMENT }}</label></div>
