@@ -36,21 +36,24 @@ class UploadServices
     }
     public function Treatment($Image)
     {
-        $tempPath = $Image->store('public/temp', 'public');
 
-        $randomFilename = Str::random(40);
-        $extension = $Image->extension();
-        $newPath = 'treatment/' . $randomFilename . '.' . $extension; // Adjusted path
-        Storage::disk('public')->move($tempPath, $newPath);
-        $dataReturn = [
-            'new_path' => $newPath,
-            'extension' => $extension,
-            'filename' => $randomFilename
-        ];
+        try {
+            $tempPath = $Image->store('public/temp', 'public');
+            $randomFilename = Str::random(40);
+            $extension = $Image->extension();
+            $newPath = 'treatment/' . $randomFilename . '.' . $extension; // Adjusted path
+            Storage::disk('public')->move($tempPath, $newPath);
+            $dataReturn = [
+                'new_path' => $newPath,
+                'extension' => $extension,
+                'filename' => $randomFilename
+            ];
 
-        return $dataReturn;
+            return $dataReturn;
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th->getMessage());
+            return [];
+        }
     }
-
-
-
 }
