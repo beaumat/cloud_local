@@ -44,6 +44,15 @@ return [
             'throw' => false,
         ],
 
+        'custom_local' => [
+            'driver' => 'local',
+            'root' => public_path('storage'), // Set the root path to C:\xampp\htdocs\public\storage
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+    
+
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
