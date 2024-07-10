@@ -192,7 +192,6 @@ class HemoServices
         return $ID;
     }
 
-
     public function PreUpdate(int $ID, string $DATE, string $CODE, int $CUSTOMER_ID, int $LOCATION_ID)
     {
         Hemodialysis::where('ID', $ID)->update([
@@ -202,6 +201,7 @@ class HemoServices
             'LOCATION_ID' => $LOCATION_ID,
         ]);
     }
+
     public function Update(
         int $ID,
         string $PRE_WEIGHT,
@@ -481,7 +481,7 @@ class HemoServices
             ->where('CUSTOMER_ID', $CONTACT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('DATE', '<', $DATE)
-            ->where('STATUS_ID', '<>', 0)
+            ->where('STATUS_ID', 2)
             ->orderBy('ID', 'desc')
             ->first();
 
@@ -721,5 +721,14 @@ class HemoServices
                 session()->flash('error', $th->getMessage());
             }
         }
+    }
+
+    public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
+    {
+        return (int) Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('DATE', '<=', $DATE)
+            ->whereBetween('STATUS_ID', [1, 2])
+            ->count();
     }
 }

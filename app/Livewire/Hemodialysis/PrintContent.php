@@ -25,21 +25,17 @@ class PrintContent extends Component
     public string $OLD_PRE_HEART_RATE;
     public string $OLD_PRE_O2_SATURATION;
     public string $OLD_PRE_TEMPERATURE;
-
-
     public string $OLD_POST_WEIGHT;
     public string $OLD_POST_BLOOD_PRESSURE;
     public string $OLD_POST_BLOOD_PRESSURE2;
     public string $OLD_POST_HEART_RATE;
     public string $OLD_POST_O2_SATURATION;
     public string $OLD_POST_TEMPERATURE;
-
-
-
     public int $CUSTOMER_ID;
     public int $LOCATION_ID;
+    public array $collection = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
-
+    public int $NO_OF_TREATMENT = 0;
 
 
     public function boot(HemoServices $hemoServices, ContactServices $contactServices)
@@ -93,10 +89,11 @@ class PrintContent extends Component
             $this->CUSTOMER_ID = $data->CUSTOMER_ID;
             $this->LOCATION_ID = $data->LOCATION_ID;
             $this->getPreviousTreatment();
+            $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment( $this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
         }
     }
 
-    public array $collection = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+    
 
     public function render()
     {

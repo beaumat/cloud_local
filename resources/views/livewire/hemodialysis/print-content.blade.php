@@ -26,11 +26,14 @@
                 </div>
                 <div class="col-12 top-line left-line right-line">
                     <div class="row font-weight-bold" id="firstfloor">
-                        <div class="col-4">NAME: <label
-                                class="text-primary font-weight-bold h5">{{ $FULL_NAME }}</label></div>
-                        <div class="col-1">AGE: <label
-                                class="text-primary font-weight-bold">{{ $AGE }}</label></div>
-                        <div class="col-3">NO. OF TREATMENT:</div>
+                        <div class="col-4">NAME: 
+                        <label class="text-primary font-weight-bold text-uppercase">{{ $FULL_NAME }}</label>
+                                </div>
+                        <div class="col-1">AGE: 
+                       
+                       </div>
+                        <div class="col-3">NO. OF TREATMENT: <label
+                                class="text-primary font-weight-bold">{{ $NO_OF_TREATMENT }}</label></div>
                         <div class="col-2">MACHINE NO. :</div>
                         <div class="col-2">DATE: <label
                                 class="text-primary font-weight-bold">{{ \Carbon\Carbon::parse($DATE)->format('m/d/Y') }}</label>
@@ -94,11 +97,13 @@
                                     <div class="row text-center">
                                         <div class="col-6">
                                             <div class="bottom-line2">
-                                               &nbsp; {{ $OLD_PRE_BLOOD_PRESSURE }}/{{ $OLD_PRE_BLOOD_PRESSURE2 }}</div>
+                                                &nbsp; {{ $OLD_PRE_BLOOD_PRESSURE }}/{{ $OLD_PRE_BLOOD_PRESSURE2 }}
+                                            </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="bottom-line2">
-                                                &nbsp;{{ $OLD_POST_BLOOD_PRESSURE }}/{{ $OLD_POST_BLOOD_PRESSURE2 }}</div>
+                                                &nbsp;{{ $OLD_POST_BLOOD_PRESSURE }}/{{ $OLD_POST_BLOOD_PRESSURE2 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
