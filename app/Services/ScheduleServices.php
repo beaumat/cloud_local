@@ -39,13 +39,13 @@ class ScheduleServices
         return Schedules::query()
             ->select([
                 'schedules.CONTACT_ID as ID',
-                'c.NAME'
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as NAME"),
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
             ->where('c.TYPE', 3)
             ->whereDate('schedules.SCHED_DATE', $Date)
             ->where('schedules.LOCATION_ID', $LOCATION_ID)
-            ->orderBy('schedules.SHIFT_ID')
+            ->orderBy('c.LAST_NAME')
             ->get();
     }
     public function scheduleList($Date, int $LOCATION_ID)

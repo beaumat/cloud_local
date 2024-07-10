@@ -29,7 +29,6 @@ class ServiceChargeFormItems extends Component
     public string $ITEM_DESCRIPTION;
     public float $QUANTITY;
     public int $UNIT_ID;
-    public int $BASE_UNIT_ID;
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -136,7 +135,7 @@ class ServiceChargeFormItems extends Component
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
-                $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
+                $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
                 $this->INCOME_ACCOUNT_ID = $item->GL_ACCOUNT_ID ?? 0;
                 $this->COGS_ACCOUNT_ID = $item->COGS_ACCOUNT_ID ?? 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
