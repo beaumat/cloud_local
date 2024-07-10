@@ -89,7 +89,7 @@ class PaymentAvailable extends Component
         $this->SERVICE_CHARGES_ITEM_ID = (int) $itemdata['SERVICE_CHARGES_ITEM_ID'];
         $this->SERVICE_CHARGES_ITEM_AMOUNT = (float) $itemdata['SERVICE_CHARGES_ITEM_AMOUNT'];
         $data = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
-        $this->dataList =  $this->patientPaymentServices->PaymentAvailableList($data->PATIENT_ID, $data->LOCATION_ID);
+        $this->dataList =  $this->patientPaymentServices->PaymentAvailableList_SC($data->PATIENT_ID, $data->LOCATION_ID, $this->SERVICE_CHARGES_ITEM_ID);
 
         $this->showModal = true;
         foreach ($this->dataList as $list) {

@@ -321,6 +321,31 @@ class PatientPaymentServices
 
         return $result;
     }
+    public function PaymentAvailableList_SC(int $PATIENT_ID, int $LOCATION_ID, int $serviceCharges_Item_Id)
+    {
+
+        $result = PatientPayments::query()
+            ->select([
+                'patient_payment.ID',
+                'patient_payment.CODE',
+                'patient_payment.DATE',
+                'payment_method.DESCRIPTION as PAYMENT_METHOD',
+                'patient_payment.AMOUNT',
+                'patient_payment.AMOUNT_APPLIED'
+            ])
+            ->leftJoin('payment_method', 'payment_method.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
+            ->where('patient_payment.PATIENT_ID', $PATIENT_ID)
+            ->where('patient_payment.LOCATION_ID', $LOCATION_ID)
+            ->whereRaw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED) > 0')
+            ->whereNotExists(function ($query) use (&$serviceCharges_Item_Id) {
+                $query->select(DB::raw(1))
+                    ->from('patient_payment_charges as hi')
+                    ->where('hi.SERVICE_CHARGES_ITEM_ID', $serviceCharges_Item_Id);
+            })
+            ->get();
+
+        return $result;
+    }
     public function GetPaymentRemaining(int $PATIENT_PAYMENT_ID): float
     {
         $result = PatientPayments::where('ID', $PATIENT_PAYMENT_ID)->first();
