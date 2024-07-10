@@ -100,8 +100,6 @@ class PaymentAvailable extends Component
 
     public function render()
     {
-
-
         return view('livewire.service-charge.payment-available');
     }
 }

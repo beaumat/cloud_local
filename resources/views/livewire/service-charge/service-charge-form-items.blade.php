@@ -72,11 +72,11 @@
                     {{-- @if ($STATUS == $openStatus) --}}
 
                     <td class="text-center">
-                        @if ($list->count_pay == 0)
+                  
                             <button class="text-primary btn btn-sm btn-link"
                                 wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})">
                                 <i class="fa fa-paypal" aria-hidden="true"></i>
-                        @endif
+                        
                         </button>
                         @if ($editItemId === $list->ID)
                             <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
