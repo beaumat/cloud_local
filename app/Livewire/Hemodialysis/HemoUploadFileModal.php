@@ -3,6 +3,7 @@
 namespace App\Livewire\Hemodialysis;
 
 use App\Services\HemoServices;
+use App\Services\UploadServices;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Zxing\QrReader;
@@ -16,9 +17,11 @@ class HemoUploadFileModal extends Component
     public $qrCodeData = [];
     public $qrCodeNotReadData = [];
     private $hemoServices;
-    public function boot(HemoServices $hemoServices)
+    private $uploadServices;
+    public function boot(HemoServices $hemoServices, UploadServices $uploadServices)
     {
         $this->hemoServices = $hemoServices;
+        $this->uploadServices = $uploadServices;
     }
     public function openModal()
     {
@@ -40,17 +43,16 @@ class HemoUploadFileModal extends Component
 
         foreach ($this->images as $image) {
             // Store the image
-            $path = $image->store('images', 'public');
-            // Get the absolute path to the stored image
-            $absolutePath = public_path('storage/' . $path);
+
+            $data =      $this->uploadServices->Treatment($image);
             // Read QR code from the stored image
-            $qrcode = new QrReader($absolutePath);
+            $qrcode = new QrReader('storage/' . $data['new_path']);
             $text = $qrcode->text();
             // Store QR code data along with just the filename
             $this->qrCodeData[] = [
                 'code' => $text,
-                'filename' => basename($path),
-                'filepath' =>  $path
+                'filename' => $data['filename'],
+                'filepath' =>  $data['new_path']
             ];
         }
 
