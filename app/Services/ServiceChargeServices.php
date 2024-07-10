@@ -434,6 +434,7 @@ class ServiceChargeServices
         return $result->pay;
     }
     public function updateServiceChargesBalance(int $SERVICE_CHARGES_ID)
+    
     {
         $data = ServiceCharges::where('ID', $SERVICE_CHARGES_ID)->first();
 

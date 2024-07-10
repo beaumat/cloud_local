@@ -41,7 +41,8 @@
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }} </td>
                                         <td> <a target="_BLANK"
-                                                href="{{ $list->SERVICE_CHARGES_ID }}">{{ $list->CODE }}</a> </td>
+                                                href="{{ route('patientsservice_charges_edit', ['id' => $list->SERVICE_CHARGES_ID]) }}">{{ $list->CODE }}</a>
+                                        </td>
                                         <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                                         <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
                                         <th>
@@ -62,10 +63,10 @@
 
                                         <th>
                                             @php
-                                                $temp_max = ($list->ITEM_AMOUNT - $list->PAID_AMOUNT);
-                                         
+                                                $temp_max = $list->ITEM_AMOUNT - $list->PAID_AMOUNT;
+
                                             @endphp
-                                            
+
                                             <input type="number" min="0" max='{{ $temp_max }}'
                                                 wire:model="paymentAmounts.{{ $list->ID }}"
                                                 class="text-xs w-100" />

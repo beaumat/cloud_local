@@ -55,6 +55,7 @@
                                         <th class="col-2">Patients</th>
                                         <th class="col-1">Deposit</th>
                                         <th class="col-1">Applied</th>
+                                        <th class="col-1">Balance</th>
                                         <th class="col-1">Method</th>
                                         <th class="text-center col-1">Confirm</th>
                                         <th class="col-1">Location</th>
@@ -83,6 +84,9 @@
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
+                                            <td class="text-right">
+                                                {{ number_format($list->AMOUNT - $list->AMOUNT_APPLIED, 2) }}
+                                            </td>
                                             <td> {{ $list->PAYMENT_METHOD }}</td>
                                             <td class="text-center">
                                                 @if ($list->IS_CONFIRM)
