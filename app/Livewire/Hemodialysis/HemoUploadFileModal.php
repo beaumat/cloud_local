@@ -44,9 +44,10 @@ class HemoUploadFileModal extends Component
         foreach ($this->images as $image) {
             // Store the image
 
-            $data =      $this->uploadServices->Treatment($image);
+            $data = $this->uploadServices->Treatment($image);
+
             // Read QR code from the stored image
-            $qrcode = new QrReader('storage/' . $data['new_path']);
+            $qrcode = new QrReader(public_path('storage/' . $data['new_path'])); // Adjusted path usage
             $text = $qrcode->text();
             // Store QR code data along with just the filename
             $this->qrCodeData[] = [
