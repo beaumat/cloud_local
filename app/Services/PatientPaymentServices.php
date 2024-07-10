@@ -151,7 +151,7 @@ class PatientPaymentServices
                 'patient_payment.AMOUNT',
                 'patient_payment.AMOUNT_APPLIED',
                 'patient_payment.NOTES',
-                'c.NAME as CONTACT_NAME',
+                 DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as CONTACT_NAME"),
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
                 'pm.DESCRIPTION as PAYMENT_METHOD',
@@ -180,7 +180,8 @@ class PatientPaymentServices
     }
 
 
-    public function PaymentChargeStore( int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID, float $DISCOUNT, float $AMOUNT_APPLIED, int $DISCOUNT_ACCOUNT_ID, int $ACCOUNTS_RECEIVABLE_ID ): int {
+    public function PaymentChargeStore(int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID, float $DISCOUNT, float $AMOUNT_APPLIED, int $DISCOUNT_ACCOUNT_ID, int $ACCOUNTS_RECEIVABLE_ID): int
+    {
 
         $ID = $this->object->ObjectNextID('PATIENT_PAYMENT_CHARGES');
         PatientPaymentCharges::create([
