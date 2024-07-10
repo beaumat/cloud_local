@@ -52,7 +52,7 @@
                                         </tr>
 
                                         @php
-                                            $gotInsert = true;
+                                         
                                         @endphp
                                     @endif
                                 @endforeach
