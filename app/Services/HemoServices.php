@@ -202,7 +202,8 @@ class HemoServices
         ]);
     }
 
-    public function Update( int $ID, string $PRE_WEIGHT, string $PRE_BLOOD_PRESSURE, string $PRE_BLOOD_PRESSURE2, string $PRE_HEART_RATE, string $PRE_O2_SATURATION, string $PRE_TEMPERATURE, string $POST_WEIGHT, string $POST_BLOOD_PRESSURE, string $POST_BLOOD_PRESSURE2, string $POST_HEART_RATE, string $POST_O2_SATURATION, string $POST_TEMPERATURE, string $TIME_START, string $TIME_END  ) {
+    public function Update(int $ID, string $PRE_WEIGHT, string $PRE_BLOOD_PRESSURE, string $PRE_BLOOD_PRESSURE2, string $PRE_HEART_RATE, string $PRE_O2_SATURATION, string $PRE_TEMPERATURE, string $POST_WEIGHT, string $POST_BLOOD_PRESSURE, string $POST_BLOOD_PRESSURE2, string $POST_HEART_RATE, string $POST_O2_SATURATION, string $POST_TEMPERATURE, string $TIME_START, string $TIME_END)
+    {
         Hemodialysis::where('ID', $ID)
             ->update([
                 'PRE_WEIGHT' => $PRE_WEIGHT,
@@ -714,5 +715,22 @@ class HemoServices
             ->where('DATE', '<=', $DATE)
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
+    }
+
+    public function UpdateQRFile($CODE, $FILE_NAME, $FILE_PATH): bool
+    {
+        $data =  Hemodialysis::where('CODE', $CODE)->exists();
+
+        if ($data) {
+            Hemodialysis::where('CODE', $CODE)
+                ->update([
+                    'FILE_NAME' => $FILE_NAME,
+                    'FILE_PATH' => $FILE_PATH
+                ]);
+
+            return true;
+        }
+
+        return false;
     }
 }

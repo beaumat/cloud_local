@@ -35,6 +35,12 @@ class HemoList extends Component
         $this->userServices = $userServices;
         $this->dateServices = $dateServices;
     }
+
+    #[On('upload-alert')]
+    public function AlertMsg($data)
+    {
+        session()->flash('message', $data);
+    }
     public function delete($id)
     {
         try {

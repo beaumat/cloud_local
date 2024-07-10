@@ -7,19 +7,23 @@
                 </div>
                 <div class="col-6 text-right">
                     <div style="float: right;" class="row">
+
                         @can('patient.treatment.create')
                             @can('patient.treatment.print')
-                                <div class="col-6 text-right">
+                                <div class="col-4 text-right">
                                     @livewire('Hemodialysis.ScheduleModal', ['LOCATION_ID' => $locationid])
                                 </div>
                             @endcan
                         @endcan
 
                         @can('patient.treatment.print')
-                            <div class="col-6">
+                            <div class="col-4">
                                 @livewire('Hemodialysis.PrintListModal', ['LOCATION_ID' => $locationid])
                             </div>
                         @endcan
+                        <div class="col-4">
+                            @livewire('Hemodialysis.HemoUploadFileModal')
+                        </div>
                     </div>
                 </div>
             </div>

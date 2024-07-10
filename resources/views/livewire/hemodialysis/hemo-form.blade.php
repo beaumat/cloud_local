@@ -13,9 +13,7 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <a class="text-white" href="{{ route('patientshemo') }}">
-                                        @if ($ID == 0)
-                                            Create
-                                        @endif
+                                        @if ($ID == 0) Create @endif
                                         Hemodialysis Treatment
                                     </a>
                                 </div>
@@ -119,7 +117,7 @@
                                         @endif
                                         <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
                                             class="btn btn-sm btn-success">Print</a>
-
+                                  
                                     </div>
                                 </div>
                             </div>
