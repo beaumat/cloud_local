@@ -419,9 +419,9 @@ class ScheduleServices
             ->when($SHIFT_ID > 0, function ($query) use (&$SHIFT_ID) {
                 $query->where('schedules.SHIFT_ID', $SHIFT_ID);
             })
-            ->orderBy('c.LAST_NAME')
-            ->orderBy('hm.ID')
             ->orderBy('s.ID')
+            ->orderBy('hm.ID')
+            ->orderBy('c.LAST_NAME')
             ->get();
 
         return $result;
