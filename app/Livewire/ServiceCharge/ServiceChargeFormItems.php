@@ -70,6 +70,7 @@ class ServiceChargeFormItems extends Component
     private $itemSubClassServices;
     public $CLASS_DESCRIPTION;
 
+    public bool $editPrice = true;
     public function boot(
         ServiceChargeServices $serviceChargeServices,
         ComputeServices $computeServices,
