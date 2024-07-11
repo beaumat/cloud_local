@@ -305,7 +305,6 @@ class PatientPaymentServices
 
     public function PaymentAvailableList(int $PATIENT_ID, int $LOCATION_ID)
     {
-
         $result = PatientPayments::query()
             ->select([
                 'patient_payment.ID',
@@ -373,7 +372,6 @@ class PatientPaymentServices
         if ($total > 0) {
             return true;
         }
-
         return false;
     }
     

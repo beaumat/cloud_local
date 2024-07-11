@@ -50,7 +50,6 @@ class InventoryTreatment extends Component
     public $unitList = [];
     public $editUnitList = [];
     public bool $IS_NEW;
-
     public $ItemRequiredList = [];
     public function mount()
     {
@@ -203,11 +202,11 @@ class InventoryTreatment extends Component
     {
         if ($this->ActiveRequired) {
 
-            if ($this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->HEMO_ID)) {
+            // if ($this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->HEMO_ID)) {
 
-                $this->ItemRequiredList =  [];
-                return;
-            }
+            //     $this->ItemRequiredList =  [];
+            //     return;
+            // }
 
             $this->ItemRequiredList =  $this->itemTreatmentServices->getItemRequired($this->LOCATION_ID, $this->HEMO_ID);
         }
@@ -215,7 +214,6 @@ class InventoryTreatment extends Component
     public function addItem(int $ItemTreatmentId)
     {
         $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
-
         if ($data) {
             $gotNew = true;
             if ($data->NO_OF_USED > 1) {
@@ -233,7 +231,6 @@ class InventoryTreatment extends Component
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
                 $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
                 $this->hemoServices->ItemStore($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
-
                 // TRIGGER START
                 $dataTrigger = $this->itemTreatmentServices->listItemTrigger($ItemTreatmentId);
                 foreach ($dataTrigger  as $list) {

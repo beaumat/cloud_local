@@ -1,6 +1,6 @@
 <section class="content">
     <!-- Default box -->
-    <div class="card">
+    <div class="card" @if ($STATUS == 2 || $STATUS == 3) style="opacity: 0.5;pointer-events: none;" @endif>
 
         <div class="card-body p-2">
             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
