@@ -8,10 +8,14 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 #[Title('Sales Report')]
 class PatientSalesReport extends Component
-{
-    public $contactList= [];
-    public string $dateForm;
-    public string $dateTo;
+{   
+
+    public $PATIENT_ID;
+    public $LOCATION_ID;
+    
+    public $patientList= [];
+    public string $DATE_FROM;
+    public string $DATE_TO;
     private $contactServices;
     private $dateServices;
     public function boot(ContactServices $contactServices, DateServices $dateServices)
@@ -20,9 +24,9 @@ class PatientSalesReport extends Component
         $this->dateServices =   $dateServices;
      }
     public function mount() {
-        $this->dateForm = $this->dateServices->NowDate();
-        $this->dateTo = $this->dateServices->NowDate();
-        $this->contactList = $this->contactServices->getList(3);
+        $this->DATE_FROM = $this->dateServices->NowDate();
+        $this->DATE_TO = $this->dateServices->NowDate();
+        $this->patientList = $this->contactServices->getList(3);
     }
     public function render()
     {       

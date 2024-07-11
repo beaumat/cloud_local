@@ -148,7 +148,6 @@ class ServiceChargeFormItems extends Component
                 $this->INCOME_ACCOUNT_ID = $item->GL_ACCOUNT_ID ?? 0;
                 $this->COGS_ACCOUNT_ID = $item->COGS_ACCOUNT_ID ?? 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
-
                 $this->GROUP_LINE_ID = false;
                 $this->PRINT_IN_FORMS = false;
                 $this->PRICE_LEVEL_ID = 0;
