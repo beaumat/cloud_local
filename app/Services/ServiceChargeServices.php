@@ -17,13 +17,12 @@ class ServiceChargeServices
     private $locationReference;
     private $systemSettingServices;
     private $dateServices;
-
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         LocationReferenceServices $locationReferenceServices,
         SystemSettingServices $systemSettingServices,
-        DateServices $dateServices
+        DateServices $dateServices,
 
     ) {
         $this->object = $objectService;
@@ -80,19 +79,8 @@ class ServiceChargeServices
     {
         return ServiceChargesItems::where('ID', $ID)->first();
     }
-    public function Store(
-        string $CODE,
-        string $DATE,
-        int $PATIENT_ID,
-        int $LOCATION_ID,
-        string $NOTES,
-        int $ACCOUNTS_RECEIVABLE_ID,
-        int $STATUS,
-        int $OUTPUT_TAX_ID,
-        float $OUTPUT_TAX_RATE,
-        int $OUTPUT_TAX_VAT_METHOD,
-        int $OUTPUT_TAX_ACCOUNT_ID
-    ): int {
+    public function Store(string $CODE, string $DATE, int $PATIENT_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_RECEIVABLE_ID, int $STATUS, int $OUTPUT_TAX_ID, float $OUTPUT_TAX_RATE, int $OUTPUT_TAX_VAT_METHOD, int $OUTPUT_TAX_ACCOUNT_ID): int
+    {
 
         $ID = (int) $this->object->ObjectNextID('SERVICE_CHARGES');
 
@@ -129,20 +117,8 @@ class ServiceChargeServices
             'STATUS_DATE' => $this->dateServices->NowDate()
         ]);
     }
-    public function Update(
-        int $ID,
-        string $CODE,
-        string $DATE,
-        int $PATIENT_ID,
-        int $LOCATION_ID,
-        string $NOTES,
-        int $ACCOUNTS_RECEIVABLE_ID,
-        int $STATUS,
-        int $OUTPUT_TAX_ID,
-        float $OUTPUT_TAX_RATE,
-        int $OUTPUT_TAX_VAT_METHOD,
-        int $OUTPUT_TAX_ACCOUNT_ID
-    ): void {
+    public function Update(int $ID, string $CODE, string $DATE, int $PATIENT_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_RECEIVABLE_ID, int $STATUS, int $OUTPUT_TAX_ID, float $OUTPUT_TAX_RATE, int $OUTPUT_TAX_VAT_METHOD, int $OUTPUT_TAX_ACCOUNT_ID): void
+    {
 
         ServiceCharges::where('ID', $ID)->update([
             'CODE' => $CODE,
@@ -167,7 +143,7 @@ class ServiceChargeServices
     {
         return  ServiceCharges::where('DATE', $DATE)->where('PATIENT_ID', $PATIENT_ID)->where('LOCATION_ID', $LOCATION_ID)->exists();
     }
-    public function Search($search, int $locationId, int $perPage)
+    public function Search($search, int $locationId, int $perPage, string $dateFrom, string $dateTo)
     {
         $result = ServiceCharges::query()
             ->select([
@@ -201,6 +177,7 @@ class ServiceChargeServices
                     ->orWhere('c.NAME', 'like', '%' . $search . '%')
                     ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
             })
+            ->where('service_charges.DATE', [$dateFrom, $dateTo])
             ->orderBy('service_charges.DATE', 'desc')
             ->paginate($perPage);
 
@@ -238,6 +215,10 @@ class ServiceChargeServices
         return $result;
     }
 
+    public  function getItemDetails(int $id)
+    {
+        return ServiceChargesItems::where('id', $id)->first();
+    }
     private function getLine($Id): int
     {
         return (int) ServiceChargesItems::where('SERVICE_CHARGES_ID', $Id)->max('LINE_NO');
@@ -434,7 +415,7 @@ class ServiceChargeServices
         return $result->pay;
     }
     public function updateServiceChargesBalance(int $SERVICE_CHARGES_ID)
-    
+
     {
         $data = ServiceCharges::where('ID', $SERVICE_CHARGES_ID)->first();
 

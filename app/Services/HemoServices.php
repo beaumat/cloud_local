@@ -10,19 +10,23 @@ use Illuminate\Support\Facades\DB;
 class HemoServices
 {
 
+    private int $ITEM_USED_ID = 5;
+    private int $ITEM_NOT_ADDED_ID = 4;
     private $object;
     private $user;
     private $systemSettingServices;
     private $dateServices;
     private $itemTreatmentServices;
     private $unitOfMeasureServices;
+    private $itemServices;
     public function __construct(
         ObjectServices $objectService,
         UserServices $userServices,
         SystemSettingServices $systemSettingServices,
         DateServices $dateServices,
         ItemTreatmentServices $itemTreatmentServices,
-        UnitOfMeasureServices $unitOfMeasureServices
+        UnitOfMeasureServices $unitOfMeasureServices,
+        ItemServices $itemServices
     ) {
         $this->object = $objectService;
         $this->user = $userServices;
@@ -30,6 +34,7 @@ class HemoServices
         $this->dateServices = $dateServices;
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
+        $this->itemServices = $itemServices;
     }
 
     public function Get(int $ID)
@@ -738,5 +743,65 @@ class HemoServices
         }
 
         return false;
+    }
+
+    public function ItemQuery(int $PATIENT_ID, string $DATE, int $LOCATION_ID, int $ITEM_ID, float $QTY, bool $IS_DELETE, int $UNIT_ID)
+    {
+        if ($ITEM_ID == $this->ITEM_NOT_ADDED_ID) {
+            return;
+        }
+
+        $itemDetails =  $this->itemServices->get($ITEM_ID);
+
+        if ($itemDetails) {
+            if ($itemDetails->TYPE <> 0) {
+                return;
+            }
+        }
+
+        $dataItem =  HemodialysisItems::select([
+            'hemodialysis_items.ID',
+            'hemodialysis_items.HEMO_ID'
+        ])
+            ->join('hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->where('hemodialysis.CUSTOMER_ID', $PATIENT_ID)
+            ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
+            ->where('hemodialysis.DATE', $DATE)
+            ->where('hemodialysis_items.ITEM_ID', $ITEM_ID)
+            ->first();
+
+        if ($dataItem) { // HEMO EXISTS
+            if ($ITEM_ID == $this->ITEM_USED_ID) { //  
+                if ($IS_DELETE) {
+                    HemodialysisItems::where('ID', $dataItem->ID)->where('HEMO_ID', $dataItem->HEMO_ID)->where('ITEM_ID', $ITEM_ID)->update(['QUANTITY' => 1, 'IS_NEW' => 0]);
+                    return;
+                }
+       
+                HemodialysisItems::where('ID', $dataItem->ID)->where('HEMO_ID', $dataItem->HEMO_ID)->where('ITEM_ID', $ITEM_ID)->update(['QUANTITY' => $QTY, 'IS_NEW' => 1]);
+                return;
+            }
+
+            if ($IS_DELETE) {
+                $this->ItemDelete($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID);
+                return;
+            }
+
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
+            $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+            $this->ItemUpdate($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID,  $UNIT_BASE_QUANTITY, true);
+            return;
+        }
+        // new item
+        $hemoData = Hemodialysis::select(['ID'])
+            ->where('hemodialysis.CUSTOMER_ID', $PATIENT_ID)
+            ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
+            ->where('hemodialysis.DATE', $DATE)
+            ->first();
+
+        if ($hemoData) {
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
+            $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+            $this->ItemStore($hemoData->ID, $ITEM_ID, $QTY, $UNIT_ID, $UNIT_BASE_QUANTITY, true);
+        }
     }
 }

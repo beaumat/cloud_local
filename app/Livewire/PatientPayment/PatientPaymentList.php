@@ -77,7 +77,7 @@ class PatientPaymentList extends Component
         $this->TOTAL_DEPOSIT = (float) $result['TOTAL_DEPOSIT'];
         $this->TOTAL_APPLIED = (float) $result['TOTAL_APPLIED'];
         $this->TOTAL_BALANCE = $this->TOTAL_DEPOSIT  - $this->TOTAL_APPLIED;
-        
+
         return view('livewire.patient-payment.patient-payment-list', ['dataList' => $dataList]);
     }
 }

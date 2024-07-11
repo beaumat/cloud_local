@@ -3,6 +3,7 @@
 namespace App\Livewire\ServiceCharge;
 
 use App\Services\ComputeServices;
+use App\Services\HemoServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
 use App\Services\ServiceChargeServices;
@@ -20,6 +21,9 @@ class ServiceChargeFormItems extends Component
     #[Reactive]
     public int $STATUS;
     #[Reactive]
+
+
+
     public int $TAX_ID;
     public int $openStatus = 0;
     public int $ID;
@@ -71,13 +75,16 @@ class ServiceChargeFormItems extends Component
     public $CLASS_DESCRIPTION;
 
     public bool $editPrice = true;
+
+    private $hemoServices;
     public function boot(
         ServiceChargeServices $serviceChargeServices,
         ComputeServices $computeServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         TaxServices $taxServices,
         ItemServices $itemServices,
-        ItemSubClassServices $itemSubClassServices
+        ItemSubClassServices $itemSubClassServices,
+        HemoServices $hemoServices
     ) {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->computeServices = $computeServices;
@@ -85,6 +92,7 @@ class ServiceChargeFormItems extends Component
         $this->taxServices = $taxServices;
         $this->itemServices = $itemServices;
         $this->itemSubClassServices = $itemSubClassServices;
+        $this->hemoServices = $hemoServices;
     }
     public function updatedcodeBase()
     {
@@ -118,7 +126,7 @@ class ServiceChargeFormItems extends Component
         $this->getAmount();
     }
     public function openPayment(int $ID, float $AMOUNT)
-    {   
+    {
         $itemdata = [
             'SERVICE_CHARGES_ITEM_ID' => $ID,
             'SERVICE_CHARGES_ITEM_AMOUNT' => $AMOUNT
@@ -191,7 +199,7 @@ class ServiceChargeFormItems extends Component
                 'RATE' => 'Price'
             ]
         );
-
+        DB::beginTransaction();
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
             $tax_result = $this->computeServices->ItemComputeTax($this->AMOUNT, $this->TAXABLE, $this->TAX_ID, $taxRate);
@@ -221,6 +229,14 @@ class ServiceChargeFormItems extends Component
                 $this->PRICE_LEVEL_ID
             );
 
+
+            $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
+            if ($dataSC) {
+                $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->ITEM_ID,  $this->QUANTITY, false, $this->UNIT_ID > 0 ? $this->UNIT_ID : 0);
+            }
+
+            DB::commit();
+
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
 
@@ -240,6 +256,7 @@ class ServiceChargeFormItems extends Component
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -291,7 +308,7 @@ class ServiceChargeFormItems extends Component
             ]
         );
 
-
+        DB::beginTransaction();
 
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
@@ -319,6 +336,14 @@ class ServiceChargeFormItems extends Component
                 $this->linePriceLevelId
             );
 
+
+            $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
+            if ($dataSC) {
+                $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->lineItemId,  $this->lineQty, false,  $this->lineUnitId > 0 ? $this->lineUnitId : 0);
+            }
+
+            DB::commit();
+
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
             $this->itemList = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID);
@@ -330,7 +355,7 @@ class ServiceChargeFormItems extends Component
             $this->lineTax = false;
             $this->lineItemId = 0;
         } catch (\Exception $e) {
-
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -340,17 +365,25 @@ class ServiceChargeFormItems extends Component
         $this->editItemId = null;
     }
 
-    public function deleteItem($Id)
+    public function deleteItem(int $Id)
     {
+        DB::beginTransaction();
         try {
-            $this->serviceChargeServices->ItemDelete(
-                $Id,
-                $this->SERVICE_CHARGES_ID
-            );
+            $getItemInfo = $this->serviceChargeService->getItemDetails($Id);
+            if ($getItemInfo) {
+                $this->serviceChargeServices->ItemDelete($Id, $this->SERVICE_CHARGES_ID); // Delete Transaction
+
+                $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
+                if ($dataSC) {
+                    $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $getItemInfo->ITEM_ID, 0, true, $getItemInfo->UNIT_ID ?? 0);
+                }
+            }
+            DB::commit();
 
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
