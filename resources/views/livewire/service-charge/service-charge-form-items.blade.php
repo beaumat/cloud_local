@@ -48,7 +48,7 @@
                         @if ($editItemId === $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
                                 name="lineRate" wire:model.live.debounce.1000ms='lineRate' wire:blur="getEditAmount"
-                                readonly />
+                                 />
                         @else
                             {{ number_format($list->RATE, 2) }}
                         @endif
@@ -150,11 +150,11 @@
 
                         <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
                             name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
-                            @if ($ITEM_ID == 0) readonly @endif />
+                            @if ($ITEM_ID == 0)  @endif />
                     </td>
                     <td>
                         <select wire:model='UNIT_ID' name="UNIT_ID" class="text-sm form-control form-control-sm mt-2"
-                            @if ($ITEM_ID == 0) readonly @endif>
+                            @if ($ITEM_ID == 0)  @endif>
                             @foreach ($unitList as $list)
                                 <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
                             @endforeach
