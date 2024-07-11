@@ -641,6 +641,8 @@ class HemoServices
         $result = Hemodialysis::query()
             ->select([
                 'ID',
+                'PRE_WEIGHT',
+                'POST_WEIGHT',
                 'TIME_START',
                 'TIME_END',
                 'STATUS_ID'
@@ -655,18 +657,22 @@ class HemoServices
 
         if ($result) {
             return [
-                'ID' =>         $result->ID,
-                'TIME_START' => $result->TIME_START,
-                'TIME_END' =>   $result->TIME_END,
-                'STATUS_ID' =>  $result->STATUS_ID ?? 0
+                'ID'            => $result->ID,
+                'TIME_START'    => $result->TIME_START,
+                'TIME_END'      => $result->TIME_END,
+                'STATUS_ID'     => $result->STATUS_ID ?? 0,
+                'PRE_WEIGHT'    => $result->PRE_WEIGHT,
+                'POST_WEIGHT'   => $result->POST_WEIGHT
             ];
         }
 
         return [
             'ID' => 0,
-            'TIME_START' => null,
-            'TIME_END' => null,
-            'STATUS_ID' => 0
+            'TIME_START'    => null,
+            'TIME_END'      => null,
+            'STATUS_ID'     => 0,
+            'PRE_WEIGHT'    => null,
+            'POST_WEIGHT'   => null
         ];
     }
 

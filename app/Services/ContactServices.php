@@ -9,7 +9,6 @@ use Livewire\WithPagination;
 
 class ContactServices
 {
-
     use WithPagination;
     private $object;
     public function __construct(ObjectServices $objectService)

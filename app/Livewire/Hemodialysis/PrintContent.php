@@ -4,6 +4,7 @@ namespace App\Livewire\Hemodialysis;
 
 use App\Services\ContactServices;
 use App\Services\HemoServices;
+use App\Services\PatientDoctorServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -34,14 +35,16 @@ class PrintContent extends Component
     public int $CUSTOMER_ID;
     public int $LOCATION_ID;
     public array $collection = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-
+    public string $NEPRHO_NAME;
+    public string $DIAGNOSIS = " ";
     public int $NO_OF_TREATMENT = 0;
 
-
-    public function boot(HemoServices $hemoServices, ContactServices $contactServices)
+    private $patientDoctorServices;
+    public function boot(HemoServices $hemoServices, ContactServices $contactServices, PatientDoctorServices $patientDoctorServices)
     {
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
+        $this->patientDoctorServices = $patientDoctorServices;
     }
 
     public function getPreviousTreatment()
@@ -89,11 +92,21 @@ class PrintContent extends Component
             $this->CUSTOMER_ID = $data->CUSTOMER_ID;
             $this->LOCATION_ID = $data->LOCATION_ID;
             $this->getPreviousTreatment();
-            $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment( $this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
+            $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
+
+            $dataDoc = $this->patientDoctorServices->GetList($this->CUSTOMER_ID);
+            foreach ($dataDoc as $doc) {
+                $this->NEPRHO_NAME = $doc->NAME ?? '';
+            }
+            $dataPatient = $this->contactServices->get($this->CUSTOMER_ID, 3);
+
+            if ($dataPatient) {
+                $this->DIAGNOSIS = $dataPatient->FINAL_DIAGNOSIS ?? '';
+            }
         }
     }
 
-    
+
 
     public function render()
     {

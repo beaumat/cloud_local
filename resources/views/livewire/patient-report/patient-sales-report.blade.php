@@ -28,16 +28,15 @@
                                             <livewire:select-option name="PATIENT_ID" titleName="Patient"
                                                 :options="$patientList" :zero="true" :isDisabled=false
                                                 wire:model='PATIENT_ID' />
-
                                         </div>
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <livewire:date-input name="DATE_FROM" titleName="Date"
+                                                    <livewire:date-input name="DATE_FROM" titleName="Date From"
                                                         wire:model.live='DATE_FROM' :isDisabled="false" />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <livewire:date-input name="DATE_TO" titleName="Date"
+                                                    <livewire:date-input name="DATE_TO" titleName="Date To"
                                                         wire:model.live='DATE_TO' :isDisabled="false" />
                                                 </div>
                                                 <div class="col-md-4">
@@ -45,22 +44,12 @@
                                                         :options="$locationList" :zero="false" :isDisabled=false
                                                         wire:model.iive='LOCATION_ID' />
                                                 </div>
-
-                                                <div class="col-md-8">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=false wire:model='NOTES' :vertical="false" />
-                                                    @else
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=true wire:model='NOTES' :vertical="false" />
-                                                    @endif
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+ 
                         </form>
 
                     </div>
@@ -68,23 +57,21 @@
             </div>
         </div>
     </section>
-    @if ($ID > 0)
-        <section class="content">
-            <div class="container-fluid bg-light">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card card-primary card-outline card-outline-tabs">
-                            <div class="card-header p-0 border-bottom-0">
-
-                            </div>
-                            <div class="card-body">
-
-                            </div>
+    <section class="content">
+        <div class="container-fluid bg-light">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary card-outline card-outline-tabs">
+                        <div class="card-header p-0 border-bottom-0">
 
                         </div>
+                        <div class="card-body">
+
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </section>
-    @endif
+        </div>
+    </section>
 </div>

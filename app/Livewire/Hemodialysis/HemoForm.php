@@ -8,6 +8,7 @@ use App\Services\HemoServices;
 use App\Services\ItemInventoryServices;
 use App\Services\ItemTreatmentServices;
 use App\Services\LocationServices;
+use App\Services\PatientDoctorServices;
 use App\Services\ScheduleServices;
 use App\Services\UnitOfMeasureServices;
 use App\Services\UploadServices;
@@ -32,6 +33,7 @@ class HemoForm extends Component
     public int $STATUS;
     public int $openStatus = 1; // draft default
     public string $STATUS_DESCRIPTION;
+    
     public $patientList = [];
     public $locationList = [];
 
@@ -79,6 +81,7 @@ class HemoForm extends Component
     private $itemTreatmentServices;
     private $unitOfMeasureServices;
     private $scheduleServices;
+    private $patientDoctorServices;
     public function boot(
         HemoServices $hemoServices,
         ContactServices $contactServices,
@@ -89,7 +92,8 @@ class HemoForm extends Component
         DocumentTypeServices $documentTypeServices,
         ItemTreatmentServices $itemTreatmentServices,
         UnitOfMeasureServices $unitOfMeasureServices,
-        ScheduleServices $scheduleServices
+        ScheduleServices $scheduleServices,
+        PatientDoctorServices $patientDoctorServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
@@ -101,6 +105,7 @@ class HemoForm extends Component
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->scheduleServices = $scheduleServices;
+        $this->patientDoctorServices = $patientDoctorServices;
     }
 
     public function reloadData($data)

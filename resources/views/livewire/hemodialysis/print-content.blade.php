@@ -35,8 +35,8 @@
                         <div class="col-4">NAME:
                             <label class="text-primary font-weight-bold text-uppercase">{{ $FULL_NAME }}</label>
                         </div>
-                        <div class="col-1">AGE: 
-           <label class="text-primary font-weight-bold text-uppercase">{{ $AGE }}</label>
+                        <div class="col-1">AGE:
+                            <label class="text-primary font-weight-bold text-uppercase">{{ $AGE }}</label>
                         </div>
                         <div class="col-3">NO. OF TREATMENT: <label
                                 class="text-primary font-weight-bold">{{ $NO_OF_TREATMENT }}</label></div>
@@ -324,39 +324,40 @@
                     <div class="row">
                         <div class="col-4 ">
                             <label class="text-sm">NEPHROLOGIST:</label>
-                            <div class="form-group">
-                                <div class="row">
+                            <div class="form-group px-3">
+                                <div class="row ">
+                                    <div class="col-12 bottom-line2 text-uppercase text-center text-primary">
+                                        &nbsp;{{ $NEPRHO_NAME }}
+                                    </div>
                                     <div class="col-12  text-center">
-                                        ______________________________________________
                                         <b> SPECIAL ENDORSEMENT</b>
                                     </div>
-
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
 
                                 </div>
@@ -365,39 +366,40 @@
                         </div>
                         <div class="col-4 left-line">
                             <label class="text-sm">DIAGNOSIS:</label>
-                            <div class="form-group">
+                            <div class="form-group px-3">
                                 <div class="row">
+                                    <div class="col-12 bottom-line2 text-uppercase text-center text-primary">
+                                        &nbsp; {{ $DIAGNOSIS }}
+                                    </div>
                                     <div class="col-12  text-center">
-                                        ______________________________________________
                                         <b>STANDING ORDER</b>
                                     </div>
-
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
-                                    <div class="col-12  text-center">
-                                        ______________________________________________
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                     </div>
 
                                 </div>

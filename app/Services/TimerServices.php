@@ -42,15 +42,21 @@ class TimerServices
         try {
 
             $data = $this->hemoServices->getTreatmentID($CONTACT_ID, $DATE, $LOCATION_ID);
+            
             $ID         = (int) $data['ID']; //HEMO_ID
             $TIME_START =       $data['TIME_START'];
             $TIME_END   =       $data['TIME_END'];
             $STATUS_ID  = (int) $data['STATUS_ID'];
-            
+
+            $PRE_WEIGHT =  $data['PRE_WEIGHT'];
+            $POST_WEIGHT = $data['POST_WEIGHT'];
+
             DB::beginTransaction();
             if ($ID > 0) {
 
-                if ($TIME_START == null || $TIME_END == null) {
+
+
+                if ($PRE_WEIGHT == null || $POST_WEIGHT == null) {
                     $this->hemoServices->StatusUpdate($ID, 3); // VOID
                     $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 2); // ABSENT
                     DB::commit();
@@ -64,10 +70,14 @@ class TimerServices
                         return;
                     }
                 }
-
-
-                $this->hemoServices->StatusUpdate($ID, 2); // POSTED
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 1); //PRESENT
+
+                if ($TIME_START == null || $TIME_END == null) {
+                    $this->hemoServices->StatusUpdate($ID, 4); // UNPOSTED
+                } else {
+                    $this->hemoServices->StatusUpdate($ID, 2); // POSTED
+                }
+
                 DB::commit();
             } else {
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 3); // CANCELLED
