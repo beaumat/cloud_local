@@ -4,10 +4,10 @@ namespace App\Livewire\PatientReport;
 
 use Livewire\Component;
 
-class PhilHealthForm extends Component
+class SoaTemplete extends Component
 {
     public function render()
     {
-        return view('livewire.patient-report.phil-health-form');
+        return view('livewire.patient-report.soa-templete');
     }
 }

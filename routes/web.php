@@ -124,7 +124,6 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::prefix('/patients')->name('patients')->group(function () {
@@ -441,7 +440,6 @@ Route::middleware(['auth'])->group(function () {
             });
         });
     });
-
     Route::prefix('/reports')->name('reports')->group(function () {
         Route::prefix('/patients')->group(function () {
             Route::prefix('/sales')->group(function () {

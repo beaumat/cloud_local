@@ -1,7 +1,6 @@
 <section class="content">
     <!-- Default box -->
     <div class="card" @if ($STATUS == 2 || $STATUS == 3) style="opacity: 0.5;pointer-events: none;" @endif>
-
         <div class="card-body p-2">
             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
             <div class="row" @if ($HEMO_ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
@@ -16,7 +15,6 @@
                         </div>
                     @endif
                 @endif
-
                 <div class="col-md-12">
                     <table class="table table-sm table-bordered table-hover">
                         <thead class="text-xs bg-info ">

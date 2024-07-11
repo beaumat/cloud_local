@@ -147,6 +147,40 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="card-footer">
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class ="row text-xs">
+                                        <div class="col-3 text-right">
+                                            <label >Total Deposit :</label>
+                                        </div>
+                                        <div class="col-9 text-left text-primary h6">
+                                            {{ number_format($TOTAL_DEPOSIT, 2) }}
+                                        </div>
+                                        <div class="col-3 text-right ">
+                                            <label>Total Applied :</label>
+                                        </div>
+                                        <div class="col-9 text-left text-success h6">
+                                            {{ number_format($TOTAL_APPLIED, 2) }}
+                                        </div>
+
+                                        <div class="col-3 text-right ">
+                                            <label>Total Balance :</label>
+                                        </div>
+                                        <div class="col-9 text-left text-danger h6">
+                                            {{ number_format($TOTAL_BALANCE, 2) }}
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-6 col-md-6">

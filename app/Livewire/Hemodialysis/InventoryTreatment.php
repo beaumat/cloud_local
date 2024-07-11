@@ -142,11 +142,11 @@ class InventoryTreatment extends Component
 
         $data = $this->hemoServices->ItemGet($editId);
         if ($data) {
-            $this->lineId = $data->ID;
-            $this->lineItemId = $data->ITEM_ID;
-            $this->lineUnitId = $data->UNIT_ID ?? 0;
-            $this->lineQty = $data->QUANTITY ?? 0;
-            $this->lineIsNew = $data->IS_NEW;
+            $this->lineId       = $data->ID;
+            $this->lineItemId   = $data->ITEM_ID;
+            $this->lineUnitId   = $data->UNIT_ID ?? 0;
+            $this->lineQty      = $data->QUANTITY ?? 0;
+            $this->lineIsNew    = $data->IS_NEW;
             if ($this->lineItemId > 0) {
                 $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
             }

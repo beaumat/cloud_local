@@ -151,7 +151,7 @@ class PatientPaymentServices
                 'patient_payment.AMOUNT',
                 'patient_payment.AMOUNT_APPLIED',
                 'patient_payment.NOTES',
-                 DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as CONTACT_NAME"),
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as CONTACT_NAME"),
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
                 'pm.DESCRIPTION as PAYMENT_METHOD',
@@ -177,6 +177,45 @@ class PatientPaymentServices
             })
             ->orderBy('patient_payment.ID', 'desc')
             ->paginate($perPage);
+    }
+    public function GetSUM($search, int $locationId)
+    {
+        $result = PatientPayments::query()
+            ->select([
+                DB::raw(' IFNULL(SUM(patient_payment.AMOUNT),0) as TOTAL_DEPOSIT'),
+                DB::raw(' IFNULL(SUM(patient_payment.AMOUNT_APPLIED),0) as TOTAL_APPLIED')
+            ])
+            ->join('contact as c', 'c.ID', '=', 'patient_payment.PATIENT_ID')
+            ->join('location as l', function ($join) use (&$locationId) {
+                $join->on('l.ID', '=', 'patient_payment.LOCATION_ID');
+                if ($locationId > 0) {
+                    $join->where('l.ID', $locationId);
+                }
+            })
+            ->join('document_status_map as s', 's.ID', '=', 'patient_payment.STATUS')
+            ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
+            ->when($search, function ($query) use (&$search) {
+                $query->where('patient_payment.CODE', 'like', '%' . $search . '%')
+                    ->orWhere('patient_payment.AMOUNT_APPLIED', 'like', '%' . $search . '%')
+                    ->orWhere('patient_payment.NOTES', 'like', '%' . $search . '%')
+                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+            })
+            ->first();
+
+
+        if ($result) {
+
+            return [
+                'TOTAL_DEPOSIT' => $result->TOTAL_DEPOSIT,
+                'TOTAL_APPLIED' => $result->TOTAL_APPLIED,
+            ];
+        }
+
+        return [
+            'TOTAL_DEPOSIT' => 0,
+            'TOTAL_APPLIED' => 0,
+        ];
     }
 
 
@@ -374,5 +413,4 @@ class PatientPaymentServices
         }
         return false;
     }
-    
 }

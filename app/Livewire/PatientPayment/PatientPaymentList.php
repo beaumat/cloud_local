@@ -18,6 +18,10 @@ class PatientPaymentList extends Component
     protected $paginationTheme = 'bootstrap';
     public $search = '';
     public int $perPage = 15;
+
+    public float $TOTAL_DEPOSIT = 0;
+    public float $TOTAL_APPLIED = 0;
+    public float $TOTAL_BALANCE = 0;
     public int $locationid;
     public $locationList = [];
     private $patientPaymentServices;
@@ -50,7 +54,6 @@ class PatientPaymentList extends Component
                 $this->patientPaymentServices->Delete($data->ID);
                 session()->flash('message', 'Successfully deleted.');
             }
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -70,7 +73,11 @@ class PatientPaymentList extends Component
     public function render()
     {
         $dataList = $this->patientPaymentServices->Search($this->search, $this->locationid, $this->perPage);
-
+        $result = $this->patientPaymentServices->GetSUM($this->search, $this->locationid);
+        $this->TOTAL_DEPOSIT = (float) $result['TOTAL_DEPOSIT'];
+        $this->TOTAL_APPLIED = (float) $result['TOTAL_APPLIED'];
+        $this->TOTAL_BALANCE = $this->TOTAL_DEPOSIT  - $this->TOTAL_APPLIED;
+        
         return view('livewire.patient-payment.patient-payment-list', ['dataList' => $dataList]);
     }
 }
