@@ -369,7 +369,7 @@ class ServiceChargeFormItems extends Component
     {
         DB::beginTransaction();
         try {
-            $getItemInfo = $this->serviceChargeService->getItemDetails($Id);
+            $getItemInfo = $this->serviceChargeServices->getItemDetails($Id);
             if ($getItemInfo) {
                 $this->serviceChargeServices->ItemDelete($Id, $this->SERVICE_CHARGES_ID); // Delete Transaction
 
