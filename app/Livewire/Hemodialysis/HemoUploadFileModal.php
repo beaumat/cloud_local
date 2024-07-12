@@ -41,7 +41,6 @@ class HemoUploadFileModal extends Component
         foreach ($this->images as $image) {
             // Store the image
             $path = $image->store('images', 'custom_local');
-
             // Get the absolute path to the stored image
             $absolutePath = public_path('storage/' . $path);
 
@@ -57,8 +56,11 @@ class HemoUploadFileModal extends Component
                 'filepath' =>  $path
             ];
         }
+        // Reading
 
+        $gotReadDoc = (bool) false;
         foreach ($this->qrCodeData as $list) {
+            $gotReadDoc = true;
             $gotInsert =  $this->hemoServices->UpdateQRFile($list['code'], $list['filename'], $list['filepath']);
             if ($gotInsert) {
                 $this->qrCodeNotReadData[] = [
@@ -72,6 +74,14 @@ class HemoUploadFileModal extends Component
                 ];
             }
         }
+        if ($gotReadDoc == false) {
+            $this->qrCodeNotReadData[] = [
+                'code' => 'No file',
+                'status' => false
+            ];
+        }
+
+
         $this->reset(['qrCodeData', 'images']);
     }
     public function render()

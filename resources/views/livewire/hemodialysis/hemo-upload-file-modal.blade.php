@@ -17,7 +17,7 @@
                             @if ($images)
                                 <div class="mt-4">
                                     <h5>Image Preview:</h5>
-                                    <div class="row">
+                                    <div class="row" style="max-height: 300px; overflow-y: auto;">
                                         @foreach ($images as $image)
                                             <div class="col-md-3 mb-4">
                                                 <img src="{{ $image->temporaryUrl() }}" class="img-thumbnail"
@@ -46,8 +46,6 @@
                                 class="btn btn-danger btn-sm">Close</button>
                         </div>
                     </form>
-
-
                 </div>
             </div>
         </div>
