@@ -39,19 +39,17 @@ class HemoUploadFileModal extends Component
         ]);
 
         foreach ($this->images as $image) {
+            
             // Store the image
             $path = $image->store('images', 'custom_local');
             // Get the absolute path to the stored image
-            $absolutePath = public_path('storage/' . $path);
+            $absolutePath = (string) public_path('storage/' . $path);
 
-            // Example: Read QR code from the stored image
-            // This assumes you have a method or logic to read the QR code
-            // Replace this with your actual QR code reading logic
             $qrcode = new QrReader($absolutePath);
-            $text = $qrcode->text();
+            $codeGenerate = $qrcode->text(); 
             // Store QR code data along with just the filename
             $this->qrCodeData[] = [
-                'code' => $text,
+                'code' => $codeGenerate,
                 'filename' => basename($path),
                 'filepath' =>  $path
             ];

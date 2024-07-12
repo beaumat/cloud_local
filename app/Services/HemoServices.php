@@ -237,10 +237,11 @@ class HemoServices
 
     public function UpdateFile(int $ID, $FILE_NAME, $FILE_PATH)
     {
-        Hemodialysis::where('ID', $ID)->update([
-            'FILE_NAME' => $FILE_NAME,
-            'FILE_PATH' => $FILE_PATH
-        ]);
+        Hemodialysis::where('ID', $ID)
+            ->update([
+                'FILE_NAME' => $FILE_NAME,
+                'FILE_PATH' => $FILE_PATH
+            ]);
     }
 
     public function StatusUpdate(int $ID, int $STATUS)
@@ -326,10 +327,6 @@ class HemoServices
         return $result;
     }
 
-    public function getPrevousEntry(int $LOCATION_ID, string $Date, int $CONTACT_ID)
-    {
-        return Hemodialysis::where('');
-    }
     public function Search($search, int $LOCATION_ID, int $perPage, $DateFrom, $DateTo)
     {
         return Hemodialysis::query()
@@ -727,10 +724,13 @@ class HemoServices
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
     }
-
+    public function codeIfExist(string $CODE): bool
+    {
+        return Hemodialysis::where('CODE', $CODE)->exists();
+    }
     public function UpdateQRFile($CODE, $FILE_NAME, $FILE_PATH): bool
     {
-        $data =  Hemodialysis::where('CODE', $CODE)->exists();
+        $data =  $this->codeIfExist($CODE);
 
         if ($data) {
             Hemodialysis::where('CODE', $CODE)
@@ -776,7 +776,7 @@ class HemoServices
                     HemodialysisItems::where('ID', $dataItem->ID)->where('HEMO_ID', $dataItem->HEMO_ID)->where('ITEM_ID', $ITEM_ID)->update(['QUANTITY' => 1, 'IS_NEW' => 0]);
                     return;
                 }
-       
+
                 HemodialysisItems::where('ID', $dataItem->ID)->where('HEMO_ID', $dataItem->HEMO_ID)->where('ITEM_ID', $ITEM_ID)->update(['QUANTITY' => $QTY, 'IS_NEW' => 1]);
                 return;
             }
