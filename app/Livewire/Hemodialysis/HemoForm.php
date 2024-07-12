@@ -33,7 +33,7 @@ class HemoForm extends Component
     public int $STATUS;
     public int $openStatus = 1; // draft default
     public string $STATUS_DESCRIPTION;
-    
+
     public $patientList = [];
     public $locationList = [];
 
@@ -296,6 +296,23 @@ class HemoForm extends Component
 
         if ($this->ID > 0) {
             //Make it restricted
+
+            if ($this->POST_WEIGHT <> "" && $this->PRE_WEIGHT <> "" && $this->POST_HEART_RATE <> "" && $this->PRE_HEART_RATE <> "") {
+
+                $this->validate(
+                    [
+                        'TIME_START'            => 'required',
+                        'TIME_END'              => 'required',
+                    ],
+                    [],
+                    [
+
+                        'TIME_START'            => 'Time Start',
+                        'TIME_END'              => 'Time End'
+                    ]
+                );
+            }
+
             // $this->validate(
             //     [
             //         'PRE_WEIGHT'            => 'required|not_in:0',
