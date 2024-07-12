@@ -310,9 +310,9 @@
                                         </div>
 
                                         <div class="col-12 text-center">
-                                            <div class="text-xs mt-3">Na: ______ meq/L</div>
-                                            <div class="text-xs mt-3">Na: ______ meq/L</div>
-                                            <div class="text-xs mt-3">Na: ______ meq/L</div>
+                                            <div class="text-xs mt-3">Na : ______ meq/L</div>
+                                            <div class="text-xs mt-3">K+ : ______ meq/L</div>
+                                            <div class="text-xs mt-3">Ca+: ______ meq/L</div>
                                         </div>
                                     </div>
                                 </div>
