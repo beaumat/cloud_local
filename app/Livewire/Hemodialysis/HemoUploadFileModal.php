@@ -46,26 +46,26 @@ class HemoUploadFileModal extends Component
 
         foreach ($this->images as $list) {
 
-            // Store the image
             $path = $list->store('images', 'custom_local');
-            // Get the absolute path to the stored image
+
             $absolutePath = (string) public_path('storage/' . $path);
 
             $manager = new ImageManager(new Driver());
-            $img = $manager->read($absolutePath);
-            $img->crop(300, 200, 0, 0);
 
+            $img = $manager->read($absolutePath);  // get actual image
 
-            // Save the resized image temporarily
+            $img->crop(300, 200, 0, 0); // crop image
+
             $resizedPath = 'resized_' . basename($path);
-            $img->save(public_path('storage/images/qrcode/' . $resizedPath));
+            
+            $img->save(public_path('storage/images/qrcode/' . $resizedPath)); // save in qrcode folder
 
-            // Read the QR code from the resized image
-            $qrcode = new QrReader(public_path('storage/images/qrcode/' . $resizedPath));
+            $qrcode = new QrReader(public_path('storage/images/qrcode/' . $resizedPath)); // reading qr-code
+            
             $codeGenerate = $qrcode->text();
 
             if ($codeGenerate) {
-                
+
                 $this->qrCodeData[] = [
                     'code' => $codeGenerate,
                     'filename' => basename($path),
