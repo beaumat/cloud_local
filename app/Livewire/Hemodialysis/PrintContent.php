@@ -106,11 +106,8 @@ class PrintContent extends Component
         }
     }
 
-
-
     public function render()
     {
-
 
         return view('livewire.hemodialysis.print-content');
     }

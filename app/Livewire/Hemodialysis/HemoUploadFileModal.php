@@ -53,28 +53,25 @@ class HemoUploadFileModal extends Component
 
             $manager = new ImageManager(new Driver());
             $img = $manager->read($absolutePath);
-            $img->crop(200, 150, 45, 90);
-            // Resize the image to 1/4th of its original size
-            // $img = Image::make($absolutePath);
-            // $img->resize($img->width() / 4, $img->height() / 4);
+            $img->crop(300, 200, 0, 0);
+
 
             // Save the resized image temporarily
-            $resizedPath = 'images/resized_' . basename($path);
-            $img->save(public_path('storage/qrcode' . $resizedPath));
+            $resizedPath = 'resized_' . basename($path);
+            $img->save(public_path('storage/images/qrcode/' . $resizedPath));
 
             // Read the QR code from the resized image
-            $qrcode = new QrReader(public_path('storage/' . $resizedPath));
+            $qrcode = new QrReader(public_path('storage/images/qrcode/' . $resizedPath));
             $codeGenerate = $qrcode->text();
 
-
-            // $qrcode = new QrReader($absolutePath);
-            // $codeGenerate = $qrcode->text();
-            // Store QR code data along with just the filename
-            $this->qrCodeData[] = [
-                'code' => $codeGenerate,
-                'filename' => basename($path),
-                'filepath' =>  $path
-            ];
+            if ($codeGenerate) {
+                
+                $this->qrCodeData[] = [
+                    'code' => $codeGenerate,
+                    'filename' => basename($path),
+                    'filepath' =>  $path
+                ];
+            }
         }
         // Reading
 
