@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+// use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class GenerateQRCode extends Component
 {   
@@ -13,7 +13,7 @@ class GenerateQRCode extends Component
 
     public function render()
     {       
-        $qrCode = $this->code ? QrCode::size(100)->generate($this->code) : null;
+         $qrCode = ''; // $this->code ? QrCode::size(100)->generate($this->code) : null;
 
         return view('livewire.generate-qrcode', ['qrcode' => $qrCode, ]);
 
