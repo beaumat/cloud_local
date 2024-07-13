@@ -6,6 +6,10 @@ use App\Services\HemoServices;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Zxing\QrReader;
+// use Intervention\Image\Laravel\Facades\Image;
+
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 class HemoUploadFileModal extends Component
 {
@@ -30,7 +34,9 @@ class HemoUploadFileModal extends Component
     {
         $this->showModal = false;
     }
-
+    private function ImageAdjust()
+    {
+    }
     public function uploadImages()
     {
         $this->qrCodeNotReadData = [];
@@ -38,15 +44,31 @@ class HemoUploadFileModal extends Component
             'images.*' => 'image|max:1024', // 1MB Max per image
         ]);
 
-        foreach ($this->images as $image) {
-            
+        foreach ($this->images as $list) {
+
             // Store the image
-            $path = $image->store('images', 'custom_local');
+            $path = $list->store('images', 'custom_local');
             // Get the absolute path to the stored image
             $absolutePath = (string) public_path('storage/' . $path);
 
-            $qrcode = new QrReader($absolutePath);
-            $codeGenerate = $qrcode->text(); 
+            $manager = new ImageManager(new Driver());
+            $img = $manager->read($absolutePath);
+            $img->crop(200, 150, 45, 90);
+            // Resize the image to 1/4th of its original size
+            // $img = Image::make($absolutePath);
+            // $img->resize($img->width() / 4, $img->height() / 4);
+
+            // Save the resized image temporarily
+            $resizedPath = 'images/resized_' . basename($path);
+            $img->save(public_path('storage/qrcode' . $resizedPath));
+
+            // Read the QR code from the resized image
+            $qrcode = new QrReader(public_path('storage/' . $resizedPath));
+            $codeGenerate = $qrcode->text();
+
+
+            // $qrcode = new QrReader($absolutePath);
+            // $codeGenerate = $qrcode->text();
             // Store QR code data along with just the filename
             $this->qrCodeData[] = [
                 'code' => $codeGenerate,
