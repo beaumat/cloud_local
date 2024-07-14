@@ -218,7 +218,7 @@ class HemoServices
     }
     public function GetOtherDetailsDefault(int $HEMO_ID, int $CUSTOMER_ID, string $DATE, int $LOCATION_ID)
     {
-        //Get Previous
+        //Get Previous  
         $data =  $this->GetPreviousTreatment($HEMO_ID, $CUSTOMER_ID, $DATE, $LOCATION_ID);
 
         if ($data) {

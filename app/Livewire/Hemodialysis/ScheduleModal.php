@@ -51,11 +51,9 @@ class ScheduleModal extends Component
                     try {
                         DB::beginTransaction();
                         $HEMO_ID = (int) $this->hemoServices->PreSave($this->DATE, "", $data->CONTACT_ID, $this->LOCATION_ID);
-                        $this->hemoServices->GetOtherDetailsDefault($HEMO_ID, $this->DATE, $data->CONTACT_ID, $this->LOCATION_ID);
+                        $this->hemoServices->GetOtherDetailsDefault($HEMO_ID,  $data->CONTACT_ID, $this->DATE, $this->LOCATION_ID);
                         $hemoData =  $this->hemoServices->Get($HEMO_ID);
-                        // 
-
-
+                        
                         $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
                         foreach ($dataList as $item) {
                             $this->hemoServices->AddItem($item->ID,  $hemoData);

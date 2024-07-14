@@ -322,9 +322,12 @@ class HemoForm extends Component
             DB::beginTransaction();
             if ($this->ID == 0) {
 
-                $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
-                $this->hemoServices->GetOtherDetailsDefault($this->ID, $this->DATE, $this->CUSTOMER_ID, $this->LOCATION_ID);
+                $this->ID = (int) $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
+
+                $this->hemoServices->GetOtherDetailsDefault($this->ID, $this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID);
+
                 $hemoData =  $this->hemoServices->Get($this->ID);
+
                 $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
                 foreach ($dataList as $item) {
                     $this->hemoServices->AddItem($item->ID,  $hemoData);
