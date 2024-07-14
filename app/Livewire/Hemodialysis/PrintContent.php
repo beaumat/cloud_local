@@ -130,9 +130,6 @@ class PrintContent extends Component
             if ($dataPatient) {
                 $this->DIAGNOSIS = $dataPatient->FINAL_DIAGNOSIS ?? '';
             }
-
-            
-
         }
     }
 

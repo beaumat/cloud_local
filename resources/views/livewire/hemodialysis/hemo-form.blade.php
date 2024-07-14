@@ -445,11 +445,13 @@
                         @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
                         @livewire('Hemodialysis.InventoryTreatment', ['HEMO_ID' => $ID, 'STATUS' => $STATUS, 'LOCATION_ID' => $LOCATION_ID, 'ActiveRequired' => $ActiveRequired])
                     </div>
+                    @if ($USE_OTHER_DETAILS == true)
+                        <div class="col-sm-12 col-md-12"
+                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                            @livewire('Hemodialysis.OtherDetails', ['HEMO_ID' => $ID])
+                        </div>
+                    @endif
 
-                    <div class=" col-sm-12 col-md-12"
-                        @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                        @livewire('Hemodialysis.OtherDetails', ['HEMO_ID' => $ID])
-                    </div>
                 </div>
             </div>
         </section>

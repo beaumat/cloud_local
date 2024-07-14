@@ -70,6 +70,8 @@ class HemoForm extends Component
     public string $OLD_POST_HEART_RATE;
     public string $OLD_POST_O2_SATURATION;
     public string $OLD_POST_TEMPERATURE;
+
+    public bool $USE_OTHER_DETAILS = false;
     // end old
     private $hemoServices;
     private $locationServices;

@@ -661,40 +661,89 @@
                     </tbody>
                 </table>
                 <div class="col-12 left-line right-line bottom-line">
-                    <div class="row mt-2">
+                    <div class="row mt-2 px-2">
                         <div class="col-4">
-                            <div class="text-sm text-left"><b>CANNULATED BY:</b>______________________________________
+                            <div class="row">
+                                <div class="col-5 text-sm text-left"><b>CANNULATED&nbsp;BY&nbsp;:</b></div>
+                                <div class="col-7 text-sm bottom-line2"></div>
                             </div>
-                            <div class="text-sm text-right"><b>NO OF ATTEMPT:</b>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                                <b>ARTERIAL:</b> ________ <b>G:</b> __________
+                            <div class="row">
+                                <div class="col-4 text-sm text-left"> <b>NO&nbsp;OF&nbsp;ATTEMPT:</b> </div>
+                                <div class="col-8">
+                                    <div class="row">
+                                        <div class="col-4  text-right text-sm">
+                                            <b>ARTERIAL:</b>
+                                        </div>
+                                        <div class="col-3 text-sm bottom-line2">
+                                        </div>
+                                        <div class="col-2 text-right text-sm">
+                                            <b>G:</b>
+                                        </div>
+                                        <div class="col-3 text-sm bottom-line2">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-sm text-right"><b>VENOUS:</b> ________ <b>G:</b> __________</div>
+                            <div class="row">
+                                <div class="col-4 text-sm text-left"> </div>
+                                <div class="col-8">
+                                    <div class="row">
+                                        <div class="col-4  text-right text-sm">
+                                            <b>VENOUS:</b>
+                                        </div>
+                                        <div class="col-3 text-sm bottom-line2">
+                                        </div>
+                                        <div class="col-2 text-right text-sm">
+                                            <b>G:</b>
+                                        </div>
+                                        <div class="col-3 text-sm bottom-line2">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-4">
-                            <div class="text-sm text-left">
-                                <b>PRIMED BY:</b> ______________________________________
+                            <div class="row">
+                                <div class="col-4 text-sm text-left"><b>PRIMED&nbsp;BY&nbsp;:</b></div>
+                                <div class="col-8 text-sm bottom-line2"></div>
                             </div>
-                            <div class="text-sm text-left"><b>INITIATED BY:</b> ______________________________________
+                            <div class="row">
+                                <div class="col-4 text-sm text-left"><b>INITIATED&nbsp;BY&nbsp;:</b></div>
+                                <div class="col-8 text-sm bottom-line2"></div>
                             </div>
-                            <div class="text-sm text-left"><b>TERMINATED BY:</b> ______________________________________
+                            <div class="row">
+                                <div class="col-4 text-sm text-left"><b>TERMINATED&nbsp;BY&nbsp;:</b></div>
+                                <div class="col-8 text-sm bottom-line2"></div>
                             </div>
                         </div>
                         <div class="col-4">
-                            <div class="text-sm text-left"><b>RML:</b>
-                                __________________________________________________
+                            <div class="row">
+                                <div class="col-2 text-sm text-left"><b>RML&nbsp;:</b></div>
+                                <div class="col-10 text-sm bottom-line2 px-1"></div>
                             </div>
-                            <div class="text-sm text-left"><b>HEPA PROFILE:</b>
-                                ________________________________________</div>
+                            <div class="row">
+                                <div class="col-4 text-sm text-left"><b>HEPA&nbsp;PROFILE&nbsp;:</b></div>
+                                <div class="col-8 text-sm bottom-line2"></div>
+                            </div>
+
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 pb-1">
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="text-sm text-left"><b>EPO GIVEN:</b> [&nbsp;&nbsp;] <b>NO</b>
-                                        [&nbsp;&nbsp;] <b>YES</b>
-                                        ___________________________________________________</div>
+                                    <div class="row">
+                                        <div class="col-4 text-sm text-left">
+                                            <b>EPO&nbsp;GIVEN:</b>&nbsp;[&nbsp;&nbsp;]<b>NO</b>&nbsp;&nbsp;[&nbsp;&nbsp;]<b>YES</b>
+                                        </div>
+                                        <div class="col-8 text-sm text-left bottom-line2"></div>
+                                    </div>
+
                                 </div>
                                 <div class="col-6">
-                                    <div class="text-sm text-left">GIVEN BY: ________________________________________
+                                    <div class="row">
+                                        <div class="col-4 text-sm text-right">
+                                            <b>GIVEN&nbsp;BY: </b>
+                                        </div>
+                                        <div class="col-8 text-sm text-left bottom-line2"></div>
                                     </div>
                                 </div>
                             </div>
