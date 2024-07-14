@@ -55998,6 +55998,9 @@ a.text-muted:hover {
 .up-space {
     margin-top: 10px;
 }
+.right-space {
+    margin-right: 2px;
+}
 
 @media print {
 

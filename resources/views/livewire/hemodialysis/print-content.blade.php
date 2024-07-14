@@ -76,7 +76,6 @@
                         <div class="col-2 left-line">
                             <div class="row">
                                 <div class="col-12 bottom-line text-center">
-
                                     <p class="up-space down-space font-weight-bold"> LAST TREATMENT</p>
                                 </div>
                                 <div class="col-12 bottom-line">
@@ -221,49 +220,59 @@
                                 <div class="col-4 ">
                                     <div class="row pb-2 font-weight-bold">
                                         <div class="col-12 bottom-line-hide">
-                                            <div class="row up-space">
+                                            <div class="row up-space right-space">
                                                 <div class="col-7">
                                                     BFR
                                                 </div>
-                                                <div class="col-5 text-right">________</div>
+                                                <div
+                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    &nbsp;{{ $BFR > 0 ? $BFR : '' }}
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-12 bottom-line-hide">
-                                            <div class="row">
+                                            <div class="row right-space">
                                                 <div class="col-7">DFR</div>
-                                                <div class="col-5 text-right">________</div>
+                                                <div
+                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    &nbsp;{{ $DFR > 0 ? $DFR : '' }}
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-12 bottom-line-hide">
-                                            <div class="row">
+                                            <div class="row right-space">
                                                 <div class="col-7">DURATION</div>
-                                                <div class="col-5 text-right">________</div>
+                                                <div
+                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    &nbsp;{{ $DURATION > 0 ? $DURATION . 'hrs' : '' }}</div>
                                             </div>
                                         </div>
                                         <div class="col-12 bottom-line-hide">
-                                            <div class="row">
+                                            <div class="row right-space">
                                                 <div class="col-7">DIALYZER</div>
-                                                <div class="col-5 text-right">________</div>
+                                                <div
+                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    &nbsp;{{ $DIALYZER }}</div>
                                             </div>
 
                                         </div>
                                         <div class="col-12 bottom-line-hide">
-                                            <div class="row">
+                                            <div class="row right-space">
                                                 <div class="col-7">RE-USE NO.</div>
-                                                <div class="col-5 text-right">________</div>
+                                                <div class="col-5 text-right bottom-line2">&nbsp;</div>
                                             </div>
 
                                         </div>
                                         <div class="col-12 bottom-line-hide">
-                                            <div class="row">
+                                            <div class="row right-space">
                                                 <div class="col-7">HEPARIN</div>
-                                                <div class="col-5 text-right">________</div>
+                                                <div class="col-5 text-right bottom-line2">&nbsp;</div>
                                             </div>
                                         </div>
                                         <div class="col-12  ">
-                                            <div class="row">
+                                            <div class="row right-space">
                                                 <div class="col-7">FLUSHING</div>
-                                                <div class="col-5 text-right">________</div>
+                                                <div class="col-5 text-right bottom-line2">&nbsp;</div>
                                             </div>
                                         </div>
                                     </div>
@@ -275,7 +284,6 @@
                                         </div>
                                         <div class="col-12">
                                             <div class="text-xs"> [&nbsp;&nbsp;] MACHINE TEST </div>
-
                                         </div>
                                         <div class="col-12">
                                             <div class="text-xs"> [&nbsp;&nbsp;] SECURED CONNECTIONS </div>
@@ -310,9 +318,27 @@
                                         </div>
 
                                         <div class="col-12 text-center">
-                                            <div class="text-xs mt-3">Na : ______ meq/L</div>
-                                            <div class="text-xs mt-3">K+ : ______ meq/L</div>
-                                            <div class="text-xs mt-3">Ca+: ______ meq/L</div>
+                                            <div class="row text-xs mt-3">
+                                                <div class="col-3 text-right"> Na :</div>
+                                                <div class="col-3 bottom-line2 text-primary">&nbsp;{{ $DIALSATE_N }}
+                                                </div>
+                                                <div class="col-3">meq/L </div>
+                                            </div>
+
+                                            <div class="row text-xs ">
+                                                <div class="col-3 text-right"> K+ :</div>
+                                                <div class="col-3 bottom-line2 text-primary">&nbsp;{{ $DIALSATE_K }}
+                                                </div>
+                                                <div class="col-3">meq/L </div>
+                                            </div>
+
+                                            <div class="row text-xs ">
+                                                <div class="col-3 text-right"> Ca+ :</div>
+                                                <div class="col-3 bottom-line2 text-primary">&nbsp;{{ $DIALSATE_C }}
+                                                </div>
+                                                <div class="col-3">meq/L </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -332,34 +358,21 @@
                                     <div class="col-12  text-center">
                                         <b> SPECIAL ENDORSEMENT</b>
                                     </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-
+                                    @foreach ($SE_PARTS as $parts)
+                                        @php
+                                            $SE_COUNT++;
+                                        @endphp
+                                        <div class="col-12  text-center bottom-line2 ">
+                                            &nbsp;{{ $parts }}
+                                        </div>
+                                    @endforeach
+                                    @if ($SE_COUNT < 9)
+                                        @for ($i = $SE_COUNT; $i < 9; $i++)
+                                            <div class="col-12  text-center bottom-line2 ">
+                                                &nbsp;
+                                            </div>
+                                        @endfor
+                                    @endif
                                 </div>
 
                             </div>
@@ -374,33 +387,21 @@
                                     <div class="col-12  text-center">
                                         <b>STANDING ORDER</b>
                                     </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
-                                    <div class="col-12  text-center bottom-line2 ">
-                                        &nbsp;
-                                    </div>
+                                    @foreach ($SO_PARTS as $parts)
+                                        @php
+                                            $SO_COUNT++;
+                                        @endphp
+                                        <div class="col-12  text-center bottom-line2 ">
+                                            &nbsp;{{ $parts }}
+                                        </div>
+                                    @endforeach
+                                    @if ($SO_COUNT < 9)
+                                        @for ($i = $SO_COUNT; $i < 9; $i++)
+                                            <div class="col-12  text-center bottom-line2 ">
+                                                &nbsp;
+                                            </div>
+                                        @endfor
+                                    @endif
 
                                 </div>
 

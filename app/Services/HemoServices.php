@@ -166,7 +166,16 @@ class HemoServices
                 'hemodialysis.PRE_O2_SATURATION',
                 'hemodialysis.PRE_TEMPERATURE',
                 'hemodialysis.CUSTOMER_ID',
-                'hemodialysis.LOCATION_ID'
+                'hemodialysis.LOCATION_ID',
+                'hemodialysis.SE_DETAILS',
+                'hemodialysis.SO_DETAILS',
+                'hemodialysis.BFR',
+                'hemodialysis.DFR',
+                'hemodialysis.DURATION',
+                'hemodialysis.DIALYZER',
+                'hemodialysis.DIALSATE_N',
+                'hemodialysis.DIALSATE_K',
+                'hemodialysis.DIALSATE_C'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->where('hemodialysis.ID', $ID)
@@ -196,7 +205,40 @@ class HemoServices
 
         return $ID;
     }
+    private function GetPreviousTreatment(int $HEMO_ID, int $CUSTOMER_ID, string $DATE, int $LOCATION_ID)
+    {
+        $result = Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)
+            ->where('DATE', '<=', $DATE)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('ID', '<>', $HEMO_ID)
+            ->orderBy('DATE', 'asc')
+            ->first();
 
+        return $result;
+    }
+    public function GetOtherDetailsDefault(int $HEMO_ID, int $CUSTOMER_ID, string $DATE, int $LOCATION_ID)
+    {
+        //Get Previous
+        $data =  $this->GetPreviousTreatment($HEMO_ID, $CUSTOMER_ID, $DATE, $LOCATION_ID);
+
+        if ($data) {
+            Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)
+                ->where('DATE', $DATE)
+                ->where('LOCATION_ID', $LOCATION_ID)
+                ->where('ID', $HEMO_ID)
+                ->update([
+                    'SE_DETAILS'    => $data->DETAILS_USE_NEXT == true ? $data->SE_DETAILS ?? null : null,
+                    'SO_DETAILS'    => $data->DETAILS_USE_NEXT == true ? $data->SO_DETAILS ?? null : null,
+                    'BFR'           => $data->BFR ?? null,
+                    'DFR'           => $data->DFR ?? null,
+                    'DURATION'      => $data->DURATION ?? null,
+                    'DIALYZER'      => $data->DIALYZER ?? null,
+                    'DIALSATE_N'    => $data->DIALSATE_N ?? null,
+                    'DIALSATE_K'    => $data->DIALSATE_K ?? null,
+                    'DIALSATE_C'    => $data->DIALSATE_C ?? null
+                ]);
+        }
+    }
     public function PreUpdate(int $ID, string $DATE, string $CODE, int $CUSTOMER_ID, int $LOCATION_ID)
     {
         Hemodialysis::where('ID', $ID)->update([
@@ -234,7 +276,33 @@ class HemoServices
         //     $this->statusUpdate($ID, 1);
         // }
     }
-
+    public function SaveOthers(
+        int $ID,
+        string $SE_DETAILS,
+        string $SO_DETAILS,
+        int $BFR,
+        int $DFR,
+        int $DURATION,
+        string $DIALYZER,
+        string  $DIALSATE_N,
+        string $DIALSATE_K,
+        string $DIALSATE_C,
+        bool $DETAILS_USE_NEXT
+    ) {
+        Hemodialysis::where('ID', $ID)
+            ->update([
+                'SE_DETAILS'        => $SE_DETAILS,
+                'SO_DETAILS'        => $SO_DETAILS,
+                'BFR'               => $BFR,
+                'DFR'               => $DFR,
+                'DURATION'          => $DURATION,
+                'DIALYZER'          => $DIALYZER,
+                'DIALSATE_N'        => $DIALSATE_N,
+                'DIALSATE_K'        => $DIALSATE_K,
+                'DIALSATE_C'        => $DIALSATE_C,
+                'DETAILS_USE_NEXT'  => $DETAILS_USE_NEXT
+            ]);
+    }
     public function UpdateFile(int $ID, $FILE_NAME, $FILE_PATH)
     {
         Hemodialysis::where('ID', $ID)
@@ -371,8 +439,7 @@ class HemoServices
                 });
             })
             ->whereBetween('hemodialysis.DATE', [$DateFrom, $DateTo])
-            ->orderBy('hemodialysis.DATE', 'desc')
-            ->orderBy('hemodialysis.ID', 'desc')
+            ->orderBy('hemodialysis.DATE', 'asc')
             ->paginate($perPage);
     }
 
@@ -448,7 +515,7 @@ class HemoServices
 
         return $result;
     }
-    public function GetLastTreatment(int $CONTACT_ID, int $LOCATION_ID, string $DATE)
+    public function ShowLastTreatment(int $CONTACT_ID, int $LOCATION_ID, string $DATE)
     {
         $result = Hemodialysis::query()
             ->select([
@@ -469,7 +536,7 @@ class HemoServices
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('DATE', '<', $DATE)
             ->where('STATUS_ID', 2)
-            ->orderBy('ID', 'desc')
+            ->orderBy('Date', 'asc')
             ->first();
 
         return $result;
@@ -744,7 +811,6 @@ class HemoServices
 
         return false;
     }
-
     public function ItemQuery(int $PATIENT_ID, string $DATE, int $LOCATION_ID, int $ITEM_ID, float $QTY, bool $IS_DELETE, int $UNIT_ID)
     {
         if ($ITEM_ID == $this->ITEM_NOT_ADDED_ID) {

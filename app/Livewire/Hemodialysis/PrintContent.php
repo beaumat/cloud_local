@@ -39,6 +39,19 @@ class PrintContent extends Component
     public string $DIAGNOSIS = " ";
     public int $NO_OF_TREATMENT = 0;
 
+    public string $SE_DETAILS;
+    public string $SO_DETAILS;
+    public int $BFR;
+    public int $DFR;
+    public int $DURATION;
+    public string $DIALYZER;
+    public string $DIALSATE_N;
+    public string $DIALSATE_K;
+    public string $DIALSATE_C;
+    public $SE_PARTS = [];
+    public $SO_PARTS = [];
+    public int $SE_COUNT = 0;
+    public int $SO_COUNT = 0;
     private $patientDoctorServices;
     public function boot(HemoServices $hemoServices, ContactServices $contactServices, PatientDoctorServices $patientDoctorServices)
     {
@@ -46,10 +59,10 @@ class PrintContent extends Component
         $this->contactServices = $contactServices;
         $this->patientDoctorServices = $patientDoctorServices;
     }
-
     public function getPreviousTreatment()
     {
-        $data = $this->hemoServices->GetLastTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
+        $data = $this->hemoServices->ShowLastTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
+
         if ($data) {
             $this->OLD_PRE_WEIGHT = $data->PRE_WEIGHT ?? "";
             $this->OLD_PRE_BLOOD_PRESSURE = $data->PRE_BLOOD_PRESSURE ?? "";
@@ -82,6 +95,7 @@ class PrintContent extends Component
     public function mount()
     {
         $data = $this->hemoServices->GetFirst($this->HEMO_ID);
+
         if ($data) {
             $this->FULL_NAME = $data->CONTACT_NAME;
             $this->DATE = $data->DATE;
@@ -91,24 +105,39 @@ class PrintContent extends Component
             $this->AGE = $this->contactServices->calculateUserAge($this->DOB);
             $this->CUSTOMER_ID = $data->CUSTOMER_ID;
             $this->LOCATION_ID = $data->LOCATION_ID;
+            $this->SE_DETAILS = $data->SE_DETAILS ?? '';
+            $this->SO_DETAILS =  $data->SO_DETAILS ?? '';
+            $this->BFR = $data->BFR ?? '';
+            $this->DFR = $data->DFR ?? '';
+            $this->DURATION = $data->DURATION ?? 0;
+            $this->DIALYZER = $data->DIALYZER ?? '';
+            $this->DIALSATE_N =  $data->DIALSATE_N ?? '';
+            $this->DIALSATE_K = $data->DIALSATE_K ?? '';
+            $this->DIALSATE_C = $data->DIALSATE_C ?? '';
+            $this->SE_COUNT = 0;
+            $this->SE_PARTS = str_split($this->SE_DETAILS, 40);
+
+            $this->SO_COUNT = 0;
+            $this->SO_PARTS = str_split($this->SO_DETAILS, 40);
             $this->getPreviousTreatment();
             $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
-
             $dataDoc = $this->patientDoctorServices->GetList($this->CUSTOMER_ID);
             foreach ($dataDoc as $doc) {
                 $this->NEPRHO_NAME = $doc->NAME ?? '';
             }
-            $dataPatient = $this->contactServices->get($this->CUSTOMER_ID, 3);
 
+            $dataPatient = $this->contactServices->get($this->CUSTOMER_ID, 3);
             if ($dataPatient) {
                 $this->DIAGNOSIS = $dataPatient->FINAL_DIAGNOSIS ?? '';
             }
+
+            
+
         }
     }
 
     public function render()
     {
-
         return view('livewire.hemodialysis.print-content');
     }
 }

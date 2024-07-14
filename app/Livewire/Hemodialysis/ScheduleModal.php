@@ -50,18 +50,23 @@ class ScheduleModal extends Component
                 if ($data) {
                     try {
                         DB::beginTransaction();
-                        $id = (int) $this->hemoServices->PreSave($this->DATE, "", $data->CONTACT_ID, $this->LOCATION_ID);
-                        $hemoData =  $this->hemoServices->Get($id);
+                        $HEMO_ID = (int) $this->hemoServices->PreSave($this->DATE, "", $data->CONTACT_ID, $this->LOCATION_ID);
+                        $this->hemoServices->GetOtherDetailsDefault($HEMO_ID, $this->DATE, $data->CONTACT_ID, $this->LOCATION_ID);
+                        $hemoData =  $this->hemoServices->Get($HEMO_ID);
+                        // 
+
+
                         $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
                         foreach ($dataList as $item) {
                             $this->hemoServices->AddItem($item->ID,  $hemoData);
                         }
 
                         if ($this->ids == "") {
-                            $this->ids = $id;
+                            $this->ids = $HEMO_ID;
                         } else {
-                            $this->ids = $this->ids . "," . $id;
+                            $this->ids = $this->ids . "," . $HEMO_ID;
                         }
+
                         DB::commit();
                         $isDone = true;
                     } catch (\Throwable $th) {

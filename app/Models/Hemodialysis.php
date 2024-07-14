@@ -39,6 +39,16 @@ class Hemodialysis extends Model
         'PRE_BLOOD_PRESSURE2',
         'POST_BLOOD_PRESSURE2',
         'FILE_NAME',
-        'FILE_PATH'
+        'FILE_PATH',
+        'SE_DETAILS',
+        'SO_DETAILS',
+        'BFR',
+        'DFR',
+        'DURATION',
+        'DIALYZER',
+        'DIALSATE_N',
+        'DIALSATE_K',
+        'DIALSATE_C',
+        'DETAILS_USE_NEXT'
     ];
 }

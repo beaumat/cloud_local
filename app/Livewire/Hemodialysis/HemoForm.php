@@ -191,7 +191,7 @@ class HemoForm extends Component
     }
     public function getPreviousTreatment()
     {
-        $data = $this->hemoServices->GetLastTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
+        $data = $this->hemoServices->ShowLastTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
         if ($data) {
             $this->OLD_PRE_WEIGHT = $data->PRE_WEIGHT ?? "";
             $this->OLD_PRE_BLOOD_PRESSURE = $data->PRE_BLOOD_PRESSURE ?? "";
@@ -312,47 +312,6 @@ class HemoForm extends Component
                     ]
                 );
             }
-
-            // $this->validate(
-            //     [
-            //         'PRE_WEIGHT'            => 'required|not_in:0',
-            //         'PRE_BLOOD_PRESSURE'    => 'required|not_in:0',
-            //         'PRE_BLOOD_PRESSURE2'   => 'required|not_in:0',
-            //         'PRE_HEART_RATE'        => 'required|not_in:0',
-            //         'PRE_O2_SATURATION'     => 'required',
-            //         'PRE_TEMPERATURE'       => 'required',
-
-            //         'POST_WEIGHT'           => 'required|not_in:0',
-            //         'POST_BLOOD_PRESSURE'   => 'required|not_in:0',
-            //         'POST_BLOOD_PRESSURE2'  => 'required|not_in:0',
-            //         'POST_HEART_RATE'       => 'required|not_in:0',
-            //         'POST_O2_SATURATION'    => 'required',
-            //         'POST_TEMPERATURE'      => 'required',
-
-            //         'TIME_START'            => 'required',
-            //         'TIME_END'              => 'required',
-            //     ],
-            //     [],
-            //     [
-            //         'PRE_WEIGHT'            => 'Pre weight',
-            //         'PRE_BLOOD_PRESSURE'    => 'Pre Blood Pressure[1]',
-            //         'PRE_BLOOD_PRESSURE2'   => 'Pre Blood Pressure[2]',
-            //         'PRE_HEART_RATE'        => 'Pre Heart Rate',
-            //         'PRE_O2_SATURATION'     => 'Pre 02 Saturation',
-            //         'PRE_TEMPERATURE'       => 'Pre Temperature',
-
-            //         'POST_WEIGHT'           => 'Post Weight',
-            //         'POST_BLOOD_PRESSURE'   => 'Post Blood Pressure[1]',
-            //         'POST_BLOOD_PRESSURE2'  => 'Post Blood Pressure[2]',
-            //         'POST_HEART_RATE'       => 'Post Heart Rate',
-            //         'POST_O2_SATURATION'    => 'Post 02 Saturation',
-            //         'POST_TEMPERATURE'      => 'Post Temperature',
-
-            //         'TIME_START'            => 'Time Start',
-            //         'TIME_END'              => 'Time End'
-
-            //     ]
-            // );
         }
 
 
@@ -362,6 +321,7 @@ class HemoForm extends Component
             if ($this->ID == 0) {
 
                 $this->ID = $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
+                $this->hemoServices->GetOtherDetailsDefault($this->ID, $this->DATE, $this->CUSTOMER_ID, $this->LOCATION_ID);
                 $hemoData =  $this->hemoServices->Get($this->ID);
                 $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
                 foreach ($dataList as $item) {

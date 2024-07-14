@@ -13,7 +13,9 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <a class="text-white" href="{{ route('patientshemo') }}">
-                                        @if ($ID == 0) Create @endif
+                                        @if ($ID == 0)
+                                            Create
+                                        @endif
                                         Hemodialysis Treatment
                                     </a>
                                 </div>
@@ -117,7 +119,7 @@
                                         @endif
                                         <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
                                             class="btn btn-sm btn-success">Print</a>
-                                  
+
                                     </div>
                                 </div>
                             </div>
@@ -132,313 +134,321 @@
             <div class="container-fluid bg-light">
                 <div class="row">
                     <div class="col-sm-6 col-md-6">
-                        <section class="content">
-                            <!-- Default box -->
-                            <div class="card">
-                                <div class="card-body p-2">
-                                    <div class="form-group row">
-                                        <div class="col-md-12">
-                                            <table class="table  table-sm table-bordered table-hover">
-                                                <thead class="text-xs bg-primary">
-                                                    <tr>
-                                                        <th class="col-4">Title</th>
-                                                        <th class="text-center col-4">
-                                                            Last Treatment
-                                                        </th>
-                                                        <th class="text-center col-4">
-                                                            Today Treatment
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <thead class="text-xs">
-                                                    <tr>
-                                                        <th></th>
-                                                        <th class="text-center">
-                                                            <div class="row">
-                                                                <div class="col-md-6 text-center">
-                                                                    PRE
+                        <div class="form-group ">
+                            <section class="content">
+                                <!-- Default box -->
+                                <div class="card">
+                                    <div class="card-body p-2">
+                                        <div class="form-group row">
+                                            <div class="col-md-12">
+                                                <table class="table  table-sm table-bordered table-hover">
+                                                    <thead class="text-xs bg-primary">
+                                                        <tr>
+                                                            <th class="col-4">Title</th>
+                                                            <th class="text-center col-4">
+                                                                Last Treatment
+                                                            </th>
+                                                            <th class="text-center col-4">
+                                                                Today Treatment
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <thead class="text-xs">
+                                                        <tr>
+                                                            <th></th>
+                                                            <th class="text-center">
+                                                                <div class="row">
+                                                                    <div class="col-md-6 text-center">
+                                                                        PRE
+                                                                    </div>
+                                                                    <div class="col-md-6 text-center">
+                                                                        POST
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-6 text-center">
-                                                                    POST
+                                                            </th>
+                                                            <th class="text-center">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        PRE
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        POST
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </th>
-                                                        <th class="text-center">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    PRE
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-xs">
+                                                        <tr>
+                                                            <td class="font-weight-bold">WEIGHT</td>
+                                                            <td>
+                                                                <div class="row" id="LAST">
+                                                                    <div class="col-md-6 text-center">
+                                                                        {{ $OLD_PRE_WEIGHT }}
+                                                                    </div>
+                                                                    <div class="col-md-6 text-center">
+                                                                        {{ $OLD_POST_WEIGHT }}
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-6">
-                                                                    POST
-                                                                </div>
-                                                            </div>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="text-xs">
-                                                    <tr>
-                                                        <td class="font-weight-bold">WEIGHT</td>
-                                                        <td>
-                                                            <div class="row" id="LAST">
-                                                                <div class="col-md-6 text-center">
-                                                                    {{ $OLD_PRE_WEIGHT }}
-                                                                </div>
-                                                                <div class="col-md-6 text-center">
-                                                                    {{ $OLD_POST_WEIGHT }}
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="row" id="TODAY">
-                                                                <div class="col-md-6">
-                                                                    <input type="number"
-                                                                        @if (!$Modify) disabled @endif
-                                                                        wire:model='PRE_WEIGHT'
-                                                                        class="text-xs w-100 text-right" />
+                                                            </td>
+                                                            <td>
+                                                                <div class="row" id="TODAY">
+                                                                    <div class="col-md-6">
+                                                                        <input type="number"
+                                                                            @if (!$Modify) disabled @endif
+                                                                            wire:model='PRE_WEIGHT'
+                                                                            class="text-xs w-100 text-right" />
 
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <input type="number"
+                                                                            @if (!$Modify) disabled @endif
+                                                                            wire:model='POST_WEIGHT'
+                                                                            class="text-xs w-100 text-right" />
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-6">
-                                                                    <input type="number"
-                                                                        @if (!$Modify) disabled @endif
-                                                                        wire:model='POST_WEIGHT'
-                                                                        class="text-xs w-100 text-right" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="font-weight-bold">BLOOD PRESSURE</td>
+                                                            <td>
+                                                                <div class="row" id="LAST">
+                                                                    <div class="col-md-6 text-center">
+                                                                        {{ $OLD_PRE_BLOOD_PRESSURE }} |
+                                                                        {{ $OLD_PRE_BLOOD_PRESSURE2 }}
+                                                                    </div>
+                                                                    <div class="col-md-6 text-center">
+                                                                        {{ $OLD_POST_BLOOD_PRESSURE }} |
+                                                                        {{ $OLD_POST_BLOOD_PRESSURE2 }}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="font-weight-bold">BLOOD PRESSURE</td>
-                                                        <td>
-                                                            <div class="row" id="LAST">
-                                                                <div class="col-md-6 text-center">
-                                                                    {{ $OLD_PRE_BLOOD_PRESSURE }} |
-                                                                    {{ $OLD_PRE_BLOOD_PRESSURE2 }}
-                                                                </div>
-                                                                <div class="col-md-6 text-center">
-                                                                    {{ $OLD_POST_BLOOD_PRESSURE }} |
-                                                                    {{ $OLD_POST_BLOOD_PRESSURE2 }}
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="row" id="TODAY">
-                                                                <div class="col-md-6">
-                                                                    <div class="row">
-                                                                        <div class="col-sm-6">
-                                                                            <input
-                                                                                @if (!$Modify) disabled @endif
-                                                                                wire:model='PRE_BLOOD_PRESSURE'
-                                                                                type="number"
-                                                                                class="text-xs w-100 text-right" />
+                                                            </td>
+                                                            <td>
+                                                                <div class="row" id="TODAY">
+                                                                    <div class="col-md-6">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-6">
+                                                                                <input
+                                                                                    @if (!$Modify) disabled @endif
+                                                                                    wire:model='PRE_BLOOD_PRESSURE'
+                                                                                    type="number"
+                                                                                    class="text-xs w-100 text-right" />
+                                                                            </div>
+
+                                                                            <div class="col-sm-6">
+                                                                                <input
+                                                                                    @if (!$Modify) disabled @endif
+                                                                                    wire:model='PRE_BLOOD_PRESSURE2'
+                                                                                    type="number"
+                                                                                    class="text-xs w-100 text-right" />
+                                                                            </div>
                                                                         </div>
-
-                                                                        <div class="col-sm-6">
-                                                                            <input
-                                                                                @if (!$Modify) disabled @endif
-                                                                                wire:model='PRE_BLOOD_PRESSURE2'
-                                                                                type="number"
-                                                                                class="text-xs w-100 text-right" />
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-6">
+                                                                                <input
+                                                                                    @if (!$Modify) disabled @endif
+                                                                                    wire:model='POST_BLOOD_PRESSURE'
+                                                                                    type="number"
+                                                                                    class="text-xs w-100 text-right" />
+                                                                            </div>
+                                                                            <div class="col-sm-6">
+                                                                                <input
+                                                                                    @if (!$Modify) disabled @endif
+                                                                                    wire:model='POST_BLOOD_PRESSURE2'
+                                                                                    type="number"
+                                                                                    class="text-xs w-100 text-right" />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="row">
-                                                                        <div class="col-sm-6">
-                                                                            <input
-                                                                                @if (!$Modify) disabled @endif
-                                                                                wire:model='POST_BLOOD_PRESSURE'
-                                                                                type="number"
-                                                                                class="text-xs w-100 text-right" />
-                                                                        </div>
-                                                                        <div class="col-sm-6">
-                                                                            <input
-                                                                                @if (!$Modify) disabled @endif
-                                                                                wire:model='POST_BLOOD_PRESSURE2'
-                                                                                type="number"
-                                                                                class="text-xs w-100 text-right" />
-                                                                        </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="font-weight-bold">HEART RATE</td>
+                                                            <td>
+                                                                <div class="row" id="LAST">
+                                                                    <div class="col-md-6 text-center">
+                                                                        {{ $OLD_PRE_HEART_RATE }}
+                                                                    </div>
+                                                                    <div class="col-md-6 text-center">
+                                                                        {{ $OLD_POST_HEART_RATE }}
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="font-weight-bold">HEART RATE</td>
-                                                        <td>
-                                                            <div class="row" id="LAST">
-                                                                <div class="col-md-6 text-center">
-                                                                    {{ $OLD_PRE_HEART_RATE }}
+                                                            </td>
+                                                            <td>
+                                                                <div class="row" id="TODAY">
+                                                                    <div class="col-md-6">
+                                                                        <input type="number"
+                                                                            @if (!$Modify) disabled @endif
+                                                                            wire:model='PRE_HEART_RATE'
+                                                                            class="text-xs w-100 text-right" />
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <input type="number"
+                                                                            @if (!$Modify) disabled @endif
+                                                                            wire:model='POST_HEART_RATE'
+                                                                            class="text-xs w-100 text-right" />
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-6 text-center">
-                                                                    {{ $OLD_POST_HEART_RATE }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="font-weight-bold">O2 SATURATION</td>
+                                                            <td>
+                                                                <div class="row" id="LAST">
+                                                                    <div class="col-md-6 text-center">
+                                                                        {{ $OLD_PRE_O2_SATURATION }}
+                                                                    </div>
+                                                                    <div class="col-md-6 text-center">
+                                                                        {{ $OLD_POST_O2_SATURATION }}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="row" id="TODAY">
-                                                                <div class="col-md-6">
-                                                                    <input type="number"
-                                                                        @if (!$Modify) disabled @endif
-                                                                        wire:model='PRE_HEART_RATE'
-                                                                        class="text-xs w-100 text-right" />
+                                                            </td>
+                                                            <td>
+                                                                <div class="row" id="TODAY">
+                                                                    <div class="col-md-6">
+                                                                        <input type="number"
+                                                                            @if (!$Modify) disabled @endif
+                                                                            wire:model='PRE_O2_SATURATION'
+                                                                            class="text-xs w-100 text-right" />
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <input type="number"
+                                                                            @if (!$Modify) disabled @endif
+                                                                            wire:model='POST_O2_SATURATION'
+                                                                            class="text-xs w-100 text-right" />
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-6">
-                                                                    <input type="number"
-                                                                        @if (!$Modify) disabled @endif
-                                                                        wire:model='POST_HEART_RATE'
-                                                                        class="text-xs w-100 text-right" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="font-weight-bold">TEMPERATURE</td>
+                                                            <td>
+                                                                <div class="row" id="LAST">
+                                                                    <div class="col-md-6 text-center">
+                                                                        {{ $OLD_PRE_TEMPERATURE }}
+                                                                    </div>
+                                                                    <div class="col-md-6 text-center">
+                                                                        {{ $OLD_POST_TEMPERATURE }}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="font-weight-bold">O2 SATURATION</td>
-                                                        <td>
-                                                            <div class="row" id="LAST">
-                                                                <div class="col-md-6 text-center">
-                                                                    {{ $OLD_PRE_O2_SATURATION }}
+                                                            </td>
+                                                            <td>
+                                                                <div class="row" id="TODAY">
+                                                                    <div class="col-md-6">
+                                                                        <input type="number"
+                                                                            @if (!$Modify) disabled @endif
+                                                                            wire:model='PRE_TEMPERATURE'
+                                                                            class="text-xs w-100 text-right" />
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <input type="number"
+                                                                            @if (!$Modify) disabled @endif
+                                                                            wire:model='POST_TEMPERATURE'
+                                                                            class="text-xs w-100 text-right" />
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-6 text-center">
-                                                                    {{ $OLD_POST_O2_SATURATION }}
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="row" id="TODAY">
-                                                                <div class="col-md-6">
-                                                                    <input type="number"
-                                                                        @if (!$Modify) disabled @endif
-                                                                        wire:model='PRE_O2_SATURATION'
-                                                                        class="text-xs w-100 text-right" />
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <input type="number"
-                                                                        @if (!$Modify) disabled @endif
-                                                                        wire:model='POST_O2_SATURATION'
-                                                                        class="text-xs w-100 text-right" />
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="font-weight-bold">TEMPERATURE</td>
-                                                        <td>
-                                                            <div class="row" id="LAST">
-                                                                <div class="col-md-6 text-center">
-                                                                    {{ $OLD_PRE_TEMPERATURE }}
-                                                                </div>
-                                                                <div class="col-md-6 text-center">
-                                                                    {{ $OLD_POST_TEMPERATURE }}
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="row" id="TODAY">
-                                                                <div class="col-md-6">
-                                                                    <input type="number"
-                                                                        @if (!$Modify) disabled @endif
-                                                                        wire:model='PRE_TEMPERATURE'
-                                                                        class="text-xs w-100 text-right" />
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <input type="number"
-                                                                        @if (!$Modify) disabled @endif
-                                                                        wire:model='POST_TEMPERATURE'
-                                                                        class="text-xs w-100 text-right" />
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                            </td>
+                                                        </tr>
 
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="row form-group mt-4 text-right">
-                                                        <div class="col-md-6">
-                                                            <label class="text-sm">TIME START :</label>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <input type="time"
-                                                                @if (!$Modify) disabled @endif
-                                                                wire:model='TIME_START'
-                                                                class="form-control form-control-sm" />
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="row form-group mt-4 text-right">
-                                                        <div class="col-md-6">
-                                                            <label class="text-sm">TIME END :</label>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <input type="time"
-                                                                @if (!$Modify) disabled @endif
-                                                                wire:model='TIME_END'
-                                                                class="form-control form-control-sm" />
-                                                        </div>
-                                                    </div>
-
-                                                </div>
+                                                    </tbody>
+                                                </table>
                                             </div>
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="row form-group mt-1 text-right">
+                                                            <div class="col-md-6">
+                                                                <label class="text-sm">TIME START :</label>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="time"
+                                                                    @if (!$Modify) disabled @endif
+                                                                    wire:model='TIME_START'
+                                                                    class="form-control form-control-sm" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="row form-group mt-1 text-right">
+                                                            <div class="col-md-6">
+                                                                <label class="text-sm">TIME END :</label>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="time"
+                                                                    @if (!$Modify) disabled @endif
+                                                                    wire:model='TIME_END'
+                                                                    class="form-control form-control-sm" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
 
 
-                                            @if ($IsDocmentUploaded)
-                                                <div class="row form-group">
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
-                                                            <label for="fileUpload" class="text-xs">PDF
-                                                                document
-                                                                file
-                                                                @if ($PDF)
-                                                                    <i class="fa fa-check-circle text-success"
-                                                                        aria-hidden="true"></i>
-                                                                @endif
-                                                            </label>
-                                                            <div class="input-group input-group-sm">
-                                                                <div class="custom-file text-xs">
-                                                                    <input type="file"
-                                                                        @if (!$Modify) disabled @endif
-                                                                        class="custom-file-input text-xs"
-                                                                        id="fileUpload" wire:model.live='PDF'>
-                                                                    <label class="custom-file-label text-xs"
-                                                                        for="fileUpload">
-                                                                        @if ($PDF)
-                                                                            {{ $PDF->getClientOriginalName() }}
-                                                                        @else
-                                                                            Choose file
-                                                                        @endif
-                                                                    </label>
+                                                {{-- @if ($IsDocmentUploaded)
+                                                    <div class="row form-group">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label for="fileUpload" class="text-xs">PDF
+                                                                    document
+                                                                    file
+                                                                    @if ($PDF)
+                                                                        <i class="fa fa-check-circle text-success"
+                                                                            aria-hidden="true"></i>
+                                                                    @endif
+                                                                </label>
+                                                                <div class="input-group input-group-sm">
+                                                                    <div class="custom-file text-xs">
+                                                                        <input type="file"
+                                                                            @if (!$Modify) disabled @endif
+                                                                            class="custom-file-input text-xs"
+                                                                            id="fileUpload" wire:model.live='PDF'>
+                                                                        <label class="custom-file-label text-xs"
+                                                                            for="fileUpload">
+                                                                            @if ($PDF)
+                                                                                {{ $PDF->getClientOriginalName() }}
+                                                                            @else
+                                                                                Choose file
+                                                                            @endif
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div class="col-md-12">
+                                                            @if ($FILE_PATH)
+                                                                <a target="_blank"
+                                                                    href="{{ asset('storage/' . $FILE_PATH) }}"
+                                                                    class="btn btn-sm btn-warning">
+                                                                    <i class="fa fa-file-pdf-o"
+                                                                        aria-hidden="true"></i>
+                                                                    Preview
+                                                                </a>
+                                                            @endif
+                                                        </div>
                                                     </div>
-                                                    <div class="col-md-12">
-                                                        @if ($FILE_PATH)
-                                                            <a target="_blank"
-                                                                href="{{ asset('storage/' . $FILE_PATH) }}"
-                                                                class="btn btn-sm btn-warning">
-                                                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                                Preview
-                                                            </a>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            @endif
+                                                @endif --}}
 
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </section>
+                            </section>
+                        </div>
 
                     </div>
                     <div class="col-sm-6 col-md-6"
                         @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
                         @livewire('Hemodialysis.InventoryTreatment', ['HEMO_ID' => $ID, 'STATUS' => $STATUS, 'LOCATION_ID' => $LOCATION_ID, 'ActiveRequired' => $ActiveRequired])
+                    </div>
+
+                    <div class=" col-sm-12 col-md-12"
+                        @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                        @livewire('Hemodialysis.OtherDetails', ['HEMO_ID' => $ID])
                     </div>
                 </div>
             </div>
