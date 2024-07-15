@@ -114,13 +114,15 @@
                                                         wire:model='DATE' :isDisabled="true" />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
+                                                    {{-- @if ($Modify)
                                                         <livewire:text-input name="Code" titleName="Reference No."
                                                             :isDisabled=false wire:model='CODE' />
                                                     @else
-                                                        <livewire:text-input name="Code" titleName="Reference No."
-                                                            :isDisabled=true wire:model='CODE' />
-                                                    @endif
+                                                      
+                                                    @endif --}}
+
+                                                    <livewire:text-input name="Code" titleName="Reference No."
+                                                        :isDisabled=true wire:model='CODE' />
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify && $AMOUNT == 0)
@@ -219,12 +221,12 @@
                                                         aria-hidden="true"></i> Cancel</button>
                                             @endif
                                         @else
-                                            {{-- @if ($AMOUNT_APPLIED == 0 ) --}}
+                                            @if ($AMOUNT_APPLIED == 0)
                                                 <button type="button" wire:click='getModify()'
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
-                                            {{-- @endif --}}
+                                            @endif
 
                                             @if ($showFileName)
                                                 @can('patient.payment.print')
