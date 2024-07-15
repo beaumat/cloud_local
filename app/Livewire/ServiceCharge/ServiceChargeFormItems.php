@@ -133,6 +133,19 @@ class ServiceChargeFormItems extends Component
         ];
         $this->dispatch('payment-avaliable-prompt', itemdata: $itemdata);
     }
+    public function cashPayment(int $ID, float $AMOUNT)
+    {
+        $itemdata = [
+            'SERVICE_CHARGES_ITEM_ID' => $ID,
+            'SERVICE_CHARGES_ITEM_AMOUNT' => $AMOUNT
+        ];
+
+        $this->dispatch('cash-payment-prompt', itemdata: $itemdata);
+    }
+    public function save()
+    {
+
+    }
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
@@ -239,11 +252,9 @@ class ServiceChargeFormItems extends Component
 
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
-
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
-
             $this->RATE = 0;
             $this->RATE_TYPE = 0;
             $this->AMOUNT = 0;

@@ -34,7 +34,7 @@ class PatientPaymentServices
     }
     public function Store(
         string $CODE,
-        $DATE,
+        string $DATE,
         int $PATIENT_ID,
         int $LOCATION_ID,
         float $AMOUNT,
@@ -82,7 +82,7 @@ class PatientPaymentServices
     public function Update(
         int $ID,
         string $CODE,
-        $DATE,
+        string $DATE,
         int $PATIENT_ID,
         int $LOCATION_ID,
         float $AMOUNT,
@@ -98,16 +98,20 @@ class PatientPaymentServices
         int $ACCOUNTS_RECEIVABLE_ID
     ) {
 
-        $OBJECT_TYPE = 0;
-        $isLocRef = false;
-        
-        if ($CODE == '') {
-            $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PATIENT_PAYMENT');
-            $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
-        }
+        // $OBJECT_TYPE = 0;
+        // $isLocRef = false;
 
-        PatientPayments::where('ID', $ID)->update([
-            'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+        // if ($CODE == '') {
+        //     $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PATIENT_PAYMENT');
+        //     $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        // }
+        // 'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+
+        if ($CODE) {
+            
+        }
+        PatientPayments::where('ID', $ID)
+        ->update([
             'DATE'              => $DATE,
             'PATIENT_ID'        => $PATIENT_ID,
             'LOCATION_ID'       => $LOCATION_ID,
@@ -165,8 +169,9 @@ class PatientPaymentServices
                 's.DESCRIPTION as STATUS',
                 'pm.DESCRIPTION as PAYMENT_METHOD',
                 'patient_payment.FILE_PATH',
-                'patient_payment.IS_CONFIRM'
-
+                'patient_payment.IS_CONFIRM',
+                'patient_payment.RECEIPT_REF_NO',
+                'patient_payment.RECEIPT_DATE'
             ])
             ->join('contact as c', 'c.ID', '=', 'patient_payment.PATIENT_ID')
             ->join('location as l', function ($join) use (&$locationId) {

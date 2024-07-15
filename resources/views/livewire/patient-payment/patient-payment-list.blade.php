@@ -50,25 +50,26 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">No</th>
-                                        <th class="col-1">Date</th>
+                                        <th class="col-1">No.</th>
+                                        <th>Date</th>
                                         <th class="col-2">Patients</th>
-                                        <th class="col-1">Deposit</th>
-                                        <th class="col-1">Applied</th>
-                                        <th class="col-1">Balance</th>
-                                        <th class="col-1">Method</th>
-                                        <th class="text-center col-1">Confirm</th>
+                                        <th>Deposit</th>
+                                        <th>Applied</th>
+                                        <th>Balance</th>
+                                        <th>Method</th>
+                                        <th class="col-1">Ref No.</th>
+                                        <th class="col-1">Ref Date.</th>
+                                        <th>Confirm</th>
                                         <th class="col-1">Location</th>
-                                        <th class="col-1 text-center">Status</th>
+                                        <th>Status</th>
                                         @can('patient.payment.create')
-                                            <th class="text-center col-2 bg-success">
+                                            <th class="text-center bg-success">
                                                 <a href="{{ route('patientspayment_create') }}"
                                                     class="text-white btn btn-xs w-100">
                                                     <i class="fas fa-plus"></i> New
                                                 </a>
                                             </th>
                                         @endcan
-
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -88,6 +89,9 @@
                                                 {{ number_format($list->AMOUNT - $list->AMOUNT_APPLIED, 2) }}
                                             </td>
                                             <td> {{ $list->PAYMENT_METHOD }}</td>
+                                            <td>{{ $list->RECEIPT_REF_NO }}</td>
+                                            <td>{{ $list->RECEIPT_DATE ? date('m/d/Y', strtotime($list->RECEIPT_DATE)) : '' }}
+                                            </td>
                                             <td class="text-center">
                                                 @if ($list->IS_CONFIRM)
                                                     <strong class="text-success">Yes</strong>
@@ -111,8 +115,6 @@
                                                             </a>
                                                         @endif
                                                     @endcan
-
-
                                                     <a href="{{ route('patientspayment_edit', ['id' => $list->ID]) }}"
                                                         class="btn-sm text-info">
                                                         <i class="fas fa-edit" aria-hidden="true"></i>
@@ -157,7 +159,7 @@
                                 <div class="col-md-6">
                                     <div class ="row text-xs">
                                         <div class="col-3 text-right">
-                                            <label >Total Deposit :</label>
+                                            <label>Total Deposit :</label>
                                         </div>
                                         <div class="col-9 text-left text-primary h6">
                                             {{ number_format($TOTAL_DEPOSIT, 2) }}

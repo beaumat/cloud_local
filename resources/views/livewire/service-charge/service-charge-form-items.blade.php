@@ -4,9 +4,9 @@
         <thead class="text-xs bg-sky">
             <tr>
                 <th class="col-1">Code</th>
-                <th class="col-5">Description</th>
+                <th class="col-4">Description</th>
                 <th class="col-1">Category</th>
-                <th class="col-1">Qty</th>
+                <th class="">Qty</th>
                 <th class="col-1">Unit</th>
                 <th class="col-1">Rate</th>
                 <th class="col-1">Amount</th>
@@ -48,8 +48,7 @@
                         @if ($editItemId === $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
                                 name="lineRate" wire:model.live.debounce.1000ms='lineRate' wire:blur="getEditAmount"
-                              
-                              @if($editPrice == false)  readonly @endif />
+                                @if ($editPrice == false) readonly @endif />
                         @else
                             {{ number_format($list->RATE, 2) }}
                         @endif
@@ -71,14 +70,7 @@
                         @endif
                     </td>
                     {{-- @if ($STATUS == $openStatus) --}}
-
                     <td class="text-center">
-
-                        <button class="text-primary btn btn-sm btn-link"
-                            wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})">
-                            <i class="fa fa-paypal" aria-hidden="true"></i>
-
-                        </button>
                         @if ($editItemId === $list->ID)
                             <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
                                 class="text-success btn btn-sm btn-link">
@@ -89,6 +81,13 @@
                                 <i class="fas fa-ban" aria-hidden="true"></i>
                             </button>
                         @else
+                            <button class="text-primary btn btn-sm btn-link"
+                                wire:click="cashPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
+                                    class="fa fa-money" aria-hidden="true"></i> </button>
+                            <button class="text-primary btn btn-sm btn-link"
+                                wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
+                                    class="fa fa-paypal" aria-hidden="true"></i> </button>
+
                             @if ($list->count_pay == 0)
                                 <button title="Edit" id="editbtn"
                                     wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
@@ -164,7 +163,8 @@
                     <td>
 
                         <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
-                          @if($editPrice == false)  readonly @endif   name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
+                            @if ($editPrice == false) readonly @endif name="rate"
+                            wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                     </td>
                     <td class="text-right">
                         <label class="mt-2">{{ number_format($AMOUNT, 2) }}</label>
@@ -199,4 +199,5 @@
     {{-- @endif --}}
 
     @livewire('ServiceCharge.PaymentAvailable', ['SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID])
+    @livewire('ServiceCharge.CashPayment', ['SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID])
 </div>

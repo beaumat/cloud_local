@@ -183,9 +183,7 @@ class PatientPaymentForm extends Component
     {
 
         $getType = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
-
         $PAYMENT_TYPE = (int) $getType->PAYMENT_TYPE;
-
         if ($PAYMENT_TYPE == 10 && $this->ID == 0) {
             $this->validate(
                 [

@@ -121,7 +121,7 @@
                                                       
                                                     @endif --}}
 
-                                                    <livewire:text-input name="Code" titleName="Reference No."
+                                                    <livewire:text-input name="Code" titleName="No."
                                                         :isDisabled=true wire:model='CODE' />
                                                 </div>
                                                 <div class="col-md-4">

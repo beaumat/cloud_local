@@ -1,9 +1,4 @@
 <div>
-
-    {{-- <button wire:click="openModal" class="btn btn-primary btn-xs text-xs ">
-        <i class="fa fa-plus" aria-hidden="true"></i> Available Payment
-    </button> --}}
-
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
             <div class="modal-dialog modal-lg" role="document">
