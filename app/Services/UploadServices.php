@@ -38,15 +38,14 @@ class UploadServices
     {
 
         try {
-            $tempPath = $Image->store('public/temp', 'public');
-            $randomFilename = Str::random(40);
+
+            $path = $Image->store('images', 'custom_local');
             $extension = $Image->extension();
-            $newPath = 'treatment/' . $randomFilename . '.' . $extension; // Adjusted path
-            Storage::disk('public')->move($tempPath, $newPath);
+    
             $dataReturn = [
-                'new_path' => $newPath,
+                'new_path' =>  $path,
                 'extension' => $extension,
-                'filename' => $randomFilename
+                'filename' => basename($path)
             ];
 
             return $dataReturn;

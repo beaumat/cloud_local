@@ -389,49 +389,7 @@
                                                 </div>
 
 
-                                                {{-- @if ($IsDocmentUploaded)
-                                                    <div class="row form-group">
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <label for="fileUpload" class="text-xs">PDF
-                                                                    document
-                                                                    file
-                                                                    @if ($PDF)
-                                                                        <i class="fa fa-check-circle text-success"
-                                                                            aria-hidden="true"></i>
-                                                                    @endif
-                                                                </label>
-                                                                <div class="input-group input-group-sm">
-                                                                    <div class="custom-file text-xs">
-                                                                        <input type="file"
-                                                                            @if (!$Modify) disabled @endif
-                                                                            class="custom-file-input text-xs"
-                                                                            id="fileUpload" wire:model.live='PDF'>
-                                                                        <label class="custom-file-label text-xs"
-                                                                            for="fileUpload">
-                                                                            @if ($PDF)
-                                                                                {{ $PDF->getClientOriginalName() }}
-                                                                            @else
-                                                                                Choose file
-                                                                            @endif
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            @if ($FILE_PATH)
-                                                                <a target="_blank"
-                                                                    href="{{ asset('storage/' . $FILE_PATH) }}"
-                                                                    class="btn btn-sm btn-warning">
-                                                                    <i class="fa fa-file-pdf-o"
-                                                                        aria-hidden="true"></i>
-                                                                    Preview
-                                                                </a>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                @endif --}}
+
 
                                             </div>
                                         </div>
@@ -441,10 +399,73 @@
                         </div>
 
                     </div>
-                    <div class="col-sm-6 col-md-6"
-                        @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                        @livewire('Hemodialysis.InventoryTreatment', ['HEMO_ID' => $ID, 'STATUS' => $STATUS, 'LOCATION_ID' => $LOCATION_ID, 'ActiveRequired' => $ActiveRequired])
+                    <div class="col-sm-6 col-md-6">
+                        <div class="row">
+                            <div class="col-md-12"
+                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                @livewire('Hemodialysis.InventoryTreatment', ['HEMO_ID' => $ID, 'STATUS' => $STATUS, 'LOCATION_ID' => $LOCATION_ID, 'ActiveRequired' => $ActiveRequired])
+
+                            </div>
+                            <div class="col-md-12">
+                                @if ($IsDocmentUploaded)
+                                    <div class="row form-group">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="fileUpload" class="text-xs">Image
+                                                    document
+                                                    file
+                                                    @if ($IMAGE)
+                                                        <i class="fa fa-check-circle text-success"
+                                                            aria-hidden="true"></i>
+                                                    @endif
+                                                </label>
+                                                <div class="input-group input-group-sm">
+                                                    <div class="custom-file text-xs">
+                                                        <input type="file" class="custom-file-input text-xs"
+                                                            id="fileUpload" wire:model.live='IMAGE'>
+                                                        <label class="custom-file-label text-xs" for="fileUpload">
+                                                            @if ($IMAGE)
+                                                                {{ $IMAGE->getClientOriginalName() }}
+                                                            @else
+                                                                Choose file
+                                                            @endif
+                                                        </label>
+
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button wire:click='uploaddoc' class="btn btn-dark btn-sm">
+                                               <i class="fa fa-upload" aria-hidden="true"></i>  Upload 
+                                            </button>
+                                            @if ($FILE_PATH)
+                                                <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
+                                                    class="btn btn-sm btn-danger">
+                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                    Preview
+                                                </a>
+                                            @endif
+
+
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+
+
+
+
                     </div>
+
+
+
+
                     @if ($USE_OTHER_DETAILS == true)
                         <div class="col-sm-12 col-md-12"
                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>

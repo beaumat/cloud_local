@@ -26,7 +26,7 @@ class HemoForm extends Component
     use WithFileUploads;
     public string $FILE_NAME;
     public string $FILE_PATH;
-    public $PDF = null;
+    public $IMAGE = null;
     public $data;
     public int $ID;
     public bool $Modify;
@@ -135,6 +135,10 @@ class HemoForm extends Component
         $this->FILE_NAME = $data->FILE_NAME ?? "";
         $this->FILE_PATH = $data->FILE_PATH ?? "";
         $this->STATUS = $data->STATUS_ID ?? 1;
+
+        if ($this->STATUS == 2 || $this->STATUS == 4) {
+            $this->IsDocmentUploaded = true;
+        }
         $this->getPreviousTreatment();
     }
     public bool $IsPostedButton;
@@ -149,7 +153,7 @@ class HemoForm extends Component
     {
         $this->ActiveRequired = true;
         $this->IsPostedButton = false;
-        $this->IsDocmentUploaded = false;
+
         $this->Modify = true;
 
         if (is_numeric($id)) {
@@ -185,11 +189,12 @@ class HemoForm extends Component
         $this->POST_O2_SATURATION = "";
         $this->POST_TEMPERATURE = "";
 
-        $this->PDF = null;
+        $this->IMAGE = null;
         $this->FILE_NAME = '';
         $this->FILE_PATH = '';
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = '';
+        $this->IsDocmentUploaded = false;
     }
     public function getPreviousTreatment()
     {
@@ -244,13 +249,24 @@ class HemoForm extends Component
             $this->TIME_END
         );
 
-        if ($this->PDF != null) {
-            $this->uploadServices->RemoveIfExists($this->FILE_PATH);
-            $returnData = $this->uploadServices->Treatment($this->PDF);
-            $this->hemoServices->UpdateFile($this->ID, $returnData['filename'] . '.' . $returnData['extension'], $returnData['new_path']);
-        }
+
 
         session()->flash('message', 'Successfully save');
+    }
+    public function uploaddoc()
+    {
+        $this->validate([
+            'IMAGE.*' => 'image|max:1024', // 1MB Max per image
+        ]);
+
+
+        if ($this->IMAGE != null) {
+            $this->uploadServices->RemoveIfExists($this->FILE_PATH);
+            $returnData = $this->uploadServices->Treatment($this->IMAGE);
+            $this->hemoServices->UpdateFile($this->ID, $returnData['filename'] . '.' . $returnData['extension'], $returnData['new_path']);
+
+            return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully upload');
+        }
     }
     public function getModify()
     {
@@ -347,10 +363,10 @@ class HemoForm extends Component
         }
     }
 
-    public function updatedPdf()
+    public function updatedImage()
     {
         $this->validate([
-            'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
+            'IMAGE.*' => 'image|max:1024', // 1MB Max per image
         ]);
     }
 

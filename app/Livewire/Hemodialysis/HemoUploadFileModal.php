@@ -35,7 +35,80 @@ class HemoUploadFileModal extends Component
     {
         $this->showModal = false;
     }
+    private function ImageCropPlaceLevel1($crop_path): string
+    {
+        // $manager0 = new ImageManager(new Driver());
+        // $img0 = $manager0->read($absolutePath);  // get actual image
+        // $img0->crop(400, 200, 0, 0); // crop image
+        // $cropPath = 'ex_crop_' . basename($path);
+        // $crop_path  = public_path('storage/images/qrcode/' . $cropPath);
+        // $img0->save($crop_path);
 
+        $manager2 = new ImageManager(new Driver());
+        $img2 = $manager2->read($crop_path);  // get actual image
+        $img2->crop(600, 600, 600, 0); // crop image
+        $img2->place($crop_path, 'top', 0, 200, 100);
+
+        $topPath = 'ex_top_' . basename($crop_path);
+        $top_path  = public_path('storage/images/qrcode/' . $topPath);
+        $img2->save($top_path);
+        $qrcode = new QrReader($top_path); // reading qr-code
+        return (string) $qrcode->text() ?? '';
+    }
+
+    private function ImageCropPlaceLevel2(string $crop_path): string
+    {
+
+        $manager2 = new ImageManager(new Driver());
+        $img2 = $manager2->read($crop_path);  // get actual image
+        $img2->crop(800, 800, 800, 0); // crop image
+        $img2->place($crop_path, 'top', 0, 300, 100);
+
+        $topPath = 'ex_a_top_' . basename($crop_path);
+        $top_path  = public_path('storage/images/qrcode/' . $topPath);
+        $img2->save($top_path);
+        $qrcode = new QrReader($top_path); // reading qr-code
+        return (string) $qrcode->text() ?? '';
+    }
+    private function ImageCropPlaceLevel3(string $crop_path): string
+    {
+
+        $manager2 = new ImageManager(new Driver());
+        $img2 = $manager2->read($crop_path);  // get actual image
+        $img2->crop(1000, 1000, 1000, 0); // crop image
+        $img2->place($crop_path, 'top', 0, 300, 100);
+
+        $topPath = 'ex_b_top_' . basename($crop_path);
+        $top_path  = public_path('storage/images/qrcode/' . $topPath);
+        $img2->save($top_path);
+        $qrcode = new QrReader($top_path); // reading qr-code
+        return (string) $qrcode->text() ?? '';
+    }
+
+    private function ImageCropPlaceLevel4(string $crop_path): string
+    {
+
+        $manager2 = new ImageManager(new Driver());
+        $img2 = $manager2->read($crop_path);  // get actual image
+        $img2->crop(200, 200, 300, 0); // crop image
+        $img2->place($crop_path, 'top', 0, 0, 100);
+
+        $topPath = 'ex_c_top_' . basename($crop_path);
+        $top_path  = public_path('storage/images/qrcode/' . $topPath);
+        $img2->save($top_path);
+        $qrcode = new QrReader($top_path); // reading qr-code
+        return (string) $qrcode->text() ?? '';
+    }
+    private function ImageCrop(string $absolutePath, $path, int $width, int $height, string $prefix): string
+    {
+        $manager0 = new ImageManager(new Driver());
+        $img0 = $manager0->read($absolutePath);  // get actual image
+        $img0->crop($width, $height, 0, 0); // crop image
+        $cropPath0 = $prefix . '_' . basename($path);
+        $crop_path0  = public_path('storage/images/qrcode/' . $cropPath0);
+        $img0->save($crop_path0);
+        return $crop_path0;
+    }
     public function uploadImages()
     {
         $this->qrCodeNotReadData = [];
@@ -47,28 +120,44 @@ class HemoUploadFileModal extends Component
             $path = $list->store('images', 'custom_local');
             $absolutePath = (string) public_path('storage/' . $path);
 
-            $manager1 = new ImageManager(new Driver());
-            $img = $manager1->read($absolutePath);  // get actual image
-            $img->crop(400, 200, 0, 0); // crop image
-            $cropPath = 'crop_' . basename($path);
-            $crop_path  = public_path('storage/images/qrcode/' . $cropPath);
-            $img->save($crop_path);
-
-            // level 1  
+            $crop_path = $this->ImageCrop($absolutePath, $path, 400, 200, 'crop_');
             $qrcode = new QrReader($crop_path); // reading qr-code
-            $codeGenerate = (string) $qrcode->text() ?? '';
+            $codeGenerate  = $qrcode->text() ?? '';
+
+            if ($codeGenerate == '') {
+                // level 1 
+                $crop_path_1 = $this->ImageCrop($absolutePath, $path, 400, 300, 'crop1_');
+                $qrcode = new QrReader($crop_path_1); // reading qr-code
+                $codeGenerate  = $qrcode->text() ?? '';
+            }
+
+            if ($codeGenerate == '') {
+                // level 1 -1
+                $crop_path_2 = $this->ImageCrop($absolutePath, $path, 400, 400, 'crop2_');
+                $qrcode = new QrReader($crop_path_2); // reading qr-code
+                $codeGenerate  = $qrcode->text() ?? '';
+            }
+
+
+
+            if ($codeGenerate == '') {
+                // level 1
+                $codeGenerate = $this->ImageCropPlaceLevel1($crop_path);
+            }
 
             if ($codeGenerate == '') {
                 // level 2
-                $manager2 = new ImageManager(new Driver());
-                $img2 = $manager2->read($crop_path);  // get actual image
-                $img2->crop(600, 600, 600, 0); // crop image
-                $img2->place($crop_path, 'top', 0, 200, 100);
-                $topPath = 'top_' . basename($crop_path);
-                $top_path  = public_path('storage/images/qrcode/' . $topPath);
-                $img2->save($top_path);
-                $qrcode = new QrReader($top_path); // reading qr-code
-                $codeGenerate = (string) $qrcode->text() ?? '';
+                $codeGenerate = $this->ImageCropPlaceLevel2($crop_path);
+            }
+
+            if ($codeGenerate == '') {
+                // level 3
+                $codeGenerate = $this->ImageCropPlaceLevel3($crop_path);
+            }
+
+            if ($codeGenerate == '') {
+                // level 4
+                $codeGenerate = $this->ImageCropPlaceLevel4($crop_path_1);
             }
 
             // save in qrcode folder
