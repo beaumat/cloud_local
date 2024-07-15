@@ -135,13 +135,13 @@ class HemoForm extends Component
         $this->FILE_NAME = $data->FILE_NAME ?? "";
         $this->FILE_PATH = $data->FILE_PATH ?? "";
         $this->STATUS = $data->STATUS_ID ?? 1;
+        $this->IsDocmentUploaded = false;
 
         if ($this->TIME_START != "" &&   $this->TIME_END != "") {
-            $this->IsDocmentUploaded = true;
-        } else {
-            $this->IsDocmentUploaded = false;
+            if ($this->STATUS <> 3) {
+                $this->IsDocmentUploaded = true;
+            }
         }
-
         $this->getPreviousTreatment();
     }
     public bool $IsPostedButton;
