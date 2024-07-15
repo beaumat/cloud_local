@@ -219,12 +219,12 @@
                                                         aria-hidden="true"></i> Cancel</button>
                                             @endif
                                         @else
-                                            @if ($AMOUNT_APPLIED == 0)
+                                            {{-- @if ($AMOUNT_APPLIED == 0 ) --}}
                                                 <button type="button" wire:click='getModify()'
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
-                                            @endif
+                                            {{-- @endif --}}
 
                                             @if ($showFileName)
                                                 @can('patient.payment.print')
