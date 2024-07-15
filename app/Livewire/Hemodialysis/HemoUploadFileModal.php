@@ -49,7 +49,7 @@ class HemoUploadFileModal extends Component
             $absolutePath = (string) public_path('storage/' . $path);
             $manager = new ImageManager(new Driver());
             $img = $manager->read($absolutePath);  // get actual image
-            $img->crop(300, 200, 0, 0); // crop image
+            $img->crop(400, 200, 0, 0); // crop image
             $resizedPath = 'resized_' . basename($path);
             $img->save(public_path('storage/images/qrcode/' . $resizedPath)); // save in qrcode folder
 
