@@ -25,7 +25,6 @@ class HemoUploadFileModal extends Component
     {
         $this->hemoServices = $hemoServices;
     }
-
     public function openModal()
     {
         $this->qrCodeNotReadData = [];
@@ -47,15 +46,32 @@ class HemoUploadFileModal extends Component
         foreach ($this->images as $list) {
             $path = $list->store('images', 'custom_local');
             $absolutePath = (string) public_path('storage/' . $path);
-            $manager = new ImageManager(new Driver());
-            $img = $manager->read($absolutePath);  // get actual image
+
+            $manager1 = new ImageManager(new Driver());
+            $img = $manager1->read($absolutePath);  // get actual image
             $img->crop(400, 200, 0, 0); // crop image
-            $resizedPath = 'resized_' . basename($path);
-            $img->save(public_path('storage/images/qrcode/' . $resizedPath)); // save in qrcode folder
+            $cropPath = 'crop_' . basename($path);
+            $crop_path  = public_path('storage/images/qrcode/' . $cropPath);
+            $img->save($crop_path);
 
-            $qrcode = new QrReader(public_path('storage/images/qrcode/' . $resizedPath)); // reading qr-code
-            $codeGenerate = $qrcode->text();
+            // level 1  
+            $qrcode = new QrReader($crop_path); // reading qr-code
+            $codeGenerate = (string) $qrcode->text() ?? '';
 
+            if ($codeGenerate == '') {
+                // level 2
+                $manager2 = new ImageManager(new Driver());
+                $img2 = $manager2->read($crop_path);  // get actual image
+                $img2->crop(600, 600, 600, 0); // crop image
+                $img2->place($crop_path, 'top', 0, 200, 100);
+                $topPath = 'top_' . basename($crop_path);
+                $top_path  = public_path('storage/images/qrcode/' . $topPath);
+                $img2->save($top_path);
+                $qrcode = new QrReader($top_path); // reading qr-code
+                $codeGenerate = (string) $qrcode->text() ?? '';
+            }
+
+            // save in qrcode folder
             if ($codeGenerate) {
                 $this->qrCodeData[] = [
                     'code' => $codeGenerate,

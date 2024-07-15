@@ -37,7 +37,7 @@
                                                 wire:model='ACCOUNT_NO' maxlength='20' />
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:date-input name="DATE_ADMISSION" titleName="Date Admission"
+                                            <livewire:date-input name="DATE_ADMISSION" titleName="Date Diagnosis"
                                                 wire:model='DATE_ADMISSION' />
                                         </div>
                                         <div class="col-md-2">

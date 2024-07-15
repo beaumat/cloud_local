@@ -53,7 +53,7 @@
                                         <th>AGE</th>
                                         <th class="col-1">PHILHEALTH NO.</th>
                                         <th class="col-2">NEPHRO</th>
-                                        <th class="col-1">ADMISSION</th>
+                                        <th class="col-1">DIAGNOSIS</th>
                                         <th class="col-1">LOCATION</th>
                                         <th class="text-center">REQ. STATUS</th>
                                         <th class="text-center">INACTIVE</th>
