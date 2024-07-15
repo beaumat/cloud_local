@@ -42,10 +42,10 @@ class TimerServices
         try {
 
             $data = $this->hemoServices->getTreatmentID($CONTACT_ID, $DATE, $LOCATION_ID);
-            
+
             $ID         = (int) $data['ID']; //HEMO_ID
-            $TIME_START =       $data['TIME_START'];
-            $TIME_END   =       $data['TIME_END'];
+            $TIME_START =       $data['TIME_START'] == '' ?  null :  $data['TIME_START'];
+            $TIME_END   =       $data['TIME_END'] == '' ?   null : $data['TIME_END'];
             $STATUS_ID  = (int) $data['STATUS_ID'];
 
             $PRE_WEIGHT =  $data['PRE_WEIGHT'];
@@ -53,8 +53,6 @@ class TimerServices
 
             DB::beginTransaction();
             if ($ID > 0) {
-
-
 
                 if ($PRE_WEIGHT == null || $POST_WEIGHT == null) {
                     $this->hemoServices->StatusUpdate($ID, 3); // VOID
@@ -70,6 +68,7 @@ class TimerServices
                         return;
                     }
                 }
+
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 1); //PRESENT
 
                 if ($TIME_START == null || $TIME_END == null) {

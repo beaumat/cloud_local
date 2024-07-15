@@ -633,7 +633,6 @@ class HemoServices
 
         return $result;
     }
-
     public function ItemView(int $HEMO_ID)
     {
         $result = HemodialysisItems::query()
@@ -662,7 +661,6 @@ class HemoServices
 
         return $result;
     }
-
     public function CountItems(int $HEMO_ID): int
     {
         return (int) HemodialysisItems::where('HEMO_ID', $HEMO_ID)->count();

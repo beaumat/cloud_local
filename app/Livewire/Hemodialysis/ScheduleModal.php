@@ -58,7 +58,6 @@ class ScheduleModal extends Component
                         foreach ($dataList as $item) {
                             $this->hemoServices->AddItem($item->ID,  $hemoData);
                         }
-
                         if ($this->ids == "") {
                             $this->ids = $HEMO_ID;
                         } else {
