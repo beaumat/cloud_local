@@ -65,18 +65,34 @@
                                             </div>
 
                                             <div class="row">
-                                                @if ($showReceiptNo)
-                                                    <div class="col-md-6">
-                                                        @if ($Modify)
-                                                            <livewire:text-input name="RECEIPT_REF_NO"
-                                                                titleName="GL Ref#" :isDisabled=false
-                                                                wire:model='RECEIPT_REF_NO' />
-                                                        @else
-                                                            <livewire:text-input name="RECEIPT_REF_NO"
-                                                                titleName="GL Ref#" :isDisabled=true
-                                                                wire:model='RECEIPT_REF_NO' />
-                                                        @endif
-                                                    </div>
+                                                @if ($reloadType)
+                                                    @if ($showReceiptNo)
+                                                        <div class="col-md-6">
+                                                            @if ($Modify)
+                                                                <livewire:text-input name="RECEIPT_REF_NO"
+                                                                    :titleName=$TITLE_REF :isDisabled=false
+                                                                    wire:model='RECEIPT_REF_NO' />
+                                                            @else
+                                                                <livewire:text-input name="RECEIPT_REF_NO"
+                                                                    :titleName=$TITLE_REF :isDisabled=true
+                                                                    wire:model='RECEIPT_REF_NO' />
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                @else
+                                                    @if ($showReceiptNo)
+                                                        <div class="col-md-6">
+                                                            @if ($Modify)
+                                                                <livewire:text-input name="RECEIPT_REF_NO"
+                                                                    :titleName=$TITLE_REF :isDisabled=false
+                                                                    wire:model='RECEIPT_REF_NO' />
+                                                            @else
+                                                                <livewire:text-input name="RECEIPT_REF_NO"
+                                                                    :titleName=$TITLE_REF :isDisabled=true
+                                                                    wire:model='RECEIPT_REF_NO' />
+                                                            @endif
+                                                        </div>
+                                                    @endif
                                                 @endif
                                                 @if ($showReceiptDate)
                                                     <div class="col-md-6">
@@ -183,8 +199,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
-
                                                 @endif
                                             </div>
                                         </div>

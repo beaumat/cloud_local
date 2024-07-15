@@ -64,7 +64,7 @@ class PatientPaymentForm extends Component
     public bool $showReceiptDate = false;
     public bool $showFileName = false;
     private $uploadServices;
-
+    public string $TITLE_REF = "";
     public function boot(
         PatientPaymentServices $patientPaymentServices,
         LocationServices $locationServices,
@@ -129,8 +129,6 @@ class PatientPaymentForm extends Component
     }
     public function mount($id = null)
     {
-
-
         if (is_numeric($id)) {
             $data = $this->patientPaymentServices->get($id);
             if ($data) {
@@ -256,10 +254,9 @@ class PatientPaymentForm extends Component
 
                     $this->getDocumentProccess();
                 }
-
                 return Redirect::route('patientspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
-
+        
                 $this->patientPaymentServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -281,10 +278,8 @@ class PatientPaymentForm extends Component
 
                 if ($this->PDF) {
                     if ($PAYMENT_TYPE == 10) {
-
                         $this->uploadServices->RemoveIfExists($this->FILE_PATH);
                         $this->getDocumentProccess();
-
                         $data = $this->patientPaymentServices->get($this->ID);
                         if ($data) {
                             $this->getInfo($data);
@@ -317,19 +312,22 @@ class PatientPaymentForm extends Component
         }
         $this->Modify = false;
     }
+    public bool $reloadType = true;
     public function updatedpaymentmethodid()
-    {
+    {   
+        $this->reloadType = $this->reloadType ? false : true;
         $paymentMethod = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
-
+        
         if ($paymentMethod) {
 
             switch ($paymentMethod->PAYMENT_TYPE) {
                 case 0:
                     $this->showCardNo = false;
                     $this->showCardDateExpire = false;
-                    $this->showReceiptNo = false;
+                    $this->showReceiptNo = true;
                     $this->showReceiptDate = false;
                     $this->showFileName = false;
+                    $this->TITLE_REF = "SL No.";
                     break;
                 case 1:
                     $this->showCardNo = false;
@@ -337,6 +335,7 @@ class PatientPaymentForm extends Component
                     $this->showReceiptNo = true;
                     $this->showReceiptDate = true;
                     $this->showFileName = false;
+                    $this->TITLE_REF = "Ref No.";
                     break;
                 case 4:
                     $this->showCardNo = true;
@@ -345,14 +344,13 @@ class PatientPaymentForm extends Component
                     $this->showReceiptDate = false;
                     $this->showFileName = false;
                     break;
-
-
                 case 5:
                     $this->showCardNo = true;
                     $this->showCardDateExpire = true;
                     $this->showReceiptNo = true;
                     $this->showReceiptDate = false;
                     $this->showFileName = false;
+                    $this->TITLE_REF = "Ref No.";
                     break;
 
                 case 8:
@@ -361,6 +359,7 @@ class PatientPaymentForm extends Component
                     $this->showReceiptNo = false;
                     $this->showReceiptDate = false;
                     $this->showFileName = false;
+                    $this->TITLE_REF = "Ref No.";
                     break;
                 case 9:
                     $this->showCardNo = false;
@@ -368,6 +367,7 @@ class PatientPaymentForm extends Component
                     $this->showReceiptNo = false;
                     $this->showReceiptDate = false;
                     $this->showFileName = false;
+                    $this->TITLE_REF = "OR No.";
                     break;
                 default:
                     # code...
@@ -376,12 +376,13 @@ class PatientPaymentForm extends Component
                     $this->showReceiptNo = true;
                     $this->showReceiptDate = true;
                     $this->showFileName = true;
+                    $this->TITLE_REF = "GL No.";
                     break;
             }
         }
     }
     public function render()
-    {
+    {   
         return view('livewire.patient-payment.patient-payment-form');
     }
 }

@@ -97,8 +97,17 @@ class PatientPaymentServices
         bool $DEPOSITED,
         int $ACCOUNTS_RECEIVABLE_ID
     ) {
+
+        $OBJECT_TYPE = 0;
+        $isLocRef = false;
+        
+        if ($CODE == '') {
+            $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PATIENT_PAYMENT');
+            $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        }
+
         PatientPayments::where('ID', $ID)->update([
-            'CODE'              => $CODE,
+            'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DATE'              => $DATE,
             'PATIENT_ID'        => $PATIENT_ID,
             'LOCATION_ID'       => $LOCATION_ID,
