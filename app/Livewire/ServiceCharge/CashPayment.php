@@ -44,8 +44,6 @@ class CashPayment extends Component
     }
     public function save()
     {
-
-
         $this->validate([
             'AMOUNT' => 'required|not_in:0',
             'RECEIPT_REF_NO' => 'required'

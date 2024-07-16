@@ -32,7 +32,7 @@ class ScheduleServices
         return Schedules::where('ID', $Id)->first();
     }
 
-    public function ContactListFromSchedules($Date, int $LOCATION_ID)
+    public function ContactListFromSchedules(string $Date, int $LOCATION_ID)
     {
         return Schedules::query()
             ->select([
@@ -43,6 +43,13 @@ class ScheduleServices
             ->where('c.TYPE', 3)
             ->whereDate('schedules.SCHED_DATE', $Date)
             ->where('schedules.LOCATION_ID', $LOCATION_ID)
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('service_charges as sc')
+                    ->whereRaw('sc.`DATE` = schedules.`SCHED_DATE`')
+                    ->whereRaw('sc.`PATIENT_ID` = schedules.`CONTACT_ID`')
+                    ->whereRaw('sc.`LOCATION_ID`= schedules.`LOCATION_ID`');
+            })
             ->orderBy('c.LAST_NAME')
             ->get();
     }
