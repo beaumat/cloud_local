@@ -379,7 +379,6 @@ class ServiceChargeServices
         }
         return [];
     }
-
     public function GetPaymentAppliedViaServiceCharges(int $SERVICE_CHARGES_ID): float
     {
         $result = PatientPaymentCharges::query()
@@ -444,8 +443,6 @@ class ServiceChargeServices
             ]);
         }
     }
-
-
     public function getUpdateTaxItem(int $SERVICE_CHARGES_ID, int $TAX_ID)
     {
         $items = ServiceChargesItems::query()
@@ -471,5 +468,18 @@ class ServiceChargeServices
                     ]);
             }
         }
+    }
+    public  function getSum(string $fromDate, string $toDate, int $locationId = 0, int $patientId  = 0): float
+    {
+        $result = (float)  ServiceCharges::whereBetween('DATE', [$fromDate, $toDate])
+            ->when($locationId > 0, function ($query) use (&$locationId) {
+                $query->where('LOCATION_ID', $locationId);
+            })
+            ->when($patientId > 0, function ($query) use (&$patientId) {
+                $query->where('PATIENT_ID', $patientId);
+            })
+            ->sum('AMOUNT');
+
+        return $result;
     }
 }

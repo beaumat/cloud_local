@@ -416,7 +416,6 @@ class ServiceChargeFormItems extends Component
     {
 
         $this->getReload();
-
         return view('livewire.service-charge.service-charge-form-items');
     }
 }
