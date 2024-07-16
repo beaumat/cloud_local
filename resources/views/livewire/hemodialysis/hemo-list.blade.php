@@ -88,7 +88,7 @@
                                         <th class="text-center ">Start</th>
                                         <th class="text-center ">End</th>
                                         <th class="col-1">Location</th>
-                                        <th class="text-center"> Status</th>
+                                        <th class="text-center">S</th>
                                         <th class="text-center"> SC</th>
                                         <th class="text-center bg-success">
                                             @can('patient.treatment.create')
@@ -137,7 +137,7 @@
                                             <td> {{ $list->LOCATION_NAME }} </td>
                                             <td
                                                 class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success  @elseif ($list->STATUS_ID == 4) bg-secondary @else bg-danger @endif ">
-                                                {{ $list->STATUS }} </td>
+                                                {{ substr($list->STATUS, 0, 1) }} </td>
                                             <td class="text-center">
                                                 @if ($list->IS_SC)
                                                     <i class="fa fa-check text-success" aria-hidden="true"></i>
