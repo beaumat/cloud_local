@@ -38,7 +38,6 @@
                                                     :options="$contactList" :zero="true" :isDisabled=true
                                                     wire:model='PATIENT_ID' />
                                             @endif
-
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     @if ($Modify)

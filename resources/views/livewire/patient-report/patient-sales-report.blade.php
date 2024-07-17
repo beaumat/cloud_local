@@ -3,7 +3,8 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('vendorsbills') }}"> Patient Collection Report </a></h5>
+                    <h5 class="m-0"><a href="{{ route('reportspatient_sales_report') }}"> Patient Collection Report
+                        </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -19,104 +20,149 @@
         <div class="container-fluid bg-light">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="form-group">
+                    <div class="form-group bg-light p-2 border border-secondary">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <livewire:date-input name="DATE_COLLECTION_FROM" titleName="Collection From"
-                                            wire:model.live='DATE_COLLECTION_FROM' :isDisabled="false" />
-                                    </div>
-                                    <div class="col-md-5">
-                                        <livewire:date-input name="DATE_COLLECTION_TO" titleName="Collection To"
-                                            wire:model.live='DATE_COLLECTION_TO' :isDisabled="false" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <livewire:date-input name="DATE_TRANSACTION_FROM" titleName="Transaction From"
+                                        <livewire:date-input name="DATE_TRANSACTION_FROM" titleName="(SC) From"
                                             wire:model.live='DATE_TRANSACTION_FROM' :isDisabled="false" />
                                     </div>
                                     <div class="col-md-5">
-                                        <livewire:date-input name="DATE_TRANSACTION_TO" titleName="Transaction To"
+                                        <livewire:date-input name="DATE_TRANSACTION_TO" titleName="(SC) To"
                                             wire:model.live='DATE_TRANSACTION_TO' :isDisabled="false" />
                                     </div>
 
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="mt-0">
-                                    <label class="text-xs pt-2">Location:</label>
-                                    <select name="location" wire:model.live='LOCATION_ID'
-                                        class="form-control form-control-sm text-xs mt-1">
-                                        <option value="0"> All Location</option>
-                                        @foreach ($locationList as $item)
-                                            <option value="{{ $item->ID }}"> {{ $item->NAME }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <livewire:date-input name="DATE_COLLECTION_FROM" titleName="(P) From"
+                                            wire:model.live='DATE_COLLECTION_FROM' :isDisabled="false" />
+                                    </div>
+                                    <div class="col-md-5">
+                                        <livewire:date-input name="DATE_COLLECTION_TO" titleName="(P) To"
+                                            wire:model.live='DATE_COLLECTION_TO' :isDisabled="false" />
+                                    </div>
                                 </div>
-
                             </div>
 
+                            <div class="col-md-4">
 
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <livewire:select-option name="PATIENT_ID" titleName="Selected patient"
+                                            :options="$patientList" :zero="true" :isDisabled=false
+                                            wire:model.live='PATIENT_ID' />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mt-0">
+                                            <label class="text-xs pt-2">Location:</label>
+                                            <select name="location" wire:model.live='LOCATION_ID'
+                                                class="form-control form-control-sm text-xs mt-1">
+                                                <option value="0"> All Location</option>
+                                                @foreach ($locationList as $item)
+                                                    <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-sm btn-success" wire:click='showfilter()'>
-                            Filter
-                        </button>
-                        <button class="btn btn-sm btn-warning" wire:click='resetFilter()'>
-                            Reset
-                        </button>
+                        <div class="row">
+                            <div class="col-6">
+                                <button class="btn btn-sm btn-primary" wire:click='showfilter()'>Filter</button>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button class="btn btn-sm btn-success " wire:click='export()'> Export </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12" style="max-height: 80vh; overflow-y: auto;">
+                
                     <table class="table table-sm table-bordered table-hover">
-                        <thead class="text-xs bg-sky">
+                        <thead class="text-xs bg-sky sticky-header">
                             <tr>
-                                <th>(SC) Date</th>
-                                <th>(SC) Code</th>
                                 <th>Patient Name</th>
                                 <th>Item Name</th>
-                                <th>(SC) Amount</th>
-                                <th>(P) Date</th>
-                                <th>(P) Code</th>
-                                <th>(P) Method</th>
-                                <th>(P) Deposit</th>
-                                <th>(P) Paid </th>
-                                <th>Bal.</th>
+                                <th class="bg-info">(SC) Date</th>
+                                <th class="bg-info">(SC) Code</th>
+                                <th class="bg-info">(SC) Amount</th>
+                                <th class="bg-success">(P) Date</th>
+                                <th class="bg-success">(P) Code</th>
+                                <th class="bg-success">(P) Method</th>
+                                <th class="bg-success">(P) Deposit</th>
+                                <th class="bg-success">(P) Paid </th>
+                                <th class="bg-danger">Running Bal.</th>
                                 <th>Doctor</th>
                                 <th>Location </th>
                             </tr>
                         </thead>
                         <tbody class="text-xs">
                             @foreach ($dataList as $list)
+                                {{-- LOGIC START --}}
                                 @php
-
                                     if ($sc_code == $list->SC_CODE) {
                                         $is_sc = false;
                                     } else {
                                         $is_sc = true;
                                     }
 
+                                    if ($PREV_SC_ITEM_REF_ID == $list->SC_ITEM_REF_ID) {
+                                        $not_to_charge = true;
+                                    } else {
+                                        $not_to_charge = false;
+                                    }
+
                                     if ($tempName == $list->PATIENT_NAME) {
                                         $is_add = false;
-                                        $running_balance =
-                                            $running_balance + $list->SC_AMOUNT ?? (0 - $list->PP_PAID ?? 0);
+                                        if ($not_to_charge == false) {
+                                            $running_balance = $running_balance + $list->SC_AMOUNT ?? 0;
+                                        }
                                     } else {
                                         $is_add = true;
                                         $is_sc = true;
-                                        $running_balance = $list->SC_AMOUNT ?? (0 - $list->PP_PAID ?? 0);
+                                        $running_balance = $list->SC_AMOUNT ?? 0;
+                                        $NO_OF_PATIENT = $NO_OF_PATIENT + 1;
                                     }
 
+                                    $running_balance = $running_balance - $list->PP_PAID;
                                     $tempName = $list->PATIENT_NAME;
                                     $sc_code = $list->SC_CODE;
-
+                                    $PREV_SC_ITEM_REF_ID = $list->SC_ITEM_REF_ID ?? 0;
                                 @endphp
+
+                                @if ($is_add == true)
+                                    <tr class="bg-dark">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                @endif
+                                {{-- LOGIC END --}}
                                 <tr class=" @if ($is_add == true) font-weight-bold @endif">
+                                    <td>
+                                        @if ($is_add == true)
+                                            {{ $list->PATIENT_NAME }}
+                                        @endif
+                                    </td>
+                                    <td>{{ $list->ITEM_NAME }}</td>
                                     <td>
                                         @if ($is_sc == true)
                                             <a target="_BLANK"
@@ -129,40 +175,43 @@
                                         @endif
                                     </td>
 
-                                    <td>
-                                        @if ($is_add == true)
-                                            {{ $list->PATIENT_NAME }}
+
+                                    <td class="text-right">
+                                        @if ($not_to_charge == false)
+                                            {{ number_format($list->SC_AMOUNT, 2) }}
+                                            @php
+                                                $TOTAL_CHARGE = $TOTAL_CHARGE + $list->SC_AMOUNT ?? 0;
+                                            @endphp
                                         @endif
                                     </td>
-                                    <td>{{ $list->ITEM_NAME }}</td>
-                                    <td class="text-right">
-
-                                        {{ number_format($list->SC_AMOUNT, 2) }}
-
-                                    </td>
-                                    <td>
+                                    <td class="@if ($list->PP_DATE) bg-info @endif">
                                         @if ($list->PP_DATE)
                                             {{ date('m/d/Y', strtotime($list->PP_DATE)) }}
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="@if ($list->PP_ID) bg-info @endif">
                                         @if ($list->PP_ID)
                                             <a target="_BLANK"
                                                 href="{{ route('patientspayment_edit', ['id' => $list->PP_ID]) }}">{{ $list->PP_CODE }}</a>
                                         @endif
                                     </td>
-                                    <td>{{ $list->PAYMENT_METHOD }}</td>
-                                    <td class="text-right">
+                                    <td class="@if ($list->PP_ID) bg-info @endif">
+                                        {{ $list->PAYMENT_METHOD }}</td>
+                                    <td class="text-right @if ($list->PP_ID) bg-info @endif">
                                         @if ($list->PP_DEPOSIT > 0)
                                             {{ number_format($list->PP_DEPOSIT, 2) }}
                                         @endif
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-right @if ($list->PP_ID) bg-info @endif">
                                         @if ($list->PP_PAID > 0)
                                             {{ number_format($list->PP_PAID, 2) }}
+
+                                            @php
+                                                $TOTAL_PAID = $TOTAL_PAID + $list->PP_PAID ?? 0;
+                                            @endphp
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-right">
 
                                         {{ number_format($running_balance, 2) }}
                                     </td>
@@ -171,27 +220,35 @@
                                             {{ $list->DOCTOR_NAME }}
                                         @endif
                                     </td>
-                                    <td>{{ $list->LOCATION_NAME }}</td>
+                                    <td>
+                                        @if ($is_add == true)
+                                            {{ $list->LOCATION_NAME }}
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
-
                         </tbody>
-
                     </table>
-
-
                 </div>
                 <div class="col-md-6">
-
+                    <h6 class="text-xs"><label>No. of Patient : </label> <span class="text-primary">
+                            {{ $NO_OF_PATIENT }}</span> </h6>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-12">
-                            <h6> <label>TOTAL SERVICE CHARGE : </label> {{ number_format($TOTAL_CHARGE, 2) }}</h6>
-                            <h6> <label>TOTAL COLLECTION : </label> {{ number_format($TOTAL_PAID, 2) }}</h6>
-                            <h6> <label>TOTAL BALANCE : </label> {{ number_format($TOTAL_CHARGE - $TOTAL_PAID, 2) }}
+                            <h6 class="text-xs"> <label>TOTAL (SC) : </label>
+                                <span
+                                    class="text-primary font-weight-bold h6">{{ number_format($TOTAL_CHARGE, 2) }}</span>
                             </h6>
-
+                            <h6 class="text-xs"> <label>TOTAL (P) : </label>
+                                <span
+                                    class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID, 2) }}</span>
+                            </h6>
+                            <h6 class="text-xs"> <label>TOTAL BALANCE : </label>
+                                <span
+                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - $TOTAL_PAID, 2) }}</span>
+                            </h6 class="text-xs">
                         </div>
                     </div>
                 </div>

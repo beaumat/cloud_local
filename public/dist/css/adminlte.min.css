@@ -56132,3 +56132,10 @@ a.text-muted:hover {
 .soa-text {
     font-size: 30px;
 }
+
+.sticky-header {
+    position: sticky;
+    top: 0; /* Distance from the top */
+    z-index: 100; /* Ensure it stays above other content */
+    background-color: white; /* Background color for better visibility */
+}
