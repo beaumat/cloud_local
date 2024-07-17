@@ -72,8 +72,8 @@
                         <td class="text-center">
                             @if ($editItemId === $list->ID)
                                 <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
-                                    class="text-success btn btn-sm btn-link"> <i class="fas fa-check"
-                                        aria-hidden="true"></i>
+                                    class="text-success btn btn-sm btn-link"> 
+                                    <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>
                                 <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
                                     class="text-warning btn btn-sm btn-link"> <i class="fas fa-ban"

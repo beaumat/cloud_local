@@ -210,6 +210,27 @@ class PhilHealthServices
 
         return $ID;
     }
+    public function PreSaveTemp(int $CONTACT_ID, int $LOCATION_ID,)
+    {
+
+
+        $ID = $this->object->ObjectNextID('PHILHEALTH');
+        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PHILHEALTH');
+        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        PhilHealth::create([
+            'ID'                => $ID,
+            'RECORDED_ON'       => $this->dateServices->Now(),
+            'CODE'              => $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'              => $this->dateServices->NowDate(),
+            'LOCATION_ID'       => $LOCATION_ID,
+            'CONTACT_ID'        => $CONTACT_ID,
+            'STATUS_ID'         => 1,
+            'STATUS_DATETIME'   => $this->dateServices->Now(),
+            'IS_TEMP'           => 1
+        ]);
+
+        return $ID;
+    }
     public function Update(
         int $ID,
         float $CHARGES_ROOM_N_BOARD,
@@ -392,6 +413,7 @@ class PhilHealthServices
                         ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
+            ->where('IS_TEMP', '0')
             ->orderBy('philhealth.ID', 'desc')
             ->paginate($perPage);
     }
@@ -410,7 +432,8 @@ class PhilHealthServices
                 's.DESCRIPTION as STATUS',
                 DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
                 'philhealth.P1_TOTAL',
-                'philhealth.PAYMENT_AMOUNT'
+                'philhealth.PAYMENT_AMOUNT',
+                'philhealth.IS_TEMP'
             ])
             ->join('location as l', 'l.ID', '=', 'philhealth.LOCATION_ID')
             ->join('document_status_map as s', 's.ID', '=', 'philhealth.STATUS_ID')
@@ -427,7 +450,7 @@ class PhilHealthServices
 
     public function getProfFee($ID)
     {
-        return PhilHealthProfFee::query()
+        $result = PhilHealthProfFee::query()
             ->select([
                 'philhealth_prof_fee.ID',
                 'philhealth_prof_fee.CONTACT_ID',
@@ -441,6 +464,8 @@ class PhilHealthServices
             ->where('PHIC_ID', $ID)
             ->orderBy('LINE_NO', 'asc')
             ->get();
+
+        return $result;
     }
     private function getLine($Id): int
     {

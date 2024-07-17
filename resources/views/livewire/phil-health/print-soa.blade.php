@@ -18,21 +18,21 @@
                                 <div class="col-4">PATIENT`S NAME : </div>
                                 <div class="col-8 bottom-line">
                                     <div class="row">
-                                        <div class="col-9">  &nbsp; {{ $PATIENT_NAME }}</div>
+                                        <div class="col-9"> &nbsp; {{ $PATIENT_NAME }}</div>
                                         <div class="col-3 text-right">Age: {{ $AGE }}</div>
                                     </div>
                                 </div>
                                 <div class="col-4">ADDRESS : </div>
                                 <div class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS1 }}</div>
-                                <div class="col-4">  &nbsp;</div>
-                                <div class="col-8 bottom-line text-xs">  &nbsp; {{ $ADDRESS2 }}</div>
+                                <div class="col-4"> &nbsp;</div>
+                                <div class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS2 }}</div>
                                 <div class="col-4">FINAL DIAGNOSIS : </div>
-                                <div class="col-8 bottom-line text-xs">  &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
+                                <div class="col-8 bottom-line text-xs"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
                                 <div class="col-4">OTHER DIAGNOSIS : </div>
-                                <div class="col-8 bottom-line text-xs">  &nbsp; {{ $OTHER_DIAGNOSIS }}</div>
+                                <div class="col-8 bottom-line text-xs"> &nbsp; {{ $OTHER_DIAGNOSIS }}</div>
                                 <div class="col-4">TREATMENT DATES : </div>
-                                <div class="col-8 bottom-line ">  &nbsp;
-                                    {{ \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') }}</div>
+                                <div class="col-8 bottom-line "> &nbsp;
+                                    {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') : '' }}</div>
                             </div>
                         </div>
                         <div class="col-6">
@@ -43,19 +43,22 @@
                             <div class="row mt-4">
                                 <div class="col-5">DATE & TIME ADMITTED :</div>
                                 <div class="col-7 bottom-line">
-                                    {{ \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') }}
-                                    {{ \Carbon\Carbon::parse($TIME_ADMITTED)->format('h:i:s A') }}</div>
+                                    {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') : '' }}
+                                    {{ $TIME_ADMITTED ? \Carbon\Carbon::parse($TIME_ADMITTED)->format('h:i:s A') : '' }}
+                                </div>
                                 <div class="col-5">DATE & TIME DISCHARGED :</div>
                                 <div class="col-7 bottom-line">
-                                    {{ \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') }}
-                                    {{ \Carbon\Carbon::parse($TIME_DISCHARGED)->format('h:i:s A') }}</div>
+                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : '' }}
+                                    {{ $TIME_DISCHARGED ? \Carbon\Carbon::parse($TIME_DISCHARGED)->format('h:i:s A') : '' }}
+                                </div>
                                 <div class="col-12"> <br /></div>
                                 <div class="col-5">FIRST CASE RATE :</div>
                                 <div class="col-7 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
                                 <div class="col-5">SECOND CASE RATE :</div>
                                 <div class="col-7 bottom-line"> &nbsp; {{ $SECOND_CASE_RATE }}</div>
                                 <div class="col-5">NO. OF TREATMENT :</div>
-                                <div class="col-7 bottom-line text-center font-weight-bold"> {{ $NO_OF_TREATMENT }}</div>
+                                <div class="col-7 bottom-line text-center font-weight-bold">
+                                    {{ $NO_OF_TREATMENT > 0 ? $NO_OF_TREATMENT : '' }}</div>
                             </div>
                         </div>
                     </div>

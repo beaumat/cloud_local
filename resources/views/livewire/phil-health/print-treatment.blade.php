@@ -1,5 +1,4 @@
 <div>
-
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -25,8 +24,9 @@
                             <div class="row">
                                 <div class="col-3 text-right">CONFINEMENT PERIOD :</div>
                                 <div class="col-6 bottom-line">
-                                    {{ \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') }} TO
-                                    {{ \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') }}</div>
+                                    {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') . ' TO ' : '' }}
+                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : '' }}
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-3 text-right">ATTENDING PHYSICIAN : </div>
@@ -34,7 +34,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-3 text-right"> FIRST CASE RATE : </div>
-                                <div class="col-6 bottom-line">  {{ $FIRST_CASE_RATE }}</div>
+                                <div class="col-6 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
                             </div>
                             <div class="row">
                                 <div class="col-3 text-right"> DIAGNOSIS : </div>
@@ -69,7 +69,11 @@
                                     </td>
                                 </tr>
                             @endforeach
-
+                            @php
+                                if ($i == 0) {
+                                    $i = 1;
+                                }
+                            @endphp
                             @for ($n = $i; $n < 16; $n++)
                                 <tr class="blackbox">
                                     <td> <u class="h4">{{ $n }}</u> </td>

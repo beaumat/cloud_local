@@ -227,7 +227,7 @@ class PrintSoa extends Component
                         $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
                     }
                 }
-                $this->NO_OF_TREATMENT = (int) $this->philHealthServices->getNumberOfTreatment($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED, $this->DATE_DISCHARGED);
+                $this->NO_OF_TREATMENT = (int) $this->philHealthServices->getNumberOfTreatment($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
                 $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
                 return;
             }

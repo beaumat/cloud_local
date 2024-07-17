@@ -184,25 +184,25 @@
                                             @endphp
                                         @endif
                                     </td>
-                                    <td class="@if ($list->PP_DATE) bg-info @endif">
+                                    <td class="@if ($list->PP_DATE) bg-warning @endif">
                                         @if ($list->PP_DATE)
                                             {{ date('m/d/Y', strtotime($list->PP_DATE)) }}
                                         @endif
                                     </td>
-                                    <td class="@if ($list->PP_ID) bg-info @endif">
+                                    <td class="@if ($list->PP_ID) bg-warning @endif">
                                         @if ($list->PP_ID)
                                             <a target="_BLANK"
                                                 href="{{ route('patientspayment_edit', ['id' => $list->PP_ID]) }}">{{ $list->PP_CODE }}</a>
                                         @endif
                                     </td>
-                                    <td class="@if ($list->PP_ID) bg-info @endif">
+                                    <td class="@if ($list->PP_ID) bg-warning @endif">
                                         {{ $list->PAYMENT_METHOD }}</td>
-                                    <td class="text-right @if ($list->PP_ID) bg-info @endif">
+                                    <td class="text-right @if ($list->PP_ID) bg-warning @endif">
                                         @if ($list->PP_DEPOSIT > 0)
                                             {{ number_format($list->PP_DEPOSIT, 2) }}
                                         @endif
                                     </td>
-                                    <td class="text-right @if ($list->PP_ID) bg-info @endif">
+                                    <td class="text-right @if ($list->PP_ID) bg-warning @endif">
                                         @if ($list->PP_PAID > 0)
                                             {{ number_format($list->PP_PAID, 2) }}
 

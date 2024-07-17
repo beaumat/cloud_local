@@ -97,10 +97,10 @@ class PrintCf4 extends Component
         $data = $this->philHealthServices->get($id);
 
         if ($data) {
-            $this->DATE_ADMITTED = $data->DATE_ADMITTED;
-            $this->TIME_ADMITTED = Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A');
-            $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
-            $this->TIME_DISCHARGED = Carbon::createFromFormat('H:i:s', $data->TIME_DISCHARGED)->format('h:i A');
+            $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
+            $this->TIME_ADMITTED = $data->TIME_ADMITTED ? Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A') : '' ;
+            $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
+            $this->TIME_DISCHARGED = $data->TIME_DISCHARGED ? Carbon::createFromFormat('H:i:s', $data->TIME_DISCHARGED)->format('h:i A') : '';
             $this->LOCATION_ID = $data->LOCATION_ID;
             $fee = $this->philHealthServices->getProfFee($id);
             $row = 1;

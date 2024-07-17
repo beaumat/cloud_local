@@ -15,6 +15,8 @@ class PhilhealthRecord extends Component
 
     #[Reactive]
     public int $CONTACT_ID;
+    public int $LOCATION_ID;
+
     public $search = "";
 
     private $philHealthServices;
@@ -22,7 +24,10 @@ class PhilhealthRecord extends Component
     {
         $this->philHealthServices = $philHealthServices;
     }
-
+    public function AddTemp()
+    {
+        $this->philHealthServices->PreSaveTemp($this->CONTACT_ID, $this->LOCATION_ID);
+    }
     public function render()
     {
         $dataList = $this->philHealthServices->PatientRecord($this->search, $this->CONTACT_ID, 15);

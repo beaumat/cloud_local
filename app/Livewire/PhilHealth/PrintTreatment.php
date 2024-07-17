@@ -108,7 +108,7 @@ class PrintTreatment extends Component
     public function getSumamry()
     {
         $this->i = 0;
-        $this->hemoList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED, $this->DATE_DISCHARGED);
+        $this->hemoList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
     }
     public function mount($PRINT_ID)
     {
@@ -204,15 +204,9 @@ class PrintTreatment extends Component
                     $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
                     $this->FINAL_DIAGNOSIS =  $this->philHealthServices->DEFAULT_DIAGNOSIS .  $contact->FINAL_DIAGNOSIS ?? '';
                     $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
-                    $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
+                    $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
                 }
-                // $conUser = $this->contactServices->get(Auth::user()->contact_id, 2);
-                // if ($conUser) {
-                //     $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
-                //     $this->USER_NAME = $conUser->NAME ?? '';
-                // }
-
 
                 $locDate = $this->locationServices->get($this->LOCATION_ID);
                 if ($locDate) {
@@ -226,8 +220,9 @@ class PrintTreatment extends Component
                     // $HCI_MANAGER_ID
 
                     $conMgr = $this->contactServices->get($locDate->HCI_MANAGER_ID ?? 0, 2); // Employee
+
                     if ($conMgr) {
-                        // $this->USER_CONTACT = $conMgr->MOBILE_NO ?? '';
+
                         $this->ADMINISTRATOR_NAME = $conMgr->PRINT_NAME_AS ?? '';
                     }
                 }

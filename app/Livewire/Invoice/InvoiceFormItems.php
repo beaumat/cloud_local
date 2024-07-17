@@ -371,7 +371,6 @@ class InvoiceFormItems extends Component
         }
 
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
-
         $this->itemList = $this->invoiceServices->ItemView($this->INVOICE_ID);
     }
     public function render()

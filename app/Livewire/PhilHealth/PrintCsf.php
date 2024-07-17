@@ -68,10 +68,10 @@ class PrintCsf extends Component
         $data = $this->philHealthServices->get($id);
 
         if ($data) {
-            $this->DATE_ADMITTED = $data->DATE_ADMITTED;
-            $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
-            $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE;
-            $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE;
+            $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
+            $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
+            $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE ?? '';
+            $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE ?? '';
             $this->LOCATION_ID = $data->LOCATION_ID;
             $fee = $this->philHealthServices->getProfFee($id);
             $row = 1;
@@ -106,9 +106,8 @@ class PrintCsf extends Component
                 $this->PATIENT_MIDDLENAME = $contact->MIDDLE_NAME;
                 $this->PATIENT_EXTENSION = $contact->SALUTATION;
                 $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
-                // $this->PATIENT_GENDER = $contact->GENDER;
+    
                 $this->IS_PATIENT = $contact->IS_PATIENT;
-
                 if ($this->IS_PATIENT) {
                     $this->MEMBER_FIRST_NAME = $contact->FIRST_NAME;
                     $this->MEMBER_LAST_NAME = $contact->LAST_NAME;
@@ -125,7 +124,6 @@ class PrintCsf extends Component
                     $this->MEMBER_BIRTH_DATE = $contact->MEMBER_BIRTH_DATE;
                     $this->MEMBER_GENDER = $contact->MEMBER_GENDER;
                 }
-
                 $this->IS_DEPENDENT = $contact->IS_DEPENDENT;
                 $this->PIN = $contact->PIN ?? '';
                 if ($this->IS_DEPENDENT) {
@@ -148,17 +146,12 @@ class PrintCsf extends Component
                     $this->NAME_REPRESENTATIVE = "";
                 }
 
-
                 $this->PEN = $contact->PEN ?? '';
                 $this->PEN_CONTACT = $contact->PEN_CONTACT ?? '';
                 $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
-
                 $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
-
-
                  $locData =   $this->locationServices->getPesonel($this->LOCATION_ID);
-
                 if($locData) {
                     $this->HCI_NAME = $locData->MANAGER_NAME ?? '';
                     $this->HCI_POSITION = $locData->MANAGER_POSITION ?? '';

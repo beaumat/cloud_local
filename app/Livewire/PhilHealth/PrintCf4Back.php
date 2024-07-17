@@ -50,8 +50,8 @@ class PrintCf4Back extends Component
             $getData = $this->hemoServices->GetSummary(
                 $data->CONTACT_ID,
                 $data->LOCATION_ID,
-                $data->DATE_ADMITTED,
-                $data->DATE_DISCHARGED
+                $data->DATE_ADMITTED ?? '',
+                $data->DATE_DISCHARGED ?? ''
             );
             $r = 0;
             foreach ($getData as $item) {

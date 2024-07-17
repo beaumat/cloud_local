@@ -651,12 +651,9 @@
                                                 aria-labelledby="custom-content-below-philhealth-info-tab">
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-
-                                                    @livewire('Patient.PhilhealthRecord', ['CONTACT_ID' => $ID])
+                                                    @livewire('Patient.PhilhealthRecord', ['CONTACT_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID])
                                                 </div>
                                             </div>
-
-
                                         </div>
                                     </div>
                                 </div>

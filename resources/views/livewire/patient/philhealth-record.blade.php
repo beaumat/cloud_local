@@ -4,6 +4,7 @@
          <div class="card">
              <div class="card-body">
                  <div class="row">
+
                      <div class="col-md-12 mb-2">
                          <div class="row">
                              <div class="col-md-12">
@@ -12,7 +13,9 @@
                                      <input type="text" wire:model.live.debounce.150ms='search'
                                          class="w-100 form-control form-control-sm" placeholder="Search" />
                                  </div>
+
                              </div>
+
                          </div>
                      </div>
                  </div>
@@ -29,6 +32,7 @@
                              <th>Collection</th>
                              <th>Location</th>
                              <th>Status</th>
+                             <th class="text-center">Temp.</th>
                              <th class="text-center col-2 bg-success">
                                  Action
                              </th>
@@ -44,19 +48,27 @@
                                      </a>
                                  </td>
                                  <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-
-                                 <td> {{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
-                                 <td> {{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
+                                 <td> {{ $list->DATE_ADMITTED ? date('m/d/Y', strtotime($list->DATE_ADMITTED)) : null }}
+                                 </td>
+                                 <td> {{ $list->DATE_DISCHARGED ? date('m/d/Y', strtotime($list->DATE_DISCHARGED)) : null }}
+                                 </td>
                                  <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
-                                 <td class="text-right"> {{ number_format($list->CHARGE_TOTAL, 2) }}</td>
-                                 <td class="text-right"> {{ number_format($list->P1_TOTAL, 2) }}</td>
-                                 <td class="text-right"> {{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
+                                 <td class="text-right">
+                                     {{ $list->CHARGE_TOTAL > 0 ? number_format($list->CHARGE_TOTAL, 2) : 0 }}</td>
+                                 <td class="text-right">
+                                     {{ $list->P1_TOTAL > 0 ? number_format($list->P1_TOTAL, 2) : 0 }}</td>
+                                 <td class="text-right">
+                                     {{ $list->PAYMENT_AMOUNT > 0 ? number_format($list->PAYMENT_AMOUNT, 2) : 0 }}</td>
                                  <td> {{ $list->LOCATION_NAME }}</td>
-                                 <td
-                                     class="
-                                                 @if ($list->STATUS == 'Paid') text-success @else text-danger @endif
-                                                ">
+                                 <td class=" @if ($list->STATUS == 'Paid') text-success @else text-danger @endif ">
                                      {{ $list->STATUS }}</td>
+                                 <td class="text-center">
+                                     @if ($list->IS_TEMP)
+                                         <i class="fas fa-check" aria-hidden="true"></i>
+                                     @else
+                                         <i class="fa fa-ban" aria-hidden="true"></i>
+                                     @endif
+                                 </td>
                                  <td class="text-center">
                                      @can('patient.philhealth.print')
                                          <a target="_BLANK" title="Soa"
@@ -68,12 +80,10 @@
                                              class="btn-sm text-danger"> <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                          </a>
                                      @endcan
-
                                      <a href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
                                          class="btn-sm text-info">
                                          <i class="fas fa-edit" aria-hidden="true"></i>
                                      </a>
-
                                      @can('patient.philhealth.delete')
                                          <a href="#" wire:click='delete({{ $list->ID }})'
                                              wire:confirm="Are you sure you want to delete this?"
@@ -84,9 +94,14 @@
                                  </td>
                              </tr>
                          @endforeach
-
                      </tbody>
                  </table>
+                 <div class="form-group mt-2">
+                     <button type="button" class="btn btn-xs btn-warning" wire:click='AddTemp'
+                         wire:confirm="Are you sure you want to add temporary files?">
+                         <i class="fas fa-plus"></i> Add Temporary
+                     </button>
+                 </div>
              </div>
          </div>
      </div>
