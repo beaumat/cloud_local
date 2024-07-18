@@ -19,19 +19,13 @@ class UploadServices
     }
     public function Payment($PDF)
     {
-        $tempPath = $PDF->store('public/temp', 'public');
-        $randomFilename = Str::random(40);
+        $path = $PDF->store('payments', 'custom_local');
         $extension = $PDF->extension();
-        $newPath = 'payment/' . $randomFilename . '.' . $extension;
-
-        Storage::disk('public')->move($tempPath, $newPath);
-
         $dataReturn = [
-            'new_path' => $newPath,
+            'new_path' => $path,
             'extension' => $extension,
-            'filename' => $randomFilename
+            'filename' => basename($path)
         ];
-
         return $dataReturn;
     }
     public function Treatment($Image)
