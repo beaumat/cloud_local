@@ -18,6 +18,7 @@ class PrintCf4Back extends Component
     public string $DR_NAME;
     public $dateList = [];
     public $dataMed = [];
+    public $DATE_DISCHARGED;
     public $DOCTOR_ORDER = "UNDERGO HEMODIALYSIS TREATMENT WITH NO COMPLICATIONS";
     public function boot(
         PhilHealthServices $philHealthServices,
@@ -47,6 +48,8 @@ class PrintCf4Back extends Component
         $data = $this->philHealthServices->get($id);
 
         if ($data) {
+            $this->DATE_DISCHARGED =  $data->DATE_DISCHARGED ?? '';
+            
             $getData = $this->hemoServices->GetSummary(
                 $data->CONTACT_ID,
                 $data->LOCATION_ID,

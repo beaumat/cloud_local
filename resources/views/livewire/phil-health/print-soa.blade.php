@@ -604,7 +604,7 @@
                                 </div>
                                 <div class="col-7 text-center">PHIC IN-Charge</div>
                                 <div class="col-12 ">Date Signed:
-                                    {{ \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') }}</div>
+                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}</div>
                                 <div class="col-12 ">CONTACT No. {{ $USER_CONTACT }}</div>
                             </div>
                         </div>
@@ -618,7 +618,7 @@
                                 <div class="col-12 text-xs">Relationship of member of authorized representative</div>
                                 <div class="col-12 bottom-line">&nbsp;</div>
                                 <div class="col-12 ">Date Signed:
-                                    {{ \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') }}</div>
+                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}</div>
                                 <div class="col-12 ">CONTACT No. {{ $PATIENT_CONTACT }}</div>
                             </div>
                         </div>

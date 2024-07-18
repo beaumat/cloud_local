@@ -128,12 +128,26 @@
                     <div class="row">
                         <div class="col-9 bottom-line2">
                             <label> 1. Name of Patient</label><br />
-                            <h5 class="text-uppercase times-new-roman"><b>{{ $PATIENT_LASTNAME }},
-                                    {{ $PATIENT_FIRSTNAME }} {{ $PATIENT_MIDDLENAME }}
-                                    @if ($PATIENT_EXTENSION != '')
-                                        {{ $PATIENT_EXTENSION }}
-                                    @endif
-                                </b></h5>
+                            <h5 class="text-uppercase times-new-roman">
+                                <b>
+                                    <div class="row">
+                                        <div class="col-4 text-center">
+                                            {{ $PATIENT_LASTNAME }},
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            {{ $PATIENT_FIRSTNAME }}
+                                        </div>
+                                        <div class="col-4 text-center">
+
+                                            {{ $PATIENT_MIDDLENAME }}
+                                            @if ($PATIENT_EXTENSION != '')
+                                                {{ $PATIENT_EXTENSION }}
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                </b>
+                            </h5>
 
                         </div>
                         <div class="col-3 left-line2 bottom-line2">
@@ -308,7 +322,7 @@
                                             {{ substr($TIME_ADMITTED, 4, 1) }}</div><label
                                             class="px-1">&nbsp;</label>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if (substr($TIME_ADMITTED, 6, 1) == 'A')
+                                            @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) == 'A')
                                                 &#10004;
                                             @else
                                                 &nbsp;
@@ -316,7 +330,8 @@
                                         </div>&nbsp;
                                         AM
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if (substr($TIME_ADMITTED, 6, 1) != 'A')
+
+                                            @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) != 'A')
                                                 &#10004;
                                             @else
                                                 &nbsp;
@@ -406,7 +421,7 @@
                                             {{ substr($TIME_DISCHARGED, 4, 1) }}</div><label
                                             class="px-1">&nbsp;</label>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if (substr($TIME_DISCHARGED, 6, 1) == 'A')
+                                            @if ($TIME_ADMITTED && substr($TIME_DISCHARGED, 6, 1) == 'A')
                                                 &#10004;
                                             @else
                                                 &nbsp;
@@ -414,7 +429,7 @@
                                         </div>&nbsp;
                                         AM
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if (substr($TIME_DISCHARGED, 6, 1) != 'A')
+                                            @if ($TIME_ADMITTED && substr($TIME_DISCHARGED, 6, 1) != 'A')
                                                 &#10004;
                                             @else
                                                 &nbsp;
@@ -612,8 +627,8 @@
                                 <div class="col-6 bottom-line2">
                                     {{ $POST_TEMPERATURE }} &nbsp;
                                 </div>
-                            </div>    
-                            
+                            </div>
+
                         </div>
                     </div>
 
@@ -660,7 +675,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>

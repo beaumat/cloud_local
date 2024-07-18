@@ -172,19 +172,19 @@
                             <div class="row">
                                 <div class="col-3 text-center">
                                     <b
-                                        class="text-primary courier-new font-weight-bold h5">{{ $MEMBER_LAST_NAME }}&nbsp;</b>
+                                        class="text-primary courier-new font-weight-bold h6">{{ $MEMBER_LAST_NAME }}&nbsp;</b>
                                     <div class="w-100 top-line2 "></div>
                                     Last Name
                                 </div>
                                 <div class="col-3 text-center">
                                     <b
-                                        class="text-primary courier-new font-weight-bold h5">{{ $MEMBER_FIRST_NAME }}&nbsp;</b>
+                                        class="text-primary courier-new font-weight-bold h6">{{ $MEMBER_FIRST_NAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     First Name
                                 </div>
                                 <div class="col-2 text-center">
                                     <b
-                                        class="text-primary courier-new font-weight-bold h5">{{ $MEMBER_EXTENSION }}&nbsp;</b>
+                                        class="text-primary courier-new font-weight-bold h6">{{ $MEMBER_EXTENSION }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Name Extension </br>
                                     (JR/SR/III)
@@ -192,7 +192,7 @@
                                 </div>
                                 <div class="col-4 text-center">
                                     <b
-                                        class="text-primary courier-new font-weight-bold h5">{{ $MEMBER_MIDDLE_NAME }}&nbsp;</b>
+                                        class="text-primary courier-new font-weight-bold h6">{{ $MEMBER_MIDDLE_NAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Middle Name<br />
                                     (ex: DELA CRUZ JUAN JR SIPAG)
@@ -339,19 +339,19 @@
                             <div class="row">
                                 <div class="col-3 text-center">
                                     <b
-                                        class="text-primary courier-new font-weight-bold h5">{{ $PATIENT_LASTNAME }}&nbsp;</b>
+                                        class="text-primary courier-new font-weight-bold h6">{{ $PATIENT_LASTNAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Last Name
                                 </div>
                                 <div class="col-3 text-center">
                                     <b
-                                        class="text-primary courier-new font-weight-bold h5">{{ $PATIENT_FIRSTNAME }}&nbsp;</b>
+                                        class="text-primary courier-new font-weight-bold h6">{{ $PATIENT_FIRSTNAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     First Name
                                 </div>
                                 <div class="col-2 text-center">
                                     <b
-                                        class="text-primary courier-new font-weight-bold h5">{{ $PATIENT_EXTENSION }}&nbsp;</b>
+                                        class="text-primary courier-new font-weight-bold h6">{{ $PATIENT_EXTENSION }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Name Extension </br>
                                     (JR/SR/III)
@@ -359,7 +359,7 @@
                                 </div>
                                 <div class="col-4 text-center">
                                     <b
-                                        class="text-primary courier-new font-weight-bold h5">{{ $PATIENT_MIDDLENAME }}&nbsp;</b>
+                                        class="text-primary courier-new font-weight-bold h6">{{ $PATIENT_MIDDLENAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Middle Name<br />
                                     (ex: DELA CRUZ JUAN JR SIPAG)
@@ -572,18 +572,35 @@
                                 <div class="col-8 text-left">
                                     <div class="form-group text-md">
 
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div><label
-                                            class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div><label
-                                            class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 5, 1) }}
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 6, 1) }}
+                                        </div>
+                                        <label class="px-1">&nbsp;-</label>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 8, 1) }}
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 9, 1) }}
+                                        </div>
+                                        <label class="px-1">&nbsp;-</label>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 0, 1) }}
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 1, 1) }}
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 2, 1) }}
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 3, 1) }}
+                                        </div>
                                         <br>
-                                        <p style="position: absolute;top:27px;">month &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
+                                        <p style="position: absolute;top:27px;">month
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             year</p>
                                     </div>
@@ -861,24 +878,34 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-8">
-                                                    <div class="form-group ">
+                                                    <div class="form-group">
 
                                                         <div class="box text-primary courier-new font-weight-bold">
-                                                            &nbsp;</div>
+                                                            {{ substr($DATE_DISCHARGED, 5, 1) }}
+                                                        </div>
                                                         <div class="box text-primary courier-new font-weight-bold">
-                                                            &nbsp;</div><label class="px-1">&nbsp;-</label>
+                                                            {{ substr($DATE_DISCHARGED, 6, 1) }}
+                                                        </div>
+                                                        <label class="px-1">&nbsp;-</label>
                                                         <div class="box text-primary courier-new font-weight-bold">
-                                                            &nbsp;</div>
+                                                            {{ substr($DATE_DISCHARGED, 8, 1) }}
+                                                        </div>
                                                         <div class="box text-primary courier-new font-weight-bold">
-                                                            &nbsp;</div><label class="px-1">&nbsp;-</label>
+                                                            {{ substr($DATE_DISCHARGED, 9, 1) }}
+                                                        </div>
+                                                        <label class="px-1">&nbsp;-</label>
                                                         <div class="box text-primary courier-new font-weight-bold">
-                                                            &nbsp;</div>
+                                                            {{ substr($DATE_DISCHARGED, 0, 1) }}
+                                                        </div>
                                                         <div class="box text-primary courier-new font-weight-bold">
-                                                            &nbsp;</div>
+                                                            {{ substr($DATE_DISCHARGED, 1, 1) }}
+                                                        </div>
                                                         <div class="box text-primary courier-new font-weight-bold">
-                                                            &nbsp;</div>
+                                                            {{ substr($DATE_DISCHARGED, 2, 1) }}
+                                                        </div>
                                                         <div class="box text-primary courier-new font-weight-bold">
-                                                            &nbsp;</div>
+                                                            {{ substr($DATE_DISCHARGED, 3, 1) }}
+                                                        </div>
                                                         <br>
                                                         <p style="position: absolute;top:27px;">month
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
@@ -949,22 +976,39 @@
                                 </div>
                                 <div class="col-8 text-left">
                                     <div class="form-group text-md">
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div><label
-                                            class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div><label
-                                            class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                                        <br>
-                                        <p style="position: absolute;top:27px;">month
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            year</p>
-                                    </div>
+
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 5, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 6, 1) }}
+                                                </div>
+                                                <label class="px-1">&nbsp;-</label>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 8, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 9, 1) }}
+                                                </div>
+                                                <label class="px-1">&nbsp;-</label>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 0, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 1, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 2, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 3, 1) }}
+                                                </div>
+                                                <br>
+                                                <p style="position: absolute;top:27px;">month
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    year</p>
+                                            </div>
                                 </div>
                             </div>
                         </div>
@@ -1513,6 +1557,40 @@
                                         </div>
                                         <div class="col-9">
                                             <div class="form-group">
+
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 5, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 6, 1) }}
+                                                </div>
+                                                <label class="px-1">&nbsp;-</label>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 8, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 9, 1) }}
+                                                </div>
+                                                <label class="px-1">&nbsp;-</label>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 0, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 1, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 2, 1) }}
+                                                </div>
+                                                <div class="box text-primary courier-new font-weight-bold">
+                                                    {{ substr($DATE_DISCHARGED, 3, 1) }}
+                                                </div>
+                                                <br>
+                                                <p style="position: absolute;top:27px;">month
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    year</p>
+                                            </div>
+                                            {{-- <div class="form-group">
                                                 <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
                                                 <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
                                                 <label class="px-1">&nbsp;-</label>
@@ -1528,7 +1606,7 @@
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     year</p>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>

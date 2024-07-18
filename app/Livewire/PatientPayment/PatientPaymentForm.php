@@ -189,7 +189,7 @@ class PatientPaymentForm extends Component
                 [
                     'PATIENT_ID' => 'required|not_in:0',
                     'DATE' => 'required',
-                    'PDF' => 'required',
+                    // 'PDF' => 'required',
                     'LOCATION_ID' => 'required',
                     'AMOUNT' => 'required|not_in:0',
                     'RECEIPT_REF_NO' => 'required',
@@ -199,7 +199,7 @@ class PatientPaymentForm extends Component
                 [
                     'PATIENT_ID' => 'Patient',
                     'DATE' => 'Date',
-                    'PDF' => 'Pdf document file',
+                    // 'PDF' => 'Pdf document file',
                     'LOCATION_ID' => 'Location',
                     'AMOUNT' => 'Amount',
                     'RECEIPT_REF_NO' => 'GL Reference No.',
