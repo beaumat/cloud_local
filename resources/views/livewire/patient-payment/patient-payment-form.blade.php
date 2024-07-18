@@ -40,7 +40,7 @@
                                             @endif
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    @if ($Modify)
+                                                    @if ($Modify && $AMOUNT_APPLIED  == 0)
                                                         <livewire:number-input name="AMOUNT" titleName="Amount"
                                                             :isDisabled=false wire:model='AMOUNT' />
                                                     @else
