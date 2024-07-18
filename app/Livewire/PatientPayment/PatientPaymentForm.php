@@ -114,6 +114,7 @@ class PatientPaymentForm extends Component
         $this->DATE_CONFIRM = $data->DATE_CONFIRM ?? '';
         $this->updatedpaymentmethodid();
         $this->Modify = false;
+        $this->PDF = null;
     }
 
     #[On('reset-payment')]
@@ -249,12 +250,13 @@ class PatientPaymentForm extends Component
                 );
 
                 if ($PAYMENT_TYPE == 10) {
-
-                    // $this->getDocumentProccess();
+                    if ($this->PDF) {
+                        $this->getDocumentProccess();
+                    }
                 }
                 return Redirect::route('patientspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
-        
+
                 $this->patientPaymentServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -312,10 +314,10 @@ class PatientPaymentForm extends Component
     }
     public bool $reloadType = true;
     public function updatedpaymentmethodid()
-    {   
+    {
         $this->reloadType = $this->reloadType ? false : true;
         $paymentMethod = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
-        
+
         if ($paymentMethod) {
 
             switch ($paymentMethod->PAYMENT_TYPE) {
@@ -380,7 +382,7 @@ class PatientPaymentForm extends Component
         }
     }
     public function render()
-    {   
+    {
         return view('livewire.patient-payment.patient-payment-form');
     }
 }

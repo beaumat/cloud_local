@@ -977,38 +977,38 @@
                                 <div class="col-8 text-left">
                                     <div class="form-group text-md">
 
-                                                <div class="box text-primary courier-new font-weight-bold">
-                                                    {{ substr($DATE_DISCHARGED, 5, 1) }}
-                                                </div>
-                                                <div class="box text-primary courier-new font-weight-bold">
-                                                    {{ substr($DATE_DISCHARGED, 6, 1) }}
-                                                </div>
-                                                <label class="px-1">&nbsp;-</label>
-                                                <div class="box text-primary courier-new font-weight-bold">
-                                                    {{ substr($DATE_DISCHARGED, 8, 1) }}
-                                                </div>
-                                                <div class="box text-primary courier-new font-weight-bold">
-                                                    {{ substr($DATE_DISCHARGED, 9, 1) }}
-                                                </div>
-                                                <label class="px-1">&nbsp;-</label>
-                                                <div class="box text-primary courier-new font-weight-bold">
-                                                    {{ substr($DATE_DISCHARGED, 0, 1) }}
-                                                </div>
-                                                <div class="box text-primary courier-new font-weight-bold">
-                                                    {{ substr($DATE_DISCHARGED, 1, 1) }}
-                                                </div>
-                                                <div class="box text-primary courier-new font-weight-bold">
-                                                    {{ substr($DATE_DISCHARGED, 2, 1) }}
-                                                </div>
-                                                <div class="box text-primary courier-new font-weight-bold">
-                                                    {{ substr($DATE_DISCHARGED, 3, 1) }}
-                                                </div>
-                                                <br>
-                                                <p style="position: absolute;top:27px;">month
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    year</p>
-                                            </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 5, 1) }}
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 6, 1) }}
+                                        </div>
+                                        <label class="px-1">&nbsp;-</label>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 8, 1) }}
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 9, 1) }}
+                                        </div>
+                                        <label class="px-1">&nbsp;-</label>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 0, 1) }}
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 1, 1) }}
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 2, 1) }}
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            {{ substr($DATE_DISCHARGED, 3, 1) }}
+                                        </div>
+                                        <br>
+                                        <p style="position: absolute;top:27px;">month
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            year</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
