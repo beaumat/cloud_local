@@ -108,25 +108,24 @@ class PatientPaymentServices
         // 'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
 
         if ($CODE) {
-            
         }
         PatientPayments::where('ID', $ID)
-        ->update([
-            'DATE'              => $DATE,
-            'PATIENT_ID'        => $PATIENT_ID,
-            'LOCATION_ID'       => $LOCATION_ID,
-            'AMOUNT'            => $AMOUNT,
-            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'CARD_NO'           => $CARD_NO,
-            'CARD_EXPIRY_DATE'  => $CARD_EXPIRY_DATE ?? null,
-            'RECEIPT_REF_NO'    => $RECEIPT_REF_NO,
-            'RECEIPT_DATE'      => $RECEIPT_DATE ?? null,
-            'NOTES'             => $NOTES,
-            'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
-            'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-            'DEPOSITED'         => $DEPOSITED,
-            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID
-        ]);
+            ->update([
+                'DATE'              => $DATE,
+                'PATIENT_ID'        => $PATIENT_ID,
+                'LOCATION_ID'       => $LOCATION_ID,
+                'AMOUNT'            => $AMOUNT,
+                'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+                'CARD_NO'           => $CARD_NO,
+                'CARD_EXPIRY_DATE'  => $CARD_EXPIRY_DATE ?? null,
+                'RECEIPT_REF_NO'    => $RECEIPT_REF_NO,
+                'RECEIPT_DATE'      => $RECEIPT_DATE ?? null,
+                'NOTES'             => $NOTES,
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
+                'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
+                'DEPOSITED'         => $DEPOSITED,
+                'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID
+            ]);
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
@@ -183,11 +182,18 @@ class PatientPaymentServices
             ->join('document_status_map as s', 's.ID', '=', 'patient_payment.STATUS')
             ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->when($search, function ($query) use (&$search) {
-                $query->where('patient_payment.CODE', 'like', '%' . $search . '%')
-                    ->orWhere('patient_payment.AMOUNT_APPLIED', 'like', '%' . $search . '%')
-                    ->orWhere('patient_payment.NOTES', 'like', '%' . $search . '%')
-                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                $query->where(function ($q) use (&$search) {
+                    $q->where('patient_payment.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('patient_payment.AMOUNT_APPLIED', 'like', '%' . $search . '%')
+                        ->orWhere('patient_payment.NOTES', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%')
+                        ->orWhere('c.LAST_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.FIRST_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.MIDDLE_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('patient_payment.NOTES', 'like', '%' . $search . '%')
+                        ->orWhere('patient_payment.RECEIPT_REF_NO', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy('patient_payment.ID', 'desc')
             ->paginate($perPage);

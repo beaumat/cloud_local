@@ -17,7 +17,7 @@ class PatientPaymentList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public int $perPage = 15;
+    public int $perPage = 20;
 
     public float $TOTAL_DEPOSIT = 0;
     public float $TOTAL_APPLIED = 0;

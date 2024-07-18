@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Livewire\StockTransfer;
+namespace App\Livewire\PullOut;
 
 use App\Services\ItemServices;
-use App\Services\StockTransferServices;
+use App\Services\PullOutServices;
 use App\Services\UnitOfMeasureServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-class StockTransferFormItems extends Component
+class PullOutFormItems extends Component
 {
     #[Reactive]
-    public int $STOCK_TRANSFER_ID;
+    public int $PULL_OUT_ID;
     #[Reactive]
     public int $STATUS;
     #[Reactive]
@@ -25,10 +25,8 @@ class StockTransferFormItems extends Component
     public float $QUANTITY;
     public int $UNIT_ID;
 
-    public float $UNIT_COST;
-    public float $UNIT_PRICE;
+    public float $RATE;
     public float $AMOUNT;
-    public float $RETAIL_VALUE;
     public int $ASSET_ACCOUNT_ID;
     public int $BATCH_ID;
     public $itemList = [];
@@ -40,22 +38,20 @@ class StockTransferFormItems extends Component
     public $saveSuccess;
     public float $lineQty;
     public int $lineUnitId;
-    public float $lineUnitCost;
-    public float $lineUnitPrice;
+    public float $lineRate;
     public float $lineAmount;
-    public float $lineRetailValue;
     public int $lineBatchId;
     public $editUnitList = [];
     public int $lineItemId = 0;
-    private $stockTransferServices;
+    private $pullOutServices;
     private $unitOfMeasureServices;
     private $itemServices;
     public function boot(
-        StockTransferServices $stockTransferServices,
+        PullOutServices $pullOutServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         ItemServices $itemServices,
     ) {
-        $this->stockTransferServices = $stockTransferServices;
+        $this->pullOutServices = $pullOutServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemServices = $itemServices;
     }
@@ -73,12 +69,10 @@ class StockTransferFormItems extends Component
         try {
             if ($this->QUANTITY) {
                 $qty = $this->QUANTITY > 0 ? $this->QUANTITY : 1;
-                $this->AMOUNT = $qty * $this->UNIT_COST;
-                $this->RETAIL_VALUE = $qty * $this->UNIT_PRICE;
+                $this->AMOUNT = $qty * $this->RATE;
             } else {
                 $this->QUANTITY = 1;
                 $this->AMOUNT = 0;
-                $this->RETAIL_VALUE = 0;
             }
         } catch (\Throwable $th) {
             //throw $th;
@@ -97,14 +91,12 @@ class StockTransferFormItems extends Component
     {
         $this->UNIT_ID = 0;
         $this->QUANTITY = 1;
-        $this->UNIT_COST = 0;
-        $this->UNIT_PRICE = 0;
+        $this->RATE = 0;
 
         $this->ITEM_CODE = '';
         $this->ITEM_DESCRIPTION = '';
         $this->BATCH_ID = 0;
         $this->AMOUNT = 0;
-        $this->RETAIL_VALUE = 0;
         $this->unitList = [];
 
         if ($this->ITEM_ID > 0) {
@@ -114,8 +106,7 @@ class StockTransferFormItems extends Component
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
 
-                $this->UNIT_COST = $item->COST ?? 0;
-                $this->UNIT_PRICE = $item->RATE ?? 0;
+                $this->RATE = $item->RATE ?? 0;
                 $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
 
@@ -126,11 +117,9 @@ class StockTransferFormItems extends Component
     public function mount()
     {
         $this->QUANTITY = 0;
-        $this->UNIT_COST = 0;
-        $this->UNIT_PRICE = 0;
+        $this->RATE = 0;
 
         $this->AMOUNT = 0;
-        $this->RETAIL_VALUE = 0;
         $this->updatedcodeBase();
     }
     public function saveItem()
@@ -153,14 +142,13 @@ class StockTransferFormItems extends Component
 
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
 
-            $this->stockTransferServices->ItemStore(
-                $this->STOCK_TRANSFER_ID,
+            $this->pullOutServices->ItemStore(
+                $this->PULL_OUT_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
                 $this->UNIT_ID,
                 (float) $unitRelated['QUANTITY'],
-                $this->UNIT_COST,
-                $this->UNIT_PRICE,
+                $this->RATE,
                 $this->BATCH_ID,
                 $this->ASSET_ACCOUNT_ID
             );
@@ -168,10 +156,8 @@ class StockTransferFormItems extends Component
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
-            $this->UNIT_COST = 0;
-            $this->UNIT_PRICE = 0;
+            $this->RATE = 0;
             $this->AMOUNT = 0;
-            $this->RETAIL_VALUE = 0;
             $this->ITEM_CODE = '';
             $this->ITEM_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
@@ -195,11 +181,9 @@ class StockTransferFormItems extends Component
         try {
             if ($this->lineQty) {
                 $qty = $this->lineQty > 0 ? $this->lineQty : 1;
-                $this->lineRetailValue = $qty * $this->lineUnitPrice;
-                $this->lineAmount = $qty * $this->lineUnitCost;
+                $this->lineAmount = $qty * $this->lineRate;
             } else {
                 $this->lineQty = 1;
-                $this->lineRetailValue = 0;
                 $this->lineAmount = 0;
             }
         } catch (\Throwable $th) {
@@ -207,15 +191,13 @@ class StockTransferFormItems extends Component
     }
     public function editItem(int $ID)
     {
-        $data = $this->stockTransferServices->GetItem($ID, $this->STOCK_TRANSFER_ID);
+        $data = $this->pullOutServices->GetItem($ID, $this->PULL_OUT_ID);
         if ($data) {
             $this->editItemId = $data->ID;
             $this->lineQty = $data->QUANTITY;
             $this->lineUnitId = $data->UNIT_ID ?? 0;
-            $this->lineUnitCost = $data->UNIT_COST ?? 0;
-            $this->lineUnitPrice = $data->UNIT_PRICE ?? 0;
+            $this->lineRate = $data->UNIT_COST ?? 0;
             $this->lineAmount = $data->AMOUNT ?? 0;
-            $this->lineRetailValue = $data->RETAIL_VALUE ?? 0;
             $this->lineItemId = $data->ITEM_ID;
             $this->lineBatchId = $data->BATCH_ID ?? 0;
             $this->getEditAmount();
@@ -225,7 +207,7 @@ class StockTransferFormItems extends Component
     public function updateItem()
     {
         $this->validate(
-            [    
+            [
                 'lineQty' => 'required|not_in:0',
             ],
             [],
@@ -236,16 +218,15 @@ class StockTransferFormItems extends Component
 
         try {
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
-            
-            $this->stockTransferServices->ItemUpdate(
+
+            $this->pullOutServices->ItemUpdate(
                 $this->editItemId,
-                $this->STOCK_TRANSFER_ID,
+                $this->PULL_OUT_ID,
                 $this->lineItemId,
                 $this->lineQty,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
                 (float) $unitRelated['QUANTITY'],
-                $this->lineUnitCost,
-                $this->lineUnitPrice,
+                $this->lineRate,
                 $this->lineBatchId
 
             );
@@ -262,10 +243,8 @@ class StockTransferFormItems extends Component
         $this->editItemId = null;
         $this->lineQty = 0;
         $this->lineUnitId = 0;
-        $this->lineUnitCost = 0;
-        $this->lineUnitPrice = 0;
+        $this->lineRate = 0;
         $this->lineAmount = 0;
-        $this->lineRetailValue = 0;
         $this->lineItemId = 0;
         $this->lineBatchId = 0;
     }
@@ -273,9 +252,9 @@ class StockTransferFormItems extends Component
     public function deleteItem($Id)
     {
         try {
-            $this->stockTransferServices->ItemDelete(
+            $this->pullOutServices->ItemDelete(
                 $Id,
-                $this->STOCK_TRANSFER_ID
+                $this->PULL_OUT_ID
             );
             $this->dispatch('update-amount');
         } catch (\Exception $e) {
@@ -294,11 +273,11 @@ class StockTransferFormItems extends Component
     {
         $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
-        $this->itemList = $this->stockTransferServices->ItemView($this->STOCK_TRANSFER_ID);
+        $this->itemList = $this->pullOutServices->ItemView($this->PULL_OUT_ID);
     }
     public function render()
     {
         $this->getReload();
-        return view('livewire.stock-transfer.stock-transfer-form-items');
+        return view('livewire.pull-out.pull-out-form-items');
     }
 }

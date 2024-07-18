@@ -87,6 +87,9 @@ use App\Livewire\PaymentTerm\PaymentTermForm;
 use App\Livewire\PaymentTerm\PaymentTermList;
 use App\Livewire\PriceLevelPage\PriceLevelForm;
 use App\Livewire\PriceLevelPage\PriceLevelList;
+use App\Livewire\PullOut\PullOutForm;
+use App\Livewire\PullOut\PullOutList;
+use App\Livewire\PullOutItem\PullOutItemList;
 use App\Livewire\PurchaseOrder\PurchaseOrderForm;
 use App\Livewire\PurchaseOrder\PurchaseOrderList;
 use App\Livewire\RolePermissionPage\RolePermissionConfig;
@@ -208,7 +211,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', BillingForm::class)->name('bills_edit')->middleware(['permission:vendor.bill.view']);
         });
 
-
         Route::prefix('/bill-payments')->group(function () {
             Route::get('/', BillPaymentList::class)->name('bill_payment')->middleware(['permission:vendor.bill-payment.view']);
             Route::get('/create', BillPaymentForm::class)->name('bill_payment_create')->middleware(['permission:vendor.bill-payment.create']);
@@ -248,6 +250,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', StockTransferList::class)->name('stock_transfer')->middleware(['permission:company.stock-transfer.view']);
             Route::get('/create', StockTransferForm::class)->name('stock_transfer_create')->middleware(['permission:company.stock-transfer.create']);
             Route::get('/{id}/edit', StockTransferForm::class)->name('stock_transfer_edit')->middleware(['permission:company.stock-transfer.view']);
+        });
+
+
+        Route::prefix('/pull-out')->group(function () {
+            Route::get('/', PullOutList::class)->name('pull_out');
+            Route::get('/create', PullOutForm::class)->name('pull_out_create');
+            Route::get('/{id}/edit', PullOutForm::class)->name('pull_out_edit');
         });
     });
 

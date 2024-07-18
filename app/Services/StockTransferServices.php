@@ -21,15 +21,8 @@ class StockTransferServices
     {
         return StockTransfer::where('ID', $ID)->first();
     }
-    public function Store(
-        string $CODE,
-        string $DATE,
-        int $LOCATION_ID,
-        int $TRANSFER_TO_ID,
-        string $NOTES,
-        int $PREPARED_BY_ID,
-        int $ACCOUNT_ID
-    ): int {
+    public function Store(string $CODE, string $DATE, int $LOCATION_ID, int $TRANSFER_TO_ID, string $NOTES, int $PREPARED_BY_ID, int $ACCOUNT_ID): int
+    {
 
         $ID = $this->object->ObjectNextID('STOCK_TRANSFER');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('STOCK_TRANSFER');
@@ -62,13 +55,8 @@ class StockTransferServices
                 'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
     }
-    public function Update(
-        int $ID,
-        string $CODE,
-        int $TRANSFER_TO_ID,
-        string $NOTES,
-        int $PREPARED_BY_ID
-    ) {
+    public function Update(int $ID, string $CODE, int $TRANSFER_TO_ID, string $NOTES, int $PREPARED_BY_ID)
+    {
         StockTransfer::where('ID', $ID)
             ->update([
                 'CODE' => $CODE,

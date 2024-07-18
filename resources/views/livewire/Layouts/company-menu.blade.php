@@ -4,7 +4,6 @@
         <p> Company <i class="fas fa-angle-left right"></i> </p>
     </a>
     <ul class="nav nav-treeview">
-
         @can('company.stock-transfer.view')
             <li class="nav-item">
                 <a href="{{ route('companystock_transfer') }}"
@@ -14,7 +13,6 @@
                 </a>
             </li>
         @endcan
-
         @can('company.inventory-adjustment.view')
             <li class="nav-item">
                 <a href="{{ route('companyinventory_adjustment') }}"
@@ -24,7 +22,6 @@
                 </a>
             </li>
         @endcan
-
         @can('company.build-assembly.view')
             <li class="nav-item">
                 <a href="{{ route('companybuild_assembly') }}"
@@ -35,6 +32,13 @@
             </li>
         @endcan
 
+        <li class="nav-item">
+            <a href="{{ route('companypull_out') }}"
+                class="nav-link {{ request()->is('company/pull-out*') ? 'active' : '' }}">
+                <i class="fa fa-undo nav-icon"></i>
+                <p>Pull Out</p>
+            </a>
+        </li>
 
         @can('company.general-journal.view')
             <li class="nav-item">
