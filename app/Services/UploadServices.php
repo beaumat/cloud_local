@@ -12,8 +12,8 @@ class UploadServices
     public function RemoveIfExists($FILE_PATH)
     {
         if ($FILE_PATH) {
-            if (Storage::disk('public')->exists($FILE_PATH)) {
-                Storage::disk('public')->delete($FILE_PATH);
+            if (Storage::disk('custom_local')->exists($FILE_PATH)) {
+                Storage::disk('custom_local')->delete($FILE_PATH);
             }
         }
     }
@@ -35,7 +35,7 @@ class UploadServices
 
             $path = $Image->store('images', 'custom_local');
             $extension = $Image->extension();
-    
+
             $dataReturn = [
                 'new_path' =>  $path,
                 'extension' => $extension,
