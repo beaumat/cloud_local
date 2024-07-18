@@ -250,7 +250,7 @@ class PatientPaymentForm extends Component
 
                 if ($PAYMENT_TYPE == 10) {
 
-                    $this->getDocumentProccess();
+                    // $this->getDocumentProccess();
                 }
                 return Redirect::route('patientspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
