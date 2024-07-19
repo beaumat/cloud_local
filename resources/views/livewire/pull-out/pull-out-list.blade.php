@@ -66,11 +66,7 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a
-                                                    href="{{ route('companypull_out_edit', ['id' => $list->ID]) }}">
-                                                    {{ $list->CODE }}
-                                                </a>
-                                            </td>
+                                                <a href="{{ route('companypull_out_edit', ['id' => $list->ID]) }}"> {{ $list->CODE }} </a> </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->PREPARED_BY }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>

@@ -536,7 +536,7 @@ class HemoServices
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('DATE', '<', $DATE)
             ->where('STATUS_ID', 2)
-            ->orderBy('Date', 'asc')
+            ->orderBy('Date', 'desc')
             ->first();
 
         return $result;
@@ -557,6 +557,7 @@ class HemoServices
             ->where('h.CUSTOMER_ID', $PATIENT_ID)
             ->where('hemodialysis_items.IS_NEW', true)
             ->where('h.DATE', '<=', $DATE_TREATMENT)
+            ->where('h.STATUS_ID', 2)
             ->orderBy('h.DATE', 'desc')
             ->first();
 
