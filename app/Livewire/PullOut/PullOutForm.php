@@ -196,9 +196,6 @@ class PullOutForm extends Component
     public function save()
     {
 
-
-
-
         if ($this->ID == 0) {
 
             $this->validate(
