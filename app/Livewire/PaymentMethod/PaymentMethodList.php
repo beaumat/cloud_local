@@ -12,28 +12,30 @@ class PaymentMethodList extends Component
 
     public $paymentMethods = [];
     public $search = '';
-    public function updatedsearch(PaymentMethodServices $paymentMethodServices)
+    private $paymentMethodServices;
+    public function boot(PaymentMethodServices $paymentMethodServices)
     {
-        $this->paymentMethods = $paymentMethodServices->Search($this->search);
+        $this->paymentMethodServices = $paymentMethodServices;
     }
-    public function delete($id, PaymentMethodServices $paymentMethodServices)
+    public function delete($id)
     {
         try {
-            $paymentMethodServices->Delete($id);
+            $this->paymentMethodServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-            $this->paymentMethods = $paymentMethodServices->Search($this->search);
+            $this->paymentMethods = $this->paymentMethodServices->Search($this->search);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
-    public function mount(PaymentMethodServices $paymentMethodServices)
+    public function mount()
     {
-        $this->paymentMethods = $paymentMethodServices->Search($this->search);
+        $this->paymentMethods = $this->paymentMethodServices->Search($this->search);
     }
 
     public function render()
     {
+        $this->paymentMethods = $this->paymentMethodServices->Search($this->search);
         return view('livewire.payment-method.payment-method-list');
     }
 }

@@ -21,11 +21,16 @@ class PaymentMethodForm extends Component
     public int $PAYMENT_TYPE;
     public int $GL_ACCOUNT_ID;
     public $accountList = [];
-
+    private $paymentMethodServices;
+    public function boot(PaymentMethodServices $paymentMethodServices)
+    {
+        $this->paymentMethodServices = $paymentMethodServices;
+    }
     public function mount($id = null)
     {
         $this->paymentTypes = PaymentTypes::all();
         $this->accountList = Accounts::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
+        
         if (is_numeric($id)) {
 
             $paymenthMethod = PaymentMethods::where('ID', $id)->first();
@@ -49,7 +54,7 @@ class PaymentMethodForm extends Component
     }
 
 
-    public function save(PaymentMethodServices $paymentMethodServices)
+    public function save()
     {
         $this->validate(
             [
@@ -68,12 +73,12 @@ class PaymentMethodForm extends Component
 
         try {
 
-            if ($this->ID === 0) {
-                $this->ID = $paymentMethodServices->Store($this->CODE, $this->DESCRIPTION, $this->PAYMENT_TYPE, $this->GL_ACCOUNT_ID);
+            if ($this->ID == 0) {
+                $this->ID = $this->paymentMethodServices->Store($this->CODE, $this->DESCRIPTION, $this->PAYMENT_TYPE, $this->GL_ACCOUNT_ID);
                 return Redirect::route('maintenancefinancialpayment_method_edit',['id'=> $this->ID])->with('message', 'Successfully created');
             
             } else {
-                $paymentMethodServices->Update($this->ID, $this->CODE, $this->DESCRIPTION, $this->PAYMENT_TYPE, $this->GL_ACCOUNT_ID);
+                $this->paymentMethodServices->Update($this->ID, $this->CODE, $this->DESCRIPTION, $this->PAYMENT_TYPE, $this->GL_ACCOUNT_ID);
                 session()->flash('message', 'Successfully updated.');
             }
         } catch (\Exception $e) {
