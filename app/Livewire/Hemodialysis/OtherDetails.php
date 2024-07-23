@@ -13,6 +13,8 @@ class OtherDetails extends Component
     public int $HEMO_ID;
     #[Reactive]
     public bool $Modify;
+    #[Reactive]
+    public int $STATUS;
     public string $SE_DETAILS;
     public string $SO_DETAILS;
     public int $BFR;
@@ -74,6 +76,9 @@ class OtherDetails extends Component
     }
     public function detailsUseNext()
     {
+        if ($this->STATUS == 2 || $this->STATUS == 3) {
+            return;
+        }
         if ($this->Modify) {
             return;
         }
@@ -88,6 +93,10 @@ class OtherDetails extends Component
     }
     public function orderUseNext()
     {
+        if ($this->STATUS == 2 || $this->STATUS == 3) {
+            return;
+        }
+
         if ($this->Modify) {
             return;
         }

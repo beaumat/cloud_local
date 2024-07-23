@@ -398,8 +398,8 @@
                             </section>
                         </div>
                         @if ($USE_OTHER_DETAILS == true)
-                            <div class="form-group" >
-                                @livewire('Hemodialysis.OtherDetails', ['HEMO_ID' => $ID, 'Modify' => $Modify])
+                            <div class="form-group">
+                                @livewire('Hemodialysis.OtherDetails', ['HEMO_ID' => $ID, 'Modify' => $Modify, 'STATUS' => $STATUS])
                             </div>
                         @endif
                     </div>
