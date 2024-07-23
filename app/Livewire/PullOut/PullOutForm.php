@@ -3,17 +3,22 @@
 namespace App\Livewire\PullOut;
 
 use App\Models\ItemInventory;
+use App\Services\AccountJournalServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
 use App\Services\DocumentTypeServices;
 use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
+use App\Services\ObjectServices;
 use App\Services\PullOutServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
+
+#[Title('Pull Out')]
 
 class PullOutForm extends Component
 {
@@ -40,7 +45,7 @@ class PullOutForm extends Component
     private $documentTypeServices;
     private $itemInventoryServices;
     private $accountJournalServices;
-
+    private $objectServices;
     public function boot(
         PullOutServices $pullOutServices,
         LocationServices $locationServices,
@@ -48,7 +53,9 @@ class PullOutForm extends Component
         DocumentStatusServices $documentStatusServices,
         ItemInventoryServices $itemInventoryServices,
         ContactServices $contactServices,
-        UserServices     $userServices
+        UserServices     $userServices,
+        AccountJournalServices $accountJournalServices,
+        ObjectServices $objectServices
     ) {
         $this->pullOutServices = $pullOutServices;
         $this->locationServices = $locationServices;
@@ -57,6 +64,8 @@ class PullOutForm extends Component
         $this->itemInventoryServices = $itemInventoryServices;
         $this->contactServices = $contactServices;
         $this->userServices = $userServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->objectServices = $objectServices;
     }
     public function LoadDropdown()
     {
@@ -64,91 +73,86 @@ class PullOutForm extends Component
         $this->contactList = $this->contactServices->getList(2);
     }
 
-    // private function ItemInventory(): bool
-    // {
-    //     try {
-    //         $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Pull Out');
-    //         $data = $this->pullOutServices->ItemInventory($this->ID);
-    //         if ($data) {
-    //             $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
-    //         }
-    //         return true;
-    //     } catch (\Exception $e) {
-    //         $errorMessage = 'Error occurred: ' . $e->getMessage();
-    //         session()->flash('error', $errorMessage);
-    //         return false;
-    //     }
-    // }
-    // private function AccountJournal(): bool
-    // {
-    //     try {
+    private function ItemInventory(): bool
+    {
+        try {
+            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Pull Out');
+            $data = $this->pullOutServices->ItemInventory($this->ID);
+            if ($data) {
+                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+            }
+            return true;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
+    private function AccountJournal(): bool
+    {
+        try {
 
-    //         $stockTransfer = (int) $this->objectServices->ObjectTypeID('STOCK_TRANSFER');
-    //         $stockTransferItems = (int) $this->objectServices->ObjectTypeID('STOCK_TRANSFER_ITEMS');
+            $stockTransfer = (int) $this->objectServices->ObjectTypeID('PULL_OUT');
+            $stockTransferItems = (int) $this->objectServices->ObjectTypeID('PULL_OUT_ITEMS');
 
-    //         $JOURNAL_NO = $this->accountJournalServices->getJournalNo($stockTransfer, $this->ID) + 1;
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($stockTransfer, $this->ID) + 1;
 
-    //         //Main
-    //         $sourceData = $this->pullOutServices->getStockTransferJournal_Source($this->ID);
-    //         $this->accountJournalServices->JournalExecute($JOURNAL_NO, $sourceData, $this->LOCATION_ID, $stockTransfer, $this->DATE);
-
-    //         $desData = $this->pullOutServices->getStockTransferJournal_Des($this->ID);
-    //         $this->accountJournalServices->JournalExecute($JOURNAL_NO, $desData, $this->TRANSFER_TO_ID, $stockTransfer, $this->DATE);
+            //Main
+            $mainData = $this->pullOutServices->getPullOutJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $mainData, $this->LOCATION_ID, $stockTransfer, $this->DATE);
 
 
-    //         //Item
-    //         $stItemCredit = $this->pullOutServices->getStockTransferItemJournal_Credit($this->ID);
-    //         $this->accountJournalServices->JournalExecute($JOURNAL_NO, $stItemCredit, $this->LOCATION_ID, $stockTransferItems, $this->DATE);
 
-    //         $stItemDebit = $this->pullOutServices->getStockTransferItemJournal_Debit($this->ID);
-    //         $this->accountJournalServices->JournalExecute($JOURNAL_NO, $stItemDebit, $this->TRANSFER_TO_ID, $stockTransferItems, $this->DATE);
+            //Item
+            $itemData = $this->pullOutServices->getPullOutItemsJournal($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $itemData, $this->LOCATION_ID, $stockTransferItems, $this->DATE);
 
-    //         $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-    //         $debit_sum = (float) $data['DEBIT'];
-    //         $credit_sum = (float) $data['CREDIT'];
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
 
-    //         if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
-    //             return true;
-    //         }
-    //         session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
-    //         return false;
-    //     } catch (\Exception $e) {
-    //         $errorMessage = 'Error occurred: ' . $e->getMessage();
-    //         session()->flash('error', $errorMessage);
-    //         return false;
-    //     }
-    // }
-    // public function posted()
-    // {
-    //     try {
-    //         $count = (float) $this->pullOutServices->CountItems($this->ID);
-    //         if ($count == 0) {
-    //             Session()->flash('error', 'No item to transfer');
-    //             return;
-    //         }
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
+    public function posted()
+    {
+        try {
+            $count = (float) $this->pullOutServices->CountItems($this->ID);
+            if ($count == 0) {
+                Session()->flash('error', 'No item to transfer');
+                return;
+            }
 
-    //         DB::beginTransaction();
-    //         if (!$this->ItemInventory()) {
-    //             DB::rollBack();
-    //             return;
-    //         }
+            DB::beginTransaction();
+            if (!$this->ItemInventory()) {
+                DB::rollBack();
+                return;
+            }
 
-    //         if (!$this->AccountJournal()) {
-    //             DB::rollBack();
-    //             return;
-    //         }
-    //         $this->pullOutServices->StatusUpdate($this->ID, 15);
-    //         $this->STATUS = 15;
-    //         DB::commit();
+            if (!$this->AccountJournal()) {
+                DB::rollBack();
+                return;
+            }
+            $this->pullOutServices->StatusUpdate($this->ID, 15);
+            $this->STATUS = 15;
+            DB::commit();
 
-    //         Session()->flash('message', 'Successfully posted');
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         $errorMessage = 'Error occurred: ' . $e->getMessage();
-    //         session()->flash('error', $errorMessage);
-    //     }
-    // }
+            Session()->flash('message', 'Successfully posted');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     private function getInfo($data)
     {
         $this->ID = $data->ID;

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\PullOut;
 use App\Models\PullOutItems;
+use Illuminate\Support\Facades\DB;
 
 class PullOutServices
 {
@@ -115,6 +116,7 @@ class PullOutServices
     {
 
         $ID = $this->object->ObjectNextID('PULL_OUT');
+        
         $LINE_NO = $this->getLine($PULL_OUT_ID) + 1;
         PullOutItems::create([
             'ID'            => $ID,
@@ -131,7 +133,7 @@ class PullOutServices
             'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null
         ]);
 
-        // $this->UpdateTotal($PULL_OUT_ID);
+        $this->UpdateTotal($PULL_OUT_ID);
     }
     public function GetItem(int $ID, int $PULL_OUT_ID)
     {
@@ -155,7 +157,7 @@ class PullOutServices
                 'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null
             ]);
 
-        // $this->UpdateTotal($STOCK_TRANSFER_ID);
+        $this->UpdateTotal($PULL_OUT_ID);
     }
     public function ItemDelete(int $ID, int $PULL_OUT_ID,)
     {
@@ -163,7 +165,39 @@ class PullOutServices
             ->where('PULL_OUT_ID', $PULL_OUT_ID)
             ->delete();
 
-        // $this->UpdateTotal($STOCK_TRANSFER_ID);
+        $this->UpdateTotal($PULL_OUT_ID);
+    }
+    public function UpdateTotal(int $PULL_OUT_ID)
+    {
+        $result = $this->GetTotal($PULL_OUT_ID);
+        
+        PullOut::where('ID', $PULL_OUT_ID)
+            ->update(
+                [
+                    'AMOUNT' => $result['AMOUNT']
+                ]
+            );
+    }
+
+    private function GetTotal(int $PULL_OUT_ID)
+    {
+
+        $result = PullOutItems::query()
+            ->select([
+                DB::raw(' ifnull(sum(AMOUNT),2) as AMOUNT'),
+            ])
+            ->where('PULL_OUT_ID', $PULL_OUT_ID)
+            ->first();
+
+        if ($result) {
+            return [
+                'AMOUNT' => $result->AMOUNT
+            ];
+        }
+
+        return [
+            'AMOUNT' => 0,
+        ];
     }
     public function ItemView(int $PULL_OUT_ID)
     {
@@ -184,6 +218,57 @@ class PullOutServices
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'pull_out_items.UNIT_ID')
             ->where('pull_out_items.PULL_OUT_ID', $PULL_OUT_ID)
             ->orderBy('pull_out_items.LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
+    public function ItemInventory(int $PULL_OUT_ID)
+    {
+        $result = PullOutItems::query()
+            ->select([
+                'pull_out_items.ID',
+                'pull_out_items.ITEM_ID',
+                'pull_out_items.QUANTITY',
+                'pull_out_items.UNIT_BASE_QUANTITY',
+                'item.COST'
+            ])
+            ->join('item', 'item.ID', '=', 'pull_out_items.ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('pull_out_items.PULL_OUT_ID', $PULL_OUT_ID)
+            ->get();
+
+        return $result;
+    }
+
+    public function getPullOutJournal(int $PULL_OUT_ID)
+    {
+        $result = PullOut::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                DB::raw(" 0 as SUBSIDIARY_ID"),
+                'AMOUNT',
+                DB::raw(" 0 as ENTRY_TYPE"),
+                DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS"),
+                DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
+            ])
+            ->where('ID', $PULL_OUT_ID)->get();
+
+        return $result;
+    }
+    public function getPullOutItemsJournal(int $PULL_OUT_ID)
+    {
+        $result = PullOutItems::query()
+            ->select([
+                'ID',
+                'ASSET_ACCOUNT_ID as ACCOUNT_ID',
+                'ITEM_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                DB::raw('1 as ENTRY_TYPE'),
+                DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS")
+            ])
+            ->where('PULL_OUT_ID', $PULL_OUT_ID)
+            ->orderBy('LINE_NO', 'asc')
             ->get();
 
         return $result;

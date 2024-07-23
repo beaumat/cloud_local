@@ -83,7 +83,6 @@ class ObjectServices
     {
 
         $data = ObjectCodeSequence::where('OBJECT_TYPE', $Type)->where('LOCATION_ID', $LocationId)->first();
-
         if ($data) {
             $this->SetSequence($data->ID, $data->NEXT_SEQUENCE, $data->INCREMENT);
 

@@ -30,7 +30,7 @@ class PaymentMethodForm extends Component
     {
         $this->paymentTypes = PaymentTypes::all();
         $this->accountList = Accounts::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
-        
+
         if (is_numeric($id)) {
 
             $paymenthMethod = PaymentMethods::where('ID', $id)->first();
@@ -57,8 +57,7 @@ class PaymentMethodForm extends Component
     public function save()
     {
         $this->validate(
-            [
-              
+            [    
                 'DESCRIPTION' => 'required|max:100|unique:payment_method,description,' . $this->ID,
                 'PAYMENT_TYPE' => 'required',
             ],

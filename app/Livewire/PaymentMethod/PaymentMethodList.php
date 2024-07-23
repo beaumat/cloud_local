@@ -28,11 +28,6 @@ class PaymentMethodList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function mount()
-    {
-        $this->paymentMethods = $this->paymentMethodServices->Search($this->search);
-    }
-
     public function render()
     {
         $this->paymentMethods = $this->paymentMethodServices->Search($this->search);

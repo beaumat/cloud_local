@@ -71,7 +71,7 @@ class HemoForm extends Component
     public string $OLD_POST_O2_SATURATION;
     public string $OLD_POST_TEMPERATURE;
 
-    public bool $USE_OTHER_DETAILS = false;
+    public bool $USE_OTHER_DETAILS = true;
     // end old
     private $hemoServices;
     private $locationServices;
@@ -291,6 +291,7 @@ class HemoForm extends Component
         $data = $this->hemoServices->Get($this->ID);
         if ($data) {
             $this->reloadData($data);
+            $this->dispatch('cancel-other');
             $this->Modify = false;
             return;
         }
@@ -357,6 +358,7 @@ class HemoForm extends Component
                 // $this->hemoServices->PreUpdate($this->ID, $this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
                 $this->update_all();
                 DB::commit();
+                $this->dispatch('save-other');
                 $this->Modify = false;
             }
         } catch (\Exception $e) {

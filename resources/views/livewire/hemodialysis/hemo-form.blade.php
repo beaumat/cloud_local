@@ -397,7 +397,11 @@
                                 </div>
                             </section>
                         </div>
-
+                        @if ($USE_OTHER_DETAILS == true)
+                            <div class="form-group" >
+                                @livewire('Hemodialysis.OtherDetails', ['HEMO_ID' => $ID, 'Modify' => $Modify])
+                            </div>
+                        @endif
                     </div>
                     <div class="col-sm-6 col-md-6">
                         <div class="row">
@@ -440,7 +444,7 @@
                                         </div>
                                         <div class="col-md-12">
                                             <button wire:click='uploaddoc' class="btn btn-dark btn-sm">
-                                               <i class="fa fa-upload" aria-hidden="true"></i>  Upload 
+                                                <i class="fa fa-upload" aria-hidden="true"></i> Upload
                                             </button>
                                             @if ($FILE_PATH)
                                                 <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
@@ -466,12 +470,7 @@
 
 
 
-                    @if ($USE_OTHER_DETAILS == true)
-                        <div class="col-sm-12 col-md-12"
-                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                            @livewire('Hemodialysis.OtherDetails', ['HEMO_ID' => $ID])
-                        </div>
-                    @endif
+
 
                 </div>
             </div>

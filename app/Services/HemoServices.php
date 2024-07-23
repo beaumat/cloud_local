@@ -208,10 +208,10 @@ class HemoServices
     private function GetPreviousTreatment(int $HEMO_ID, int $CUSTOMER_ID, string $DATE, int $LOCATION_ID)
     {
         $result = Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)
-            ->where('DATE', '<=', $DATE)
+            ->where('DATE', '<', $DATE)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('ID', '<>', $HEMO_ID)
-            ->orderBy('DATE', 'asc')
+            ->orderBy('DATE', 'desc')
             ->first();
 
         return $result;
@@ -228,7 +228,7 @@ class HemoServices
                 ->where('ID', $HEMO_ID)
                 ->update([
                     'SE_DETAILS'    => $data->DETAILS_USE_NEXT == true ? $data->SE_DETAILS ?? null : null,
-                    'SO_DETAILS'    => $data->DETAILS_USE_NEXT == true ? $data->SO_DETAILS ?? null : null,
+                    'SO_DETAILS'    => $data->ORDER_USE_NEXT == true ? $data->SO_DETAILS ?? null : null,
                     'BFR'           => $data->BFR ?? null,
                     'DFR'           => $data->DFR ?? null,
                     'DURATION'      => $data->DURATION ?? null,
@@ -287,7 +287,8 @@ class HemoServices
         string  $DIALSATE_N,
         string $DIALSATE_K,
         string $DIALSATE_C,
-        bool $DETAILS_USE_NEXT
+        bool $DETAILS_USE_NEXT,
+        bool $ORDER_USE_NEXT
     ) {
         Hemodialysis::where('ID', $ID)
             ->update([
@@ -300,8 +301,33 @@ class HemoServices
                 'DIALSATE_N'        => $DIALSATE_N,
                 'DIALSATE_K'        => $DIALSATE_K,
                 'DIALSATE_C'        => $DIALSATE_C,
-                'DETAILS_USE_NEXT'  => $DETAILS_USE_NEXT
+                'DETAILS_USE_NEXT'  => $DETAILS_USE_NEXT,
+                'ORDER_USE_NEXT'    => $ORDER_USE_NEXT
             ]);
+    }
+    public function UpdatedSpecialOrder(int $ID): bool
+    {
+        $isBool =  Hemodialysis::where('ID', $ID)->first()->DETAILS_USE_NEXT ?? false;
+
+        if ($isBool) {
+            // make it false
+            Hemodialysis::where('ID', $ID)->update(['DETAILS_USE_NEXT' => false]);
+            return false;
+        }
+        Hemodialysis::where('ID', $ID)->update(['DETAILS_USE_NEXT' => true]);
+        return true;
+    }
+    public function UpdatedStandingOrder(int $ID): bool
+    {
+        $isBool =  Hemodialysis::where('ID', $ID)->first()->ORDER_USE_NEXT ?? false;
+
+        if ($isBool) {
+            // make it false
+            Hemodialysis::where('ID', $ID)->update(['ORDER_USE_NEXT' => false]);
+            return false;
+        }
+        Hemodialysis::where('ID', $ID)->update(['ORDER_USE_NEXT' => true]);
+        return true;
     }
     public function UpdateFile(int $ID, $FILE_NAME, $FILE_PATH)
     {
