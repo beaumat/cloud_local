@@ -46,16 +46,16 @@
                         Auth::user()->can('banking.make-cheque.view'))
                     @livewire('Layouts.BankingMenu')
                 @endif
-
-                @if (Auth::user()->name == 'admin')
+                @if (Auth::user()->can('report.patient.sales'))
                     <li class="nav-item {{ request()->is('reports*') ? 'menu-open' : '' }}">
-                        <a href="#" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}"> <i class="nav-icon fa fa-line-chart"></i>
+                        <a href="#" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}"> <i
+                                class="nav-icon fa fa-line-chart"></i>
                             <p> Reports <i class="right fas fa-angle-left"></i> </p>
                         </a>
                         <ul class="nav nav-treeview">
-                        
-                            @livewire('Layouts.ReportsPatients')
-
+                            @if (Auth::user()->can('report.patient.sales'))
+                                @livewire('Layouts.ReportsPatients')
+                            @endif
 
                             {{-- @livewire('Layouts.ReportsFinancial')
                             @livewire('Layouts.ReportsSales')

@@ -4,12 +4,14 @@
               <p> Patients <i class="right fas fa-angle-left"></i> </p>
           </a>
           <ul class="nav nav-treeview">
-              <li class="nav-item ">
-                  <a href="{{ route('reportspatient_sales_report') }}"
-                      class="nav-link {{ request()->is('reports/patients/sales*') ? 'active' : '' }}">
-                      <i class="fa fa-print nav-icon"></i>
-                      <p>Sales</p>
-                  </a>
-              </li>
+              @if (Auth::user()->can('report.patient.sales'))
+                  <li class="nav-item ">
+                      <a href="{{ route('reportspatient_sales_report') }}"
+                          class="nav-link {{ request()->is('reports/patients/sales*') ? 'active' : '' }}">
+                          <i class="fa fa-print nav-icon"></i>
+                          <p>Sales</p>
+                      </a>
+                  </li>
+              @endif
           </ul>
       </li>
