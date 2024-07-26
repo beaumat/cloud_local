@@ -218,17 +218,17 @@ class BillPaymentForm extends Component
             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($check, $this->ID) + 1;
 
             $checkDataBills = $this->billPaymentServices->billPaymentBillsJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkDataBills, $this->LOCATION_ID, $checkbills, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkDataBills, $this->LOCATION_ID, $checkbills, $this->DATE,"AP");
 
             $checkData = $this->billPaymentServices->billPaymentJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkData, $this->LOCATION_ID, $check, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkData, $this->LOCATION_ID, $check, $this->DATE,"BILL");
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
-            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+            if ($debit_sum == $credit_sum) {
                 $this->billPaymentServices->StatusUpdate($this->ID, 15);
                 DB::commit();
                 $data = $this->billPaymentServices->get($this->ID);

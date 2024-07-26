@@ -453,7 +453,6 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/patients')->group(function () {
             Route::prefix('/sales')->group(function () {
                 Route::get('/', PatientSalesReport::class)->name('patient_sales_report'); //->middleware(['permission:patient-sales-report']);
-                Route::get('/print', PatientSalesReportPrint::class)->name('patient_sales_report_print');
             });
         });
         Route::prefix('/financial')->group(function () {

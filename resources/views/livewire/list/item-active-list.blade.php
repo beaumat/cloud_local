@@ -60,7 +60,6 @@
                                         <th>CLASS</th>
                                         <th>SUB-CLASS</th>
                                         <th class="text-center">QTY ON-HAND</th>
-
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -74,8 +73,8 @@
                                             <td> {{ $list->CLASS_NAME }}</td>
                                             <td> {{ $list->SUB_NAME }}</td>
                                             <td class="text-center">
-                                                <a href="#"
-                                                    wire:click='OnClick({{ $list->ID }})'>{{ number_format($list->QTY_ON_HAND ?? 0, 2) }}</a>
+                                                <button class="btn btn-xs @if($list->QTY_ON_HAND <= 0) btn-warning @else btn-info @endif w-100"
+                                                    wire:click='OnClick({{ $list->ID }})'>{{ number_format($list->QTY_ON_HAND ?? 0, 2) }}</button>
                                             </td>
 
                                         </tr>

@@ -8,6 +8,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
+                            @livewire('Doctor.DoctorProfessionalFeeModal')
                         </li>
                     </ol>
                 </div>
@@ -22,12 +23,15 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-1">
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     <div class="mt-0">
                                         <label class="text-sm">Search:</label>
                                         <input type="text" wire:model.live.debounce.150ms='search'
                                             class="w-100 form-control form-control-sm" placeholder="Search" />
                                     </div>
+                                </div>
+                                <div class="col-md-4">
+
                                 </div>
                                 {{-- <div class="col-md-3">
                                     <div class="mt-0">
@@ -46,11 +50,9 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>Doctor ID</th>
+                                        <th>ID No.</th>
                                         <th>Name</th>
                                         <th>Accreditation No.</th>
-                                        <th>Mobile No.</th>
-                                        <th>Email</th>
                                         <th>Inactive</th>
                                         <th class="text-center bg-success col-1">
                                             <a href="{{ route('maintenancecontactdoctors_create') }}"
@@ -65,8 +67,6 @@
                                             <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
                                             <td> {{ $list->PIN }}</td>
-                                            <td> {{ $list->MOBILE_NO }}</td>
-                                            <td> {{ $list->EMAIL }}</td>
                                             <td>
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>

@@ -39,15 +39,17 @@ class ServiceChargeServices
         }
         return 0;
     }
-    public function getServiceChargeList(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID): object
+    public function getServiceChargeList_NotPhilhealth(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID): object
     {
+
+
         $result = ServiceChargesItems::query()
             ->select([
                 'service_charges_items.ID',
                 'service_charges_items.SERVICE_CHARGES_ID',
                 'service_charges.DATE',
                 'service_charges.CODE',
-                'service_charges.AMOUNT as ORG_AMOUNT',
+                'service_charges.AMOUNT',
                 'service_charges.BALANCE_DUE',
                 'item.DESCRIPTION as ITEM_NAME',
                 'service_charges_items.AMOUNT as ITEM_AMOUNT',
@@ -67,10 +69,83 @@ class ServiceChargeServices
                     ->where('ppc.PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)
                     ->whereRaw('ppc.SERVICE_CHARGES_ITEM_ID = service_charges_items.ID');
             })
+            ->where('service_charges_items.ITEM_ID', '<>', '2')
             ->get();
 
         return $result;
     }
+    public function getServiceChargeList_PH(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID): object
+    {
+        $result = ServiceChargesItems::query()
+            ->select([
+                'service_charges_items.ID',
+                'service_charges_items.SERVICE_CHARGES_ID',
+                'service_charges.DATE',
+                'service_charges.CODE',
+                'service_charges.AMOUNT',
+                'service_charges.BALANCE_DUE',
+                'item.DESCRIPTION as ITEM_NAME',
+                'service_charges_items.AMOUNT as ITEM_AMOUNT',
+                'service_charges_items.PAID_AMOUNT',
+                'service_charges_items.QUANTITY',
+                'unit_of_measure.SYMBOL'
+            ])
+            ->leftJoin('service_charges', 'service_charges.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->leftJoin('item', 'item.ID', '=', 'service_charges_items.ITEM_ID')
+            ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'service_charges_items.UNIT_ID')
+            ->where('service_charges.PATIENT_ID', $PATIENT_ID)
+            ->where('service_charges.LOCATION_ID', $LOCATION_ID)
+            ->whereRaw('(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) > 0')
+            ->whereNotExists(function ($query) use (&$PATIENT_PAYMENT_ID) {
+                $query->select(DB::raw(1))
+                    ->from('patient_payment_charges as ppc')
+                    ->where('ppc.PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)
+                    ->whereRaw('ppc.SERVICE_CHARGES_ITEM_ID = service_charges_items.ID');
+            })
+            ->where('service_charges_items.ITEM_ID', '=', '2')
+            ->get();
+
+        return $result;
+    }
+
+
+    public function getServiceChargeList_PH_Date(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID, string $DT_FROM, string $DT_TO): object
+    {
+        $result = ServiceChargesItems::query()
+            ->select([
+                'service_charges_items.ID',
+                'service_charges_items.SERVICE_CHARGES_ID',
+                'service_charges.DATE',
+                'service_charges.CODE',
+                'service_charges.AMOUNT',
+                'service_charges.BALANCE_DUE',
+                'item.DESCRIPTION as ITEM_NAME',
+                'service_charges_items.AMOUNT as ITEM_AMOUNT',
+                'service_charges_items.PAID_AMOUNT',
+                'service_charges_items.QUANTITY',
+                'unit_of_measure.SYMBOL'
+            ])
+            ->leftJoin('service_charges', 'service_charges.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->leftJoin('item', 'item.ID', '=', 'service_charges_items.ITEM_ID')
+            ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'service_charges_items.UNIT_ID')
+            ->where('service_charges.PATIENT_ID', $PATIENT_ID)
+            ->where('service_charges.LOCATION_ID', $LOCATION_ID)
+            ->whereRaw('(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) > 0')
+            ->whereNotExists(function ($query) use (&$PATIENT_PAYMENT_ID) {
+                $query->select(DB::raw(1))
+                    ->from('patient_payment_charges as ppc')
+                    ->where('ppc.PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)
+                    ->whereRaw('ppc.SERVICE_CHARGES_ITEM_ID = service_charges_items.ID');
+            })
+            ->where('service_charges_items.ITEM_ID', '=', '2')
+            ->whereBetween('service_charges.DATE', [$DT_FROM, $DT_TO])
+            ->get();
+
+        return $result;
+    }
+
+
+
     public function get(int $ID): object
     {
         return ServiceCharges::where('ID', $ID)->first();

@@ -80,31 +80,20 @@ class ServiceChargeList extends Component
     }
     private function CheckingHavePaymentNotUsed(): bool
     {
-        $data = $this->patientPaymentServices->PaymentHaveAvailable($this->PATIENT_ID);
-        if ($data) {
-            if ($data->ID != $this->PATIENT_PAYMENT_ID) {
-                session()->flash('error', "Some payment have not applied. please check this url: <a target='_BLANK' href ='" . route('patientspayment_edit', ['id' => $data->ID]) . "'> Here </a> ");
-                return true;
-            }
-        }
         return false;
+        // $data = $this->patientPaymentServices->PaymentHaveAvailable($this->PATIENT_ID);
+        // if ($data) {
+        //     if ($data->ID != $this->PATIENT_PAYMENT_ID) {
+        //         session()->flash('error', "Some payment have not applied. please check this url: <a target='_BLANK' href ='" . route('patientspayment_edit', ['id' => $data->ID]) . "'> Here </a> ");
+        //         return true;
+        //     }
+        // }
+        // return false;
     }
-    private function gotHaveItemBalance(int $ID, int $Init_AMOUNT)
-    {
-        foreach ($this->dataList as $list) {
-            if ($list->ID == $ID) {
 
-                $bal = $list->AMOUNT - $list->PAID_AMOUNT;
-
-                if ($Init_AMOUNT > $bal) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
     public function save(): void
     {
+        $creditBalance = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
         $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
         $CollectAmount = 0;
         //Check Amount First
@@ -113,7 +102,7 @@ class ServiceChargeList extends Component
                 try {
                     $init_value = $this->paymentAmounts[$chargeId] ?? 0;
                     $CollectAmount = $CollectAmount + $init_value;
-                    if ($this->gotHaveItemBalance($chargeId, $init_value) == true) {
+                    if ($this->patientPaymentServices->gotHaveItemBalance($this->dataList, $chargeId, $init_value) == true) {
                         session()->flash('error', 'invalid payment initial. please enter exactly initial amount');
                         return;
                     }
@@ -127,7 +116,10 @@ class ServiceChargeList extends Component
             session()->flash('error', 'payment selected not found.');
             return;
         }
-
+        if ($creditBalance < $CollectAmount) {
+            session()->flash('error', 'you dont have credit balance.');
+            return;
+        }
         if ($CollectAmount > $CurrentAmount) {
             session()->flash('error', 'Invalid amount');
             return;
@@ -145,14 +137,12 @@ class ServiceChargeList extends Component
                     if ($ID > 0) {
                         $this->patientPaymentServices->PaymentChargesUpdate($ID, $this->PATIENT_PAYMENT_ID, $chargeId, 0, $chargeAmount);
                         $this->serviceChargeServices->updateServiceChargesItemPaid($chargeId);
-
                     } else {
                         $this->patientPaymentServices->PaymentChargeStore($this->PATIENT_PAYMENT_ID, $chargeId, 0, $chargeAmount, 0, 0);
                         $this->serviceChargeServices->updateServiceChargesItemPaid($chargeId);
                     }
                     $this->dispatch('reset-payment');
                 }
-
             }
         }
 
@@ -172,7 +162,7 @@ class ServiceChargeList extends Component
     public function render()
     {
 
-        $this->dataList = $this->serviceChargeServices->getServiceChargeList($this->PATIENT_PAYMENT_ID, $this->PATIENT_ID, $this->LOCATION_ID);
+        $this->dataList = $this->serviceChargeServices->getServiceChargeList_NotPhilhealth($this->PATIENT_PAYMENT_ID, $this->PATIENT_ID, $this->LOCATION_ID);
 
         return view('livewire.patient-payment.service-charge-list');
     }

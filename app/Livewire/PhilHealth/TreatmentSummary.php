@@ -25,12 +25,10 @@ class TreatmentSummary extends Component
     }
     public function mount($CONTACT_ID, $LOCATION_ID, $DATE_ADMITTED, $DATE_DISCHARGED)
     {
-
         $this->CONTACT_ID = $CONTACT_ID;
         $this->LOCATION_ID = $LOCATION_ID;
         $this->DATE_ADMITTED = $DATE_ADMITTED;
         $this->DATE_DISCHARGED = $DATE_DISCHARGED;
-
     }
     public function render()
     {

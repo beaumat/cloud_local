@@ -306,28 +306,26 @@ class BillCreditForm extends Component
             $billCreditExpenses = (int) $this->objectServices->ObjectTypeID('BILL_CREDIT_EXPENSES');
 
             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($billCredits, $this->ID) + 1;
-
             //Main
             $billCreditData = $this->billCreditServices->getBillCreditJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditData, $this->LOCATION_ID, $billCredits, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditData, $this->LOCATION_ID, $billCredits, $this->DATE, "AP");
             //Tax
             $billDataTax = $this->billCreditServices->getBillCreditTaxJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billDataTax, $this->LOCATION_ID, $billCredits, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billDataTax, $this->LOCATION_ID, $billCredits, $this->DATE, "TAX");
 
             //Item
             $billCreditItemData = $this->billCreditServices->getBillCreditItemJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditItemData, $this->LOCATION_ID, $billCreditItems, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditItemData, $this->LOCATION_ID, $billCreditItems, $this->DATE, "ASSET");
             //Expenses
             $billCreditExpensesData = $this->billCreditServices->getBillCreditExpenseJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditExpensesData, $this->LOCATION_ID, $billCreditExpenses, $this->DATE);
-
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditExpensesData, $this->LOCATION_ID, $billCreditExpenses, $this->DATE, "EXPENSE");
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
-            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+            if ($debit_sum == $credit_sum ) {
                 return true;
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');

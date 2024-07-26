@@ -64,26 +64,33 @@ class ItemServices
     {
         if ($isCode) {
             return Items::query()
-                ->select(['ID', 'CODE'])->where('INACTIVE', '0')
-                ->where('TYPE', 0)
+                ->select(['ID', 'CODE'])
+                ->where('INACTIVE', '0')
+                ->whereIn('TYPE', [0, 1])
                 ->get();
         }
         return Items::query()
             ->select(
                 [
                     'item.ID',
-                    DB::raw('IFNULL(item.PURCHASE_DESCRIPTION, item.DESCRIPTION) as DESCRIPTION')
+                    'item.DESCRIPTION'
                 ]
             )->where('INACTIVE', '0')
-            ->where('TYPE', 0)
+            ->whereIn('TYPE', [0, 1])
             ->get();
     }
     public function getByCustomer(bool $isCode)
     {
         if ($isCode) {
-            return Items::query()->select(['ID', 'CODE'])->where('INACTIVE', '0')->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])->get();
+            return Items::query()->select(['ID', 'CODE'])
+                ->where('INACTIVE', '0')
+                ->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])
+                ->get();
         }
-        return Items::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])->get();
+        return Items::query()->select(['ID', 'DESCRIPTION'])
+            ->where('INACTIVE', '0')
+            ->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])
+            ->get();
     }
     public function Store(
         string $CODE,

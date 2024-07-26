@@ -41,14 +41,14 @@ class AccountServices
         $ID = $this->object->ObjectNextID('ACCOUNT');
 
         Accounts::create([
-            'ID' => $ID,
-            'NAME' => $NAME,
-            'GROUP_ACCOUNT_ID' => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
-            'TYPE' => $TYPE,
-            'BANK_ACCOUNT_NO' => $BANK_ACCOUNT_NO,
-            'INACTIVE' => $INACTIVE,
-            'TAG' => $TAG,
-            'LINE_NO' => $LINE_NO
+            'ID'                => $ID,
+            'NAME'              => $NAME,
+            'GROUP_ACCOUNT_ID'  => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
+            'TYPE'              => $TYPE,
+            'BANK_ACCOUNT_NO'   => $BANK_ACCOUNT_NO,
+            'INACTIVE'          => $INACTIVE,
+            'TAG'               => $TAG,
+            'LINE_NO'           => $LINE_NO
 
         ]);
 

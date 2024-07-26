@@ -114,18 +114,18 @@ class StockTransferForm extends Component
            
             //Main
             $sourceData = $this->stockTransferServices->getStockTransferJournal_Source($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $sourceData, $this->LOCATION_ID, $stockTransfer, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $sourceData, $this->LOCATION_ID, $stockTransfer, $this->DATE,"FROM");
 
             $desData = $this->stockTransferServices->getStockTransferJournal_Des($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $desData, $this->TRANSFER_TO_ID, $stockTransfer, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $desData, $this->TRANSFER_TO_ID, $stockTransfer, $this->DATE,"TO");
 
 
             //Item
             $stItemCredit = $this->stockTransferServices->getStockTransferItemJournal_Credit($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $stItemCredit, $this->LOCATION_ID, $stockTransferItems, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $stItemCredit, $this->LOCATION_ID, $stockTransferItems, $this->DATE,"FROM");
 
             $stItemDebit = $this->stockTransferServices->getStockTransferItemJournal_Debit($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $stItemDebit, $this->TRANSFER_TO_ID, $stockTransferItems, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $stItemDebit, $this->TRANSFER_TO_ID, $stockTransferItems, $this->DATE,"TO");
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 

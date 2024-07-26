@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\PhilHealth;
 use App\Models\Hemodialysis;
 use App\Models\PatientDoctor;
-use App\Models\PhilhealthPayment;
 use App\Models\PhilHealthProfFee;
 use Illuminate\Support\Facades\DB;
 use App\Models\PhilhealthDrugsMedicines;
@@ -375,7 +374,7 @@ class PhilHealthServices
     }
     public function Delete(int $ID)
     {
-        PhilhealthPayment::where('PHILHEALTH_ID', $ID)->delete();
+  
         PhilhealthDrugsMedicines::where('PHILHEALTH_ID', $ID)->delete();
         PhilHealthProfFee::where('PHIC_ID', $ID)->delete();
         PhilHealth::where('ID', $ID)->delete();
@@ -602,76 +601,22 @@ class PhilHealthServices
     {
         return PhilhealthDrugsMedicines::where('ID', $ID)->first();
     }
-    public function PaymentGet(int $ID)
-    {
-        return PhilhealthPayment::where('ID', $ID)->first();
-    }
-    public function PaymentStore(int $PHILHEALTH_ID, string $RECEIVED_DATE, float $AMOUNT, string $REF_NO)
-    {
-        $ID = $this->object->ObjectNextID('PHILHEALTH_PAYMENT');
-
-        PhilhealthPayment::create([
-            'ID'            => $ID,
-            'PHILHEALTH_ID' => $PHILHEALTH_ID,
-            'RECORDED_ON'   => $this->dateServices->Now(),
-            'RECEIVED_DATE' => $RECEIVED_DATE,
-            'AMOUNT'        => $AMOUNT,
-            'REF_NO'        => $REF_NO
-        ]);
-    }
-    public function PaymentUpdate(int $ID, int $PHILHEALTH_ID, string $RECEIVED_DATE, float $AMOUNT, string $REF_NO)
-    {
-
-        PhilhealthPayment::where('ID', $ID)
-            ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
-            ->update([
-                'RECEIVED_DATE' => $RECEIVED_DATE,
-                'AMOUNT'        => $AMOUNT,
-                'REF_NO'        => $REF_NO
-            ]);
-    }
-    public function PaymentDelete(int $ID, int $PHILHEALTH_ID)
-    {
-        PhilhealthPayment::where('ID', $ID)
-            ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
-            ->delete();
-    }
-    public function PaymentList(int $PHILHEALTH_ID)
-    {
-        $result =  PhilhealthPayment::query()
-            ->select([
-                'ID',
-                'RECORDED_ON',
-                'RECEIVED_DATE',
-                'AMOUNT',
-                'REF_NO'
-            ])
-            ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
-            ->get();
-
-        return $result;
-    }
-    public function UpdatePayment(int $PHILHEALTH_ID)
+    public function UpdatePayment(int $PHILHEALTH_ID, float $TOTAL_PAY)
     {
         $data = $this->get($PHILHEALTH_ID);
+
         if ($data) {
 
-            $pay =  PhilhealthPayment::query()
-                ->select([
-                    DB::raw('SUM(AMOUNT) as TOTAL'),
-                ])
-                ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
-                ->first();
-
-            if ((float) $pay->TOTAL >= (float) $data->P1_TOTAL) {
+            if ((float) $TOTAL_PAY >= (float) $data->P1_TOTAL) {
                 $STATUS_ID = 11; // Paid
             } else {
                 $STATUS_ID = 1; //PENDING
             }
+
             PhilHealth::where('ID', $PHILHEALTH_ID)
                 ->update([
-                    'PAYMENT_AMOUNT' =>  $pay->TOTAL,
-                    'STATUS_ID' => $STATUS_ID
+                    'PAYMENT_AMOUNT' =>  $TOTAL_PAY,
+                    'STATUS_ID'     => $STATUS_ID
                 ]);
         }
     }

@@ -36,6 +36,7 @@ class PatientPayments extends Model
         'FILE_NAME',
         'FILE_PATH',
         'IS_CONFIRM',
-        'DATE_CONFIRM'
+        'DATE_CONFIRM',
+        'PHILHEALTH_ID'
     ];
 }

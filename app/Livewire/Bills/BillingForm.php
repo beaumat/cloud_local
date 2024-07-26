@@ -3,12 +3,10 @@
 namespace App\Livewire\Bills;
 
 use App\Services\AccountJournalServices;
+use App\Services\AccountServices;
 use App\Services\BillingServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
-use App\Services\DocumentTypeServices;
-use App\Services\ItemInventoryServices;
-use App\Services\ItemServices;
 use App\Services\LocationServices;
 use App\Services\ObjectServices;
 use App\Services\PaymentTermServices;
@@ -24,8 +22,11 @@ use Illuminate\Support\Facades\DB;
 
 #[Title('Add Stock')]
 class BillingForm extends Component
-{
+{   
 
+    public int $openStatus = 2;
+    public int $JOURNAL_NO;
+    public int $OBJECT_TYPE;
     public int $ID;
     public int $VENDOR_ID;
     public string $DATE;
@@ -47,6 +48,10 @@ class BillingForm extends Component
     public float $AMOUNT;
     public float $BALANCE_DUE;
 
+
+    public bool $useAccount = false;
+
+
     public $vendorList = [];
     public $locationList = [];
     public $paymentTermList = [];
@@ -60,26 +65,11 @@ class BillingForm extends Component
     private $userServices;
     private $documentStatusServices;
     private $systemSettingServices;
-    private $itemInventoryServices;
-    private $itemServices;
-    private $documentTypeServices;
     private $objectServices;
     private $accountJournalServices;
-    public function boot(
-        BillingServices $billingServices,
-        LocationServices $locationServices,
-        ContactServices $contactServices,
-        PaymentTermServices $paymentTermServices,
-        TaxServices $taxServices,
-        UserServices $userServices,
-        DocumentStatusServices $documentStatusServices,
-        SystemSettingServices $systemSettingServices,
-        ItemInventoryServices $itemInventoryServices,
-        ItemServices $itemServices,
-        DocumentTypeServices $documentTypeServices,
-        ObjectServices $objectServices,
-        AccountJournalServices $accountJournalServices
-    ) {
+    private $accountServices;
+    public function boot(BillingServices $billingServices, LocationServices $locationServices, ContactServices $contactServices, PaymentTermServices $paymentTermServices, TaxServices $taxServices, UserServices $userServices, DocumentStatusServices $documentStatusServices, SystemSettingServices $systemSettingServices, ObjectServices $objectServices, AccountJournalServices $accountJournalServices, AccountServices $accountServices)
+    {
         $this->billingServices = $billingServices;
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
@@ -88,11 +78,9 @@ class BillingForm extends Component
         $this->userServices = $userServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->itemInventoryServices = $itemInventoryServices;
-        $this->itemServices = $itemServices;
-        $this->documentTypeServices = $documentTypeServices;
         $this->objectServices = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->accountServices = $accountServices;
     }
 
     public string $tab = 'item';
@@ -121,6 +109,7 @@ class BillingForm extends Component
     private function getInfo($data)
     {
         $this->ID = $data->ID;
+        $this->JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->OBJECT_TYPE, $this->ID);
         $this->CODE = $data->CODE;
         $this->DATE = $data->DATE;
         $this->DUE_DATE = $data->DUE_DATE ? $data->DUE_DATE : '';
@@ -141,15 +130,18 @@ class BillingForm extends Component
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
         $this->ACCOUNTS_PAYABLE_ID = $data->ACCOUNTS_PAYABLE_ID;
 
-        if ($this->billingServices->isItemTab($data->ID)) {
-            $this->tab = "item";
-            return;
+        if ($this->useAccount) {
+            if ($this->billingServices->isItemTab($data->ID)) {
+                $this->tab = "item";
+                return;
+            }
+            $this->tab = "account";
         }
-        $this->tab = "account";
     }
 
     public function mount($id = null)
     {
+        $this->OBJECT_TYPE = (int) $this->objectServices->ObjectTypeID('BILL');
 
         if (is_numeric($id)) {
             $Bill = $this->billingServices->get($id);
@@ -185,109 +177,22 @@ class BillingForm extends Component
         $this->INPUT_TAX_VAT_METHOD = 0;
         $this->INPUT_TAX_ACCOUNT_ID = 0;
         $this->STATUS_DESCRIPTION = "";
-        $this->ACCOUNTS_PAYABLE_ID = 21;
+        $this->ACCOUNTS_PAYABLE_ID = $this->accountServices->getByName('Accounts Payable');
         $this->getTax();
+        $this->JOURNAL_NO = 0;
     }
     public function getModify()
     {
         $this->Modify = true;
     }
-    private function ItemInventory(): bool
+    public function AccountJournal()
     {
-        try {
-            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Bill');
-            $data = $this->billingServices->ItemInventory($this->ID);
-            if ($data) {
-                foreach ($data as $item) {
-                    $this->itemServices->updateCost($item->ITEM_ID, $item->RATE);
-                }
-                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, true);
-            }
-            return true;
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-            return false;
-        }
-    }
-    private function AccountJournal(): bool
-    {
-        try {
-
-            $bills = (int) $this->objectServices->ObjectTypeID('BILL');
-            $billItems = (int) $this->objectServices->ObjectTypeID('BILL_ITEMS');
-            $billExpenses = (int) $this->objectServices->ObjectTypeID('BILL_EXPENSES');
-
-            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($bills, $this->ID) + 1;
-            //Item
-            $billitemData = $this->billingServices->getBillItemJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billitemData, $this->LOCATION_ID, $billItems, $this->DATE);
-            //Expenses
-            $billExpensesData = $this->billingServices->getBillExpenseJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billExpensesData, $this->LOCATION_ID, $billExpenses, $this->DATE);
-
-            //Main
-            $billData = $this->billingServices->getBillJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billData, $this->LOCATION_ID, $bills, $this->DATE);
-            //Tax
-            $billDataTax = $this->billingServices->getBillTaxJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billDataTax, $this->LOCATION_ID, $bills, $this->DATE);
-
-            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-
-            $debit_sum = (float) $data['DEBIT'];
-            $credit_sum = (float) $data['CREDIT'];
-
-            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
-                return true;
-            }
-            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
-            return false;
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-            return false;
-        }
-    }
-    public function getPosted()
-    {
-        try {
-
-            $count_item = (int) $this->billingServices->CountItems($this->ID, true);
-            $count_expense = (int) $this->billingServices->CountItems($this->ID, false);
-            $count = $count_item + $count_expense;
-            if ($count == 0) {
-                session()->flash('error', 'Item not found.');
-                return;
-            }
-            DB::beginTransaction();
-            if (!$this->ItemInventory()) {
-                DB::rollBack();
-                return;
-            }
-
-            if (!$this->AccountJournal()) {
-                DB::rollBack();
-                return;
-            }
-
-            $this->billingServices->StatusUpdate($this->ID, 15);
-            DB::commit();
-            $data = $this->billingServices->get($this->ID);
-            if ($data) {
-                $this->getInfo($data);
-                $this->Modify = false;
-                return;
-            }
-            session()->flash('message', 'Successfully posted');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-        }
+        $this->billingServices->updateJournal($this->ID, $this->ACCOUNTS_PAYABLE_ID, $this->JOURNAL_NO, $this->LOCATION_ID, $this->DATE, $this->VENDOR_ID, $this->OBJECT_TYPE, $this->AMOUNT, 1, "AP");
+        $this->billingServices->updateJournal($this->ID, $this->INPUT_TAX_ACCOUNT_ID, $this->JOURNAL_NO, $this->LOCATION_ID, $this->DATE, $this->VENDOR_ID, $this->OBJECT_TYPE, $this->INPUT_TAX_AMOUNT, 0, "TAX");
     }
     public function save()
     {
+
         try {
             if ($this->ID == 0) {
 
@@ -309,9 +214,10 @@ class BillingForm extends Component
                     ]
                 );
 
-
-
                 $this->getTax();
+                DB::beginTransaction();
+
+
                 $this->ID = $this->billingServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -330,7 +236,10 @@ class BillingForm extends Component
                     $this->INPUT_TAX_ACCOUNT_ID,
                     $this->STATUS
                 );
-
+                $this->JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->OBJECT_TYPE, $this->ID) + 1;
+                $this->AccountJournal();
+                DB::commit();
+                $this->billingServices->StatusUpdate($this->ID, 2);
                 return Redirect::route('vendorsbills_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
@@ -354,6 +263,7 @@ class BillingForm extends Component
                     ]
                 );
 
+                DB::beginTransaction();
 
                 $this->getTax();
                 $this->billingServices->Update(
@@ -371,6 +281,7 @@ class BillingForm extends Component
                     $this->INPUT_TAX_ACCOUNT_ID
                 );
 
+                DB::commit();
                 $this->billingServices->getUpdateTaxItem($this->ID, $this->INPUT_TAX_ID);
                 $getResult = $this->billingServices->ReComputed($this->ID);
                 $this->getUpdateAmount($getResult);
@@ -378,6 +289,7 @@ class BillingForm extends Component
             }
             $this->Modify = false;
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -390,6 +302,8 @@ class BillingForm extends Component
             $this->BALANCE_DUE = $list['AMOUNT'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
         }
+
+        $this->AccountJournal();
     }
     public function updateCancel()
     {

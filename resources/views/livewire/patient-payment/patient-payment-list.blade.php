@@ -76,7 +76,8 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('patientspayment_edit', ['id' => $list->ID]) }}"
+                                                <a 
+                                                    href="{{ route('patientspayment_edit', ['id' => $list->ID]) }}"
                                                     class="text-primary">
                                                     {{ $list->CODE }}
                                                 </a>

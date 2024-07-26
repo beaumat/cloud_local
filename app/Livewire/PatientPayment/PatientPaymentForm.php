@@ -26,7 +26,7 @@ class PatientPaymentForm extends Component
     public bool $IS_CONFIRM;
     public string $DATE_CONFIRM;
     public $PDF;
-    public int $ID;
+    public int $ID = 0;
     public string $CODE;
     public $DATE;
     public int $PATIENT_ID;
@@ -65,6 +65,7 @@ class PatientPaymentForm extends Component
     public bool $showFileName = false;
     private $uploadServices;
     public string $TITLE_REF = "";
+    public string $TITLE_DATE = "";
     public function boot(
         PatientPaymentServices $patientPaymentServices,
         LocationServices $locationServices,
@@ -96,7 +97,7 @@ class PatientPaymentForm extends Component
         $this->LOCATION_ID = $data->LOCATION_ID;
         $this->AMOUNT = $data->AMOUNT;
         $this->AMOUNT_APPLIED = $data->AMOUNT_APPLIED;
-        $this->PAYMENT_METHOD_ID = $data->PAYMENT_METHOD_ID;
+        $this->PAYMENT_METHOD_ID = $data->PAYMENT_METHOD_ID ?? 0;
         $this->CARD_NO = $data->CARD_NO ?? null;
         $this->CARD_EXPIRY_DATE = $data->CARD_EXPIRY_DATE ?? null;
         $this->RECEIPT_REF_NO = $data->RECEIPT_REF_NO ?? null;
@@ -124,8 +125,15 @@ class PatientPaymentForm extends Component
     }
     private function LoadDropDown()
     {
+
+
         $this->contactList = $this->contactServices->getList(3);
         $this->locationList = $this->locationServices->getList();
+
+        if ($this->ID  == 0) {
+            $this->paymentMethodList = $this->paymentMethodServices->getListNotIncludeOneParam(9);
+            return;
+        }
         $this->paymentMethodList = $this->paymentMethodServices->getList();
     }
     public function mount($id = null)
@@ -230,6 +238,10 @@ class PatientPaymentForm extends Component
 
             if ($this->ID == 0) {
 
+                if ($$this->RECEIPT_REF_NO <> "") {
+                }
+
+
                 $this->ID = $this->patientPaymentServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -328,6 +340,7 @@ class PatientPaymentForm extends Component
                     $this->showReceiptDate = false;
                     $this->showFileName = false;
                     $this->TITLE_REF = "SL No.";
+                    $this->TITLE_DATE = "";
                     break;
                 case 1:
                     $this->showCardNo = false;
@@ -336,6 +349,7 @@ class PatientPaymentForm extends Component
                     $this->showReceiptDate = true;
                     $this->showFileName = false;
                     $this->TITLE_REF = "Ref No.";
+                    $this->TITLE_DATE = "Ref Date";
                     break;
                 case 4:
                     $this->showCardNo = true;
@@ -343,6 +357,7 @@ class PatientPaymentForm extends Component
                     $this->showReceiptNo = true;
                     $this->showReceiptDate = false;
                     $this->showFileName = false;
+                    $this->TITLE_DATE = "";
                     break;
                 case 5:
                     $this->showCardNo = true;
@@ -351,6 +366,7 @@ class PatientPaymentForm extends Component
                     $this->showReceiptDate = false;
                     $this->showFileName = false;
                     $this->TITLE_REF = "Ref No.";
+                    $this->TITLE_DATE = "";
                     break;
 
                 case 8:
@@ -360,14 +376,16 @@ class PatientPaymentForm extends Component
                     $this->showReceiptDate = false;
                     $this->showFileName = false;
                     $this->TITLE_REF = "Ref No.";
+                    $this->TITLE_DATE = "";
                     break;
                 case 9:
                     $this->showCardNo = false;
                     $this->showCardDateExpire = false;
-                    $this->showReceiptNo = false;
-                    $this->showReceiptDate = false;
+                    $this->showReceiptNo = true;
+                    $this->showReceiptDate = true;
                     $this->showFileName = false;
                     $this->TITLE_REF = "OR No.";
+                    $this->TITLE_DATE = "OR Date";
                     break;
                 default:
                     # code...
@@ -377,6 +395,7 @@ class PatientPaymentForm extends Component
                     $this->showReceiptDate = true;
                     $this->showFileName = true;
                     $this->TITLE_REF = "GL No.";
+                    $this->TITLE_DATE = "GL Date";
                     break;
             }
         }

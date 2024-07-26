@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\PatientPaymentCharges;
 use App\Models\PatientPayments;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\WithPagination;
 
 class PatientPaymentServices
@@ -14,11 +15,29 @@ class PatientPaymentServices
     private $object;
     private $dateServices;
     private $systemSettingServices;
-    public function __construct(ObjectServices $objectService, DateServices $dateServices, SystemSettingServices $systemSettingServices)
+    private $philHealthServices;
+    private $accountServices;
+    public function __construct(ObjectServices $objectService, DateServices $dateServices, SystemSettingServices $systemSettingServices, PhilHealthServices $philHealthServices, AccountServices $accountServices)
     {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
+        $this->philHealthServices = $philHealthServices;
+        $this->accountServices = $accountServices;
+    }
+    public function gotHaveItemBalance($dataList = [], int $ID, int $Init_AMOUNT)
+    {
+        foreach ($dataList as $list) {
+            if ($list->ID == $ID) {
+
+                $bal = $list->AMOUNT - $list->PAID_AMOUNT;
+
+                if ($Init_AMOUNT > $bal) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     public function get($ID)
     {
@@ -48,8 +67,8 @@ class PatientPaymentServices
         int $UNDEPOSITED_FUNDS_ACCOUNT_ID,
         int $OVERPAYMENT_ACCOUNT_ID,
         bool $DEPOSITED,
-        int $ACCOUNTS_RECEIVABLE_ID
-
+        int $ACCOUNTS_RECEIVABLE_ID,
+        int $PHILHEALTH_ID = 0
     ): int {
 
         $ID = (int) $this->object->ObjectNextID('PATIENT_PAYMENT');
@@ -75,7 +94,8 @@ class PatientPaymentServices
             'STATUS' => 2,
             'STATUS_DATE' => $this->dateServices->NowDate(),
             'DEPOSITED' => $DEPOSITED,
-            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID
+            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID,
+            'PHILHEALTH_ID' => $PHILHEALTH_ID
         ]);
         return $ID;
     }
@@ -446,5 +466,104 @@ class PatientPaymentServices
             ->sum('AMOUNT_APPLIED');
 
         return $result;
+    }
+
+    public function PH_Store(int $PHILHEALTH_ID, float $AMOUNT, string $RECEIPT_REF_NO, string $RECEIPT_DATE, string $NOTES)
+    {
+        $METHOD_ID = 91; // Philhealth
+        $DATE = $this->dateServices->NowDate();
+        $phData = $this->philHealthServices->get($PHILHEALTH_ID);
+        $UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
+
+        $ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
+
+        $this->Store(
+            "",
+            $DATE,
+            $phData->CONTACT_ID,
+            $phData->LOCATION_ID,
+            $AMOUNT,
+            0,
+            $METHOD_ID,
+            "",
+            null,
+            $RECEIPT_REF_NO,
+            $RECEIPT_DATE,
+            $NOTES,
+            $UNDEPOSITED_FUNDS_ACCOUNT_ID,
+            0,
+            0,
+            $ACCOUNTS_RECEIVABLE_ID,
+            $PHILHEALTH_ID
+        );
+    }
+    public function PH_Update(int $ID, int $PHILHEALTH_ID, float $AMOUNT, string $RECEIPT_REF_NO, string $RECEIPT_DATE, string $NOTES)
+    {
+        $METHOD_ID = 91;
+
+        PatientPayments::where('ID', $ID)
+            ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
+            ->where('PAYMENT_METHOD_ID', $METHOD_ID)
+            ->where('AMOUNT_APPLIED', 0)
+            ->update([
+                'AMOUNT'            => $AMOUNT,
+                'RECEIPT_REF_NO'    => $RECEIPT_REF_NO,
+                'RECEIPT_DATE'      => $RECEIPT_DATE,
+                'NOTES'             => $NOTES
+            ]);
+    }
+    public function PH_Delete(int $ID, int $PHILHEALTH_ID): bool
+    {
+        try {
+            $METHOD_ID = 91;
+            $data = PatientPayments::where('ID', $ID)
+                ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
+                ->where('PAYMENT_METHOD_ID', $METHOD_ID)
+                ->where('AMOUNT_APPLIED', 0);
+
+            if ($data->exists()) {
+                $data->delete();
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            Log::error('Error deleting record: ' . $e->getMessage());
+            return false;
+        }
+    }
+    public function PH_List(int $PHILHEALTH_ID, int $PATIENT_ID, int $LOCATION_ID)
+    {
+        $result =  PatientPayments::query()
+            ->select([
+                'ID',
+                'CODE',
+                'DATE',
+                'RECEIPT_REF_NO',
+                'RECEIPT_DATE',
+                'AMOUNT',
+                'AMOUNT_APPLIED',
+                'DEPOSITED',
+                'NOTES'
+            ])
+            ->where('PATIENT_ID', $PATIENT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
+            ->get();
+
+        return $result;
+    }
+    public function getPH_TotalPay(int $PHILHEALTH_ID): float
+    {
+        $pay = PatientPayments::query()
+            ->select([DB::raw('SUM(AMOUNT) as TOTAL')])
+            ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
+            ->first();
+
+        if ($pay) {
+            return $pay->TOTAL;
+        }
+
+        return 0;
     }
 }

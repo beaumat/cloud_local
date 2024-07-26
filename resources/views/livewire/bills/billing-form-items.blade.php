@@ -20,7 +20,7 @@
             @foreach ($itemList as $list)
                 <tr>
                     <td>{{ $list->CODE }}</td>
-                    <td>{{ $list->PURCHASE_DESCRIPTION }}</td>
+                    <td>{{ $list->DESCRIPTION }}</td>
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
@@ -89,7 +89,7 @@
                                     class="text-info btn btn-sm btn-link">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
-                                <button title="Delete" id="deletebtn" wire:click='deleteItem({{ $list->ID }})'
+                                <button title="Delete" id="deletebtn" wire:click='deleteItem({{ $list->ID }},{{ $list->ITEM_ID }})'
                                     wire:confirm="Are you sure you want to delete this?"
                                     class="text-danger btn btn-sm btn-link">
                                     <i class="fas fa-times" aria-hidden="true"></i>

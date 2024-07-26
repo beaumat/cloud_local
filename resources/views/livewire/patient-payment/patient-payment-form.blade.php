@@ -40,7 +40,7 @@
                                             @endif
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    @if ($Modify && $AMOUNT_APPLIED  == 0)
+                                                    @if ($Modify && $AMOUNT_APPLIED == 0)
                                                         <livewire:number-input name="AMOUNT" titleName="Amount"
                                                             :isDisabled=false wire:model='AMOUNT' />
                                                     @else
@@ -78,6 +78,19 @@
                                                             @endif
                                                         </div>
                                                     @endif
+                                                    @if ($showReceiptDate)
+                                                        <div class="col-md-6">
+                                                            @if ($Modify)
+                                                                <livewire:date-input name="RECEIPT_DATE"
+                                                                    :titleName=$TITLE_DATE wire:model='RECEIPT_DATE'
+                                                                    :isDisabled="false" />
+                                                            @else
+                                                                <livewire:date-input name="RECEIPT_DATE"
+                                                                    :titleName=$TITLE_DATE wire:model='RECEIPT_DATE'
+                                                                    :isDisabled="true" />
+                                                            @endif
+                                                        </div>
+                                                    @endif
                                                 @else
                                                     @if ($showReceiptNo)
                                                         <div class="col-md-6">
@@ -92,18 +105,21 @@
                                                             @endif
                                                         </div>
                                                     @endif
+                                                    @if ($showReceiptDate)
+                                                        <div class="col-md-6">
+                                                            @if ($Modify)
+                                                                <livewire:date-input name="RECEIPT_DATE"
+                                                                    :titleName=$TITLE_DATE wire:model='RECEIPT_DATE'
+                                                                    :isDisabled="false" />
+                                                            @else
+                                                                <livewire:date-input name="RECEIPT_DATE"
+                                                                    :titleName=$TITLE_DATE wire:model='RECEIPT_DATE'
+                                                                    :isDisabled="true" />
+                                                            @endif
+                                                        </div>
+                                                    @endif
                                                 @endif
-                                                @if ($showReceiptDate)
-                                                    <div class="col-md-6">
-                                                        @if ($Modify)
-                                                            <livewire:date-input name="RECEIPT_DATE" titleName="GL Date"
-                                                                wire:model='RECEIPT_DATE' :isDisabled="false" />
-                                                        @else
-                                                            <livewire:date-input name="RECEIPT_DATE" titleName="GL Date"
-                                                                wire:model='RECEIPT_DATE' :isDisabled="true" />
-                                                        @endif
-                                                    </div>
-                                                @endif
+
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -120,8 +136,8 @@
                                                       
                                                     @endif --}}
 
-                                                    <livewire:text-input name="Code" titleName="No."
-                                                        :isDisabled=true wire:model='CODE' />
+                                                    <livewire:text-input name="Code" titleName="No." :isDisabled=true
+                                                        wire:model='CODE' />
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify && $AMOUNT == 0)

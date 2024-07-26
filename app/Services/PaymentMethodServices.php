@@ -22,6 +22,13 @@ class PaymentMethodServices
 
         return $result;
     }
+
+    public function getListNotIncludeOneParam(int $ID)
+    {
+        $result = PaymentMethods::query()->select(['ID', 'DESCRIPTION'])->where('ID', '<>', $ID)->get();
+
+        return $result;
+    }
     public function getListNonPatient()
     {
         $result = PaymentMethods::query()->select(['ID', 'DESCRIPTION'])->where('PAYMENT_TYPE', '<=', '8')->get();

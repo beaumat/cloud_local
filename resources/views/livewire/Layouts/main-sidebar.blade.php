@@ -53,8 +53,11 @@
                             <p> Reports <i class="right fas fa-angle-left"></i> </p>
                         </a>
                         <ul class="nav nav-treeview">
+                        
                             @livewire('Layouts.ReportsPatients')
-                            @livewire('Layouts.ReportsFinancial')
+
+
+                            {{-- @livewire('Layouts.ReportsFinancial')
                             @livewire('Layouts.ReportsSales')
                             @livewire('Layouts.ReportsReceivables')
                             @livewire('Layouts.ReportsPurchases')
@@ -62,7 +65,7 @@
                             @livewire('Layouts.ReportsPayables')
                             @livewire('Layouts.ReportsInventory')
                             @livewire('Layouts.ReportsAccounting')
-                            @livewire('Layouts.ReportsDocuments')
+                            @livewire('Layouts.ReportsDocuments') --}}
                         </ul>
                     </li>
                 @endif

@@ -184,7 +184,6 @@
                         <div class="card card-primary card-outline card-outline-tabs">
                             <div class="card-header p-0 border-bottom-0">
                                 <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
-
                                     <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'soa') active @endif"
                                             id="custom-tabs-four-soa-tab" wire:click="SelectTab('soa')"
@@ -222,7 +221,7 @@
                                         id="custom-tabs-four-soa" role="tabpanel"
                                         aria-labelledby="custom-tabs-four-soa-tab">
                                         <div class="row"
-                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            @if ($ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
                                                 @livewire('PhilHealth.StatementOfAccount', ['ID' => $ID])
                                             </div>
@@ -257,7 +256,7 @@
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-                                                @livewire('PhilHealth.PaymentList', ['PHILHEALTH_ID' => $ID])
+                                                @livewire('PhilHealth.PaymentList', ['PHILHEALTH_ID' => $ID,'PATIENT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID])
                                             </div>
                                         </div>
                                     </div>

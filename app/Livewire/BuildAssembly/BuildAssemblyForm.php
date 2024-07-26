@@ -274,20 +274,22 @@ class BuildAssemblyForm extends Component
             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($buildAssembly, $this->ID) + 1;
             //Main
             $buildAssemblyData = $this->buildAssemblyServices->getBuildAssemblyJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyData, $this->LOCATION_ID, $buildAssembly, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyData, $this->LOCATION_ID, $buildAssembly, $this->DATE, "BUILD");
 
             //Item
             $buildAssemblyItemData = $this->buildAssemblyServices->getBuildAssemblyItemsJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyItemData, $this->LOCATION_ID, $buildAssemblyItems, $this->DATE);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyItemData, $this->LOCATION_ID, $buildAssemblyItems, $this->DATE, "COMPONENT");
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
-            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+            if ($debit_sum == $credit_sum ) {
                 return true;
             }
+
+            
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
         } catch (\Exception $e) {

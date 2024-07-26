@@ -27,7 +27,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            @if ($Modify)
+                                            @if ($Modify && $ID == 0)
                                                 <livewire:select-option name="VENDOR_ID" titleName="Vendor"
                                                     :options="$vendorList" :zero="true" :isDisabled=false
                                                     wire:model='VENDOR_ID' />
@@ -80,7 +80,7 @@
 
                                                 </div>
                                                 <div class="col-md-4">
-                                                    @if ($Modify && $AMOUNT == 0)
+                                                    @if ($Modify && $ID == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
                                                             wire:model='LOCATION_ID' />
@@ -121,7 +121,7 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-6 col-6">
-                                        @if ($STATUS == 0)
+                                        @if ($STATUS == $openStatus || $ID == 0)
                                             @if ($Modify)
                                                 <button type="submit" class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
@@ -134,22 +134,14 @@
                                             @else
                                                 <button type="button" wire:click='getModify()'
                                                     class="btn btn-sm btn-info"
-                                                    @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                    @if ($STATUS > $openStatus) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
-
-                                                @if ($STATUS == 0)
-                                                    <button type="button" wire:click='getPosted()'
-                                                        class="btn btn-sm btn-warning"
-                                                        wire:confirm="Are you sure you want to post?">
-                                                        <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
-                                                    </button>
-                                                @endif
                                             @endif
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0 && $STATUS > 0)
+                                        @if ($ID > 0)
                                             <a id="new" title="Create" href="{{ route('vendorsbills_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
@@ -175,12 +167,15 @@
                                         data-toggle="pill" href="#custom-tabs-four-item" role="tab"
                                         aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link @if ($tab == 'account') active @endif"
-                                        id="custom-tabs-four-account-tab" wire:click="SelectTab('account')"
-                                        data-toggle="pill" href="#custom-tabs-four-account" role="tab"
-                                        aria-controls="custom-tabs-four-account" aria-selected="true">Expenses</a>
-                                </li>
+                                @if ($useAccount)
+                                    <li class="nav-item">
+                                        <a class="nav-link @if ($tab == 'account') active @endif"
+                                            id="custom-tabs-four-account-tab" wire:click="SelectTab('account')"
+                                            data-toggle="pill" href="#custom-tabs-four-account" role="tab"
+                                            aria-controls="custom-tabs-four-account" aria-selected="true">Expenses</a>
+                                    </li>
+                                @endif
+
                             </ul>
                         </div>
                         <div class="card-body">
@@ -191,21 +186,25 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('Bills.BillingFormItems', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
+
+                                            @livewire('Bills.BillingFormItems', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE, 'JOURNAL_NO' => $JOURNAL_NO])
 
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade @if ($tab == 'account') show active @endif "
-                                    id="custom-tabs-four-account" role="tabpanel">
-                                    <div class="row"
-                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        <div class="col-md-12"
-                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('Bills.BillingFormAccounts', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
+                                @if ($useAccount)
+                                    <div class="tab-pane fade @if ($tab == 'account') show active @endif "
+                                        id="custom-tabs-four-account" role="tabpanel">
+                                        <div class="row"
+                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            <div class="col-md-12"
+                                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                @livewire('Bills.BillingFormAccounts', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE, 'JOURNAL_NO' => $JOURNAL_NO])
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
+
                             </div>
                         </div>
                         <div class="card-footer">
@@ -217,6 +216,9 @@
                                         </div>
                                         <div class="col-md-2">
                                             {{-- @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID]) --}}
+                                        </div>
+                                        <div class="col-md-2">
+                                            @livewire('AccountJournal.AccountJournalModal', ['JOURNAL_NO' => $JOURNAL_NO])
                                         </div>
                                     </div>
 
