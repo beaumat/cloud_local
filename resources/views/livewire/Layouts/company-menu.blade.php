@@ -31,15 +31,16 @@
                 </a>
             </li>
         @endcan
-
-        <li class="nav-item">
-            <a href="{{ route('companypull_out') }}"
-                class="nav-link {{ request()->is('company/pull-out*') ? 'active' : '' }}">
-                <i class="fa fa-undo nav-icon"></i>
-                <p>Pull Out</p>
-            </a>
-        </li>
-
+        @can('company.pull-out.view')
+            <li class="nav-item">
+                <a href="{{ route('companypull_out') }}"
+                    class="nav-link {{ request()->is('company/pull-out*') ? 'active' : '' }}">
+                    <i class="fa fa-undo nav-icon"></i>
+                    <p>Pull Out</p>
+                </a>
+            </li>
+        @endcan
+        
         @can('company.general-journal.view')
             <li class="nav-item">
                 <a href="{{ route('companygeneral_journal') }}"

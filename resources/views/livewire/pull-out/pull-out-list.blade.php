@@ -57,8 +57,15 @@
                                         <th class="col-1">Amount</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">
-                                            <a href="{{ route('companypull_out_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+
+
+
+
+                                            @can('company.pull-out.create')
+                                                <a href="{{ route('companypull_out_create') }}" class="text-white">
+                                                    <i class="fas fa-plus"></i></a>
+                                            @endcan
+
                                         </th>
                                     </tr>
                                 </thead>
@@ -66,7 +73,9 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('companypull_out_edit', ['id' => $list->ID]) }}"> {{ $list->CODE }} </a> </td>
+                                                <a href="{{ route('companypull_out_edit', ['id' => $list->ID]) }}">
+                                                    {{ $list->CODE }} </a>
+                                            </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->PREPARED_BY }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
@@ -77,11 +86,14 @@
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+                                                @can('company.pull-out.delete')
+                                                    <a href="#" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn-sm text-danger">
+                                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                                    </a>
+                                                @endcan
+
                                             </td>
                                         </tr>
                                     @endforeach

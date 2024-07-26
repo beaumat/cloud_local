@@ -112,9 +112,11 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0)
-                                            <a id="new" title="Create"
-                                                href="{{ route('companypull_out_create') }}"
-                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                            @can('company.pull-out.create')
+                                                <a id="new" title="Create"
+                                                    href="{{ route('companypull_out_create') }}"
+                                                    class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                            @endcan
                                         @endif
                                     </div>
                                 </div>

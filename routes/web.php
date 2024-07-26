@@ -254,9 +254,9 @@ Route::middleware(['auth'])->group(function () {
 
 
         Route::prefix('/pull-out')->group(function () {
-            Route::get('/', PullOutList::class)->name('pull_out');
-            Route::get('/create', PullOutForm::class)->name('pull_out_create');
-            Route::get('/{id}/edit', PullOutForm::class)->name('pull_out_edit');
+            Route::get('/', PullOutList::class)->name('pull_out')->middleware(['permission:company.pull-out.view']);
+            Route::get('/create', PullOutForm::class)->name('pull_out_create')->middleware(['permission:company.pull-out.create']);
+            Route::get('/{id}/edit', PullOutForm::class)->name('pull_out_edit')->middleware(['permission:company.pull-out.view']);
         });
     });
 

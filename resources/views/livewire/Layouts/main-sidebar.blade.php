@@ -38,7 +38,8 @@
                 @if (Auth::user()->can('company.stock-transfer.view') ||
                         Auth::user()->can('company.build-assembly.view') ||
                         Auth::user()->can('company.inventory-adjustment.view') ||
-                        Auth::user()->can('company.general-journal.view'))
+                        Auth::user()->can('company.general-journal.view') ||
+                        Auth::user()->can('company.pull-out.view'))
                     @livewire('Layouts.CompanyMenu')
                 @endif
                 @if (Auth::user()->can('banking.deposit.view') ||
