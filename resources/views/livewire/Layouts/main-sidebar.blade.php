@@ -1,7 +1,6 @@
 <aside class="main-sidebar  sidebar-light-info elevation-1 text-xs">
     <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ asset('dist/img/cloud_128.png') }}" alt="" class="brand-image elevation-0" style="opacity: .8">
-
         <span class="brand-text font-weight-light text-xs text-info"><b>Cloud</b> System.</span>
     </a>
     <div class="sidebar">

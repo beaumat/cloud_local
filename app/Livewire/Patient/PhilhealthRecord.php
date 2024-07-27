@@ -28,6 +28,10 @@ class PhilhealthRecord extends Component
     {
         $this->philHealthServices->PreSaveTemp($this->CONTACT_ID, $this->LOCATION_ID);
     }
+    public function delete($id)
+    {
+        $this->philHealthServices->Delete($id);
+    }
     public function render()
     {
         $dataList = $this->philHealthServices->PatientRecord($this->search, $this->CONTACT_ID, 15);
