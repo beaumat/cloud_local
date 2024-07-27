@@ -167,7 +167,6 @@ class PaymentList extends Component
         $data = [
             'PATIENT_PAYMENT_ID' => $PATIENT_PAYMENT_ID
         ];
-
         $this->dispatch('open-payment-sc', result: $data);
     }
     #[On('reload_philhealth_payment')]

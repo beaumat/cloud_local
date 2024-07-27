@@ -319,20 +319,62 @@ class HemoForm extends Component
         if ($this->ID > 0) {
             //Make it restricted
 
-            if ($this->POST_WEIGHT <> "" && $this->PRE_WEIGHT <> "" && $this->POST_HEART_RATE <> "" && $this->PRE_HEART_RATE <> "") {
+
+            if (empty($this->PRE_WEIGHT)  && empty($this->PRE_BLOOD_PRESSURE) && empty($this->PRE_BLOOD_PRESSURE2) && empty($this->PRE_HEART_RATE) && empty($this->PRE_O2_SATURATION) && empty($this->TIME_START) && empty($this->POST_WEIGHT) && empty($this->POST_BLOOD_PRESSURE) && empty($this->POST_BLOOD_PRESSURE2) && empty($this->POST_HEART_RATE) && empty($this->POST_O2_SATURATION)  && empty($this->TIME_END)) {
+            } else {
 
                 $this->validate(
                     [
+                        'PRE_WEIGHT'            => 'required',
+                        'PRE_BLOOD_PRESSURE'    => 'required',
+                        'PRE_BLOOD_PRESSURE2'   => 'required',
+                        'PRE_HEART_RATE'        => 'required',
+                        'PRE_O2_SATURATION'     => 'required',
                         'TIME_START'            => 'required',
-                        'TIME_END'              => 'required',
                     ],
                     [],
                     [
 
+                        'PRE_WEIGHT'            => 'Pre weight',
+                        'PRE_BLOOD_PRESSURE'    => 'Pre blood pressure [1]',
+                        'PRE_BLOOD_PRESSURE2'   => 'Pre blood pressure [2]',
+                        'PRE_HEART_RATE'        => 'Pre heart rate',
+                        'PRE_O2_SATURATION'     => 'Pre 02 saturation',
                         'TIME_START'            => 'Time Start',
-                        'TIME_END'              => 'Time End'
                     ]
                 );
+
+                // }
+
+                if (empty($this->TIME_START) == false) {
+
+                    if (empty($this->TIME_END) == false) {
+                        if (empty($this->POST_WEIGHT) || empty($this->POST_BLOOD_PRESSURE) || empty($this->POST_BLOOD_PRESSURE2) || empty($this->POST_HEART_RATE) || empty($this->POST_O2_SATURATION)) {
+
+                            $this->validate(
+                                [
+                                    'POST_WEIGHT'            => 'required',
+                                    'POST_BLOOD_PRESSURE'    => 'required',
+                                    'POST_BLOOD_PRESSURE2'   => 'required',
+                                    'POST_HEART_RATE'        => 'required',
+                                    'POST_O2_SATURATION'     => 'required',
+                                    'TIME_END'               => 'required',
+                                ],
+                                [],
+                                [
+
+                                    'POST_WEIGHT'            => 'Post weight',
+                                    'POST_BLOOD_PRESSURE'    => 'Post blood pressure [1]',
+                                    'POST_BLOOD_PRESSURE2'   => 'Post blood pressure [2]',
+                                    'POST_HEART_RATE'        => 'Post heart rate',
+                                    'POST_O2_SATURATION'     => 'Post 02 saturation',
+                                    'TIME_END'               => 'Time End',
+
+                                ]
+                            );
+                        }
+                    }
+                }
             }
         }
 
