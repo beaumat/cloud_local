@@ -1,6 +1,5 @@
 <div>
-
-    <button wire:click="openModal" class="btn btn-warning btn-sm " title="Multiple Select Print Form">
+    <button wire:click="openModal" class="btn btn-warning btn-sm text-xs" title="Multiple Select Print Form">
         <i class="fa fa-print" aria-hidden="true"></i>
     </button>
 

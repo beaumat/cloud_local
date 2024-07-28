@@ -1,5 +1,5 @@
 <div>
-    <button wire:click="openModal()" class="btn btn-dark btn-sm text-xs">
+    <button title="Upload Image Docs" wire:click="openModal()" class="btn btn-dark btn-sm text-xs">
         <i class="fa fa-upload" aria-hidden="true"></i>
     </button>
     @if ($showModal)

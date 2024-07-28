@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Hemodialysis;
 
+use App\Exports\TreatmentListExport;
 use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
@@ -10,6 +11,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Hemodialysis Treatment')]
 class HemoList extends Component
@@ -62,6 +64,16 @@ class HemoList extends Component
     public function refreshList()
     {
         $this->dispatch('refresh-list');
+    }
+    public function exportData()
+    {
+        return Excel::download(new TreatmentListExport(
+            $this->hemoServices,
+            $this->locationid,
+            $this->search,
+            $this->DATE_FROM,
+            $this->DATE_TO
+        ), 'hemo-treatment-.xlsx');
     }
     #[On('refresh-list')]
     public function render()

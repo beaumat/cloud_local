@@ -1,5 +1,5 @@
 <div>
-    <button wire:click="openModal" class="btn btn-info btn-sm " title="Schedule Create Form">
+    <button wire:click="openModal" class="btn btn-info btn-sm text-xs " title="Schedule Create Form">
                <i class="fa fa-calendar" aria-hidden="true"></i>
     </button>
     @if ($showModal)

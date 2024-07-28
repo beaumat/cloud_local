@@ -10,19 +10,27 @@
 
                         @can('patient.treatment.create')
                             @can('patient.treatment.print')
-                                <div class="col-4 text-right">
+                                <div class="col-3 text-right">
                                     @livewire('Hemodialysis.ScheduleModal', ['LOCATION_ID' => $locationid])
                                 </div>
                             @endcan
                         @endcan
 
                         @can('patient.treatment.print')
-                            <div class="col-4">
+                            <div class="col-3">
                                 @livewire('Hemodialysis.PrintListModal', ['LOCATION_ID' => $locationid])
                             </div>
                         @endcan
-                        <div class="col-4">
+                        <div class="col-3">
                             @livewire('Hemodialysis.HemoUploadFileModal')
+                        </div>
+                        <div class="col-3">
+                            <div>
+                                <button title="Export" wire:click="exportData()" class="btn btn-success btn-sm text-xs">
+                                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 </div>

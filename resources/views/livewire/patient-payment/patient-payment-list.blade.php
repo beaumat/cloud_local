@@ -59,14 +59,14 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">No.</th>
+                                        <th class="">No.</th>
                                         <th>Date</th>
                                         <th class="col-2">Patients</th>
                                         <th>Deposit</th>
                                         <th>Applied</th>
                                         <th>Balance</th>
                                         <th>Method</th>
-                                        <th class="col-1">Ref No.</th>
+                                        <th class="">Ref No.</th>
                                         <th class="col-1">Ref Date.</th>
                                         <th>Confirm</th>
                                         <th class="col-1">Location</th>
@@ -89,7 +89,12 @@
                                                     class="text-primary"> {{ $list->CODE }} </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                            <td> {{ $list->CONTACT_NAME }}</td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('maintenancecontactpatients_edit', ['id' => $list->PATIENT_ID]) }}">
+                                                    {{ $list->CONTACT_NAME }}</a>
+
+                                            </td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
                                             <td class="text-right">

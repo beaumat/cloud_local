@@ -64,7 +64,6 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         // Loop through your data and format it for export
         foreach ($data as $list) {
 
-
             if ($sc_code == $list->SC_CODE) {
                 $is_sc = false;
             } else {

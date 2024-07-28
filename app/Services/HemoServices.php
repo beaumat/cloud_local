@@ -462,7 +462,7 @@ class HemoServices
 
     public function Search($search, int $LOCATION_ID, int $perPage, $DateFrom, $DateTo)
     {
-        return Hemodialysis::query()
+        $result = Hemodialysis::query()
             ->select([
                 'hemodialysis.ID',
                 'hemodialysis.CODE',
@@ -506,6 +506,9 @@ class HemoServices
             ->whereBetween('hemodialysis.DATE', [$DateFrom, $DateTo])
             ->orderBy('hemodialysis.DATE', 'asc')
             ->paginate($perPage);
+
+
+        return $result;
     }
 
     public function PatientRecord($search, int $CONTACT_ID, int $perPage)

@@ -141,7 +141,7 @@ class PatientPaymentServices
     }
     public function Search($search, int $locationId, int $perPage)
     {
-        return PatientPayments::query()
+        $result = PatientPayments::query()
             ->select([
                 'patient_payment.ID',
                 'patient_payment.CODE',
@@ -156,7 +156,8 @@ class PatientPaymentServices
                 'patient_payment.FILE_PATH',
                 'patient_payment.IS_CONFIRM',
                 'patient_payment.RECEIPT_REF_NO',
-                'patient_payment.RECEIPT_DATE'
+                'patient_payment.RECEIPT_DATE',
+                'patient_payment.PATIENT_ID'
             ])
             ->join('contact as c', 'c.ID', '=', 'patient_payment.PATIENT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -183,6 +184,8 @@ class PatientPaymentServices
             })
             ->orderBy('patient_payment.ID', 'desc')
             ->paginate($perPage);
+
+        return $result;
     }
     public function GetSUM($search, int $locationId)
     {

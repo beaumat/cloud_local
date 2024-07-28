@@ -99,7 +99,7 @@
                  <div class="form-group mt-2">
                      <button type="button" class="btn btn-xs btn-warning" wire:click='AddTemp'
                          wire:confirm="Are you sure you want to add temporary files?">
-                         <i class="fas fa-plus"></i> Add Temporary
+                         <i class="fas fa-plus"></i> Add
                      </button>
                  </div>
              </div>
