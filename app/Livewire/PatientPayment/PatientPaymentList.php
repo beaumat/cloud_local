@@ -49,7 +49,6 @@ class PatientPaymentList extends Component
         try {
             $data = $this->patientPaymentServices->get($id);
             if ($data) {
-
                 $this->uploadServices->RemoveIfExists($data->FILE_PATH);
                 $this->patientPaymentServices->Delete($data->ID);
                 session()->flash('message', 'Successfully deleted.');
@@ -70,13 +69,18 @@ class PatientPaymentList extends Component
     {
         $this->patientPaymentServices->ConfirmProccess($id);
     }
+    public function reloadList()
+    {
+        $this->dispatch('reload-list');
+    }
+    #[On('reload-list')]
     public function render()
     {
         $dataList = $this->patientPaymentServices->Search($this->search, $this->locationid, $this->perPage);
-        $result = $this->patientPaymentServices->GetSUM($this->search, $this->locationid);
-        $this->TOTAL_DEPOSIT = (float) $result['TOTAL_DEPOSIT'];
-        $this->TOTAL_APPLIED = (float) $result['TOTAL_APPLIED'];
-        $this->TOTAL_BALANCE = $this->TOTAL_DEPOSIT  - $this->TOTAL_APPLIED;
+        // $result = $this->patientPaymentServices->GetSUM($this->search, $this->locationid);
+        // $this->TOTAL_DEPOSIT = (float) $result['TOTAL_DEPOSIT'];
+        // $this->TOTAL_APPLIED = (float) $result['TOTAL_APPLIED'];
+        // $this->TOTAL_BALANCE = $this->TOTAL_DEPOSIT  - $this->TOTAL_APPLIED;
 
         return view('livewire.patient-payment.patient-payment-list', ['dataList' => $dataList]);
     }

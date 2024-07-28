@@ -203,10 +203,10 @@ class StatementOfAccount extends Component
             }
         }
         $this->CHARGES_ROOM_N_BOARD = 0;
-        $this->CHARGES_DRUG_N_MEDICINE = $this->DRUG_N_MEDINE_AMOUNT;
+        $this->CHARGES_DRUG_N_MEDICINE = 0;
         $this->CHARGES_LAB_N_DIAGNOSTICS = 0;
-        $this->CHARGES_OPERATING_ROOM_FEE = $this->OPERATING_ROOM_FEE_AMOUNT;
-        $this->CHARGES_SUPPLIES = $this->SUPPLIES;
+        $this->CHARGES_OPERATING_ROOM_FEE = 0;
+        $this->CHARGES_SUPPLIES = 0;
         $this->CHARGES_OTHERS = 0;
         $this->CHARGES_SUB_TOTAL = 0;
         $this->OTHER_SPECIFY = '';

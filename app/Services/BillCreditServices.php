@@ -34,19 +34,8 @@ class BillCreditServices
         return BillCredit::where('ID', $ID)->first();
     }
 
-    public function Store(
-        string $CODE,
-        string $DATE,
-        int $VENDOR_ID,
-        int $LOCATION_ID,
-        string $NOTES,
-        int $ACCOUNTS_PAYABLE_ID,
-        int $INPUT_TAX_ID,
-        float $INPUT_TAX_RATE,
-        float $INPUT_TAX_AMOUNT,
-        int $INPUT_TAX_VAT_METHOD,
-        int $INPUT_TAX_ACCOUNT_ID
-    ): int {
+    public function Store(string $CODE, string $DATE, int $VENDOR_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID): int
+    {
         $ID = (int) $this->object->ObjectNextID('BILL_CREDIT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL_CREDIT');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
@@ -166,22 +155,8 @@ class BillCreditServices
         return (int) BillCreditExpenses::where('BILL_CREDIT_ID', $BILL_CREDIT_ID)->max('LINE_NO');
     }
 
-    public function ItemStore(
-        int $BILL_CREDIT_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        float $RATE,
-        int $RATE_TYPE,
-        float $AMOUNT,
-        int $BATCH_ID,
-        int $ACCOUNT_ID,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT,
-        int $CLASS_ID
-    ) {
+    public function ItemStore(int $BILL_CREDIT_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, int $BATCH_ID, int $ACCOUNT_ID, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, int $CLASS_ID)
+    {
 
         $LINE_NO = $this->getLine($BILL_CREDIT_ID, true) + 1;
         $ID = $this->object->ObjectNextID('BILL_CREDIT_ITEMS');
@@ -206,19 +181,8 @@ class BillCreditServices
             'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
         ]);
     }
-    public function ItemUpdate(
-        int $ID,
-        int $BILL_CREDIT_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        float $RATE,
-        float $AMOUNT,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT
-    ) {
+    public function ItemUpdate(int $ID, int $BILL_CREDIT_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT)
+    {
 
         BillCreditItems::where('ID', $ID)
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
@@ -237,9 +201,7 @@ class BillCreditServices
 
     public function ItemDelete(int $ID, int $BILL_CREDIT_ID)
     {
-        BillCreditItems::where('ID', $ID)
-            ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
-            ->delete();
+        BillCreditItems::where('ID', $ID)->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)->delete();
     }
 
     public function ItemView(int $BILL_CREDIT_ID)
@@ -267,16 +229,7 @@ class BillCreditServices
             ->get();
     }
 
-    public function ExpenseStore(
-        int $BILL_CREDIT_ID,
-        int $ACCOUNT_ID,
-        float $AMOUNT,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT,
-        string $PARTICULARS,
-        int $CLASS_ID
-    ) {
+    public function ExpenseStore( int $BILL_CREDIT_ID, int $ACCOUNT_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID ) {
         $LINE_NO = $this->getLine($BILL_CREDIT_ID, false) + 1;
         $ID = $this->object->ObjectNextID('BILL_CREDIT_EXPENSES');
 
@@ -295,16 +248,8 @@ class BillCreditServices
         ]);
     }
 
-    public function ExpenseUpdate(
-        int $ID,
-        int $BILL_CREDIT_ID,
-        float $AMOUNT,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT,
-        string $PARTICULARS,
-        int $CLASS_ID
-    ) {
+    public function ExpenseUpdate(int $ID, int $BILL_CREDIT_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID)
+    {
         BillCreditExpenses::where('ID', $ID)
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->update([
@@ -317,10 +262,8 @@ class BillCreditServices
             ]);
     }
 
-    public function ExpenseDelete(
-        int $ID,
-        int $BILL_CREDIT_ID,
-    ) {
+    public function ExpenseDelete(int $ID, int $BILL_CREDIT_ID,)
+    {
         BillCreditExpenses::where('ID', $ID)
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->delete();
@@ -615,7 +558,6 @@ class BillCreditServices
 
         return $result;
     }
-
     public function getBillCreditExpenseJournal(int $BILL_CREDIT_ID)
     {
         $result = BillCreditExpenses::query()

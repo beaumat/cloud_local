@@ -16,7 +16,7 @@ class AssistanceRecord extends Component
         $this->tab = $tab;
     }
     public function render()
-    {
+    {   
         return view('livewire.patient.assistance-record');
     }
 }

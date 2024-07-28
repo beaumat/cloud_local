@@ -11,14 +11,15 @@ use App\Models\PhilhealthDrugsMedicines;
 
 class PhilHealthServices
 {
+    public float $OP_LAB_N_DIAGNOSTICS_AMOUNT = 250;
     public string $DEFAULT_DIAGNOSIS = "CHRONIC KIDNEY DISEASE STAGE 5 : ";
     private float $DISCOUNT_PERCENT = 20;
     public float $P1_PHIC_AMOUNT = 2250;
-    public float $DRUG_N_MEDINE_AMOUNT = 1100.00;
-    public float $OPERATING_ROOM_FEE_AMOUNT = 370;
-    public float $ROOM_FEE = 700;
-    public float $SUPPLIES = 780;
-    public float $PROF_FEE_AMOUNT = 450;
+    public float $DRUG_N_MEDINE_AMOUNT = 1270.00;
+    public float $OPERATING_ROOM_FEE_AMOUNT = 1960.50;
+    public float $ROOM_FEE = 1960;
+    public float $SUPPLIES = 1082;
+    public float $PROF_FEE_AMOUNT = 437.50;
     public float $PROF_FEE_FIRST_CASE = 350;
 
     private $object;
@@ -92,16 +93,16 @@ class PhilHealthServices
         if ($data) {
 
             $NO_OF_TREATMENT = $this->getNumberOfTreatment($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
-
+            $LAB_N_DIAGNOS  = $this->OP_LAB_N_DIAGNOSTICS_AMOUNT  *  $NO_OF_TREATMENT;
             $DRUG_MED = (float) $this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT;
-            $OPERATE_FEE = (float) ($this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT) + ($this->ROOM_FEE * $NO_OF_TREATMENT);
+            $OPERATE_FEE = (float) $this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT; //
             $CHARGES_SUPPLIES = (float) $this->SUPPLIES * $NO_OF_TREATMENT;
-            $C_SUB_TOTAL = (float) $DRUG_MED + $OPERATE_FEE + $CHARGES_SUPPLIES;
+            $C_SUB_TOTAL = (float) $DRUG_MED + $OPERATE_FEE + $CHARGES_SUPPLIES + $LAB_N_DIAGNOS;
 
             $SP_SUB_TOTAL = (float)  $C_SUB_TOTAL *  ($this->DISCOUNT_PERCENT / 100);
             $AD_SUB_TOTAL = $C_SUB_TOTAL  -  $SP_SUB_TOTAL;
-            $P1_SUB_TOTAL = (float) $this->P1_PHIC_AMOUNT * $NO_OF_TREATMENT;
-            $OP_SUB_TOTAL = (float) $AD_SUB_TOTAL - $P1_SUB_TOTAL;
+            $P1_SUB_TOTAL = $AD_SUB_TOTAL; // (float) $this->P1_PHIC_AMOUNT * $NO_OF_TREATMENT;
+            $OP_SUB_TOTAL = 0;  //(float) $AD_SUB_TOTAL - $P1_SUB_TOTAL;
 
             $profArray = $this->AutoMakeProfFeeDetails($data->ID, $data->CONTACT_ID, $NO_OF_TREATMENT);
             $PROFESSIONAL_FEE_SUB_TOTAL  = (float) $profArray['TOTAL_FEE'];
@@ -112,11 +113,12 @@ class PhilHealthServices
             $SP_TOTAL = $CHARGE_TOTAL * ($this->DISCOUNT_PERCENT / 100);
             $AD_TOTAL = $CHARGE_TOTAL -  $SP_TOTAL;
             $P1_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
-            $OP_TOTAL = $AD_TOTAL - $P1_TOTAL;
+            $OP_TOTAL = 0; // $AD_TOTAL - $P1_TOTAL;
 
             PhilHealth::where('ID', $data->ID)
                 ->update([
                     'CHARGES_DRUG_N_MEDICINE'           => $DRUG_MED,
+                    'CHARGES_LAB_N_DIAGNOSTICS'         => $LAB_N_DIAGNOS,
                     'CHARGES_OPERATING_ROOM_FEE'        => $OPERATE_FEE,
                     'CHARGES_SUPPLIES'                  => $CHARGES_SUPPLIES,
                     'CHARGES_SUB_TOTAL'                 => $C_SUB_TOTAL,
@@ -374,7 +376,7 @@ class PhilHealthServices
     }
     public function Delete(int $ID)
     {
-  
+
         PhilhealthDrugsMedicines::where('PHILHEALTH_ID', $ID)->delete();
         PhilHealthProfFee::where('PHIC_ID', $ID)->delete();
         PhilHealth::where('ID', $ID)->delete();

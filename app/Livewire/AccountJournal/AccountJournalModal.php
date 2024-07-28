@@ -2,27 +2,30 @@
 
 namespace App\Livewire\AccountJournal;
 
+use App\Services\AccountJournalServices;
+
 use Livewire\Attributes\On;
-use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class AccountJournalModal extends Component
 {
-    #[Reactive]
-    public int $JOURNAL_NO;
     public bool $showModal = false;
-
-
-    public function boot()
+    public $dataList = [];
+    public int $JOURNAL_NO;
+    private $accountJournalServices;
+    public function boot(AccountJournalServices $accountJournalServices)
     {
-        
+        $this->accountJournalServices = $accountJournalServices;
     }
-
-
-   
-    public function openModal()
+    #[On('open-journal')]
+    public function openModal($result)
     {
+
+        $this->JOURNAL_NO = $result['JOURNAL_NO'];
         $this->showModal = true;
+
+        $this->dataList =  $this->accountJournalServices->getJournalList($this->JOURNAL_NO);
+
     }
     public function closeModal()
     {
@@ -32,5 +35,4 @@ class AccountJournalModal extends Component
     {
         return view('livewire.account-journal.account-journal-modal');
     }
-
 }

@@ -51,26 +51,8 @@ class PatientPaymentServices
 
         return $data;
     }
-    public function Store(
-        string $CODE,
-        string $DATE,
-        int $PATIENT_ID,
-        int $LOCATION_ID,
-        float $AMOUNT,
-        float $AMOUNT_APPLIED,
-        int $PAYMENT_METHOD_ID,
-        string $CARD_NO,
-        $CARD_EXPIRY_DATE,
-        string $RECEIPT_REF_NO,
-        $RECEIPT_DATE,
-        string $NOTES,
-        int $UNDEPOSITED_FUNDS_ACCOUNT_ID,
-        int $OVERPAYMENT_ACCOUNT_ID,
-        bool $DEPOSITED,
-        int $ACCOUNTS_RECEIVABLE_ID,
-        int $PHILHEALTH_ID = 0
-    ): int {
-
+    public function Store(string $CODE, string $DATE, int $PATIENT_ID, int $LOCATION_ID, float $AMOUNT, float $AMOUNT_APPLIED, int $PAYMENT_METHOD_ID, string $CARD_NO, $CARD_EXPIRY_DATE, string $RECEIPT_REF_NO, $RECEIPT_DATE, string $NOTES, int $UNDEPOSITED_FUNDS_ACCOUNT_ID, int $OVERPAYMENT_ACCOUNT_ID, bool $DEPOSITED, int $ACCOUNTS_RECEIVABLE_ID, int $PHILHEALTH_ID = 0): int
+    {
         $ID = (int) $this->object->ObjectNextID('PATIENT_PAYMENT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PATIENT_PAYMENT');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
@@ -99,24 +81,8 @@ class PatientPaymentServices
         ]);
         return $ID;
     }
-    public function Update(
-        int $ID,
-        string $CODE,
-        string $DATE,
-        int $PATIENT_ID,
-        int $LOCATION_ID,
-        float $AMOUNT,
-        int $PAYMENT_METHOD_ID,
-        string $CARD_NO,
-        $CARD_EXPIRY_DATE,
-        string $RECEIPT_REF_NO,
-        $RECEIPT_DATE,
-        string $NOTES,
-        int $UNDEPOSITED_FUNDS_ACCOUNT_ID,
-        int $OVERPAYMENT_ACCOUNT_ID,
-        bool $DEPOSITED,
-        int $ACCOUNTS_RECEIVABLE_ID
-    ) {
+    public function Update(int $ID, string $CODE, string $DATE, int $PATIENT_ID, int $LOCATION_ID, float $AMOUNT, int $PAYMENT_METHOD_ID, string $CARD_NO, $CARD_EXPIRY_DATE, string $RECEIPT_REF_NO, $RECEIPT_DATE, string $NOTES, int $UNDEPOSITED_FUNDS_ACCOUNT_ID, int $OVERPAYMENT_ACCOUNT_ID, bool $DEPOSITED, int $ACCOUNTS_RECEIVABLE_ID)
+    {
 
         // $OBJECT_TYPE = 0;
         // $isLocRef = false;
@@ -565,5 +531,82 @@ class PatientPaymentServices
         }
 
         return 0;
+    }
+    public function AssistanceAll(int $PATIENT_ID)
+    {
+        $result = PatientPayments::select([
+            DB::raw('IF(ISNULL(RECEIPT_DATE), patient_payment.DATE, RECEIPT_DATE) AS TRANS_DATE'),
+            DB::raw('IF(ISNULL(RECEIPT_REF_NO), patient_payment.CODE, RECEIPT_REF_NO) AS TRANS_CODE'),
+            'patient_payment.AMOUNT',
+            'patient_payment.AMOUNT_APPLIED',
+            DB::raw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED)  as BALANCE'),
+            'pm.description AS METHOD',
+            'patient_payment.PAYMENT_METHOD_ID'
+        ])
+            ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
+            ->where('PATIENT_ID', $PATIENT_ID)
+            ->whereIn('PAYMENT_METHOD_ID', [91, 92, 93, 94, 96])
+            ->orderBy('RECEIPT_DATE', 'asc')
+            ->get();
+
+        return $result;
+    }
+    public function AssistanceByType(int $PATIENT_ID, int $METHOD_ID = 0)
+    {
+        // First query
+        $query1 = PatientPayments::select([
+            DB::raw('patient_payment.ID AS TRANS_ID'),
+            DB::raw('patient_payment.RECEIPT_DATE AS TRANS_DATE'),
+            DB::raw('patient_payment.RECEIPT_REF_NO AS TRANS_CODE'),
+            DB::raw("patient_payment.CODE as P_CODE"),
+            DB::raw("patient_payment.DATE as P_DATE"),
+            'patient_payment.AMOUNT',
+            'patient_payment.AMOUNT_APPLIED',
+            DB::raw('AMOUNT AS DEPOSIT_AMOUNT'),
+            DB::raw('0 AS CREDIT_AMOUNT'),
+            DB::raw('"" AS ITEM_CODE'),
+            DB::raw('"" AS ITEM_NAME'),
+            'pm.description AS METHOD',
+            'patient_payment.PAYMENT_METHOD_ID'
+        ])
+            ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
+            ->where('PATIENT_ID', $PATIENT_ID)
+            ->when($METHOD_ID > 0, function ($query) use (&$METHOD_ID) {
+                $query->where('patient_payment.PAYMENT_METHOD_ID', '=', $METHOD_ID);
+            });
+
+
+        // Second query
+        $query2 = PatientPaymentCharges::select([
+            DB::raw('sc.ID AS TRANS_ID'),
+            'sc.DATE AS TRANS_DATE',
+            'sc.CODE AS TRANS_CODE',
+            DB::raw("'' as P_CODE"),
+            DB::raw("'' as P_DATE"),
+            'sci.AMOUNT',
+            'patient_payment_charges.AMOUNT_APPLIED',
+            DB::raw('0 AS DEPOSIT_AMOUNT'),
+            DB::raw('(patient_payment_charges.AMOUNT_APPLIED * -1) AS CREDIT_AMOUNT'),
+            'i.CODE AS ITEM_CODE',
+            'i.DESCRIPTION AS ITEM_NAME',
+            'pm.description AS METHOD',
+            'pp.PAYMENT_METHOD_ID'
+        ])
+            ->join('patient_payment as pp', 'pp.ID', '=', 'patient_payment_charges.PATIENT_PAYMENT_ID')
+            ->join('service_charges_items as sci', 'sci.ID', '=', 'patient_payment_charges.SERVICE_CHARGES_ITEM_ID')
+            ->join('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')
+            ->leftJoin('item as i', 'i.ID', '=', 'sci.ITEM_ID')
+            ->join('payment_method as pm', 'pm.id', '=', 'pp.payment_method_id')
+            ->where('pp.PATIENT_ID', $PATIENT_ID)
+            ->when($METHOD_ID > 0, function ($query) use (&$METHOD_ID) {
+                $query->where('pp.PAYMENT_METHOD_ID', '=', $METHOD_ID);
+            });
+
+
+        // Combine both queries
+        $result = $query1->unionAll($query2)->orderBy('TRANS_DATE')->get();
+
+
+        return $result;
     }
 }

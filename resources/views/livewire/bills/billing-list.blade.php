@@ -38,12 +38,12 @@
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
-                                                        <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                        <option value="{{ $item->ID }}">
+                                                            {{ $item->NAME }}
                                                         </option>
                                                     @endforeach
                                                 </select>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -56,10 +56,8 @@
                                         <th class="col-4">Vendor</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Amount</th>
-
                                         <th class="col-1">Tax</th>
                                         <th class="col-1">Status</th>
-
                                         <th class="text-center bg-success col-1">
                                             <a href="{{ route('vendorsbills_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
@@ -80,7 +78,6 @@
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td> {{ $list->TAX_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
-
                                             <td class="text-center">
                                                 <a href="{{ route('vendorsbills_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">

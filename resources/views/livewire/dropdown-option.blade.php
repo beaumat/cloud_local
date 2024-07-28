@@ -40,9 +40,7 @@
         <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm text-xs"
             @if ($isDisabled) disabled @endif>
             @if ($zero)
-                <option value="0">
-                     &nbsp;
-                </option>
+                <option value="0"> &nbsp; </option>
             @endif
             @foreach ($options as $option)
                 <option value="{{ $option->ID }}">

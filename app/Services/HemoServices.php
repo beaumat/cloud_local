@@ -149,6 +149,45 @@ class HemoServices
         ];
     }
 
+
+    public function getDateTimeByRange(int $CONTACT_ID, int $LOCATION_ID, string $DT_FROM, string $DT_TO)
+    {
+        $dates = Hemodialysis::query()
+            ->select(DB::raw('MIN(DATE) AS first_date, MAX(DATE) AS last_date'))
+            ->where('CUSTOMER_ID', $CONTACT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->whereBetween('DATE', [$DT_FROM, $DT_TO])
+            ->where('STATUS_ID', 2)
+            ->first();
+
+
+        if ($dates) {
+            $firstDate = $dates->first_date ?? null;
+            $lastDate = $dates->last_date ?? null;
+
+            if ($firstDate != null && $lastDate != null) {
+                $firstTime = $this->getTime(true, $firstDate, $CONTACT_ID, $LOCATION_ID);
+                $lastTime = $this->getTime(false, $lastDate, $CONTACT_ID, $LOCATION_ID);
+
+                return [
+                    'FIRST_DATE' => $firstDate,
+                    'FIRST_TIME' => $firstTime,
+                    'LAST_DATE' => $lastDate,
+                    'LAST_TIME' => $lastTime
+                ];
+            }
+        }
+
+
+        return [
+            'FIRST_DATE' => '',
+            'FIRST_TIME' => '',
+            'LAST_DATE' => '',
+            'LAST_TIME' => ''
+        ];
+    }
+
+
     public function GetFirst(int $ID)
     {
         return Hemodialysis::query()

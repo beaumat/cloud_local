@@ -87,10 +87,8 @@ class PatientForm extends Component
     public string $ADDRESS_PROVINCE;
     public string $ADDRESS_COUNTRY;
     public string $ADDRESS_ZIP_CODE;
-
     public string $PIN = '';
     public string $PEN = '';
-
     public bool $IS_PATIENT = true;
     public string $MEMBER_TEL_NO;
     public string $MEMBER_MOBILE;

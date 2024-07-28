@@ -31,29 +31,15 @@ class BillingServices
         $this->dateServices = $dateServices;
         $this->accountJournalServices = $accountJournalServices;
     }
-    public function get(int $ID): object
+    public function get(int $ID)
     {
-        return Bill::where('ID', $ID)->first();
+        try {
+            return Bill::where('ID', $ID)->first();
+        } catch (\Throwable $th) {
+            return [];
+        }
     }
-    public function Store(
-        string $CODE,
-        string $DATE,
-        int $VENDOR_ID,
-        int $LOCATION_ID,
-        int $PAYMENT_TERMS_ID,
-        string $DUE_DATE,
-        string $DISCOUNT_DATE,
-        float $DISCOUNT_PCT,
-        string $NOTES,
-        int $ACCOUNTS_PAYABLE_ID,
-        int $INPUT_TAX_ID,
-        float $INPUT_TAX_RATE,
-        float $INPUT_TAX_AMOUNT,
-        int $INPUT_TAX_VAT_METHOD,
-        int $INPUT_TAX_ACCOUNT_ID,
-        int $STATUS
-    ): int {
-
+    public function Store( string $CODE, string $DATE, int $VENDOR_ID, int $LOCATION_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $DISCOUNT_DATE, float $DISCOUNT_PCT, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID, int $STATUS ): int {
         $ID = (int) $this->object->ObjectNextID('BILL');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL');
         $isLocRef = (bool) boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
@@ -84,20 +70,7 @@ class BillingServices
 
         return $ID;
     }
-    public function Update(
-        int $ID,
-        string $CODE,
-        int $VENDOR_ID,
-        int $PAYMENT_TERMS_ID,
-        string $DUE_DATE,
-        string $NOTES,
-        int $ACCOUNTS_PAYABLE_ID,
-        int $INPUT_TAX_ID,
-        float $INPUT_TAX_RATE,
-        float $INPUT_TAX_AMOUNT,
-        int $INPUT_TAX_VAT_METHOD,
-        int $INPUT_TAX_ACCOUNT_ID
-    ) {
+    public function Update( int $ID, string $CODE, int $VENDOR_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID ) {
 
 
         Bill::where('ID', $ID)->update([
@@ -117,9 +90,14 @@ class BillingServices
 
     public function Delete(int $ID)
     {
-        BillItems::where('BILL_ID', $ID)->delete();
-        BillExpenses::where('BILL_ID', $ID)->delete();
-        Bill::where('ID', $ID)->delete();
+        $data = $this->get($ID);
+        if ($data->STATUS ==  0) {
+            BillItems::where('BILL_ID', $ID)->delete();
+            BillExpenses::where('BILL_ID', $ID)->delete();
+            Bill::where('ID', $ID)->delete();
+            return true;
+        }
+        return false;
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
@@ -208,19 +186,8 @@ class BillingServices
 
         return $ID;
     }
-    public function ItemUpdate(
-        int $ID,
-        int $BILL_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        float $RATE,
-        float $AMOUNT,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT
-    ) {
+    public function ItemUpdate(int $ID, int $BILL_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT)
+    {
 
         BillItems::where('ID', $ID)
             ->where('BILL_ID', $BILL_ID)
@@ -288,16 +255,8 @@ class BillingServices
 
         return $ID;
     }
-    public function ExpenseUpdate(
-        int $ID,
-        int $BILL_ID,
-        float $AMOUNT,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT,
-        string $PARTICULARS,
-        int $CLASS_ID
-    ) {
+    public function ExpenseUpdate(int $ID, int $BILL_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID)
+    {
         BillExpenses::where('ID', $ID)
             ->where('BILL_ID', $BILL_ID)
             ->update([
@@ -309,10 +268,8 @@ class BillingServices
                 'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
             ]);
     }
-    public function ExpenseDelete(
-        int $ID,
-        int $BILL_ID,
-    ) {
+    public function ExpenseDelete(int $ID, int $BILL_ID,)
+    {
         BillExpenses::where('ID', $ID)
             ->where('BILL_ID', $BILL_ID)
             ->delete();
@@ -397,10 +354,10 @@ class BillingServices
 
         return [];
     }
-    public function updateJournal(int $ID, int $ACCOUNT_ID, int $JOURNAL_NO, int $LOCATION_ID, string $DATE, int $SUBSIDIARY_ID, int $OBJECT_TYPE, float $AMOUNT, int $TYPE, string $EXTENSION)
-    {
-        $this->accountJournalServices->JournalModify($ACCOUNT_ID, $LOCATION_ID, $JOURNAL_NO, $SUBSIDIARY_ID, $ID, $OBJECT_TYPE, $DATE, $TYPE, $AMOUNT, 0, $EXTENSION);
-    }
+    // public function updateJournal(int $ID, int $ACCOUNT_ID, int $JOURNAL_NO, int $LOCATION_ID, string $DATE, int $SUBSIDIARY_ID, int $OBJECT_TYPE, float $AMOUNT, int $TYPE, string $EXTENSION)
+    // {
+    //     $this->accountJournalServices->JournalModify($ACCOUNT_ID, $LOCATION_ID, $JOURNAL_NO, $SUBSIDIARY_ID, $ID, $OBJECT_TYPE, $DATE, $TYPE, $AMOUNT, 0, $EXTENSION);
+    // }
     public function getUpdateTaxItem(int $BILL_ID, int $TAX_ID)
     {
         $taxRate = (float) Tax::where('ID', $TAX_ID)->first()->RATE;
@@ -431,7 +388,6 @@ class BillingServices
                         'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
                     ]);
 
-                $this->updateJournal($list->ID, 0, $JOURNAL_NO, $BILL_DATA->LOCATION_ID, $BILL_DATA->DATE, $list->ITEM_ID, $ITEM_OBJECT_TYPE, $list->TAXABLE ? $tax_result['TAXABLE_AMOUNT'] : $list->AMOUNT, $list->AMOUNT >= 0 ? 0 : 1, "EXPENSES");
             }
         }
 
@@ -454,8 +410,6 @@ class BillingServices
                     'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
                     'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
                 ]);
-
-            $this->updateJournal($list->ID, 0, $JOURNAL_NO, $BILL_DATA->LOCATION_ID, $BILL_DATA->DATE, 0, $EXPENSES_OBJECT_TYPE, $list->TAXABLE ? $tax_result['TAXABLE_AMOUNT'] : $list->AMOUNT, $list->AMOUNT >= 0 ? 0 : 1, "EXPENSES");
         }
     }
     public function GetBillPaymentApplied(int $BILL_ID): float
@@ -560,7 +514,6 @@ class BillingServices
             ->where('bill.BALANCE_DUE', '>', 0)
             ->get();
     }
-
     public function PaymentHistory($BILL_ID)
     {
         $results = DB::table(DB::raw('
@@ -579,5 +532,88 @@ class BillingServices
             ->get();
 
         return $results;
+    }
+
+    public function ItemInventory(int $BILL_ID)
+    {
+        $result = BillItems::query()
+            ->select([
+                'bill_items.ID',
+                'bill_items.ITEM_ID',
+                'bill_items.RATE',
+                'bill_items.QUANTITY',
+                'bill_items.UNIT_BASE_QUANTITY',
+                'bill_items.RATE',
+                'item.COST'
+            ])
+            ->join('item', 'item.ID', '=', 'bill_items.ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('bill_items.BILL_ID', $BILL_ID)
+            ->get();
+
+        return $result;
+    }
+    public function getBillTaxJournal(int $BILL_ID)
+    {
+        $result = Bill::query()
+            ->select([
+                'ID',
+                'INPUT_TAX_ACCOUNT_ID as ACCOUNT_ID',
+                'VENDOR_ID as SUBSIDIARY_ID',
+                'INPUT_TAX_AMOUNT as AMOUNT',
+                DB::raw(' 0 as ENTRY_TYPE')
+
+            ])
+            ->where('ID', $BILL_ID)
+            ->where('INPUT_TAX_AMOUNT', '>', 0)
+            ->get();
+
+        return $result;
+    }
+    public function getBillJournal(int $BILL_ID)
+    {
+        $result = Bill::query()
+            ->select([
+                'ID',
+                'ACCOUNTS_PAYABLE_ID as ACCOUNT_ID',
+                'VENDOR_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                DB::raw(' 1 as ENTRY_TYPE')
+            ])
+            ->where('ID', $BILL_ID)->get();
+
+        return $result;
+    }
+    public function getBillItemJournal(int $BILL_ID)
+    {
+        $result = BillItems::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                'ITEM_ID as SUBSIDIARY_ID',
+                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                DB::raw('IF(AMOUNT >= 0, 0, 1)  as ENTRY_TYPE')
+            ])
+            ->where('BILL_ID', $BILL_ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
+    public function getBillExpenseJournal(int $BILL_ID)
+    {
+        $result = BillExpenses::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                'ACCOUNT_ID as SUBSIDIARY_ID',
+                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                DB::raw('IF(AMOUNT >= 0, 0, 1) as ENTRY_TYPE')
+            ])
+            ->where('BILL_ID', $BILL_ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+        return $result;
     }
 }

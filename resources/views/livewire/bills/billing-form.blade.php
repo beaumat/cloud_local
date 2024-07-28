@@ -121,7 +121,7 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-6 col-6">
-                                        @if ($STATUS == $openStatus || $ID == 0)
+                                        @if ($STATUS == $openStatus)
                                             @if ($Modify)
                                                 <button type="submit" class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
@@ -137,12 +137,23 @@
                                                     @if ($STATUS > $openStatus) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
+                                                <button type="button" wire:click='getPosted()'
+                                                    class="btn btn-sm btn-warning"
+                                                    wire:confirm="Are you sure you want to post?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                </button>
                                             @endif
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
+
                                         @if ($ID > 0)
-                                            <a id="new" title="Create" href="{{ route('vendorsbills_create') }}"
+                                            <button type="button" wire:click='OpenJournal()'
+                                                class="btn btn-sm btn-warning">
+                                                <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                            </button>
+                                            <a id="new" title="Create"
+                                                href="{{ route('vendorsbills_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
                                     </div>
@@ -187,7 +198,7 @@
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
 
-                                            @livewire('Bills.BillingFormItems', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE, 'JOURNAL_NO' => $JOURNAL_NO])
+                                            @livewire('Bills.BillingFormItems', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
 
                                         </div>
                                     </div>
@@ -199,7 +210,7 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('Bills.BillingFormAccounts', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE, 'JOURNAL_NO' => $JOURNAL_NO])
+                                                @livewire('Bills.BillingFormAccounts', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
                                             </div>
                                         </div>
                                     </div>
@@ -218,7 +229,7 @@
                                             {{-- @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID]) --}}
                                         </div>
                                         <div class="col-md-2">
-                                            @livewire('AccountJournal.AccountJournalModal', ['JOURNAL_NO' => $JOURNAL_NO])
+                                            @livewire('AccountJournal.AccountJournalModal')
                                         </div>
                                     </div>
 

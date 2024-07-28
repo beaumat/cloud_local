@@ -10,17 +10,18 @@
                     <div class="modal-header">Quick Create</div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <livewire:date-input name="DATE_FROM" titleName="Date From"
                                     wire:model.live='DATE_FROM' />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <livewire:date-input name="DATE_TO" titleName="Date To" wire:model.live='DATE_TO' />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <livewire:dropdown-option name="LOCATION_ID" titleName="Location" :options="$locationList"
                                     :zero="false" :isDisabled=false wire:model.live='LOCATION_ID' />
                             </div>
+
                         </div>
                         <table class="table table-sm table-bordered table-hover mt-2">
                             <thead class="bg-sky text-xs">
@@ -48,12 +49,27 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class='modal-footer'>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 text-left">
+                                    <button class="btn btn-primary btn-sm" wire:click='getReload()'>
+                                        Reload
+                                    </button>
+                                </div>
 
-
-                    <div class="modal-footer">
-                        <button type="button" wire:click='create()' class="btn btn-success btn-sm">Create</button>
-                        <button type="button" wire:click='closeModal()' class="btn btn-danger btn-sm">Close</button>
+                                <div class="col-6 text-right">
+                                    <button type="button" wire:click='create()' class="btn btn-success btn-sm">
+                                        Create
+                                    </button>
+                                    <button type="button" wire:click='closeModal()' class="btn btn-danger btn-sm">
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>

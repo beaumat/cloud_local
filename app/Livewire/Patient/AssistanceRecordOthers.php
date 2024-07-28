@@ -6,8 +6,9 @@ use App\Services\PatientPaymentServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-class AssistanceRecordCash extends Component
+class AssistanceRecordOthers extends Component
 {
+
     #[Reactive]
     public int $CONTACT_ID;
     public $dataList = [];
@@ -19,13 +20,13 @@ class AssistanceRecordCash extends Component
     }
     public function reload()
     {
-        $this->dataList = $this->patientPaymentServices->AssistanceByType($this->CONTACT_ID, 1);
+        $this->dataList = $this->patientPaymentServices->AssistanceByType($this->CONTACT_ID, 96);
     }
     public function render()
     {
-
+    
         $this->reload();
-
-        return view('livewire.patient.assistance-record-cash');
+        
+        return view('livewire.patient.assistance-record-others');
     }
 }

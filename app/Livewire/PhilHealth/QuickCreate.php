@@ -97,8 +97,9 @@ class QuickCreate extends Component
     private string $SECOND_CASE_RATE = '';
 
     private function generateDateTime($CONTACT_ID): bool
-    {
-        $data = $this->hemoServices->getDateTime($CONTACT_ID, $this->LOCATION_ID);
+    {   
+        // $this->hemoServices->getDateTime();
+        $data = $this->hemoServices->getDateTimeByRange($CONTACT_ID, $this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
         if ($data) {
             $this->DATE_ADMITTED = $data['FIRST_DATE'];
             $this->TIME_ADMITTED = $data['FIRST_TIME'];
@@ -111,7 +112,7 @@ class QuickCreate extends Component
     }
     private function resetMethod()
     {
-        $this->dispatch('reload-list', );
+        $this->dispatch('reload-list',);
         $this->ResetValue();
         $this->showModal = false;
     }
@@ -128,7 +129,6 @@ class QuickCreate extends Component
     }
     public function create()
     {
-
         $gotSelected = false;
         foreach ($this->patientSelected as $patientID => $isSelected) {
             if ($isSelected) {
@@ -158,9 +158,19 @@ class QuickCreate extends Component
             $this->resetMethod();
         }
     }
-    public function render()
+    public function getReload()
+    {
+
+        $this->LoadList();
+    }
+    private function LoadList()
     {
         $this->dataList = $this->hemoServices->QuickFilterByDateRange($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
+    }
+    public function render()
+    {
+        $this->LoadList();
+
         return view('livewire.phil-health.quick-create');
     }
 }

@@ -24,7 +24,7 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-9">
+                                        <div class="col-md-8">
                                             <div class="mt-0">
                                                 <label class="text-sm">Search:</label>
                                                 <input type="text" wire:model.live.debounce.150ms='search'
@@ -42,6 +42,15 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="mt-0">
+                                                <label class="text-sm"><br /></label>
+
+                                                <button class="btn btn-sm btn-primary w-100" wire:click='reloadList()'>
+                                                    <i class="fa fa-refresh" aria-hidden="true"></i> Reload
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -76,11 +85,8 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a 
-                                                    href="{{ route('patientspayment_edit', ['id' => $list->ID]) }}"
-                                                    class="text-primary">
-                                                    {{ $list->CODE }}
-                                                </a>
+                                                <a href="{{ route('patientspayment_edit', ['id' => $list->ID]) }}"
+                                                    class="text-primary"> {{ $list->CODE }} </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
@@ -151,9 +157,7 @@
                             </table>
                         </div>
                         <div class="card-footer">
-
-                            <div class="row">
-
+                            {{-- <div class="row">
                                 <div class="col-md-6">
 
                                 </div>
@@ -179,10 +183,8 @@
                                             {{ number_format($TOTAL_BALANCE, 2) }}
                                         </div>
                                     </div>
-
-
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

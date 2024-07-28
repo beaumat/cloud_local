@@ -1,6 +1,6 @@
  <div class="row">
      <div class="col-md-4">
-         @livewire('Patient.AssistanceRecordSum')
+         @livewire('Patient.AssistanceRecordSum', ['CONTACT_ID' => $CONTACT_ID])
      </div>
      <div class="col-md-8">
          <div class="card card-primary card-outline card-outline-tabs">
@@ -31,6 +31,14 @@
                          </a>
                      </li>
                      <li class="nav-item">
+                         <a class="nav-link @if ($tab == 'others') active @endif"
+                             id="custom-tabs-four-others-tab" wire:click="SelectTab('others')" data-toggle="pill"
+                             href="#custom-tabs-four-others" role="tab" aria-controls="custom-tabs-four-others"
+                             aria-selected="true">
+                             OTHERS
+                         </a>
+                     </li>
+                     <li class="nav-item">
                          <a class="nav-link @if ($tab == 'balance') active @endif"
                              id="custom-tabs-four-balance-tab" wire:click="SelectTab('balance')" data-toggle="pill"
                              href="#custom-tabs-four-balance" role="tab" aria-controls="custom-tabs-four-balance"
@@ -52,23 +60,27 @@
                  <div class="tab-content" id="custom-tabs-four-tabContent">
                      <div class="tab-pane fade @if ($tab == 'dswd') show active @endif"
                          id="custom-tabs-four-dswd" role="tabpanel" aria-labelledby="custom-tabs-four-dswd-tab">
-                         @livewire('Patient.AssistanceRecordDswd')
+                         @livewire('Patient.AssistanceRecordDswd', ['CONTACT_ID' => $CONTACT_ID])
                      </div>
                      <div class="tab-pane fade @if ($tab == 'pcso') show active @endif"
                          id="custom-tabs-four-pcso" role="tabpanel" aria-labelledby="custom-tabs-four-pcso-tab">
-                         @livewire('Patient.AssistanceRecordPcso')
+                         @livewire('Patient.AssistanceRecordPcso', ['CONTACT_ID' => $CONTACT_ID])
                      </div>
                      <div class="tab-pane fade @if ($tab == 'lingap') show active @endif"
                          id="custom-tabs-four-lingap" role="tabpanel" aria-labelledby="custom-tabs-four-lingap-tab">
-                         @livewire('Patient.AssistanceRecordLingap')
+                         @livewire('Patient.AssistanceRecordLingap', ['CONTACT_ID' => $CONTACT_ID])
+                     </div>
+                     <div class="tab-pane fade @if ($tab == 'others') show active @endif"
+                         id="custom-tabs-four-others" role="tabpanel" aria-labelledby="custom-tabs-four-others-tab">
+                         @livewire('Patient.AssistanceRecordOthers', ['CONTACT_ID' => $CONTACT_ID])
                      </div>
                      <div class="tab-pane fade @if ($tab == 'balance') show active @endif"
                          id="custom-tabs-four-balance" role="tabpanel" aria-labelledby="custom-tabs-four-balance-tab">
-                         @livewire('Patient.AssistanceRecordBalance')
+                         @livewire('Patient.AssistanceRecordBalance', ['CONTACT_ID' => $CONTACT_ID])
                      </div>
                      <div class="tab-pane fade @if ($tab == 'cash') show active @endif"
                          id="custom-tabs-four-cash" role="tabpanel" aria-labelledby="custom-tabs-four-cash-tab">
-                         @livewire('Patient.AssistanceRecordCash')
+                         @livewire('Patient.AssistanceRecordCash', ['CONTACT_ID' => $CONTACT_ID])
                      </div>
 
 

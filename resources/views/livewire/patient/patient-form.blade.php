@@ -577,7 +577,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -622,8 +621,8 @@
                                                 aria-labelledby="custom-content-below-charges-info-tab">
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-
                                                     @livewire('Patient.ChargesRecord', ['CONTACT_ID' => $ID])
+
                                                 </div>
                                             </div>
 

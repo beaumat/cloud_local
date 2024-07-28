@@ -17,10 +17,8 @@ use Livewire\Component;
 
 class BillingFormItems extends Component
 {
-    public int $SOURCE_REF_TYPE;
-    public int $OBJECT_TYPE;
-    #[Reactive]
-    public int $JOURNAL_NO;
+
+
     #[Reactive]
     public int $BILL_ID;
     #[Reactive]
@@ -31,7 +29,7 @@ class BillingFormItems extends Component
     public int $LOCATION_ID;
     #[Reactive]
     public string $DATE;
-    public int $openStatus = 2;
+    public int $openStatus = 0;
     public int $ID;
     public int $LINE_NO;
     public int $ITEM_ID = 0;
@@ -72,19 +70,14 @@ class BillingFormItems extends Component
     private $unitOfMeasureServices;
     private $taxServices;
     private $itemServices;
-    private $itemInventoryServices;
-    private $objectServices;
-    private $documentTypeServices;
-    public function boot(BillingServices $billingServices, ComputeServices $computeServices, UnitOfMeasureServices $unitOfMeasureServices, TaxServices $taxServices, ItemServices $itemServices, ItemInventoryServices $itemInventoryServices, ObjectServices $objectServices,DocumentTypeServices $documentTypeServices)
+
+    public function boot(BillingServices $billingServices, ComputeServices $computeServices, UnitOfMeasureServices $unitOfMeasureServices, TaxServices $taxServices, ItemServices $itemServices)
     {
         $this->billingServices = $billingServices;
         $this->computeServices = $computeServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->taxServices = $taxServices;
         $this->itemServices = $itemServices;
-        $this->itemInventoryServices = $itemInventoryServices;
-        $this->objectServices = $objectServices;
-        $this->documentTypeServices = $documentTypeServices;
     }
     public function updatedcodeBase()
     {
@@ -147,8 +140,8 @@ class BillingFormItems extends Component
 
     public function mount()
     {
-        $this->OBJECT_TYPE = (int) $this->objectServices->ObjectTypeID('BILL_ITEMS');
-        $this->SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Bill');
+
+
 
         $this->QUANTITY = 0;
         $this->RATE = 0;
@@ -190,45 +183,11 @@ class BillingFormItems extends Component
 
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID);
 
-            $BILL_ITEMS_ID = (int)  $this->billingServices->ItemStore(
-                $this->BILL_ID,
-                $this->ITEM_ID,
-                $this->QUANTITY,
-                $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
-                (float) $unitRelated['QUANTITY'],
-                $this->RATE,
-                $this->RATE_TYPE,
-                $this->AMOUNT,
-                $this->BATCH_ID,
-                $this->ACCOUNT_ID,
-                $this->PO_ITEM_ID,
-                $this->TAXABLE,
-                $this->TAXABLE_AMOUNT,
-                $this->TAX_AMOUNT,
-                $this->CLASS_ID
-            );
-
-            $QTY =  $this->QUANTITY *  (float) $unitRelated['QUANTITY'];
-            $this->itemInventoryServices->InventoryModify($this->ITEM_ID, $this->LOCATION_ID, $BILL_ITEMS_ID, $this->SOURCE_REF_TYPE, $this->DATE, 0, $QTY, $this->RATE);   
-            $this->AccountJournal($BILL_ITEMS_ID, $this->ACCOUNT_ID, $this->ITEM_ID, $this->TAXABLE ? $this->TAX_AMOUNT : $this->AMOUNT, $this->AMOUNT >= 0 ? 0 : 1, "ASSET");
+            $this->billingServices->ItemStore($this->BILL_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID > 0 ? $this->UNIT_ID : 0, (float) $unitRelated['QUANTITY'], $this->RATE, $this->RATE_TYPE, $this->AMOUNT, $this->BATCH_ID, $this->ACCOUNT_ID, $this->PO_ITEM_ID, $this->TAXABLE, $this->TAXABLE_AMOUNT, $this->TAX_AMOUNT, $this->CLASS_ID);
             DB::commit();
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
             $this->dispatch('update-amount', result: $getResult);
-            $this->ITEM_ID = 0;
-            $this->QUANTITY = 0;
-            $this->UNIT_ID = 0;
-            $this->RATE = 0;
-            $this->RATE_TYPE = 0;
-            $this->AMOUNT = 0;
-            $this->BATCH_ID = 0;
-            $this->ACCOUNT_ID = 0;
-            $this->TAXABLE = false;
-            $this->PO_ITEM_ID = 0;
-            $this->TAXABLE_AMOUNT = 0;
-            $this->TAX_AMOUNT = 0;
-            $this->ITEM_CODE = '';
-            $this->ITEM_DESCRIPTION = '';
-            $this->saveSuccess = $this->saveSuccess ? false : true;
+            $this->resetItem();
             $this->updatedcodeBase();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -236,11 +195,25 @@ class BillingFormItems extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
-    private function AccountJournal(int $ID, int $ACCOUNT_ID, int $ITEM_ID, float $AMOUNT, int $TYPE, string $EXTENSION)
+    private function resetItem()
     {
-        $this->billingServices->updateJournal($ID, $ACCOUNT_ID, $this->JOURNAL_NO, $this->LOCATION_ID, $this->DATE, $ITEM_ID, $this->OBJECT_TYPE, $AMOUNT, $TYPE, $EXTENSION);
+        $this->ITEM_ID = 0;
+        $this->QUANTITY = 0;
+        $this->UNIT_ID = 0;
+        $this->RATE = 0;
+        $this->RATE_TYPE = 0;
+        $this->AMOUNT = 0;
+        $this->BATCH_ID = 0;
+        $this->ACCOUNT_ID = 0;
+        $this->TAXABLE = false;
+        $this->PO_ITEM_ID = 0;
+        $this->TAXABLE_AMOUNT = 0;
+        $this->TAX_AMOUNT = 0;
+        $this->ITEM_CODE = '';
+        $this->ITEM_DESCRIPTION = '';
+        $this->saveSuccess = $this->saveSuccess ? false : true;
     }
+
     public function updatedlineqty()
     {
         $this->getEditAmount();
@@ -295,10 +268,6 @@ class BillingFormItems extends Component
             }
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId);
             $this->billingServices->ItemUpdate($Id, $this->BILL_ID, $this->lineItemId, $this->lineQty, $this->lineUnitId > 0 ? $this->lineUnitId : 0, (float) $unitRelated['QUANTITY'], $this->lineRate, $this->lineAmount, $this->lineTax, $this->lineTaxable, $this->lineTaxAmount);
-            $QTY =  $this->lineQty *  (float) $unitRelated['QUANTITY'];
-
-            $this->itemInventoryServices->InventoryModify($this->lineItemId, $this->LOCATION_ID, $Id, $this->SOURCE_REF_TYPE, $this->DATE, 0, $QTY, $this->lineRate);
-            $this->AccountJournal($Id, 0, $this->lineItemId, $this->lineTax ? $this->lineTaxAmount : $this->lineAmount, $this->lineAmount >= 0 ? 0 : 1, "ASSET");
             DB::commit();
 
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
@@ -329,8 +298,7 @@ class BillingFormItems extends Component
             // delete first
             $Qty = 0;
             $Cost = 0;
-            $this->itemInventoryServices->InventoryModify($ItemId, $this->LOCATION_ID, $Id, $this->SOURCE_REF_TYPE, $this->DATE, 0,  $Qty, $Cost);
-            $this->AccountJournal($Id, 0, $ItemId, 0, 0, "ASSET");
+
             $this->billingServices->ItemDelete($Id, $this->BILL_ID);
             DB::commit();
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);

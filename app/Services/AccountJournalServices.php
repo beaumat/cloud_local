@@ -73,6 +73,9 @@ class AccountJournalServices
             ->where('OBJECT_ID', $OBJECT_ID)
             ->first();
 
+
+        
+
         if ($data) { // if exists
             return (int) $data->JOURNAL_NO;
         }
@@ -80,6 +83,20 @@ class AccountJournalServices
         return  (int) AccountJournal::max('JOURNAL_NO');
     }
 
+    public function getRecord(int $OBJECT_TYPE, int $OBJECT_ID): int
+    {
+        $data = AccountJournal::query()
+            ->select(['JOURNAL_NO'])
+            ->where('OBJECT_TYPE', $OBJECT_TYPE)
+            ->where('OBJECT_ID', $OBJECT_ID)
+            ->first();  
+
+        if ($data) { // if exists
+            return (int) $data->JOURNAL_NO;
+        }
+
+        return 0;
+    }
     private function getPreviousID(int $ACCOUNT_ID, int $LOCATION_ID): int
     {
         $result = DB::table('account_journal')
@@ -183,7 +200,7 @@ class AccountJournalServices
         // no more textended function
 
     }
-    public function JournalExecute(int $JOURNAL_NO, $data, int $LOCATION_ID, int $OBJECT_TYPE, string $OBJECT_DATE, string $EXTENDED = '' )
+    public function JournalExecute(int $JOURNAL_NO, $data, int $LOCATION_ID, int $OBJECT_TYPE, string $OBJECT_DATE, string $EXTENDED = '')
     {
         foreach ($data as $list) {
             $OBJECT_ID = (int) $list->ID;
@@ -206,5 +223,21 @@ class AccountJournalServices
 
             $this->JournalModify($ACCOUNT_ID, $LOCATION_ID, $JOURNAL_NO, $SUBSIDIARY_ID, $OBJECT_ID, $OBJECT_TYPE, $OBJECT_DATE, $ENTRY_TYPE, $AMOUNT, $SEQUENCE_GROUP, $EXTENDED_OPTIONS);
         }
+    }
+    public function getJournalList(int $JOURNAL_NO)
+    {
+        $result = AccountJournal::query()
+            ->select(
+                [
+                    'a.TAG as ACCOUNT_CODE',
+                    'a.NAME as ACCOUNT_TITLE',
+                    DB::raw(" if(account_journal.ENTRY_TYPE = 0, account_journal.AMOUNT, '' ) as DEBIT "),
+                    DB::raw(" if(account_journal.ENTRY_TYPE = 1, account_journal.AMOUNT, '' ) as CREDIT ")
+                ]
+            )->leftJoin('account as a', 'a.ID', '=', 'account_journal.ACCOUNT_ID')
+            ->where('account_journal.JOURNAL_NO', $JOURNAL_NO)
+            ->get();
+
+        return $result;
     }
 }
