@@ -503,7 +503,7 @@ class HemoServices
             ->paginate($perPage);
         return $result;
     }
-    public function UnpostedTratment(int $LOCATION_ID)
+    public function UnpostedTratment(int $LOCATION_ID, $search)
     {
         $result = Hemodialysis::query()
             ->select([
@@ -538,6 +538,13 @@ class HemoServices
                 if ($LOCATION_ID > 0) {
                     $join->where('l.ID', $LOCATION_ID);
                 }
+            })
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('hemodialysis.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                });
             })
             ->where('hemodialysis.STATUS_ID', 4)
             ->orderBy('hemodialysis.DATE', 'asc')
