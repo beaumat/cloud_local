@@ -55842,3 +55842,7 @@ a.text-muted:hover {
 /*# sourceMappingURL=adminlte.css.map */
 
 
+
+.modal-xl-2 .modal-dialog {
+  max-width: 16.6667%; /* col-xl-2 is roughly 16.67% wide */
+}

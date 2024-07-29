@@ -84,7 +84,7 @@ class HemoList extends Component
     public function render()
     {
 
-        $this->pendingList = $this->hemoServices->UnpostedTratment($this->locationid,$this->search);
+        $this->pendingList = $this->hemoServices->UnpostedTratment($this->locationid, $this->search);
 
         $dataList = $this->hemoServices->Search(
             $this->search,

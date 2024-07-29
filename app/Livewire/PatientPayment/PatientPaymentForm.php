@@ -400,6 +400,13 @@ class PatientPaymentForm extends Component
             }
         }
     }
+    public function openPayment()
+    {
+        $data = [
+            'CONTACT_ID' => $this->PATIENT_ID
+        ];
+        $this->dispatch('open-assistance', result: $data);
+    }
     public function render()
     {
         return view('livewire.patient-payment.patient-payment-form');

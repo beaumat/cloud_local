@@ -73,6 +73,13 @@ class PatientPaymentList extends Component
     {
         $this->dispatch('reload-list');
     }
+    public function openPayment(int $CONTACT_ID)
+    {
+        $data = [
+            'CONTACT_ID' => $CONTACT_ID
+        ];
+        $this->dispatch('open-assistance', result: $data);
+    }
     #[On('reload-list')]
     public function render()
     {

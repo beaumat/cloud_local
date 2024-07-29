@@ -90,9 +90,9 @@
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td>
-                                                <a target="_BLANK"
-                                                    href="{{ route('maintenancecontactpatients_edit', ['id' => $list->PATIENT_ID]) }}">
-                                                    {{ $list->CONTACT_NAME }}</a>
+                                                <label type="button"
+                                                    wire:click='openPayment({{ $list->PATIENT_ID }})'>
+                                                    {{ $list->CONTACT_NAME }}</label>
                                             </td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
@@ -198,4 +198,5 @@
             </div>
         </div>
     </section>
+    @livewire('PatientPayment.PaymentRecordModal');
 </div>

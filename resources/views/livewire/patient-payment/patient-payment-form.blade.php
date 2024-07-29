@@ -275,6 +275,13 @@
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
+                                        @if ($ID > 0)
+                                            <button type="button" class="btn btn-dark btn-sm"
+                                                wire:click="openPayment()">
+                                                <i class="fa fa-money" aria-hidden="true"></i>
+                                                Assistance Record
+                                            </button>
+                                        @endif
                                         @can('patient.payment.create')
                                             @if ($ID > 0 && $STATUS > 0)
                                                 <a id="new" title="Create"
@@ -345,4 +352,5 @@
             </div>
         </div>
     </section>
+    @livewire('PatientPayment.PaymentRecordModal');
 </div>

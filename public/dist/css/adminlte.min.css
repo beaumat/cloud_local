@@ -6840,13 +6840,13 @@ a.disabled.mailbox-attachment-close {
 
     .modal-lg,
     .modal-xl {
-        max-width: 800px
+        max-width: 1900px
     }
 }
 
 @media (min-width:1200px) {
     .modal-xl {
-        max-width: 1140px
+        max-width: 1440px
     }
 }
 
@@ -56139,3 +56139,4 @@ a.text-muted:hover {
     z-index: 100; /* Ensure it stays above other content */
     background-color: white; /* Background color for better visibility */
 }
+
