@@ -44,17 +44,29 @@ class TimerServices
             $data = $this->hemoServices->getTreatmentID($CONTACT_ID, $DATE, $LOCATION_ID);
 
             $ID         = (int) $data['ID']; //HEMO_ID
-            $TIME_START =       $data['TIME_START'] == '' ?  null :  $data['TIME_START'];
-            $TIME_END   =       $data['TIME_END'] == '' ?   null : $data['TIME_END'];
+            $TIME_START =       empty($data['TIME_START']) ?  null :  $data['TIME_START'];
+            $TIME_END   =       empty($data['TIME_END'])  ?   null : $data['TIME_END'];
             $STATUS_ID  = (int) $data['STATUS_ID'];
 
-            $PRE_WEIGHT =  $data['PRE_WEIGHT'];
-            $POST_WEIGHT = $data['POST_WEIGHT'];
+
+
+            $PRE_WEIGHT             = (int) $data['PRE_WEIGHT'];
+            $PRE_BLOOD_PRESSURE     = (int) $data['PRE_BLOOD_PRESSURE'];
+            $PRE_BLOOD_PRESSURE2    = (int) $data['PRE_BLOOD_PRESSURE2'];
+            $PRE_HEART_RATE         = (int) $data['PRE_HEART_RATE'];
+            $PRE_O2_SATURATION      = (int) $data['PRE_O2_SATURATION'];
+
+            $POST_WEIGHT            = (int) $data['POST_WEIGHT'];
+            $POST_BLOOD_PRESSURE    = (int) $data['POST_BLOOD_PRESSURE'];
+            $POST_BLOOD_PRESSURE2   = (int) $data['POST_BLOOD_PRESSURE2'];
+            $POST_HEART_RATE        = (int) $data['POST_HEART_RATE'];
+            $POST_O2_SATURATION     = (int) $data['POST_O2_SATURATION'];
+
 
             DB::beginTransaction();
             if ($ID > 0) {
 
-                if ($PRE_WEIGHT == null || $POST_WEIGHT == null) {
+                if ($PRE_WEIGHT == 0 || $PRE_BLOOD_PRESSURE == 0 || $PRE_BLOOD_PRESSURE2 == 0 || $PRE_HEART_RATE == 0 || $PRE_O2_SATURATION == 0) {
                     $this->hemoServices->StatusUpdate($ID, 3); // VOID
                     $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 2); // ABSENT
                     DB::commit();
@@ -63,7 +75,6 @@ class TimerServices
 
                 if ($STATUS_ID == 1) {
                     if (!$this->ItemInventory($ID, $DATE, $LOCATION_ID)) {
-                        Log::error('rollback executing Schedule executed in getPosted(ItemInventory): [' . $CONTACT_ID . ',' . $LOCATION_ID . ', ' . $DATE . ']');
                         DB::rollBack();
                         return;
                     }
@@ -71,7 +82,7 @@ class TimerServices
 
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 1); //PRESENT
 
-                if ($TIME_START == null || $TIME_END == null) {
+                if ($POST_WEIGHT == 0 || $POST_BLOOD_PRESSURE == 0 || $POST_BLOOD_PRESSURE2 == 0 || $POST_HEART_RATE == 0 || $POST_O2_SATURATION == 0 || empty($TIME_START) == true ||  empty($TIME_END) == true) {
                     $this->hemoServices->StatusUpdate($ID, 4); // UNPOSTED
                 } else {
                     $this->hemoServices->StatusUpdate($ID, 2); // POSTED

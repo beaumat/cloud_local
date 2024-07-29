@@ -778,7 +778,17 @@ class HemoServices
             ->select([
                 'ID',
                 'PRE_WEIGHT',
+                'PRE_BLOOD_PRESSURE',
+                'PRE_HEART_RATE',
+                'PRE_O2_SATURATION',
+                'PRE_TEMPERATURE',
                 'POST_WEIGHT',
+                'POST_BLOOD_PRESSURE',
+                'POST_HEART_RATE',
+                'POST_O2_SATURATION',
+                'POST_TEMPERATURE',
+                'PRE_BLOOD_PRESSURE2',
+                'POST_BLOOD_PRESSURE2',
                 'TIME_START',
                 'TIME_END',
                 'STATUS_ID'
@@ -793,22 +803,38 @@ class HemoServices
 
         if ($result) {
             return [
-                'ID'            => $result->ID,
-                'TIME_START'    => $result->TIME_START,
-                'TIME_END'      => $result->TIME_END,
-                'STATUS_ID'     => $result->STATUS_ID ?? 0,
-                'PRE_WEIGHT'    => $result->PRE_WEIGHT,
-                'POST_WEIGHT'   => $result->POST_WEIGHT
+                'ID'                     => (int) $result->ID,
+                'PRE_WEIGHT'             => (float) $result->PRE_WEIGHT ?? 0,
+                'PRE_BLOOD_PRESSURE'     => (float) $result->PRE_BLOOD_PRESSURE ?? 0,
+                'PRE_HEART_RATE'         => (float) $result->PRE_HEART_RATE ?? 0,
+                'PRE_O2_SATURATION'      => (float) $result->PRE_O2_SATURATION ?? 0,
+                'POST_WEIGHT'            => (float) $result->POST_WEIGHT ?? 0,
+                'POST_BLOOD_PRESSURE'    => (float) $result->POST_BLOOD_PRESSURE ?? 0,
+                'POST_HEART_RATE'        => (float) $result->POST_HEART_RATE ?? 0,
+                'POST_O2_SATURATION'     => (float) $result->POST_O2_SATURATION ?? 0,
+                'PRE_BLOOD_PRESSURE2'    => (float) $result->PRE_BLOOD_PRESSURE2 ?? 0,
+                'POST_BLOOD_PRESSURE2'   => (float) $result->POST_BLOOD_PRESSURE2 ?? 0,
+                'TIME_START'             => $result->TIME_START ?? '',
+                'TIME_END'               => $result->TIME_END ?? '',
+                'STATUS_ID'              => $result->STATUS_ID ?? 0,
             ];
         }
 
         return [
-            'ID' => 0,
-            'TIME_START'    => null,
-            'TIME_END'      => null,
-            'STATUS_ID'     => 0,
-            'PRE_WEIGHT'    => null,
-            'POST_WEIGHT'   => null
+            'ID'                     => 0,
+            'PRE_WEIGHT'             => 0,
+            'PRE_BLOOD_PRESSURE'     => 0,
+            'PRE_HEART_RATE'         => 0,
+            'PRE_O2_SATURATION'      => 0,
+            'POST_WEIGHT'            => 0,
+            'POST_BLOOD_PRESSURE'    => 0,
+            'POST_HEART_RATE'        => 0,
+            'POST_O2_SATURATION'     => 0,
+            'PRE_BLOOD_PRESSURE2'    => 0,
+            'POST_BLOOD_PRESSURE2'   => 0,
+            'TIME_START'             => '',
+            'TIME_END'               => '',
+            'STATUS_ID'              => 0,
         ];
     }
 

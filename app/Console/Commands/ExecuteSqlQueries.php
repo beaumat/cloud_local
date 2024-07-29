@@ -52,9 +52,7 @@ class ExecuteSqlQueries extends Command
     {
         //
         // $ php artisan schedule:work = must run per minute
-        Log::info('Schedule executed start');
         $this->timerServices->getExecute();
-        Log::info('Schedule executed stop');
         return 0;
     }
 }
