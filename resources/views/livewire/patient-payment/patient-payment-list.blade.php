@@ -90,7 +90,7 @@
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td>
-                                                <a
+                                                <a target="_BLANK"
                                                     href="{{ route('maintenancecontactpatients_edit', ['id' => $list->PATIENT_ID]) }}">
                                                     {{ $list->CONTACT_NAME }}</a>
 
