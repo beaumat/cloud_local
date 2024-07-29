@@ -64,8 +64,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success btn-sm" wire:click="create">Create &
-                            Print</button>
+                        <button type="button" class="btn btn-success btn-sm" wire:click="create">Create &  Print</button>
                             
                         <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">Close</button>
                     </div>
