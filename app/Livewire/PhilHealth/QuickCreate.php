@@ -10,6 +10,8 @@ use App\Services\PhilHealthServices;
 use App\Services\UserServices;
 use Livewire\Component;
 
+use function PHPUnit\Framework\isEmpty;
+
 class QuickCreate extends Component
 {
     public $patientSelected = [];
@@ -97,7 +99,7 @@ class QuickCreate extends Component
     private string $SECOND_CASE_RATE = '';
 
     private function generateDateTime($CONTACT_ID): bool
-    {   
+    {
         // $this->hemoServices->getDateTime();
         $data = $this->hemoServices->getDateTimeByRange($CONTACT_ID, $this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
         if ($data) {
@@ -134,22 +136,25 @@ class QuickCreate extends Component
             if ($isSelected) {
                 $gotSelected = true;
                 if ($this->generateDateTime($patientID)) {
-                    $this->generateRemarks($patientID);
-                    $ID = (int) $this->philHealthServices->preSave(
-                        '',
-                        $this->dateServices->NowDate(),
-                        $this->LOCATION_ID,
-                        $patientID,
-                        $this->DATE_ADMITTED,
-                        $this->TIME_ADMITTED,
-                        $this->DATE_DISCHARGED,
-                        $this->TIME_DISCHARGED,
-                        $this->FINAL_DIAGNOSIS,
-                        $this->OTHER_DIAGNOSIS,
-                        $this->FIRST_CASE_RATE,
-                        $this->SECOND_CASE_RATE
-                    );
-                    $this->philHealthServices->DefaultEntry($ID);
+
+                    if (empty($this->DATE_ADMITTED) == false && empty($this->DATE_DISCHARGED) == false) {
+                        $this->generateRemarks($patientID);
+                        $ID = (int) $this->philHealthServices->preSave(
+                            '',
+                            $this->dateServices->NowDate(),
+                            $this->LOCATION_ID,
+                            $patientID,
+                            $this->DATE_ADMITTED,
+                            $this->TIME_ADMITTED,
+                            $this->DATE_DISCHARGED,
+                            $this->TIME_DISCHARGED,
+                            $this->FINAL_DIAGNOSIS,
+                            $this->OTHER_DIAGNOSIS,
+                            $this->FIRST_CASE_RATE,
+                            $this->SECOND_CASE_RATE
+                        );
+                        $this->philHealthServices->DefaultEntry($ID);
+                    }
                 }
             }
         }
