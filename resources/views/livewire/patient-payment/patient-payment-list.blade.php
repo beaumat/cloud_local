@@ -93,7 +93,6 @@
                                                 <a target="_BLANK"
                                                     href="{{ route('maintenancecontactpatients_edit', ['id' => $list->PATIENT_ID]) }}">
                                                     {{ $list->CONTACT_NAME }}</a>
-
                                             </td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT_APPLIED, 2) }}</td>

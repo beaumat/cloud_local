@@ -16,7 +16,7 @@ class ItemsList extends Component
     protected $paginationTheme = 'bootstrap';
     protected $queryString = ['search' => ['except' => '']];
     public $search = '';
-    public int $perPage = 20;
+    public int $perPage = 30;
     private $itemServices;
     public function boot(ItemServices $itemServices)
     {
