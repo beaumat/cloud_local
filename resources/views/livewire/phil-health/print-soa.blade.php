@@ -587,9 +587,9 @@
                             @endif
                         </div>
                         <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
-                            @if ($OP_TOTAL > 0)
+                           
                                 {{ number_format($OP_TOTAL, 2) }}
-                            @endif
+                       
                         </div>
                     </div>
                 </div>
