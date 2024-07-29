@@ -20,12 +20,15 @@ class HemoList extends Component
     protected $paginationTheme = 'bootstrap';
     protected $queryString = ['search' => ['except' => '']];
     public $search = '';
+    public $statusList = [];
     public int $perPage = 100;
     public int $locationid;
+    public int $statusid = 0;
     public $locationList = [];
     private $hemoServices;
     private $locationServices;
     private $userServices;
+    public $pendingList = [];
 
     public string $DATE_FROM;
     public string $DATE_TO;
@@ -60,6 +63,7 @@ class HemoList extends Component
         $this->DATE_TO = $this->dateServices->NowDate();
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
+        $this->statusList = $this->hemoServices->HemoStatus();
     }
     public function refreshList()
     {
@@ -72,18 +76,23 @@ class HemoList extends Component
             $this->locationid,
             $this->search,
             $this->DATE_FROM,
-            $this->DATE_TO
+            $this->DATE_TO,
+            $this->statusid
         ), 'hemo-treatment-.xlsx');
     }
     #[On('refresh-list')]
     public function render()
     {
+
+        $this->pendingList = $this->hemoServices->UnpostedTratment($this->locationid);
+
         $dataList = $this->hemoServices->Search(
             $this->search,
             $this->locationid,
             $this->perPage,
             $this->DATE_FROM == '' ? $this->dateServices->NowDate() : $this->DATE_FROM,
-            $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO
+            $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO,
+            $this->statusid
         );
         return view('livewire.hemodialysis.hemo-list', ['dataList' => $dataList]);
     }

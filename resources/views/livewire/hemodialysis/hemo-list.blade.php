@@ -47,7 +47,7 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mt-0">
                                                 <label class="text-sm"> <a href="#"
                                                         wire:click='refreshList()'>Search:</a> </label>
@@ -65,6 +65,21 @@
                                             <input type="date" class="form-control form-control-sm"
                                                 wire:model.live='DATE_TO' />
                                         </div>
+                                        <div class="col-md-2">
+                                            <div class="mt-0">
+                                                <label class="text-sm">Status:</label>
+                                                <select name="location" wire:model.live='statusid'
+                                                    class="form-control form-control-sm">
+                                                    <option value="0"> All Status</option>
+                                                    @foreach ($statusList as $item)
+                                                        <option value="{{ $item->ID }}"> {{ $item->DESCRIPTION }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                        </div>
+
                                         <div class="col-md-2">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
@@ -108,6 +123,95 @@
                                         </th>
                                     </tr>
                                 </thead>
+                                <tbody class="text-xs bg-light">
+                                    @foreach ($pendingList as $list)
+                                        <tr>
+                                            <td>
+                                                <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
+                                                    class="text-primary">
+                                                    {{ $list->CODE }}
+                                                </a>
+                                            </td>
+                                            <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
+                                            <td> {{ $list->CONTACT_NAME }}</td>
+                                            <td class="text-center">
+                                                {{ $list->PRE_WEIGHT }} | {{ $list->POST_WEIGHT }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ $list->PRE_BLOOD_PRESSURE }}/{{ $list->PRE_BLOOD_PRESSURE2 }} |
+                                                {{ $list->POST_BLOOD_PRESSURE }}/{{ $list->POST_BLOOD_PRESSURE2 }}
+                                            </td>
+                                            <td class="text-center"> {{ $list->PRE_HEART_RATE }} |
+                                                {{ $list->POST_HEART_RATE }}</td>
+                                            <td class="text-center"> {{ $list->PRE_O2_SATURATION }} |
+                                                {{ $list->POST_O2_SATURATION }}</td>
+                                            <td class="text-center"> {{ $list->PRE_TEMPERATURE }} |
+                                                {{ $list->POST_TEMPERATURE }}</td>
+                                            <td class="text-center">
+                                                @if ($list->TIME_START)
+                                                    {{ \Carbon\Carbon::parse($list->TIME_START)->format('h:i A') }}
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($list->TIME_END)
+                                                    {{ \Carbon\Carbon::parse($list->TIME_END)->format('h:i A') }}
+                                                @endif
+                                            </td>
+                                            <td> {{ $list->LOCATION_NAME }} </td>
+                                            <td
+                                                class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success  @elseif ($list->STATUS_ID == 4) bg-secondary @else bg-danger @endif ">
+                                                {{ substr($list->STATUS, 0, 1) }} </td>
+                                            <td class="text-center">
+                                                @if ($list->IS_SC)
+                                                    <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-times text-danger" aria-hidden="true"></i>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @can('patient.treatment.print')
+                                                    <a target="_blank"
+                                                        href="{{ route('patientshemo_print', ['id' => $list->ID]) }}"
+                                                        class="btn-sm text-primary">
+                                                        <i class="fa fa-print" aria-hidden="true"></i>
+                                                    </a>
+
+                                                    @if ($list->FILE_PATH)
+                                                        <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
+                                                            target="_blank" class="btn-sm text-danger">
+                                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                        </a>
+                                                    @else
+                                                        <a href="#" class="btn-sm text-secondary">
+                                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                                        </a>
+                                                    @endif
+                                                @endcan
+
+                                                <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
+                                                    class="btn-sm text-info">
+                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                </a>
+
+                                                @can('patient.treatment.delete')
+                                                    @if ($list->STATUS_ID == 1)
+                                                        <a href="#" wire:click='delete({{ $list->ID }})'
+                                                            wire:confirm="Are you sure you want to delete this?"
+                                                            class="btn-sm text-danger">
+                                                            <i class="fas fa-times" aria-hidden="true"></i>
+                                                        </a>
+                                                    @else
+                                                        <a class="btn-sm text-secondary">
+                                                            <i class="fas fa-times" aria-hidden="true"></i>
+                                                        </a>
+                                                    @endif
+                                                @endcan
+
+                                            </td>
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>

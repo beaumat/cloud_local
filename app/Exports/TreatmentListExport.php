@@ -15,13 +15,15 @@ class TreatmentListExport implements FromCollection, ShouldAutoSize
     private $DateFrom;
     private $DateTo;
     private $hemoServices;
-    public function __construct(HemoServices $hemoServices, $LOCATION_ID, $search, $DateFrom, $DateTo)
+    private $STATUS_ID;
+    public function __construct(HemoServices $hemoServices, $LOCATION_ID, $search, $DateFrom, $DateTo, $STATUS_ID)
     {
         $this->LOCATION_ID = $LOCATION_ID;
         $this->search = $search;
         $this->DateFrom = $DateFrom;
         $this->DateTo = $DateTo;
         $this->hemoServices = $hemoServices;
+        $this->STATUS_ID = $STATUS_ID;
     }
 
     /**
@@ -29,7 +31,7 @@ class TreatmentListExport implements FromCollection, ShouldAutoSize
      */
     public function collection()
     {
-        $dataList = $this->hemoServices->Search($this->search, $this->LOCATION_ID, 500, $this->DateFrom, $this->DateTo);
+        $dataList = $this->hemoServices->Search($this->search, $this->LOCATION_ID, 500, $this->DateFrom, $this->DateTo, $this->STATUS_ID);
 
         $headers = [
             'NO'            => 'NO',

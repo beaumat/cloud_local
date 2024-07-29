@@ -148,7 +148,10 @@ class HemoServices
             'LAST_TIME' => ''
         ];
     }
-
+    public function HemoStatus()
+    {
+        return  DB::table('hemo_status')->select(['ID', 'DESCRIPTION'])->whereNotIn('ID', ['4'])->get();
+    }
 
     public function getDateTimeByRange(int $CONTACT_ID, int $LOCATION_ID, string $DT_FROM, string $DT_TO)
     {
@@ -315,20 +318,8 @@ class HemoServices
         //     $this->statusUpdate($ID, 1);
         // }
     }
-    public function SaveOthers(
-        int $ID,
-        string $SE_DETAILS,
-        string $SO_DETAILS,
-        int $BFR,
-        int $DFR,
-        int $DURATION,
-        string $DIALYZER,
-        string  $DIALSATE_N,
-        string $DIALSATE_K,
-        string $DIALSATE_C,
-        bool $DETAILS_USE_NEXT,
-        bool $ORDER_USE_NEXT
-    ) {
+    public function SaveOthers(int $ID, string $SE_DETAILS, string $SO_DETAILS, int $BFR, int $DFR, int $DURATION, string $DIALYZER, string  $DIALSATE_N, string $DIALSATE_K, string $DIALSATE_C, bool $DETAILS_USE_NEXT, bool $ORDER_USE_NEXT)
+    {
         Hemodialysis::where('ID', $ID)
             ->update([
                 'SE_DETAILS'        => $SE_DETAILS,
@@ -460,7 +451,7 @@ class HemoServices
         return $result;
     }
 
-    public function Search($search, int $LOCATION_ID, int $perPage, $DateFrom, $DateTo)
+    public function Search($search, int $LOCATION_ID, int $perPage, $DateFrom, $DateTo, int $statusId)
     {
         $result = Hemodialysis::query()
             ->select([
@@ -503,14 +494,57 @@ class HemoServices
                         ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
+            ->when($statusId > 0, function ($query) use (&$statusId) {
+                $query->where('hemodialysis.STATUS_ID', $statusId);
+            })
             ->whereBetween('hemodialysis.DATE', [$DateFrom, $DateTo])
+            ->where('hemodialysis.STATUS_ID', '<>', 4)
             ->orderBy('hemodialysis.DATE', 'asc')
             ->paginate($perPage);
-
+        return $result;
+    }
+    public function UnpostedTratment(int $LOCATION_ID)
+    {
+        $result = Hemodialysis::query()
+            ->select([
+                'hemodialysis.ID',
+                'hemodialysis.CODE',
+                'hemodialysis.DATE',
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as CONTACT_NAME"),
+                'l.NAME as LOCATION_NAME',
+                'hemodialysis.PRE_WEIGHT',
+                'hemodialysis.PRE_BLOOD_PRESSURE',
+                'hemodialysis.PRE_BLOOD_PRESSURE2',
+                'hemodialysis.PRE_HEART_RATE',
+                'hemodialysis.PRE_O2_SATURATION',
+                'hemodialysis.PRE_TEMPERATURE',
+                'hemodialysis.POST_WEIGHT',
+                'hemodialysis.POST_BLOOD_PRESSURE',
+                'hemodialysis.POST_BLOOD_PRESSURE2',
+                'hemodialysis.POST_HEART_RATE',
+                'hemodialysis.POST_O2_SATURATION',
+                'hemodialysis.POST_TEMPERATURE',
+                'hemodialysis.TIME_START',
+                'hemodialysis.TIME_END',
+                's.DESCRIPTION as STATUS',
+                'hemodialysis.STATUS_ID',
+                'hemodialysis.FILE_PATH',
+                DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where  sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC')
+            ])
+            ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
+            ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')
+            ->join('location as l', function ($join) use (&$LOCATION_ID) {
+                $join->on('l.ID', '=', 'hemodialysis.LOCATION_ID');
+                if ($LOCATION_ID > 0) {
+                    $join->where('l.ID', $LOCATION_ID);
+                }
+            })
+            ->where('hemodialysis.STATUS_ID', 4)
+            ->orderBy('hemodialysis.DATE', 'asc')
+            ->get();
 
         return $result;
     }
-
     public function PatientRecord($search, int $CONTACT_ID, int $perPage)
     {
         return Hemodialysis::query()
