@@ -1029,9 +1029,9 @@
                                 {{ substr($DATE_DISCHARGED, 3, 1) }}
                             </div>
                             <br>
-                            <p style="position: absolute;top:27px;">month
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <p style="position: absolute;top:27px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;month
+                                &nbsp;&nbsp;&nbsp;&nbsp;day
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 year</p>
                         </div>
 
