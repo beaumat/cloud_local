@@ -32,7 +32,8 @@
                                 <div class="col-8 bottom-line text-xs"> &nbsp; {{ $OTHER_DIAGNOSIS }}</div>
                                 <div class="col-4">TREATMENT DATES : </div>
                                 <div class="col-8 bottom-line "> &nbsp;
-                                    {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') : '' }}</div>
+                                    {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') : '' }}
+                                </div>
                             </div>
                         </div>
                         <div class="col-6">
@@ -373,9 +374,9 @@
                             @endif
                         </div>
                         <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
-                            @if ($OP_SUB_TOTAL > 0)
-                                {{ number_format($OP_SUB_TOTAL, 2) }}
-                            @endif
+
+                            {{ number_format($OP_SUB_TOTAL, 2) }}
+
                         </div>
                     </div>
                     <div class="row bottom-line right-line left-line">
@@ -587,9 +588,9 @@
                             @endif
                         </div>
                         <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
-                           
-                                {{ number_format($OP_TOTAL, 2) }}
-                       
+
+                            {{ number_format($OP_TOTAL, 2) }}
+
                         </div>
                     </div>
                 </div>
@@ -604,7 +605,8 @@
                                 </div>
                                 <div class="col-7 text-center">PHIC IN-Charge</div>
                                 <div class="col-12 ">Date Signed:
-                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}</div>
+                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
+                                </div>
                                 <div class="col-12 ">CONTACT No. {{ $USER_CONTACT }}</div>
                             </div>
                         </div>
@@ -618,7 +620,8 @@
                                 <div class="col-12 text-xs">Relationship of member of authorized representative</div>
                                 <div class="col-12 bottom-line">&nbsp;</div>
                                 <div class="col-12 ">Date Signed:
-                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}</div>
+                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
+                                </div>
                                 <div class="col-12 ">CONTACT No. {{ $PATIENT_CONTACT }}</div>
                             </div>
                         </div>
