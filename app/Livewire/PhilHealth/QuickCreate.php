@@ -47,9 +47,11 @@ class QuickCreate extends Component
     {
         $this->SelectAll = false;
         $this->patientSelected = [];
+        $this->LoadList();
+        
     }
     public function updatedDateFrom()
-    {
+    { 
         $this->ResetValue();
     }
     public function updatedDateTo()
@@ -163,18 +165,14 @@ class QuickCreate extends Component
             $this->resetMethod();
         }
     }
-    public function getReload()
-    {
 
-        $this->LoadList();
-    }
     private function LoadList()
-    {
-        $this->dataList = $this->hemoServices->QuickFilterByDateRange($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
+    {   
+     
     }
     public function render()
     {
-        $this->LoadList();
+        $this->dataList = $this->hemoServices->QuickFilterByDateRange($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
 
         return view('livewire.phil-health.quick-create');
     }
