@@ -13,12 +13,14 @@
                       </a>
                   </li>
               @endif
-              <li class="nav-item ">
-                  <a href="{{ route('reportspatient_doctor_fee_report') }}"
-                      class="nav-link {{ request()->is('reports/patients/doctor-pro-fees*') ? 'active' : '' }}">
-                      <i class="fa fa-print nav-icon"></i>
-                      <p>Doctor PF</p>
-                  </a>
-              </li>
+              @if (Auth::user()->can('report.patient.doctor-pf'))
+                  <li class="nav-item ">
+                      <a href="{{ route('reportspatient_doctor_fee_report') }}"
+                          class="nav-link {{ request()->is('reports/patients/doctor-pro-fees*') ? 'active' : '' }}">
+                          <i class="fa fa-print nav-icon"></i>
+                          <p>Doctor PF</p>
+                      </a>
+                  </li>
+              @endif
           </ul>
       </li>

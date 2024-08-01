@@ -53,7 +53,7 @@
                             <p> Reports <i class="right fas fa-angle-left"></i> </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            @if (Auth::user()->can('report.patient.sales'))
+                            @if (Auth::user()->can('report.patient.sales') || Auth::user()-can('report.patient.doctor-pf'))
                                 @livewire('Layouts.ReportsPatients')
                             @endif
                             {{-- @livewire('Layouts.ReportsFinancial')

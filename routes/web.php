@@ -456,7 +456,7 @@ Route::middleware(['auth'])->group(function () {
             });
 
             Route::prefix('/doctor-pro-fees')->group(function () {
-                Route::get('/', DoctorProFeeReport::class)->name('patient_doctor_fee_report');
+                Route::get('/', DoctorProFeeReport::class)->name('patient_doctor_fee_report')->middleware(['permission:report.patient.doctor-pf']);
             });
         });
         Route::prefix('/financial')->group(function () {
