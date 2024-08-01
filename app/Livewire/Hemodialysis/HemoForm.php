@@ -72,6 +72,8 @@ class HemoForm extends Component
     public string $OLD_POST_TEMPERATURE;
 
     public bool $USE_OTHER_DETAILS = true;
+
+    public bool $IS_INCOMPLETE;
     // end old
     private $hemoServices;
     private $locationServices;
@@ -136,7 +138,7 @@ class HemoForm extends Component
         $this->FILE_PATH = $data->FILE_PATH ?? "";
         $this->STATUS = $data->STATUS_ID ?? 1;
         $this->IsDocmentUploaded = false;
-
+        $this->IS_INCOMPLETE = $data->IS_INCOMPLETE ?? false;
         if ($this->TIME_START != "" &&   $this->TIME_END != "") {
             if ($this->STATUS <> 3) {
                 $this->IsDocmentUploaded = true;
@@ -198,6 +200,8 @@ class HemoForm extends Component
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = '';
         $this->IsDocmentUploaded = false;
+
+        $this->IS_INCOMPLETE =  false;
     }
     public function getPreviousTreatment()
     {
@@ -249,7 +253,8 @@ class HemoForm extends Component
             $this->POST_O2_SATURATION,
             $this->POST_TEMPERATURE,
             $this->TIME_START,
-            $this->TIME_END
+            $this->TIME_END,
+            $this->IS_INCOMPLETE
         );
 
 
@@ -318,17 +323,15 @@ class HemoForm extends Component
 
         if ($this->ID > 0) {
             //Make it restricted
-
-
             if (empty($this->PRE_WEIGHT)  && empty($this->PRE_BLOOD_PRESSURE) && empty($this->PRE_BLOOD_PRESSURE2) && empty($this->PRE_HEART_RATE) && empty($this->PRE_O2_SATURATION) && empty($this->TIME_START) && empty($this->POST_WEIGHT) && empty($this->POST_BLOOD_PRESSURE) && empty($this->POST_BLOOD_PRESSURE2) && empty($this->POST_HEART_RATE) && empty($this->POST_O2_SATURATION)  && empty($this->TIME_END)) {
             } else {
 
                 $this->validate(
                     [
-                        'PRE_WEIGHT'            => 'required',
-                        'PRE_BLOOD_PRESSURE'    => 'required',
-                        'PRE_BLOOD_PRESSURE2'   => 'required',
-                        'PRE_HEART_RATE'        => 'required',
+                        'PRE_WEIGHT'            => 'required|not_in:0',
+                        'PRE_BLOOD_PRESSURE'    => 'required|not_in:0',
+                        'PRE_BLOOD_PRESSURE2'   => 'required|not_in:0',
+                        'PRE_HEART_RATE'        => 'required|not_in:0',
                         'PRE_O2_SATURATION'     => 'required',
                         'TIME_START'            => 'required',
                     ],
@@ -349,29 +352,34 @@ class HemoForm extends Component
                 if (empty($this->TIME_START) == false) {
 
                     if (empty($this->TIME_END) == false) {
-                        if (empty($this->POST_WEIGHT) || empty($this->POST_BLOOD_PRESSURE) || empty($this->POST_BLOOD_PRESSURE2) || empty($this->POST_HEART_RATE) || empty($this->POST_O2_SATURATION)) {
 
-                            $this->validate(
-                                [
-                                    'POST_WEIGHT'            => 'required',
-                                    'POST_BLOOD_PRESSURE'    => 'required',
-                                    'POST_BLOOD_PRESSURE2'   => 'required',
-                                    'POST_HEART_RATE'        => 'required',
-                                    'POST_O2_SATURATION'     => 'required',
-                                    'TIME_END'               => 'required',
-                                ],
-                                [],
-                                [
 
-                                    'POST_WEIGHT'            => 'Post weight',
-                                    'POST_BLOOD_PRESSURE'    => 'Post blood pressure [1]',
-                                    'POST_BLOOD_PRESSURE2'   => 'Post blood pressure [2]',
-                                    'POST_HEART_RATE'        => 'Post heart rate',
-                                    'POST_O2_SATURATION'     => 'Post 02 saturation',
-                                    'TIME_END'               => 'Time End',
+                        if ($this->IS_INCOMPLETE == false) {
 
-                                ]
-                            );
+                            if (empty($this->POST_WEIGHT) || empty($this->POST_BLOOD_PRESSURE) || empty($this->POST_BLOOD_PRESSURE2) || empty($this->POST_HEART_RATE) || empty($this->POST_O2_SATURATION)) {
+
+                                $this->validate(
+                                    [
+                                        'POST_WEIGHT'            => 'required',
+                                        'POST_BLOOD_PRESSURE'    => 'required',
+                                        'POST_BLOOD_PRESSURE2'   => 'required',
+                                        'POST_HEART_RATE'        => 'required',
+                                        'POST_O2_SATURATION'     => 'required',
+                                        'TIME_END'               => 'required',
+                                    ],
+                                    [],
+                                    [
+
+                                        'POST_WEIGHT'            => 'Post weight',
+                                        'POST_BLOOD_PRESSURE'    => 'Post blood pressure [1]',
+                                        'POST_BLOOD_PRESSURE2'   => 'Post blood pressure [2]',
+                                        'POST_HEART_RATE'        => 'Post heart rate',
+                                        'POST_O2_SATURATION'     => 'Post 02 saturation',
+                                        'TIME_END'               => 'Time End',
+
+                                    ]
+                                );
+                            }
                         }
                     }
                 }
@@ -385,9 +393,7 @@ class HemoForm extends Component
             if ($this->ID == 0) {
 
                 $this->ID = (int) $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
-
                 $this->hemoServices->GetOtherDetailsDefault($this->ID, $this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID);
-
                 $hemoData =  $this->hemoServices->Get($this->ID);
 
                 $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
@@ -397,7 +403,7 @@ class HemoForm extends Component
                 DB::commit();
                 return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
-                // $this->hemoServices->PreUpdate($this->ID, $this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
+
                 $this->update_all();
                 DB::commit();
                 $this->dispatch('save-other');
@@ -449,10 +455,10 @@ class HemoForm extends Component
                 'PRE_O2_SATURATION'     => 'required',
                 'PRE_TEMPERATURE'       => 'required',
 
-                'POST_WEIGHT'           => 'required|not_in:0',
-                'POST_BLOOD_PRESSURE'   => 'required|not_in:0',
-                'POST_BLOOD_PRESSURE2'  => 'required|not_in:0',
-                'POST_HEART_RATE'       => 'required|not_in:0',
+                'POST_WEIGHT'           => 'required',
+                'POST_BLOOD_PRESSURE'   => 'required',
+                'POST_BLOOD_PRESSURE2'  => 'required',
+                'POST_HEART_RATE'       => 'required',
                 'POST_O2_SATURATION'    => 'required',
                 'POST_TEMPERATURE'      => 'required',
 

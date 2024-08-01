@@ -98,7 +98,8 @@ class PhilHealth extends Model
         'PAYMENT_AMOUNT',
         'AD_SUB_TOTAL',
         'AD_TOTAL',
-        'IS_TEMP'
+        'IS_TEMP',
+        'PF_RECEIVED_DATE'
     ];
 
 }

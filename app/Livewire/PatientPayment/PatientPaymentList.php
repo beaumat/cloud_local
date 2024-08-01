@@ -18,7 +18,6 @@ class PatientPaymentList extends Component
     protected $paginationTheme = 'bootstrap';
     public $search = '';
     public int $perPage = 20;
-
     public float $TOTAL_DEPOSIT = 0;
     public float $TOTAL_APPLIED = 0;
     public float $TOTAL_BALANCE = 0;
@@ -28,12 +27,8 @@ class PatientPaymentList extends Component
     private $locationServices;
     private $userServices;
     private $uploadServices;
-    public function boot(
-        PatientPaymentServices $patientPaymentServices,
-        LocationServices $locationServices,
-        UserServices $userServices,
-        UploadServices $uploadServices
-    ) {
+    public function boot(PatientPaymentServices $patientPaymentServices, LocationServices $locationServices, UserServices $userServices, UploadServices $uploadServices)
+    {
         $this->patientPaymentServices = $patientPaymentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;

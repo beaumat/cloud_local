@@ -291,24 +291,41 @@ class HemoServices
         ]);
     }
 
-    public function Update(int $ID, string $PRE_WEIGHT, string $PRE_BLOOD_PRESSURE, string $PRE_BLOOD_PRESSURE2, string $PRE_HEART_RATE, string $PRE_O2_SATURATION, string $PRE_TEMPERATURE, string $POST_WEIGHT, string $POST_BLOOD_PRESSURE, string $POST_BLOOD_PRESSURE2, string $POST_HEART_RATE, string $POST_O2_SATURATION, string $POST_TEMPERATURE, string $TIME_START, string $TIME_END)
-    {
+    public function Update(
+        int $ID,
+        string $PRE_WEIGHT,
+        string $PRE_BLOOD_PRESSURE,
+        string $PRE_BLOOD_PRESSURE2,
+        string $PRE_HEART_RATE,
+        string $PRE_O2_SATURATION,
+        string $PRE_TEMPERATURE,
+        string $POST_WEIGHT,
+        string $POST_BLOOD_PRESSURE,
+        string $POST_BLOOD_PRESSURE2,
+        string $POST_HEART_RATE,
+        string $POST_O2_SATURATION,
+        string $POST_TEMPERATURE,
+        string $TIME_START,
+        string $TIME_END,
+        bool $IS_INCOMPLETE
+    ) {
         Hemodialysis::where('ID', $ID)
             ->update([
-                'PRE_WEIGHT' => $PRE_WEIGHT,
-                'PRE_BLOOD_PRESSURE' => $PRE_BLOOD_PRESSURE,
-                'PRE_BLOOD_PRESSURE2' => $PRE_BLOOD_PRESSURE2,
-                'PRE_HEART_RATE' => $PRE_HEART_RATE,
-                'PRE_O2_SATURATION' => $PRE_O2_SATURATION,
-                'PRE_TEMPERATURE' => $PRE_TEMPERATURE,
-                'POST_WEIGHT' => $POST_WEIGHT,
-                'POST_BLOOD_PRESSURE' => $POST_BLOOD_PRESSURE,
-                'POST_BLOOD_PRESSURE2' => $POST_BLOOD_PRESSURE2,
-                'POST_HEART_RATE' => $POST_HEART_RATE,
-                'POST_O2_SATURATION' => $POST_O2_SATURATION,
-                'POST_TEMPERATURE' => $POST_TEMPERATURE,
-                'TIME_START' => $TIME_START != "" ? $TIME_START : null,
-                'TIME_END' => $TIME_END != "" ? $TIME_END : null
+                'PRE_WEIGHT'            => $PRE_WEIGHT,
+                'PRE_BLOOD_PRESSURE'    => $PRE_BLOOD_PRESSURE,
+                'PRE_BLOOD_PRESSURE2'   => $PRE_BLOOD_PRESSURE2,
+                'PRE_HEART_RATE'        => $PRE_HEART_RATE,
+                'PRE_O2_SATURATION'     => $PRE_O2_SATURATION,
+                'PRE_TEMPERATURE'       => $PRE_TEMPERATURE,
+                'POST_WEIGHT'           => $POST_WEIGHT,
+                'POST_BLOOD_PRESSURE'   => $POST_BLOOD_PRESSURE,
+                'POST_BLOOD_PRESSURE2'  => $POST_BLOOD_PRESSURE2,
+                'POST_HEART_RATE'       => $POST_HEART_RATE,
+                'POST_O2_SATURATION'    => $POST_O2_SATURATION,
+                'POST_TEMPERATURE'      => $POST_TEMPERATURE,
+                'TIME_START'            => $TIME_START != "" ? $TIME_START : null,
+                'TIME_END'              => $TIME_END != "" ? $TIME_END : null,
+                'IS_INCOMPLETE'         => $IS_INCOMPLETE
 
             ]);
 
@@ -477,6 +494,7 @@ class HemoServices
                 's.DESCRIPTION as STATUS',
                 'hemodialysis.STATUS_ID',
                 'hemodialysis.FILE_PATH',
+                'hemodialysis.IS_INCOMPLETE',
                 DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where  sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC')
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
@@ -529,6 +547,7 @@ class HemoServices
                 's.DESCRIPTION as STATUS',
                 'hemodialysis.STATUS_ID',
                 'hemodialysis.FILE_PATH',
+                'hemodialysis.IS_INCOMPLETE',
                 DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where  sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC')
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
@@ -649,6 +668,10 @@ class HemoServices
             ->first();
 
         return $result;
+    }
+    public function SetIsIncomplete(int $HEMO_ID, $isInCompleted = false)
+    {
+        Hemodialysis::where('ID', $HEMO_ID)->update(['IS_INCOMPLETE' => $isInCompleted]);
     }
     private function getLine($HEMO_ID): int
     {
@@ -832,7 +855,8 @@ class HemoServices
                 'POST_BLOOD_PRESSURE2',
                 'TIME_START',
                 'TIME_END',
-                'STATUS_ID'
+                'STATUS_ID',
+                'IS_INCOMPLETE'
             ])
             ->where('CUSTOMER_ID', $CONTACT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
@@ -858,6 +882,7 @@ class HemoServices
                 'TIME_START'             => $result->TIME_START ?? '',
                 'TIME_END'               => $result->TIME_END ?? '',
                 'STATUS_ID'              => $result->STATUS_ID ?? 0,
+                'IS_INCOMPLETE'         => $result->IS_INCOMPLETE ?? false
             ];
         }
 
@@ -876,6 +901,7 @@ class HemoServices
             'TIME_START'             => '',
             'TIME_END'               => '',
             'STATUS_ID'              => 0,
+            'IS_INCOMPLETE'          => false   
         ];
     }
 

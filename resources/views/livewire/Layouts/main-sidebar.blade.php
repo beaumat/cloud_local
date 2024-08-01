@@ -56,7 +56,6 @@
                             @if (Auth::user()->can('report.patient.sales'))
                                 @livewire('Layouts.ReportsPatients')
                             @endif
-
                             {{-- @livewire('Layouts.ReportsFinancial')
                             @livewire('Layouts.ReportsSales')
                             @livewire('Layouts.ReportsReceivables')

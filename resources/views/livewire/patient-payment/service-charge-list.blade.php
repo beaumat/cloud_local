@@ -14,7 +14,7 @@
                     </div>
                     <div class="modal-body">
                         @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-                        <table @if ($isDisabled === true) style="opacity: 0.5;pointer-events: none;" @endif
+                        <table @if ($isDisabled == true) style="opacity: 0.5;pointer-events: none;" @endif
                             class="table table-sm table-bordered table-hover">
                             <thead class="bg-sky text-xs">
                                 <tr>
@@ -64,13 +64,10 @@
                                         <th>
                                             @php
                                                 $temp_max = $list->ITEM_AMOUNT - $list->PAID_AMOUNT;
-
                                             @endphp
-
                                             <input type="number" min="0" max='{{ $temp_max }}'
                                                 wire:model="paymentAmounts.{{ $list->ID }}"
                                                 class="text-xs w-100" />
-
                                         </th>
                                     </tr>
                                 @endforeach

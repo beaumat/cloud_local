@@ -26,11 +26,7 @@ class PhilHealthList extends Component
     private $userServices;
 
     public bool $show = false;
-    public function boot(
-        PhilHealthServices $philHealthServices,
-        LocationServices $locationServices,
-        UserServices $userServices
-    ) {
+    public function boot( PhilHealthServices $philHealthServices, LocationServices $locationServices, UserServices $userServices ) {
         $this->philHealthServices = $philHealthServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;

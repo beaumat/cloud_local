@@ -56,9 +56,7 @@ class DoctorForm extends Component
 
     private $contactServices;
 
-    public function boot(
-        ContactServices $contactServices
-    ) {
+    public function boot( ContactServices $contactServices ) {
         $this->contactServices = $contactServices;
     }
     public function SelectTab($tab)
@@ -68,13 +66,9 @@ class DoctorForm extends Component
 
     public function mount($id = null)
     {
-
         $this->genders = Gender::all();
-
         if (is_numeric($id)) {
-
             $contact = $this->contactServices->get($id, $this->TYPE);
-
             if ($contact) {
                 $this->ID = $contact->ID;
                 $this->NAME = $contact->NAME;
@@ -114,7 +108,6 @@ class DoctorForm extends Component
 
                 return;
             }
-
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('maintenancecontactemployees')->with('error', $errorMessage);
         }
@@ -280,8 +273,7 @@ class DoctorForm extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-    }
-   
+    }  
     #[On('clear-alert')]
     public function clearAlert()
     {

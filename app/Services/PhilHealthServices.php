@@ -25,12 +25,8 @@ class PhilHealthServices
     private $object;
     private $dateServices;
     private $systemSettingServices;
-
-    public function __construct(
-        ObjectServices $objectService,
-        DateServices $dateServices,
-        SystemSettingServices $systemSettingServices
-    ) {
+    public function __construct(ObjectServices $objectService, DateServices $dateServices, SystemSettingServices $systemSettingServices)
+    {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
@@ -622,4 +618,6 @@ class PhilHealthServices
                 ]);
         }
     }
+
+
 }

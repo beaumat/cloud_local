@@ -50,6 +50,7 @@ class Hemodialysis extends Model
         'DIALSATE_K',
         'DIALSATE_C',
         'DETAILS_USE_NEXT',
-        'ORDER_USE_NEXT'
+        'ORDER_USE_NEXT',
+        'IS_INCOMPLETE'
     ];
 }

@@ -358,7 +358,7 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <div class="row form-group mt-1 text-right">
                                                             <div class="col-md-6">
                                                                 <label class="text-sm">TIME START :</label>
@@ -372,7 +372,7 @@
                                                         </div>
 
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
                                                         <div class="row form-group mt-1 text-right">
                                                             <div class="col-md-6">
                                                                 <label class="text-sm">TIME END :</label>
@@ -386,11 +386,14 @@
                                                         </div>
 
                                                     </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group mt-1 text-center">
+                                                            <input @if (!$Modify) disabled @endif
+                                                                type="checkbox" wire:model='IS_INCOMPLETE' />
+                                                            <label class="text-xs text-danger"> INCOMPLETE </label>
+                                                        </div>
+                                                    </div>
                                                 </div>
-
-
-
-
                                             </div>
                                         </div>
                                     </div>
