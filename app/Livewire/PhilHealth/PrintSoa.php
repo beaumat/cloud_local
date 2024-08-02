@@ -243,7 +243,7 @@ class PrintSoa extends Component
                     if ($this->allDate == '') {
                         $this->allDate =  $dateFormat;
                     } else {
-                        $this->allDate = $this->allDate . ' ,' . $dateFormat;
+                        $this->allDate = $this->allDate . ', ' . $dateFormat;
                     }
                 }
                 return;
