@@ -202,7 +202,7 @@ class PrintTreatment extends Component
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS = $contact->POSTAL_ADDRESS;
                     $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
-                    $this->FINAL_DIAGNOSIS =  $this->philHealthServices->DEFAULT_DIAGNOSIS .  $contact->FINAL_DIAGNOSIS ?? '';
+                    $this->FINAL_DIAGNOSIS =  $this->philHealthServices->DEFAULT_DIAGNOSIS . strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
                     $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                     $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
