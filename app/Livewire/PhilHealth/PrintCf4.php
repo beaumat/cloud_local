@@ -152,7 +152,7 @@ class PrintCf4 extends Component
                 $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                 $this->PATIENT_GENDER = $contact->GENDER;
                 $this->IS_PATIENT = $contact->IS_PATIENT;
-                $this->FINAL_DIAGNOSIS = $contact->FINAL_DIAGNOSIS ?? '';
+                $this->FINAL_DIAGNOSIS =  strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
                 $this->AGE = $this->contactServices->calculateUserAge($this->PATIENT_BIRTH_DATE);
 
                 if ($this->IS_PATIENT) {
@@ -187,7 +187,7 @@ class PrintCf4 extends Component
                 $this->IS_REPRESENTATIVE = $contact->IS_REPRESENTATIVE;
 
                 if ($this->IS_REPRESENTATIVE) {
-                    $this->NAME_REPRESENTATIVE = strtoupper( $contact->CONTACT_PERSON);
+                    $this->NAME_REPRESENTATIVE = strtoupper($contact->CONTACT_PERSON);
                 } else {
                     $this->NAME_REPRESENTATIVE = "";
                 }
