@@ -12,7 +12,7 @@ use App\Models\PhilhealthDrugsMedicines;
 class PhilHealthServices
 {
     public float $OP_LAB_N_DIAGNOSTICS_AMOUNT = 250;
-    public string $DEFAULT_DIAGNOSIS = "CHRONIC KIDNEY DISEASE STAGE 5 to ";
+    public string $DEFAULT_DIAGNOSIS = "CHRONIC KIDNEY DISEASE STAGE 5 TO ";
     public string $DEFAULT_DIAGNOSIS2 = "CKD Stage Sec 5 to ";
     private float $DISCOUNT_PERCENT = 20;
     public float $P1_PHIC_AMOUNT = 2250;

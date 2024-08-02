@@ -1333,7 +1333,7 @@
                                     </div>
                                 </div>
                                 <div class="col-3 text-center">
-                                    <b class="h6 text-primary courier-new font-weight-bold text-sm" >
+                                    <b class="h6 text-primary courier-new font-weight-bold" >
                                       <div style="position: absolute;">{{ $HCP_1_NAME }}</div>  &nbsp;
                                     </b>
                                     <div class="top-line2"></div>

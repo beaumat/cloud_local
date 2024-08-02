@@ -567,7 +567,6 @@
             <div class="row">
                 <div class="col bottom-line2 ">
                     <p> Generic Name </p>
-
                     <div class="row top-line2 ">
                         <br />
                         &nbsp; <strong class="h6"> {{ $dataMed[0]['GENERIC_NAME'] }} </strong>

@@ -80,15 +80,15 @@ class PrintCsf extends Component
                 switch ($row) {
                     case '1':
                         $this->HCP_1_AN = $list->PIN;
-                        $this->HCP_1_NAME = $list->NAME;
+                        $this->HCP_1_NAME = strtoupper($list->NAME);
                         break;
                     case '2':
                         $this->HCP_2_AN = $list->PIN;
-                        $this->HCP_2_NAME = $list->NAME;
+                        $this->HCP_2_NAME = strtoupper($list->NAME);
                         break;
                     case '3':
                         $this->HCP_3_AN = $list->PIN;
-                        $this->HCP_3_NAME = $list->NAME;
+                        $this->HCP_3_NAME = strtoupper($list->NAME);
                         break;
                     default:
                         # code...
@@ -101,26 +101,25 @@ class PrintCsf extends Component
             $contact = $this->contactServices->get($data->CONTACT_ID, 3);
             if ($contact) {
 
-                $this->PATIENT_LASTNAME = $contact->LAST_NAME;
-                $this->PATIENT_FIRSTNAME = $contact->FIRST_NAME;
-                $this->PATIENT_MIDDLENAME = $contact->MIDDLE_NAME;
-                $this->PATIENT_EXTENSION = $contact->SALUTATION;
+                $this->PATIENT_LASTNAME = strtoupper($contact->LAST_NAME);
+                $this->PATIENT_FIRSTNAME = strtoupper($contact->FIRST_NAME);
+                $this->PATIENT_MIDDLENAME = strtoupper($contact->MIDDLE_NAME);
+                $this->PATIENT_EXTENSION = strtoupper($contact->SALUTATION);
                 $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
-    
+
                 $this->IS_PATIENT = $contact->IS_PATIENT;
                 if ($this->IS_PATIENT) {
-                    $this->MEMBER_FIRST_NAME = $contact->FIRST_NAME;
-                    $this->MEMBER_LAST_NAME = $contact->LAST_NAME;
-                    $this->MEMBER_MIDDLE_NAME = $contact->MIDDLE_NAME;
-                    $this->MEMBER_EXTENSION = $contact->SALUTATION;
+                    $this->MEMBER_FIRST_NAME = strtoupper($contact->FIRST_NAME);
+                    $this->MEMBER_LAST_NAME = strtoupper($contact->LAST_NAME);
+                    $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MIDDLE_NAME);
+                    $this->MEMBER_EXTENSION = strtoupper($contact->SALUTATION);
                     $this->MEMBER_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                     $this->MEMBER_GENDER = $contact->GENDER;
-
                 } else {
-                    $this->MEMBER_FIRST_NAME = $contact->MEMBER_FIRST_NAME;
-                    $this->MEMBER_LAST_NAME = $contact->MEMBER_LAST_NAME;
-                    $this->MEMBER_MIDDLE_NAME = $contact->MEMBER_MIDDLE_NAME;
-                    $this->MEMBER_EXTENSION = $contact->MEMBER_EXTENSION;
+                    $this->MEMBER_FIRST_NAME = strtoupper($contact->MEMBER_FIRST_NAME);
+                    $this->MEMBER_LAST_NAME = strtoupper($contact->MEMBER_LAST_NAME);
+                    $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MEMBER_MIDDLE_NAME);
+                    $this->MEMBER_EXTENSION = strtoupper($contact->MEMBER_EXTENSION);
                     $this->MEMBER_BIRTH_DATE = $contact->MEMBER_BIRTH_DATE;
                     $this->MEMBER_GENDER = $contact->MEMBER_GENDER;
                 }
@@ -151,16 +150,12 @@ class PrintCsf extends Component
                 $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
                 $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
-                 $locData =   $this->locationServices->getPesonel($this->LOCATION_ID);
-                if($locData) {
-                    $this->HCI_NAME = $locData->MANAGER_NAME ?? '';
-                    $this->HCI_POSITION = $locData->MANAGER_POSITION ?? '';
+                $locData =   $this->locationServices->getPesonel($this->LOCATION_ID);
+                if ($locData) {
+                    $this->HCI_NAME = strtoupper($locData->MANAGER_NAME)  ?? '';
+                    $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION)  ?? '';
                 }
-
             }
-
-
-
         }
     }
 

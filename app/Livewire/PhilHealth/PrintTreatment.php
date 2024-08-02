@@ -214,7 +214,7 @@ class PrintTreatment extends Component
                     $conPHIC = $this->contactServices->get($locDate->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                     if ($conPHIC) {
                         $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
-                        $this->USER_NAME = $conPHIC->PRINT_NAME_AS ?? '';
+                        $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
                     }
 
                     // $HCI_MANAGER_ID
@@ -223,7 +223,7 @@ class PrintTreatment extends Component
 
                     if ($conMgr) {
 
-                        $this->ADMINISTRATOR_NAME = $conMgr->PRINT_NAME_AS ?? '';
+                        $this->ADMINISTRATOR_NAME = strtoupper($conMgr->PRINT_NAME_AS) ?? '';
                     }
                 }
 
@@ -231,7 +231,7 @@ class PrintTreatment extends Component
                 $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
                 $PF = $this->philHealthServices->getProfFee($ID);
                 foreach ($PF as $p) {
-                    $this->PHYSICIAN = $p->NAME;
+                    $this->PHYSICIAN = strtoupper($p->NAME);
                 }
 
                 return;

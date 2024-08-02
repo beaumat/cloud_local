@@ -49,7 +49,7 @@ class PrintCf4Back extends Component
 
         if ($data) {
             $this->DATE_DISCHARGED =  $data->DATE_DISCHARGED ?? '';
-            
+
             $getData = $this->hemoServices->GetSummary(
                 $data->CONTACT_ID,
                 $data->LOCATION_ID,
@@ -68,7 +68,7 @@ class PrintCf4Back extends Component
         }
         $fee = $this->philHealthServices->getProfFee($id);
         foreach ($fee as $list) {
-            $this->DR_NAME = $list->NAME;
+            $this->DR_NAME = strtoupper($list->NAME);
             return;
         }
     }
