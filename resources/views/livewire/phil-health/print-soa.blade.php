@@ -31,8 +31,8 @@
                                 <div class="col-4">OTHER DIAGNOSIS : </div>
                                 <div class="col-8 bottom-line text-xs"> &nbsp; {{ $OTHER_DIAGNOSIS }}</div>
                                 <div class="col-4">TREATMENT DATES : </div>
-                                <div class="col-8 bottom-line "> &nbsp;
-                                    {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') : '' }}
+                                <div class="col-8 bottom-line text-xs"> &nbsp;
+                                    {{ $allDate }}
                                 </div>
                             </div>
                         </div>

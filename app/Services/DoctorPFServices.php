@@ -9,7 +9,7 @@ class DoctorPFServices
 
     public function getDoctorList(int $LOCATION_ID)
     {
-        $STATUS_ID = 1;
+        $STATUS_ID = 11; // 11 is paid
         $doctors = DB::table(DB::raw('(
             select 
                 c.ID,
@@ -32,14 +32,12 @@ class DoctorPFServices
             ->groupBy('DOCTOR_NAME', 'ID')
             ->get();
 
-
-
         return $doctors;
     }
 
     public function PatientGenerate(int $LOCATION_ID, int $DOCTOR_ID)
     {
-        $STATUS_ID = 1;
+        $STATUS_ID = 11; // 11 is paid
         $patients = DB::table(DB::raw('(
             select 
                 c.ID,

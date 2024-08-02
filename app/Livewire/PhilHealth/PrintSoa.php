@@ -3,6 +3,7 @@
 namespace App\Livewire\PhilHealth;
 
 use App\Services\ContactServices;
+use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Carbon;
@@ -94,14 +95,18 @@ class PrintSoa extends Component
     private $philHealthServices;
     private $contactServices;
     private $locationServices;
+    private $hemoServices;
     public $feeList = [];
     public $i;
     public int $NO_OF_TREATMENT;
-    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, LocationServices $locationServices)
+    public string $allDate = '';
+
+    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, LocationServices $locationServices, HemoServices $hemoServices)
     {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
+        $this->hemoServices = $hemoServices;
     }
 
     public function profFeeList($PHIC_ID)
@@ -212,7 +217,7 @@ class PrintSoa extends Component
                     $this->ADDRESS1 = $this->GetAddress1($contact);
                     $this->ADDRESS2 = $this->GetAddress2($contact);
                     $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
-                    $this->FINAL_DIAGNOSIS = $this->philHealthServices->DEFAULT_DIAGNOSIS . $contact->FINAL_DIAGNOSIS ?? '';
+                    $this->FINAL_DIAGNOSIS = $this->philHealthServices->DEFAULT_DIAGNOSIS2 . $contact->FINAL_DIAGNOSIS ?? '';
                     $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                     $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
@@ -229,6 +234,18 @@ class PrintSoa extends Component
                 }
                 $this->NO_OF_TREATMENT = (int) $this->philHealthServices->getNumberOfTreatment($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
                 $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
+
+                $this->allDate == '';
+
+                $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
+                foreach ($dataList as $list) {
+                    $dateFormat = date('m/d/Y', strtotime($list->DATE));
+                    if ($this->allDate == '') {
+                        $this->allDate =  $dateFormat;
+                    } else {
+                        $this->allDate = $this->allDate . ' ,' . $dateFormat;
+                    }
+                }
                 return;
             }
         }
