@@ -17,7 +17,8 @@ class PhilHealthServices
     private float $DISCOUNT_PERCENT = 20;
     public float $P1_PHIC_AMOUNT = 2250;
     public float $DRUG_N_MEDINE_AMOUNT = 1270.00;
-    public float $OPERATING_ROOM_FEE_AMOUNT = 1960.50;
+    public float $OPERATING_ROOM_FEE_AMOUNT = 0;
+    public float $OTHER_CHARGES_AMOUNT = 1960.50;
     public float $ROOM_FEE = 1960;
     public float $SUPPLIES = 1082;
     public float $PROF_FEE_AMOUNT = 437.50;
@@ -94,7 +95,8 @@ class PhilHealthServices
             $DRUG_MED = (float) $this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT;
             $OPERATE_FEE = (float) $this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT; //
             $CHARGES_SUPPLIES = (float) $this->SUPPLIES * $NO_OF_TREATMENT;
-            $C_SUB_TOTAL = (float) $DRUG_MED + $OPERATE_FEE + $CHARGES_SUPPLIES + $LAB_N_DIAGNOS;
+            $CHARGES_OTHERS = (float) $this->OTHER_CHARGES_AMOUNT * $NO_OF_TREATMENT;
+            $C_SUB_TOTAL = (float) $DRUG_MED + $OPERATE_FEE + $CHARGES_SUPPLIES + $LAB_N_DIAGNOS + $CHARGES_OTHERS;
 
             $SP_SUB_TOTAL = (float)  $C_SUB_TOTAL *  ($this->DISCOUNT_PERCENT / 100);
             $AD_SUB_TOTAL = $C_SUB_TOTAL  -  $SP_SUB_TOTAL;
@@ -119,6 +121,7 @@ class PhilHealthServices
                     'CHARGES_OPERATING_ROOM_FEE'        => $OPERATE_FEE,
                     'CHARGES_SUPPLIES'                  => $CHARGES_SUPPLIES,
                     'CHARGES_SUB_TOTAL'                 => $C_SUB_TOTAL,
+                    'CHARGES_OTHERS'                    => $CHARGES_OTHERS,
                     'SP_SUB_TOTAL'                      => $SP_SUB_TOTAL,
                     'P1_SUB_TOTAL'                      => $P1_SUB_TOTAL,
                     'OP_SUB_TOTAL'                      => $OP_SUB_TOTAL,
@@ -619,6 +622,4 @@ class PhilHealthServices
                 ]);
         }
     }
-
-
 }

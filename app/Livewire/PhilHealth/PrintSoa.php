@@ -239,13 +239,15 @@ class PrintSoa extends Component
 
                 $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
                 foreach ($dataList as $list) {
-                    $dateFormat = date('m/d/Y', strtotime($list->DATE));
+
                     if ($this->allDate == '') {
-                        $this->allDate =  $dateFormat;
+                        $this->allDate =  date('F d', strtotime($list->DATE));
                     } else {
-                        $this->allDate = $this->allDate . ', ' . $dateFormat;
+                        $this->allDate = $this->allDate . ', ' .  date('d', strtotime($list->DATE));
                     }
                 }
+
+                $this->allDate = $this->allDate . ', ' .  date('Y', strtotime($list->DATE));
                 return;
             }
         }

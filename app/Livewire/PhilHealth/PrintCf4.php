@@ -65,6 +65,7 @@ class PrintCf4 extends Component
 
     public string $CHIEF_OF_COMPLAINT = 'HEMODIALYSIS';
     public string $ADMITTING_DIAGNOSIS = 'CHRONIC KIDNEY DISEASE';
+    public string $FINAL_DIAGNOSIS;
     public string $HISTORY_OF_PRESENT_ILLNESS = 'CHRONIC KIDNEY DISEASE STAGE 5';
     public int $AGE;
     public float $HEIGHT;
@@ -101,6 +102,7 @@ class PrintCf4 extends Component
             $this->TIME_ADMITTED = $data->TIME_ADMITTED ? Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A') : '' ;
             $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
             $this->TIME_DISCHARGED = $data->TIME_DISCHARGED ? Carbon::createFromFormat('H:i:s', $data->TIME_DISCHARGED)->format('h:i A') : '';
+        
             $this->LOCATION_ID = $data->LOCATION_ID;
             $fee = $this->philHealthServices->getProfFee($id);
             $row = 1;
@@ -151,6 +153,7 @@ class PrintCf4 extends Component
                 $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                 $this->PATIENT_GENDER = $contact->GENDER;
                 $this->IS_PATIENT = $contact->IS_PATIENT;
+                $this->FINAL_DIAGNOSIS = $contact->FINAL_DIAGNOSIS ?? '';
                 $this->AGE = $this->contactServices->calculateUserAge($this->PATIENT_BIRTH_DATE);
                 
                 if ($this->IS_PATIENT) {

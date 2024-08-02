@@ -236,7 +236,7 @@
                                 <div class="col-6">
                                     <label> 7. Discharge Diagnosis</label>
                                     <h4 class="p-0 m-0 times-new-roman">
-                                        &nbsp;&nbsp;<b>{{ $ADMITTING_DIAGNOSIS }}</b> &nbsp;</h4>
+                                        &nbsp;&nbsp;<b>{{ $FINAL_DIAGNOSIS }}</b> &nbsp;</h4>
                                 </div>
                             </div>
                         </div>
@@ -469,7 +469,7 @@
                 <div class="col-12 bottom-line2" style="height: 150px;">
                     <label class="text-xs">2.a Pertinent Past Medical History: </label>
                     <h4 class="p-0 m-0 times-new-roman">
-                        &nbsp;&nbsp;<b>{{ $ADMITTING_DIAGNOSIS }}</b> &nbsp;</h4>
+                        &nbsp;&nbsp;<b>{{ $FINAL_DIAGNOSIS }}</b> &nbsp;</h4>
                     <div class="" style="bottom: -10px; position: absolute;">
                         <label class="text-xs">2.b OB/GYN History </label>
                         <p class="text-xs">G ___ P ___ ( ___ - ___ - ____ - ____ ) LMP: ________________________ <b

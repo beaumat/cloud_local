@@ -153,9 +153,9 @@
                     <td class="text-right">
                         {{-- <livewire:number name='CHARGES_OPERATING_ROOM_FEE' wire:model.live.lazy='CHARGES_OPERATING_ROOM_FEE' /> --}}
 
-                        @if ($CHARGES_OPERATING_ROOM_FEE > 0)
+                        {{-- @if ($CHARGES_OPERATING_ROOM_FEE > 0) --}}
                             {{ number_format($CHARGES_OPERATING_ROOM_FEE, 2) }}
-                        @endif
+                        {{-- @endif --}}
                     </td>
                     <td class="text-right">
                         {{-- <livewire:number name='VAT_OPERATING_ROOM_FEE' wire:model.live.lazy='VAT_OPERATING_ROOM_FEE' /> --}}
@@ -230,8 +230,8 @@
                 </tr>
 
                 <tr>
-                    <td class="text-left">Others: specify</td>
-                    <td>
+                    <td class="text-left">Administrative & Others Fee</td>
+                    <td class="text-right">
                         {{-- <livewire:number name='CHARGES_OTHERS' wire:model.live.lazy='CHARGES_OTHERS' /> --}}
 
                         @if ($CHARGES_OTHERS > 0)

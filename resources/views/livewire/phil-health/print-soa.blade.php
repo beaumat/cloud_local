@@ -244,9 +244,9 @@
                             Operating Room Fee
                         </div>
                         <div id="p-charge" class="col-1 text-right  left-line">
-                            @if ($CHARGES_OPERATING_ROOM_FEE > 0)
-                                {{ number_format($CHARGES_OPERATING_ROOM_FEE, 2) }}
-                            @endif
+                            {{-- @if ($CHARGES_OPERATING_ROOM_FEE > 0) --}}
+                            {{ number_format($CHARGES_OPERATING_ROOM_FEE, 2) }}
+                            {{-- @endif --}}
                         </div>
                         <div id="p-vat" class="col-1 text-right  left-line">
                             @if ($VAT_OPERATING_ROOM_FEE > 0)
@@ -307,7 +307,7 @@
                     </div>
                     <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
-                            Others: Pls. specify
+                            Administrative & Other Fees
                         </div>
                         <div id="p-charge" class="col-1 text-right  left-line">
                             @if ($CHARGES_OTHERS > 0)
@@ -334,6 +334,9 @@
                         <div id="p-second" class="col-1 left-line text-center "> </div>
                         <div id="p-pocket" class="col-1 text-center left-line"> </div>
                     </div>
+
+
+
                     <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
                             <b>SUBTOTAL</b>
