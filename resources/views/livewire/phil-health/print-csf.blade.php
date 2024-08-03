@@ -1211,10 +1211,10 @@
                                     <div class="top-line2"></div>
                                     <p class="text-xs">Signature Over Printed Name</p>
                                 </div>
-                                <div class="col-4">
-                                    <div class="row">
+                                <div class="col-4 text-right">
+                                    <div class="row" style="padding-right:10px;">
                                         <div class="col-3 text-md">
-                                            <div class="form-group mt-2 text-sm  text-left" style="width:100px;">
+                                            <div class="form-group mt-2 text-sm  text-right" style="width:110px;">
                                                 Date Signed
                                             </div>
                                         </div>
@@ -1231,17 +1231,17 @@
                                                 <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
                                                 <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
                                                 <br>
-                                                <p style="position: absolute;top:27px;">month
+                                                <p style="position: absolute;top:27px;right:0">month
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    year</p>
+                                                    year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12" id="always_input">
                             <div class="row">
                                 <div class="col-5 text-sm">
                                     Accreditation No.
@@ -1333,16 +1333,17 @@
                                     </div>
                                 </div>
                                 <div class="col-3 text-center">
-                                    <b class="h6 text-primary courier-new font-weight-bold" >
-                                      <div style="position: absolute;">{{ $HCP_1_NAME }}</div>  &nbsp;
+                                    <b class="h6 text-primary courier-new font-weight-bold">
+                                        <div style="position: absolute;width:300px;" class="text-left">
+                                            {{ $HCP_1_NAME }}</div> &nbsp;
                                     </b>
                                     <div class="top-line2"></div>
                                     <p class="text-xs">Signature Over Printed Name</p>
                                 </div>
-                                <div class="col-4">
-                                    <div class="row">
+                                <div class="col-4 text-right">
+                                    <div class="row" style="padding-right:10px;">
                                         <div class="col-3 text-md">
-                                            <div class="form-group mt-2 text-sm  text-left" style="width:100px;">
+                                            <div class="form-group mt-2 text-sm  text-right" style="width:110px;">
                                                 Date Signed
                                             </div>
                                         </div>
@@ -1375,10 +1376,10 @@
                                                     {{ substr($DATE_DISCHARGED, 3, 1) }}
                                                 </div>
                                                 <br>
-                                                <p style="position: absolute;top:27px;">month
+                                                <p style="position: absolute;top:27px;right:0">month
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    year</p>
+                                                    year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1481,12 +1482,12 @@
                                         {{ $HCP_3_NAME }}&nbsp;
                                     </b>
                                     <div class="top-line2"></div>
-                                  <p class="text-xs">Signature Over Printed Name</p>
+                                    <p class="text-xs">Signature Over Printed Name</p>
                                 </div>
-                                <div class="col-4">
-                                    <div class="row">
+                                <div class="col-4 text-right">
+                                    <div class="row" style="padding-right:10px;">
                                         <div class="col-3 text-md">
-                                            <div class="form-group mt-2 text-sm  text-left" style="width:100px;">
+                                            <div class="form-group mt-2 text-sm  text-right" style="width:110px;">
                                                 Date Signed
                                             </div>
                                         </div>
@@ -1503,10 +1504,10 @@
                                                 <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
                                                 <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
                                                 <br>
-                                                <p style="position: absolute;top:27px;">month
+                                                <p style="position: absolute;top:27px;right:0">month
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    year</p>
+                                                    year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                             </div>
                                         </div>
                                     </div>

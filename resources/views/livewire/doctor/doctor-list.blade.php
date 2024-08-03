@@ -8,7 +8,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
-                            @livewire('Doctor.DoctorProfessionalFeeModal')
+              
                         </li>
                     </ol>
                 </div>

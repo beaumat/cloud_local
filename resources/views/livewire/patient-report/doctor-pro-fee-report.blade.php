@@ -26,28 +26,27 @@
                                 <button class="btn btn-sm btn-primary" wire:click='Generate()'>Filter</button>
                             </div>
                             <div class="col-md-4">
-
                             </div>
-
                             <div class="col-md-4">
-
                                 <div class="row">
-                                    <div class="col-md-8">
-                                        {{-- <livewire:select-option name="PATIENT_ID" titleName="Selected patient"
-                                            :options="$patientList" :zero="true" :isDisabled=false
-                                            wire:model.live='PATIENT_ID' /> --}}
+                                    <div class="col-md-6">
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="mt-0">
-                                            <label class="text-xs pt-2">Location:</label>
-                                            <select name="location" wire:model.live='LOCATION_ID'
-                                                class="form-control form-control-sm text-xs mt-1">
-                                                <option value="0"> All Location</option>
-                                                @foreach ($locationList as $item)
-                                                    <option value="{{ $item->ID }}"> {{ $item->NAME }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class='col-md-6  text-right'>
+                                                <label class="text-xs pt-2">Location:</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select name="location" wire:model.live='LOCATION_ID'
+                                                    class="form-control form-control-sm text-xs mt-1">
+                                                    <option value="0"> All Location</option>
+                                                    @foreach ($locationList as $item)
+                                                        <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -57,7 +56,6 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-6">
-
                             </div>
                             <div class="col-6 text-right">
                                 {{-- <button class="btn btn-sm btn-success " wire:click='export()'> Export </button> --}}
