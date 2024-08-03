@@ -1334,7 +1334,7 @@
                                 </div>
                                 <div class="col-3 text-center">
                                     <b class="h6 text-primary courier-new font-weight-bold">
-                                        <div style="position: absolute;width:300px;" class="text-left">
+                                        <div style="position: absolute;width:330px;" class="text-left">
                                             {{ $HCP_1_NAME }}</div> &nbsp;
                                     </b>
                                     <div class="top-line2"></div>
