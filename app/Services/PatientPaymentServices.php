@@ -139,7 +139,7 @@ class PatientPaymentServices
         PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->delete();
         PatientPayments::where('ID', $ID)->delete();
     }
-    public function Search($search, int $locationId, int $perPage)
+    public function Search($search, int $locationId, int $perPage, string $sortby, bool $isDesc)
     {
         $result = PatientPayments::query()
             ->select([
@@ -148,8 +148,10 @@ class PatientPaymentServices
                 'patient_payment.DATE',
                 'patient_payment.AMOUNT',
                 'patient_payment.AMOUNT_APPLIED',
+                DB::raw(" IFNULL(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED,0) AS BALANCE"),
                 'patient_payment.NOTES',
-                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as CONTACT_NAME"),
+                'c.LAST_NAME',
+                'c.FIRST_NAME',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
                 'pm.DESCRIPTION as PAYMENT_METHOD',
@@ -182,7 +184,7 @@ class PatientPaymentServices
                         ->orWhere('patient_payment.RECEIPT_REF_NO', 'like', '%' . $search . '%');
                 });
             })
-            ->orderBy('patient_payment.ID', 'desc')
+            ->orderBy($sortby, $isDesc ? 'desc' : 'asc')
             ->paginate($perPage);
 
         return $result;

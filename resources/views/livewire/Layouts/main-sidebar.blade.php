@@ -98,8 +98,6 @@
                         Auth::user()->can('location.view') ||
                         Auth::user()->can('location-group.view') ||
                         Auth::user()->can('option'))
-
-
                     <li class="nav-item {{ request()->is('maintenance*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('maintenance*') ? 'active ' : '' }}">
                             <i class="nav-icon fa fa-cog"></i>

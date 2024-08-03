@@ -17,10 +17,9 @@ class PatientPaymentList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
+    public bool $isDesc = true;
     public int $perPage = 20;
-    public float $TOTAL_DEPOSIT = 0;
-    public float $TOTAL_APPLIED = 0;
-    public float $TOTAL_BALANCE = 0;
+    public string $sortby = 'patient_payment.ID';
     public int $locationid;
     public $locationList = [];
     private $patientPaymentServices;
@@ -75,10 +74,20 @@ class PatientPaymentList extends Component
         ];
         $this->dispatch('open-assistance', result: $data);
     }
+    public function sorting(string $column)
+    {
+        if ($this->sortby  == $column) {
+
+            $this->isDesc = $this->isDesc ? false : true;
+            return;
+        }
+        $this->isDesc = true;
+        $this->sortby = $column;
+    }
     #[On('reload-list')]
     public function render()
     {
-        $dataList = $this->patientPaymentServices->Search($this->search, $this->locationid, $this->perPage);
+        $dataList = $this->patientPaymentServices->Search($this->search, $this->locationid, $this->perPage, $this->sortby, $this->isDesc);
         return view('livewire.patient-payment.patient-payment-list', ['dataList' => $dataList]);
     }
 }

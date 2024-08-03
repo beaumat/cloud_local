@@ -86,8 +86,6 @@ class PhilHealthForm extends Component
     }
     public function mount($id = null)
     {
-
-
         if (is_numeric($id)) {
             $data = $this->philHealthServices->get($id);
             if ($data) {
@@ -127,8 +125,6 @@ class PhilHealthForm extends Component
         $this->FIRST_CASE_RATE = '';
         $this->SECOND_CASE_RATE = '';
         $this->STATUS_ID = 0;
-
-
         $this->Modify = true;
     }
 
@@ -183,6 +179,7 @@ class PhilHealthForm extends Component
             $this->Modify = false;
 
             return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+            
         } else {
 
             $this->philHealthServices->preUpdate(

@@ -47,8 +47,8 @@
                                         <div class="col-md-1">
                                             <div class="mt-0">
                                                 <label class="text-sm"><br /></label>
-
-                                                <button class="btn btn-sm btn-primary w-100" wire:click='reloadList()'>
+                                                <button class="btn btn-sm btn-secondary w-100"
+                                                    wire:click='reloadList()'>
                                                     <i class="fa fa-refresh" aria-hidden="true"></i> Reload
                                                 </button>
                                             </div>
@@ -59,18 +59,146 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="">No.</th>
-                                        <th>Date</th>
-                                        <th class="col-2">Patients</th>
-                                        <th>Deposit</th>
-                                        <th>Applied</th>
-                                        <th>Balance</th>
-                                        <th>Method</th>
-                                        <th class="">Ref No.</th>
-                                        <th class="col-1">Ref Date.</th>
-                                        <th>Confirm</th>
-                                        <th class="col-1">Location</th>
-                                        <th>Status</th>
+                                        <th>
+                                            <span type='button' wire:click="sorting('patient_payment.CODE')">No.</span>
+                                            @if ($sortby == 'patient_payment.CODE')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th>
+                                            <span type='button'
+                                                wire:click="sorting('patient_payment.DATE')">Date</span>
+                                            @if ($sortby == 'patient_payment.DATE')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th class="col-1">
+                                            <span type='button' wire:click="sorting('c.LAST_NAME')">Lastname</span>
+                                            @if ($sortby == 'c.LAST_NAME')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th class="col-1">
+                                            <span type='button' wire:click="sorting('c.FIRST_NAME')">Firstname</span>
+                                            @if ($sortby == 'c.FIRT_NAME')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+
+                                        <th>
+                                            <span type='button'
+                                                wire:click="sorting('patient_payment.AMOUNT')">Deposit</span>
+                                            @if ($sortby == 'patient_payment.AMOUNT')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th>
+                                            <span type='button'
+                                                wire:click="sorting('patient_payment.AMOUNT_APPLIED')">Applied</span>
+
+                                            @if ($sortby == 'patient_payment.AMOUNT_APPLIED')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th>
+                                            <span type='button' wire:click="sorting('BALANCE')">Balance</span>
+                                        </th>
+                                        <th>
+                                            <span type='button' wire:click="sorting('pm.DESCRIPTION')"> Method </span>
+                                            @if ($sortby == 'pm.DESCRIPTION')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th>
+                                            <span type='button' wire:click="sorting('patient_payment.RECEIPT_REF_NO')">
+                                                Ref No. </span>
+
+                                            @if ($sortby == 'patient_payment.RECEIPT_REF_NO')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th class="col-1">
+                                            <span type='button' wire:click="sorting('patient_payment.RECEIPT_DATE')">
+                                                Ref Date
+                                            </span>
+                                            @if ($sortby == 'patient_payment.RECEIPT_DATE')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+
+                                        </th>
+                                        <th>
+                                            <span type='button' wire:click="sorting('patient_payment.IS_CONFIRM')">
+                                                Confirm
+                                            </span>
+                                            @if ($sortby == 'patient_payment.IS_CONFIRM')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th class="col-1">
+                                            <span type='button' wire:click="sorting('l.NAME')">
+                                                Location
+                                            </span>
+                                            @if ($sortby == 'l.NAME')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+
+                                        </th>
+                                        <th>
+                                            <span type='button' wire:click="sorting('s.DESCRIPTION')">
+                                                Status
+                                            </span>
+                                            @if ($sortby == 's.DESCRIPTION')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
                                         @can('patient.payment.create')
                                             <th class="text-center bg-success">
                                                 <a href="{{ route('patientspayment_create') }}"
@@ -92,12 +220,17 @@
                                             <td>
                                                 <label type="button"
                                                     wire:click='openPayment({{ $list->PATIENT_ID }})'>
-                                                    {{ $list->CONTACT_NAME }}</label>
+                                                    {{ $list->LAST_NAME }}</label>
+                                            </td>
+                                            <td>
+                                                <label type="button"
+                                                    wire:click='openPayment({{ $list->PATIENT_ID }})'>
+                                                    {{ $list->FIRST_NAME }}</label>
                                             </td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
                                             <td class="text-right">
-                                                {{ number_format($list->AMOUNT - $list->AMOUNT_APPLIED, 2) }}
+                                                {{ number_format($list->BALANCE, 2) }}
                                             </td>
                                             <td> {{ $list->PAYMENT_METHOD }}</td>
                                             <td>{{ $list->RECEIPT_REF_NO }}</td>
@@ -132,7 +265,8 @@
                                                     </a>
                                                     @can('patient.payment.update')
                                                         @if ($list->FILE_PATH)
-                                                            <button wire:click='getConfirm({{ $list->ID }})' type="button"
+                                                            <button wire:click='getConfirm({{ $list->ID }})'
+                                                                type="button"
                                                                 wire:confirm="Are you sure this guaranteed letter is confirm?"
                                                                 class="btn btn-outline-none btn-sm p-0  text-success">
                                                                 <i class="fa fa-check-square-o" aria-hidden="true"></i>
