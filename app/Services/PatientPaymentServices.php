@@ -530,7 +530,7 @@ class PatientPaymentServices
             ->first();
 
         if ($pay) {
-            return $pay->TOTAL;
+            return $pay->TOTAL ?? 0;
         }
 
         return 0;
