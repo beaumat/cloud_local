@@ -352,7 +352,6 @@ class PatientPaymentServices
 
         return $result;
     }
-
     public function PaymentAvailableList(int $PATIENT_ID, int $LOCATION_ID)
     {
         $result = PatientPayments::query()

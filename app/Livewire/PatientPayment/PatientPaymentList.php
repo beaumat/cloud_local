@@ -77,7 +77,6 @@ class PatientPaymentList extends Component
     public function sorting(string $column)
     {
         if ($this->sortby  == $column) {
-
             $this->isDesc = $this->isDesc ? false : true;
             return;
         }

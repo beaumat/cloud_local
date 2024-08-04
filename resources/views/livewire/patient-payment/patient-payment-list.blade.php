@@ -92,7 +92,7 @@
                                         </th>
                                         <th class="col-1">
                                             <span type='button' wire:click="sorting('c.FIRST_NAME')">Firstname</span>
-                                            @if ($sortby == 'c.FIRT_NAME')
+                                            @if ($sortby == 'c.FIRST_NAME')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
                                                 @else

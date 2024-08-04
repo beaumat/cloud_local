@@ -15,7 +15,9 @@
                         <table class="table table-sm table-bordered table-hover">
                             <thead class="bg-sky text-xs">
                                 <tr>
-                                    <th class="text-center">Select</th>
+                                    <th class="text-center">
+                                        <input type="checkbox" wire:model.live='SelectAllCharges' />
+                                    </th>
                                     <th class="col-1 ">Date</th>
                                     <th class="col-1 ">Reference</th>
                                     <th class="col-1 ">Org.Amount</th>

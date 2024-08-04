@@ -39,6 +39,9 @@ class ServicesChargesModal extends Component
     #[On('open-payment-sc')]
     public function openModal($result)
     {
+
+        $this->SelectAllCharges = false;
+
         $this->PATIENT_PAYMENT_ID = $result['PATIENT_PAYMENT_ID'];
 
         $pay = $this->patientPaymentServices->get($this->PATIENT_PAYMENT_ID);
@@ -63,7 +66,7 @@ class ServicesChargesModal extends Component
         $this->showModal = false;
     }
     public function save(): void
-    {      
+    {
         $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
         $CollectAmount = 0;
         //Check Amount First
@@ -77,7 +80,6 @@ class ServicesChargesModal extends Component
                         return;
                     }
                 } catch (\Throwable $th) {
-              
                 }
             }
         }
@@ -87,7 +89,7 @@ class ServicesChargesModal extends Component
             return;
         }
 
-   
+
         if ($CollectAmount > $CurrentAmount) {
             session()->flash('error', 'Invalid amount');
             return;
@@ -119,7 +121,57 @@ class ServicesChargesModal extends Component
         $this->paymentAmounts = [];
         $this->dispatch('reload_philhealth_payment');
     }
+    public function updatedSelectedCharges(bool $value, $id): bool
+    {
+        if (!$value) {
+            $this->paymentAmounts[$id] = 0;
+            return false;
+        }
 
+        $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
+        $CollectAmount = 0;
+        foreach ($this->selectedCharges as $chargeId => $isSelected) {
+            if ($isSelected) {
+                try {
+                    $CollectAmount = $CollectAmount + $this->paymentAmounts[$chargeId] ?? 0;
+                } catch (\Throwable $th) {
+                    $CollectAmount = $CollectAmount + 0;
+                }
+            }
+        }
+        $newPay = $CurrentAmount - $CollectAmount;
+        $balance = $this->serviceChargeServices->getItemBalance($id);
+
+        if ($balance <= $newPay) {
+            $mustPay = $balance;
+        } else {
+            $mustPay = $newPay;
+        }
+        $this->paymentAmounts[$id] = $mustPay;
+        return true;
+    }
+    public bool $SelectAllCharges = false;
+    public function UpdatedSelectAllCharges($value)
+    {
+        if ($value) {
+
+            foreach ($this->dataList as $list) {
+
+                $this->selectedCharges[$list->ID] = true;
+                $isDone =    $this->updatedSelectedCharges(true, $list->ID);
+
+                if ($isDone == false) {
+
+                    return;
+                }
+            }
+        } else {
+            foreach ($this->dataList as $list) {
+                $this->selectedCharges[$list->ID] = false;
+                $this->paymentAmounts[$list->ID] = 0;
+            }
+        }
+    }
     public function render()
     {
         if ($this->showModal) {

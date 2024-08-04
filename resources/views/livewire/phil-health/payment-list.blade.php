@@ -145,7 +145,7 @@
         </table>
     </div>
     <div class="col-md-6">
-        @livewire('PhilHealth.Services ChargesModal', ['PHILHEALTH_ID' => $PHILHEALTH_ID])
+        @livewire('PhilHealth.ServicesChargesModal', ['PHILHEALTH_ID' => $PHILHEALTH_ID])
     </div>
     <div class="col-md-6">
         <div class="row">

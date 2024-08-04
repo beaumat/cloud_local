@@ -252,7 +252,7 @@ class ServiceChargeServices
                     ->orWhere('c.NAME', 'like', '%' . $search . '%')
                     ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
             })
-            ->where('service_charges.DATE', [$dateFrom, $dateTo])
+            ->whereBetween('service_charges.DATE', [$dateFrom, $dateTo])
             ->orderBy('service_charges.DATE', 'desc')
             ->paginate($perPage);
 
