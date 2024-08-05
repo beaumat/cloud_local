@@ -126,6 +126,13 @@
                                         </th>
                                         <th>
                                             <span type='button' wire:click="sorting('BALANCE')">Balance</span>
+                                            @if ($sortby == 'BALANCE')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
                                         </th>
                                         <th>
                                             <span type='button' wire:click="sorting('pm.DESCRIPTION')"> Method </span>
