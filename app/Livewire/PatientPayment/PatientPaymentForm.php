@@ -238,9 +238,6 @@ class PatientPaymentForm extends Component
 
             if ($this->ID == 0) {
 
-                if ($$this->RECEIPT_REF_NO <> "") {
-                }
-
 
                 $this->ID = $this->patientPaymentServices->Store(
                     $this->CODE,
