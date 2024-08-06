@@ -550,7 +550,7 @@ class PatientPaymentServices
             ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('PATIENT_ID', $PATIENT_ID)
             ->whereIn('PAYMENT_METHOD_ID', [91, 92, 93, 94, 96])
-            ->orderBy('RECEIPT_DATE', 'asc')
+            ->orderBy('TRANS_DATE', 'asc')
             ->get();
 
         return $result;
@@ -608,7 +608,7 @@ class PatientPaymentServices
 
 
         // Combine both queries
-        $result = $query1->unionAll($query2)->orderBy('TRANS_DATE')->get();
+        $result = $query1->unionAll($query2)->orderBy('TRANS_DATE','asc')->get();
 
 
         return $result;
