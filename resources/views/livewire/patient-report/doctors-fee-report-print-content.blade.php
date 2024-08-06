@@ -46,7 +46,7 @@
 
                         </tbody>
                     </table>
-                    <table class="w-100 ">
+                    <table class="w-100 mt-4">
                         <thead>
                             <tr>
                                 <th class="col-1 h5"></th>
@@ -64,7 +64,8 @@
                                 <th>&nbsp;</th>
                                 <th class="text-center h5 text-danger">TOTAL</th>
                                 <th class="text-center h5 text-danger">{{ $TOTAL_TREATMENT }} &nbsp;&nbsp;</th>
-                                <th class="text-right h5 text-danger">{{ number_format($TOTAL_AMOUNT, 2) }}&nbsp;&nbsp;</th>
+                                <th class="text-right h5 text-danger">{{ number_format($TOTAL_AMOUNT, 2) }}&nbsp;&nbsp;
+                                </th>
                             </tr>
                         </tbody>
                     </table>
@@ -75,27 +76,27 @@
                     <div class="row mt-4">
                         <div class="col-4">
                             <div class="form-group row ">
-                                <div class="col-7 text-center bottom-line"><strong class="">
-                                        {{ $USER_NAME }}</strong>
+                                <div class="col-7 h5 text-center bottom-line">
+                                    <strong> {{ $USER_NAME }}</strong>
                                 </div>
                                 <div class="col-7 text-center "><i>Prepered By :</i></div>
-
                             </div>
-
                         </div>
                         <div class="col-4">
                         </div>
                         <div class="col-4 text-right">
                             <div class="form-group row ">
-                                <div class="col-12 text-center bottom-line"><b>{{ $DOCTOR_NAME }}</b></div>
+                                <div class="col-12 text-center bottom-line h5"><b>{{ $DOCTOR_NAME }}</b></div>
                                 <div class="col-12 text-center"><i>Received By:</i></div>
                             </div>
                         </div>
                         <div class="col-4">
-                            <div class="form-group row ">
-                                <div class="col-7 text-center bottom-line"><strong class="">
+                            <div class="form-group row  mt-4">
+                                <div class="col-7 h5 text-left bottom-line">
+                                    <strong class="" style="position:absolute; width:250px;">
                                         {{ $ADMINISTRATOR_NAME }}
                                     </strong>
+                                    <br />
                                 </div>
                                 <div class="col-7 text-center"><i>Noted By:</i></div>
                             </div>

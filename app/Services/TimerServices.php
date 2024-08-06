@@ -29,9 +29,15 @@ class TimerServices
     public function getExecute()
     {
         // $ php artisan schedule:work = must run per minute
+        $unPostList = $this->hemoServices->GetUnpostedTreatment();
+        foreach ($unPostList as $list) {
+            $this->getPosted($list->CUSTOMER_ID, $list->DATE, $list->LOCATION_ID);
+        }
+
+
+
 
         $schedlist = $this->scheduleServices->getWaitingList($this->dateServices->NowDate());
-
         foreach ($schedlist as $sched) {
             $this->getPosted($sched->CONTACT_ID, $sched->SCHED_DATE, $sched->LOCATION_ID);
         }

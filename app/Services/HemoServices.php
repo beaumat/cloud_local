@@ -521,6 +521,22 @@ class HemoServices
             ->paginate($perPage);
         return $result;
     }
+
+    public function GetUnpostedTreatment()
+    {
+        $result = Hemodialysis::query()
+            ->select([
+                'hemodialysis.ID',
+                'hemodialysis.DATE',
+                'hemodialysis.CUSTOMER_ID',
+                'hemodialysis.LOCATION_ID'
+            ])
+            ->where('hemodialysis.STATUS_ID', 4)
+            ->orderBy('hemodialysis.DATE', 'asc')
+            ->get();
+
+        return $result;
+    }
     public function UnpostedTratment(int $LOCATION_ID, $search)
     {
         $result = Hemodialysis::query()
@@ -901,7 +917,7 @@ class HemoServices
             'TIME_START'             => '',
             'TIME_END'               => '',
             'STATUS_ID'              => 0,
-            'IS_INCOMPLETE'          => false   
+            'IS_INCOMPLETE'          => false
         ];
     }
 

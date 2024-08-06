@@ -436,7 +436,6 @@ class ScheduleServices
     {
         return  Schedules::query()->whereBetween('SCHED_DATE', [$DATE_FROM, $DATE_TO])->where('LOCATION_ID', $LOCATION_ID)->count();
     }
-
     public function getWaitingList(string $Date)
     {
         $data = Schedules::query()
