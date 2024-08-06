@@ -74,9 +74,9 @@
                                     $i = 1;
                                 }
                             @endphp
-                            @for ($n = $i; $n < 16; $n++)
+                            @for ($n = $i; $n < 15; $n++)
                                 <tr class="blackbox">
-                                    <td> <u class="h4">{{ $n - 1 }}</u> </td>
+                                    <td> <u class="h4">{{ $n + 1 }}</u> </td>
                                     <td class="left-line">
                                         <h4></h4>
                                     </td>
