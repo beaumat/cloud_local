@@ -411,7 +411,8 @@ class PhilHealthServices
                     $q->where('philhealth.CODE', 'like', '%' . $search . '%')
                         ->orWhere('philhealth.CHARGE_TOTAL', 'like', '%' . $search . '%')
                         ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                        ->orWhere('c.LAST_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.FIRST_NAME', 'like', '%' . $search . '%');
                 });
             })
             ->where('IS_TEMP', '0')
