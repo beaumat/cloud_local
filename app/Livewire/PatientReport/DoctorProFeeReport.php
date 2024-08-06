@@ -12,7 +12,7 @@ use Livewire\Component;
 #[Title('Doctors PF Reports')]
 class DoctorProFeeReport extends Component
 {
-    public int  $LOCATION_ID;
+    public int $LOCATION_ID;
     public $locationList = [];
     public $doctorList = [];
     private $doctorPFServices;
@@ -41,16 +41,15 @@ class DoctorProFeeReport extends Component
 
     public function openList(int $DOCTOR_ID)
     {
-
         $data = [
             'DOCTOR_ID' => $DOCTOR_ID,
             'LOCATION_ID' => $this->LOCATION_ID 
         ];
-
         $this->dispatch('pf-open-list', result: $data);
     }
     public function printList()
-    {
+    {   
+        
     }
     public function render()
     {

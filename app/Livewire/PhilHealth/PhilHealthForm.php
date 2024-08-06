@@ -207,9 +207,7 @@ class PhilHealthForm extends Component
     {
         $this->Modify = true;
     }
-    public function print()
-    {
-    }
+
     public function render()
     {
         return view('livewire.phil-health.phil-health-form');

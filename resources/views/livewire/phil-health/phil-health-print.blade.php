@@ -11,7 +11,6 @@
         <div class="page-break"></div>
         {{-- @livewire('PhilHealth.PrintComputation', ['PRINT_ID' => $ID]) --}}
     @endforeach
-
 </div>
 
 @script

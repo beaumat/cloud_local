@@ -2,7 +2,7 @@
 
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h6 class="modal-title"> NEPHRO : {{ $DOCTOR_NAME }}</h6>
@@ -16,11 +16,11 @@
                             class="table table-sm table-bordered table-hover">
                             <thead class="bg-sky text-xs">
                                 <tr>
-                                    <th>PATIENT</th>
-                                    <th class="col-1 ">DATE ADMITTED</th>
-                                    <th class="col-1 ">DATE DISCHARGE</th>
-                                    <th class="col-2 text-center">NO. OF TREATMENTS</th>
-                                    <th class="col-1 text-right">TOTAL</th>
+                                    <th>Patient Name</th>
+                                    <th class="col-1 ">Date Admiited</th>
+                                    <th class="col-1 ">Date Discharged</th>
+                                    <th class="col-2 text-center">No. of Treatment</th>
+                                    <th class="col-1 text-right">Total</th>
                                 </tr>
                             </thead>
                             <tbody class="text-xs">
@@ -49,7 +49,10 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success btn-sm" wire:click="save">Print</button>
+                        <a target="_BLANK"
+                            href="{{ route('reportspatient_doctor_fee_report_print', ['id' => $DOCTOR_ID,'locationid' => $LOCATION_ID]) }}"
+                            class="btn btn-sm btn-danger"> Print </a>
+
                         <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">Close</button>
                     </div>
                 </div>

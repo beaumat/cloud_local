@@ -258,7 +258,6 @@ class ServiceChargeServices
 
         return $result;
     }
-
     public function PatientRecord($search, int $contact_id, int $perPage)
     {
         $result = ServiceCharges::query()
@@ -289,7 +288,6 @@ class ServiceChargeServices
             ->paginate($perPage);
         return $result;
     }
-
     public  function getItemDetails(int $id)
     {
         return ServiceChargesItems::where('id', $id)->first();
@@ -298,25 +296,8 @@ class ServiceChargeServices
     {
         return (int) ServiceChargesItems::where('SERVICE_CHARGES_ID', $Id)->max('LINE_NO');
     }
-    public function ItemStore(
-        int $SERVICE_CHARGES_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        float $RATE,
-        int $RATE_TYPE,
-        float $AMOUNT,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT,
-        int $COGS_ACCOUNT_ID,
-        int $ASSET_ACCOUNT_ID,
-        int $INCOME_ACCOUNT_ID,
-        int $GROUP_LINE_ID,
-        bool $PRINT_IN_FORMS,
-        int $PRICE_LEVEL_ID
-    ): int {
+    public function ItemStore(int $SERVICE_CHARGES_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, int $INCOME_ACCOUNT_ID, int $GROUP_LINE_ID, bool $PRINT_IN_FORMS, int $PRICE_LEVEL_ID): int
+    {
 
         $LINE_NO = (int) $this->getLine($SERVICE_CHARGES_ID) + 1;
         $ID = (int) $this->object->ObjectNextID('SERVICE_CHARGES_ITEMS');

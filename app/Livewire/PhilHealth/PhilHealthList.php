@@ -18,13 +18,10 @@ class PhilHealthList extends Component
     public $search = '';
     public int $perPage = 20;
     public int $locationid;
-
     public $locationList = [];
-
     private $philHealthServices;
     private $locationServices;
     private $userServices;
-
     public bool $show = false;
     public function boot( PhilHealthServices $philHealthServices, LocationServices $locationServices, UserServices $userServices ) {
         $this->philHealthServices = $philHealthServices;

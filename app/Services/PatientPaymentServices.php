@@ -228,8 +228,6 @@ class PatientPaymentServices
             'TOTAL_APPLIED' => 0,
         ];
     }
-
-
     public function PaymentChargeStore(int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID, float $DISCOUNT, float $AMOUNT_APPLIED, int $DISCOUNT_ACCOUNT_ID, int $ACCOUNTS_RECEIVABLE_ID): int
     {
 

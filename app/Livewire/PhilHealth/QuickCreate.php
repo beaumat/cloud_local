@@ -72,7 +72,6 @@ class QuickCreate extends Component
     }
     public function updatedSelectAll($value)
     {
-
         if ($value) {
             foreach ($this->dataList as $list) {
                 $this->patientSelected[$list->ID] = true;
@@ -94,7 +93,6 @@ class QuickCreate extends Component
     private $TIME_ADMITTED = '';
     private $DATE_DISCHARGED = '';
     private $TIME_DISCHARGED = '';
-
     private string $FINAL_DIAGNOSIS = '';
     private string $OTHER_DIAGNOSIS = '';
     private string $FIRST_CASE_RATE = '';
@@ -102,7 +100,7 @@ class QuickCreate extends Component
 
     private function generateDateTime($CONTACT_ID): bool
     {
-        // $this->hemoServices->getDateTime();
+
         $data = $this->hemoServices->getDateTimeByRange($CONTACT_ID, $this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
         if ($data) {
             $this->DATE_ADMITTED = $data['FIRST_DATE'];

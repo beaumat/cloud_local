@@ -237,8 +237,6 @@ class PatientPaymentForm extends Component
         try {
 
             if ($this->ID == 0) {
-
-
                 $this->ID = $this->patientPaymentServices->Store(
                     $this->CODE,
                     $this->DATE,
