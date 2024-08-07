@@ -12,8 +12,9 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                        {{ $ID == 0 ? 'Create' : '' }}
-                                    <a class="text-white" href="{{ route('vendorspurchase_order') }}"> Purchase Order </a>
+                                    {{ $ID == 0 ? 'Create' : '' }}
+                                    <a class="text-white" href="{{ route('vendorspurchase_order') }}"> Purchase Order
+                                    </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)
@@ -89,7 +90,8 @@
                                                     @endif
 
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-4"
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($Modify && $AMOUNT == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false

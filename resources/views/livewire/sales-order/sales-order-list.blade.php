@@ -34,7 +34,9 @@
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
-                                                <select name="location" wire:model.live='locationid'
+                                                <select
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                    name="location" wire:model.live='locationid'
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
@@ -86,7 +88,7 @@
                                                     class="btn-sm text-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
-                                                @if ($list->STATUS_ID == 0 || $list->STATUS_ID == 3 )
+                                                @if ($list->STATUS_ID == 0 || $list->STATUS_ID == 3)
                                                     <a href="#" wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn-sm text-danger">

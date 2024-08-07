@@ -20,7 +20,7 @@
             <div class="row">
                 @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <!-- left column -->
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <!-- jquery validation -->
                     <div class="card card-sm">
                         <div class="pt-1 pb-1 card-header bg-sky">
@@ -32,15 +32,12 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-md-4"
-                                            @if ($id > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                        <div class="col-md-12">
                                             <livewire:text-input name="name" titleName="Username"
                                                 wire:model='name' />
                                         </div>
-                                        <div class="col-md-8"></div>
-                                        <div class="col-md-4">
-                                            <br />
-                                            <label for="pass" class="text-sm">
+                                        <div class="col-md-12">
+                                            <label for="pass" class="text-xs">
                                                 @if ($id > 0)
                                                     Change Password
                                                 @else
@@ -50,38 +47,29 @@
                                             <input type="password" class="form-control form-control-sm" name="password"
                                                 placeholder="Enter password" wire:model='password' />
                                         </div>
-                                        <div class="col-md-8"></div>
-                                        <div class="col-md-4">
-                                            <br />
-                                            <label for="pass" class="text-sm">Empoyees</label>
-                                            <select class="form-control form-control-sm" name="employee"
-                                                wire:model='contact_id'>
-                                                <option value="0"> </option>
-                                                @foreach ($employees as $list)
-                                                    <option value="{{ $list->ID }}"> {{ $list->NAME }} </option>
-                                                @endforeach
-                                            </select>
+
+                                        <div class="col-md-12">
+                                            <livewire:select-option name="contact_id" titleName="Empoyees"
+                                                :options="$employees" :zero="true" :isDisabled=false
+                                                wire:model='contact_id' />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <livewire:select-option name="location_id" titleName="Location"
+                                                :options="$locationList" :zero="true" :isDisabled=false
+                                                wire:model='location_id' />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <livewire:custom-check-box name="locked_location"
+                                                titleName="Locked Location" wire:model='locked_location' />
                                         </div>
 
-                                        <div class="col-md-8"></div>
-                                        <div class="col-md-4">
-                                            <br />
-                                            <label for="pass" class="text-sm">Default Location</label>
-                                            <select class="form-control form-control-sm" name="employee"
-                                                wire:model='location_id'>
-                                                <option value="0"> </option>
-                                                @foreach ($locationList as $list)
-                                                    <option value="{{ $list->ID }}"> {{ $list->NAME }} </option>
-                                                @endforeach
-                                            </select>
+                                        <div class="col-md-12">
+                                            <livewire:date-input name="trans_date" titleName="Transaction Date"
+                                                wire:model='trans_date' :isDisabled="false" />
                                         </div>
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="inactive" titleName="Inactive"
                                                 wire:model='inactive' />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <livewire:date-input name="trans_date" titleName="Transaction Date Default"
-                                                wire:model='trans_date' :isDisabled="false" />
                                         </div>
                                     </div>
                                 </div>

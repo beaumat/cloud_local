@@ -21,6 +21,7 @@ class UserForm extends Component
     public int $contact_id;
     public bool $inactive;
     public int $location_id;
+    public bool $locked_location;
     public $trans_date;
     public $employees = [];
     public $locationList = [];
@@ -54,6 +55,7 @@ class UserForm extends Component
                 $this->inactive = $user->inactive;
                 $this->location_id = $user->location_id ? $user->location_id : 0;
                 $this->trans_date =  $user->trans_date ?? null;
+                $this->locked_location = $user->locked_location ?? false;
                 return;
             }
 
@@ -68,6 +70,7 @@ class UserForm extends Component
         $this->inactive = false;
         $this->location_id  = 0;
         $this->trans_date = '';
+        $this->locked_location = false;
     }
 
 
@@ -78,14 +81,12 @@ class UserForm extends Component
                 [
                     'name' => 'required|max:10|unique:users,name,' . $this->id,
                     'password' => 'required|min:3|max:16|regex:/^(?=.*[A-Za-z])(?=.*\d).+$/',
-                    'contact_id' => 'required|not_in:0',
-
                 ],
                 [],
                 [
                     'name' => 'Username',
                     'Password' => 'Password',
-                    'contact_id' => 'Employee'
+                
                 ]
             );
         } else {
@@ -95,26 +96,24 @@ class UserForm extends Component
                     [
                         'name' => 'required|max:10|unique:users,name,' . $this->id,
                         'password' => 'required|min:3|max:16|regex:/^(?=.*[A-Za-z])(?=.*\d).+$/',
-                        'contact_id' => 'required|not_in:0',
-
                     ],
                     [],
                     [
                         'name' => 'Username',
                         'Password' => 'Password',
-                        'contact_id' => 'Employee'
+         
                     ]
                 );
             } else {
                 $this->validate(
                     [
                         'name' => 'required|max:10|unique:users,name,' . $this->id,
-                        'contact_id' => 'required|not_in:0',
+                     
                     ],
                     [],
                     [
                         'name' => 'Username',
-                        'contact_id' => 'Employee'
+               
                     ]
                 );
             }
@@ -123,10 +122,10 @@ class UserForm extends Component
 
         try {
             if ($this->id === 0) {
-                $this->id = $this->userServices->Store($this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '');
+                $this->id = $this->userServices->Store($this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '', $this->locked_location);
                 session()->flash('message', 'Successfully created.');
             } else {
-                $this->userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '');
+                $this->userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '',$this->locked_location);
                 session()->flash('message', 'Successfully updated.');
             }
         } catch (\Exception $e) {

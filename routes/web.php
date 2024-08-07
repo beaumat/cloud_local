@@ -131,6 +131,7 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::prefix('/patients')->name('patients')->group(function () {
+
         Route::prefix('/schedules')->group(function () {
             Route::get('/', SchedulerList::class)->name('schedules')->middleware(['permission:patient.schedule.view']);
             Route::get('/setup', SchedulerForm::class)->name('schedules_setup')->middleware(['permission:patient.schedule.modify']);

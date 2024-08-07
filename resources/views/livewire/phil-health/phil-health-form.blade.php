@@ -83,7 +83,7 @@
                                                     @endif
 
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-3" @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($Modify)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false

@@ -124,7 +124,8 @@
                             <div id="calendar">
                                 <div>
                                     <div class="row mb-2">
-                                        <div class="col-md-4">
+                                        <div class="col-md-4"
+                                            @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <livewire:select-option name="LOCATION_ID" :options="$locationList"
                                                 :zero="false" titleName="Location" :vertical="true"
                                                 wire:model.live='LOCATION_ID' />

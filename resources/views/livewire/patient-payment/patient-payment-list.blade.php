@@ -34,7 +34,9 @@
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
-                                                <select name="location" wire:model.live='locationid'
+                                                <select
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                    name="location" wire:model.live='locationid'
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)

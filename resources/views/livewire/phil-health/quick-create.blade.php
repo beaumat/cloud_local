@@ -2,7 +2,6 @@
     <button wire:click="openModal" class="btn btn-warning btn-sm text-xs">
         <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Quick Create
     </button>
-
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
@@ -17,11 +16,11 @@
                             <div class="col-md-3">
                                 <livewire:date-input name="DATE_TO" titleName="Date To" wire:model.live='DATE_TO' />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6"
+                                @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                 <livewire:dropdown-option name="LOCATION_ID" titleName="Location" :options="$locationList"
                                     :zero="false" :isDisabled=false wire:model.live='LOCATION_ID' />
                             </div>
-
                         </div>
                         <table class="table table-sm table-bordered table-hover mt-2">
                             <thead class="bg-sky text-xs">
@@ -53,11 +52,7 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-6 text-left">
-                                    <button class="btn btn-primary btn-sm" wire:click='getReload()'>
-                                        Reload
-                                    </button>
                                 </div>
-
                                 <div class="col-6 text-right">
                                     <button type="button" wire:click='create()' class="btn btn-success btn-sm">
                                         Create

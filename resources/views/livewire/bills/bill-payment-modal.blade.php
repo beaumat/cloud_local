@@ -40,8 +40,6 @@
                                         <td class="text-right">{{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
                                     </tr>
                                 @endforeach
-
-
                             </tbody>
                         </table>
                     </div>

@@ -39,7 +39,7 @@ class UserServices
     {
         return (int) Auth::user()->id;
     }
-    public function Store(string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id, string $trans_date): int
+    public function Store(string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id, string $trans_date, bool $locked_location): int
     {
 
         $user = User::create([
@@ -51,7 +51,8 @@ class UserServices
             'contact_id' => $Contact_id ? $Contact_id : null,
             'inactive' => $Inactive,
             'location_id' => $Location_id > 0 ? $Location_id : 0,
-            'trans_date' => $trans_date == '' ? null : $trans_date
+            'trans_date' => $trans_date == '' ? null : $trans_date,
+            'locked_location' => $locked_location
         ]);
 
         return $user->id;
@@ -60,7 +61,7 @@ class UserServices
 
     }
 
-    public function Update(int $id, string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id, string $trans_date): void
+    public function Update(int $id, string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id, string $trans_date, bool $locked_location): void
     {
         if ($Password) {
             User::where('id', $id)->update([
@@ -69,7 +70,8 @@ class UserServices
                 'contact_id' => $Contact_id ? $Contact_id : null,
                 'inactive' => $Inactive,
                 'location_id' => $Location_id > 0 ? $Location_id : 0,
-                'trans_date' => $trans_date == '' ? null : $trans_date
+                'trans_date' => $trans_date == '' ? null : $trans_date,
+                'locked_location' => $locked_location
             ]);
 
             return;
@@ -80,7 +82,8 @@ class UserServices
             'contact_id' => $Contact_id ? $Contact_id : null,
             'inactive' => $Inactive,
             'location_id' => $Location_id > 0 ? $Location_id : 0,
-            'trans_date' => $trans_date == '' ? null : $trans_date
+            'trans_date' => $trans_date == '' ? null : $trans_date,
+            'locked_location' => $locked_location
         ]);
     }
 
@@ -100,7 +103,8 @@ class UserServices
                         'contact.name as employee',
                         'users.inactive',
                         'l.NAME as location',
-                        'users.trans_date'
+                        'users.trans_date',
+                        'users.locked_location as locked'
                     ]
                 )
                 ->leftJoin('contact', 'contact.id', '=', 'users.contact_id')

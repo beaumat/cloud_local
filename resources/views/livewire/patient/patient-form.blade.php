@@ -40,7 +40,7 @@
                                             <livewire:date-input name="DATE_ADMISSION" titleName="Date Diagnosis"
                                                 wire:model='DATE_ADMISSION' />
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-2" @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <livewire:select-option name="LOCATION_ID" :options="$locationList"
                                                 :zero="false" titleName="Branch" wire:model='LOCATION_ID' />
                                         </div>

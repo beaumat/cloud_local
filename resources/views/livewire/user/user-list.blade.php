@@ -29,33 +29,39 @@
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>Username</th>
-                                        <th>Employee</th>
-                                        <th>Location</th>
-                                        <th>Inactive</th>
-                                        <th>Trans Date</th>
+                                        <th>ID</th>
+                                        <th class="col-2">Username</th>
+                                        <th class="col-4">Employee</th>
+                                        <th class="col-2">Location</th>
+                                        <th class="text-center">Locked</th>
+                                        <th class="text-center">Trans Date</th>
+                                        <th class="text-center">Inactive</th>
                                         <th class="text-center col-1">
                                             <a href="{{ route('maintenancesettingsusers_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
+                                <tbody class="text-xs">
                                     @foreach ($users as $list)
                                         <tr>
+                                            <td> {{ $list->id }}</td>
                                             <td> {{ $list->name }}</td>
                                             <td> {{ $list->employee }}</td>
                                             <td> {{ $list->location }}</td>
-                                            <td>
-                                                @if ($list->inactive)
+                                            <td class="text-center">
+                                                @if ($list->locked)
                                                     <strong class="text-danger">Yes</strong>
-                                                @else
-                                                    <strong class="text-primary">No</strong>
                                                 @endif
                                             </td>
-                                            <td> {{ $list->trans_date }}</td>
+                                            <td class='text-center'> {{ $list->trans_date }}</td>
+                                            <td class="text-center">
+                                                @if ($list->inactive)
+                                                    <strong class="text-danger">Yes</strong>
+                                                @endif
+                                            </td>
                                             <td class="text-center">
                                                 <a href="{{ route('maintenancesettingsusers_role', ['id' => $list->id]) }}"
                                                     class="btn-sm text-primary" title="Permission">

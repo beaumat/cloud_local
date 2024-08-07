@@ -90,7 +90,8 @@
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-4"
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($Modify && $AMOUNT == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
