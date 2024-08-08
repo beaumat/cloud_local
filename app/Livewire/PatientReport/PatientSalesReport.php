@@ -80,6 +80,7 @@ class PatientSalesReport extends Component
         $this->NO_OF_PATIENT  = 0;
         $this->TOTAL_CHARGE = 0;
         $this->TOTAL_PAID = 0;
+        
         $this->dataList = $this->patientReportServices->generateSalesReportData(
             $this->DATE_COLLECTION_FROM,
             $this->DATE_COLLECTION_TO,
