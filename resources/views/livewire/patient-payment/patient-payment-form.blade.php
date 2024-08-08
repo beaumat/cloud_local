@@ -346,5 +346,5 @@
             </div>
         </div>
     </section>
-    @livewire('PatientPayment.PaymentRecordModal');
+    @livewire('PatientPayment.PaymentRecordModal')
 </div>
