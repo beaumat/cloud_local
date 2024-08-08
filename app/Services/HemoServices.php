@@ -624,12 +624,12 @@ class HemoServices
             ->orderBy('hemodialysis.ID', 'desc')
             ->paginate($perPage);
     }
-    public function QuickFilterByDateRange(string $DATE_FORM, string $DATE_TO, $LOCATION_ID)
+    public function QuickFilterByDateRange(string $DATE_FORM, string $DATE_TO, $LOCATION_ID, $search)
     {
         $result = Contacts::query()
             ->select([
                 'contact.ID',
-                'contact.NAME as PATIENT',
+                DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ' .', LEFT(contact.MIDDLE_NAME, 1), IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as PATIENT"),
                 'contact.PIN',
                 DB::raw('count(h.ID) as TOTAL_HEMO'),
                 DB::raw('min(h.DATE) as FIRST_DATE'),
@@ -652,9 +652,13 @@ class HemoServices
                     ->from('philhealth as l')
                     ->whereColumn('l.CONTACT_ID', 'h.CUSTOMER_ID')
                     ->whereColumn('l.LOCATION_ID', 'h.LOCATION_ID')
-                    ->whereColumn('l.DATE_DISCHARGED', '>=','h.DATE');
+                    ->whereColumn('l.DATE_DISCHARGED', '>=', 'h.DATE');
             })
-            ->groupBy(['contact.ID', 'contact.NAME', 'contact.PIN'])
+            ->when($search, function ($query) use (&$search) {
+                $query->where('contact.NAME', 'like', '%' . $search . '%');
+            })
+            ->groupBy(['contact.ID', 'contact.NAME', 'contact.PIN', 'contact.LAST_NAME', 'contact.FIRST_NAME', 'contact.MIDDLE_NAME', 'contact.SALUTATION'])
+            ->orderBy('contact.LAST_NAME')
             ->get();
 
 

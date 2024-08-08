@@ -23,6 +23,7 @@ class QuickCreate extends Component
     private $userServices;
     public $DATE_FROM;
     public $DATE_TO;
+    public $search;
     public $dataList = [];
     private $hemoServices;
     private $philHealthServices;
@@ -166,11 +167,11 @@ class QuickCreate extends Component
 
     private function LoadList()
     {   
-     
+        
     }
     public function render()
     {
-        $this->dataList = $this->hemoServices->QuickFilterByDateRange($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
+        $this->dataList = $this->hemoServices->QuickFilterByDateRange($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, $this->search);
 
         return view('livewire.phil-health.quick-create');
     }

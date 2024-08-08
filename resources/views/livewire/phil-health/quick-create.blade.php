@@ -11,7 +11,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <livewire:text-input name="search" titleName="Search" :isDisabled=false
-                                    wire:model='search' :vertical="false" />
+                                    wire:model.live='search' :vertical="false" />
 
                             </div>
                             <div class="col-md-2">

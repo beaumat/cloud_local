@@ -1,4 +1,7 @@
 <div class="content-wrapper">
+@php
+    use Carbon\Carbon;
+@endphp
     <div class="content-header">
         <div class="container-fluid">
             <div class="row">
@@ -50,7 +53,7 @@
                                 <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>No.</th>
-                                        <th>Date</th>
+                                        <th>Date Created</th>
                                         <th class="col-3">Patients</th>
                                         <th>Admitted</th>
                                         <th>Discharges</th>
@@ -60,6 +63,7 @@
                                         <th>Collection</th>
                                         <th>Location</th>
                                         <th>Status</th>
+                                        <th>Elapsed Time</th>
                                         <th class="text-center col-2 bg-success">
                                             @can('patient.philhealth.create')
                                                 <a href="{{ route('patientsphic_create') }}"
@@ -89,10 +93,12 @@
                                             <td class="text-right"> {{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td
-                                                class="
-                                                 @if ($list->STATUS == 'Paid') text-success @else text-danger @endif
-                                                ">
-                                                {{ $list->STATUS }}</td>
+                                                class=" @if ($list->STATUS == 'Paid') text-success @else text-danger @endif ">
+                                                {{ $list->STATUS }}
+                                            </td>
+                                            <td>
+                                                {{ Carbon::parse($list->DATE)->diffForHumans() }}
+                                            </td>
                                             <td class="text-center">
                                                 @can('patient.philhealth.print')
                                                     <a target="_BLANK" title="Soa"
