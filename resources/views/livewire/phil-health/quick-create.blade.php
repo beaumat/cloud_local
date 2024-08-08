@@ -9,14 +9,19 @@
                     <div class="modal-header">Quick Create</div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-6">
+                                <livewire:text-input name="search" titleName="Search" :isDisabled=false
+                                    wire:model='search' :vertical="false" />
+
+                            </div>
+                            <div class="col-md-2">
                                 <livewire:date-input name="DATE_FROM" titleName="Date From"
                                     wire:model.live='DATE_FROM' />
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <livewire:date-input name="DATE_TO" titleName="Date To" wire:model.live='DATE_TO' />
                             </div>
-                            <div class="col-md-6"
+                            <div class="col-md-2"
                                 @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                 <livewire:dropdown-option name="LOCATION_ID" titleName="Location" :options="$locationList"
                                     :zero="false" :isDisabled=false wire:model.live='LOCATION_ID' />
@@ -29,6 +34,8 @@
                                     </th>
                                     <th class="col-4">Patient Name</th>
                                     <th class="col-2 text-center">No. of Treatment</th>
+                                    <th class="col-2">Date Admiited</th>
+                                    <th class="col-2">Date Discharged</th>
                                     <th class="col-2">Philhealth No.</th>
 
                                 </tr>
@@ -42,6 +49,8 @@
                                         </td>
                                         <td>{{ $list->PATIENT }}</td>
                                         <td class="text-center">{{ $list->TOTAL_HEMO }}</td>
+                                        <td> {{ date('m/d/Y', strtotime($list->FIRST_DATE)) }}</td>
+                                        <td> {{ date('m/d/Y', strtotime($list->LAST_DATE)) }}</td>
                                         <td>{{ $list->PIN }}</td>
                                     </tr>
                                 @endforeach

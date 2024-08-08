@@ -631,7 +631,9 @@ class HemoServices
                 'contact.ID',
                 'contact.NAME as PATIENT',
                 'contact.PIN',
-                DB::raw('count(h.ID) as TOTAL_HEMO')
+                DB::raw('count(h.ID) as TOTAL_HEMO'),
+                DB::raw('min(h.DATE) as FIRST_DATE'),
+                DB::raw('max(h.DATE) as LAST_DATE')
 
             ])
             ->join('hemodialysis as h', 'h.CUSTOMER_ID', '=', 'contact.ID')
@@ -645,12 +647,12 @@ class HemoServices
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.STATUS_ID', 2)
             ->whereBetween('h.DATE', [$DATE_FORM, $DATE_TO])
-            ->whereNotExists(function ($query) {
+            ->whereNotExists(function ($query) use (&$DATE_FORM) {
                 $query->select(DB::raw(1))
                     ->from('philhealth as l')
                     ->whereColumn('l.CONTACT_ID', 'h.CUSTOMER_ID')
                     ->whereColumn('l.LOCATION_ID', 'h.LOCATION_ID')
-                    ->where('l.DATE', '>', 'h.DATE');
+                    ->whereColumn('l.DATE_DISCHARGED', '>=','h.DATE');
             })
             ->groupBy(['contact.ID', 'contact.NAME', 'contact.PIN'])
             ->get();
@@ -974,7 +976,6 @@ class HemoServices
     public function UpdateQRFile($CODE, $FILE_NAME, $FILE_PATH): bool
     {
         $data =  $this->codeIfExist($CODE);
-
         if ($data) {
             Hemodialysis::where('CODE', $CODE)
                 ->update([

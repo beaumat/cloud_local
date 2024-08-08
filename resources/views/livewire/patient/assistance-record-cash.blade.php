@@ -10,8 +10,9 @@
                 <th class="col-1 bg-info">(SC)Date</th>
                 <th class="bg-info">Item Name</th>
                 <th class="bg-info text-right col-1">Usage</th>
-                <th class="text-right col-1 bg-danger">Balance <i wire:click='reload()' type="button"
-                        class="fa fa-refresh" aria-hidden="true"></th>
+                <th class="text-right col-1 bg-danger">
+                    Balance <i wire:click='reload()' type="button" class="fa fa-refresh" aria-hidden="true">
+                </th>
             </tr>
         </thead>
         <tbody class="text-xs">

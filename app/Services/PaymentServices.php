@@ -109,7 +109,7 @@ class PaymentServices
     }
     public function Search($search, int $locationId, int $perPage)
     {
-        return Payment::query()
+        $result = Payment::query()
             ->select([
                 'payment.ID',
                 'payment.CODE',
@@ -141,6 +141,8 @@ class PaymentServices
             })
             ->orderBy('payment.ID', 'desc')
             ->paginate($perPage);
+
+        return $result;
     }
     public function PaymentInvoiceStore(
         int $PAYMENT_ID,
@@ -160,13 +162,14 @@ class PaymentServices
             'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
         ]);
+
         return $ID;
     }
     public function PaymentInvoiceExist(int $PAYMENT_ID, int $INVOICE_ID): int
     {
         $data = PaymentInvoices::where('PAYMENT_ID', $PAYMENT_ID)->where('INVOICE_ID', $INVOICE_ID)->first();
         if ($data) {
-            return $data->ID;
+            return (int) $data->ID ?? 0;
         }
         return 0;
     }

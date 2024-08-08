@@ -606,9 +606,10 @@ class PatientPaymentServices
 
 
         // Combine both queries
-        $result = $query1->unionAll($query2)->orderBy('TRANS_DATE','asc')->get();
+        $result = $query1->unionAll($query2)->orderBy('TRANS_DATE', 'asc')->get();
 
 
         return $result;
     }
+ 
 }
