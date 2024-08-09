@@ -83,7 +83,8 @@
                                                     @endif
 
                                                 </div>
-                                                <div class="col-md-3" @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="col-md-3"
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($Modify)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
@@ -119,6 +120,15 @@
                                                             :isDisabled="true" />
                                                     @endif
                                                 </div>
+                                                <div class="col-md-3">
+                                                    <livewire:text-input name="AR_NO" titleName="AR No."
+                                                        :isDisabled=true wire:model='AR_NO' />
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <livewire:date-input name="AR_DATE" titleName="AR Date"
+                                                        wire:model='AR_DATE' :isDisabled="true" />
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -129,20 +139,25 @@
                                     <div class="col-md-6 col-6">
                                         @if ($STATUS == 0)
                                             @if ($Modify)
-                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                <button type="submit" class="btn btn-sm btn-success text-xs">
                                                     <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
                                                 @if ($ID > 0)
                                                     <button type="button" wire:click='updateCancel'
-                                                        class="btn btn-sm btn-danger"><i class="fa fa-ban"
+                                                        class="btn btn-sm btn-danger text-xs"><i class="fa fa-ban"
                                                             aria-hidden="true"></i> Cancel</button>
                                                 @endif
                                             @else
                                                 <button type="button" wire:click='getModify()'
-                                                    class="btn btn-sm btn-info"
+                                                    class="btn btn-sm btn-info text-xs"
                                                     @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                </button>
+
+                                                <button type="button" wire:click="getARForm()"
+                                                    class="btn btn-secondary btn-sm text-xs">
+                                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> AR Form
                                                 </button>
                                             @endif
                                         @endif
@@ -151,11 +166,13 @@
                                         @can('patient.philhealth.print')
                                             @if ($ID > 0)
                                                 <a target="_BLANK" href="{{ route('patientsphic_print', ['id' => $ID]) }}"
-                                                    class="btn btn-sm btn-primary"> Print SOA </a>
+                                                    class="btn btn-sm btn-primary text-xs"> <i class="fa fa-file-pdf-o"
+                                                        aria-hidden="true"></i> Print SOA </a>
 
                                                 <a target="_BLANK"
                                                     href="{{ route('patientsphic_print_form', ['id' => $ID]) }}"
-                                                    class="btn btn-sm btn-primary"> Print Form </a>
+                                                    class="btn btn-sm btn-danger text-xs">
+                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Print Form </a>
                                             @endif
                                         @endcan
                                         @can('patient.philhealth.create')
@@ -256,7 +273,7 @@
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-                                                @livewire('PhilHealth.PaymentList', ['PHILHEALTH_ID' => $ID,'PATIENT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                @livewire('PhilHealth.PaymentList', ['PHILHEALTH_ID' => $ID, 'PATIENT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID])
                                             </div>
                                         </div>
                                     </div>
@@ -279,4 +296,5 @@
             </div>
         </section>
     @endif
+    @livewire('PhilHealth.ArForm')
 </div>

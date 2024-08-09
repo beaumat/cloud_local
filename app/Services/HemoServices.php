@@ -290,25 +290,8 @@ class HemoServices
             'LOCATION_ID' => $LOCATION_ID,
         ]);
     }
-
-    public function Update(
-        int $ID,
-        string $PRE_WEIGHT,
-        string $PRE_BLOOD_PRESSURE,
-        string $PRE_BLOOD_PRESSURE2,
-        string $PRE_HEART_RATE,
-        string $PRE_O2_SATURATION,
-        string $PRE_TEMPERATURE,
-        string $POST_WEIGHT,
-        string $POST_BLOOD_PRESSURE,
-        string $POST_BLOOD_PRESSURE2,
-        string $POST_HEART_RATE,
-        string $POST_O2_SATURATION,
-        string $POST_TEMPERATURE,
-        string $TIME_START,
-        string $TIME_END,
-        bool $IS_INCOMPLETE
-    ) {
+    public function Update(int $ID, string $PRE_WEIGHT, string $PRE_BLOOD_PRESSURE, string $PRE_BLOOD_PRESSURE2, string $PRE_HEART_RATE, string $PRE_O2_SATURATION, string $PRE_TEMPERATURE, string $POST_WEIGHT, string $POST_BLOOD_PRESSURE, string $POST_BLOOD_PRESSURE2, string $POST_HEART_RATE, string $POST_O2_SATURATION, string $POST_TEMPERATURE, string $TIME_START, string $TIME_END, bool $IS_INCOMPLETE)
+    {
         Hemodialysis::where('ID', $ID)
             ->update([
                 'PRE_WEIGHT'            => $PRE_WEIGHT,
@@ -384,7 +367,6 @@ class HemoServices
                 'FILE_PATH' => $FILE_PATH
             ]);
     }
-
     public function StatusUpdate(int $ID, int $STATUS)
     {
         // Check if already done
@@ -427,7 +409,6 @@ class HemoServices
 
         return $result;
     }
-
     public function SearchListbyShift($search, int $LOCATION_ID, int $SHIFT_ID, string $DATE)
     {
 
@@ -467,7 +448,6 @@ class HemoServices
 
         return $result;
     }
-
     public function Search($search, int $LOCATION_ID, int $perPage, $DateFrom, $DateTo, int $statusId)
     {
         $result = Hemodialysis::query()
@@ -647,7 +627,7 @@ class HemoServices
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.STATUS_ID', 2)
             ->whereBetween('h.DATE', [$DATE_FORM, $DATE_TO])
-            ->whereNotExists(function ($query) use (&$DATE_FORM) {
+            ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('philhealth as l')
                     ->whereColumn('l.CONTACT_ID', 'h.CUSTOMER_ID')
@@ -999,7 +979,7 @@ class HemoServices
         }
 
         $itemDetails =  $this->itemServices->get($ITEM_ID);
-
+        
         if ($itemDetails) {
             if ($itemDetails->TYPE <> 0) {
                 return;

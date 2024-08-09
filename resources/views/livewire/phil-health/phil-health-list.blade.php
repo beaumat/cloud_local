@@ -1,7 +1,7 @@
 <div class="content-wrapper">
-@php
-    use Carbon\Carbon;
-@endphp
+    @php
+        use Carbon\Carbon;
+    @endphp
     <div class="content-header">
         <div class="container-fluid">
             <div class="row">
@@ -54,16 +54,18 @@
                                     <tr>
                                         <th>No.</th>
                                         <th>Date Created</th>
-                                        <th class="col-3">Patients</th>
-                                        <th>Admitted</th>
-                                        <th>Discharges</th>
-                                        <th>No. of Treatment </th>
-                                        <th>Total Charge</th>
-                                        <th>First Case </th>
-                                        <th>Collection</th>
-                                        <th>Location</th>
+                                        <th>Elapsed </th>
+                                        <th clsss="bg-success">AR No.</th>
+                                        <th clsss="bg-success">AR Date</th>
+                                 
+                                        <th class="col-2">Patients</th>
+                                        <th class="text-center">Admitted</th>
+                                        <th class="text-center">Discharges</th>
+                                        <th class="text-center">#Trmt. </th>
+                                        <th class='text-right'>FC Amt.</th>
+                                        <th class="text-right">Paid Amt.</th>
                                         <th>Status</th>
-                                        <th>Elapsed Time</th>
+                                        <th>Location</th>
                                         <th class="text-center col-2 bg-success">
                                             @can('patient.philhealth.create')
                                                 <a href="{{ route('patientsphic_create') }}"
@@ -84,21 +86,40 @@
                                                 </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
+                                            <td> {{ Carbon::parse($list->DATE)->diffForHumans() }} </td>
+                                            <td class="text-center">
+                                                <button type="button"
+                                                    class="btn @if ($list->AR_NO) btn-white @else btn-secondary @endif btn-xs w-100"
+                                                    wire:click='getARForm({{ $list->ID }})'>
+                                                    @if ($list->AR_NO)
+                                                        {{ $list->AR_NO }}
+                                                    @else
+                                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                                    @endif
+                                                    </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span type="button" wire:click='getARForm({{ $list->ID }})'>
+                                                    @if ($list->AR_DATE)
+                                                        {{ date('m/d/Y', strtotime($list->AR_DATE)) }}
+                                                    @endif
+                                                </span>
+                                            </td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
-                                            <td> {{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
-                                            <td> {{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
+                                            <td class="text-center">
+                                                {{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
+                                            <td class="text-center">
+                                                {{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
                                             <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
-                                            <td class="text-right"> {{ number_format($list->CHARGE_TOTAL, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->P1_TOTAL, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
-                                            <td> {{ $list->LOCATION_NAME }}</td>
                                             <td
                                                 class=" @if ($list->STATUS == 'Paid') text-success @else text-danger @endif ">
                                                 {{ $list->STATUS }}
                                             </td>
-                                            <td>
-                                                {{ Carbon::parse($list->DATE)->diffForHumans() }}
-                                            </td>
+                                            <td> {{ $list->LOCATION_NAME }}</td>
+
+
                                             <td class="text-center">
                                                 @can('patient.philhealth.print')
                                                     <a target="_BLANK" title="Soa"
@@ -139,4 +160,5 @@
             </div>
         </div>
     </section>
+    @livewire('PhilHealth.ArForm')
 </div>

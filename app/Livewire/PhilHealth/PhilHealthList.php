@@ -23,7 +23,8 @@ class PhilHealthList extends Component
     private $locationServices;
     private $userServices;
     public bool $show = false;
-    public function boot( PhilHealthServices $philHealthServices, LocationServices $locationServices, UserServices $userServices ) {
+    public function boot(PhilHealthServices $philHealthServices, LocationServices $locationServices, UserServices $userServices)
+    {
         $this->philHealthServices = $philHealthServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -41,6 +42,22 @@ class PhilHealthList extends Component
     {
         $this->show = true;
     }
+
+    public function getARForm(int $ID)
+    {
+        $data = [
+            'PHILHEALTH_ID' => $ID
+        ];
+
+        $this->dispatch('ar-form-show', result: $data);
+    }
+    #[On('ar-form-data')]
+    public function arForm($ar)
+    {
+        $this->dispatch('reload_philhealth_payment');
+    }
+
+
     #[On('reload-list')]
     public function render()
     {

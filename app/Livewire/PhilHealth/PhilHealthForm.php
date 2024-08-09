@@ -9,6 +9,7 @@ use App\Services\PhilHealthServices;
 use App\Services\UserServices;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -37,6 +38,10 @@ class PhilHealthForm extends Component
     public string $FIRST_CASE_RATE;
     public string $SECOND_CASE_RATE;
     public int $STATUS_ID;
+
+    public string $AR_DATE;
+    public string $AR_NO;
+
     private $philHealthServices;
     private $hemoServices;
     private $contactServices;
@@ -46,14 +51,14 @@ class PhilHealthForm extends Component
     {
         $this->tab = $tab;
     }
-
-    public function boot(
-        PhilHealthServices $philHealthServices,
-        HemoServices $hemoServices,
-        ContactServices $contactServices,
-        LocationServices $locationServices,
-        UserServices $userServices
-    ) {
+    #[On('ar-form-data')]
+    public function arForm($ar)
+    {
+        $this->AR_DATE = $ar['AR_DATE'];
+        $this->AR_NO = $ar['AR_NO'];
+    }
+    public function boot(PhilHealthServices $philHealthServices, HemoServices $hemoServices, ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
+    {
         $this->philHealthServices = $philHealthServices;
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
@@ -104,6 +109,8 @@ class PhilHealthForm extends Component
                 $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE;
                 $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE;
                 $this->STATUS_ID = $data->STATUS_ID;
+                $this->AR_DATE = $data->AR_DATE ?? '';
+                $this->AR_NO = $data->AR_NO ?? '';
                 return;
             }
 
@@ -124,6 +131,8 @@ class PhilHealthForm extends Component
         $this->OTHER_DIAGNOSIS = '';
         $this->FIRST_CASE_RATE = '';
         $this->SECOND_CASE_RATE = '';
+        $this->AR_DATE = '';
+        $this->AR_NO =  '';
         $this->STATUS_ID = 0;
         $this->Modify = true;
     }
@@ -179,7 +188,6 @@ class PhilHealthForm extends Component
             $this->Modify = false;
 
             return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-            
         } else {
 
             $this->philHealthServices->preUpdate(
@@ -207,7 +215,14 @@ class PhilHealthForm extends Component
     {
         $this->Modify = true;
     }
+    public function getARForm()
+    {
+        $data = [
+            'PHILHEALTH_ID' => $this->ID
+        ];
 
+        $this->dispatch('ar-form-show', result: $data);
+    }
     public function render()
     {
         return view('livewire.phil-health.phil-health-form');

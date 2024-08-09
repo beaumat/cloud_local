@@ -99,7 +99,9 @@ class PhilHealth extends Model
         'AD_SUB_TOTAL',
         'AD_TOTAL',
         'IS_TEMP',
-        'PF_RECEIVED_DATE'
+        'PF_RECEIVED_DATE',
+        'AR_NO',
+        'AR_DATE'
     ];
 
 }

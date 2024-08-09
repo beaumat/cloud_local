@@ -140,21 +140,8 @@ class PhilHealthServices
         //got professional fee
     }
 
-    public function preUpdate(
-        int $ID,
-        string $CODE,
-        string $DATE,
-        int $LOCATION_ID,
-        int $CONTACT_ID,
-        string $DATE_ADMITTED,
-        string $TIME_ADMITTED,
-        string $DATE_DISCHARGED,
-        string $TIME_DISCHARGED,
-        string $FINAL_DIAGNOSIS,
-        string $OTHER_DIAGNOSIS,
-        string $FIRST_CASE_RATE,
-        string $SECOND_CASE_RATE
-    ) {
+    public function preUpdate(int $ID, string $CODE, string $DATE, int $LOCATION_ID, int $CONTACT_ID, string $DATE_ADMITTED, string $TIME_ADMITTED, string $DATE_DISCHARGED, string $TIME_DISCHARGED, string $FINAL_DIAGNOSIS, string $OTHER_DIAGNOSIS, string $FIRST_CASE_RATE, string $SECOND_CASE_RATE)
+    {
 
         PhilHealth::where('ID', $ID)
             ->update([
@@ -172,20 +159,9 @@ class PhilHealthServices
                 'SECOND_CASE_RATE'  => $SECOND_CASE_RATE
             ]);
     }
-    public function preSave(
-        string $CODE,
-        string $DATE,
-        int $LOCATION_ID,
-        int $CONTACT_ID,
-        string $DATE_ADMITTED,
-        string $TIME_ADMITTED,
-        string $DATE_DISCHARGED,
-        string $TIME_DISCHARGED,
-        string $FINAL_DIAGNOSIS,
-        string $OTHER_DIAGNOSIS,
-        string $FIRST_CASE_RATE,
-        string $SECOND_CASE_RATE
-    ): int {
+    public function preSave(string $CODE, string $DATE, int $LOCATION_ID, int $CONTACT_ID, string $DATE_ADMITTED, string $TIME_ADMITTED, string $DATE_DISCHARGED, string $TIME_DISCHARGED, string $FINAL_DIAGNOSIS, string $OTHER_DIAGNOSIS, string $FIRST_CASE_RATE, string $SECOND_CASE_RATE): int
+    {
+
         $ID = $this->object->ObjectNextID('PHILHEALTH');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PHILHEALTH');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
@@ -214,10 +190,9 @@ class PhilHealthServices
     public function PreSaveTemp(int $CONTACT_ID, int $LOCATION_ID,)
     {
 
-
-        $ID = $this->object->ObjectNextID('PHILHEALTH');
+        $ID          = $this->object->ObjectNextID('PHILHEALTH');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PHILHEALTH');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef   = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
         PhilHealth::create([
             'ID'                => $ID,
             'RECORDED_ON'       => $this->dateServices->Now(),
@@ -232,76 +207,8 @@ class PhilHealthServices
 
         return $ID;
     }
-    public function Update(
-        int $ID,
-        float $CHARGES_ROOM_N_BOARD,
-        float $CHARGES_DRUG_N_MEDICINE,
-        float $CHARGES_LAB_N_DIAGNOSTICS,
-        float $CHARGES_OPERATING_ROOM_FEE,
-        float $CHARGES_SUPPLIES,
-        float $CHARGES_OTHERS,
-        float $CHARGES_SUB_TOTAL,
-        string $OTHER_SPECIFY,
-        float $VAT_ROOM_N_BOARD,
-        float $VAT_DRUG_N_MEDICINE,
-        float $VAT_LAB_N_DIAGNOSTICS,
-        float $VAT_OPERATING_ROOM_FEE,
-        float $VAT_SUPPLIES,
-        float $VAT_OTHERS,
-        float $VAT_SUB_TOTAL,
-        float $SP_ROOM_N_BOARD,
-        float $SP_DRUG_N_MEDICINE,
-        float $SP_LAB_N_DIAGNOSTICS,
-        float $SP_OPERATING_ROOM_FEE,
-        float $SP_SUPPLIES,
-        float $SP_OTHERS,
-        float $SP_SUB_TOTAL,
-        float $GOV_ROOM_N_BOARD,
-        float $GOV_DRUG_N_MEDICINE,
-        float $GOV_LAB_N_DIAGNOSTICS,
-        float $GOV_OPERATING_ROOM_FEE,
-        float $GOV_SUPPLIES,
-        float $GOV_OTHERS,
-        float $GOV_SUB_TOTAL,
-        bool $GOV_PCSO,
-        bool $GOV_DSWD,
-        bool $GOV_DOH,
-        bool $GOV_HMO,
-        bool $GOV_LINGAP,
-        float $P1_ROOM_N_BOARD,
-        float $P1_DRUG_N_MEDICINE,
-        float $P1_LAB_N_DIAGNOSTICS,
-        float $P1_OPERATING_ROOM_FEE,
-        float $P1_SUPPLIES,
-        float $P1_OTHERS,
-        float $P1_SUB_TOTAL,
-        float $P2_ROOM_N_BOARD,
-        float $P2_DRUG_N_MEDICINE,
-        float $P2_LAB_N_DIAGNOSTICS,
-        float $P2_OPERATING_ROOM_FEE,
-        float $P2_SUPPLIES,
-        float $P2_OTHERS,
-        float $P2_SUB_TOTAL,
-        float $OP_ROOM_N_BOARD,
-        float $OP_DRUG_N_MEDICINE,
-        float $OP_LAB_N_DIAGNOSTICS,
-        float $OP_OPERATING_ROOM_FEE,
-        float $OP_SUPPLIES,
-        float $OP_OTHERS,
-        float $OP_SUB_TOTAL,
-        float $PROFESSIONAL_FEE_SUB_TOTAL,
-        float $PROFESSIONAL_DISCOUNT_SUB_TOTAL,
-        float $CHARGE_TOTAL,
-        float $VAT_TOTAL,
-        float $SP_TOTAL,
-        float $GOV_TOTAL,
-        float $P1_TOTAL,
-        float $P2_TOTAL,
-        float $OP_TOTAL,
-        int $PREPARED_BY_ID,
-        string $DATE_SIGNED,
-        string $OTHER_NAME
-    ) {
+    public function Update(int $ID, float $CHARGES_ROOM_N_BOARD, float $CHARGES_DRUG_N_MEDICINE, float $CHARGES_LAB_N_DIAGNOSTICS, float $CHARGES_OPERATING_ROOM_FEE, float $CHARGES_SUPPLIES, float $CHARGES_OTHERS, float $CHARGES_SUB_TOTAL, string $OTHER_SPECIFY, float $VAT_ROOM_N_BOARD, float $VAT_DRUG_N_MEDICINE, float $VAT_LAB_N_DIAGNOSTICS, float $VAT_OPERATING_ROOM_FEE, float $VAT_SUPPLIES, float $VAT_OTHERS, float $VAT_SUB_TOTAL, float $SP_ROOM_N_BOARD, float $SP_DRUG_N_MEDICINE, float $SP_LAB_N_DIAGNOSTICS, float $SP_OPERATING_ROOM_FEE, float $SP_SUPPLIES, float $SP_OTHERS, float $SP_SUB_TOTAL, float $GOV_ROOM_N_BOARD, float $GOV_DRUG_N_MEDICINE, float $GOV_LAB_N_DIAGNOSTICS, float $GOV_OPERATING_ROOM_FEE, float $GOV_SUPPLIES, float $GOV_OTHERS, float $GOV_SUB_TOTAL, bool $GOV_PCSO, bool $GOV_DSWD, bool $GOV_DOH, bool $GOV_HMO, bool $GOV_LINGAP, float $P1_ROOM_N_BOARD, float $P1_DRUG_N_MEDICINE, float $P1_LAB_N_DIAGNOSTICS, float $P1_OPERATING_ROOM_FEE, float $P1_SUPPLIES, float $P1_OTHERS, float $P1_SUB_TOTAL, float $P2_ROOM_N_BOARD, float $P2_DRUG_N_MEDICINE, float $P2_LAB_N_DIAGNOSTICS, float $P2_OPERATING_ROOM_FEE, float $P2_SUPPLIES, float $P2_OTHERS, float $P2_SUB_TOTAL, float $OP_ROOM_N_BOARD, float $OP_DRUG_N_MEDICINE, float $OP_LAB_N_DIAGNOSTICS, float $OP_OPERATING_ROOM_FEE, float $OP_SUPPLIES, float $OP_OTHERS, float $OP_SUB_TOTAL, float $PROFESSIONAL_FEE_SUB_TOTAL, float $PROFESSIONAL_DISCOUNT_SUB_TOTAL, float $CHARGE_TOTAL, float $VAT_TOTAL, float $SP_TOTAL, float $GOV_TOTAL, float $P1_TOTAL, float $P2_TOTAL, float $OP_TOTAL, int $PREPARED_BY_ID, string $DATE_SIGNED, string $OTHER_NAME)
+    {
 
         PhilHealth::where('ID', $ID)
             ->update([
@@ -376,14 +283,13 @@ class PhilHealthServices
     }
     public function Delete(int $ID)
     {
-
         PhilhealthDrugsMedicines::where('PHILHEALTH_ID', $ID)->delete();
         PhilHealthProfFee::where('PHIC_ID', $ID)->delete();
         PhilHealth::where('ID', $ID)->delete();
     }
     public function Search($search, int $locationId, int $perPage)
     {
-        return PhilHealth::query()
+        $result = PhilHealth::query()
             ->select([
                 'philhealth.ID',
                 'philhealth.RECORDED_ON',
@@ -397,7 +303,10 @@ class PhilHealthServices
                 's.DESCRIPTION as STATUS',
                 DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
                 'philhealth.P1_TOTAL',
-                'philhealth.PAYMENT_AMOUNT'
+                'philhealth.PAYMENT_AMOUNT',
+                'philhealth.AR_NO',
+                'philhealth.AR_DATE',
+                DB::raw('if(ISNULL(philhealth.AR_DATE),false,true)  as IN_PROGRESS')
             ])
             ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -419,6 +328,17 @@ class PhilHealthServices
             ->where('IS_TEMP', '0')
             ->orderBy('philhealth.ID', 'desc')
             ->paginate($perPage);
+
+        return $result;
+    }
+
+    public function UpdateAR(int $ID, string $AR_NO, string $AR_DATE)
+    {
+        PhilHealth::where('ID', $ID)
+            ->update([
+                'AR_NO'     => $AR_NO == '' ? null : $AR_NO,
+                'AR_DATE'   => $AR_DATE  == '' ? null : $AR_DATE
+            ]);
     }
 
     public function PatientRecord($search, int $contact_id, int $perPage)
