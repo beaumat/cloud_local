@@ -7,28 +7,28 @@
                     <div class="modal-header">Account Receivable Form</div>
                     <div class="modal-body">
                         <div class="form-group row mb-2">
-
+                            <div class="col-md-6">
+                                <livewire:text-input name="CODE" titleName="SOA No." :isDisabled=true
+                                    wire:model='CODE' />
+                            </div>
                             <div class="col-md-6">
                                 <livewire:date-input name="DATE" titleName="Date Created" wire:model='DATE'
                                     :isDisabled=true />
                             </div>
 
-                            <div class="col-md-6">
-                                <livewire:text-input name="CODE" titleName="SOA No." :isDisabled=true
-                                    wire:model='CODE' />
-                            </div>
+
                         </div>
                         <div class="form-group row">
-
+                            <div class="col-md-6">
+                                <livewire:text-input name="AR_NO" titleName="AR No." :isDisabled=false
+                                    wire:model='AR_NO' />
+                            </div>
                             <div class="col-md-6">
                                 <livewire:date-input name="AR_DATE" titleName="AR Date" wire:model='AR_DATE'
                                     :isDisabled="false" />
                             </div>
 
-                            <div class="col-md-6">
-                                <livewire:text-input name="AR_NO" titleName="AR No." :isDisabled=false
-                                    wire:model='AR_NO' />
-                            </div>
+
                         </div>
                     </div>
                     <div class='modal-footer'>
