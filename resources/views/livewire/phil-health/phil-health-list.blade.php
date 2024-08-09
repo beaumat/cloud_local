@@ -52,12 +52,12 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>No.</th>
+                                        <th>SOA No.</th>
                                         <th>Date Created</th>
                                         <th>Elapsed </th>
                                         <th clsss="bg-success">AR No.</th>
                                         <th clsss="bg-success">AR Date</th>
-                                 
+
                                         <th class="col-2">Patients</th>
                                         <th class="text-center">Admitted</th>
                                         <th class="text-center">Discharges</th>

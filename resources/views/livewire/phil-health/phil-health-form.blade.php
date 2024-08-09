@@ -75,10 +75,10 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     @if ($Modify)
-                                                        <livewire:text-input name="Code" titleName="Reference No."
+                                                        <livewire:text-input name="Code" titleName="SOA No."
                                                             :isDisabled=false wire:model='CODE' />
                                                     @else
-                                                        <livewire:text-input name="Code" titleName="Reference No."
+                                                        <livewire:text-input name="Code" titleName="SOA No."
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
 
