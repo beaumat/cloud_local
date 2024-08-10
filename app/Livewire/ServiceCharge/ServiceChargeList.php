@@ -59,13 +59,7 @@ class ServiceChargeList extends Component
     }
     public function render()
     {
-        $dataList = $this->serviceChargeServices->Search(
-            $this->search,
-            $this->locationid,
-            $this->perPage,
-            $this->DATE_FROM == '' ?  $this->dateServices->NowDate() : $this->DATE_FROM,
-            $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO
-        );
+        $dataList = $this->serviceChargeServices->Search($this->search, $this->locationid, $this->perPage, $this->DATE_FROM == '' ?  $this->dateServices->NowDate() : $this->DATE_FROM, $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO);
         return view('livewire.service-charge.service-charge-list', ['dataList' => $dataList]);
     }
 }

@@ -318,7 +318,8 @@ class ServiceChargeServices
             'INCOME_ACCOUNT_ID'     => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null,
             'GROUP_LINE_ID'         => $GROUP_LINE_ID > 0,
             'PRINT_IN_FORMS'        => $PRINT_IN_FORMS,
-            'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
+            'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+            'DATE_LOG'              => $this->dateServices->NowDate()
         ]);
 
         return $ID;
@@ -363,6 +364,7 @@ class ServiceChargeServices
                 'u.SYMBOL',
                 'c.DESCRIPTION as CLASS_DESCRIPTION',
                 DB::raw('(select count(*) from patient_payment_charges where SERVICE_CHARGES_ITEM_ID = service_charges_items.ID) as count_pay'),
+                'service_charges_items.DATE_LOG'
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'service_charges_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'service_charges_items.UNIT_ID')

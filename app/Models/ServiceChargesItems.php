@@ -32,6 +32,7 @@ class ServiceChargesItems extends Model
         'GROUP_LINE_ID',
         'PRICE_LEVEL_ID',
         'PRINT_IN_FORMS',
-        'PAID_AMOUNT'
+        'PAID_AMOUNT',
+        'DATE_LOG'
     ];
 }

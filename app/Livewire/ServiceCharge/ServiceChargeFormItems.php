@@ -3,6 +3,7 @@
 namespace App\Livewire\ServiceCharge;
 
 use App\Services\ComputeServices;
+use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
@@ -21,10 +22,8 @@ class ServiceChargeFormItems extends Component
     #[Reactive]
     public int $STATUS;
     #[Reactive]
-
-
-
     public int $TAX_ID;
+    public int $PHIHEALTH_ITEM_ID = 0;
     public int $openStatus = 0;
     public int $ID;
     public int $LINE_NO;
@@ -54,7 +53,6 @@ class ServiceChargeFormItems extends Component
     public $itemCodeList = [];
     public $unitList = [];
     public $saveSuccess;
-
     public float $lineQty;
     public int $lineUnitId;
     public float $lineRate;
@@ -73,19 +71,12 @@ class ServiceChargeFormItems extends Component
     private $itemServices;
     private $itemSubClassServices;
     public $CLASS_DESCRIPTION;
-
     public bool $editPrice = true;
-
+    public string $DATE_NOW;
     private $hemoServices;
-    public function boot(
-        ServiceChargeServices $serviceChargeServices,
-        ComputeServices $computeServices,
-        UnitOfMeasureServices $unitOfMeasureServices,
-        TaxServices $taxServices,
-        ItemServices $itemServices,
-        ItemSubClassServices $itemSubClassServices,
-        HemoServices $hemoServices
-    ) {
+    private $dateServices;
+    public function boot(ServiceChargeServices $serviceChargeServices, ComputeServices $computeServices, UnitOfMeasureServices $unitOfMeasureServices, TaxServices $taxServices, ItemServices $itemServices, ItemSubClassServices $itemSubClassServices, HemoServices $hemoServices, DateServices $dateServices)
+    {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->computeServices = $computeServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
@@ -93,6 +84,7 @@ class ServiceChargeFormItems extends Component
         $this->itemServices = $itemServices;
         $this->itemSubClassServices = $itemSubClassServices;
         $this->hemoServices = $hemoServices;
+        $this->dateServices = $dateServices;
     }
     public function updatedcodeBase()
     {
@@ -141,10 +133,6 @@ class ServiceChargeFormItems extends Component
         ];
 
         $this->dispatch('cash-payment-prompt', itemdata: $itemdata);
-    }
-    public function save()
-    {
-
     }
     public function updateditemid()
     {
@@ -383,7 +371,6 @@ class ServiceChargeFormItems extends Component
             $getItemInfo = $this->serviceChargeServices->getItemDetails($Id);
             if ($getItemInfo) {
                 $this->serviceChargeServices->ItemDelete($Id, $this->SERVICE_CHARGES_ID); // Delete Transaction
-
                 $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
                 if ($dataSC) {
                     $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $getItemInfo->ITEM_ID, 0, true, $getItemInfo->UNIT_ID ?? 0);
@@ -414,7 +401,7 @@ class ServiceChargeFormItems extends Component
     }
     public function render()
     {
-
+        $this->DATE_NOW = $this->dateServices->NowDate();
         $this->getReload();
         return view('livewire.service-charge.service-charge-form-items');
     }

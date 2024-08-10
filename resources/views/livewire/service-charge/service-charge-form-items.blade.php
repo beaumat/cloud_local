@@ -6,10 +6,10 @@
                 <th class="col-1">Code</th>
                 <th class="col-4">Description</th>
                 <th class="col-1">Category</th>
-                <th class="">Qty</th>
-                <th class="col-1">Unit</th>
-                <th class="col-1">Rate</th>
-                <th class="col-1">Amount</th>
+                <th class="text-right">Qty</th>
+                <th class="col-1 text-center">Unit</th>
+                <th class="col-1 text-right">Rate</th>
+                <th class="col-1 text-right">Amount</th>
                 <th class="text-center">Tax</th>
                 {{-- @if ($STATUS == $openStatus) --}}
                 <th class="text-center col-2">Action</th>
@@ -24,17 +24,16 @@
                     <td> {{ $list->CLASS_DESCRIPTION }}</td>
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
+                            <input type="number" step="0.01" class="form-control form-control-sm text-right"
                                 name="lineQty" wire:model.live.debounce.1000ms='lineQty' wire:blur="getEditAmount" />
                         @else
                             {{ number_format($list->QUANTITY, 0) }}
                         @endif
 
                     </td>
-                    <td>
+                    <td class="text-center">
                         @if ($editItemId === $list->ID)
-                            <select wire:model='lineUnitId' name="lineUnitId"
-                                class="text-sm form-control form-control-sm mt-2">
+                            <select wire:model='lineUnitId' name="lineUnitId" class="form-control form-control-sm">
                                 @foreach ($editUnitList as $listitem)
                                     <option value="{{ $listitem->ID }}">{{ $listitem->SYMBOL }}</option>
                                 @endforeach
@@ -46,7 +45,7 @@
                     </td>
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
+                            <input type="number" step="0.01" class="form-control form-control-sm text-right"
                                 name="lineRate" wire:model.live.debounce.1000ms='lineRate' wire:blur="getEditAmount"
                                 @if ($editPrice == false) readonly @endif />
                         @else
@@ -55,14 +54,14 @@
                     </td>
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
-                            <label class="mt-2">{{ number_format($lineAmount, 2) }}</label>
+                            <label>{{ number_format($lineAmount, 2) }}</label>
                         @else
                             {{ number_format($list->AMOUNT, 2) }}
                         @endif
                     </td>
                     <td class="text-center">
                         @if ($editItemId === $list->ID)
-                            <input type="checkbox" class="text-lg mt-2" wire:model='lineTax' name="lineTax" />
+                            <input type="checkbox" class="text-lg" wire:model='lineTax' name="lineTax" />
                         @else
                             @if ($list->TAXABLE)
                                 <i class="fa fa-check-square-o" aria-hidden="true"></i>
@@ -73,33 +72,42 @@
                     <td class="text-center">
                         @if ($editItemId === $list->ID)
                             <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
-                                class="text-success btn btn-sm btn-link">
+                                class="btn btn-sm btn-success">
                                 <i class="fas fa-check" aria-hidden="true"></i>
                             </button>
                             <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
-                                class="text-warning btn btn-sm btn-link">
+                                class="btn btn-sm btn-warning">
                                 <i class="fas fa-ban" aria-hidden="true"></i>
                             </button>
                         @else
-                            <button class="text-primary btn btn-sm btn-link"
-                                wire:click="cashPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
-                                    class="fa fa-money" aria-hidden="true"></i> </button>
-                            <button class="text-primary btn btn-sm btn-link"
-                                wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
-                                    class="fa fa-paypal" aria-hidden="true"></i> </button>
-
-                            @if ($list->count_pay == 0)
-                                <button title="Edit" id="editbtn"
+                            @if ($list->count_pay == 0 && $list->DATE_LOG == $DATE_NOW)
+                                <button title="Edit Active" id="editbtn"
                                     wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
-                                    class="text-info btn btn-sm btn-link">
+                                    class="btn btn-sm btn-info">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
-                                <button title="Delete" id="deletebtn" wire:click='deleteItem({{ $list->ID }})'
-                                    wire:confirm="Are you sure you want to delete this?"
-                                    class="text-danger btn btn-sm btn-link">
-                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                <button title="Delete Active" id="deletebtn"
+                                    wire:click='deleteItem({{ $list->ID }})'
+                                    wire:confirm="Are you sure you want to delete this?" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                </button>
+                            @else
+                                <button type="button" title="Edit Disabled" id="editbtn"
+                                    class="btn btn-sm btn-secondary">
+                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" title="Delete Disabled" id="deletebtn"
+                                    class="btn btn-sm btn-secondary">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                             @endif
+                            {{-- Other Buttons --}}
+                            <button class="btn btn-sm btn-primary" title="Cash Payment"
+                                wire:click="cashPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
+                                    class="fa fa-money" aria-hidden="true"></i> </button>
+                            <button class="btn btn-sm btn-success" title="Open Payment"
+                                wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
+                                    class="fa fa-paypal" aria-hidden="true"></i> </button>
                         @endif
                     </td>
                     {{-- @endif --}}
@@ -116,14 +124,14 @@
                                 <livewire:select-option name="ITEM_ID1" titleName="Item Code" :options="$itemCodeList"
                                     :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false" />
                             @else
-                                <label class="mt-2"> {{ $ITEM_CODE }}</label>
+                                <label class="mt-2 text-xs"> {{ $ITEM_CODE }}</label>
                             @endif
                         @else
                             @if ($codeBase)
                                 <livewire:select-option name="ITEM_ID2" titleName="Item Code" :options="$itemCodeList"
                                     :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false" />
                             @else
-                                <label class="mt-2"> {{ $ITEM_CODE }}</label>
+                                <label class="mt-2 text-xs"> {{ $ITEM_CODE }}</label>
                             @endif
                         @endif
                     </td>
@@ -131,23 +139,23 @@
                         @if ($saveSuccess)
                             @if (!$codeBase)
                                 <livewire:select-option name="ITEM_ID3" titleName="Item Description" :options="$itemDescList"
-                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false" />
-                            @else
-                                <label class="mt-2"> {{ $ITEM_DESCRIPTION }}</label>
-                            @endif
-                        @else
-                            @if (!$codeBase)
-                                <livewire:select-option name="ITEM_ID4" titleName="Item Description" :options="$itemDescList"
                                     :zero="true" wire:model.live='ITEM_ID' :vertical="false"
                                     :withLabel="false" />
                             @else
-                                <label class="mt-2"> {{ $ITEM_DESCRIPTION }}</label>
+                                <label class="mt-2 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
+                            @endif
+                        @else
+                            @if (!$codeBase)
+                                <livewire:select-option name="ITEM_ID4" titleName="Item Description"
+                                    :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false"
+                                    :withLabel="false" />
+                            @else
+                                <label class="mt-2 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
                             @endif
                         @endif
                     </td>
-                    <td class="text-sm"> <label class="mt-2"> {{ $CLASS_DESCRIPTION }}</label></td>
+                    <td > <label class="mt-2 text-xs"> {{ $CLASS_DESCRIPTION }}</label></td>
                     <td>
-
                         <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
                             name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
                             @if ($ITEM_ID == 0) readonly @endif />
@@ -161,13 +169,12 @@
                         </select>
                     </td>
                     <td>
-
                         <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
                             @if ($editPrice == false) readonly @endif name="rate"
                             wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                     </td>
                     <td class="text-right">
-                        <label class="mt-2">{{ number_format($AMOUNT, 2) }}</label>
+                        <label class="mt-2 text-xs">{{ number_format($AMOUNT, 2) }}</label>
                     </td>
                     <td class="text-center">
                         <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"

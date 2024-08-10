@@ -11,7 +11,6 @@
                     </div>
                     <div class="modal-body">
                         @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-
                         <form id="quickForm" wire:submit.prevent='save'>
                             <div class="card-body bg-light">
                                 <div class="form-group">
