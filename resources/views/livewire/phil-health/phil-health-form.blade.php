@@ -164,22 +164,20 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @can('patient.philhealth.print')
-                                            @if ($ID > 0)
-                                                <a target="_BLANK" href="{{ route('patientsphic_print', ['id' => $ID]) }}"
-                                                    class="btn btn-sm btn-primary text-xs"> <i class="fa fa-file-pdf-o"
-                                                        aria-hidden="true"></i> Print SOA </a>
 
-                                                <a target="_BLANK"
-                                                    href="{{ route('patientsphic_print_form', ['id' => $ID]) }}"
-                                                    class="btn btn-sm btn-danger text-xs">
-                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Print Form </a>
+                                            @if ($ID > 0)
+                                                <button type="button" class="btn btn-sm btn-primary text-xs"
+                                                    wire:click='print()'>
+                                                    <i class="fa fa-print" aria-hidden="true"></i> Print
+                                                </button>
                                             @endif
                                         @endcan
                                         @can('patient.philhealth.create')
-                                            @if ($ID > 0 && $STATUS > 0)
+                                            @if ($ID > 0)
                                                 <a id="new" title="Create"
                                                     href="{{ route('patientsphic_create') }}"
-                                                    class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                                    class="btn btn-success btn-sm text-xs"> <i class="fas fa-plus"></i>
+                                                    New </a>
                                             @endif
                                         @endcan
 
@@ -297,4 +295,5 @@
         </section>
     @endif
     @livewire('PhilHealth.ArForm')
+    @livewire('PhilHealth.PrintModal')
 </div>

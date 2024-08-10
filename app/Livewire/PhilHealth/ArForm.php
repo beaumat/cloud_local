@@ -26,23 +26,23 @@ class ArForm extends Component
     {
 
         if ($this->AR_DATE == '' && $this->AR_NO <> '') {
+            session()->flash('error', 'AR Date Requred');
             return;
         }
-
 
         if ($this->AR_DATE <> '' && $this->AR_NO == '') {
+            session()->flash('error', 'AR No. Requred');
             return;
         }
-
-
         $this->philHealthServices->UpdateAR($this->PHILHEALTH_ID, $this->AR_NO, $this->AR_DATE);
+
         $ar = [
             'AR_DATE' => $this->AR_DATE,
             'AR_NO'  => $this->AR_NO,
             'PHILHEALTH_ID' => $this->PHILHEALTH_ID
         ];
         $this->dispatch('ar-form-data', ar: $ar);
-        $this->closeModal();
+        session()->flash('message', 'Successfully save.');    
     }
     #[On('ar-form-show')]
     public function openModal($result)
@@ -62,6 +62,15 @@ class ArForm extends Component
     {
         $this->showModal = false;
     }
+
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
+    }
+
     public function render()
     {
         return view('livewire.phil-health.ar-form');

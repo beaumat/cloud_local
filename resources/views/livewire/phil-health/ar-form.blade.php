@@ -1,11 +1,13 @@
 <div>
-
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
             <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content text-left">
                     <div class="modal-header">Account Receivable Form</div>
                     <div class="modal-body">
+                        <div class="col-md-12">
+                            @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+                        </div>
                         <div class="form-group row mb-2">
                             <div class="col-md-6">
                                 <livewire:text-input name="CODE" titleName="SOA No." :isDisabled=true
@@ -15,10 +17,10 @@
                                 <livewire:date-input name="DATE" titleName="Date Created" wire:model='DATE'
                                     :isDisabled=true />
                             </div>
-
-
                         </div>
                         <div class="form-group row">
+
+
                             <div class="col-md-6">
                                 <livewire:text-input name="AR_NO" titleName="AR No." :isDisabled=false
                                     wire:model='AR_NO' />

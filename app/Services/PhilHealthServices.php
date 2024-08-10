@@ -37,6 +37,27 @@ class PhilHealthServices
     {
         return PhilHealth::where('ID', $ID)->first();
     }
+    public function getPrint($ID)
+    {
+        $result = PhilHealth::query()
+            ->select([
+                'philhealth.ID',
+                'philhealth.CODE',
+                'philhealth.DATE',
+                'philhealth.DATE_ADMITTED',
+                'philhealth.DATE_DISCHARGED',
+                'c.FINAL_DIAGNOSIS',
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
+                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL'),
+                'philhealth.P1_TOTAL'
+            ])
+            ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
+            ->where('philhealth.ID', $ID)
+            ->first();
+
+        return $result;
+    }
+
     public function AutoMakeProfFeeDetails(int $PHIC_ID, int $PATIENT_ID, int $COUNT)
     {
         $TOTAL_FEE = 0;
@@ -343,7 +364,7 @@ class PhilHealthServices
 
     public function PatientRecord($search, int $contact_id, int $perPage)
     {
-        return PhilHealth::query()
+        $result = PhilHealth::query()
             ->select([
                 'philhealth.ID',
                 'philhealth.CODE',
@@ -369,6 +390,8 @@ class PhilHealthServices
             })
             ->orderBy('philhealth.ID', 'desc')
             ->paginate($perPage);
+
+        return $result;
     }
 
     public function getProfFee($ID)

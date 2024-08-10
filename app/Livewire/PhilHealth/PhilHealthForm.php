@@ -136,7 +136,31 @@ class PhilHealthForm extends Component
         $this->STATUS_ID = 0;
         $this->Modify = true;
     }
+    public function print()
+    {
 
+        $ds = $this->philHealthServices->get($this->ID);
+        if ($ds) {
+            if (!empty($ds->AR_NO)) {
+                session()->flash('error', 'cannot be print. this document already set AR info');
+                return;
+            }
+
+
+            if (floatval($ds->PAYMENT_AMOUNT ?? 0) > 0) {
+                session()->flash('error', 'cannot be print. this document having a payment collection');
+                return;
+            }
+
+
+            // restriction end
+            $data = [
+                'PHILHEALTH_ID' => $this->ID
+            ];
+
+            $this->dispatch('philhealth-print-data', result: $data);
+        }
+    }
     public function updateCancel()
     {
         return Redirect::route('patientsphic_edit', ['id' => $this->ID]);
@@ -223,6 +247,15 @@ class PhilHealthForm extends Component
 
         $this->dispatch('ar-form-show', result: $data);
     }
+
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
+    }
+
     public function render()
     {
         return view('livewire.phil-health.phil-health-form');

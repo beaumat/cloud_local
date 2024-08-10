@@ -56,7 +56,14 @@ class PhilHealthList extends Component
     {
         $this->dispatch('reload_philhealth_payment');
     }
-
+    public function print(int $ID)
+    {
+        $data = [
+            'PHILHEALTH_ID' => $ID
+        ];
+        
+        $this->dispatch('philhealth-print-data', result: $data);
+    }
 
     #[On('reload-list')]
     public function render()

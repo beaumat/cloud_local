@@ -34,7 +34,6 @@ class PaymentList extends Component
         $this->patientPaymentServices = $patientPaymentServices;
         $this->philHealthServices = $philHealthServices;
     }
-   
     public function mount()
     {
         $this->ClearInsert();

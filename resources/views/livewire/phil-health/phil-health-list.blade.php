@@ -57,7 +57,6 @@
                                         <th>Elapsed </th>
                                         <th clsss="bg-success">AR No.</th>
                                         <th clsss="bg-success">AR Date</th>
-
                                         <th class="col-2">Patients</th>
                                         <th class="text-center">Admitted</th>
                                         <th class="text-center">Discharges</th>
@@ -114,36 +113,42 @@
                                             <td class="text-right"> {{ number_format($list->P1_TOTAL, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
                                             <td
-                                                class=" @if ($list->STATUS == 'Paid') text-success @else text-danger @endif ">
+                                                class="@if ($list->STATUS == 'Paid') text-success @else text-danger @endif ">
                                                 {{ $list->STATUS }}
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
 
 
                                             <td class="text-center">
-                                                @can('patient.philhealth.print')
-                                                    <a target="_BLANK" title="Soa"
-                                                        href="{{ route('patientsphic_print', ['id' => $list->ID]) }}"
-                                                        class="btn-sm text-primary"> <i class="fa fa-file-pdf-o"
-                                                            aria-hidden="true"></i></a>
-                                                    <a target="_BLANK" title="Philheath Form"
-                                                        href="{{ route('patientsphic_print_form', ['id' => $list->ID]) }}"
-                                                        class="btn-sm text-danger"> <i class="fa fa-file-pdf-o"
-                                                            aria-hidden="true"></i> </a>
-                                                @endcan
 
-                                                <a href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
+                                                <a title="View Details"
+                                                    href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
                                                     class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @if ($list->PAYMENT_AMOUNT == 0)
-                                                    @can('patient.philhealth.delete')
-                                                        <a href="#" wire:click='delete({{ $list->ID }})'
-                                                            wire:confirm="Are you sure you want to delete this?"
-                                                            class="btn-sm text-danger">
-                                                            <i class="fas fa-times" aria-hidden="true"></i>
-                                                        </a>
-                                                    @endcan
+                                                @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && Auth::user()->can('patient.philhealth.print'))
+                                                    <span class="btn-sm text-primary" type="button"
+                                                        title="Active Print" wire:click='print({{ $list->ID }})'>
+                                                        <i class="fa fa-print" aria-hidden="true"></i>
+                                                    </span>
+                                                @else
+                                                    <span class="btn-sm text-secondary" type="button"
+                                                        title="Active Print">
+                                                        <i class="fa fa-print" aria-hidden="true"></i>
+                                                    </span>
+                                                @endif
+                                                @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && Auth::user()->can('patient.philhealth.delete'))
+                                                    <span title="Active delete button" type="button"
+                                                        wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn-sm text-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </span>
+                                                @else
+                                                    <span title="Disabled delete button" type="button"
+                                                        class="btn-sm text-secondary">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </span>
                                                 @endif
                                             </td>
                                         </tr>
@@ -161,4 +166,5 @@
         </div>
     </section>
     @livewire('PhilHealth.ArForm')
+    @livewire('PhilHealth.PrintModal')
 </div>
