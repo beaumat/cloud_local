@@ -22,7 +22,7 @@
                 </a>
             </li>
         @endcan
-        @can('company.build-assembly.view')
+        @if(Auth()->user()->can('company.build-assembly.view'))
             <li class="nav-item">
                 <a href="{{ route('companybuild_assembly') }}"
                     class="nav-link {{ request()->is('company/build-assembly*') ? 'active' : '' }}">
@@ -30,7 +30,7 @@
                     <p>Build Assembly</p>
                 </a>
             </li>
-        @endcan
+        @endif
         @can('company.pull-out.view')
             <li class="nav-item">
                 <a href="{{ route('companypull_out') }}"

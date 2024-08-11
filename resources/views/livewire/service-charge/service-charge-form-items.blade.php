@@ -4,8 +4,8 @@
         <thead class="text-xs bg-sky">
             <tr>
                 <th class="col-1">Code</th>
-                <th class="col-4">Description</th>
-                <th class="col-1">Category</th>
+                <th class="col-3">Description</th>
+                <th class="col-2">Category</th>
                 <th class="text-right">Qty</th>
                 <th class="col-1 text-center">Unit</th>
                 <th class="col-1 text-right">Rate</th>

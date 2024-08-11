@@ -113,7 +113,7 @@ class InventoryAdjustmentForm extends Component
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
-            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+            if ($debit_sum == $credit_sum) {
                 return true;
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');

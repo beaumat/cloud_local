@@ -111,6 +111,12 @@ class InventoryAdjustmentServices
             ->where('INVENTORY_ADJUSTMENT_ID', $INVENTORY_ADJUSTMENT_ID)
             ->first();
     }
+    public function haveExists(int $INVENTORY_ADJUSTMENT_ID, int $ITEM_ID): bool
+    {
+        return InventoryAdjustmentItems::where('INVENTORY_ADJUSTMENT_ID', $INVENTORY_ADJUSTMENT_ID)
+            ->where('ITEM_ID', $ITEM_ID)
+            ->exists();
+    }
     public function ItemStore(
         int $INVENTORY_ADJUSTMENT_ID,
         int $ITEM_ID,

@@ -730,7 +730,6 @@ class HemoServices
                 ->where('IS_NEW', $IS_NEW)
                 ->where('IS_DEFAULT', $IS_DEFAULT)
                 ->exists();
-                
         } catch (\Throwable $th) {
             $IsExist = true;
         }
@@ -857,7 +856,7 @@ class HemoServices
                 'hemodialysis.CUSTOMER_ID'
             ])
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
-            ->join('join', 'hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->join('hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
             ->whereIn('item.TYPE', ['0', '1'])
             ->where('hemodialysis_items.IS_NEW', true)
             ->where('hemodialysis_items.IS_POST', false)
@@ -870,7 +869,7 @@ class HemoServices
     public function CallOutItemToBePosted(string $DATE)
     {
         HemodialysisItems::join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
-            ->join('join', 'hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->join('hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
             ->whereIn('item.TYPE', ['0', '1'])
             ->where('hemodialysis_items.IS_NEW', true)
             ->where('hemodialysis_items.IS_POST', false)

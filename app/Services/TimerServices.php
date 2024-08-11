@@ -36,23 +36,23 @@ class TimerServices
         }
     }
     private function generateWaitingList()
-    {
-        $schedlist = $this->scheduleServices->getWaitingList($this->dateServices->NowDate());
+    {   
+        $transDate =  $this->dateServices->NowDate();
+        $schedlist = $this->scheduleServices->getWaitingList($transDate);
         foreach ($schedlist as $sched) {
             $this->getPosted($sched->CONTACT_ID, $sched->SCHED_DATE, $sched->LOCATION_ID);
         }
     }
     private function generateItem()
     {
+        $transDate =  $this->dateServices->NowDate();
         DB::beginTransaction();
         try {
 
             $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Hemodialysis');
-            $itemData = $this->hemoServices->CallOutItemUnPosted($this->dateServices->NowDate());
+            $itemData = $this->hemoServices->CallOutItemUnPosted($transDate);
             foreach ($itemData as $list) {
-
                 $QTY = (float)  ($list->QUANTITY * $list->UNIT_BASE_QUANTITY ?? 1) * -1;
-
                 $this->itemInventoryServices->InventoryModify(
                     $list->ITEM_ID,
                     $list->LOCATION_ID,
@@ -64,7 +64,7 @@ class TimerServices
                     $list->COST ?? 0
                 );
             }
-            $this->hemoServices->CallOutItemToBePosted($this->dateServices->NowDate()); // to update update
+            $this->hemoServices->CallOutItemToBePosted($transDate); // to update update
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

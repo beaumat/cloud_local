@@ -25,7 +25,6 @@ class InventoryAdjustmentFormItems extends Component
     public float $QUANTITY;
     public float $UNIT_COST;
     public int $UNIT_ID;
-    public int $BASE_UNIT_ID;
     public int $ACCOUNT_ID;
     public float $ASSET_ACCOUNT_ID;
 
@@ -38,6 +37,7 @@ class InventoryAdjustmentFormItems extends Component
     public $unitList = [];
     public $saveSuccess;
     public float $lineQty;
+    public float $lineUnitCost;
     public int $lineUnitId;
     public int $lineBatchId;
     public $editUnitList = [];
@@ -63,10 +63,7 @@ class InventoryAdjustmentFormItems extends Component
         }
         $this->itemDescList = $this->itemServices->getByVendor(false);
     }
-    public function updatedquantity()
-    {
-        $this->getAmount();
-    }
+    public function updatedquantity() {}
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
@@ -86,9 +83,8 @@ class InventoryAdjustmentFormItems extends Component
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->UNIT_COST = $item->COST ?? 0;
-                $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 0;
+                $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
-                $this->getAmount();
             }
         }
     }
@@ -114,6 +110,11 @@ class InventoryAdjustmentFormItems extends Component
         );
 
         try {
+
+            if ($this->inventoryAdjustmentServices->haveExists($this->INVENTORY_ADJUSTMENT_ID, $this->ITEM_ID)) {
+                session()->flash('error', 'Item already added.');
+                return;
+            }
 
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
 
@@ -150,9 +151,7 @@ class InventoryAdjustmentFormItems extends Component
     {
         $this->getEditAmount();
     }
-    public function getEditAmount()
-    {
-    }
+    public function getEditAmount() {}
     public function editItem(int $ID)
     {
         $data = $this->inventoryAdjustmentServices->GetItem($ID, $this->INVENTORY_ADJUSTMENT_ID);
@@ -160,6 +159,7 @@ class InventoryAdjustmentFormItems extends Component
         if ($data) {
             $this->editItemId = $data->ID;
             $this->lineQty = $data->QUANTITY;
+            $this->lineUnitCost = $data->UNIT_COST ?? 0;
             $this->lineUnitId = $data->UNIT_ID ?? 0;
             $this->lineItemId = $data->ITEM_ID;
             $this->lineBatchId = $data->BATCH_ID ?? 0;
@@ -172,7 +172,7 @@ class InventoryAdjustmentFormItems extends Component
 
 
         $this->validate(
-            [    
+            [
                 'lineQty' => 'required|not_in:0',
             ],
             [],
@@ -181,7 +181,7 @@ class InventoryAdjustmentFormItems extends Component
             ]
         );
 
-        
+
         try {
 
 
