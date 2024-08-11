@@ -72,40 +72,40 @@
                     <td class="text-center">
                         @if ($editItemId === $list->ID)
                             <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
-                                class="btn btn-sm btn-success">
+                                class="btn btn-xs btn-success">
                                 <i class="fas fa-check" aria-hidden="true"></i>
                             </button>
                             <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
-                                class="btn btn-sm btn-warning">
+                                class="btn btn-xs btn-warning">
                                 <i class="fas fa-ban" aria-hidden="true"></i>
                             </button>
                         @else
                             @if ($list->count_pay == 0 && $list->DATE_LOG == $DATE_NOW)
                                 <button title="Edit Active" id="editbtn"
                                     wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
-                                    class="btn btn-sm btn-info">
+                                    class="btn btn-xs btn-info">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
                                 <button title="Delete Active" id="deletebtn"
                                     wire:click='deleteItem({{ $list->ID }})'
-                                    wire:confirm="Are you sure you want to delete this?" class="btn btn-sm btn-danger">
+                                    wire:confirm="Are you sure you want to delete this?" class="btn btn-xs btn-danger">
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                             @else
                                 <button type="button" title="Edit Disabled" id="editbtn"
-                                    class="btn btn-sm btn-secondary">
+                                    class="btn btn-xs btn-secondary">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
                                 <button type="button" title="Delete Disabled" id="deletebtn"
-                                    class="btn btn-sm btn-secondary">
+                                    class="btn btn-xs btn-secondary">
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                             @endif
                             {{-- Other Buttons --}}
-                            <button class="btn btn-sm btn-primary" title="Cash Payment"
+                            <button class="btn btn-xs btn-primary" title="Cash Payment"
                                 wire:click="cashPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
                                     class="fa fa-money" aria-hidden="true"></i> </button>
-                            <button class="btn btn-sm btn-success" title="Open Payment"
+                            <button class="btn btn-xs btn-success" title="Open Payment"
                                 wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
                                     class="fa fa-paypal" aria-hidden="true"></i> </button>
                         @endif
@@ -156,12 +156,12 @@
                     </td>
                     <td > <label class="mt-2 text-xs"> {{ $CLASS_DESCRIPTION }}</label></td>
                     <td>
-                        <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
+                        <input type="number" step="0.01" class="form-control form-control-sm text-xs mt-2 text-right"
                             name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
                             @if ($ITEM_ID == 0) readonly @endif />
                     </td>
                     <td>
-                        <select wire:model='UNIT_ID' name="UNIT_ID" class="text-sm form-control form-control-sm mt-2"
+                        <select wire:model='UNIT_ID' name="UNIT_ID" class="text-xs text-center form-control form-control-sm mt-2"
                             @if ($ITEM_ID == 0) readonly @endif>
                             @foreach ($unitList as $list)
                                 <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
@@ -169,7 +169,7 @@
                         </select>
                     </td>
                     <td>
-                        <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
+                        <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-xs text-right"
                             @if ($editPrice == false) readonly @endif name="rate"
                             wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                     </td>
@@ -184,7 +184,7 @@
                         <div class="mt-2">
                             <button type="submit" wire:loading.attr='hidden'
                                 @if ($ITEM_ID == 0) disabled @endif
-                                class="text-white btn bg-sky btn-sm w-100">
+                                class="btn btn-success btn-xs w-100">
                                 <i class="fas fa-plus"></i>
                             </button>
                             <div wire:loading.delay>

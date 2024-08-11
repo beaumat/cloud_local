@@ -43,20 +43,21 @@
                     </td>
                     <td class="text-center">
                         @if ($list->FILE_PATH)
-                            <a href="{{ asset('storage/' . $list->FILE_PATH) }}" target="_blank"
-                                class="btn-sm text-danger">
+                            <a type="button" title="Preview documents"
+                                href="{{ asset('storage/' . $list->FILE_PATH) }}" target="_blank"
+                                class="btn btn-xs btn-danger">
                                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                             </a>
                         @else
-                            <a href="#" class="btn-sm text-secondary">
+                            <button type="button" class="btn btn-xs btn-secondary">
                                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                            </a>
+                            </button>
                         @endif
-                        <a href="#" title="Delete" id="deletebtn"
+                        <button title="Delete" id="deletebtn"
                             wire:click='delete({{ $list->ID }}, {{ $list->PATIENT_PAYMENT_ID }}, {{ $list->SERVICE_CHARGES_ITEM_ID }})'
-                            wire:confirm="Are you sure you want to delete this?" class="btn-sm text-danger">
-                            <i class="fas fa-times" aria-hidden="true"></i>
-                        </a>
+                            wire:confirm="Are you sure you want to delete this?" class="btn btn-xs btn-danger">
+                            <i class="fas fa-trash" aria-hidden="true"></i>
+                        </button>
                     </td>
 
                 </tr>

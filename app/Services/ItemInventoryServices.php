@@ -259,7 +259,7 @@ class ItemInventoryServices
         }
 
 
-        $dataExist =  $this->getInvItem($ITEM_ID, $LOCATION_ID, $SOURCE_REF_ID, $SOURCE_REF_TYPE, $SOURCE_REF_DATE);
+        $dataExist = $this->getInvItem($ITEM_ID, $LOCATION_ID, $SOURCE_REF_ID, $SOURCE_REF_TYPE, $SOURCE_REF_DATE);
 
         if (!$dataExist) {
             // new store

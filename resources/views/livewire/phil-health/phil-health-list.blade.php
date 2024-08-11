@@ -87,22 +87,13 @@
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ Carbon::parse($list->DATE)->diffForHumans() }} </td>
                                             <td class="text-center">
-                                                <button type="button"
-                                                    class="btn @if ($list->AR_NO) btn-white @else btn-secondary @endif btn-xs w-100"
-                                                    wire:click='getARForm({{ $list->ID }})'>
-                                                    @if ($list->AR_NO)
-                                                        {{ $list->AR_NO }}
-                                                    @else
-                                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                                    @endif
-                                                    </span>
+                                                {{ $list->AR_NO }}
+
                                             </td>
                                             <td class="text-center">
-                                                <span type="button" wire:click='getARForm({{ $list->ID }})'>
-                                                    @if ($list->AR_DATE)
-                                                        {{ date('m/d/Y', strtotime($list->AR_DATE)) }}
-                                                    @endif
-                                                </span>
+                                                @if ($list->AR_DATE)
+                                                    {{ date('m/d/Y', strtotime($list->AR_DATE)) }}
+                                                @endif
                                             </td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td class="text-center">
@@ -123,33 +114,40 @@
 
                                                 <a title="View Details"
                                                     href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
+                                                    class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
                                                 @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && Auth::user()->can('patient.philhealth.print'))
-                                                    <span class="btn-sm text-primary" type="button"
+                                                    <span class="btn btn-xs btn-primary" type="button"
                                                         title="Active Print" wire:click='print({{ $list->ID }})'>
                                                         <i class="fa fa-print" aria-hidden="true"></i>
                                                     </span>
                                                 @else
-                                                    <span class="btn-sm text-secondary" type="button"
+                                                    <span class="btn btn-xs btn-secondary" type="button"
                                                         title="Active Print">
                                                         <i class="fa fa-print" aria-hidden="true"></i>
                                                     </span>
                                                 @endif
+
                                                 @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && Auth::user()->can('patient.philhealth.delete'))
                                                     <span title="Active delete button" type="button"
                                                         wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
-                                                        class="btn-sm text-danger">
+                                                        class="btn btn-xs btn-danger">
                                                         <i class="fas fa-trash" aria-hidden="true"></i>
                                                     </span>
                                                 @else
                                                     <span title="Disabled delete button" type="button"
-                                                        class="btn-sm text-secondary">
+                                                        class="btn btn-xs btn-secondary">
                                                         <i class="fas fa-trash" aria-hidden="true"></i>
                                                     </span>
                                                 @endif
+
+                                                <button type="button" title="AR Form" class="btn btn-success active btn-xs"
+                                                    wire:click='getARForm({{ $list->ID }})'>
+                                                    <i class="fa fa-registered" aria-hidden="true"></i>
+                                                </button>
+
                                             </td>
                                         </tr>
                                     @endforeach

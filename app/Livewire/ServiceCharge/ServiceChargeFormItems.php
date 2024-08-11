@@ -293,7 +293,6 @@ class ServiceChargeFormItems extends Component
         $this->lineBatchId = 0;
         $this->linePriceLevelId = 0;
     }
-
     public function updateItem(int $Id)
     {
 
@@ -363,7 +362,6 @@ class ServiceChargeFormItems extends Component
     {
         $this->editItemId = null;
     }
-
     public function deleteItem(int $Id)
     {
         DB::beginTransaction();
@@ -395,13 +393,14 @@ class ServiceChargeFormItems extends Component
     }
     public function getReload()
     {
+        $this->DATE_NOW = $this->dateServices->NowDate();
         $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
         $this->itemList = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID);
     }
     public function render()
     {
-        $this->DATE_NOW = $this->dateServices->NowDate();
+
         $this->getReload();
         return view('livewire.service-charge.service-charge-form-items');
     }

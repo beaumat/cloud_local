@@ -26,21 +26,57 @@ class TimerServices
         $this->itemInventoryServices = $itemInventoryServices;
     }
 
-    public function getExecute()
+
+    private function generateUnposted()
     {
         // $ php artisan schedule:work = must run per minute
         $unPostList = $this->hemoServices->GetUnpostedTreatment();
         foreach ($unPostList as $list) {
             $this->getPosted($list->CUSTOMER_ID, $list->DATE, $list->LOCATION_ID);
         }
-
-
-
-
+    }
+    private function generateWaitingList()
+    {
         $schedlist = $this->scheduleServices->getWaitingList($this->dateServices->NowDate());
         foreach ($schedlist as $sched) {
             $this->getPosted($sched->CONTACT_ID, $sched->SCHED_DATE, $sched->LOCATION_ID);
         }
+    }
+    private function generateItem()
+    {
+        DB::beginTransaction();
+        try {
+
+            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Hemodialysis');
+            $itemData = $this->hemoServices->CallOutItemUnPosted($this->dateServices->NowDate());
+            foreach ($itemData as $list) {
+
+                $QTY = (float)  ($list->QUANTITY * $list->UNIT_BASE_QUANTITY ?? 1) * -1;
+
+                $this->itemInventoryServices->InventoryModify(
+                    $list->ITEM_ID,
+                    $list->LOCATION_ID,
+                    $list->ID,
+                    $SOURCE_REF_TYPE,
+                    $list->DATE,
+                    0,
+                    $QTY,
+                    $list->COST ?? 0
+                );
+            }
+            $this->hemoServices->CallOutItemToBePosted($this->dateServices->NowDate()); // to update update
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error('Error executing generateItem() : ' . $th->getMessage());
+        }
+    }
+    public function getExecute()
+    {
+
+        $this->generateUnposted();
+        $this->generateWaitingList();
+        $this->generateItem();
     }
 
     private function getPosted(int $CONTACT_ID, string $DATE, int  $LOCATION_ID)
@@ -50,8 +86,8 @@ class TimerServices
             $data = $this->hemoServices->getTreatmentID($CONTACT_ID, $DATE, $LOCATION_ID);
 
             $ID         = (int) $data['ID']; //HEMO_ID
-            $TIME_START =       empty($data['TIME_START']) ?  null :  $data['TIME_START'];
-            $TIME_END   =       empty($data['TIME_END'])  ?   null : $data['TIME_END'];
+            $TIME_START = empty($data['TIME_START']) ?  null :  $data['TIME_START'];
+            $TIME_END   = empty($data['TIME_END'])  ?   null : $data['TIME_END'];
             $STATUS_ID  = (int) $data['STATUS_ID'];
 
 
@@ -79,12 +115,12 @@ class TimerServices
                     return;
                 }
 
-                if ($STATUS_ID == 1) {
-                    if (!$this->ItemInventory($ID, $DATE, $LOCATION_ID)) {
-                        DB::rollBack();
-                        return;
-                    }
-                }
+                // if ($STATUS_ID == 1) {
+                //     if (!$this->ItemInventory($ID, $DATE, $LOCATION_ID)) {
+                //         DB::rollBack();
+                //         return;
+                //     }
+                // }
 
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 1); //PRESENT
 
@@ -109,17 +145,7 @@ class TimerServices
             Log::error('Error executing Schedule executed in getPosted: ' . $e->getMessage() . '[' . $CONTACT_ID . ',' . $LOCATION_ID . ', ' . $DATE . ']');
         }
     }
-    private function ItemInventory(int $HEMO_ID, string $DATE, int $LOCATION_ID): bool
-    {
-        try {
-            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Hemodialysis');
-            $data = $this->hemoServices->ItemInventory($HEMO_ID);
-            if ($data) {
-                $this->itemInventoryServices->InventoryExecute($data, $LOCATION_ID, $SOURCE_REF_TYPE, $DATE, false);
-            }
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
+
+
+
 }

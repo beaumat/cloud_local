@@ -55,9 +55,8 @@
                                     </td>
                                     <td class="text-center">
                                         @if ($lineId == $list->ID)
-                                            <input type="number" step="0.01"
-                                                class="form-control form-control-sm mt-2 text-right" name="lineQty"
-                                                wire:model='lineQty' />
+                                            <input type="number" step="0.01" class="w-100 text-xs text-right"
+                                                name="lineQty" wire:model='lineQty' />
                                         @else
                                             @if ($list->NO_OF_USED > 1)
                                                 <a wire:click='OpenUsageHistory({{ $list->ITEM_ID }})' href="#"
@@ -71,8 +70,7 @@
                                     </td>
                                     <td class="text-center">
                                         @if ($lineId == $list->ID)
-                                            <select wire:model='lineUnitId' name="lineUnitId"
-                                                class="text-sm form-control form-control-sm mt-2">
+                                            <select wire:model='lineUnitId' name="lineUnitId" class="text-sm w-100">
                                                 @foreach ($editUnitList as $listitem)
                                                     <option value="{{ $listitem->ID }}">{{ $listitem->SYMBOL }}
                                                     </option>
@@ -84,7 +82,7 @@
                                     </td>
                                     <td class="text-center">
                                         @if ($lineId == $list->ID)
-                                            <input type="checkbox" class="text-lg mt-2" wire:model='lineIsNew'
+                                            <input type="checkbox" class="text-xs mt-2" wire:model='lineIsNew'
                                                 name="lineIsNew" />
                                         @else
                                             @if ($list->IS_NEW)
@@ -95,32 +93,41 @@
                                     @if ($STATUS == $openStatus)
                                         <td class="text-center">
                                             @if ($lineId == $list->ID)
-                                                <button title="Update" id="updatebtn" wire:click="updateItem()"
-                                                    class="btn-sm w-25">
-                                                    <i class="fas fa-check text-success" aria-hidden="true"></i>
+                                                <button type="button" title="Update" id="updatebtn"
+                                                    wire:click="updateItem()" class="btn btn-xs btn-success">
+                                                    <i class="fas fa-check" aria-hidden="true"></i>
                                                 </button>
-                                                <button title="Cancel" id="cancelbtn" href="#"
-                                                    wire:click="cancelItem()" class="btn-sm w-25">
-                                                    <i class="fas fa-ban text-warning" aria-hidden="true"></i>
+                                                <button type="button" title="Cancel" id="cancelbtn" href="#"
+                                                    wire:click="cancelItem()" class="btn btn-xs btn-warning">
+                                                    <i class="fas fa-ban" aria-hidden="true"></i>
                                                 </button>
                                             @else
-                                                <a href="#" title="Edit" id="editbtn"
-                                                    wire:click='editItem({{ $list->ID }})'
-                                                    class="btn-sm text-primary">
-                                                    <i class="fas fa-edit " aria-hidden="true"></i>
-                                                </a>
-                                                <a href="#" title="Delete" id="deletebtn"
-                                                    wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }}, {{ $list->UNIT_ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger w-25">
-                                                    <i class="fas fa-times " aria-hidden="true"></i>
-                                                </a>
+                                                @if ($CAN_BE_EDIT)
+                                                    <button type="button" title="Edit" id="editbtn"
+                                                        wire:click='editItem({{ $list->ID }})'
+                                                        class="btn btn-xs btn-primary">
+                                                        <i class="fas fa-edit " aria-hidden="true"></i>
+                                                    </button>
+                                                @endif
+
+                                                @if ($list->IS_DEFAULT)
+                                                    <button type="button" title="Delete" id="deletebtn"
+                                                        wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }}, {{ $list->UNIT_ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash " aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" title="Delete" id="deletebtn"
+                                                        class="btn btn-xs btn-secondary"> <i class="fas fa-trash "
+                                                            aria-hidden="true"></i></button>
+                                                @endif
                                             @endif
                                         </td>
                                     @endif
                                 </tr>
                             @endforeach
-                            @if ($STATUS == $openStatus)
+                            {{-- @if ($STATUS == $openStatus)
                                 <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
                                     <tr>
                                         <td class="text-xs">
@@ -194,11 +201,11 @@
                                         </td>
                                     </tr>
                                 </form>
-                            @endif
+                            @endif --}}
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                     @if ($STATUS == $openStatus)
                         <livewire:custom-check-box name="codeBase" titleName="Use item code"
                             wire:model.live='codeBase' />
@@ -208,7 +215,7 @@
                     @if ($STATUS == $openStatus)
                         @livewire('Hemodialysis.AddDefaultModal', ['HEMO_ID' => $HEMO_ID, 'LOCATION_ID' => $LOCATION_ID])
                     @endif
-                </div>
+                </div> --}}
             </div>
         </div>
         <!-- /.card-body -->

@@ -27,12 +27,8 @@ class InventoryTreatment extends Component
     private $itemServices;
     private $unitOfMeasureServices;
     private $itemTreatmentServices;
-    public function boot(
-        HemoServices $hemoServices,
-        ItemServices $itemServices,
-        UnitOfMeasureServices $unitOfMeasureServices,
-        ItemTreatmentServices $itemTreatmentServices
-    ) {
+    public function boot(HemoServices $hemoServices, ItemServices $itemServices, UnitOfMeasureServices $unitOfMeasureServices, ItemTreatmentServices $itemTreatmentServices)
+    {
         $this->hemoServices = $hemoServices;
         $this->itemServices = $itemServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
@@ -51,6 +47,8 @@ class InventoryTreatment extends Component
     public $editUnitList = [];
     public bool $IS_NEW;
     public $ItemRequiredList = [];
+
+    public bool $CAN_BE_EDIT = false;
     public function mount()
     {
         $this->codeBase = false;
@@ -84,19 +82,14 @@ class InventoryTreatment extends Component
     }
     public function deleteItem(int $ID, int $ITEM_ID, int  $UNIT_ID = 0)
     {
+        $this->hemoServices->ItemDelete($ID, $this->HEMO_ID, $ITEM_ID, true);
 
-
-        $this->hemoServices->ItemDelete($ID, $this->HEMO_ID, $ITEM_ID);
-
-        //Trigger Item
         $ITEM_TREATMENT_ID = (int)  $this->itemTreatmentServices->getItemTreatmentID($ITEM_ID, $this->LOCATION_ID,  $UNIT_ID);
 
         if ($ITEM_TREATMENT_ID > 0) {
-
             $dataList = $this->itemTreatmentServices->listItemTrigger($ITEM_TREATMENT_ID);
-
             foreach ($dataList as $item) {
-                $this->hemoServices->ItemDelete2($this->HEMO_ID, $item->ITEM_ID, $item->UNIT_ID);
+                $this->hemoServices->ItemDelete2($this->HEMO_ID, $item->ITEM_ID, $item->UNIT_ID, true);
             }
         }
         session()->flash('message', 'Successfully deleted');
@@ -115,7 +108,7 @@ class InventoryTreatment extends Component
             ]
         );
         $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
-        $this->hemoServices->ItemStore($this->HEMO_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, (float) $unitRelated['QUANTITY'], $this->IS_NEW);
+        $this->hemoServices->ItemStore($this->HEMO_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, (float) $unitRelated['QUANTITY'], $this->IS_NEW, true);
         $this->resetInsert();
         session()->flash('message', 'Successfully added');
     }
@@ -185,6 +178,7 @@ class InventoryTreatment extends Component
             $this->lineUnitId,
             (float)  $unitRelated['QUANTITY'],
             $this->lineIsNew,
+            true
         );
 
         session()->flash('message', 'Successfully updated');
@@ -201,25 +195,24 @@ class InventoryTreatment extends Component
     public function loadItemRequired()
     {
         if ($this->ActiveRequired) {
-
-            // if ($this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->HEMO_ID)) {
-
-            //     $this->ItemRequiredList =  [];
-            //     return;
-            // }
-
             $this->ItemRequiredList =  $this->itemTreatmentServices->getItemRequired($this->LOCATION_ID, $this->HEMO_ID);
         }
     }
     public function addItem(int $ItemTreatmentId)
     {
         $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
+
         if ($data) {
+
             $gotNew = true;
+
             if ($data->NO_OF_USED > 1) {
+
                 $hemoData =  $this->hemoServices->Get($this->HEMO_ID);
+
                 if ($hemoData) {
                     $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $this->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
+
                     if ($totalused == 0) {
                         $gotNew = true;
                     } elseif ($totalused < $data->NO_OF_USED) {
@@ -230,19 +223,26 @@ class InventoryTreatment extends Component
             try {
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
                 $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-                $this->hemoServices->ItemStore($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
-                // TRIGGER START
+
+                // check if exists
+                if ($this->hemoServices->ItemStoreExists($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew, true)) {
+                    //  force to stop;
+                    $this->dispatch('refresh-item-treatment');
+                    session()->flash('error', 'Item already exists');
+                    return;
+                }
+
+                $this->hemoServices->ItemStore($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew, true);
+
                 $dataTrigger = $this->itemTreatmentServices->listItemTrigger($ItemTreatmentId);
                 foreach ($dataTrigger  as $list) {
                     $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
                     $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
-                    $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true);
+                    $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true);
                 }
-                // TRIGGER END
 
-                $this->dispatch('refresh-item-treatment');
+                $this->dispatch('refresh-item-treatment'); //refrest item
             } catch (\Throwable $th) {
-
                 session()->flash('error', $th->getMessage());
             }
         }
@@ -261,10 +261,10 @@ class InventoryTreatment extends Component
         $data = $this->hemoServices->get($this->HEMO_ID);
         if ($data) {
             $result = [
-                'DATE' => $data->DATE,
-                'LOCATION_ID' => $data->LOCATION_ID,
-                'ITEM_ID' => $ITEM_ID,
-                'CONTACT_ID' => $data->CUSTOMER_ID
+                'DATE'          => $data->DATE,
+                'LOCATION_ID'   => $data->LOCATION_ID,
+                'ITEM_ID'       => $ITEM_ID,
+                'CONTACT_ID'    => $data->CUSTOMER_ID
             ];
 
             $this->dispatch('usage-modal-open', result: $result);

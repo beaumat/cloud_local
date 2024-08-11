@@ -719,47 +719,70 @@ class HemoServices
 
         return  (int) $result_new->total_count ?? 0;
     }
-    public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW)
+    public function ItemStoreExists(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT): bool
+    {
+        try {
+            $IsExist =  HemodialysisItems::where('HEMO_ID', $HEMO_ID)
+                ->where('ITEM_ID', $ITEM_ID)
+                ->where('QUANTITY', $QUANTITY)
+                ->where('UNIT_ID', $UNIT_ID > 0 ? $UNIT_ID : null)
+                ->where('UNIT_BASE_QUANTITY', $UNIT_BASE_QUANTITY)
+                ->where('IS_NEW', $IS_NEW)
+                ->where('IS_DEFAULT', $IS_DEFAULT)
+                ->exists();
+                
+        } catch (\Throwable $th) {
+            $IsExist = true;
+        }
+
+        return $IsExist;
+    }
+    public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT)
     {
         $ID = (int) $this->object->ObjectNextID('HEMODIALYSIS_ITEMS');
 
         $LINE_NO = (int) $this->getLine($HEMO_ID) + 1;
 
         HemodialysisItems::create([
-            'ID' => $ID,
-            'HEMO_ID' => $HEMO_ID,
-            'LINE_NO' => $LINE_NO,
-            'ITEM_ID' => $ITEM_ID,
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'IS_NEW' => $IS_NEW
+            'ID'                    => $ID,
+            'HEMO_ID'               => $HEMO_ID,
+            'LINE_NO'               => $LINE_NO,
+            'ITEM_ID'               => $ITEM_ID,
+            'QUANTITY'              => $QUANTITY,
+            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
+            'IS_NEW'                => $IS_NEW,
+            'IS_DEFAULT'            => $IS_DEFAULT,
+            'IS_POST'               => false
         ]);
     }
-    public function ItemUpdate(int $ID, int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW)
+    public function ItemUpdate(int $ID, int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT)
     {
         HemodialysisItems::where('ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
             ->where('ITEM_ID', $ITEM_ID)
+            ->where('IS_DEFAULT', $IS_DEFAULT)
             ->update([
-                'QUANTITY' => $QUANTITY,
-                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-                'IS_NEW' => $IS_NEW
+                'QUANTITY'              => $QUANTITY,
+                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
+                'IS_NEW'                => $IS_NEW,
             ]);
     }
-    public function ItemDelete(int $ID, int $HEMO_ID, int $ITEM_ID)
+    public function ItemDelete(int $ID, int $HEMO_ID, int $ITEM_ID, bool $IS_DEFAULT)
     {
         HemodialysisItems::where('ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
             ->where('ITEM_ID', $ITEM_ID)
+            ->where('IS_DEFAULT', $IS_DEFAULT)
             ->delete();
     }
-    public function ItemDelete2(int $HEMO_ID, int $ITEM_ID, int $UNIT_ID)
+    public function ItemDelete2(int $HEMO_ID, int $ITEM_ID, int $UNIT_ID, bool $IS_DEFAULT)
     {
         HemodialysisItems::where('HEMO_ID', $HEMO_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->where('UNIT_ID', $UNIT_ID)
+            ->where('IS_DEFAULT', $IS_DEFAULT)
             ->delete();
     }
     public function ItemGet(int $ID)
@@ -778,6 +801,7 @@ class HemoServices
                 'hemodialysis_items.UNIT_ID',
                 'hemodialysis_items.UNIT_BASE_QUANTITY',
                 'hemodialysis_items.IS_NEW',
+                'hemodialysis_items.IS_DEFAULT',
                 'item.CODE',
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
@@ -817,6 +841,43 @@ class HemoServices
             ->get();
 
         return $result;
+    }
+    public function CallOutItemUnPosted(string $DATE)
+    {
+        $result = HemodialysisItems::query()
+            ->select([
+                'hemodialysis_items.ID',
+                'hemodialysis_items.HEMO_ID',
+                'hemodialysis_items.ITEM_ID',
+                'hemodialysis_items.QUANTITY',
+                'hemodialysis_items.UNIT_BASE_QUANTITY',
+                'item.COST',
+                'hemodialysis.DATE',
+                'hemodialysis.LOCATION_ID',
+                'hemodialysis.CUSTOMER_ID'
+            ])
+            ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->join('join', 'hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('hemodialysis_items.IS_NEW', true)
+            ->where('hemodialysis_items.IS_POST', false)
+            ->where('hemodialysis.DATE', '<=', $DATE)
+            ->orderBy('hemodialysis.DATE', 'asc')
+            ->get();
+
+        return $result;
+    }
+    public function CallOutItemToBePosted(string $DATE)
+    {
+        HemodialysisItems::join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->join('join', 'hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('hemodialysis_items.IS_NEW', true)
+            ->where('hemodialysis_items.IS_POST', false)
+            ->where('hemodialysis.DATE', '<=', $DATE)
+            ->update([
+                'hemodialysis_items.IS_POST' => true
+            ]);
     }
     public function UsageHistory(int $ITEM_ID, int $CONTACT_ID, string $DATE, int $LOCATION_ID)
     {
@@ -938,7 +999,7 @@ class HemoServices
             try {
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
                 $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-                $this->ItemStore($hemoData->ID, $data->ITEM_ID, $QTY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew);
+                $this->ItemStore($hemoData->ID, $data->ITEM_ID, $QTY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew, true);
             } catch (\Throwable $th) {
                 session()->flash('error', $th->getMessage());
             }
@@ -979,14 +1040,14 @@ class HemoServices
         }
 
         $itemDetails =  $this->itemServices->get($ITEM_ID);
-        
+
         if ($itemDetails) {
-            if ($itemDetails->TYPE <> 0) {
+            if ($itemDetails->TYPE >= 2) {
                 return;
             }
         }
 
-        $dataItem =  HemodialysisItems::select([
+        $dataItem = HemodialysisItems::select([
             'hemodialysis_items.ID',
             'hemodialysis_items.HEMO_ID'
         ])
@@ -995,27 +1056,17 @@ class HemoServices
             ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
             ->where('hemodialysis.DATE', $DATE)
             ->where('hemodialysis_items.ITEM_ID', $ITEM_ID)
+            ->where('hemodialysis_items.IS_DEFAULT', false)
             ->first();
 
         if ($dataItem) { // HEMO EXISTS
-            if ($ITEM_ID == $this->ITEM_USED_ID) { //  
-                if ($IS_DELETE) {
-                    HemodialysisItems::where('ID', $dataItem->ID)->where('HEMO_ID', $dataItem->HEMO_ID)->where('ITEM_ID', $ITEM_ID)->update(['QUANTITY' => 1, 'IS_NEW' => 0]);
-                    return;
-                }
-
-                HemodialysisItems::where('ID', $dataItem->ID)->where('HEMO_ID', $dataItem->HEMO_ID)->where('ITEM_ID', $ITEM_ID)->update(['QUANTITY' => $QTY, 'IS_NEW' => 1]);
-                return;
-            }
-
             if ($IS_DELETE) {
-                $this->ItemDelete($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID);
+                $this->ItemDelete($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, false);
                 return;
             }
-
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-            $this->ItemUpdate($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID,  $UNIT_BASE_QUANTITY, true);
+            $this->ItemUpdate($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID,  $UNIT_BASE_QUANTITY, true, false);
             return;
         }
         // new item
@@ -1028,7 +1079,7 @@ class HemoServices
         if ($hemoData) {
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-            $this->ItemStore($hemoData->ID, $ITEM_ID, $QTY, $UNIT_ID, $UNIT_BASE_QUANTITY, true);
+            $this->ItemStore($hemoData->ID, $ITEM_ID, $QTY, $UNIT_ID, $UNIT_BASE_QUANTITY, true, false);
         }
     }
 }

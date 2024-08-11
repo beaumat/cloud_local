@@ -20,6 +20,8 @@ class HemodialysisItems extends Model
         'QUANTITY',
         'UNIT_ID',
         'UNIT_BASE_QUANTITY',
-        'IS_NEW'
+        'IS_NEW',
+        'IS_DEFAULT',
+        'IS_POST'
     ];
 }
