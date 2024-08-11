@@ -8,9 +8,13 @@ use App\Models\PatientDoctor;
 use App\Models\PhilHealthProfFee;
 use Illuminate\Support\Facades\DB;
 use App\Models\PhilhealthDrugsMedicines;
+use App\Models\PhilhealthItemAdjustment;
 
 class PhilHealthServices
 {
+
+
+
     public float $OP_LAB_N_DIAGNOSTICS_AMOUNT = 250;
     public string $DEFAULT_DIAGNOSIS = "CHRONIC KIDNEY DISEASE STAGE 5 TO ";
     public string $DEFAULT_DIAGNOSIS2 = "CKD Stage Sec 5 to ";
@@ -23,6 +27,8 @@ class PhilHealthServices
     public float $SUPPLIES = 1082;
     public float $PROF_FEE_AMOUNT = 437.50;
     public float $PROF_FEE_FIRST_CASE = 350;
+
+    public int $PHIL_HEALTH_ITEM_ID  = 2;
 
     private $object;
     private $dateServices;
@@ -485,22 +491,8 @@ class PhilHealthServices
 
         ]);
     }
-    public function DrugMedicineUpdate(
-        int $ID,
-        int $PHILHEALTH_ID,
-        string $GENERIC_NAME,
-        float $QUANTITY,
-        string $DOSSAGE,
-        string $ROUTE,
-        string $FREQUENCY,
-        float $TOTAL_COST,
-        string $CONT_GENERIC_NAME,
-        float $CONT_QUANTITY,
-        string $CONT_DOSSAGE,
-        string $CONT_ROUTE,
-        string $CONT_FREQUENCY,
-        float $CONT_TOTAL_COST
-    ) {
+    public function DrugMedicineUpdate(int $ID, int $PHILHEALTH_ID, string $GENERIC_NAME, float $QUANTITY, string $DOSSAGE, string $ROUTE, string $FREQUENCY, float $TOTAL_COST, string $CONT_GENERIC_NAME, float $CONT_QUANTITY, string $CONT_DOSSAGE, string $CONT_ROUTE, string $CONT_FREQUENCY, float $CONT_TOTAL_COST)
+    {
         PhilhealthDrugsMedicines::where('ID', $ID)->update([
             'PHILHEALTH_ID'         => $PHILHEALTH_ID,
             'GENERIC_NAME'          => $GENERIC_NAME,
@@ -567,5 +559,67 @@ class PhilHealthServices
                     'STATUS_ID'     => $STATUS_ID
                 ]);
         }
+    }
+
+    public function ItemAdjustStore(int $PATIENT_ID, int $LOCATION_ID, int $NO_OF_USED, int $YEAR)
+    {
+
+        $ID = $this->object->ObjectNextID('PHILHEALTH_ITEM_ADJUSTMENT');
+
+        PhilhealthItemAdjustment::create(
+            [
+                'ID'            => $ID,
+                'PATIENT_ID'    => $PATIENT_ID,
+                'LOCATION_ID'   =>  $LOCATION_ID,
+                'NO_OF_USED'    =>  $NO_OF_USED,
+                'YEAR'          => $YEAR,
+            ]
+        );
+    }
+    public function ItemAdjustUpdate(int $ID, int $PATIENT_ID, int $LOCATION_ID, int $NO_OF_USED, int $YEAR)
+    {
+
+        PhilhealthItemAdjustment::where('ID', $ID)
+            ->where('PATIENT_ID', $PATIENT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->update(
+                [
+                    'NO_OF_USED'    =>  $NO_OF_USED,
+                    'YEAR'          => $YEAR,
+                ]
+            );
+    }
+    public function ItemAdjustDelete(int $ID)
+    {
+
+        PhilhealthItemAdjustment::where('ID', $ID)->delete();
+    }
+
+    public function ItemAdjustList(int $PATIENT_ID, int $LOCATION_ID)
+    {
+
+        $result = PhilhealthItemAdjustment::query()
+        ->select(['NO_OF_USED', 'YEAR'])
+        ->where('PATIENT_ID', $PATIENT_ID)
+        ->where('LOCATION_ID', $LOCATION_ID)
+        ->get();
+
+        return $result;
+    }
+    public function ItemAdjustGet(int $PATIENT_ID, int $LOCATION_ID, int $YEAR): int
+    {
+        $result = PhilhealthItemAdjustment::query()
+        ->select(['NO_OF_USED'])
+        ->where('PATIENT_ID', $PATIENT_ID)
+        ->where('LOCATION_ID', $LOCATION_ID)
+        ->where('YEAR', $YEAR)
+        ->first();
+
+        if ($result) {
+
+            return $result->NO_OF_USED ?? 0;
+        }
+
+        return 0;
     }
 }

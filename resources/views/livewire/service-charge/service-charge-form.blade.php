@@ -165,7 +165,7 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('ServiceCharge.ServiceChargeFormItems', ['SERVICE_CHARGES_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID])
+                                                @livewire('ServiceCharge.ServiceChargeFormItems', ['SERVICE_CHARGES_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID])
                                             </div>
                                         </div>
                                     </div>

@@ -48,8 +48,13 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <livewire:date-input name="DATE" titleName="Date"
-                                                        wire:model='DATE' :isDisabled="true" />
+                                                    @if ($ID > 0)
+                                                        <livewire:date-input name="DATE" titleName="Date"
+                                                            wire:model='DATE' :isDisabled="true" />
+                                                    @else
+                                                        <livewire:date-input name="DATE" titleName="Date"
+                                                            wire:model='DATE' :isDisabled="false" />
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify)
@@ -60,7 +65,8 @@
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-4" @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="col-md-4"
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($Modify)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
@@ -136,7 +142,8 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
                                         href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true">Adjustment Items</a>
+                                        aria-controls="custom-tabs-four-item" aria-selected="true">Adjustment
+                                        Items</a>
                                 </li>
                             </ul>
                         </div>

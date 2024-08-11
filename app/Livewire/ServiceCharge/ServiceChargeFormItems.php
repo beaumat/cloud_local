@@ -7,6 +7,7 @@ use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
+use App\Services\PhilHealthServices;
 use App\Services\ServiceChargeServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
@@ -23,7 +24,13 @@ class ServiceChargeFormItems extends Component
     public int $STATUS;
     #[Reactive]
     public int $TAX_ID;
-    public int $PHIHEALTH_ITEM_ID = 0;
+
+    #[Reactive]
+    public $LOCATION_ID;
+
+    #[Reactive]
+    public $PATIENT_ID;
+
     public int $openStatus = 0;
     public int $ID;
     public int $LINE_NO;
@@ -75,8 +82,10 @@ class ServiceChargeFormItems extends Component
     public string $DATE_NOW;
     private $hemoServices;
     private $dateServices;
-    public function boot(ServiceChargeServices $serviceChargeServices, ComputeServices $computeServices, UnitOfMeasureServices $unitOfMeasureServices, TaxServices $taxServices, ItemServices $itemServices, ItemSubClassServices $itemSubClassServices, HemoServices $hemoServices, DateServices $dateServices)
+    private $philHealthServices;
+    public function boot(PhilHealthServices $philHealthServices, ServiceChargeServices $serviceChargeServices, ComputeServices $computeServices, UnitOfMeasureServices $unitOfMeasureServices, TaxServices $taxServices, ItemServices $itemServices, ItemSubClassServices $itemSubClassServices, HemoServices $hemoServices, DateServices $dateServices)
     {
+        $this->philHealthServices = $philHealthServices;
         $this->serviceChargeServices = $serviceChargeServices;
         $this->computeServices = $computeServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
@@ -240,6 +249,9 @@ class ServiceChargeFormItems extends Component
 
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
+
+            $prime_item_id =  $this->ITEM_ID;
+
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
@@ -254,11 +266,34 @@ class ServiceChargeFormItems extends Component
             $this->CLASS_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
+
+
+            if ($this->philHealthServices->PHIL_HEALTH_ITEM_ID == $prime_item_id) {
+
+                $count = $this->serviceChargeServices->GetCountByYear($prime_item_id, $this->dateServices->NowYear(), $this->PATIENT_ID, $this->LOCATION_ID);
+                $countAdjust = $this->philHealthServices->ItemAdjustGet($this->PATIENT_ID, $this->LOCATION_ID, $this->dateServices->NowYear());
+                $totalCount = $count + $countAdjust;
+
+                $resultcount = ['count' => $totalCount];
+                $this->dispatch('phic-message', result: $resultcount);
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+    #[On('phic-message')]
+    public function philhealth_Item($result)
+    {
+        $total = $result['count'];
+
+        if ($total <= 156) {
+            session()->flash('message', 'PHIC 156: Total Used ' . $result['count']);
+            return;
+        }
+
+        session()->flash('error', 'PHIC 156: Total Used ' . $result['count']);
     }
     public function updatedlineqty()
     {

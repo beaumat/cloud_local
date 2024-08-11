@@ -345,6 +345,18 @@ class ServiceChargeServices
     {
         ServiceChargesItems::where('ID', $ID)->where('SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)->delete();
     }
+    public function GetCountByYear(int $ITEM_ID, int $YEAR, int $PATIENT_ID, int $LOCATION_ID): int
+    {
+
+        $count =  ServiceCharges::join('service_charges_items', 'service_charges_items.SERVICE_CHARGES_ID', '=', 'service_charges.ID')
+            ->where('service_charges.PATIENT_ID', $PATIENT_ID)
+            ->whereYear('service_charges.DATE', $YEAR)
+            ->where('service_charges.LOCATION_ID', $LOCATION_ID)
+            ->where('service_charges_items.ITEM_ID', $ITEM_ID)
+            ->count();
+            
+            return $count;
+    }
     public function ItemView(int $SERVICE_CHARGES_ID)
     {
         return ServiceChargesItems::query()

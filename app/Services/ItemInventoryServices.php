@@ -254,7 +254,6 @@ class ItemInventoryServices
         $isInventoryExists = (bool) DB::table('item')->where('ID', $ITEM_ID)->whereIn('TYPE', [0, 1])->exists();
 
         if (!$isInventoryExists) {
-
             return;
         }
 

@@ -63,7 +63,7 @@ class ItemClassForm extends Component
             }
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $$errorMessage);
+            session()->flash('error', $errorMessage);
         }
     }
     public function render()

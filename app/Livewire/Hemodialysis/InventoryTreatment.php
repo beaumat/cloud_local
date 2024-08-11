@@ -201,11 +201,8 @@ class InventoryTreatment extends Component
     public function addItem(int $ItemTreatmentId)
     {
         $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
-
         if ($data) {
-
             $gotNew = true;
-
             if ($data->NO_OF_USED > 1) {
 
                 $hemoData =  $this->hemoServices->Get($this->HEMO_ID);
