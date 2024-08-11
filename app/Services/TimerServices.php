@@ -78,7 +78,6 @@ class TimerServices
         $this->generateWaitingList();
         $this->generateItem();
     }
-
     private function getPosted(int $CONTACT_ID, string $DATE, int  $LOCATION_ID)
     {
         try {

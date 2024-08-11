@@ -13,7 +13,7 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     {{ $ID == 0 ? 'Create' : '' }}
-                                    <a class="text-white" href="{{ route('vendorsbills') }}"> Add Stock </a>
+                                    <a class="text-white" href="{{ route('vendorsbills') }}"> Bills </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)

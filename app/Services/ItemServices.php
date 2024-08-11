@@ -287,11 +287,13 @@ class ItemServices
             ->leftJoin('item_class as c', 'c.ID', '=', 's.CLASS_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', 'item.BASE_UNIT_ID')
             ->where('item.TYPE', '<', 2)
-            ->where('item.INACTIVE', 0)
+            ->where('item.INACTIVE', false)
             ->when($search, function ($query) use (&$search) {
-                $query->where('item.CODE', 'like', '%' . $search . '%')
+                $query->where(function($q) use(&$search) {
+                    $q->where('item.CODE', 'like', '%' . $search . '%')
                     ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
                     ->orWhere('t.DESCRIPTION', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy('item.ID', 'desc')
             ->get();

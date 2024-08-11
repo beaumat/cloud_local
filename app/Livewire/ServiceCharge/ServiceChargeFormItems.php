@@ -83,8 +83,17 @@ class ServiceChargeFormItems extends Component
     private $hemoServices;
     private $dateServices;
     private $philHealthServices;
-    public function boot(PhilHealthServices $philHealthServices, ServiceChargeServices $serviceChargeServices, ComputeServices $computeServices, UnitOfMeasureServices $unitOfMeasureServices, TaxServices $taxServices, ItemServices $itemServices, ItemSubClassServices $itemSubClassServices, HemoServices $hemoServices, DateServices $dateServices)
-    {
+    public function boot(
+        PhilHealthServices $philHealthServices,
+        ServiceChargeServices $serviceChargeServices,
+        ComputeServices $computeServices,
+        UnitOfMeasureServices $unitOfMeasureServices,
+        TaxServices $taxServices,
+        ItemServices $itemServices,
+        ItemSubClassServices $itemSubClassServices,
+        HemoServices $hemoServices,
+        DateServices $dateServices
+    ) {
         $this->philHealthServices = $philHealthServices;
         $this->serviceChargeServices = $serviceChargeServices;
         $this->computeServices = $computeServices;
@@ -289,11 +298,11 @@ class ServiceChargeFormItems extends Component
         $total = $result['count'];
 
         if ($total <= 156) {
-            session()->flash('message', 'PHIC 156: Total Used ' . $result['count']);
+            session()->flash('message', 'PHIC 156 Treatment. The number of Used is ' . $result['count']);
             return;
         }
 
-        session()->flash('error', 'PHIC 156: Total Used ' . $result['count']);
+        session()->flash('error', 'PHIC 156 Treatment : The number of Used is ' . $result['count']);
     }
     public function updatedlineqty()
     {
