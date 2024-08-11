@@ -30,7 +30,6 @@ class ItemSubClassForm extends Component
                 $this->CODE = $itemSubClass->CODE;
                 $this->DESCRIPTION = $itemSubClass->DESCRIPTION;
                 $this->CLASS_ID = $itemSubClass->CLASS_ID;
-
                 return;
             }
 

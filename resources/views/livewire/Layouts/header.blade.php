@@ -43,7 +43,10 @@
 
             <ul aria-labelledby="dropdownSubMenu3" class="border-0 shadow dropdown-menu">
                 <li>
-                    <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">Item On Hand </a>
+                    <a href="{{ route('maintenanceinventoryitem') }}" class="dropdown-item">Item Master List </a>
+                </li>
+                <li>
+                    <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">Item Inventory </a>
                 </li>
 
                 <div class="dropdown-divider"></div>
