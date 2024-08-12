@@ -30,8 +30,7 @@ class ItemActiveList extends Component
   public function OnClick(int $ID)
   {
 
-    $this->dispatch('open-modal', result: ['ITEM_ID'=> $ID,'LOCATION_ID' => $this->LOCATION_ID, 'showModal' => true]);
-    
+    $this->dispatch('open-modal', result: ['ITEM_ID' => $ID, 'LOCATION_ID' => $this->LOCATION_ID, 'showModal' => true]);
   }
   public function boot(
     UserServices $userServices,
@@ -52,10 +51,20 @@ class ItemActiveList extends Component
     $this->locationList = $this->locationServices->getList();
     $this->LOCATION_ID = $this->userServices->getLocationDefault();
   }
-
+  public bool $isDesc = false;
+  public string $sortby = 'c.DESCRIPTION';
+  public function sorting(string $column)
+  {
+    if ($this->sortby  == $column) {
+      $this->isDesc = $this->isDesc ? false : true;
+      return;
+    }
+    $this->isDesc = true;
+    $this->sortby = $column;
+  }
   public function render()
   {
-    $this->dataList = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID);
+    $this->dataList = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc);
     return view('livewire.list.item-active-list');
   }
 }

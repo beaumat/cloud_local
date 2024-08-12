@@ -255,7 +255,7 @@ class ItemServices
             ->paginate($perPage);
     }
 
-    public function getActiveItems($search, int $locationId)
+    public function getActiveItems($search, int $locationId,string $sortby, bool $isDesc)
     {
         $items = DB::table('item')
             ->select(
@@ -269,18 +269,10 @@ class ItemServices
                     'g.DESCRIPTION as GROUP_NAME',
                     'c.DESCRIPTION as CLASS_NAME',
                     's.DESCRIPTION as SUB_NAME',
-                    'u.NAME as UNIT_NAME'
+                    'u.SYMBOL'
                 ]
             )
-            ->selectSub(function ($query) use (&$locationId) {
-                $query->from('item_inventory')
-                    ->select('item_inventory.ENDING_QUANTITY')
-                    ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
-                    ->where('item_inventory.LOCATION_ID', $locationId)
-                    ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
-                    ->orderBy('item_inventory.ID', 'DESC')
-                    ->limit(1);
-            }, 'QTY_ON_HAND')
+            ->selectSub(function ($query) use (&$locationId) { $query->from('item_inventory') ->select('item_inventory.ENDING_QUANTITY') ->whereColumn('item_inventory.ITEM_ID', 'item.ID') ->where('item_inventory.LOCATION_ID', $locationId) ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC') ->orderBy('item_inventory.ID', 'DESC') ->limit(1); }, 'QTY_ON_HAND')
             ->leftJoin('item_type_map as t', 't.ID', '=', 'item.TYPE')
             ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')
             ->leftJoin('item_sub_class as s', 's.ID', '=', 'item.SUB_CLASS_ID')
@@ -289,13 +281,15 @@ class ItemServices
             ->where('item.TYPE', '<', 2)
             ->where('item.INACTIVE', false)
             ->when($search, function ($query) use (&$search) {
-                $query->where(function($q) use(&$search) {
+                $query->where(function ($q) use (&$search) {
                     $q->where('item.CODE', 'like', '%' . $search . '%')
-                    ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
-                    ->orWhere('t.DESCRIPTION', 'like', '%' . $search . '%');
+                        ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('t.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('s.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('c.DESCRIPTION', 'like', '%' . $search . '%');
                 });
             })
-            ->orderBy('item.ID', 'desc')
+            ->orderBy($sortby, $isDesc ? 'desc' : 'asc')
             ->get();
 
         return $items;
