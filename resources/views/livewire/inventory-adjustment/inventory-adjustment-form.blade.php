@@ -80,10 +80,10 @@
                                                 <div class="col-md-12">
                                                     @if ($Modify)
                                                         <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=false wire:model='NOTES' :vertical="false" />
+                                                            :isDisabled=false wire:model='NOTES' :vertical="false" :maxlength="80" />
                                                     @else
                                                         <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=true wire:model='NOTES' :vertical="false" />
+                                                            :isDisabled=true wire:model='NOTES' :vertical="false" :maxlength="80" />
                                                     @endif
                                                 </div>
                                             </div>
