@@ -188,7 +188,7 @@ class ItemInventoryServices
         }
         return 0;
     }
-   
+
     private function getEndingLastOutPut(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE)
     {
         $data = DB::table('item_inventory')
@@ -307,14 +307,12 @@ class ItemInventoryServices
     {
 
         foreach ($data as $list) {
-
             $SOURCE_REF_ID = (int) $list->ID;
             $ITEM_ID = (int) $list->ITEM_ID;
             $QUANTITY = (float) $list->QUANTITY ?? 1;
             $BATCH_ID = $list->BATCH_ID ?? 0;
             $UNIT_BASE_QUANTITY = (float) $list->UNIT_BASE_QUANTITY ?? 1;
             $ENDING_QUANTITY = (float) $QUANTITY * $UNIT_BASE_QUANTITY;
-
             if (isset($list->COST)) {
                 $COST = (float) $list->COST ?? 0;
             } else {
@@ -324,14 +322,14 @@ class ItemInventoryServices
             $isExists = (bool) $this->InvItemExists($ITEM_ID, $LOCATION_ID, $SOURCE_REF_ID, $SOURCE_REF_TYPE, $SOURCE_REF_DATE);
 
             if (!$isExists) {
-                $PREVIOUS_ID = $this->getPreviousID($LOCATION_ID, $ITEM_ID);             
+                $PREVIOUS_ID = $this->getPreviousID($LOCATION_ID, $ITEM_ID);
                 $ending = $this->getEndingLastOutPut($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
                 $SEQUENCE_NO = (int) $ending['SEQUENCE_NO'];
                 $QTY = (float) $ENDING_QUANTITY - (float) $ending['ENDING_QUANTITY'];
 
                 $ENDING_UNIT_COST = (float) $COST;
                 $ENDING_COST = $ENDING_UNIT_COST * $ENDING_QUANTITY;
-                $this->Store( $PREVIOUS_ID, $SEQUENCE_NO + 1, $ITEM_ID, $LOCATION_ID, $BATCH_ID, $SOURCE_REF_TYPE, $SOURCE_REF_ID, $SOURCE_REF_DATE, $QTY, $COST, $ENDING_QUANTITY, $ENDING_UNIT_COST, $ENDING_COST );
+                $this->Store($PREVIOUS_ID, $SEQUENCE_NO + 1, $ITEM_ID, $LOCATION_ID, $BATCH_ID, $SOURCE_REF_TYPE, $SOURCE_REF_ID, $SOURCE_REF_DATE, $QTY, $COST, $ENDING_QUANTITY, $ENDING_UNIT_COST, $ENDING_COST);
             }
         }
     }
@@ -341,12 +339,64 @@ class ItemInventoryServices
         $result = ItemInventory::query()
             ->select([
                 'item_inventory.ID',
-                't.DESCRIPTION as TYPE',
+                'item_inventory..SOURCE_REF_TYPE',
+                DB::raw('
+                    CASE 
+		WHEN document_type_map.`ID` = 1 THEN  (SELECT bill.`ID` FROM bill_items  JOIN bill ON bill.`ID` =  bill_items.`BILL_ID` WHERE bill_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 3 THEN  (SELECT bill_credit.`ID` FROM bill_credit_items  JOIN bill_credit ON bill_credit.`ID` =  bill_credit_items.`BILL_CREDIT_ID`  WHERE bill_credit_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill_credit.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill_credit.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_credit_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
+		WHEN document_type_map.`ID` = 6 THEN  (SELECT inventory_adjustment.`ID` FROM inventory_adjustment_items  JOIN inventory_adjustment ON inventory_adjustment.`ID` =  inventory_adjustment_items.`INVENTORY_ADJUSTMENT_ID` WHERE inventory_adjustment_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND inventory_adjustment.`DATE` = item_inventory.`SOURCE_REF_DATE` AND inventory_adjustment.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND inventory_adjustment_items.`ITEM_ID` = item_inventory.`ITEM_ID` )			
+		WHEN document_type_map.`ID` = 7 THEN  (SELECT stock_transfer.`ID` FROM stock_transfer_items  JOIN stock_transfer ON stock_transfer.`ID` =  stock_transfer_items.`STOCK_TRANSFER_ID`  WHERE stock_transfer_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND stock_transfer.`DATE` = item_inventory.`SOURCE_REF_DATE` AND stock_transfer.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND stock_transfer_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
+		WHEN document_type_map.`ID` = 7 THEN  (SELECT stock_transfer.`ID` FROM stock_transfer_items  JOIN stock_transfer ON stock_transfer.`ID` =  stock_transfer_items.`STOCK_TRANSFER_ID`  WHERE stock_transfer_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND stock_transfer.`DATE` = item_inventory.`SOURCE_REF_DATE` AND stock_transfer.`TRANSFER_TO_ID` = item_inventory.`LOCATION_ID` AND stock_transfer_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
+		WHEN document_type_map.`ID` = 10 THEN  (SELECT invoice.`ID` FROM invoice_items  JOIN invoice ON invoice.`ID` =  invoice_items.`INVOICE_ID`  WHERE invoice_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND invoice.`DATE` = item_inventory.`SOURCE_REF_DATE` AND invoice.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND invoice_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 12 THEN  (SELECT credit_memo.`ID` FROM credit_memo_items  JOIN credit_memo ON credit_memo.`ID` =  credit_memo_items.`CREDIT_MEMO_ID` WHERE credit_memo_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND credit_memo.`DATE` = item_inventory.`SOURCE_REF_DATE` AND credit_memo.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND credit_memo_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 13 THEN  (SELECT sales_receipt.`ID` FROM sales_receipt_items  JOIN sales_receipt ON sales_receipt.`ID` =  sales_receipt_items.`SALES_RECEIPT_ID`  WHERE sales_receipt_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND sales_receipt.`DATE` = item_inventory.`SOURCE_REF_DATE` AND sales_receipt.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND sales_receipt_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 19 THEN  (SELECT build_assembly.`ID` FROM build_assembly_items  JOIN build_assembly ON build_assembly.`ID` =  build_assembly_items.`BUILD_ASSEMBLY_ID`  WHERE build_assembly_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND build_assembly.`DATE` = item_inventory.`SOURCE_REF_DATE` AND build_assembly.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND build_assembly_items.`ITEM_ID` = item_inventory.`ITEM_ID` )			
+		WHEN document_type_map.`ID` = 19 THEN  (SELECT build_assembly.`ID` FROM build_assembly  WHERE build_assembly.`ASSEMBLY_ITEM_ID` =  item_inventory.`SOURCE_REF_ID` AND build_assembly.`DATE` = item_inventory.`SOURCE_REF_DATE` AND build_assembly.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND build_assembly.`ASSEMBLY_ITEM_ID` = item_inventory.`ITEM_ID` )			
+		WHEN document_type_map.`ID` = 21 THEN  (SELECT `check`.`ID` FROM check_items  JOIN  `check` ON `check`.`ID` =  check_items.`CHECK_ID` WHERE check_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `check`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `check`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND check_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 27 THEN  (SELECT hemodialysis.`ID` FROM `hemodialysis_items`  JOIN hemodialysis ON hemodialysis.`ID` =  hemodialysis_items.`HEMO_ID` WHERE hemodialysis_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND hemodialysis.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  hemodialysis.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND hemodialysis_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
+		WHEN document_type_map.`ID` = 31 THEN  (SELECT pull_out.`ID` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID`  WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+	END AS TX_ID
+                '),
+                'document_type_map.DESCRIPTION as TYPE',
                 'item_inventory.SOURCE_REF_DATE',
+                DB::raw('
+                CASE 
+		WHEN document_type_map.`ID` = 1 THEN  (SELECT bill.`CODE` FROM bill_items  JOIN bill ON bill.`ID` =  bill_items.`BILL_ID` WHERE bill_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 3 THEN  (SELECT bill_credit.`CODE` FROM bill_credit_items  JOIN bill_credit ON bill_credit.`ID` =  bill_credit_items.`BILL_CREDIT_ID`  WHERE bill_credit_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill_credit.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill_credit.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_credit_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
+		WHEN document_type_map.`ID` = 6 THEN  (SELECT inventory_adjustment.`CODE` FROM inventory_adjustment_items  JOIN inventory_adjustment ON inventory_adjustment.`ID` =  inventory_adjustment_items.`INVENTORY_ADJUSTMENT_ID` WHERE inventory_adjustment_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND inventory_adjustment.`DATE` = item_inventory.`SOURCE_REF_DATE` AND inventory_adjustment.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND inventory_adjustment_items.`ITEM_ID` = item_inventory.`ITEM_ID` )			
+		WHEN document_type_map.`ID` = 7 THEN  (SELECT stock_transfer.`CODE` FROM stock_transfer_items  JOIN stock_transfer ON stock_transfer.`ID` =  stock_transfer_items.`STOCK_TRANSFER_ID`  WHERE stock_transfer_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND stock_transfer.`DATE` = item_inventory.`SOURCE_REF_DATE` AND stock_transfer.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND stock_transfer_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
+		WHEN document_type_map.`ID` = 7 THEN  (SELECT stock_transfer.`CODE` FROM stock_transfer_items  JOIN stock_transfer ON stock_transfer.`ID` =  stock_transfer_items.`STOCK_TRANSFER_ID`  WHERE stock_transfer_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND stock_transfer.`DATE` = item_inventory.`SOURCE_REF_DATE` AND stock_transfer.`TRANSFER_TO_ID` = item_inventory.`LOCATION_ID` AND stock_transfer_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
+		WHEN document_type_map.`ID` = 10 THEN  (SELECT invoice.`CODE` FROM invoice_items  JOIN invoice ON invoice.`ID` =  invoice_items.`INVOICE_ID`  WHERE invoice_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND invoice.`DATE` = item_inventory.`SOURCE_REF_DATE` AND invoice.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND invoice_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 12 THEN  (SELECT credit_memo.`CODE` FROM credit_memo_items  JOIN credit_memo ON credit_memo.`ID` =  credit_memo_items.`CREDIT_MEMO_ID` WHERE credit_memo_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND credit_memo.`DATE` = item_inventory.`SOURCE_REF_DATE` AND credit_memo.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND credit_memo_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 13 THEN  (SELECT sales_receipt.`CODE` FROM sales_receipt_items  JOIN sales_receipt ON sales_receipt.`ID` =  sales_receipt_items.`SALES_RECEIPT_ID`  WHERE sales_receipt_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND sales_receipt.`DATE` = item_inventory.`SOURCE_REF_DATE` AND sales_receipt.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND sales_receipt_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 19 THEN  (SELECT build_assembly.`CODE` FROM build_assembly_items  JOIN build_assembly ON build_assembly.`ID` =  build_assembly_items.`BUILD_ASSEMBLY_ID`  WHERE build_assembly_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND build_assembly.`DATE` = item_inventory.`SOURCE_REF_DATE` AND build_assembly.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND build_assembly_items.`ITEM_ID` = item_inventory.`ITEM_ID` )			
+		WHEN document_type_map.`ID` = 19 THEN  (SELECT build_assembly.`CODE` FROM build_assembly  WHERE build_assembly.`ASSEMBLY_ITEM_ID` =  item_inventory.`SOURCE_REF_ID` AND build_assembly.`DATE` = item_inventory.`SOURCE_REF_DATE` AND build_assembly.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND build_assembly.`ASSEMBLY_ITEM_ID` = item_inventory.`ITEM_ID` )			
+		WHEN document_type_map.`ID` = 21 THEN  (SELECT `check`.`CODE` FROM check_items  JOIN  `check` ON `check`.`ID` =  check_items.`CHECK_ID` WHERE check_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `check`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `check`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND check_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 27 THEN  (SELECT hemodialysis.`CODE` FROM `hemodialysis_items`  JOIN hemodialysis ON hemodialysis.`ID` =  hemodialysis_items.`HEMO_ID` WHERE hemodialysis_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND hemodialysis.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  hemodialysis.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND hemodialysis_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
+		WHEN document_type_map.`ID` = 31 THEN  (SELECT pull_out.`CODE` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID`  WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+	END AS TX_CODE
+                '),
                 'item_inventory.QUANTITY',
-                'item_inventory.ENDING_QUANTITY'
+                'item_inventory.ENDING_QUANTITY',
+                DB::raw('
+                CASE 
+		WHEN document_type_map.`ID` = 1 THEN  (SELECT contact.`PRINT_NAME_AS` FROM bill_items  JOIN bill ON bill.`ID` =  bill_items.`BILL_ID` JOIN contact ON contact.`ID` = bill.`VENDOR_ID` WHERE bill_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 3 THEN  (SELECT contact.`PRINT_NAME_AS` FROM bill_credit_items  JOIN bill_credit ON bill_credit.`ID` =  bill_credit_items.`BILL_CREDIT_ID` JOIN contact ON contact.`ID` = bill_credit.`VENDOR_ID` WHERE bill_credit_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill_credit.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill_credit.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_credit_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
+		WHEN document_type_map.`ID` = 6 THEN  (SELECT inventory_adjustment_type.`DESCRIPTION` FROM inventory_adjustment_items  JOIN inventory_adjustment ON inventory_adjustment.`ID` =  inventory_adjustment_items.`INVENTORY_ADJUSTMENT_ID` JOIN inventory_adjustment_type ON inventory_adjustment_type.`ID` =  inventory_adjustment.`ADJUSTMENT_TYPE_ID` WHERE inventory_adjustment_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND inventory_adjustment.`DATE` = item_inventory.`SOURCE_REF_DATE` AND inventory_adjustment.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND inventory_adjustment_items.`ITEM_ID` = item_inventory.`ITEM_ID` )			
+		WHEN document_type_map.`ID` = 7 THEN  (SELECT location.`NAME` FROM stock_transfer_items  JOIN stock_transfer ON stock_transfer.`ID` =  stock_transfer_items.`STOCK_TRANSFER_ID` JOIN location ON location.`ID` = stock_transfer.`TRANSFER_TO_ID` WHERE stock_transfer_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND stock_transfer.`DATE` = item_inventory.`SOURCE_REF_DATE` AND stock_transfer.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND stock_transfer_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
+		WHEN document_type_map.`ID` = 7 THEN  (SELECT location.`NAME` FROM stock_transfer_items  JOIN stock_transfer ON stock_transfer.`ID` =  stock_transfer_items.`STOCK_TRANSFER_ID` JOIN location ON location.`ID` = stock_transfer.`LOCATION_ID` WHERE stock_transfer_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND stock_transfer.`DATE` = item_inventory.`SOURCE_REF_DATE` AND stock_transfer.`TRANSFER_TO_ID` = item_inventory.`LOCATION_ID` AND stock_transfer_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
+		WHEN document_type_map.`ID` = 10 THEN  (SELECT contact.`PRINT_NAME_AS` FROM invoice_items  JOIN invoice ON invoice.`ID` =  invoice_items.`INVOICE_ID` JOIN contact ON contact.`ID` = invoice.`CUSTOMER_ID` WHERE invoice_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND invoice.`DATE` = item_inventory.`SOURCE_REF_DATE` AND invoice.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND invoice_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 12 THEN  (SELECT contact.`PRINT_NAME_AS` FROM credit_memo_items  JOIN credit_memo ON credit_memo.`ID` =  credit_memo_items.`CREDIT_MEMO_ID` JOIN contact ON contact.`ID` = credit_memo.`CUSTOMER_ID` WHERE credit_memo_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND credit_memo.`DATE` = item_inventory.`SOURCE_REF_DATE` AND credit_memo.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND credit_memo_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 13 THEN  (SELECT contact.`PRINT_NAME_AS` FROM sales_receipt_items  JOIN sales_receipt ON sales_receipt.`ID` =  sales_receipt_items.`SALES_RECEIPT_ID` JOIN contact ON contact.`ID` = sales_receipt.`CUSTOMER_ID` WHERE sales_receipt_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND sales_receipt.`DATE` = item_inventory.`SOURCE_REF_DATE` AND sales_receipt.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND sales_receipt_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 19 THEN  (SELECT item.`DESCRIPTION` FROM build_assembly_items  JOIN build_assembly ON build_assembly.`ID` =  build_assembly_items.`BUILD_ASSEMBLY_ID` JOIN item AS item ON item.`ID` =  build_assembly.`ASSEMBLY_ITEM_ID` WHERE build_assembly_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND build_assembly.`DATE` = item_inventory.`SOURCE_REF_DATE` AND build_assembly.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND build_assembly_items.`ITEM_ID` = item_inventory.`ITEM_ID` )			
+		WHEN document_type_map.`ID` = 19 THEN  (SELECT item.`DESCRIPTION` FROM build_assembly  JOIN item AS item ON item.`ID` =  build_assembly.`ASSEMBLY_ITEM_ID` WHERE build_assembly.`ASSEMBLY_ITEM_ID` =  item_inventory.`SOURCE_REF_ID` AND build_assembly.`DATE` = item_inventory.`SOURCE_REF_DATE` AND build_assembly.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND build_assembly.`ASSEMBLY_ITEM_ID` = item_inventory.`ITEM_ID` )			
+		WHEN document_type_map.`ID` = 21 THEN  (SELECT contact.`PRINT_NAME_AS` FROM check_items  JOIN  `check` ON `check`.`ID` =  check_items.`CHECK_ID` JOIN contact ON contact.`ID` = `check`.`PAY_TO_ID` WHERE check_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `check`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `check`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND check_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+		WHEN document_type_map.`ID` = 27 THEN  (SELECT contact.`PRINT_NAME_AS` FROM `hemodialysis_items`  JOIN hemodialysis ON hemodialysis.`ID` =  hemodialysis_items.`HEMO_ID` JOIN contact ON contact.`ID` = hemodialysis.`CUSTOMER_ID` WHERE hemodialysis_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND hemodialysis.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  hemodialysis.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND hemodialysis_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
+		WHEN document_type_map.`ID` = 31 THEN  (SELECT contact.`PRINT_NAME_AS` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID` JOIN contact ON contact.`ID` = pull_out.`PREPARED_BY_ID` WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
+	END AS CONTACT_NAME
+                ')
             ])
-            ->join('document_type_map as t', 't.ID', '=', 'item_inventory.SOURCE_REF_TYPE')
+            ->join('document_type_map', 'document_type_map.ID', '=', 'item_inventory.SOURCE_REF_TYPE')
             ->where('ITEM_ID', $ITEM_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->orderBy('item_inventory.SOURCE_REF_DATE', 'asc')

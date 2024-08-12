@@ -28,22 +28,24 @@ class InventoryDetailsModal extends Component
     #[On("open-modal")]
     public function showingModa($result)
     {
-
         $this->ITEM_ID = $result['ITEM_ID'];
-
-
         $data = $this->itemServices->get($this->ITEM_ID);
         if ($data) {
             $this->LOCATION_ID = $result['LOCATION_ID'];
             $this->showModal = $result['showModal'];
             $this->ITEM_NAME = $data->DESCRIPTION;
+            $this->dispatch('active-scroll');
         }
     }
     public function openModal()
     {
         $this->showModal = true;
     }
-
+    #[On('active-scroll')]
+    public function scrollDown()
+    {
+        $this->dispatch('scrollToBottom'); // Emit an event to trigger scrolling
+    }
     public function render()
     {
         if ($this->showModal) {
