@@ -91,6 +91,7 @@ use App\Livewire\PriceLevelPage\PriceLevelForm;
 use App\Livewire\PriceLevelPage\PriceLevelList;
 use App\Livewire\PullOut\PullOutForm;
 use App\Livewire\PullOut\PullOutList;
+use App\Livewire\PullOut\PullOutPrint;
 use App\Livewire\PurchaseOrder\PurchaseOrderForm;
 use App\Livewire\PurchaseOrder\PurchaseOrderList;
 use App\Livewire\RolePermissionPage\RolePermissionConfig;
@@ -259,6 +260,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', PullOutList::class)->name('pull_out')->middleware(['permission:company.pull-out.view']);
             Route::get('/create', PullOutForm::class)->name('pull_out_create')->middleware(['permission:company.pull-out.create']);
             Route::get('/{id}/edit', PullOutForm::class)->name('pull_out_edit')->middleware(['permission:company.pull-out.view']);
+            Route::get('/{id}/print', PullOutPrint::class)->name('pull_out_print')->middleware(['permission:company.pull-out.print']);
         });
     });
 

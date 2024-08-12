@@ -11,10 +11,11 @@
                                     <tr>
                                         <th>Type</th>
                                         <th>Date</th>
-                                        <th>Reference</th>
-                                        <th>Contact</th>
-                                        <th class="text-right">Quantity</th>
-                                        <th class="text-right">Ending</th>
+                                        <th>Ref No.</th>
+                                        <th class="col-2">Name/Details</th>
+                                        <th class="col-4">Notes</th>
+                                        <th class="text-right">Qty</th>
+                                        <th class="text-right">Ending Qty</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -24,8 +25,15 @@
                                             <td>{{ date('m/d/Y', strtotime($list->SOURCE_REF_DATE)) }}</td>
                                             <td>{{ $list->TX_CODE }}</td>
                                             <td>{{ $list->CONTACT_NAME }}</td>
-                                            <td class="text-right">{{ number_format($list->QUANTITY, 1) }}</td>
-                                            <td class="text-right">{{ number_format($list->ENDING_QUANTITY, 1) }}</td>
+                                            <td>{{ $list->TX_NOTES }}</td>
+                                            <td
+                                                class="text-right @if ($list->QUANTITY > 0) text-success @else text-danger @endif">
+                                                @if ($list->QUANTITY > 0)
+                                                    +
+                                                @endif{{ number_format($list->QUANTITY, 1) }}
+                                            </td>
+                                            <td class="text-right text-primary font-weight-bold ">
+                                                {{ number_format($list->ENDING_QUANTITY, 1) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -36,7 +44,8 @@
 
 
                     <div class="modal-footer">
-                        <button type="button" wire:click='scrollDown()' class="btn btn-info btn-sm"><i class="fa fa-angle-double-down" aria-hidden="true"></i> Last Row</button>
+                        <button type="button" wire:click='scrollDown()' class="btn btn-info btn-sm"><i
+                                class="fa fa-angle-double-down" aria-hidden="true"></i> Last Row</button>
                         <button type="button" wire:click='closeModal()' class="btn btn-danger btn-sm">Close</button>
                     </div>
                 </div>
@@ -47,7 +56,6 @@
 </div>
 @script
     <script>
-  
         $wire.on('scrollToBottom', (eventData) => {
             const tableContainer = document.getElementById('tableContainer');
             if (tableContainer) {

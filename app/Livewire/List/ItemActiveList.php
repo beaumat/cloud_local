@@ -14,9 +14,6 @@ use Livewire\Component;
 #[Title('Active Item List')]
 class ItemActiveList extends Component
 {
-
-
-
   public $search = '';
   private $userServices;
   private $dateServices;
@@ -29,16 +26,16 @@ class ItemActiveList extends Component
 
   public function OnClick(int $ID)
   {
+    $data = [
+      'ITEM_ID'     => $ID,
+      'LOCATION_ID' => $this->LOCATION_ID,
+      'showModal'   => true
+    ];
 
-    $this->dispatch('open-modal', result: ['ITEM_ID' => $ID, 'LOCATION_ID' => $this->LOCATION_ID, 'showModal' => true]);
+    $this->dispatch('open-modal', result: $data);
   }
-  public function boot(
-    UserServices $userServices,
-    DateServices $dateServices,
-    LocationServices $locationServices,
-    ItemServices $itemServices
-
-  ) {
+  public function boot(UserServices $userServices, DateServices $dateServices, LocationServices $locationServices, ItemServices $itemServices)
+  {
     $this->userServices = $userServices;
     $this->dateServices = $dateServices;
     $this->locationServices = $locationServices;

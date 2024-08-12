@@ -89,27 +89,36 @@
                             </div>
                             <div class="card-footer">
                                 <div class="row">
-                                    <div class="col-md-6 col-6"
-                                        @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                    <div class="col-md-6 col-6">
                                         @if ($Modify)
-                                            <button type="submit" class="btn btn-sm btn-primary"> <i
-                                                    class="fa fa-floppy-o" aria-hidden="true"></i>
+                                            <button type="submit" class="btn btn-sm btn-primary"
+                                                @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                                 {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
                                             @if ($ID > 0)
                                                 <button type="button" wire:click='updateCancel'
-                                                    class="btn btn-sm btn-danger"><i class="fa fa-ban"
-                                                        aria-hidden="true"></i> Cancel</button>
+                                                    class="btn btn-sm btn-danger"
+                                                    @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
                                             @endif
                                         @else
-                                            <button type="button" wire:click='getModify()' class="btn btn-sm btn-info">
+                                            <button type="button" wire:click='getModify()' class="btn btn-sm btn-info"
+                                                @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                 <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                             </button>
-                                            <button type="button" wire:click='posted()' class="btn btn-sm btn-warning">
+                                            <button type="button" wire:click='posted()' class="btn btn-sm btn-warning"
+                                                @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                 <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                             </button>
                                         @endif
-
+                                        @if ($STATUS > 0)
+                                            <a target='_BLANK'
+                                                href="{{ route('companypull_out_print', ['id' => $ID]) }}"
+                                                type="button" class="btn btn-sm btn-dark">
+                                                <i class="fa fa-print" aria-hidden="true"></i> Print
+                                            </a>
+                                        @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0)

@@ -69,7 +69,6 @@ class InventoryAdjustmentFormItems extends Component
         $this->UNIT_ID = 0;
         $this->QUANTITY = 1;
         $this->UNIT_COST = 0;
-
         $this->ITEM_CODE = '';
         $this->ITEM_DESCRIPTION = '';
         $this->BATCH_ID = 0;
@@ -157,12 +156,12 @@ class InventoryAdjustmentFormItems extends Component
         $data = $this->inventoryAdjustmentServices->GetItem($ID, $this->INVENTORY_ADJUSTMENT_ID);
 
         if ($data) {
-            $this->editItemId = $data->ID;
-            $this->lineQty = $data->QUANTITY;
-            $this->lineUnitCost = $data->UNIT_COST ?? 0;
-            $this->lineUnitId = $data->UNIT_ID ?? 0;
-            $this->lineItemId = $data->ITEM_ID;
-            $this->lineBatchId = $data->BATCH_ID ?? 0;
+            $this->editItemId =     $data->ID;
+            $this->lineQty =        $data->QUANTITY;
+            $this->lineUnitCost =   $data->UNIT_COST ?? 0;
+            $this->lineUnitId =     $data->UNIT_ID ?? 0;
+            $this->lineItemId =     $data->ITEM_ID;
+            $this->lineBatchId =    $data->BATCH_ID ?? 0;
             $this->getEditAmount();
         }
     }

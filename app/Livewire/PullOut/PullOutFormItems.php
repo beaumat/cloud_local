@@ -127,13 +127,13 @@ class PullOutFormItems extends Component
         $this->validate(
             [
                 'ITEM_ID' => 'required|not_in:0',
-                'QUANTITY' => 'required|not_in:0',
+                'QUANTITY' => 'required|numeric|not_in:0',
 
             ],
             [],
             [
                 'ITEM_ID' => 'Item',
-                'QUANTITY' => 'Quantitity',
+                'QUANTITY' => 'Quantity',
 
             ]
         );

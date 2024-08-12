@@ -70,8 +70,4 @@
             </div>
         </div>
     </section>
-
-
-
-
 </div>

@@ -3,7 +3,6 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -39,14 +38,13 @@
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
                                                     name="location" wire:model.live='LOCATION_ID'
                                                     class="form-control form-control-sm">
-
                                                     @foreach ($locationList as $item)
-                                                        <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                        <option value="{{ $item->ID }}"> 
+                                                        {{ $item->NAME }}
                                                         </option>
                                                     @endforeach
                                                 </select>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -55,7 +53,6 @@
                                 <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>
-
                                             <span type='button' wire:click="sorting('c.DESCRIPTION')">Category</span>
                                             @if ($sortby == 'c.DESCRIPTION')
                                                 @if ($isDesc)
@@ -64,7 +61,6 @@
                                                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                 @endif
                                             @endif
-
                                         </th>
                                         <th>
                                             <span type='button' wire:click="sorting('s.DESCRIPTION')">Sub
@@ -88,8 +84,9 @@
                                             @endif
                                         </th>
                                         <th class="bg-primary">
-                                            <span type='button' wire:click="sorting('item.DESCRIPTION')">Item
-                                                Description</span>
+                                            <span type='button' wire:click="sorting('item.DESCRIPTION')">
+                                                Item Description
+                                            </span>
                                             @if ($sortby == 'item.DESCRIPTION')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -109,7 +106,7 @@
                                             @endif
                                         </th>
                                         <th class="text-center bg-warning">
-                                            <span type='button' wire:click="sorting('QTY_ON_HAND')">Quantity</span>
+                                            <span type='button' wire:click="sorting('QTY_ON_HAND')">Onhand</span>
                                             @if ($sortby == 'QTY_ON_HAND')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -142,7 +139,8 @@
                                                     wire:click='OnClick({{ $list->ID }})'>
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </span>
-                                                <a title="Item Details" target="_BLANK" type="button" class="btn btn-xs btn-primary"
+                                                <a title="Item Details" target="_BLANK" type="button"
+                                                    class="btn btn-xs btn-primary"
                                                     href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}">
                                                     <i class="fas fa-info-circle" aria-hidden="true"></i>
                                                 </a>
