@@ -118,14 +118,15 @@
                                                 @endif
                                             @endif
                                         </th>
+                                        <th class="text-center ">
+                                            Action
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ $list->CLASS_NAME }}
-
-                                            </td>
+                                            <td> {{ $list->CLASS_NAME }} </td>
                                             <td> {{ $list->SUB_NAME }}</td>
                                             <td> {{ $list->CODE }}</td>
                                             <td> {{ $list->DESCRIPTION }}</td>
@@ -133,9 +134,19 @@
                                             <td class="text-center">
                                                 <span type="button"
                                                     class="text-sm @if ($list->QTY_ON_HAND < 0) text-danger @elseif ($list->QTY_ON_HAND == 0) text-info  @else text-primary @endif"
-                                                    wire:click='OnClick({{ $list->ID }})'>{{ number_format($list->QTY_ON_HAND ?? 0, 2) }}</span>
+                                                    wire:click='OnClick({{ $list->ID }})'>{{ number_format($list->QTY_ON_HAND ?? 0, 2) }}
+                                                </span>
                                             </td>
-
+                                            <td class="text-center">
+                                                <span title="Qty Details" type="button" class="btn btn-xs btn-info"
+                                                    wire:click='OnClick({{ $list->ID }})'>
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                                </span>
+                                                <a title="Item Details" target="_BLANK" type="button" class="btn btn-xs btn-primary"
+                                                    href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}">
+                                                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
