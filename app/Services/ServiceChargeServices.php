@@ -148,6 +148,20 @@ class ServiceChargeServices
     {
         return ServiceCharges::where('ID', $ID)->first();
     }
+    public function get2(int $PATIENT_ID, int $LOCATION_ID, string $DATE): object
+    {
+        return ServiceCharges::where('PATIENT_ID', $PATIENT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('DATE', $DATE)
+            ->first();
+    }
+    public function getItemList(int $SERVICE_CHARGES_ID)
+    {
+
+        $result = ServiceChargesItems::where('SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)->get();
+
+        return $result;
+    }
     public function getItem(int $ID)
     {
         return ServiceChargesItems::where('ID', $ID)->first();
@@ -162,11 +176,11 @@ class ServiceChargeServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         ServiceCharges::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'PATIENT_ID' => $PATIENT_ID,
+            'ID'            => $ID,
+            'RECORDED_ON'   => $this->dateServices->Now(),
+            'CODE'          => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'          => $DATE,
+            'PATIENT_ID'    => $PATIENT_ID,
             'LOCATION_ID' => $LOCATION_ID,
             'NOTES' => $NOTES ?? null,
             'AMOUNT' => 0,
@@ -354,8 +368,8 @@ class ServiceChargeServices
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
             ->where('service_charges_items.ITEM_ID', $ITEM_ID)
             ->count();
-            
-            return $count;
+
+        return $count;
     }
     public function ItemView(int $SERVICE_CHARGES_ID)
     {

@@ -38,7 +38,7 @@
                                         <th class="col-8 text-left">Patient Name</th>
                                         <th class="col-2 text-left">Shift </th>
                                         <th class="col-2 text-left">Type</th>
-                                        
+                                  
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">

@@ -6,6 +6,7 @@ use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\ItemTreatmentServices;
 use App\Services\ScheduleServices;
+use App\Services\ServiceChargeServices;
 use App\Services\ShiftServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -30,20 +31,27 @@ class ScheduleModal extends Component
     private $shiftServices;
     private $dateServices;
     private $itemTreatmentServices;
-    public function boot(ScheduleServices $scheduleServices, HemoServices $hemoServices, ShiftServices $shiftServices, DateServices $dateServices, ItemTreatmentServices $itemTreatmentServices)
-    {
+    private $serviceChargeServices;
+    public function boot(
+        ScheduleServices $scheduleServices,
+        HemoServices $hemoServices,
+        ShiftServices $shiftServices,
+        DateServices $dateServices,
+        ItemTreatmentServices $itemTreatmentServices,
+        ServiceChargeServices $serviceChargeServices
+    ) {
         $this->scheduleServices = $scheduleServices;
         $this->hemoServices = $hemoServices;
         $this->shiftServices = $shiftServices;
         $this->dateServices = $dateServices;
         $this->itemTreatmentServices = $itemTreatmentServices;
+        $this->serviceChargeServices = $serviceChargeServices;
     }
 
     public function create()
     {
         $isDone = false;
         $this->ids = "";
-
         foreach ($this->scheduleSelected as $scheId => $isSelect) {
             if ($isSelect) {
                 $data = $this->scheduleServices->getInfo($scheId);
@@ -53,7 +61,7 @@ class ScheduleModal extends Component
                         $HEMO_ID = (int) $this->hemoServices->PreSave($this->DATE, "", $data->CONTACT_ID, $this->LOCATION_ID);
                         $this->hemoServices->GetOtherDetailsDefault($HEMO_ID,  $data->CONTACT_ID, $this->DATE, $this->LOCATION_ID);
                         $hemoData =  $this->hemoServices->Get($HEMO_ID);
-                        
+
                         $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
                         foreach ($dataList as $item) {
                             $this->hemoServices->AddItem($item->ID,  $hemoData);
@@ -63,6 +71,21 @@ class ScheduleModal extends Component
                         } else {
                             $this->ids = $this->ids . "," . $HEMO_ID;
                         }
+
+
+                        $dataSC = $this->serviceChargeServices->get2($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE);
+                        if ($dataSC) {
+
+                            // for items 
+                            $dataScItem = $this->serviceChargeServices->getItemList($dataSC->ID);
+                            foreach ($dataScItem as $list) {
+                                $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $list->ITEM_ID,  $list->QUANTITY, false, $list->UNIT_ID > 0 ? $list->UNIT_ID : 0);
+                            }
+                        }
+
+
+
+
 
                         DB::commit();
                         $isDone = true;
