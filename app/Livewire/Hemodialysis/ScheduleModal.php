@@ -72,11 +72,12 @@ class ScheduleModal extends Component
                             $this->ids = $this->ids . "," . $HEMO_ID;
                         }
 
-
+            
                         $dataSC = $this->serviceChargeServices->get2($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE);
+                        
                         if ($dataSC) {
-
                             // for items 
+                   
                             $dataScItem = $this->serviceChargeServices->getItemList($dataSC->ID);
                             foreach ($dataScItem as $list) {
                                 $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $list->ITEM_ID,  $list->QUANTITY, false, $list->UNIT_ID > 0 ? $list->UNIT_ID : 0);

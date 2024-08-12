@@ -148,12 +148,19 @@ class ServiceChargeServices
     {
         return ServiceCharges::where('ID', $ID)->first();
     }
-    public function get2(int $PATIENT_ID, int $LOCATION_ID, string $DATE): object
+    public function get2(int $PATIENT_ID, int $LOCATION_ID, string $DATE)
     {
-        return ServiceCharges::where('PATIENT_ID', $PATIENT_ID)
+        $result = ServiceCharges::where('PATIENT_ID', $PATIENT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('DATE', $DATE)
             ->first();
+        
+
+        if ($result) {
+            return $result;
+        }
+
+        return [];
     }
     public function getItemList(int $SERVICE_CHARGES_ID)
     {
