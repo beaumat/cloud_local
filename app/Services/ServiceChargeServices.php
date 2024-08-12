@@ -105,8 +105,6 @@ class ServiceChargeServices
 
         return $result;
     }
-
-
     public function getServiceChargeList_PH_Date(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID, string $DT_FROM, string $DT_TO): object
     {
         $result = ServiceChargesItems::query()
@@ -141,9 +139,6 @@ class ServiceChargeServices
 
         return $result;
     }
-
-
-
     public function get(int $ID): object
     {
         return ServiceCharges::where('ID', $ID)->first();

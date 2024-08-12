@@ -99,7 +99,7 @@ class InventoryAdjustmentFormItems extends Component
         $this->validate(
             [
                 'ITEM_ID' => 'required|not_in:0',
-                'QUANTITY' => 'required|not_in:0',
+                'QUANTITY' => 'required|numeric',
             ],
             [],
             [
@@ -173,7 +173,7 @@ class InventoryAdjustmentFormItems extends Component
 
         $this->validate(
             [
-                'lineQty' => 'required|not_in:0',
+                'lineQty' => 'required|numeric',
             ],
             [],
             [
