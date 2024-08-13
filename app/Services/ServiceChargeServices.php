@@ -68,7 +68,7 @@ class ServiceChargeServices
             ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'service_charges_items.UNIT_ID')
             ->where('service_charges.PATIENT_ID', $PATIENT_ID)
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
-            ->whereRaw('( ifnull(service_charges_items.AMOUNT,0) -  ifnull(service_charges_items.PAID_AMOUNT,2)) > 0')
+            ->whereRaw('( service_charges_items.AMOUNT -  service_charges_items.PAID_AMOUNT ) > 0')
             ->whereNotExists(function ($query) use (&$PATIENT_PAYMENT_ID) {
                 $query->select(DB::raw(1))
                     ->from('patient_payment_charges as ppc')
@@ -478,13 +478,14 @@ class ServiceChargeServices
         $data = ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)->first();
         if ($data) {
             $ITEM_PAID = $this->getPaidItemCharge($SERVICE_CHARGES_ITEM_ID);
-            
+
             ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)
                 ->update([
                     'PAID_AMOUNT' => $ITEM_PAID
                 ]);
 
             $this->updateServiceChargesBalance($data->SERVICE_CHARGES_ID);
+            dd('paid => ' . $ITEM_PAID);
         }
     }
     public function getPaidItemCharge(int $SERVICE_CHARGES_ITEM_ID): float
