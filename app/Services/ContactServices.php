@@ -320,7 +320,7 @@ class ContactServices
 
         return $result;
     }
-    public function SearchPatient($search, int $perPage, int $locationId, string $sortBy, bool $isDesc )
+    public function SearchPatient($search, int $perPage, int $locationId, string $sortBy, bool $isDesc)
     {
         $TYPE = 3;
 
@@ -346,7 +346,7 @@ class ContactServices
                     'contact.DATE_ADMISSION',
                     DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH, CURDATE()) AS AGE'),
                     'l.NAME as LOCATION_NAME',
-                    DB::raw('(select d.PRINT_NAME_AS  from patient_doctor  as pd join contact as d on d.ID = pd.DOCTOR_ID where pd.PATIENT_ID = contact.ID limit 1) as DOCTOR_NAME ')
+                    'd.PRINT_NAME_AS as DOCTOR_NAME'
                 ]
             )
             ->join('contact_type_map as t', function ($join) use (&$TYPE) {
@@ -355,6 +355,8 @@ class ContactServices
             })
             ->leftJoin('gender_map', 'gender_map.ID', '=', 'contact.GENDER')
             ->leftJoin('location as l', 'l.ID', '=', 'contact.LOCATION_ID')
+            ->leftJoin('patient_doctor as pd', 'pd.PATIENT_ID', '=', 'contact.ID')
+            ->leftJoin('contact as d', 'd.ID', '=', 'pd.DOCTOR_ID')
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('contact.NAME', 'like', '%' . $search . '%')
@@ -365,7 +367,8 @@ class ContactServices
                         ->orWhere('contact.LAST_NAME', 'like', '%' . $search . '%')
                         ->orWhere('contact.PRINT_NAME_AS', 'like', '%' . $search . '%')
                         ->orWhere('contact.MOBILE_NO', 'like', '%' . $search . '%')
-                        ->orWhere('contact.EMAIL', 'like', '%' . $search . '%');
+                        ->orWhere('contact.EMAIL', 'like', '%' . $search . '%')
+                        ->orWhere('d.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
             ->when($locationId > 0, function ($query) use (&$locationId) {
