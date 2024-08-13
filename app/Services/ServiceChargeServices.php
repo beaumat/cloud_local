@@ -485,7 +485,7 @@ class ServiceChargeServices
                 ]);
 
             $this->updateServiceChargesBalance($data->SERVICE_CHARGES_ID);
-            dd('paid => ' . $ITEM_PAID);
+       
         }
     }
     public function getPaidItemCharge(int $SERVICE_CHARGES_ITEM_ID): float
