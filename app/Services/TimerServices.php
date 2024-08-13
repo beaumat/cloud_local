@@ -45,10 +45,9 @@ class TimerServices
     }
     private function generateItem()
     {
-        $transDate = '2024-8-12';// $this->dateServices->NowDate();
+        $transDate =  $this->dateServices->NowDate();
         DB::beginTransaction();
         try {
-
             $SOURCE_REF_TYPE = 27;
             $itemData = $this->hemoServices->CallOutItemUnPosted($transDate);
             foreach ($itemData as $list) {
@@ -74,8 +73,8 @@ class TimerServices
     public function getExecute()
     {
 
-        // $this->generateUnposted();
-        // $this->generateWaitingList();
+        $this->generateUnposted();
+        $this->generateWaitingList();
         $this->generateItem();
     }
     private function getPosted(int $CONTACT_ID, string $DATE, int  $LOCATION_ID)
