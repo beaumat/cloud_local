@@ -478,6 +478,7 @@ class ServiceChargeServices
         $data = ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)->first();
         if ($data) {
             $ITEM_PAID = $this->getPaidItemCharge($SERVICE_CHARGES_ITEM_ID);
+            
             ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)
                 ->update([
                     'PAID_AMOUNT' => $ITEM_PAID

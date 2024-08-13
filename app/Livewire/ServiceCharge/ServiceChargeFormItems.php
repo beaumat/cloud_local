@@ -414,7 +414,7 @@ class ServiceChargeFormItems extends Component
     }
     private function getRefershItem(int $Id)
     {
-        $this->serviceChargeServices->updateServiceChargesBalance($Id);
+        $this->serviceChargeServices->updateServiceChargesItemPaid($Id);
     }
     public function deleteItem(int $Id)
     {
