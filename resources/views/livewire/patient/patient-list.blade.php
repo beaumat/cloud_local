@@ -8,6 +8,10 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
+                            <button class="btn btn-success btn-sm" wire:click='export()'>
+                                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                Export
+                            </button>
                         </li>
                     </ol>
                 </div>
@@ -30,10 +34,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                        <livewire:select-option name="doctorid" :options="$doctorList" :zero="true"
-                                            titleName="Nephro/Doctors :" wire:model.live='doctorid' />
-                            
-
+                                    <livewire:select-option name="doctorid" :options="$doctorList" :zero="true"
+                                        titleName="Nephro/Doctors :" wire:model.live='doctorid' />
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mt-0">
@@ -50,6 +52,7 @@
                                         </select>
                                     </div>
                                 </div>
+
                             </div>
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Patient;
 
+use App\Exports\PatientListExport;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
@@ -9,6 +10,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Patients')]
 class PatientList extends Component
@@ -51,6 +53,18 @@ class PatientList extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+
+    public function export()
+    {
+        return Excel::download(new PatientListExport(
+            $this->contactServices,
+            $this->doctorid,
+            $this->locationid,
+            $this->search,
+            $this->sortby,
+            $this->isDesc
+        ), 'patient-list.xlsx');
     }
 
     #[On('clear-alert')]
