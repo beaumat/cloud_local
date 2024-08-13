@@ -1,4 +1,4 @@
-<div wire:ignore class="mt-2 text-sm">
+<div wire:ignore class="mt-1 text-sm">
     @if ($vertical)
         <div class="row">
             <div class="col-3">

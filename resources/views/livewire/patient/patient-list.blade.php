@@ -22,12 +22,18 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-1">
-                                <div class="col-md-9">
+                                <div class="col-md-6">
                                     <div class="mt-0">
                                         <label class="text-sm">Search:</label>
                                         <input type="text" wire:model.live.debounce.150ms='search'
                                             class="w-100 form-control form-control-sm" placeholder="Search" />
                                     </div>
+                                </div>
+                                <div class="col-md-3">
+                                        <livewire:select-option name="doctorid" :options="$doctorList" :zero="true"
+                                            titleName="Nephro/Doctors :" wire:model.live='doctorid' />
+                            
+
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mt-0">
@@ -218,11 +224,11 @@
                                                     N
                                                 @endif
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-center font-weight-bold">
                                                 @if ($list->INACTIVE)
-                                                    Y
+                                                    Yes
                                                 @else
-                                                    N
+                                                    No
                                                 @endif
                                             </td>
                                             <td class="text-center">

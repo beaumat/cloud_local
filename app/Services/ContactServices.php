@@ -320,7 +320,7 @@ class ContactServices
 
         return $result;
     }
-    public function SearchPatient($search, int $perPage, int $locationId, string $sortBy, bool $isDesc)
+    public function SearchPatient($search, int $perPage, int $locationId, string $sortBy, bool $isDesc, int $doctorId = 0)
     {
         $TYPE = 3;
 
@@ -357,6 +357,9 @@ class ContactServices
             ->leftJoin('location as l', 'l.ID', '=', 'contact.LOCATION_ID')
             ->leftJoin('patient_doctor as pd', 'pd.PATIENT_ID', '=', 'contact.ID')
             ->leftJoin('contact as d', 'd.ID', '=', 'pd.DOCTOR_ID')
+            ->when($doctorId > 0, function ($query) use (&$doctorId) {
+                $query->where('pd.DOCTOR_ID', $doctorId);
+            })
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('contact.NAME', 'like', '%' . $search . '%')
