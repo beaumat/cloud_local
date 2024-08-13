@@ -91,6 +91,16 @@
                                     wire:confirm="Are you sure you want to delete this?" class="btn btn-xs btn-danger">
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
+                            @elseif ($list->count_pay == 0 && $isAdmin == true)
+                                <button type="button" title="Edit Disabled" id="editbtn"
+                                    class="btn btn-xs btn-secondary">
+                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                </button>
+                                <button title="Delete Active" id="deletebtn"
+                                    wire:click='deleteItem({{ $list->ID }})'
+                                    wire:confirm="Are you sure you want to delete this?" class="btn btn-xs btn-danger">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                </button>
                             @else
                                 <button type="button" title="Edit Disabled" id="editbtn"
                                     class="btn btn-xs btn-secondary">
@@ -154,14 +164,16 @@
                             @endif
                         @endif
                     </td>
-                    <td > <label class="mt-2 text-xs"> {{ $CLASS_DESCRIPTION }}</label></td>
+                    <td> <label class="mt-2 text-xs"> {{ $CLASS_DESCRIPTION }}</label></td>
                     <td>
-                        <input type="number" step="0.01" class="form-control form-control-sm text-xs mt-2 text-right"
-                            name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
+                        <input type="number" step="0.01"
+                            class="form-control form-control-sm text-xs mt-2 text-right" name="Qty"
+                            wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
                             @if ($ITEM_ID == 0) readonly @endif />
                     </td>
                     <td>
-                        <select wire:model='UNIT_ID' name="UNIT_ID" class="text-xs text-center form-control form-control-sm mt-2"
+                        <select wire:model='UNIT_ID' name="UNIT_ID"
+                            class="text-xs text-center form-control form-control-sm mt-2"
                             @if ($ITEM_ID == 0) readonly @endif>
                             @foreach ($unitList as $list)
                                 <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
@@ -169,7 +181,8 @@
                         </select>
                     </td>
                     <td>
-                        <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-xs text-right"
+                        <input type="number" step="0.01"
+                            class="form-control form-control-sm mt-2 text-xs text-right"
                             @if ($editPrice == false) readonly @endif name="rate"
                             wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                     </td>

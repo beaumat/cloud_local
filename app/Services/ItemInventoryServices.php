@@ -80,6 +80,10 @@ class ItemInventoryServices
             }
         }
     }
+    public function DeleteInv(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE)
+    {
+        $this->Update($ITEM_ID, $LOCATION_ID, $SOURCE_REF_TYPE, $SOURCE_REF_ID, $SOURCE_REF_DATE, 0);
+    }
     private function getNextEndingUpdate(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $ID)
     {
 
@@ -395,7 +399,7 @@ class ItemInventoryServices
 		WHEN document_type_map.`ID` = 31 THEN  (SELECT contact.`PRINT_NAME_AS` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID` JOIN contact ON contact.`ID` = pull_out.`PREPARED_BY_ID` WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 	END AS CONTACT_NAME
                 '),
-        DB::raw('
+                DB::raw('
     CASE 
 		WHEN document_type_map.`ID` = 1 THEN  (SELECT bill.`NOTES` FROM bill_items  JOIN bill ON bill.`ID` =  bill_items.`BILL_ID` WHERE bill_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 		WHEN document_type_map.`ID` = 3 THEN  (SELECT bill_credit.`NOTES` FROM bill_credit_items  JOIN bill_credit ON bill_credit.`ID` =  bill_credit_items.`BILL_CREDIT_ID`  WHERE bill_credit_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill_credit.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill_credit.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_credit_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	

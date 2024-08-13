@@ -228,7 +228,6 @@ class PullOutFormItems extends Component
                 (float) $unitRelated['QUANTITY'],
                 $this->lineRate,
                 $this->lineBatchId
-
             );
             $this->dispatch('update-amount');
             $this->cancelItem();

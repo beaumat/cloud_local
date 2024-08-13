@@ -11,6 +11,7 @@ use App\Services\PhilHealthServices;
 use App\Services\ServiceChargeServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -31,6 +32,7 @@ class ServiceChargeFormItems extends Component
     #[Reactive]
     public $PATIENT_ID;
 
+    public bool $isAdmin = false;
     public int $openStatus = 0;
     public int $ID;
     public int $LINE_NO;
@@ -202,6 +204,9 @@ class ServiceChargeFormItems extends Component
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
+        if (Auth::user()->name == 'admin') {
+            $this->isAdmin  =  true;
+        }
     }
     public function saveItem()
     {
@@ -419,7 +424,6 @@ class ServiceChargeFormItems extends Component
                 }
             }
             DB::commit();
-
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
         } catch (\Exception $e) {

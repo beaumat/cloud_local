@@ -19,6 +19,7 @@ class HemoServices
     private $itemTreatmentServices;
     private $unitOfMeasureServices;
     private $itemServices;
+    private $itemInventoryServices;
     public function __construct(
         ObjectServices $objectService,
         UserServices $userServices,
@@ -26,7 +27,8 @@ class HemoServices
         DateServices $dateServices,
         ItemTreatmentServices $itemTreatmentServices,
         UnitOfMeasureServices $unitOfMeasureServices,
-        ItemServices $itemServices
+        ItemServices $itemServices,
+        ItemInventoryServices $itemInventoryServices
     ) {
         $this->object = $objectService;
         $this->user = $userServices;
@@ -35,11 +37,17 @@ class HemoServices
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemServices = $itemServices;
+        $this->itemInventoryServices = $itemInventoryServices;
     }
 
     public function Get(int $ID)
     {
-        return Hemodialysis::where('ID', $ID)->first();
+        $data = Hemodialysis::where('ID', $ID)->first();
+        if ($data) {
+            return $data;
+        }
+
+        return [];
     }
     public function IsNewHemo(int $CONTACT_ID, int $LOCATION_ID, string $DATE): bool
     {
@@ -770,6 +778,14 @@ class HemoServices
     }
     public function ItemDelete(int $ID, int $HEMO_ID, int $ITEM_ID, bool $IS_DEFAULT)
     {
+
+        $data = $this->Get($HEMO_ID);
+        if ($data) {
+            if ($data->STATUS_ID == 2 || $data->STATUS_ID == 4) {
+                $this->itemInventoryServices->DeleteInv($ITEM_ID, $data->LOCATION_ID, 27, $ID, $data->DATE);
+            }
+        }
+
         HemodialysisItems::where('ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
             ->where('ITEM_ID', $ITEM_ID)
