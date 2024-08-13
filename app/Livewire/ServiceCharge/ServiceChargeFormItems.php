@@ -143,6 +143,7 @@ class ServiceChargeFormItems extends Component
             'SERVICE_CHARGES_ITEM_ID' => $ID,
             'SERVICE_CHARGES_ITEM_AMOUNT' => $AMOUNT
         ];
+        $this->getRefershItem($ID);
         $this->dispatch('payment-avaliable-prompt', itemdata: $itemdata);
     }
     public function cashPayment(int $ID, float $AMOUNT)
@@ -151,7 +152,7 @@ class ServiceChargeFormItems extends Component
             'SERVICE_CHARGES_ITEM_ID' => $ID,
             'SERVICE_CHARGES_ITEM_AMOUNT' => $AMOUNT
         ];
-
+        $this->getRefershItem($ID);
         $this->dispatch('cash-payment-prompt', itemdata: $itemdata);
     }
     public function updateditemid()
@@ -410,6 +411,10 @@ class ServiceChargeFormItems extends Component
     public function cancelItem()
     {
         $this->editItemId = null;
+    }
+    private function getRefershItem(int $Id)
+    {
+        $this->serviceChargeServices->updateServiceChargesBalance($Id);
     }
     public function deleteItem(int $Id)
     {

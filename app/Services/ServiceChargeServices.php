@@ -39,6 +39,14 @@ class ServiceChargeServices
         }
         return 0;
     }
+    public function setItemPaidAmount(int $SERVICE_CHARGES_ITEM_ID, float $PAID_AMOUNT)
+    {
+
+        ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)
+            ->update([
+                'PAID_AMOUNT' => $PAID_AMOUNT
+            ]);
+    }
     public function getServiceChargeList_NotPhilhealth(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID): object
     {
         $result = ServiceChargesItems::query()
@@ -60,7 +68,7 @@ class ServiceChargeServices
             ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'service_charges_items.UNIT_ID')
             ->where('service_charges.PATIENT_ID', $PATIENT_ID)
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
-            ->whereRaw('(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) > 0')
+            ->whereRaw('( ifnull(service_charges_items.AMOUNT,0) -  ifnull(service_charges_items.PAID_AMOUNT,2)) > 0')
             ->whereNotExists(function ($query) use (&$PATIENT_PAYMENT_ID) {
                 $query->select(DB::raw(1))
                     ->from('patient_payment_charges as ppc')
@@ -69,6 +77,8 @@ class ServiceChargeServices
             })
             ->where('service_charges_items.ITEM_ID', '<>', '2')
             ->get();
+
+
 
         return $result;
     }
@@ -149,7 +159,7 @@ class ServiceChargeServices
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('DATE', $DATE)
             ->first();
-        
+
 
         if ($result) {
             return $result;
@@ -468,7 +478,6 @@ class ServiceChargeServices
         $data = ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)->first();
         if ($data) {
             $ITEM_PAID = $this->getPaidItemCharge($SERVICE_CHARGES_ITEM_ID);
-
             ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)
                 ->update([
                     'PAID_AMOUNT' => $ITEM_PAID
