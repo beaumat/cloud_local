@@ -18,7 +18,7 @@ class PatientList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public int $perPage = 15;
+    public int $perPage = 50;
     public $locationList = [];
     public int $locationid;
     private $contactServices;
@@ -54,10 +54,21 @@ class PatientList extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    public bool $isDesc = true;
+    public string $sortby = 'contact.ID';
+    public function sorting(string $column)
+    {
+        if ($this->sortby  == $column) {
+            $this->isDesc = $this->isDesc ? false : true;
+            return;
+        }
+        $this->isDesc = true;
+        $this->sortby = $column;
+    }
     public function render()
     {
 
-        $dataList = $this->contactServices->SearchPatient($this->search, $this->perPage, $this->locationid);
+        $dataList = $this->contactServices->SearchPatient($this->search, $this->perPage, $this->locationid, $this->sortby, $this->isDesc);
 
         return view('livewire.patient.patient-list', ['dataList' => $dataList]);
     }

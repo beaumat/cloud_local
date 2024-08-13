@@ -320,7 +320,7 @@ class ContactServices
 
         return $result;
     }
-    public function SearchPatient($search, int $perPage, int $locationId)
+    public function SearchPatient($search, int $perPage, int $locationId, string $sortBy, bool $isDesc )
     {
         $TYPE = 3;
 
@@ -371,7 +371,7 @@ class ContactServices
             ->when($locationId > 0, function ($query) use (&$locationId) {
                 $query->where('contact.LOCATION_ID', $locationId);
             })
-            ->orderBy('contact.ID', 'desc')
+            ->orderBy($sortBy, $isDesc ? 'desc' : 'asc')
             ->paginate($perPage);
 
         return $result;

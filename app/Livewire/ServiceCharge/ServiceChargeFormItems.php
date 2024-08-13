@@ -308,7 +308,8 @@ class ServiceChargeFormItems extends Component
             return;
         }
 
-        session()->flash('error', 'PHIC 156 Treatment : The number of Used is ' . $result['count']);
+        session()->flash('error', 'PHIC 156 Treatment: The number of uses is ' . $result['count']);
+
     }
     public function updatedlineqty()
     {

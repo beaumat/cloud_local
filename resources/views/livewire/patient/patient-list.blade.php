@@ -32,7 +32,9 @@
                                 <div class="col-md-3">
                                     <div class="mt-0">
                                         <label class="text-sm">Location:</label>
-                                        <select @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif name="location" wire:model.live='locationid'
+                                        <select
+                                            @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                            name="location" wire:model.live='locationid'
                                             class="form-control form-control-sm">
                                             <option value="0"> All Location</option>
                                             @foreach ($locationList as $item)
@@ -46,17 +48,141 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>Profile No.</th>
-                                        <th class="col-2">PATIENT NAME</th>
-                                        <th>SEX</th>
-                                        <th class="col-1">DATE OF BIRTH</th>
-                                        <th>AGE</th>
-                                        <th class="col-1">PHILHEALTH NO.</th>
-                                        <th class="col-2">NEPHRO</th>
-                                        <th class="col-1">DIAGNOSIS</th>
-                                        <th class="col-1">LOCATION</th>
-                                        <th class="text-center">REQ. STATUS</th>
-                                        <th class="text-center">INACTIVE</th>
+                                        <th>
+                                            <span type="button" wire:click="sorting('contact.ACCOUNT_NO')">No.</span>
+                                            @if ($sortby == 'contact.ACCOUNT_NO')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+
+                                        </th>
+                                        <th class="col-1">
+
+                                            <span type="button"
+                                                wire:click="sorting('contact.LAST_NAME')">Lastname</span>
+                                            @if ($sortby == 'contact.LAST_NAME')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th class="col-1">
+                                            <span type="button"
+                                                wire:click="sorting('contact.FIRST_NAME')">Firstname</span>
+                                            @if ($sortby == 'contact.FIRST_NAME')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+
+                                        <th>
+                                            <span type="button"
+                                                wire:click="sorting('gender_map.DESCRIPTION')">Sex</span>
+                                            @if ($sortby == 'gender_map.DESCRIPTION')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+
+                                        </th>
+                                        <th class="text-center">
+                                            <span type="button" wire:click="sorting('contact.DATE_OF_BIRTH')">Date of
+                                                Birth</span>
+                                            @if ($sortby == 'contact.DATE_OF_BIRTH')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th>
+                                            <span type="button" wire:click="sorting('AGE')">Age</span>
+                                            @if ($sortby == 'AGE')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+
+                                        </th>
+                                        <th class="col-1">
+                                            <span type="button" wire:click="sorting('contact.PIN')">Philhealth
+                                                No.</span>
+                                            @if ($sortby == 'contact.PIN')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th class="col-2">
+                                            <span type="button"
+                                                wire:click="sorting('DOCTOR_NAME')">Nephro/Doctors</span>
+                                            @if ($sortby == 'DOCTOR_NAME')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+
+                                        </th>
+                                        <th class="col-1 text-center">
+                                            <span type="button"
+                                                wire:click="sorting('contact.DATE_ADMISSION')">Diagnosis On</span>
+                                            @if ($sortby == 'contact.DATE_ADMISSION')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th class="col-1">
+                                            <span type="button" wire:click="sorting('l.NAME')">Location</span>
+                                            @if ($sortby == 'l.NAME')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th class="text-center">
+                                            <span type="button"
+                                                wire:click="sorting('contact.IS_COMPLETE')">Req.(S)</span>
+                                            @if ($sortby == 'contact.IS_COMPLETE')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                        <th class="text-center">
+                                            <span type="button"
+                                                wire:click="sorting('contact.INACTIVE')">Inactive</span>
+                                            @if ($sortby == 'contact.INACTIVE')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenancecontactpatients_create') }}"
                                                 class="text-white">
@@ -73,27 +199,30 @@
                                                     {{ $list->ACCOUNT_NO }}
                                                 </a>
                                             </td>
-                                            <td> {{ $list->NAME }}</td>
+                                            <td> {{ $list->LAST_NAME }}</td>
+                                            <td> {{ $list->FIRST_NAME }}</td>
                                             <td> {{ $list->GENDER }}</td>
-                                            <td> {{ \Carbon\Carbon::parse($list->DATE_OF_BIRTH)->format('M/d/Y') }}</td>
+                                            <td class="text-center">
+                                                {{ \Carbon\Carbon::parse($list->DATE_OF_BIRTH)->format('M/d/Y') }}</td>
                                             <td> {{ $list->AGE }}</td>
                                             <td> {{ $list->PIN }}</td>
                                             <td> {{ $list->DOCTOR_NAME }}</td>
-                                            <td> {{ \Carbon\Carbon::parse($list->DATE_ADMISSION)->format('M/d/Y') }}
+                                            <td class="text-center">
+                                                {{ \Carbon\Carbon::parse($list->DATE_ADMISSION)->format('M/d/Y') }}
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center">
                                                 @if ($list->IS_COMPLETE)
-                                                    <strong class="text-success">Completed</strong>
+                                                    Y
                                                 @else
-                                                    <strong class="text-secondary">Uncompleted</strong>
+                                                    N
                                                 @endif
                                             </td>
                                             <td class="text-center">
                                                 @if ($list->INACTIVE)
-                                                    <strong class="text-danger">Yes</strong>
+                                                    Y
                                                 @else
-                                                    <strong class="text-primary">No</strong>
+                                                    N
                                                 @endif
                                             </td>
                                             <td class="text-center">
