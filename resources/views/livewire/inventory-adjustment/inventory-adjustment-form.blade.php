@@ -80,10 +80,12 @@
                                                 <div class="col-md-12">
                                                     @if ($Modify)
                                                         <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=false wire:model='NOTES' :vertical="false" :maxlength="80" />
+                                                            :isDisabled=false wire:model='NOTES' :vertical="false"
+                                                            :maxlength="80" />
                                                     @else
                                                         <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=true wire:model='NOTES' :vertical="false" :maxlength="80" />
+                                                            :isDisabled=true wire:model='NOTES' :vertical="false"
+                                                            :maxlength="80" />
                                                     @endif
                                                 </div>
                                             </div>
@@ -156,7 +158,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('InventoryAdjustment.InventoryAdjustmentFormItems', ['INVENTORY_ADJUSTMENT_ID' => $ID, 'STATUS' => $STATUS, 'openStatus' => $openStatus])
+                                            @livewire('InventoryAdjustment.InventoryAdjustmentFormItems', ['INVENTORY_ADJUSTMENT_ID' => $ID, 'STATUS' => $STATUS, 'openStatus' => $openStatus, 'DATE' => $DATE, 'LOCATION_ID' => $LOCATION_ID])
                                         </div>
                                     </div>
                                 </div>

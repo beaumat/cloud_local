@@ -18,6 +18,10 @@ class InventoryAdjustmentFormItems extends Component
     public int $STATUS;
     #[Reactive]
     public int $openStatus;
+    #[Reactive]
+    public string $DATE;
+    #[Reactive]
+    public int $LOCATION_ID;
     public int $ID;
     public int $ITEM_ID = 0;
     public string $ITEM_CODE;
@@ -109,6 +113,11 @@ class InventoryAdjustmentFormItems extends Component
         );
 
         try {
+
+            if ($this->inventoryAdjustmentServices->ItemHasAdjustmentThatBefore($this->ITEM_ID, $this->DATE, $this->LOCATION_ID)) {
+                session()->flash('error', 'Item already adjusted that date or greater than.');
+                return;
+            }
 
             if ($this->inventoryAdjustmentServices->haveExists($this->INVENTORY_ADJUSTMENT_ID, $this->ITEM_ID)) {
                 session()->flash('error', 'Item already added.');

@@ -129,7 +129,7 @@
                                                         wire:model='DATE' :isDisabled="true" />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <livewire:text-input name="Code" titleName="No." :isDisabled=true
+                                                    <livewire:text-input name="Code" titleName="Reference No." :isDisabled=true
                                                         wire:model='CODE' />
                                                 </div>
                                                 <div class="col-md-4"
