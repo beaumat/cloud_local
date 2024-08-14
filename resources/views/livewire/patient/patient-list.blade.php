@@ -8,10 +8,14 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
-                            <button class="btn btn-success btn-sm" wire:click='export()'>
-                                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-                                Export
-                            </button>
+
+                            @can('contact.patient.print')
+                                <button class="btn btn-success btn-sm" wire:click='export()'>
+                                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                    Export
+                                </button>
+                            @endcan
+
                         </li>
                     </ol>
                 </div>
@@ -91,7 +95,17 @@
                                                 @endif
                                             @endif
                                         </th>
-
+                                        <th class="col-1">
+                                            <span type="button"
+                                                wire:click="sorting('contact.MIDDLE_NAME')">Middlename</span>
+                                            @if ($sortby == 'contact.MIDDLE_NAME')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
                                         <th>
                                             <span type="button"
                                                 wire:click="sorting('gender_map.DESCRIPTION')">Sex</span>
@@ -160,7 +174,7 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        <th class="col-1">
+                                        <th>
                                             <span type="button" wire:click="sorting('l.NAME')">Location</span>
                                             @if ($sortby == 'l.NAME')
                                                 @if ($isDesc)
@@ -192,10 +206,13 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        <th class="text-center col-1 bg-success">
-                                            <a href="{{ route('maintenancecontactpatients_create') }}"
-                                                class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+                                        <th class="text-center col-1 bg-success active">
+                                            @can('contact.patient.create')
+                                                <a href="{{ route('maintenancecontactpatients_create') }}"
+                                                    class="text-white">
+                                                    <i class="fas fa-plus"></i> New</a>
+                                            @endcan
+
                                         </th>
                                     </tr>
                                 </thead>
@@ -210,21 +227,22 @@
                                             </td>
                                             <td> {{ $list->LAST_NAME }}</td>
                                             <td> {{ $list->FIRST_NAME }}</td>
+                                            <td> {{ $list->MIDDLE_NAME }}</td>
                                             <td> {{ $list->GENDER }}</td>
                                             <td class="text-center">
-                                                {{ \Carbon\Carbon::parse($list->DATE_OF_BIRTH)->format('M/d/Y') }}</td>
+                                                {{ date('m/d/Y', strtotime($list->DATE_OF_BIRTH)) }}</td>
                                             <td> {{ $list->AGE }}</td>
                                             <td> {{ $list->PIN }}</td>
                                             <td> {{ $list->DOCTOR_NAME }}</td>
                                             <td class="text-center">
-                                                {{ \Carbon\Carbon::parse($list->DATE_ADMISSION)->format('M/d/Y') }}
+                                                {{ date('m/d/Y', strtotime($list->DATE_ADMISSION)) }}
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center">
                                                 @if ($list->IS_COMPLETE)
-                                                    Y
+                                                    Yes
                                                 @else
-                                                    N
+                                                    No
                                                 @endif
                                             </td>
                                             <td class="text-center font-weight-bold">
@@ -235,17 +253,24 @@
                                                 @endif
                                             </td>
                                             <td class="text-center">
-                                                <a href="{{ route('maintenancecontactpatients_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                <a type='button' title="View Details"
+                                                    href="{{ route('maintenancecontactpatients_edit', ['id' => $list->ID]) }}"
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
 
                                                 @can('contact.patient.delete')
-                                                    <a href="#" wire:click='delete({{ $list->ID }})'
+                                                    <button type='button' title="Delete Active"
+                                                        wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
-                                                        class="btn-sm text-danger">
-                                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                                    </a>
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type='button' title="Delete Disabled"
+                                                        class="btn btn-xs btn-secondary">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
                                                 @endcan
 
                                             </td>

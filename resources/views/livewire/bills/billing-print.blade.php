@@ -11,14 +11,22 @@
                             Email:avidadavao.torres@yahoo.com.ph</b>
                     </div>
                 </div>
-                <div class="col-4 ">
+                <div class="col-4  text-left">
+                    <div class="row">
+                        <div class="col-3"> Vendor : </div>
+                        <div class="col-9 bottom-line"> {{ $CONTACT_NAME }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3"> Location : </div>
+                        <div class="col-9 bottom-line"> {{ $LOCATION_NAME }}</div>
+                    </div>
                 </div>
                 <div class="col-4 text-center">
-                 <b class="h4">PULL OUT</b>
+                    <b class="h4">BILLING</b>
                 </div>
                 <div class="col-4 ">
                     <div class="row ">
-                        <div class="col-4 text-right"> Reference No. </div>
+                        <div class="col-4 text-right"> Reference No. : </div>
                         <div class="col-6 bottom-line"> {{ $CODE }}</div>
                     </div>
                     <div class="row">
@@ -32,10 +40,12 @@
                     <table class="w-100" border="1">
                         <thead>
                             <tr class="bgBlack text-white">
-                                <th class="col-2 text-left">CODE</th>
-                                <th class="col-7 text-left">ITEM DESCRIPTION</th>
-                                <th class="col-2">UOM</th>
-                                <th class="col-1">QTY</th>
+                                <th class="col-1 text-left">CODE</th>
+                                <th class="col-6 text-left">ITEM DESCRIPTION</th>
+                                <th class="col-1 text-right">QTY</th>
+                                <th class="col-1">UOM</th>
+                                <th class="col-1 text-right">Rate</th>
+                                <th class="col-2 text-right">TOTAL</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,18 +53,20 @@
                                 <tr>
                                     <td class="text-left p-1">{{ $list->CODE }}</td>
                                     <td class="text-left p-1">{{ $list->DESCRIPTION }}</td>
+                                    <td class="text-right">{{ number_format($list->QUANTITY, 1) }}&nbsp;</td>
                                     <td>{{ $list->UNIT_NAME }}</td>
-                                    <td>{{ number_format($list->QUANTITY, 1) }}</td>
+                                    <td class="text-right">{{ number_format($list->RATE, 2) }}&nbsp;</td>
+                                    <td class="text-right">{{ number_format($list->AMOUNT, 2) }}&nbsp;</td>
                                 </tr>
                             @endforeach
-
-                            {{-- <tr class="blackbox">
-                                <td> <u class="h4"></u> </td>
-                                <td class="left-line">
-                                    <h4></h4>
-                                </td>
-                            </tr> --}}
-
+                            <tr>
+                                <td class="text-left p-1"></td>
+                                <td class="text-left p-1"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-right"><b>{{ number_format($AMOUNT, 2) }} &nbsp;</b></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -67,17 +79,17 @@
                     <div class="row mt-4">
                         <div class="col-3 text-left">
                             <div class="form-group row  mt-4">
-                                <div class="col-12 text-center bottom-line"> <b> {{ $PREPARED_BY_NAME }}</b> </div>
-                                <div class="col-12 text-center"><i>Prepared by</i></div>
+                                <div class="col-12 text-center bottom-line"> <b>&nbsp; </b> </div>
+                                <div class="col-12 text-center"><i>Encoded by</i></div>
                             </div>
                         </div>
                         <div class="col-6">
                         </div>
                         <div class="col-3 text-right">
-                            <div class="form-group row  mt-4">
+                            {{-- <div class="form-group row  mt-4">
                                 <div class="col-12 text-center bottom-line"><b>&nbsp;</b></div>
                                 <div class="col-12 text-center"><i>Received By</i></div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

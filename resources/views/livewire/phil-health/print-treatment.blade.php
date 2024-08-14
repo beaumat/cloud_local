@@ -24,8 +24,8 @@
                             <div class="row">
                                 <div class="col-3 text-right">CONFINEMENT PERIOD :</div>
                                 <div class="col-6 bottom-line">
-                                    {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') . ' TO ' : '' }}
-                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : '' }}
+                                    {{ $DATE_ADMITTED ? date('m/d/Y', strtotime($DATE_ADMITTED)) . ' TO ' : '' }}
+                                    {{ $DATE_DISCHARGED ? date('m/d/Y', strtotime($DATE_DISCHARGED)) : '' }}
                                 </div>
                             </div>
                             <div class="row">

@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class PatientReportServices
 {
-    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, int $patientId = 0)
+    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, int $patientId = 0): Collection
     {
         $results = DB::table('service_charges_items as sci')
-            ->select(
+            ->select([
                 'sc.ID as SC_ID',
                 'sc.CODE as SC_CODE',
                 'sc.DATE as SC_DATE',
@@ -26,7 +27,7 @@ class PatientReportServices
                 DB::raw('IFNULL(ppc.AMOUNT_APPLIED, 0) as PP_PAID'),
                 'l.NAME as LOCATION_NAME',
                 DB::raw('(select d.PRINT_NAME_AS  from patient_doctor  as pd join contact as d on d.ID = pd.DOCTOR_ID where pd.PATIENT_ID = c.ID limit 1) as DOCTOR_NAME ')
-            )
+            ])
             ->join('item as i', 'i.ID', '=', 'sci.ITEM_ID')
             ->join('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')
             ->join('location as l', 'l.ID', '=', 'sc.LOCATION_ID')

@@ -127,6 +127,7 @@
                                                 <button type="submit" class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
+
                                                 @if ($ID > 0)
                                                     <button type="button" wire:click='updateCancel'
                                                         class="btn btn-sm btn-danger"><i class="fa fa-ban"
@@ -144,6 +145,12 @@
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
                                             @endif
+                                        @else
+                                            <a type="button" target="_BLANK"
+                                                href="{{ route('vendorsbills_print', ['id' => $ID]) }}"
+                                                class="btn btn-sm btn-dark">
+                                                <i class="fa fa-print" aria-hidden="true"></i> Print
+                                            </a>
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">

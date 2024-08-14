@@ -37,8 +37,6 @@ class BillingFormItems extends Component
     public string $ITEM_DESCRIPTION;
     public float $QUANTITY;
     public int $UNIT_ID;
-    public int $BASE_UNIT_ID;
-
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -140,9 +138,6 @@ class BillingFormItems extends Component
 
     public function mount()
     {
-
-
-
         $this->QUANTITY = 0;
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
@@ -152,15 +147,15 @@ class BillingFormItems extends Component
     {
         $this->validate(
             [
-                'ITEM_ID' => 'required|not_in:0',
-                'QUANTITY' => 'required|not_in:0',
-                'RATE' => 'required'
+                'ITEM_ID'   => 'required|not_in:0',
+                'QUANTITY'  => 'required|numeric|not_in:0',
+                'RATE'      => 'required'
             ],
             [],
             [
-                'ITEM_ID' => 'Item',
-                'QUANTITY' => 'Quantitity',
-                'RATE' => 'Cost'
+                'ITEM_ID'   => 'Item',
+                'QUANTITY'  => 'Quantitity',
+                'RATE'      => 'Cost'
             ]
         );
 
@@ -250,7 +245,7 @@ class BillingFormItems extends Component
 
         $this->validate(
             [
-                'lineQty' => 'required|not_in:0',
+                'lineQty' => 'required|numeric|not_in:0',
             ],
             [],
             [
@@ -269,7 +264,6 @@ class BillingFormItems extends Component
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId);
             $this->billingServices->ItemUpdate($Id, $this->BILL_ID, $this->lineItemId, $this->lineQty, $this->lineUnitId > 0 ? $this->lineUnitId : 0, (float) $unitRelated['QUANTITY'], $this->lineRate, $this->lineAmount, $this->lineTax, $this->lineTaxable, $this->lineTaxAmount);
             DB::commit();
-
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
             $this->dispatch('update-amount', result: $getResult);
             $this->itemList = $this->billingServices->ItemView($this->BILL_ID);

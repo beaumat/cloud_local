@@ -6,6 +6,7 @@ use App\Livewire\BillPayments\BillPaymentForm;
 use App\Livewire\BillPayments\BillPaymentList;
 use App\Livewire\Bills\BillingForm;
 use App\Livewire\Bills\BillingList;
+use App\Livewire\Bills\BillingPrint;
 use App\Livewire\BuildAssembly\BuildAssemblyForm;
 use App\Livewire\BuildAssembly\BuildAssemblyList;
 use App\Livewire\ChartOfAccount\ChartOfAccountForm;
@@ -212,6 +213,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', BillingList::class)->name('bills')->middleware(['permission:vendor.bill.view']);
             Route::get('/create', BillingForm::class)->name('bills_create')->middleware(['permission:vendor.bill.create']);
             Route::get('/{id}/edit', BillingForm::class)->name('bills_edit')->middleware(['permission:vendor.bill.view']);
+            Route::get('/{id}/print', BillingPrint::class)->name('bills_print');
         });
 
         Route::prefix('/bill-payments')->group(function () {
@@ -226,8 +228,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', BillCreditForm::class)->name('bill_credit_edit')->middleware(['permission:vendor.bill-credit.view']);
         });
 
-        Route::prefix('/withholding-tax')->group(function () {
-        });
+        Route::prefix('/withholding-tax')->group(function () {});
     });
 
     Route::prefix('/company')->name('company')->group(function () {
@@ -464,24 +465,15 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/{locationid}/print-form', DoctorsFeeReportPrint::class)->name('patient_doctor_fee_report_print');
             });
         });
-        Route::prefix('/financial')->group(function () {
-        });
-        Route::prefix('/sales')->group(function () {
-        });
-        Route::prefix('/receivables')->group(function () {
-        });
-        Route::prefix('/purchases')->group(function () {
-        });
-        Route::prefix('/expenses')->group(function () {
-        });
-        Route::prefix('/payables')->group(function () {
-        });
-        Route::prefix('/inventory')->group(function () {
-        });
-        Route::prefix('/accounting')->group(function () {
-        });
-        Route::prefix('/documents')->group(function () {
-        });
+        Route::prefix('/financial')->group(function () {});
+        Route::prefix('/sales')->group(function () {});
+        Route::prefix('/receivables')->group(function () {});
+        Route::prefix('/purchases')->group(function () {});
+        Route::prefix('/expenses')->group(function () {});
+        Route::prefix('/payables')->group(function () {});
+        Route::prefix('/inventory')->group(function () {});
+        Route::prefix('/accounting')->group(function () {});
+        Route::prefix('/documents')->group(function () {});
     });
 });
 
