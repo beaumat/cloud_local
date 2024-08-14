@@ -32,16 +32,17 @@
                                     <div class="row">
 
                                         <div class="col-md-4">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'/>
+                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'
+                                                maxlength='50' />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:select-option name="PRICE_LEVEL_ID" :options="$priceLevels"
                                                 :zero="true" titleName="Price Level"
-                                                wire:model.live='PRICE_LEVEL_ID' :key="$priceLevels->pluck('ID')->join('_')"/>
+                                                wire:model.live='PRICE_LEVEL_ID' :key="$priceLevels->pluck('ID')->join('_')" />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:select-option name="GROUP_ID" :options="$locationGroups" :zero="true"
-                                                titleName="Group" wire:model.live='GROUP_ID' :key="$locationGroups->pluck('ID')->join('_')"/>
+                                                titleName="Group" wire:model.live='GROUP_ID' :key="$locationGroups->pluck('ID')->join('_')" />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
@@ -52,26 +53,37 @@
                                 <div class="form-group border-top border-secondary">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <livewire:text-input name="NAME_OF_BUSINESS" titleName="Branch/Business Title:" wire:model='NAME_OF_BUSINESS'/>
+                                            <livewire:text-input name="NAME_OF_BUSINESS"
+                                                titleName="Branch/Business Title:" wire:model='NAME_OF_BUSINESS'
+                                                maxlength='50' />
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:text-input name="ACCREDITATION_NO" titleName="Accreditation No." wire:model='ACCREDITATION_NO'/>
+                                            <livewire:text-input name="ACCREDITATION_NO" titleName="Accreditation No."
+                                                wire:model='ACCREDITATION_NO' maxlength='20' />
                                         </div>
                                         <div class="col-md-6"></div>
                                         <div class="col-md-3">
-                                            <livewire:text-input name="BLDG_NAME_LOT_BLOCK" titleName="Bldg No./Name/Lot/Block" wire:model='BLDG_NAME_LOT_BLOCK'/>
+                                            <livewire:text-input name="BLDG_NAME_LOT_BLOCK"
+                                                titleName="Bldg No./Name/Lot/Block" wire:model='BLDG_NAME_LOT_BLOCK'
+                                                maxlength='50' />
                                         </div>
                                         <div class="col-md-3">
-                                            <livewire:text-input name="STREET_SUB_VALL" titleName="Street/Subdivision/Village" wire:model='STREET_SUB_VALL'/>
+                                            <livewire:text-input name="STREET_SUB_VALL"
+                                                titleName="Street/Subdivision/Village" wire:model='STREET_SUB_VALL'
+                                                maxlength='50' />
                                         </div>
                                         <div class="col-md-3">
-                                            <livewire:text-input name="BRGY_CITY_MUNI" titleName="Barangay/City/Municipality" wire:model='BRGY_CITY_MUNI'/>
+                                            <livewire:text-input name="BRGY_CITY_MUNI"
+                                                titleName="Barangay/City/Municipality" wire:model='BRGY_CITY_MUNI'
+                                                maxlength='50' />
                                         </div>
                                         <div class="col-md-3">
-                                            <livewire:text-input name="PROVINCE" titleName="Province" wire:model='PROVINCE'/>
+                                            <livewire:text-input name="PROVINCE" titleName="Province"
+                                                wire:model='PROVINCE' maxlength='50' />
                                         </div>
                                         <div class="col-md-3">
-                                            <livewire:text-input name="ZIP_CODE" titleName="Zip Code" wire:model='ZIP_CODE'/>
+                                            <livewire:text-input name="ZIP_CODE" titleName="Zip Code"
+                                                wire:model='ZIP_CODE' maxlength='10' />
                                         </div>
                                     </div>
                                 </div>
@@ -80,15 +92,34 @@
                                         <div class="col-md-4">
                                             <livewire:select-option name="HCI_MANAGER_ID" :options="$managerList"
                                                 :zero="true" titleName="HCI Manager"
-                                                wire:model.live='HCI_MANAGER_ID'/>
+                                                wire:model.live='HCI_MANAGER_ID' />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:select-option name="PHIC_INCHARGE_ID" :options="$inchargeList"
                                                 :zero="true" titleName="Phic In-charge"
-                                                wire:model.live='PHIC_INCHARGE_ID'/>
+                                                wire:model.live='PHIC_INCHARGE_ID' />
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="form-group border-top border-secondary">
+                                    <h6 class="text-primary">Report Headers</h6>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <livewire:text-input name="REPORT_HEADER_1" titleName="Header 1"
+                                                wire:model='REPORT_HEADER_1' maxlength='60' />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <livewire:text-input name="REPORT_HEADER_2" titleName="Header 2"
+                                                wire:model='REPORT_HEADER_2' maxlength='60' />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <livewire:text-input name="REPORT_HEADER_3" titleName="Header 3"
+                                                wire:model='REPORT_HEADER_3' maxlength='60' />
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="card-footer">
                                 <div class="row">

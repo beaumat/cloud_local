@@ -31,6 +31,9 @@ class LocationForm extends Component
     public string $BRGY_CITY_MUNI;
     public string $PROVINCE;
     public string $ZIP_CODE;
+    public string $REPORT_HEADER_1;
+    public string $REPORT_HEADER_2;
+    public string $REPORT_HEADER_3;
 
     public $managerList = [];
     public $inchargeList = [];
@@ -42,7 +45,6 @@ class LocationForm extends Component
     {
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
-
     }
     public function loadDropDown()
     {
@@ -75,6 +77,9 @@ class LocationForm extends Component
                 $this->BRGY_CITY_MUNI = $location->BRGY_CITY_MUNI ?? '';
                 $this->PROVINCE = $location->PROVINCE ?? '';
                 $this->ZIP_CODE = $location->ZIP_CODE ?? '';
+                $this->REPORT_HEADER_1 = $location->REPORT_HEADER_1 ?? '';
+                $this->REPORT_HEADER_2 = $location->REPORT_HEADER_2 ?? '';
+                $this->REPORT_HEADER_3 = $location->REPORT_HEADER_3 ?? '';
                 return;
             }
 
@@ -95,6 +100,9 @@ class LocationForm extends Component
         $this->BRGY_CITY_MUNI = '';
         $this->PROVINCE = '';
         $this->ZIP_CODE = '';
+        $this->REPORT_HEADER_1 =  '';
+        $this->REPORT_HEADER_2 = '';
+        $this->REPORT_HEADER_3 =  '';
     }
 
 
@@ -121,11 +129,13 @@ class LocationForm extends Component
                     $this->STREET_SUB_VALL,
                     $this->BRGY_CITY_MUNI,
                     $this->PROVINCE,
-                    $this->ZIP_CODE
+                    $this->ZIP_CODE,
+                    $this->REPORT_HEADER_1,
+                    $this->REPORT_HEADER_2,
+                    $this->REPORT_HEADER_3
                 );
 
                 Redirect::route('maintenancesettingslocation_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
                 $this->locationServices->Update(
                     $this->ID,
@@ -141,7 +151,10 @@ class LocationForm extends Component
                     $this->STREET_SUB_VALL,
                     $this->BRGY_CITY_MUNI,
                     $this->PROVINCE,
-                    $this->ZIP_CODE
+                    $this->ZIP_CODE,
+                    $this->REPORT_HEADER_1,
+                    $this->REPORT_HEADER_2,
+                    $this->REPORT_HEADER_3
                 );
                 session()->flash('message', 'Successfully updated');
             }

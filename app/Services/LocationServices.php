@@ -22,7 +22,6 @@ class LocationServices
             ->where('INACTIVE', '0')
             ->where('ID', '<>', $id)
             ->get();
-
     }
     public function getPesonel($LOC_ID)
     {
@@ -56,24 +55,31 @@ class LocationServices
         string $STREET_SUB_VALL,
         string $BRGY_CITY_MUNI,
         string $PROVINCE,
-        string $ZIP_CODE
+        string $ZIP_CODE,
+        string $REPORT_HEADER_1,
+        string $REPORT_HEADER_2,
+        string $REPORT_HEADER_3
     ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
         Locations::create([
-            'ID' => $ID,
-            'NAME' => $NAME,
-            'INACTIVE' => $INACTIVE,
-            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-            'HCI_MANAGER_ID' => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
-            'PHIC_INCHARGE_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
-            'NAME_OF_BUSINESS' => $NAME_OF_BUSINESS,
-            'ACCREDITATION_NO' => $ACCREDITATION_NO,
-            'BLDG_NAME_LOT_BLOCK' => $BLDG_NAME_LOT_BLOCK,
-            'STREET_SUB_VALL' => $STREET_SUB_VALL,
-            'BRGY_CITY_MUNI' => $BRGY_CITY_MUNI,
-            'PROVINCE' => $PROVINCE,
-            'ZIP_CODE' => $ZIP_CODE
+            'ID'                    => $ID,
+            'NAME'                  => $NAME,
+            'INACTIVE'              => $INACTIVE,
+            'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+            'GROUP_ID'              => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'HCI_MANAGER_ID'        => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
+            'PHIC_INCHARGE_ID'      => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
+            'NAME_OF_BUSINESS'      => $NAME_OF_BUSINESS,
+            'ACCREDITATION_NO'      => $ACCREDITATION_NO,
+            'BLDG_NAME_LOT_BLOCK'   => $BLDG_NAME_LOT_BLOCK,
+            'STREET_SUB_VALL'       => $STREET_SUB_VALL,
+            'BRGY_CITY_MUNI'        => $BRGY_CITY_MUNI,
+            'PROVINCE'              => $PROVINCE,
+            'ZIP_CODE'              => $ZIP_CODE,
+            'REPORT_HEADER_1'       => $REPORT_HEADER_1,
+            'REPORT_HEADER_2'       => $REPORT_HEADER_2,
+            'REPORT_HEADER_3'       => $REPORT_HEADER_3
+
         ]);
 
         return $ID;
@@ -93,24 +99,32 @@ class LocationServices
         string $STREET_SUB_VALL,
         string $BRGY_CITY_MUNI,
         string $PROVINCE,
-        string $ZIP_CODE
+        string $ZIP_CODE,
+        string $REPORT_HEADER_1,
+        string $REPORT_HEADER_2,
+        string $REPORT_HEADER_3
     ): void {
 
-        Locations::where('ID', $ID)->update([
-            'NAME' => $NAME,
-            'INACTIVE' => $INACTIVE,
-            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-            'HCI_MANAGER_ID' => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
-            'PHIC_INCHARGE_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
-            'NAME_OF_BUSINESS' => $NAME_OF_BUSINESS,
-            'ACCREDITATION_NO' => $ACCREDITATION_NO,
-            'BLDG_NAME_LOT_BLOCK' => $BLDG_NAME_LOT_BLOCK,
-            'STREET_SUB_VALL' => $STREET_SUB_VALL,
-            'BRGY_CITY_MUNI' => $BRGY_CITY_MUNI,
-            'PROVINCE' => $PROVINCE,
-            'ZIP_CODE' => $ZIP_CODE
-        ]);
+        Locations::where('ID', $ID)
+            ->update([
+                'NAME'                  => $NAME,
+                'INACTIVE'              => $INACTIVE,
+                'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+                'GROUP_ID'              => $GROUP_ID > 0 ? $GROUP_ID : null,
+                'HCI_MANAGER_ID'        => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
+                'PHIC_INCHARGE_ID'      => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
+                'NAME_OF_BUSINESS'      => $NAME_OF_BUSINESS,
+                'ACCREDITATION_NO'      => $ACCREDITATION_NO,
+                'BLDG_NAME_LOT_BLOCK'   => $BLDG_NAME_LOT_BLOCK,
+                'STREET_SUB_VALL'       => $STREET_SUB_VALL,
+                'BRGY_CITY_MUNI'        => $BRGY_CITY_MUNI,
+                'PROVINCE'              => $PROVINCE,
+                'ZIP_CODE'              => $ZIP_CODE,
+                'REPORT_HEADER_1'       => $REPORT_HEADER_1,
+                'REPORT_HEADER_2'       => $REPORT_HEADER_2,
+                'REPORT_HEADER_3'       => $REPORT_HEADER_3
+    
+            ]);
     }
 
     public function Delete(int $ID): void

@@ -27,6 +27,9 @@ class Locations extends Model
         'STREET_SUB_VALL',
         'BRGY_CITY_MUNI',
         'PROVINCE',        
-        'ZIP_CODE'
+        'ZIP_CODE',
+        'REPORT_HEADER_1',
+        'REPORT_HEADER_2',
+        'REPORT_HEADER_3'
     ];
 }
