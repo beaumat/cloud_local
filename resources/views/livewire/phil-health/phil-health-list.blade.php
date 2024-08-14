@@ -86,16 +86,14 @@
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ Carbon::parse($list->DATE)->diffForHumans() }} </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 @if ($list->AR_DATE)
                                                     {{ date('m/d/Y', strtotime($list->AR_DATE)) }}
                                                 @endif
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-left">
                                                 {{ $list->AR_NO }}
-
                                             </td>
-
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td class="text-center">
                                                 {{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
