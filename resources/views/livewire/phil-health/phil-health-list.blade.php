@@ -55,8 +55,8 @@
                                         <th>SOA No.</th>
                                         <th>Date Created</th>
                                         <th>Elapsed </th>
-                                        <th clsss="bg-success">AR No.</th>
-                                        <th clsss="bg-success">AR Date</th>
+                                        <th clsss="bg-success">LHIO No.</th>
+                                        <th clsss="bg-success">LHIO Date</th>
                                         <th class="col-2">Patients</th>
                                         <th class="text-center">Admitted</th>
                                         <th class="text-center">Discharges</th>
@@ -143,7 +143,8 @@
                                                     </span>
                                                 @endif
 
-                                                <button type="button" title="AR Form" class="btn btn-success active btn-xs"
+                                                <button type="button" title="LHIO Form"
+                                                    class="btn btn-success active btn-xs"
                                                     wire:click='getARForm({{ $list->ID }})'>
                                                     <i class="fa fa-registered" aria-hidden="true"></i>
                                                 </button>

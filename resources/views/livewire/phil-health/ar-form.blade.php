@@ -3,7 +3,7 @@
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
             <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content text-left">
-                    <div class="modal-header">Account Receivable Form</div>
+                    <div class="modal-header">LHIO Form</div>
                     <div class="modal-body">
                         <div class="col-md-12">
                             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
@@ -22,11 +22,11 @@
 
 
                             <div class="col-md-6">
-                                <livewire:text-input name="AR_NO" titleName="AR No." :isDisabled=false
+                                <livewire:text-input name="AR_NO" titleName="LHIO No." :isDisabled=false
                                     wire:model='AR_NO' />
                             </div>
                             <div class="col-md-6">
-                                <livewire:date-input name="AR_DATE" titleName="AR Date" wire:model='AR_DATE'
+                                <livewire:date-input name="AR_DATE" titleName="LHIO Date" wire:model='AR_DATE'
                                     :isDisabled="false" />
                             </div>
 

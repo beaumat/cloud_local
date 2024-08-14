@@ -157,7 +157,7 @@
 
                                                 <button type="button" wire:click="getARForm()"
                                                     class="btn btn-success active btn-sm text-xs">
-                                                    <i class="fa fa-registered" aria-hidden="true"></i> AR Form
+                                                    <i class="fa fa-registered" aria-hidden="true"></i> LHIO Form
                                                 </button>
                                             @endif
                                         @endif
