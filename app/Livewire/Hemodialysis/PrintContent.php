@@ -4,6 +4,7 @@ namespace App\Livewire\Hemodialysis;
 
 use App\Services\ContactServices;
 use App\Services\HemoServices;
+use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -52,12 +53,17 @@ class PrintContent extends Component
     public $SO_PARTS = [];
     public int $SE_COUNT = 0;
     public int $SO_COUNT = 0;
+
+    public string $REPORT_HEADER_1;
+
     private $patientDoctorServices;
-    public function boot(HemoServices $hemoServices, ContactServices $contactServices, PatientDoctorServices $patientDoctorServices)
+    private $locationServices;
+    public function boot(HemoServices $hemoServices, ContactServices $contactServices, PatientDoctorServices $patientDoctorServices, LocationServices $locationServices)
     {
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
         $this->patientDoctorServices = $patientDoctorServices;
+        $this->locationServices = $locationServices;
     }
     public function getPreviousTreatment()
     {
@@ -130,6 +136,11 @@ class PrintContent extends Component
             if ($dataPatient) {
                 $this->DIAGNOSIS = $dataPatient->FINAL_DIAGNOSIS ?? '';
             }
+
+           $locData =  $this->locationServices->get($this->LOCATION_ID);
+           if($locData) {
+            $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+           }
         }
     }
 

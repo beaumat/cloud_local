@@ -29,7 +29,9 @@ class BillingPrint extends Component
     private $contactServices;
     private $locationServices;
 
-
+    public string $REPORT_HEADER_1;
+    public string $REPORT_HEADER_2;
+    public string $REPORT_HEADER_3;
     public function boot(BillingServices $billingServices, ContactServices $contactServices, LocationServices $locationServices)
     {
         $this->billingServices = $billingServices;
@@ -53,9 +55,12 @@ class BillingPrint extends Component
             if ($con) {
                 $this->CONTACT_NAME = $con->PRINT_NAME_AS;
             }
-            $loc = $this->locationServices->get($this->LOCATION_ID);
-            if($loc) {
-                $this->LOCATION_NAME  = $loc->NAME;
+            $locData = $this->locationServices->get($this->LOCATION_ID);
+            if ($locData) {
+                $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+                $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
+                $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                $this->LOCATION_NAME  = $locData->NAME;
             }
             $this->itemList = $this->billingServices->ItemView($this->BILL_ID);
             $this->dispatch('preview_print');

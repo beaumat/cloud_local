@@ -3,6 +3,7 @@
 namespace App\Livewire\PullOut;
 
 use App\Services\ContactServices;
+use App\Services\LocationServices;
 use App\Services\PullOutServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -15,14 +16,20 @@ class PullOutPrint extends Component
     public string $DATE;
     public string $CODE;
     public string $PREPARED_BY_NAME;
+    public string $REPORT_HEADER_1;
+    public string $REPORT_HEADER_2;
+    public string $REPORT_HEADER_3;
+    public string $LOCATION_NAME;
     public string $NOTES;
     public $itemList = [];
     private $pullOutServices;
     private $contactServices;
-    public function boot(PullOutServices $pullOutServices, ContactServices $contactServices)
+    private $locationServices;
+    public function boot(PullOutServices $pullOutServices, ContactServices $contactServices, LocationServices $locationServices)
     {
         $this->pullOutServices = $pullOutServices;
         $this->contactServices = $contactServices;
+        $this->locationServices = $locationServices;
     }
     public function mount($id = null)
     {
@@ -32,6 +39,15 @@ class PullOutPrint extends Component
             $this->DATE = $data->DATE;
             $this->CODE = $data->CODE;
             $this->NOTES = $data->NOTES;
+
+            $locData = $this->locationServices->get($data->LOCATION_ID);
+            if ($locData) {
+                $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+                $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
+                $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                $this->LOCATION_NAME  = $locData->NAME;
+            }
+
             $pd = $this->contactServices->get($data->PREPARED_BY_ID, 2);
             if ($pd) {
                 $this->PREPARED_BY_NAME = $pd->NAME ?? '';

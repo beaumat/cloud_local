@@ -6,9 +6,8 @@
                 <div class="col-12 text-center mb-4">
                     <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
                     <div class="text-center">
-                        <b class="print-address1 text-center">RDL Building F. Torres Street, Davao City <br />Telephone
-                            #:285-2403; Mobile #: 09258678600/9175041322 <br /> Email:
-                            avidadavao.torres@yahoo.com.ph</b>
+                        <b class="print-address1 text-center">{{ $REPORT_HEADER_1 }} <br /> {{ $REPORT_HEADER_2 }}<br />
+                            {{ $REPORT_HEADER_3 }}</b>
                     </div>
                 </div>
                 <div class="col-12">

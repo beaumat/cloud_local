@@ -93,7 +93,9 @@ class PrintTreatment extends Component
     private $contactServices;
     private $hemoServices;
     private $locationServices;
-
+    public string $REPORT_HEADER_1;
+    public string $REPORT_HEADER_2;
+    public string $REPORT_HEADER_3;
     public $hemoList = [];
     public $i;
     public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, HemoServices $hemoServices, LocationServices $locationServices)
@@ -208,10 +210,12 @@ class PrintTreatment extends Component
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
                 }
 
-                $locDate = $this->locationServices->get($this->LOCATION_ID);
-                if ($locDate) {
-
-                    $conPHIC = $this->contactServices->get($locDate->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                $locData = $this->locationServices->get($this->LOCATION_ID);
+                if ($locData) {
+                    $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+                    $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
+                    $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                    $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                     if ($conPHIC) {
                         $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
                         $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
@@ -219,7 +223,7 @@ class PrintTreatment extends Component
 
                     // $HCI_MANAGER_ID
 
-                    $conMgr = $this->contactServices->get($locDate->HCI_MANAGER_ID ?? 0, 2); // Employee
+                    $conMgr = $this->contactServices->get($locData->HCI_MANAGER_ID ?? 0, 2); // Employee
 
                     if ($conMgr) {
 

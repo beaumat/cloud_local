@@ -100,7 +100,9 @@ class PrintSoa extends Component
     public $i;
     public int $NO_OF_TREATMENT;
     public string $allDate = '';
-
+    public string $REPORT_HEADER_1;
+    public string $REPORT_HEADER_2;
+    public string $REPORT_HEADER_3;
     public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, LocationServices $locationServices, HemoServices $hemoServices)
     {
         $this->philHealthServices = $philHealthServices;
@@ -223,10 +225,12 @@ class PrintSoa extends Component
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
                 }
 
-                $locDate = $this->locationServices->get($this->LOCATION_ID);
-                if ($locDate) {
-
-                    $conUser = $this->contactServices->get($locDate->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                $locData = $this->locationServices->get($this->LOCATION_ID);
+                if ($locData) {
+                    $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+                    $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
+                    $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                    $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                     if ($conUser) {
                         $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
                         $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
@@ -252,6 +256,7 @@ class PrintSoa extends Component
             }
         }
     }
+
     public function GetAddress1($contact): string
     {
         $ADDRESS_UNIT_ROOM_FLOOR    =   $contact->ADDRESS_UNIT_ROOM_FLOOR ?? '';

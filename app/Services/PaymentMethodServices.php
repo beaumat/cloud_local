@@ -40,10 +40,10 @@ class PaymentMethodServices
         $ID = $this->object->ObjectNextID('PAYMENT_METHOD');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PAYMENT_METHOD');
         PaymentMethods::create([
-            'ID' => $ID,
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
-            'DESCRIPTION' => $DESCRIPTION,
-            'PAYMENT_TYPE' => $PAYMENT_TYPE,
+            'ID'            => $ID,
+            'CODE'          => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
+            'DESCRIPTION'   => $DESCRIPTION,
+            'PAYMENT_TYPE'  => $PAYMENT_TYPE,
             'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
         ]);
         return $ID;
@@ -52,9 +52,9 @@ class PaymentMethodServices
     public function Update(int $ID, string $CODE, string $DESCRIPTION, int $PAYMENT_TYPE, int $GL_ACCOUNT_ID): void
     {
         PaymentMethods::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DESCRIPTION' => $DESCRIPTION,
-            'PAYMENT_TYPE' => $PAYMENT_TYPE,
+            'CODE'          => $CODE,
+            'DESCRIPTION'   => $DESCRIPTION,
+            'PAYMENT_TYPE'  => $PAYMENT_TYPE,
             'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
         ]);
     }

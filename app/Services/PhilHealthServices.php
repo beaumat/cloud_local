@@ -496,22 +496,23 @@ class PhilHealthServices
     }
     public function DrugMedicineUpdate(int $ID, int $PHILHEALTH_ID, string $GENERIC_NAME, float $QUANTITY, string $DOSSAGE, string $ROUTE, string $FREQUENCY, float $TOTAL_COST, string $CONT_GENERIC_NAME, float $CONT_QUANTITY, string $CONT_DOSSAGE, string $CONT_ROUTE, string $CONT_FREQUENCY, float $CONT_TOTAL_COST)
     {
-        PhilhealthDrugsMedicines::where('ID', $ID)->update([
-            'PHILHEALTH_ID'         => $PHILHEALTH_ID,
-            'GENERIC_NAME'          => $GENERIC_NAME,
-            'QUANTITY'              => $QUANTITY,
-            'DOSSAGE'               => $DOSSAGE,
-            'ROUTE'                 => $ROUTE,
-            'FREQUENCY'             => $FREQUENCY,
-            'TOTAL_COST'            => $TOTAL_COST,
-            'CONT_GENERIC_NAME'     => $CONT_GENERIC_NAME,
-            'CONT_QUANTITY'         => $CONT_QUANTITY,
-            'CONT_DOSSAGE'          => $CONT_DOSSAGE,
-            'CONT_ROUTE'            => $CONT_ROUTE,
-            'CONT_FREQUENCY'        => $CONT_FREQUENCY,
-            'CONT_TOTAL_COST'       => $CONT_TOTAL_COST
+        PhilhealthDrugsMedicines::where('ID', $ID)
+            ->update([
+                'PHILHEALTH_ID'         => $PHILHEALTH_ID,
+                'GENERIC_NAME'          => $GENERIC_NAME,
+                'QUANTITY'              => $QUANTITY,
+                'DOSSAGE'               => $DOSSAGE,
+                'ROUTE'                 => $ROUTE,
+                'FREQUENCY'             => $FREQUENCY,
+                'TOTAL_COST'            => $TOTAL_COST,
+                'CONT_GENERIC_NAME'     => $CONT_GENERIC_NAME,
+                'CONT_QUANTITY'         => $CONT_QUANTITY,
+                'CONT_DOSSAGE'          => $CONT_DOSSAGE,
+                'CONT_ROUTE'            => $CONT_ROUTE,
+                'CONT_FREQUENCY'        => $CONT_FREQUENCY,
+                'CONT_TOTAL_COST'       => $CONT_TOTAL_COST
 
-        ]);
+            ]);
     }
     public function DrugMedicineDelete(int $ID)
     {

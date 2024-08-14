@@ -8,7 +8,7 @@
                 <div class="col-8 text-center mb-4">
                     <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
                     <div class="print-address">
-                        <b>RDL Building F. Torres Street, Davao City</b>
+                        <b>{{ $REPORT_HEADER_1 }}</b>
                     </div>
                 </div>
                 <div class="col-2">
