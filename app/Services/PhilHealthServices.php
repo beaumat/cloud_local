@@ -368,7 +368,10 @@ class PhilHealthServices
                 'AR_DATE'   => $AR_DATE  == '' ? null : $AR_DATE
             ]);
     }
-
+    public function IsExistsARNumber($AR_NO, $ID): bool
+    {
+        return  PhilHealth::where('AR_NO', $AR_NO)->whereNot('ID', $ID)->exists();
+    }
     public function PatientRecord($search, int $contact_id, int $perPage)
     {
         $result = PhilHealth::query()
@@ -599,21 +602,21 @@ class PhilHealthServices
     {
 
         $result = PhilhealthItemAdjustment::query()
-        ->select(['NO_OF_USED', 'YEAR'])
-        ->where('PATIENT_ID', $PATIENT_ID)
-        ->where('LOCATION_ID', $LOCATION_ID)
-        ->get();
+            ->select(['NO_OF_USED', 'YEAR'])
+            ->where('PATIENT_ID', $PATIENT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->get();
 
         return $result;
     }
     public function ItemAdjustGet(int $PATIENT_ID, int $LOCATION_ID, int $YEAR): int
     {
         $result = PhilhealthItemAdjustment::query()
-        ->select(['NO_OF_USED'])
-        ->where('PATIENT_ID', $PATIENT_ID)
-        ->where('LOCATION_ID', $LOCATION_ID)
-        ->where('YEAR', $YEAR)
-        ->first();
+            ->select(['NO_OF_USED'])
+            ->where('PATIENT_ID', $PATIENT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('YEAR', $YEAR)
+            ->first();
 
         if ($result) {
 

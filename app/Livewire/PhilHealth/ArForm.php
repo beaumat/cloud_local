@@ -34,6 +34,14 @@ class ArForm extends Component
             session()->flash('error', 'LHIO No. Requred');
             return;
         }
+
+        if ($this->AR_DATE <> '' && $this->AR_NO <> '') {
+            if ($this->philHealthServices->IsExistsARNumber($this->AR_NO, $this->PHILHEALTH_ID)) {
+                session()->flash('error', 'LHIO No. already used.');
+                return;
+            }
+        }
+
         $this->philHealthServices->UpdateAR($this->PHILHEALTH_ID, $this->AR_NO, $this->AR_DATE);
 
         $ar = [
@@ -42,7 +50,7 @@ class ArForm extends Component
             'PHILHEALTH_ID' => $this->PHILHEALTH_ID
         ];
         $this->dispatch('ar-form-data', ar: $ar);
-        session()->flash('message', 'Successfully save.');    
+        session()->flash('message', 'Successfully save.');
     }
     #[On('ar-form-show')]
     public function openModal($result)
