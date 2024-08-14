@@ -42,20 +42,10 @@ class DoctorPFServices
             select 
                 c.ID,
                 c.PRINT_NAME_AS as DOCTOR_NAME,
-                CONCAT(
-                    p.LAST_NAME,
-                    ", ",
-                    p.FIRST_NAME,
-                    ", ",
-                    LEFT(p.MIDDLE_NAME, 1)
-                ) as PATIENT_NAME,
+                CONCAT( p.LAST_NAME, ", ", p.FIRST_NAME, ", ", LEFT(p.MIDDLE_NAME, 1) ) as PATIENT_NAME,
                 ph.DATE_ADMITTED,
                 ph.DATE_DISCHARGED,
-                (select count(*) from hemodialysis 
-                    where hemodialysis.STATUS_ID = 2 
-                    and hemodialysis.CUSTOMER_ID = ph.CONTACT_ID 
-                    and hemodialysis.DATE between ph.DATE_ADMITTED and ph.DATE_DISCHARGED
-                ) as HEMO_TOTAL,
+                (select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = ph.CONTACT_ID and hemodialysis.DATE between ph.DATE_ADMITTED and ph.DATE_DISCHARGED ) as HEMO_TOTAL,
                 pf.FIRST_CASE,
                 pf.PHIC_ID
             from

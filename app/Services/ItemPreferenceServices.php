@@ -16,7 +16,6 @@ class ItemPreferenceServices
     {
 
         $ID = $this->object->ObjectNextID('ITEM_PREFERENCE');
-
         ItemPreference::create([
             'ID'                => $ID,
             'ITEM_ID'           => $ITEM_ID,
@@ -33,13 +32,15 @@ class ItemPreferenceServices
 
     public function Update(int $ID, int $ITEM_ID, float $ORDER_POINT, float $ORDER_QTY, int $ORDER_LEADTIME, float $ONHAND_MAX_LIMIT, int $STOCK_BIN_ID): void
     {
-        ItemPreference::where('ID', $ID)->where('ITEM_ID', $ITEM_ID)->update([
-            'ORDER_POINT'       => $ORDER_POINT,
-            'ORDER_QTY'         => $ORDER_QTY,
-            'ORDER_LEADTIME'    => $ORDER_LEADTIME,
-            'ONHAND_MAX_LIMIT'  => $ONHAND_MAX_LIMIT,
-            'STOCK_BIN_ID'      => $STOCK_BIN_ID > 0 ? $STOCK_BIN_ID : null
-        ]);
+        ItemPreference::where('ID', $ID)
+            ->where('ITEM_ID', $ITEM_ID)
+            ->update([
+                'ORDER_POINT'       => $ORDER_POINT,
+                'ORDER_QTY'         => $ORDER_QTY,
+                'ORDER_LEADTIME'    => $ORDER_LEADTIME,
+                'ONHAND_MAX_LIMIT'  => $ONHAND_MAX_LIMIT,
+                'STOCK_BIN_ID'      => $STOCK_BIN_ID > 0 ? $STOCK_BIN_ID : null
+            ]);
     }
 
     public function Delete(int $ID): void
@@ -48,8 +49,7 @@ class ItemPreferenceServices
     }
     public function Search(int $itemId)
     {
-
-        return ItemPreference::query()
+        $result = ItemPreference::query()
             ->select([
                 'item_preference.ID',
                 'location.NAME as LOCATION_NAME',
@@ -64,5 +64,7 @@ class ItemPreferenceServices
             ->leftjoin('stock_bin', 'stock_bin.ID', '=', 'item_preference.STOCK_BIN_ID')
             ->where('item_preference.ITEM_ID', '=', $itemId)
             ->orderBy('item_preference.ID', 'asc')->get();
+
+        return $result;
     }
 }

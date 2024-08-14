@@ -266,21 +266,21 @@ class InvoiceForm extends Component
 
                 $this->validate(
                     [
-                        'CUSTOMER_ID' => 'required|not_in:0',
-                        'CODE' => 'required|max:20|unique:invoice,code,' . $this->ID,
-                        'OUTPUT_TAX_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'PAYMENT_TERMS_ID' => 'required'
+                        'CUSTOMER_ID'           => 'required|not_in:0',
+                        'CODE'                  => 'required|max:20|unique:invoice,code,' . $this->ID,
+                        'OUTPUT_TAX_ID'         => 'required|not_in:0',
+                        'DATE'                  => 'required',
+                        'LOCATION_ID'           => 'required',
+                        'PAYMENT_TERMS_ID'      => 'required'
                     ],
                     [],
                     [
-                        'CUSTOMER_ID' => 'Petient',
-                        'CODE' => 'Reference No.',
-                        'OUTPUT_TAX_ID' => 'Tax',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'PAYMENT_TERMS_ID' => 'Payment Terms'
+                        'CUSTOMER_ID'       => 'Petient',
+                        'CODE'              => 'Reference No.',
+                        'OUTPUT_TAX_ID'     => 'Tax',
+                        'DATE'              => 'Date',
+                        'LOCATION_ID'       => 'Location',
+                        'PAYMENT_TERMS_ID'  => 'Payment Terms'
                     ]
                 );
 
@@ -311,11 +311,8 @@ class InvoiceForm extends Component
                 );
 
                 $this->invoiceServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
-
                 $getResult = $this->invoiceServices->ReComputed($this->ID);
-
                 $this->getUpdateAmount($getResult);
-
                 session()->flash('message', 'Successfully updated');
             }
 
@@ -327,9 +324,7 @@ class InvoiceForm extends Component
 
             $this->Modify = false;
         } catch (\Exception $e) {
-
             $errorMessage = 'Error occurred: ' . $e->getMessage();
-
             session()->flash('error', $errorMessage);
         }
     }

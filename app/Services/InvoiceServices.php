@@ -85,30 +85,8 @@ class InvoiceServices
     {
         return Invoice::where('ID', $ID)->first();
     }
-    public function Store(
-        string $CODE,
-        string $DATE,
-        int $CUSTOMER_ID,
-        int $LOCATION_ID,
-        int $CLASS_ID,
-        int $SALES_REP_ID,
-        string $PO_NUMBER,
-        string $SHIP_TO,
-        int $SHIP_VIA_ID,
-        $SHIP_DATE,
-        int $PAYMENT_TERMS_ID,
-        $DUE_DATE,
-        $DISCOUNT_DATE,
-        float $DISCOUNT_PCT,
-        string $NOTES,
-        int $ACCOUNTS_RECEIVABLE_ID,
-        int $STATUS,
-        int $OUTPUT_TAX_ID,
-        float $OUTPUT_TAX_RATE,
-        int $OUTPUT_TAX_VAT_METHOD,
-        int $OUTPUT_TAX_ACCOUNT_ID
-    ): int {
-
+    public function Store(string $CODE, string $DATE, int $CUSTOMER_ID, int $LOCATION_ID, int $CLASS_ID, int $SALES_REP_ID, string $PO_NUMBER, string $SHIP_TO, int $SHIP_VIA_ID, $SHIP_DATE, int $PAYMENT_TERMS_ID, $DUE_DATE, $DISCOUNT_DATE, float $DISCOUNT_PCT, string $NOTES, int $ACCOUNTS_RECEIVABLE_ID, int $STATUS, int $OUTPUT_TAX_ID, float $OUTPUT_TAX_RATE, int $OUTPUT_TAX_VAT_METHOD, int $OUTPUT_TAX_ACCOUNT_ID): int
+    {
         $ID = (int) $this->object->ObjectNextID('INVOICE');
 
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('INVOICE');
@@ -116,30 +94,30 @@ class InvoiceServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Invoice::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'CUSTOMER_ID' => $CUSTOMER_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
-            'SALES_REP_ID' => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
-            'PO_NUMBER' => $PO_NUMBER ?? '',
-            'SHIP_TO' => $SHIP_TO ? $SHIP_TO : null,
-            'SHIP_VIA_ID' => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
-            'SHIP_DATE' => $SHIP_DATE ?? null,
-            'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
-            'DUE_DATE' => $DUE_DATE ?? null,
-            'DISCOUNT_DATE' => $DISCOUNT_DATE ?? null,
-            'DISCOUNT_PCT' => $DISCOUNT_PCT ?? null,
-            'NOTES' => $NOTES ?? null,
-            'AMOUNT' => 0,
-            'BALANCE_DUE' => 0,
+            'ID'                    => $ID,
+            'RECORDED_ON'           => $this->dateServices->Now(),
+            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                  => $DATE,
+            'CUSTOMER_ID'           => $CUSTOMER_ID,
+            'LOCATION_ID'           => $LOCATION_ID,
+            'CLASS_ID'              => $CLASS_ID > 0 ? $CLASS_ID : null,
+            'SALES_REP_ID'          => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+            'PO_NUMBER'             => $PO_NUMBER ?? '',
+            'SHIP_TO'               => $SHIP_TO ? $SHIP_TO : null,
+            'SHIP_VIA_ID'           => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
+            'SHIP_DATE'             => $SHIP_DATE ?? null,
+            'PAYMENT_TERMS_ID'      => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
+            'DUE_DATE'              => $DUE_DATE ?? null,
+            'DISCOUNT_DATE'         => $DISCOUNT_DATE ?? null,
+            'DISCOUNT_PCT'          => $DISCOUNT_PCT ?? null,
+            'NOTES'                 => $NOTES ?? null,
+            'AMOUNT'                => 0,
+            'BALANCE_DUE'           => 0,
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID,
-            'STATUS' => $STATUS,
-            'STATUS_DATE' => $this->dateServices->NowDate(),
-            'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
-            'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
+            'STATUS'                => $STATUS,
+            'STATUS_DATE'           => $this->dateServices->NowDate(),
+            'OUTPUT_TAX_ID'         => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
+            'OUTPUT_TAX_RATE'       => $OUTPUT_TAX_RATE,
             'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
             'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null
 
@@ -154,53 +132,32 @@ class InvoiceServices
             'STATUS_DATE' => $this->dateServices->NowDate()
         ]);
     }
-    public function Update(
-        int $ID,
-        string $CODE,
-        string $DATE,
-        int $CUSTOMER_ID,
-        int $LOCATION_ID,
-        int $CLASS_ID,
-        int $SALES_REP_ID,
-        string $PO_NUMBER,
-        string $SHIP_TO,
-        int $SHIP_VIA_ID,
-        $SHIP_DATE,
-        int $PAYMENT_TERMS_ID,
-        $DUE_DATE,
-        $DISCOUNT_DATE,
-        float $DISCOUNT_PCT,
-        string $NOTES,
-        int $ACCOUNTS_RECEIVABLE_ID,
-        int $STATUS,
-        int $OUTPUT_TAX_ID,
-        float $OUTPUT_TAX_RATE,
-        int $OUTPUT_TAX_VAT_METHOD,
-        int $OUTPUT_TAX_ACCOUNT_ID
-    ): void {
+    public function Update(int $ID, string $CODE, string $DATE, int $CUSTOMER_ID, int $LOCATION_ID, int $CLASS_ID, int $SALES_REP_ID, string $PO_NUMBER, string $SHIP_TO, int $SHIP_VIA_ID, $SHIP_DATE, int $PAYMENT_TERMS_ID, $DUE_DATE, $DISCOUNT_DATE, float $DISCOUNT_PCT, string $NOTES, int $ACCOUNTS_RECEIVABLE_ID, int $STATUS, int $OUTPUT_TAX_ID, float $OUTPUT_TAX_RATE, int $OUTPUT_TAX_VAT_METHOD, int $OUTPUT_TAX_ACCOUNT_ID): void
+    {
 
-        Invoice::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DATE' => $DATE,
-            'CUSTOMER_ID' => $CUSTOMER_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
-            'SALES_REP_ID' => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
-            'PO_NUMBER' => $PO_NUMBER ?? '',
-            'SHIP_TO' => $SHIP_TO ? $SHIP_TO : null,
-            'SHIP_VIA_ID' => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
-            'SHIP_DATE' => $SHIP_DATE ?? null,
-            'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
-            'DUE_DATE' => $DUE_DATE ?? null,
-            'DISCOUNT_DATE' => $DISCOUNT_DATE ?? null,
-            'DISCOUNT_PCT' => $DISCOUNT_PCT ?? null,
-            'NOTES' => $NOTES ?? null,
-            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID,
-            'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
-            'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
-            'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
-            'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
-        ]);
+        Invoice::where('ID', $ID)
+            ->update([
+                'CODE'                      => $CODE,
+                'DATE'                      => $DATE,
+                'CUSTOMER_ID'               => $CUSTOMER_ID,
+                'LOCATION_ID'               => $LOCATION_ID,
+                'CLASS_ID'                  => $CLASS_ID > 0 ? $CLASS_ID : null,
+                'SALES_REP_ID'              => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+                'PO_NUMBER'                 => $PO_NUMBER ?? '',
+                'SHIP_TO'                   => $SHIP_TO ? $SHIP_TO : null,
+                'SHIP_VIA_ID'               => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
+                'SHIP_DATE'                 => $SHIP_DATE ?? null,
+                'PAYMENT_TERMS_ID'          => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
+                'DUE_DATE'                  => $DUE_DATE ?? null,
+                'DISCOUNT_DATE'             => $DISCOUNT_DATE ?? null,
+                'DISCOUNT_PCT'              => $DISCOUNT_PCT ?? null,
+                'NOTES'                     => $NOTES ?? null,
+                'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID,
+                'OUTPUT_TAX_ID'             => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
+                'OUTPUT_TAX_RATE'           => $OUTPUT_TAX_RATE,
+                'OUTPUT_TAX_VAT_METHOD'     => $OUTPUT_TAX_VAT_METHOD,
+                'OUTPUT_TAX_ACCOUNT_ID'     => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
+            ]);
     }
     public function Delete(int $ID): void
     {
@@ -233,11 +190,13 @@ class InvoiceServices
             ->join('document_status_map as s', 's.ID', '=', 'invoice.STATUS')
             ->leftJoin('tax as t', 't.ID', '=', 'invoice.OUTPUT_TAX_ID')
             ->when($search, function ($query) use (&$search) {
-                $query->where('invoice.CODE', 'like', '%' . $search . '%')
-                    ->orWhere('invoice.AMOUNT', 'like', '%' . $search . '%')
-                    ->orWhere('invoice.NOTES', 'like', '%' . $search . '%')
-                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                $query->where(function ($q) use (&$search) {
+                    $q->where('invoice.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('invoice.AMOUNT', 'like', '%' . $search . '%')
+                        ->orWhere('invoice.NOTES', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy('invoice.ID', 'desc')
             ->paginate($perPage);
@@ -246,106 +205,62 @@ class InvoiceServices
     {
         return (int) InvoiceItems::where('INVOICE_ID', $Id)->max('LINE_NO');
     }
-    public function ItemStore(
-        int $INVOICE_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        float $RATE,
-        int $RATE_TYPE,
-        float $AMOUNT,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT,
-        int $COGS_ACCOUNT_ID,
-        int $ASSET_ACCOUNT_ID,
-        int $INCOME_ACCOUNT_ID,
-        int $REF_LINE_ID,
-        int $BATCH_ID,
-        int $GROUP_LINE_ID,
-        bool $PRINT_IN_FORMS,
-        bool $DEPOSITED,
-        int $PRICE_LEVEL_ID,
-
-    ): int {
+    public function ItemStore(int $INVOICE_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, int $INCOME_ACCOUNT_ID, int $REF_LINE_ID, int $BATCH_ID, int $GROUP_LINE_ID, bool $PRINT_IN_FORMS, bool $DEPOSITED, int $PRICE_LEVEL_ID,): int
+    {
 
         $LINE_NO = $this->getLine($INVOICE_ID) + 1;
         $ID = $this->object->ObjectNextID('INVOICE_ITEMS');
 
         InvoiceItems::create([
-            'ID' => $ID,
-            'INVOICE_ID' => $INVOICE_ID,
-            'LINE_NO' => $LINE_NO,
-            'ITEM_ID' => $ITEM_ID,
-            'DESCRIPTION' => null,
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'RATE' => $RATE,
-            'RATE_TYPE' => $RATE_TYPE,
-            'AMOUNT' => $AMOUNT,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT,
-            'COGS_ACCOUNT_ID' => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
-            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-            'INCOME_ACCOUNT_ID' => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null,
-            'REF_LINE_ID' => $REF_LINE_ID > 0 ? $REF_LINE_ID : null,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'GROUP_LINE_ID' => $GROUP_LINE_ID > 0,
-            'PRINT_IN_FORMS' => $PRINT_IN_FORMS,
-            'DEPOSITED' => $DEPOSITED,
-            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
+            'ID'                    => $ID,
+            'INVOICE_ID'            => $INVOICE_ID,
+            'LINE_NO'               => $LINE_NO,
+            'ITEM_ID'               => $ITEM_ID,
+            'DESCRIPTION'           => null,
+            'QUANTITY'              => $QUANTITY,
+            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
+            'RATE'                  => $RATE,
+            'RATE_TYPE'             => $RATE_TYPE,
+            'AMOUNT'                => $AMOUNT,
+            'TAXABLE'               => $TAXABLE,
+            'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'            => $TAX_AMOUNT,
+            'COGS_ACCOUNT_ID'       => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
+            'ASSET_ACCOUNT_ID'      => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'INCOME_ACCOUNT_ID'     => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null,
+            'REF_LINE_ID'           => $REF_LINE_ID > 0 ? $REF_LINE_ID : null,
+            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'GROUP_LINE_ID'         => $GROUP_LINE_ID > 0,
+            'PRINT_IN_FORMS'        => $PRINT_IN_FORMS,
+            'DEPOSITED'             => $DEPOSITED,
+            'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
 
         ]);
         return $ID;
     }
-    public function ItemUpdate(
-        int $ID,
-        int $INVOICE_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        float $RATE,
-        int $RATE_TYPE,
-        float $AMOUNT,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT,
-        int $BATCH_ID,
-        int $PRICE_LEVEL_ID,
-    ) {
+    public function ItemUpdate(int $ID, int $INVOICE_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, int $BATCH_ID, int $PRICE_LEVEL_ID,)
+    {
         $data = InvoiceItems::where('ID', $ID)->where('INVOICE_ID', $INVOICE_ID)->where('ITEM_ID', $ITEM_ID)->first();
         if ($data) {
-            DB::beginTransaction();
-            try {
+            $data->update([
+                'QUANTITY'              => $QUANTITY,
+                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
+                'RATE'                  => $RATE,
+                'AMOUNT'                => $AMOUNT,
+                'TAXABLE'               => $TAXABLE,
+                'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT'            => $TAX_AMOUNT,
+                'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
+                'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
+            ]);
 
-                $data->update([
-                    'QUANTITY' => $QUANTITY,
-                    'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-                    'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-                    'RATE' => $RATE,
-                    'AMOUNT' => $AMOUNT,
-                    'TAXABLE' => $TAXABLE,
-                    'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-                    'TAX_AMOUNT' => $TAX_AMOUNT,
-                    'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-                    'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
-                ]);
-
-                if ($data->REF_LINE_ID) {
-                    SalesOrderItems::where('ID', $data->REF_LINE_ID)
-                        ->update([
-                            'INVOICED_QTY' => $QUANTITY
-                        ]);
-                }
-                DB::commit();
-            } catch (\Exception $e) {
-                //throw $th;
-                DB::rollBack();
-                dd($e);
+            if ($data->REF_LINE_ID) {
+                SalesOrderItems::where('ID', $data->REF_LINE_ID)
+                    ->update([
+                        'INVOICED_QTY'  => $QUANTITY
+                    ]);
             }
         }
     }
@@ -414,19 +329,19 @@ class InvoiceServices
                 $originalAmount = (float) $list['AMOUNT'];
                 $balance = (float) $originalAmount - $totalPay;
                 Invoice::where('ID', $ID)->update([
-                    'AMOUNT' => $originalAmount,
-                    'BALANCE_DUE' => $balance,
+                    'AMOUNT'            => $originalAmount,
+                    'BALANCE_DUE'       => $balance,
                     'OUTPUT_TAX_AMOUNT' => $list['TAX_AMOUNT'],
-                    'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
+                    'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
                     'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                 ]);
 
                 $result = array(
                     [
-                        'AMOUNT' => $originalAmount,
-                        'BALANCE_DUE' => $balance,
-                        'TAX_AMOUNT' => $list['TAX_AMOUNT'],
-                        'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
+                        'AMOUNT'            => $originalAmount,
+                        'BALANCE_DUE'       => $balance,
+                        'TAX_AMOUNT'        => $list['TAX_AMOUNT'],
+                        'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
                         'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                     ]
                 );
@@ -443,7 +358,7 @@ class InvoiceServices
             ->select(DB::raw('IFNULL(SUM(payment_invoices.AMOUNT_APPLIED), 0) AS pay'))
             ->where('payment_invoices.INVOICE_ID', '=', $INVOICE_ID)
             ->first();
-        return $paymentSum->pay;
+        return $paymentSum->pay ?? 0;
     }
 
     public function GetCreditApplied(int $INVOICE_ID): float
@@ -453,7 +368,7 @@ class InvoiceServices
             ->where('credit_memo_invoices.INVOICE_ID', '=', $INVOICE_ID)
             ->first();
 
-        return $paymentSum->pay;
+        return $paymentSum->pay ?? 0;
     }
 
     public function updateInvoiceBalance(int $INVOICE_ID)
@@ -480,11 +395,12 @@ class InvoiceServices
                 $STATUS = 2;
             }
 
-            Invoice::where('ID', $INVOICE_ID)->update([
-                'BALANCE_DUE' => $BALANCE,
-                'STATUS' => $STATUS,
-                'STATUS_DATE' => $this->dateServices->NowDate()
-            ]);
+            Invoice::where('ID', $INVOICE_ID)
+                ->update([
+                    'BALANCE_DUE'       => $BALANCE,
+                    'STATUS'            => $STATUS,
+                    'STATUS_DATE'       => $this->dateServices->NowDate()
+                ]);
         }
     }
 

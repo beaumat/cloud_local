@@ -28,10 +28,11 @@ class ManufacturerServices
     public function Update(int $ID, string $CODE, string $NAME): void
     {
 
-        Manufacturers::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'NAME' => $NAME
-        ]);
+        Manufacturers::where('ID', $ID)
+            ->update([
+                'CODE' => $CODE,
+                'NAME' => $NAME
+            ]);
     }
 
     public function Delete(int $ID): void

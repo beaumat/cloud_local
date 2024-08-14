@@ -14,7 +14,6 @@ class ObjectServices
         try {
 
             return ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first()->ID;
-            
         } catch (\Exception $e) {
             //throw $th;
             dd("$TABLE_NAME :" . $e->getMessage());
@@ -74,28 +73,23 @@ class ObjectServices
 
         return $Nxt_ID;
     }
-    public function RecordLimit(): int
-    {
-        return 1000;
-    }
-
     public function GetSequence(int $Type, $LocationId): string
     {
 
         $data = ObjectCodeSequence::where('OBJECT_TYPE', $Type)->where('LOCATION_ID', $LocationId)->first();
         if ($data) {
             $this->SetSequence($data->ID, $data->NEXT_SEQUENCE, $data->INCREMENT);
-
             return $this->codeFormat($LocationId, $data->NEXT_SEQUENCE, $data->WIDTH, $data->POSTFIX, $data->PREFIX);
         }
 
         $this->NewSequence(1, $Type, (int) $LocationId, 1, null, null, 4);
-
         return $this->GetSequence($Type, $LocationId);
     }
     public function SetSequence(int $ID, int $NEXT_SEQUENCE, int $INCREMENT)
     {
-        ObjectCodeSequence::where('ID', $ID)->where('NEXT_SEQUENCE', $NEXT_SEQUENCE)->update(['NEXT_SEQUENCE' => $NEXT_SEQUENCE + $INCREMENT]);
+        ObjectCodeSequence::where('ID', $ID)
+            ->where('NEXT_SEQUENCE', $NEXT_SEQUENCE)
+            ->update(['NEXT_SEQUENCE' => $NEXT_SEQUENCE + $INCREMENT]);
     }
     public function NewSequence(
         int $NEXT_SEQUENCE,

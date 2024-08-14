@@ -15,15 +15,15 @@ class LocationServices
     {
         return Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
     }
-    public function getListExcept($id)
+    public function getListExcept($ID)
     {
         return Locations::query()
             ->select(['ID', 'NAME'])
             ->where('INACTIVE', '0')
-            ->where('ID', '<>', $id)
+            ->where('ID', '<>', $ID)
             ->get();
     }
-    public function getPesonel($LOC_ID)
+    public function getPesonel(int $ID)
     {
         return Locations::query()
             ->select([
@@ -35,31 +35,15 @@ class LocationServices
             ])
             ->leftJoin('contact as m', 'm.ID', '=', 'location.HCI_MANAGER_ID')
             ->leftJoin('contact as p', 'p.ID', '=', 'location.PHIC_INCHARGE_ID')
-            ->where('location.ID', $LOC_ID)
+            ->where('location.ID', $ID)
             ->first();
     }
-    public function get($LOC_ID)
+    public function get(int $ID)
     {
-        return Locations::where('ID', $LOC_ID)->first();
+        return Locations::where('ID', $ID)->first();
     }
-    public function Store(
-        string $NAME,
-        bool $INACTIVE,
-        int $PRICE_LEVEL_ID,
-        int $GROUP_ID,
-        int $HCI_MANAGER_ID,
-        int $PHIC_INCHARGE_ID,
-        string $NAME_OF_BUSINESS,
-        string $ACCREDITATION_NO,
-        string $BLDG_NAME_LOT_BLOCK,
-        string $STREET_SUB_VALL,
-        string $BRGY_CITY_MUNI,
-        string $PROVINCE,
-        string $ZIP_CODE,
-        string $REPORT_HEADER_1,
-        string $REPORT_HEADER_2,
-        string $REPORT_HEADER_3
-    ): int {
+    public function Store(string $NAME, bool $INACTIVE, int $PRICE_LEVEL_ID, int $GROUP_ID, int $HCI_MANAGER_ID, int $PHIC_INCHARGE_ID, string $NAME_OF_BUSINESS, string $ACCREDITATION_NO, string $BLDG_NAME_LOT_BLOCK, string $STREET_SUB_VALL, string $BRGY_CITY_MUNI, string $PROVINCE, string $ZIP_CODE, string $REPORT_HEADER_1, string $REPORT_HEADER_2, string $REPORT_HEADER_3): int
+    {
         $ID = $this->object->ObjectNextID('LOCATION');
         Locations::create([
             'ID'                    => $ID,
@@ -123,13 +107,13 @@ class LocationServices
                 'REPORT_HEADER_1'       => $REPORT_HEADER_1,
                 'REPORT_HEADER_2'       => $REPORT_HEADER_2,
                 'REPORT_HEADER_3'       => $REPORT_HEADER_3
-    
+
             ]);
     }
 
-    public function Delete(int $ID): void
+    public function Delete(int $LOCATION_ID): void
     {
-        Locations::where('ID', $ID)->delete();
+        Locations::where('ID', $LOCATION_ID)->delete();
     }
     public function Search($search)
     {

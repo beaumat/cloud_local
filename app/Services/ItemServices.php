@@ -42,21 +42,17 @@ class ItemServices
     public function getInventoryItem(bool $isCode)
     {
         if ($isCode) {
-
+            // Code
             return Items::query()
                 ->select(['ID', 'CODE'])
                 ->where('INACTIVE', '0')
                 ->whereIn('TYPE', ['0', '1'])
                 ->get();
         }
-
+        // Descripton
         return Items::query()
-            ->select(
-                [
-                    'item.ID',
-                    'item.DESCRIPTION'
-                ]
-            )->where('INACTIVE', '0')
+            ->select(['ID', 'DESCRIPTION'])
+            ->where('INACTIVE', '0')
             ->whereIn('TYPE', ['0', '1'])
             ->get();
     }
@@ -92,32 +88,8 @@ class ItemServices
             ->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])
             ->get();
     }
-    public function Store(
-        string $CODE,
-        string $DESCRIPTION,
-        string $PURCHASE_DESCRIPTION,
-        int $GROUP_ID,
-        int $SUB_CLASS_ID,
-        int $TYPE,
-        int $STOCK_TYPE,
-        int $GL_ACCOUNT_ID,
-        int $COGS_ACCOUNT_ID,
-        int $ASSET_ACCOUNT_ID,
-        bool $TAXABLE,
-        int $PREFERRED_VENDOR_ID,
-        int $MANUFACTURER_ID,
-        float $RATE,
-        float $COST,
-        int $RATE_TYPE,
-        int $PAYMENT_METHOD_ID,
-        string $NOTES,
-        int $BASE_UNIT_ID,
-        int $PURCHASES_UNIT_ID,
-        int $SHIPPING_UNIT_ID,
-        int $SALES_UNIT_ID,
-        bool $PRINT_INDIVIDUAL_ITEMS,
-        bool $INACTIVE
-    ): int {
+    public function Store(string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE): int
+    {
 
         $ID = $this->object->ObjectNextID('ITEM');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('ITEM');
@@ -152,33 +124,8 @@ class ItemServices
         return $ID;
     }
 
-    public function Update(
-        int $ID,
-        string $CODE,
-        string $DESCRIPTION,
-        string $PURCHASE_DESCRIPTION,
-        int $GROUP_ID,
-        int $SUB_CLASS_ID,
-        int $TYPE,
-        int $STOCK_TYPE,
-        int $GL_ACCOUNT_ID,
-        int $COGS_ACCOUNT_ID,
-        int $ASSET_ACCOUNT_ID,
-        bool $TAXABLE,
-        int $PREFERRED_VENDOR_ID,
-        int $MANUFACTURER_ID,
-        float $RATE,
-        float $COST,
-        int $RATE_TYPE,
-        int $PAYMENT_METHOD_ID,
-        string $NOTES,
-        int $BASE_UNIT_ID,
-        int $PURCHASES_UNIT_ID,
-        int $SHIPPING_UNIT_ID,
-        int $SALES_UNIT_ID,
-        bool $PRINT_INDIVIDUAL_ITEMS,
-        bool $INACTIVE
-    ): void {
+    public function Update(int $ID, string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE): void
+    {
 
         Items::where('ID', $ID)
             ->update([
@@ -255,7 +202,7 @@ class ItemServices
             ->paginate($perPage);
     }
 
-    public function getActiveItems($search, int $locationId,string $sortby, bool $isDesc)
+    public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc)
     {
         $items = DB::table('item')
             ->select(
@@ -272,7 +219,13 @@ class ItemServices
                     'u.SYMBOL'
                 ]
             )
-            ->selectSub(function ($query) use (&$locationId) { $query->from('item_inventory') ->select('item_inventory.ENDING_QUANTITY') ->whereColumn('item_inventory.ITEM_ID', 'item.ID') ->where('item_inventory.LOCATION_ID', $locationId) ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC') ->orderBy('item_inventory.ID', 'DESC') ->limit(1); }, 'QTY_ON_HAND')
+            ->selectSub(function ($query) use (&$locationId) {
+                $query->from('item_inventory')->select('item_inventory.ENDING_QUANTITY')
+                    ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
+                    ->where('item_inventory.LOCATION_ID', $locationId)
+                    ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
+                    ->orderBy('item_inventory.ID', 'DESC')->limit(1);
+            }, 'QTY_ON_HAND')
             ->leftJoin('item_type_map as t', 't.ID', '=', 'item.TYPE')
             ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')
             ->leftJoin('item_sub_class as s', 's.ID', '=', 'item.SUB_CLASS_ID')

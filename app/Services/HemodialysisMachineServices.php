@@ -20,14 +20,14 @@ class HemodialysisMachineServices
     public function Store(string $CODE, int $TYPE, string $DESCRIPTION, int $LOCATION_ID, int $CAPACITY): int
     {
         $ID = $this->object->ObjectNextID('HEMODIALYSIS_MACHINE');
-        
+
         HemodialysisMachines::create([
-            'ID' => $ID,
-            'CODE' => $CODE,
-            'TYPE' => $TYPE,
-            'DESCRIPTION' => $DESCRIPTION,
-            'LOCATION_ID' => $LOCATION_ID,
-            'CAPACITY' => $CAPACITY
+            'ID'            > $ID,
+            'CODE'          => $CODE,
+            'TYPE'          => $TYPE,
+            'DESCRIPTION'   => $DESCRIPTION,
+            'LOCATION_ID'   => $LOCATION_ID,
+            'CAPACITY'      => $CAPACITY
         ]);
 
         return $ID;
@@ -35,13 +35,14 @@ class HemodialysisMachineServices
     public function Update(int $ID, string $CODE, int $TYPE, string $DESCRIPTION, int $LOCATION_ID, int $CAPACITY)
     {
 
-        HemodialysisMachines::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'TYPE' => $TYPE,
-            'DESCRIPTION' => $DESCRIPTION,
-            'LOCATION_ID' => $LOCATION_ID,
-            'CAPACITY' => $CAPACITY
-        ]);
+        HemodialysisMachines::where('ID', $ID)
+            ->update([
+                'CODE'          => $CODE,
+                'TYPE'          => $TYPE,
+                'DESCRIPTION'   => $DESCRIPTION,
+                'LOCATION_ID'   => $LOCATION_ID,
+                'CAPACITY'      => $CAPACITY
+            ]);
     }
     public function Delete(int $ID)
     {
@@ -57,7 +58,7 @@ class HemodialysisMachineServices
     }
     public function Search($search)
     {
-        return HemodialysisMachines::query()
+        $result = HemodialysisMachines::query()
             ->select([
                 'hemodialysis_machine.ID',
                 'hemodialysis_machine.CODE',
@@ -71,5 +72,11 @@ class HemodialysisMachineServices
             ->where('hemodialysis_machine.CODE', 'like', '%' . $search . '%')
             ->orWhere('hemodialysis_machine.DESCRIPTION', 'like', '%' . $search . '%')
             ->get();
+
+        if ($result) {
+            return $result;
+        }
+
+        return [];
     }
 }

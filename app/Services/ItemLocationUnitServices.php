@@ -39,9 +39,9 @@ class ItemLocationUnitServices
     {
         ItemLocationUnits::where('ID', $ID)->delete();
     }
-    public function Search($itemId)
+    public function Search(int $ITEM_ID)
     {
-       return ItemLocationUnits::query()
+        $result = ItemLocationUnits::query()
             ->select([
                 'item_location_units.ID',
                 'item_location_units.LOCATION_ID',
@@ -57,12 +57,14 @@ class ItemLocationUnitServices
             ->leftJoin('unit_of_measure as u1', 'u1.ID', '=', 'item_location_units.PURCHASES_UNIT_ID')
             ->leftJoin('unit_of_measure as u2', 'u2.ID', '=', 'item_location_units.SALES_UNIT_ID')
             ->leftJoin('unit_of_measure as u3', 'u3.ID', '=', 'item_location_units.SHIPPING_UNIT_ID')
-            ->where('item_location_units.ITEM_ID', $itemId)
+            ->where('item_location_units.ITEM_ID', $ITEM_ID)
             ->where('location.INACTIVE', '0')
             ->where('u1.INACTIVE', '0')
             ->where('u2.INACTIVE', '0')
             ->where('u3.INACTIVE', '0')
             ->orderBy('item_location_units.ID', 'asc')
             ->get();
+
+        return $result;
     }
 }

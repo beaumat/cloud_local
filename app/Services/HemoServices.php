@@ -20,16 +20,8 @@ class HemoServices
     private $unitOfMeasureServices;
     private $itemServices;
     private $itemInventoryServices;
-    public function __construct(
-        ObjectServices $objectService,
-        UserServices $userServices,
-        SystemSettingServices $systemSettingServices,
-        DateServices $dateServices,
-        ItemTreatmentServices $itemTreatmentServices,
-        UnitOfMeasureServices $unitOfMeasureServices,
-        ItemServices $itemServices,
-        ItemInventoryServices $itemInventoryServices
-    ) {
+    public function __construct(ObjectServices $objectService, UserServices $userServices, SystemSettingServices $systemSettingServices, DateServices $dateServices, ItemTreatmentServices $itemTreatmentServices, UnitOfMeasureServices $unitOfMeasureServices, ItemServices $itemServices, ItemInventoryServices $itemInventoryServices)
+    {
         $this->object = $objectService;
         $this->user = $userServices;
         $this->systemSettingServices = $systemSettingServices;
@@ -140,10 +132,10 @@ class HemoServices
                 $lastTime = $this->getTime(false, $lastDate, $CONTACT_ID, $LOCATION_ID);
 
                 return [
-                    'FIRST_DATE' => $firstDate,
-                    'FIRST_TIME' => $firstTime,
-                    'LAST_DATE' => $lastDate,
-                    'LAST_TIME' => $lastTime
+                    'FIRST_DATE'    => $firstDate,
+                    'FIRST_TIME'    => $firstTime,
+                    'LAST_DATE'     => $lastDate,
+                    'LAST_TIME'     => $lastTime
                 ];
             }
         }
@@ -348,11 +340,14 @@ class HemoServices
         $isBool =  Hemodialysis::where('ID', $ID)->first()->DETAILS_USE_NEXT ?? false;
 
         if ($isBool) {
-            // make it false
-            Hemodialysis::where('ID', $ID)->update(['DETAILS_USE_NEXT' => false]);
+            Hemodialysis::where('ID', $ID)
+                ->update(['DETAILS_USE_NEXT' => false]);
             return false;
         }
-        Hemodialysis::where('ID', $ID)->update(['DETAILS_USE_NEXT' => true]);
+
+        Hemodialysis::where('ID', $ID)
+            ->update(['DETAILS_USE_NEXT' => true]);
+
         return true;
     }
     public function UpdatedStandingOrder(int $ID): bool
@@ -442,9 +437,11 @@ class HemoServices
                 }
             })
             ->when($search, function ($query) use (&$search) {
-                $query->where('hemodialysis.CODE', 'like', '%' . $search . '%')
-                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                $query->where(function ($q) use (&$search) {
+                    $q->where('hemodialysis.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                });
             })
             ->when($SHIFT_ID > 0, function ($query) use (&$SHIFT_ID) {
                 $query->where('s.SHIFT_ID', $SHIFT_ID);

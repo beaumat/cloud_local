@@ -40,20 +40,20 @@ class BuildAssemblyServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         BuildAssembly::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'LOCATION_ID' => $LOCATION_ID,
-            'ASSEMBLY_ITEM_ID' => $ASSEMBLY_ITEM_ID,
-            'QUANTITY' => $QUANTITY,
-            'AMOUNT' => 0,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'NOTES' => $NOTES,
-            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-            'STATUS' => 0,
+            'ID'                    > $ID,
+            'RECORDED_ON'           => $this->dateServices->Now(),
+            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                  => $DATE,
+            'LOCATION_ID'           => $LOCATION_ID,
+            'ASSEMBLY_ITEM_ID'      => $ASSEMBLY_ITEM_ID,
+            'QUANTITY'              => $QUANTITY,
+            'AMOUNT'                => 0,
+            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
+            'NOTES'                 => $NOTES,
+            'ASSET_ACCOUNT_ID'      => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'STATUS'                => 0
         ]);
 
         $newAmount = (float) $this->AutoCreateComponent($ASSEMBLY_ITEM_ID, $ID, $QUANTITY);
@@ -140,6 +140,7 @@ class BuildAssemblyServices
             $QTY = (float) $item->QUANTITY * $QUANTITY;
             $AMOUNT = (float) ($item->RATE * $item->QUANTITY) * $QUANTITY;
             $TOTAL = $TOTAL + $AMOUNT;
+
             $this->ComponentStore($BUILD_ASSEMBLY_ID, $item->COMPONENT_ID, $QTY, $AMOUNT, 0, $item->ASSET_ACCOUNT_ID ?? 0);
         }
 
@@ -175,13 +176,13 @@ class BuildAssemblyServices
         $ID = (int) $this->object->ObjectNextID('BUILD_ASSEMBLY_ITEMS');
 
         BuildAssemblyItems::create([
-            'ID' => $ID,
-            'BUILD_ASSEMBLY_ID' => $BUILD_ASSEMBLY_ID,
-            'ITEM_ID' => $ITEM_ID,
-            'QUANTITY' => $QUANTITY,
-            'AMOUNT' => $AMOUNT,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : 0,
-            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : 0,
+            'ID'                    => $ID,
+            'BUILD_ASSEMBLY_ID'     => $BUILD_ASSEMBLY_ID,
+            'ITEM_ID'               => $ITEM_ID,
+            'QUANTITY'              => $QUANTITY,
+            'AMOUNT'                => $AMOUNT,
+            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : 0,
+            'ASSET_ACCOUNT_ID'      => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : 0,
         ]);
     }
     public function ComponentUpdate(int $ID, int $BUILD_ASSEMBLY_ID, int $ITEM_ID, float $QUANTITY, float $AMOUNT)
@@ -190,8 +191,8 @@ class BuildAssemblyServices
             ->where('BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->update([
-                'QUANTITY' => $QUANTITY,
-                'AMOUNT' => $AMOUNT
+                'QUANTITY'      => $QUANTITY,
+                'AMOUNT'        => $AMOUNT
             ]);
     }
     public function ComponentDelete(int $ID)
@@ -217,7 +218,6 @@ class BuildAssemblyServices
                 'u.NAME as UNIT_BASE'
             ])
             ->selectSub(function ($query) use (&$locationId) {
-
                 $query->from('item_inventory')
                     ->select('item_inventory.ENDING_QUANTITY')
                     ->whereColumn('item_inventory.ITEM_ID', 'item.ID')

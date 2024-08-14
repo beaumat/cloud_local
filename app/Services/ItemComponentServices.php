@@ -39,7 +39,7 @@ class ItemComponentServices
     }
     public function Search($search, int $itemId)
     {
-        return  ItemComponents::query()
+        $result =  ItemComponents::query()
             ->select(['ITEM_COMPONENTS.ID', 'item.CODE', 'item.DESCRIPTION', 'ITEM_COMPONENTS.QUANTITY', 'ITEM_COMPONENTS.RATE'])
             ->leftjoin('item', 'item.ID', '=', 'ITEM_COMPONENTS.COMPONENT_ID')
             ->where('ITEM_COMPONENTS.ITEM_ID', $itemId)
@@ -50,5 +50,7 @@ class ItemComponentServices
             })
             ->orderBy('ITEM_COMPONENTS.ID', 'asc')
             ->get();
+
+        return $result;
     }
 }

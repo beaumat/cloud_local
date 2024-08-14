@@ -17,12 +17,8 @@ class BillCreditServices
     private $systemSettingServices;
     private $dateServices;
 
-    public function __construct(
-        ObjectServices $objectService,
-        ComputeServices $computeServices,
-        SystemSettingServices $systemSettingServices,
-        DateServices $dateServices
-    ) {
+    public function __construct(ObjectServices $objectService, ComputeServices $computeServices, SystemSettingServices $systemSettingServices, DateServices $dateServices)
+    {
         $this->object = $objectService;
         $this->compute = $computeServices;
         $this->systemSettingServices = $systemSettingServices;
@@ -41,53 +37,41 @@ class BillCreditServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         BillCredit::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'DATE' => $DATE,
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'VENDOR_ID' => $VENDOR_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'AMOUNT' => 0,
-            'AMOUNT_APPLIED' => 0,
-            'NOTES' => $NOTES,
-            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null,
-            'INPUT_TAX_ID' => $INPUT_TAX_ID,
-            'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
-            'INPUT_TAX_AMOUNT' => $INPUT_TAX_AMOUNT,
+            'ID'                   => $ID,
+            'RECORDED_ON'          => $this->dateServices->Now(),
+            'DATE'                 => $DATE,
+            'CODE'                 => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'VENDOR_ID'            => $VENDOR_ID,
+            'LOCATION_ID'          => $LOCATION_ID,
+            'AMOUNT'               => 0,
+            'AMOUNT_APPLIED'       => 0,
+            'NOTES'                => $NOTES,
+            'ACCOUNTS_PAYABLE_ID'  => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null,
+            'INPUT_TAX_ID'         => $INPUT_TAX_ID,
+            'INPUT_TAX_RATE'       => $INPUT_TAX_RATE,
+            'INPUT_TAX_AMOUNT'     => $INPUT_TAX_AMOUNT,
             'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
             'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
-            'STATUS' => 0,
-            'STATUS_DATE' => $this->dateServices->NowDate()
+            'STATUS'               => 0,
+            'STATUS_DATE'          => $this->dateServices->NowDate()
         ]);
 
         return $ID;
     }
 
 
-    public function Update(
-        int $ID,
-        string $CODE,
-        string $DATE,
-        int $VENDOR_ID,
-        int $LOCATION_ID,
-        string $NOTES,
-        int $ACCOUNTS_PAYABLE_ID,
-        int $INPUT_TAX_ID,
-        float $INPUT_TAX_RATE,
-        float $INPUT_TAX_AMOUNT,
-        int $INPUT_TAX_VAT_METHOD,
-        int $INPUT_TAX_ACCOUNT_ID
-    ) {
+    public function Update(int $ID, string $CODE, string $DATE, int $VENDOR_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID)
+    {
         BillCredit::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'VENDOR_ID' => $VENDOR_ID,
-            'NOTES' => $NOTES,
-            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID,
-            'INPUT_TAX_ID' => $INPUT_TAX_ID,
-            'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
-            'INPUT_TAX_AMOUNT' => $INPUT_TAX_AMOUNT,
-            'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
-            'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
+            'CODE'                  => $CODE,
+            'VENDOR_ID'             => $VENDOR_ID,
+            'NOTES'                 => $NOTES,
+            'ACCOUNTS_PAYABLE_ID'   => $ACCOUNTS_PAYABLE_ID,
+            'INPUT_TAX_ID'          => $INPUT_TAX_ID,
+            'INPUT_TAX_RATE'        => $INPUT_TAX_RATE,
+            'INPUT_TAX_AMOUNT'      => $INPUT_TAX_AMOUNT,
+            'INPUT_TAX_VAT_METHOD'  => $INPUT_TAX_VAT_METHOD,
+            'INPUT_TAX_ACCOUNT_ID'  => $INPUT_TAX_ACCOUNT_ID,
         ]);
     }
 
@@ -102,8 +86,8 @@ class BillCreditServices
     {
         BillCredit::where('ID', $ID)
             ->update([
-                'STATUS' => $STATUS,
-                'STATUS_DATE' => $this->dateServices->NowDate()
+                'STATUS'        => $STATUS,
+                'STATUS_DATE'   => $this->dateServices->NowDate()
             ]);
     }
 
@@ -133,14 +117,15 @@ class BillCreditServices
             ->join('document_status_map as s', 's.ID', '=', 'bill_credit.STATUS')
             ->leftJoin('tax as t', 't.ID', '=', 'bill_credit.INPUT_TAX_ID')
             ->when($search, function ($query) use (&$search) {
-                $query->where('bill_credit.CODE', 'like', '%' . $search . '%')
-                    ->orWhere('bill_credit.AMOUNT', 'like', '%' . $search . '%')
-                    ->orWhere('bill_credit.NOTES', 'like', '%' . $search . '%')
-                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                $query->where(function ($q) use (&$search) {
+                    $q->where('bill_credit.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('bill_credit.AMOUNT', 'like', '%' . $search . '%')
+                        ->orWhere('bill_credit.NOTES', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy('ID', 'desc')
-            ->limit($this->object->RecordLimit())
             ->paginate($perPage);
 
         return $result;
@@ -162,23 +147,23 @@ class BillCreditServices
         $ID = $this->object->ObjectNextID('BILL_CREDIT_ITEMS');
 
         BillCreditItems::create([
-            'ID' => $ID,
-            'BILL_CREDIT_ID' => $BILL_CREDIT_ID,
-            'LINE_NO' => $LINE_NO,
-            'ITEM_ID' => $ITEM_ID,
-            'DESCRIPTION' => null,
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'ID'                 => $ID,
+            'BILL_CREDIT_ID'     => $BILL_CREDIT_ID,
+            'LINE_NO'            => $LINE_NO,
+            'ITEM_ID'            => $ITEM_ID,
+            'DESCRIPTION'        => null,
+            'QUANTITY'           => $QUANTITY,
+            'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'RATE' => $RATE,
-            'RATE_TYPE' => $RATE_TYPE,
-            'AMOUNT' => $AMOUNT,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'ACCOUNT_ID' => $ACCOUNT_ID,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
+            'RATE'               => $RATE,
+            'RATE_TYPE'          => $RATE_TYPE,
+            'AMOUNT'             => $AMOUNT,
+            'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'ACCOUNT_ID'         => $ACCOUNT_ID,
+            'TAXABLE'            => $TAXABLE,
+            'TAXABLE_AMOUNT'     => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'         => $TAX_AMOUNT,
+            'CLASS_ID'           => $CLASS_ID > 0 ? $CLASS_ID : null,
         ]);
     }
     public function ItemUpdate(int $ID, int $BILL_CREDIT_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT)
@@ -188,14 +173,14 @@ class BillCreditServices
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->update([
-                'QUANTITY' => $QUANTITY,
-                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-                'RATE' => $RATE,
-                'AMOUNT' => $AMOUNT,
-                'TAXABLE' => $TAXABLE,
-                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-                'TAX_AMOUNT' => $TAX_AMOUNT
+                'QUANTITY'              => $QUANTITY,
+                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
+                'RATE'                  => $RATE,
+                'AMOUNT'                => $AMOUNT,
+                'TAXABLE'               => $TAXABLE,
+                'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT'            => $TAX_AMOUNT
             ]);
     }
 
@@ -229,21 +214,22 @@ class BillCreditServices
             ->get();
     }
 
-    public function ExpenseStore( int $BILL_CREDIT_ID, int $ACCOUNT_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID ) {
+    public function ExpenseStore(int $BILL_CREDIT_ID, int $ACCOUNT_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID)
+    {
         $LINE_NO = $this->getLine($BILL_CREDIT_ID, false) + 1;
         $ID = $this->object->ObjectNextID('BILL_CREDIT_EXPENSES');
 
         BillCreditExpenses::create([
-            'ID' => $ID,
-            'BILL_CREDIT_ID' => $BILL_CREDIT_ID,
-            'LINE_NO' => $LINE_NO,
-            'ACCOUNT_ID' => $ACCOUNT_ID,
-            'AMOUNT' => $AMOUNT,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT,
-            'PARTICULARS' => $PARTICULARS,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
+            'ID'                => $ID,
+            'BILL_CREDIT_ID'    => $BILL_CREDIT_ID,
+            'LINE_NO'           => $LINE_NO,
+            'ACCOUNT_ID'        => $ACCOUNT_ID,
+            'AMOUNT'            => $AMOUNT,
+            'TAXABLE'           => $TAXABLE,
+            'TAXABLE_AMOUNT'    => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'        => $TAX_AMOUNT,
+            'PARTICULARS'       => $PARTICULARS,
+            'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null
 
         ]);
     }
@@ -253,12 +239,12 @@ class BillCreditServices
         BillCreditExpenses::where('ID', $ID)
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->update([
-                'AMOUNT' => $AMOUNT,
-                'TAXABLE' => $TAXABLE,
-                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-                'TAX_AMOUNT' => $TAX_AMOUNT,
-                'PARTICULARS' => $PARTICULARS,
-                'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
+                'AMOUNT'            => $AMOUNT,
+                'TAXABLE'           => $TAXABLE,
+                'TAXABLE_AMOUNT'    => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT'        => $TAX_AMOUNT,
+                'PARTICULARS'       => $PARTICULARS,
+                'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null
             ]);
     }
 

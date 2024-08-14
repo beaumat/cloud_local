@@ -19,21 +19,22 @@ class ItemInventoryServices
     {
 
         $ID = (int) $this->object->ObjectNextID('ITEM_INVENTORY');
+
         ItemInventory::create([
-            'ID' => $ID,
-            'PREVIOUS_ID' => $PREVIOUS_ID > 0 ? $PREVIOUS_ID : null,
-            'SEQUENCE_NO' => $SEQUENCE_NO,
-            'ITEM_ID' => $ITEM_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : 0,
-            'SOURCE_REF_TYPE' => $SOURCE_REF_TYPE,
-            'SOURCE_REF_ID' => $SOURCE_REF_ID,
-            'SOURCE_REF_DATE' => $SOURCE_REF_DATE,
-            'QUANTITY' => $QUANTITY,
-            'COST' => $COST,
-            'ENDING_QUANTITY' => $ENDING_QUANTITY,
-            'ENDING_UNIT_COST' => $ENDING_UNIT_COST,
-            'ENDING_COST' => $ENDING_COST
+            'ID'                    => $ID,
+            'PREVIOUS_ID'           => $PREVIOUS_ID > 0 ? $PREVIOUS_ID : null,
+            'SEQUENCE_NO'           => $SEQUENCE_NO,
+            'ITEM_ID'               => $ITEM_ID,
+            'LOCATION_ID'           => $LOCATION_ID,
+            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : 0,
+            'SOURCE_REF_TYPE'       => $SOURCE_REF_TYPE,
+            'SOURCE_REF_ID'         => $SOURCE_REF_ID,
+            'SOURCE_REF_DATE'       => $SOURCE_REF_DATE,
+            'QUANTITY'              => $QUANTITY,
+            'COST'                  => $COST,
+            'ENDING_QUANTITY'       => $ENDING_QUANTITY,
+            'ENDING_UNIT_COST'      => $ENDING_UNIT_COST,
+            'ENDING_COST'           => $ENDING_COST
         ]);
 
 
@@ -285,10 +286,10 @@ class ItemInventoryServices
 
         foreach ($data as $list) {
 
-            $SOURCE_REF_ID = (int) $list->ID;
-            $ITEM_ID = (int) $list->ITEM_ID;
-            $QUANTITY = (float) $list->QUANTITY ?? 1;
-            $BATCH_ID = $list->BATCH_ID ?? 0;
+            $SOURCE_REF_ID  = (int) $list->ID;
+            $ITEM_ID        = (int) $list->ITEM_ID;
+            $QUANTITY       = (float) $list->QUANTITY ?? 1;
+            $BATCH_ID       = $list->BATCH_ID ?? 0;
             $UNIT_BASE_QUANTITY = (float) $list->UNIT_BASE_QUANTITY ?? 1;
 
             $QTY = (float) $QUANTITY * $UNIT_BASE_QUANTITY;

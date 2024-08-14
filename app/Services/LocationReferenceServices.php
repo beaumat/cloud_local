@@ -62,6 +62,5 @@ class LocationReferenceServices
         $loc_code = Str::padLeft($LOCATION_ID, 3, '0');
 
         return $loc_code . '-' . $symbol . Str::padLeft($Number, $digit, '0');
-        ;
     }
 }

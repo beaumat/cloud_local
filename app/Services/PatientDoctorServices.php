@@ -18,9 +18,9 @@ class PatientDoctorServices
         $ID = (int) $this->object->ObjectNextID('PATIENT_DOCTOR');
 
         PatientDoctor::create([
-            'ID' => $ID,
-            'PATIENT_ID' => $PATIENT_ID,
-            'DOCTOR_ID' => $DOCTOR_ID
+            'ID'            => $ID,
+            'PATIENT_ID'    => $PATIENT_ID,
+            'DOCTOR_ID'     => $DOCTOR_ID
         ]);
     }
     public function GetList(int $id)
@@ -37,7 +37,6 @@ class PatientDoctorServices
     }
     public function Delete(int $ID)
     {
-
         PatientDoctor::where('ID', $ID)->delete();
     }
 

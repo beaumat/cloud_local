@@ -44,19 +44,21 @@ class ArForm extends Component
 
         $this->philHealthServices->UpdateAR($this->PHILHEALTH_ID, $this->AR_NO, $this->AR_DATE);
 
-        $ar = [
-            'AR_DATE' => $this->AR_DATE,
-            'AR_NO'  => $this->AR_NO,
+        $dataAR = [
+            'AR_DATE'       => $this->AR_DATE,
+            'AR_NO'         => $this->AR_NO,
             'PHILHEALTH_ID' => $this->PHILHEALTH_ID
         ];
-        $this->dispatch('ar-form-data', ar: $ar);
+
+        $this->dispatch('ar-form-data', ar: $dataAR);
+        
         session()->flash('message', 'Successfully save.');
     }
     #[On('ar-form-show')]
     public function openModal($result)
     {
         $this->PHILHEALTH_ID = $result['PHILHEALTH_ID'];
-        $data =  $this->philHealthServices->get($this->PHILHEALTH_ID);
+        $data = $this->philHealthServices->get($this->PHILHEALTH_ID);
         if ($data) {
             $this->CODE = $data->CODE;
             $this->DATE = $data->DATE;

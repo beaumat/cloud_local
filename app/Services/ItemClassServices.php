@@ -25,9 +25,9 @@ class ItemClassServices
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('ITEM_CLASS');
 
         ItemClass::create([
-            'ID' => $ID,
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
-            'DESCRIPTION' => $DESCRIPTION
+            'ID'            => $ID,
+            'CODE'          => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
+            'DESCRIPTION'   => $DESCRIPTION
         ]);
 
         return $ID;

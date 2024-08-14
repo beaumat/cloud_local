@@ -34,58 +34,66 @@ class BillingServices
     public function get(int $ID)
     {
         try {
-            return Bill::where('ID', $ID)->first();
+
+            $data = Bill::where('ID', $ID)->first();
+            if ($data) {
+                return $data;
+            }
+            return [];
         } catch (\Throwable $th) {
             return [];
         }
     }
-    public function Store( string $CODE, string $DATE, int $VENDOR_ID, int $LOCATION_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $DISCOUNT_DATE, float $DISCOUNT_PCT, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID, int $STATUS ): int {
+    public function Store(string $CODE, string $DATE, int $VENDOR_ID, int $LOCATION_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $DISCOUNT_DATE, float $DISCOUNT_PCT, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID, int $STATUS): int
+    {
         $ID = (int) $this->object->ObjectNextID('BILL');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL');
         $isLocRef = (bool) boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Bill::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'DATE' => $DATE,
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'VENDOR_ID' => $VENDOR_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : 0,
-            'DUE_DATE' => $DUE_DATE ? $DUE_DATE : null,
-            'DISCOUNT_DATE' => $DISCOUNT_DATE ? $DISCOUNT_DATE : null,
-            'DISCOUNT_PCT' => $DISCOUNT_PCT > 0 ? $DISCOUNT_PCT : 0,
-            'AMOUNT' => 0,
-            'BALANCE_DUE' => 0,
-            'NOTES' => $NOTES,
+            'ID'                => $ID,
+            'RECORDED_ON'       => $this->dateServices->Now(),
+            'DATE'              => $DATE,
+            'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'VENDOR_ID'         => $VENDOR_ID,
+            'LOCATION_ID'       => $LOCATION_ID,
+            'PAYMENT_TERMS_ID'  => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : 0,
+            'DUE_DATE'          => $DUE_DATE ? $DUE_DATE : null,
+            'DISCOUNT_DATE'     => $DISCOUNT_DATE ? $DISCOUNT_DATE : null,
+            'DISCOUNT_PCT'      => $DISCOUNT_PCT > 0 ? $DISCOUNT_PCT : 0,
+            'AMOUNT'            => 0,
+            'BALANCE_DUE'       => 0,
+            'NOTES'             => $NOTES,
             'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null,
-            'INPUT_TAX_ID' => $INPUT_TAX_ID,
-            'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
-            'INPUT_TAX_AMOUNT' => $INPUT_TAX_AMOUNT,
+            'INPUT_TAX_ID'      => $INPUT_TAX_ID,
+            'INPUT_TAX_RATE'    => $INPUT_TAX_RATE,
+            'INPUT_TAX_AMOUNT'  => $INPUT_TAX_AMOUNT,
             'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
             'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
-            'STATUS' => $STATUS,
-            'STATUS_DATE' => $this->dateServices->NowDate()
+            'STATUS'            => $STATUS,
+            'STATUS_DATE'       => $this->dateServices->NowDate()
         ]);
 
         return $ID;
     }
-    public function Update( int $ID, string $CODE, int $VENDOR_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID ) {
+    public function Update(int $ID, string $CODE, int $VENDOR_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID)
+    {
 
 
-        Bill::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'VENDOR_ID' => $VENDOR_ID,
-            'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,
-            'DUE_DATE' => $DUE_DATE ? $DUE_DATE : null,
-            'NOTES' => $NOTES,
-            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID,
-            'INPUT_TAX_ID' => $INPUT_TAX_ID,
-            'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
-            'INPUT_TAX_AMOUNT' => $INPUT_TAX_AMOUNT,
-            'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
-            'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
-        ]);
+        Bill::where('ID', $ID)
+            ->update([
+                'CODE'                      => $CODE,
+                'VENDOR_ID'                 => $VENDOR_ID,
+                'PAYMENT_TERMS_ID'          => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,
+                'DUE_DATE'                  => $DUE_DATE ? $DUE_DATE : null,
+                'NOTES'                     => $NOTES,
+                'ACCOUNTS_PAYABLE_ID'       => $ACCOUNTS_PAYABLE_ID,
+                'INPUT_TAX_ID'              => $INPUT_TAX_ID,
+                'INPUT_TAX_RATE'            => $INPUT_TAX_RATE,
+                'INPUT_TAX_AMOUNT'          => $INPUT_TAX_AMOUNT,
+                'INPUT_TAX_VAT_METHOD'      => $INPUT_TAX_VAT_METHOD,
+                'INPUT_TAX_ACCOUNT_ID'      => $INPUT_TAX_ACCOUNT_ID,
+            ]);
     }
 
     public function Delete(int $ID)
@@ -132,11 +140,13 @@ class BillingServices
             ->join('document_status_map as s', 's.ID', '=', 'bill.STATUS')
             ->leftJoin('tax as t', 't.ID', '=', 'bill.INPUT_TAX_ID')
             ->when($search, function ($query) use (&$search) {
-                $query->where('bill.CODE', 'like', '%' . $search . '%')
-                    ->orWhere('bill.AMOUNT', 'like', '%' . $search . '%')
-                    ->orWhere('bill.NOTES', 'like', '%' . $search . '%')
-                    ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                    ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                $query->where(function ($q) use (&$search) {
+                    $q->where('bill.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('bill.AMOUNT', 'like', '%' . $search . '%')
+                        ->orWhere('bill.NOTES', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy('ID', 'desc')
             ->paginate($perPage);
@@ -157,50 +167,74 @@ class BillingServices
         }
         return (int) BillExpenses::where('BILL_ID', $Id)->max('LINE_NO');
     }
-    public function ItemStore(int $BILL_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, int $BATCH_ID, int $ACCOUNT_ID, int $PO_ITEM_ID, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, int $CLASS_ID): int
-    {
+    public function ItemStore(
+        int $BILL_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        float $UNIT_BASE_QUANTITY,
+        float $RATE,
+        int $RATE_TYPE,
+        float $AMOUNT,
+        int $BATCH_ID,
+        int $ACCOUNT_ID,
+        int $PO_ITEM_ID = 9,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT,
+        int $CLASS_ID = 0
+    ): int {
 
         $LINE_NO = $this->getLine($BILL_ID, true) + 1;
         $ID = $this->object->ObjectNextID('BILL_ITEMS');
 
         BillItems::create([
-            'ID' => $ID,
-            'BILL_ID' => $BILL_ID,
-            'LINE_NO' => $LINE_NO,
-            'ITEM_ID' => $ITEM_ID,
-            'DESCRIPTION' => null,
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'RATE' => $RATE,
-            'RATE_TYPE' => $RATE_TYPE,
-            'AMOUNT' => $AMOUNT,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'ACCOUNT_ID' => $ACCOUNT_ID,
-            'PO_ITEM_ID' => $PO_ITEM_ID > 0 ? $PO_ITEM_ID : null,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
+            'ID'                    => $ID,
+            'BILL_ID'               => $BILL_ID,
+            'LINE_NO'               => $LINE_NO,
+            'ITEM_ID'               => $ITEM_ID,
+            'DESCRIPTION'           => null,
+            'QUANTITY'              => $QUANTITY,
+            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
+            'RATE'                  => $RATE,
+            'RATE_TYPE'             => $RATE_TYPE,
+            'AMOUNT'                => $AMOUNT,
+            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'ACCOUNT_ID'            => $ACCOUNT_ID,
+            'PO_ITEM_ID'            => $PO_ITEM_ID > 0 ? $PO_ITEM_ID : null,
+            'TAXABLE'               => $TAXABLE,
+            'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'            => $TAX_AMOUNT,
+            'CLASS_ID'              => $CLASS_ID > 0 ? $CLASS_ID : null,
         ]);
 
         return $ID;
     }
-    public function ItemUpdate(int $ID, int $BILL_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT)
-    {
+    public function ItemUpdate(
+        int $ID,
+        int $BILL_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        float $UNIT_BASE_QUANTITY,
+        float $RATE,
+        float $AMOUNT,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT
+    ) {
 
-        BillItems::where('ID', $ID)
-            ->where('BILL_ID', $BILL_ID)
-            ->where('ITEM_ID', $ITEM_ID)
+        BillItems::where('ID', $ID)->where('BILL_ID', $BILL_ID)->where('ITEM_ID', $ITEM_ID)
             ->update([
-                'QUANTITY' => $QUANTITY,
-                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-                'RATE' => $RATE,
-                'AMOUNT' => $AMOUNT,
-                'TAXABLE' => $TAXABLE,
-                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-                'TAX_AMOUNT' => $TAX_AMOUNT
+                'QUANTITY'              => $QUANTITY,
+                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
+                'RATE'                  => $RATE,
+                'AMOUNT'                => $AMOUNT,
+                'TAXABLE'               => $TAXABLE,
+                'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT'            => $TAX_AMOUNT
             ]);
     }
     public function ItemDelete(int $ID, int $BILL_ID)
@@ -234,50 +268,60 @@ class BillingServices
             ->orderBy('bill_items.LINE_NO', 'asc')
             ->get();
     }
-    public function ExpenseStore(int $BILL_ID, int $ACCOUNT_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID): int
-    {
+    public function ExpenseStore(
+        int $BILL_ID,
+        int $ACCOUNT_ID,
+        float $AMOUNT,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT,
+        string $PARTICULARS,
+        int $CLASS_ID = 0
+    ): int {
         $LINE_NO = $this->getLine($BILL_ID, false) + 1;
         $ID = (int)  $this->object->ObjectNextID('BILL_EXPENSES');
 
         BillExpenses::create([
-            'ID' => $ID,
-            'BILL_ID' => $BILL_ID,
-            'LINE_NO' => $LINE_NO,
-            'ACCOUNT_ID' => $ACCOUNT_ID,
-            'AMOUNT' => $AMOUNT,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT,
-            'PARTICULARS' => $PARTICULARS,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
+            'ID'                => $ID,
+            'BILL_ID'           => $BILL_ID,
+            'LINE_NO'           => $LINE_NO,
+            'ACCOUNT_ID'        => $ACCOUNT_ID,
+            'AMOUNT'            => $AMOUNT,
+            'TAXABLE'           => $TAXABLE,
+            'TAXABLE_AMOUNT'    => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'        => $TAX_AMOUNT,
+            'PARTICULARS'       => $PARTICULARS,
+            'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null
 
         ]);
 
         return $ID;
     }
-    public function ExpenseUpdate(int $ID, int $BILL_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID)
+    public function ExpenseUpdate(int $ID, int $BILL_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID = 0)
     {
         BillExpenses::where('ID', $ID)
             ->where('BILL_ID', $BILL_ID)
             ->update([
-                'AMOUNT' => $AMOUNT,
-                'TAXABLE' => $TAXABLE,
-                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-                'TAX_AMOUNT' => $TAX_AMOUNT,
-                'PARTICULARS' => $PARTICULARS,
-                'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
+                'AMOUNT'            => $AMOUNT,
+                'TAXABLE'           => $TAXABLE,
+                'TAXABLE_AMOUNT'    => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT'        => $TAX_AMOUNT,
+                'PARTICULARS'       => $PARTICULARS,
+                'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null
             ]);
     }
     public function ExpenseDelete(int $ID, int $BILL_ID,)
     {
-        BillExpenses::where('ID', $ID)
-            ->where('BILL_ID', $BILL_ID)
-            ->delete();
+        BillExpenses::where('ID', $ID)->where('BILL_ID', $BILL_ID)->delete();
     }
     public function ExpenseGet(int $ID, $BILL_ID)
     {
-        $result =  BillExpenses::where('ID', $ID)->where('BILL_ID', $BILL_ID)->first();
-        return $result;
+        $data =  BillExpenses::where('ID', $ID)->where('BILL_ID', $BILL_ID)->first();
+        if ($data) {
+            return $data;
+        }
+
+        return [];
     }
     public function ExpenseView(int $BILL_ID)
     {
@@ -347,27 +391,14 @@ class BillingServices
                     'INPUT_TAX_AMOUNT' => $list['TAX_AMOUNT']
                 ]);
             }
-
-
             return $result;
         }
 
         return [];
     }
-    // public function updateJournal(int $ID, int $ACCOUNT_ID, int $JOURNAL_NO, int $LOCATION_ID, string $DATE, int $SUBSIDIARY_ID, int $OBJECT_TYPE, float $AMOUNT, int $TYPE, string $EXTENSION)
-    // {
-    //     $this->accountJournalServices->JournalModify($ACCOUNT_ID, $LOCATION_ID, $JOURNAL_NO, $SUBSIDIARY_ID, $ID, $OBJECT_TYPE, $DATE, $TYPE, $AMOUNT, 0, $EXTENSION);
-    // }
     public function getUpdateTaxItem(int $BILL_ID, int $TAX_ID)
     {
-        $taxRate = (float) Tax::where('ID', $TAX_ID)->first()->RATE;
-        $MAIN_OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL');
-        $ITEM_OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL_ITEMS');
-        $EXPENSES_OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL_EXPENSES');
-        $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($MAIN_OBJECT_TYPE, $BILL_ID);
-
-        $BILL_DATA = $this->get($BILL_ID);
-
+        $taxRate = (float) Tax::where('ID', $TAX_ID)->first()->RATE ?? 0;
         $items = BillItems::query()
             ->select([
                 'bill_items.ID',
@@ -384,31 +415,29 @@ class BillingServices
             if ($tax_result) {
                 BillItems::where('ID', $list->ID)
                     ->update([
-                        'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
-                        'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
+                        'TAXABLE_AMOUNT'    => $tax_result['TAXABLE_AMOUNT'],
+                        'TAX_AMOUNT'        => $tax_result['TAX_AMOUNT']
                     ]);
-
             }
         }
 
         $expenses = BillExpenses::query()
-            ->select(
-                [
-                    'bill_expenses.ID',
-                    'bill_expenses.AMOUNT',
-                    'bill_expenses.TAXABLE'
-                ]
-            )
+            ->select([
+                'bill_expenses.ID',
+                'bill_expenses.AMOUNT',
+                'bill_expenses.TAXABLE'
+            ])
             ->where('bill_expenses.BILL_ID', $BILL_ID)
             ->orderBy('bill_expenses.LINE_NO', 'asc')
             ->get();
 
         foreach ($expenses as $list) {
             $tax_result = $this->compute->ItemComputeTax($list->AMOUNT, $list->TAXABLE, $TAX_ID, $taxRate);
+
             BillExpenses::where('ID', $list->ID)
                 ->update([
-                    'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
-                    'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
+                    'TAXABLE_AMOUNT'        => $tax_result['TAXABLE_AMOUNT'],
+                    'TAX_AMOUNT'            => $tax_result['TAX_AMOUNT']
                 ]);
         }
     }
@@ -445,7 +474,7 @@ class BillingServices
             $STATUS = 0;
 
             if ($PAY == 0) {
-                // poste    d
+                // poste 
                 $STATUS = 0;
             } elseif ($BALANCE <= 0) {
                 //paid
@@ -455,11 +484,12 @@ class BillingServices
                 $STATUS = 2;
             }
 
-            Bill::where('ID', $BILL_ID)->update([
-                'BALANCE_DUE' => $BALANCE,
-                'STATUS' => $STATUS,
-                'STATUS_DATE' => $this->dateServices->NowDate()
-            ]);
+            Bill::where('ID', $BILL_ID)
+                ->update([
+                    'BALANCE_DUE'   => $BALANCE,
+                    'STATUS'        => $STATUS,
+                    'STATUS_DATE'   => $this->dateServices->NowDate()
+                ]);
         }
     }
     public function getBalance(int $BILL_ID): float

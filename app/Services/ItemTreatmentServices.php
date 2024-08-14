@@ -18,16 +18,7 @@ class ItemTreatmentServices
     {
         return ItemTreatment::where('ID', $Id)->first();
     }
-    public function Store(
-        int $LOCATION_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        int $NO_OF_USED,
-        bool $IS_AUTO,
-        bool $IS_REQUIRED,
-        float $NEW_TREATMENT_QTY
-    ): int {
+    public function Store( int $LOCATION_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, int $NO_OF_USED, bool $IS_AUTO, bool $IS_REQUIRED, float $NEW_TREATMENT_QTY ): int {
         $ID =  (int) $this->object->ObjectNextID('ITEM_TREATMENT');
         ItemTreatment::create([
             'ID'                => $ID,
@@ -45,18 +36,7 @@ class ItemTreatmentServices
         return $ID;
     }
 
-    public function Update(
-        int $ID,
-        int $LOCATION_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        int $NO_OF_USED,
-        bool $INACTIVE,
-        bool $IS_AUTO,
-        bool $IS_REQUIRED,
-        float $NEW_TREATMENT_QTY
-    ) {
+    public function Update( int $ID, int $LOCATION_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, int $NO_OF_USED, bool $INACTIVE, bool $IS_AUTO, bool $IS_REQUIRED, float $NEW_TREATMENT_QTY ) {
         ItemTreatment::where('ID', $ID)
             ->update([
                 'LOCATION_ID'       => $LOCATION_ID,

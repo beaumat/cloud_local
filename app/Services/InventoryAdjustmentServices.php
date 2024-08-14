@@ -117,55 +117,39 @@ class InventoryAdjustmentServices
             ->where('ITEM_ID', $ITEM_ID)
             ->exists();
     }
-    public function ItemStore(
-        int $INVENTORY_ADJUSTMENT_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        float $UNIT_COST,
-        int $ASSET_ACCOUNT_ID,
-        int $BATCH_ID,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY
-    ) {
+    public function ItemStore(int $INVENTORY_ADJUSTMENT_ID, int $ITEM_ID, float $QUANTITY, float $UNIT_COST, int $ASSET_ACCOUNT_ID, int $BATCH_ID, int $UNIT_ID, float $UNIT_BASE_QUANTITY)
+    {
 
         $ID = (int) $this->object->ObjectNextID('INVENTORY_ADJUSTMENT_ITEMS');
         $LINE_NO = (int) $this->getLine($INVENTORY_ADJUSTMENT_ID) + 1;
 
         InventoryAdjustmentItems::create([
-            'ID' => $ID,
-            'INVENTORY_ADJUSTMENT_ID' => $INVENTORY_ADJUSTMENT_ID,
-            'LINE_NO' => $LINE_NO,
-            'ITEM_ID' => $ITEM_ID,
-            'QUANTITY' => $QUANTITY,
-            'UNIT_COST' => $UNIT_COST,
-            'QTY_DIFFERENCE' => 0,
-            'VALUE_DIFFERENCE' => 0,
-            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID,
-            'ASSET_VALUE' => 0,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY
+            'ID'                        => $ID,
+            'INVENTORY_ADJUSTMENT_ID'   => $INVENTORY_ADJUSTMENT_ID,
+            'LINE_NO'                   => $LINE_NO,
+            'ITEM_ID'                   => $ITEM_ID,
+            'QUANTITY'                  => $QUANTITY,
+            'UNIT_COST'                 => $UNIT_COST,
+            'QTY_DIFFERENCE'            => 0,
+            'VALUE_DIFFERENCE'          => 0,
+            'ASSET_ACCOUNT_ID'          => $ASSET_ACCOUNT_ID,
+            'ASSET_VALUE'               => 0,
+            'BATCH_ID'                  => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'UNIT_ID'                   => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY'        => $UNIT_BASE_QUANTITY
         ]);
     }
-    public function ItemUpdate(
-        int $ID,
-        int $INVENTORY_ADJUSTMENT_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        float $UNIT_COST,
-        int $BATCH_ID,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY
-    ) {
+    public function ItemUpdate(int $ID, int $INVENTORY_ADJUSTMENT_ID, int $ITEM_ID, float $QUANTITY, float $UNIT_COST, int $BATCH_ID, int $UNIT_ID, float $UNIT_BASE_QUANTITY)
+    {
         InventoryAdjustmentItems::where('ID', $ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->where('INVENTORY_ADJUSTMENT_ID', $INVENTORY_ADJUSTMENT_ID)
             ->update([
-                'QUANTITY' => $QUANTITY,
-                'UNIT_COST' => $UNIT_COST,
-                'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY
+                'QUANTITY'              => $QUANTITY,
+                'UNIT_COST'             => $UNIT_COST,
+                'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
+                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY
             ]);
     }
     public function ItemDelete(

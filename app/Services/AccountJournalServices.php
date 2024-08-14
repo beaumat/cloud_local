@@ -74,7 +74,7 @@ class AccountJournalServices
             ->first();
 
 
-        
+
 
         if ($data) { // if exists
             return (int) $data->JOURNAL_NO;
@@ -89,7 +89,7 @@ class AccountJournalServices
             ->select(['JOURNAL_NO'])
             ->where('OBJECT_TYPE', $OBJECT_TYPE)
             ->where('OBJECT_ID', $OBJECT_ID)
-            ->first();  
+            ->first();
 
         if ($data) { // if exists
             return (int) $data->JOURNAL_NO;
@@ -141,10 +141,10 @@ class AccountJournalServices
     public function getSumDebitCredit(int $JOURNAL_NO)
     {
         $result = AccountJournal::query()
-            ->select(
+            ->select([
                 DB::raw('SUM(IF(ENTRY_TYPE=0, AMOUNT, 0)) as DEBIT'),
                 DB::raw('SUM(IF(ENTRY_TYPE=1, AMOUNT, 0)) as CREDIT')
-            )
+            ])
             ->where('ACCOUNT_JOURNAL.JOURNAL_NO', $JOURNAL_NO)
             ->first();
 
@@ -163,7 +163,7 @@ class AccountJournalServices
     }
     private function JournalExists(int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $LOCATION_ID, int $SUBSIDIARY_ID, string $EXTENDED_OPTIONS): bool
     {
-        return AccountJournal::query()
+        $result = (bool) AccountJournal::query()
             ->where('OBJECT_ID', $OBJECT_ID)
             ->where('OBJECT_TYPE', $OBJECT_TYPE)
             ->where('OBJECT_DATE', $OBJECT_DATE)
@@ -171,6 +171,8 @@ class AccountJournalServices
             ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
             ->where('EXTENDED_OPTIONS', $EXTENDED_OPTIONS)
             ->exists();
+
+        return $result;
     }
 
     public function JournalModify(int $ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE, float $AMOUNT, int  $SEQUENCE_GROUP, string $EXTENDED_OPTIONS)
@@ -227,14 +229,12 @@ class AccountJournalServices
     public function getJournalList(int $JOURNAL_NO)
     {
         $result = AccountJournal::query()
-            ->select(
-                [
-                    'a.TAG as ACCOUNT_CODE',
-                    'a.NAME as ACCOUNT_TITLE',
-                    DB::raw(" if(account_journal.ENTRY_TYPE = 0, account_journal.AMOUNT, '' ) as DEBIT "),
-                    DB::raw(" if(account_journal.ENTRY_TYPE = 1, account_journal.AMOUNT, '' ) as CREDIT ")
-                ]
-            )->leftJoin('account as a', 'a.ID', '=', 'account_journal.ACCOUNT_ID')
+            ->select([
+                'a.TAG as ACCOUNT_CODE',
+                'a.NAME as ACCOUNT_TITLE',
+                DB::raw(" if(account_journal.ENTRY_TYPE = 0, account_journal.AMOUNT, '' ) as DEBIT "),
+                DB::raw(" if(account_journal.ENTRY_TYPE = 1, account_journal.AMOUNT, '' ) as CREDIT ")
+            ])->leftJoin('account as a', 'a.ID', '=', 'account_journal.ACCOUNT_ID')
             ->where('account_journal.JOURNAL_NO', $JOURNAL_NO)
             ->get();
 

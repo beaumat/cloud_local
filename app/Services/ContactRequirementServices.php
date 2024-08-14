@@ -9,10 +9,12 @@ use Illuminate\Support\Carbon;
 class ContactRequirementServices
 {
 
-    private $object;
-    public function __construct(ObjectServices $objectService)
+    private $objectService;
+    private $dateServices;
+    public function __construct(ObjectServices $objectService, DateServices $dateServices)
     {
-        $this->object = $objectService;
+        $this->objectService = $objectService;
+        $this->dateServices = $dateServices;
     }
     public function AutoCreateList(int $CONTACT_ID)
     {
@@ -23,20 +25,20 @@ class ContactRequirementServices
     }
     public function Store(int $CONTACT_ID, int $REQUIREMENT_ID)
     {
-        $ID = $this->object->ObjectNextID('CONTACT_REQUIREMENT');
+        $ID = $this->objectService->ObjectNextID('CONTACT_REQUIREMENT');
         ContactRequirements::create([
-            'ID' => $ID,
-            'CONTACT_ID' => $CONTACT_ID,
-            'REQUIREMENT_ID' => $REQUIREMENT_ID
+            'ID'                => $ID,
+            'CONTACT_ID'        => $CONTACT_ID,
+            'REQUIREMENT_ID'    => $REQUIREMENT_ID
         ]);
     }
     public function UpdateIsComplete(int $ID, bool $VALUE)
     {
         ContactRequirements::where('ID', $ID)
             ->update([
-                'IS_COMPLETE' => $VALUE,
-                'DATE_COMPLETED' => $VALUE ? Carbon::now()->format('Y-m-d') : null,
-                'NOT_APPLICABLE' => false
+                'IS_COMPLETE'       => $VALUE,
+                'DATE_COMPLETED'    => $VALUE ? $this->dateServices->NowDate() : null,
+                'NOT_APPLICABLE'    => false
             ]);
     }
     public function UpdateNotApplicable(int $ID, bool $VALUE)
@@ -53,13 +55,16 @@ class ContactRequirementServices
         ContactRequirements::where('ID', $ID)
             ->update([
                 'IS_COMPLETE' =>  $IS_COMPLETE,
-                'DATE_COMPLETED' => $IS_COMPLETE ? Carbon::now()->format('Y-m-d') : null,
+                'DATE_COMPLETED' => $IS_COMPLETE ? $this->dateServices->NowDate() : null,
                 'NOT_APPLICABLE' => $NOT_APPLICABLE
             ]);
     }
     public function GetCountRequirement(int $CONTACT_ID): int
     {
-        return (int) ContactRequirements::where('CONTACT_ID', $CONTACT_ID)->where('IS_COMPLETE', 0)->where('NOT_APPLICABLE', 0)->count();
+        return (int) ContactRequirements::where('CONTACT_ID', $CONTACT_ID)
+            ->where('IS_COMPLETE', 0)
+            ->where('NOT_APPLICABLE', 0)
+            ->count();
     }
     public function GetList(int $CONTACT_ID)
     {
