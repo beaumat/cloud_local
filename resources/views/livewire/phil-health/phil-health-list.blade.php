@@ -55,8 +55,8 @@
                                         <th>SOA No.</th>
                                         <th>Date Created</th>
                                         <th>Elapsed </th>
-                                        <th clsss="bg-success">LHIO No.</th>
-                                        <th clsss="bg-success">LHIO Date</th>
+                                        <th clsss="bg-success active">LHIO Date</th>
+                                        <th clsss="bg-success active">LHIO No.</th>
                                         <th class="col-2">Patients</th>
                                         <th class="text-center">Admitted</th>
                                         <th class="text-center">Discharges</th>
@@ -87,14 +87,15 @@
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ Carbon::parse($list->DATE)->diffForHumans() }} </td>
                                             <td class="text-center">
-                                                {{ $list->AR_NO }}
-
-                                            </td>
-                                            <td class="text-center">
                                                 @if ($list->AR_DATE)
                                                     {{ date('m/d/Y', strtotime($list->AR_DATE)) }}
                                                 @endif
                                             </td>
+                                            <td class="text-center">
+                                                {{ $list->AR_NO }}
+
+                                            </td>
+
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td class="text-center">
                                                 {{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
