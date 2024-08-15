@@ -21,7 +21,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 
-#[Title('Add Stock')]
+#[Title('Billing')]
 class BillingForm extends Component
 {
 

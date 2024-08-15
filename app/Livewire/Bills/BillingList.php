@@ -14,7 +14,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title('Add Stock')]
+#[Title('Billing')]
 class BillingList extends Component
 {
 

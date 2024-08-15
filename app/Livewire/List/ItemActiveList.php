@@ -11,7 +11,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 
-#[Title('Active Item List')]
+#[Title('Item Inventory')]
 class ItemActiveList extends Component
 {
   public $search = '';

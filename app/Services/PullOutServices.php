@@ -50,7 +50,7 @@ class PullOutServices
     {
         PullOut::where('ID', $ID)
             ->update([
-                'CODE' => $CODE,
+                'CODE'  => $CODE,
                 'NOTES' => $NOTES,
                 'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
             ]);
@@ -59,8 +59,8 @@ class PullOutServices
     {
         PullOut::where('ID', $ID)
             ->update([
-                'STATUS' => $STATUS,
-                'STATUS_DATE' => $this->dateServices->NowDate()
+                'STATUS'            => $STATUS,
+                'STATUS_DATE'       => $this->dateServices->NowDate()
             ]);
     }
     public function Delete(int $ID)
@@ -68,7 +68,19 @@ class PullOutServices
         PullOutItems::where('PULL_OUT_ID', $ID)->delete();
         PullOut::where('ID', $ID)->delete();
     }
-
+    public function PostedToCanceld(int $ID)
+    {
+        $data =  PullOut::where('ID', $ID)->first();
+        if ($data) {
+            if ($data->STATUS_ID ==  15) {
+                // Canceled
+                PullOut::where("ID", $ID)->update(['STATUS', 6]);
+            } else {
+                // Void
+                PullOut::where("ID", $ID)->update(['STATUS', 7]);
+            }
+        }
+    }
 
     public function Search($search, int $LOCATION_ID, int $perPage)
     {
@@ -117,7 +129,7 @@ class PullOutServices
     {
 
         $ID = $this->object->ObjectNextID('PULL_OUT');
-        
+
         $LINE_NO = $this->getLine($PULL_OUT_ID) + 1;
         PullOutItems::create([
             'ID'            => $ID,
@@ -171,7 +183,7 @@ class PullOutServices
     public function UpdateTotal(int $PULL_OUT_ID)
     {
         $result = $this->GetTotal($PULL_OUT_ID);
-        
+
         PullOut::where('ID', $PULL_OUT_ID)
             ->update(
                 [
