@@ -175,7 +175,7 @@ class BillingForm extends Component
         $this->DISCOUNT_DATE = '';
         $this->DISCOUNT_PCT = 0;
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->VENDOR_ID = $this->contactServices->getFirstFromListByID(0);
+        $this->VENDOR_ID = 0; //$this->contactServices->getFirstFromListByID(0);
         $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
         $this->NOTES = '';
         $this->AMOUNT = 0;
