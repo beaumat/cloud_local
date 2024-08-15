@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class PatientReportServices
 {
-    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, int $patientId = 0): Collection
+    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, int $patientId = 0)
     {
         $results = DB::table('service_charges_items as sci')
             ->select([
