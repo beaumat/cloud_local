@@ -81,7 +81,8 @@ class PullOutServices
                 'pull_out.NOTES',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                'c.NAME as PREPARED_BY'
+                'c.NAME as PREPARED_BY',
+                'pull_out.STATUS as STATUS_ID'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'pull_out.PREPARED_BY_ID')
             ->join('document_status_map as s', 's.ID', '=', 'pull_out.STATUS')

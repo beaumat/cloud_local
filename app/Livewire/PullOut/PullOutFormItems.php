@@ -148,8 +148,8 @@ class PullOutFormItems extends Component
                 $this->QUANTITY,
                 $this->UNIT_ID,
                 (float) $unitRelated['QUANTITY'],
-                $this->RATE,
-                $this->BATCH_ID,
+                0,
+                0,
                 $this->ASSET_ACCOUNT_ID
             );
 

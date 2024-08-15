@@ -29,16 +29,16 @@ class InventoryAdjustmentServices
         $isLocRef = (bool) boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         InventoryAdjustment::create([
-            'ID'            => $ID,
-            'RECORDED_ON'   => $this->dateServices->Now(),
-            'CODE'          => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'          => $DATE,
-            'LOCATION_ID'   => $LOCATION_ID,
-            'ADJUSTMENT_TYPE_ID' => $ADJUSTMENT_TYPE_ID,
-            'ACCOUNT_ID'    => $ACCOUNT_ID,
-            'NOTES'         => $NOTES,
-            'STATUS'        => 0,
-            'STATUS_DATE'   => $this->dateServices->NowDate(),
+            'ID'                    => $ID,
+            'RECORDED_ON'           => $this->dateServices->Now(),
+            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                  => $DATE,
+            'LOCATION_ID'           => $LOCATION_ID,
+            'ADJUSTMENT_TYPE_ID'    => $ADJUSTMENT_TYPE_ID,
+            'ACCOUNT_ID'            => $ACCOUNT_ID,
+            'NOTES'                 => $NOTES,
+            'STATUS'                => 0,
+            'STATUS_DATE'           => $this->dateServices->NowDate(),
         ]);
 
         return $ID;
@@ -77,7 +77,8 @@ class InventoryAdjustmentServices
                 'inventory_adjustment.NOTES',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                't.DESCRIPTION as TYPE'
+                't.DESCRIPTION as TYPE',
+                'inventory_adjustment.STATUS as STATUS_ID'
             ])
             ->join('inventory_adjustment_type as t', 't.ID', '=', 'inventory_adjustment.ADJUSTMENT_TYPE_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -88,9 +89,11 @@ class InventoryAdjustmentServices
             })
             ->join('document_status_map as s', 's.ID', '=', 'inventory_adjustment.STATUS')
             ->when($search, function ($query) use (&$search) {
-                $query->where('inventory_adjustment.CODE', 'like', '%' . $search . '%')
-                    ->where('t.DESCRIPTION', 'like', '%' . $search . '%')
-                    ->orWhere('inventory_adjustment.NOTES', 'like', '%' . $search . '%');
+                $query->where(function ($q) use (&$search) {
+                    $q->where('inventory_adjustment.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('t.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('inventory_adjustment.NOTES', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy('inventory_adjustment.ID', 'desc')
             ->paginate($perPage);
@@ -117,13 +120,13 @@ class InventoryAdjustmentServices
             ->where('ITEM_ID', $ITEM_ID)
             ->exists();
     }
-    public function ItemHasAdjustmentThatBefore( int $ITEM_ID,string $DATE, int $LOCATION_ID)
+    public function ItemHasAdjustmentThatBefore(int $ITEM_ID, string $DATE, int $LOCATION_ID)
     {
-        return InventoryAdjustmentItems::join('inventory_adjustment as i','i.ID','=','inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID')
-        ->where('ITEM_ID', $ITEM_ID)
-        ->where('i.DATE','>=', $DATE)
-        ->where('i.LOCATION_ID',$LOCATION_ID)
-        ->exists();
+        return InventoryAdjustmentItems::join('inventory_adjustment as i', 'i.ID', '=', 'inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID')
+            ->where('ITEM_ID', $ITEM_ID)
+            ->where('i.DATE', '>=', $DATE)
+            ->where('i.LOCATION_ID', $LOCATION_ID)
+            ->exists();
     }
     public function ItemStore(int $INVENTORY_ADJUSTMENT_ID, int $ITEM_ID, float $QUANTITY, float $UNIT_COST, int $ASSET_ACCOUNT_ID, int $BATCH_ID, int $UNIT_ID, float $UNIT_BASE_QUANTITY)
     {

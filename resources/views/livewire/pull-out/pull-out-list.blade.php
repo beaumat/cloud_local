@@ -34,7 +34,9 @@
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
-                                                <select @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif  name="location" wire:model.live='locationid'
+                                                <select
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                    name="location" wire:model.live='locationid'
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
@@ -54,13 +56,8 @@
                                         <th class="col-1">Date</th>
                                         <th class="col-1">Prepared By</th>
                                         <th class="col-1">Location</th>
-                                        <th class="col-1">Amount</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">
-
-
-
-
                                             @can('company.pull-out.create')
                                                 <a href="{{ route('companypull_out_create') }}" class="text-white">
                                                     <i class="fas fa-plus"></i></a>
@@ -79,20 +76,24 @@
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->PREPARED_BY }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
-                                            <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('companypull_out_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                <a type="button"
+                                                    href="{{ route('companypull_out_edit', ['id' => $list->ID]) }}"
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @can('company.pull-out.delete')
-                                                    <a href="#" wire:click='delete({{ $list->ID }})'
+                                                @if (auth()->user()->can('company.pull-out.delete') && $list->STATUS_ID == 0)
+                                                    <button type="button" wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
-                                                        class="btn-sm text-danger">
-                                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                                    </a>
-                                                @endcan
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn btn-xs btn-secondary">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @endif
 
                                             </td>
                                         </tr>

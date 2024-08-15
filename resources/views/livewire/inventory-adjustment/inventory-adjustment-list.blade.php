@@ -3,7 +3,8 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('companyinventory_adjustment') }}"> Inventory Adjustment </a></h5>
+                    <h5 class="m-0"><a href="{{ route('companyinventory_adjustment') }}"> Inventory Adjustment </a>
+                    </h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -34,7 +35,9 @@
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
-                                                <select @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif name="location" wire:model.live='locationid'
+                                                <select
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                    name="location" wire:model.live='locationid'
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
@@ -53,12 +56,16 @@
                                     <tr>
                                         <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
-                                        <th class="col-1">Adustment Type</th>                      
-                                        <th class="col-1">Location</th>                             
+                                        <th class="col-1">Adustment Type</th>
+                                        <th class="col-1">Location</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">
-                                            <a href="{{ route('companyinventory_adjustment_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+
+                                            @can('company.inventory-adjustment.create')
+                                                <a href="{{ route('companyinventory_adjustment_create') }}"
+                                                    class="text-white">
+                                                    <i class="fas fa-plus"></i></a>
+                                            @endcan
                                         </th>
                                     </tr>
                                 </thead>
@@ -72,19 +79,29 @@
                                                 </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                            <td> {{ $list->TYPE }}</td>         
+                                            <td> {{ $list->TYPE }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('companyinventory_adjustment_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+
+                                                <a type="button"
+                                                    href="{{ route('companyinventory_adjustment_edit', ['id' => $list->ID]) }}"
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+
+                                                @if (auth()->user()->can('company.inventory-adjustment.delete') && $list->STATUS_ID == 0)
+                                                    <button type="button" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn btn-xs btn-secondary">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @endif
+
                                             </td>
                                         </tr>
                                     @endforeach

@@ -5,6 +5,7 @@ namespace App\Livewire\InventoryAdjustment;
 use App\Services\InventoryAdjustmentServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -21,11 +22,8 @@ class InventoryAdjustmentList extends Component
     private $inventoryAdjustmentServices;
     private $locationServices;
     private $userServices;
-    public function boot(
-        InventoryAdjustmentServices $inventoryAdjustmentServices,
-        LocationServices $locationServices,
-        UserServices $userServices
-    ) {
+    public function boot(InventoryAdjustmentServices $inventoryAdjustmentServices, LocationServices $locationServices, UserServices $userServices)
+    {
         $this->inventoryAdjustmentServices = $inventoryAdjustmentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -38,11 +36,14 @@ class InventoryAdjustmentList extends Component
     }
     public function delete($id)
     {
+        DB::beginTransaction();
         try {
-            $this->inventoryAdjustmentServices->Delete($id);
-            session()->flash('message', 'Successfully deleted.');
 
+            $this->inventoryAdjustmentServices->Delete($id);
+            DB::commit();
+            session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -50,6 +51,6 @@ class InventoryAdjustmentList extends Component
     public function render()
     {
         $dataList = $this->inventoryAdjustmentServices->Search($this->search, $this->locationid, $this->perPage);
-        return view('livewire.inventory-adjustment.inventory-adjustment-list',['dataList' => $dataList]);
+        return view('livewire.inventory-adjustment.inventory-adjustment-list', ['dataList' => $dataList]);
     }
 }
