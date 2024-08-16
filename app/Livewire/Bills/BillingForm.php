@@ -25,9 +25,7 @@ use Illuminate\Support\Facades\DB;
 class BillingForm extends Component
 {
 
-
     public int $openStatus = 0;
-
     public int $ID;
     public int $VENDOR_ID;
     public string $DATE;

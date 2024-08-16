@@ -9,8 +9,10 @@ use App\Models\Tax;
 use App\Services\ContactServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Vendor Details')]
 class VendorForm extends Component
 {
     public int $ID;
@@ -51,7 +53,7 @@ class VendorForm extends Component
     public $taxList = [];
     public $contactGroup = [];
     public $paymentTermList = [];
-    public string $selectTab='gen';
+    public string $selectTab = 'gen';
     public function SelectTab($tab)
     {
         $this->selectTab = $tab;
@@ -150,28 +152,12 @@ class VendorForm extends Component
         $this->validate(
             [
                 'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
-                'ACCOUNT_NO' => [
-                    'required',
-                    'max:50',
-                    function ($attribute, $value, $fail) {
-                        $count = Contacts::query()
-                            ->where('account_no', $value)
-                            ->where('type', $this->TYPE)
-                            ->where('id', '<>', $this->ID)
-                            ->count();
-
-                        if ($count > 0) {
-                            $fail('The specified Account No. is not unique.');
-                        }
-                    },
-                ],
                 'PRINT_NAME_AS' => 'required|max:100'
 
             ],
             [],
             [
                 'NAME' => 'Name',
-                'ACCOUNT_NO' => 'Account No.',
                 'PRINT_NAME_AS' => 'Print As'
             ]
         );
@@ -215,6 +201,7 @@ class VendorForm extends Component
                     $this->HIRE_DATE
                 );
                 session()->flash('message', 'Successfully created');
+                return Redirect::route('maintenancecontactvendor_edit', ['id' => $this->ID]);
             } else {
                 $contactServices->Update(
                     $this->ID,

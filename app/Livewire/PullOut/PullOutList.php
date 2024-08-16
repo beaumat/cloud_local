@@ -40,7 +40,6 @@ class PullOutList extends Component
     public function render()
     {
         $dataList = $this->pullOutServices->Search($this->search, $this->locationid, $this->perPage);
-
         return view('livewire.pull-out.pull-out-list', ['dataList' => $dataList]);
     }
 }

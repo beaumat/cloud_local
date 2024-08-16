@@ -19,20 +19,15 @@ class EmployeeList extends Component
     public int $locationid = 0;
     private $contactServices;
 
-    public function boot(
-        ContactServices $contactServices,
-
-    ) {
+    public function boot(ContactServices $contactServices)
+    {
         $this->contactServices = $contactServices;
-
-       
     }
     public function delete($id)
     {
         try {
             $this->contactServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);

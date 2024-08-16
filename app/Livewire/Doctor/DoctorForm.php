@@ -56,7 +56,8 @@ class DoctorForm extends Component
 
     private $contactServices;
 
-    public function boot( ContactServices $contactServices ) {
+    public function boot(ContactServices $contactServices)
+    {
         $this->contactServices = $contactServices;
     }
     public function SelectTab($tab)
@@ -70,41 +71,41 @@ class DoctorForm extends Component
         if (is_numeric($id)) {
             $contact = $this->contactServices->get($id, $this->TYPE);
             if ($contact) {
-                $this->ID = $contact->ID;
-                $this->NAME = $contact->NAME;
-                $this->COMPANY_NAME = $contact->COMPANY_NAME ? $contact->COMPANY_NAME : '';
-                $this->SALUTATION = $contact->SALUTATION ? $contact->SALUTATION : '';
-                $this->FIRST_NAME = $contact->FIRST_NAME ? $contact->FIRST_NAME : '';
-                $this->MIDDLE_NAME = $contact->MIDDLE_NAME ? $contact->MIDDLE_NAME : '';
-                $this->LAST_NAME = $contact->LAST_NAME ? $contact->LAST_NAME : '';
-                $this->PRINT_NAME_AS = $contact->PRINT_NAME_AS ? $contact->PRINT_NAME_AS : '';
-                $this->POSTAL_ADDRESS = $contact->POSTAL_ADDRESS ? $contact->POSTAL_ADDRESS : '';
-                $this->CONTACT_PERSON = $contact->CONTACT_PERSON ? $contact->CONTACT_PERSON : '';
-                $this->TELEPHONE_NO = $contact->TELEPHONE_NO ? $contact->TELEPHONE_NO : '';
-                $this->FAX_NO = $contact->FAX_NO ? $contact->FAX_NO : '';
-                $this->MOBILE_NO = $contact->MOBILE_NO ? $contact->MOBILE_NO : '';
-                $this->ALT_TELEPHONE_NO = $contact->ALT_TELEPHONE_NO ? $contact->ALT_TELEPHONE_NO : '';
-                $this->ALT_CONTACT_PERSON = $contact->ALT_CONTACT_PERSON ? $contact->ALT_CONTACT_PERSON : '';
-                $this->EMAIL = $contact->EMAIL ? $contact->EMAIL : '';
-                $this->ACCOUNT_NO = $contact->ACCOUNT_NO ? $contact->ACCOUNT_NO : '';
-                $this->INACTIVE = $contact->INACTIVE;
-                $this->GROUP_ID = $contact->GROUP_ID ? $contact->GROUP_ID : 0;
-                $this->PAYMENT_TERMS_ID = $contact->PAYMENT_TERMS_ID ? $contact->PAYMENT_TERMS_ID : 0;
-                $this->CREDIT_LIMIT = $contact->CREDIT_LIMIT ? $contact->CREDIT_LIMIT : 0;
-                $this->PREF_PAYMENT_METHOD_ID = $contact->PREF_PAYMENT_METHOD_ID ? $contact->PREF_PAYMENT_METHOD_ID : 0;
-                $this->CREDIT_CARD_NO = $contact->CREDIT_CARD_NO ? $contact->CREDIT_CARD_NO : '';
-                $this->CREDIT_CARD_EXPIRY_DATE = $contact->CREDIT_CARD_EXPIRY_DATE ? $contact->CREDIT_CARD_EXPIRY_DATE : '';
-                $this->SALES_REP_ID = $contact->SALES_REP_ID ? $contact->SALES_REP_ID : 0;
-                $this->PRICE_LEVEL_ID = $contact->PRICE_LEVEL_ID ? $contact->PRICE_LEVEL_ID : 0;
-                $this->TAXPAYER_ID = $contact->TAXPAYER_ID ? $contact->TAXPAYER_ID : '';
-                $this->TAX_ID = $contact->TAX_ID ? $contact->TAX_ID : 0;
-                $this->EW_TAX_ID = $contact->EW_TAX_ID ? $contact->EW_TAX_ID : 0;
-                $this->SSS_NO = $contact->SSS_NO ? $contact->SSS_NO : 0;
-                $this->GENDER = $contact->GENDER ? $contact->GENDER : -1;
-                $this->DATE_OF_BIRTH = $contact->DATE_OF_BIRTH ? $contact->DATE_OF_BIRTH : '';
-                $this->NICKNAME = $contact->NICKNAME ? $contact->NICKNAME : '';
-                $this->HIRE_DATE = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
-                $this->PIN = $contact->PIN ?? '';
+                $this->ID                       = $contact->ID;
+                $this->NAME                     = $contact->NAME;
+                $this->COMPANY_NAME             = $contact->COMPANY_NAME ? $contact->COMPANY_NAME : '';
+                $this->SALUTATION               = $contact->SALUTATION ? $contact->SALUTATION : '';
+                $this->FIRST_NAME               = $contact->FIRST_NAME ? $contact->FIRST_NAME : '';
+                $this->MIDDLE_NAME              = $contact->MIDDLE_NAME ? $contact->MIDDLE_NAME : '';
+                $this->LAST_NAME                = $contact->LAST_NAME ? $contact->LAST_NAME : '';
+                $this->PRINT_NAME_AS            = $contact->PRINT_NAME_AS ? $contact->PRINT_NAME_AS : '';
+                $this->POSTAL_ADDRESS           = $contact->POSTAL_ADDRESS ? $contact->POSTAL_ADDRESS : '';
+                $this->CONTACT_PERSON           = $contact->CONTACT_PERSON ? $contact->CONTACT_PERSON : '';
+                $this->TELEPHONE_NO             = $contact->TELEPHONE_NO ? $contact->TELEPHONE_NO : '';
+                $this->FAX_NO                   = $contact->FAX_NO ? $contact->FAX_NO : '';
+                $this->MOBILE_NO                = $contact->MOBILE_NO ? $contact->MOBILE_NO : '';
+                $this->ALT_TELEPHONE_NO         = $contact->ALT_TELEPHONE_NO ? $contact->ALT_TELEPHONE_NO : '';
+                $this->ALT_CONTACT_PERSON       = $contact->ALT_CONTACT_PERSON ? $contact->ALT_CONTACT_PERSON : '';
+                $this->EMAIL                    = $contact->EMAIL ? $contact->EMAIL : '';
+                $this->ACCOUNT_NO               = $contact->ACCOUNT_NO ? $contact->ACCOUNT_NO : '';
+                $this->INACTIVE                 = $contact->INACTIVE;
+                $this->GROUP_ID                 = $contact->GROUP_ID ? $contact->GROUP_ID : 0;
+                $this->PAYMENT_TERMS_ID         = $contact->PAYMENT_TERMS_ID ? $contact->PAYMENT_TERMS_ID : 0;
+                $this->CREDIT_LIMIT             = $contact->CREDIT_LIMIT ? $contact->CREDIT_LIMIT : 0;
+                $this->PREF_PAYMENT_METHOD_ID   = $contact->PREF_PAYMENT_METHOD_ID ? $contact->PREF_PAYMENT_METHOD_ID : 0;
+                $this->CREDIT_CARD_NO           = $contact->CREDIT_CARD_NO ? $contact->CREDIT_CARD_NO : '';
+                $this->CREDIT_CARD_EXPIRY_DATE  = $contact->CREDIT_CARD_EXPIRY_DATE ? $contact->CREDIT_CARD_EXPIRY_DATE : '';
+                $this->SALES_REP_ID             = $contact->SALES_REP_ID ? $contact->SALES_REP_ID : 0;
+                $this->PRICE_LEVEL_ID           = $contact->PRICE_LEVEL_ID ? $contact->PRICE_LEVEL_ID : 0;
+                $this->TAXPAYER_ID              = $contact->TAXPAYER_ID ? $contact->TAXPAYER_ID : '';
+                $this->TAX_ID                   = $contact->TAX_ID ? $contact->TAX_ID : 0;
+                $this->EW_TAX_ID                = $contact->EW_TAX_ID ? $contact->EW_TAX_ID : 0;
+                $this->SSS_NO                   = $contact->SSS_NO ? $contact->SSS_NO : 0;
+                $this->GENDER                   = $contact->GENDER ? $contact->GENDER : -1;
+                $this->DATE_OF_BIRTH            = $contact->DATE_OF_BIRTH ? $contact->DATE_OF_BIRTH : '';
+                $this->NICKNAME                 = $contact->NICKNAME ? $contact->NICKNAME : '';
+                $this->HIRE_DATE                = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
+                $this->PIN                      = $contact->PIN ?? '';
 
                 return;
             }
@@ -156,28 +157,13 @@ class DoctorForm extends Component
     {
         $this->validate(
             [
-                'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
-                'ACCOUNT_NO' => [
-                    'required',
-                    'max:50',
-                    function ($attribute, $value, $fail) {
-                        $count = Contacts::query()
-                            ->where('ACCOUNT_NO', $value)
-                            ->where('TYPE', $this->TYPE)
-                            ->where('ID', '<>', $this->ID)
-                            ->count();
-                        if ($count > 0) {
-                            $fail('The specified Doctor ID is not unique.');
-                        }
-                    },
-                ],
-                'PRINT_NAME_AS' => 'required|max:100',
+                'NAME' => 'required|string|max:100|unique:contact,name,' . $this->ID,
+                'PRINT_NAME_AS' => 'required|string|max:100',
 
             ],
             [],
             [
                 'NAME' => 'Name',
-                'ACCOUNT_NO' => 'Doctor ID',
                 'PRINT_NAME_AS' => 'Print As',
             ]
         );
@@ -273,7 +259,7 @@ class DoctorForm extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-    }  
+    }
     #[On('clear-alert')]
     public function clearAlert()
     {

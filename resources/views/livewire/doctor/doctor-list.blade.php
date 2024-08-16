@@ -3,12 +3,12 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancecontactdoctors') }}"> Doctor List </a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancecontactdoctors') }}"> Doctors </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
-              
+
                         </li>
                     </ol>
                 </div>
@@ -33,19 +33,6 @@
                                 <div class="col-md-4">
 
                                 </div>
-                                {{-- <div class="col-md-3">
-                                    <div class="mt-0">
-                                        <label class="text-sm">Location:</label>
-                                        <select name="location" wire:model.live='locationid'
-                                            class="form-control form-control-sm">
-                                            <option value="0"> All Location</option>
-                                            @foreach ($locationList as $item)
-                                                <option value="{{ $item->ID }}"> {{ $item->NAME }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div> --}}
                             </div>
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
@@ -53,21 +40,30 @@
                                         <th>ID No.</th>
                                         <th>Name</th>
                                         <th>Accreditation No.</th>
-                                        <th>Inactive</th>
+                                        <th class="text-center">Inactive</th>
                                         <th class="text-center bg-success col-1">
-                                            <a href="{{ route('maintenancecontactdoctors_create') }}"
-                                                class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+
+                                            @can('contact.doctor.create')
+                                                <a type="button" href="{{ route('maintenancecontactdoctors_create') }}"
+                                                    class="text-white">
+                                                    <i class="fas fa-plus"></i> New</a>
+                                            @endcan
+
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ $list->ACCOUNT_NO }}</td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('maintenancecontactdoctors_edit', ['id' => $list->ID]) }}">
+                                                    {{ $list->ACCOUNT_NO }}
+                                                </a>
+                                            </td>
                                             <td> {{ $list->NAME }}</td>
                                             <td> {{ $list->PIN }}</td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
                                                 @else
@@ -76,14 +72,22 @@
                                             </td>
                                             <td class="text-center">
                                                 <a href="{{ route('maintenancecontactdoctors_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+
+                                                @can('contact.doctor.delete')
+                                                    <button type="button" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn btn-xs btn-secondary">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @endcan
+
                                             </td>
                                         </tr>
                                     @endforeach

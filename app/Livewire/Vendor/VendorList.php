@@ -7,26 +7,21 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Supplier ')]
+#[Title('Vendor List')]
 class VendorList extends Component
 {
-    
+
     public $search = '';
     private $contactServices;
     public function boot(ContactServices $contactServices)
     {
-            $this->contactServices = $contactServices;
+        $this->contactServices = $contactServices;
     }
-    public function updatedsearch()
-    {
-        $this->contacts = $this->contactServices->Search($this->search,0,15,0);
-    }
-    public function delete($id, ContactServices $contactServices)
+    public function delete(int $id)
     {
         try {
-            $contactServices->Delete($id);
+            $this->contactServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
-      
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -41,8 +36,8 @@ class VendorList extends Component
         session()->forget('error');
     }
     public function render()
-    {        
-        $contacts = $this->contactServices->Search($this->search,0,15,0);
-        return view('livewire.vendor.vendor-list',['dataList' => $contacts]);
+    {
+        $contacts = $this->contactServices->Search($this->search, 0, 15, 0);
+        return view('livewire.vendor.vendor-list', ['dataList' => $contacts]);
     }
 }

@@ -34,40 +34,58 @@
                                         <th>Name</th>
                                         <th>Address</th>
                                         <th>Mobile No.</th>
-                                        <th>Email</th>          
-                                        <th>Inactive</th>
-                                        <th class="text-center col-1">
-                                            <a href="{{ route('maintenancecontactvendor_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+                                        <th>Email</th>
+                                        <th class="text-center">Inactive</th>
+                                        <th class="text-center bg-success col-1">
+                                            @can('contact.vendor.create')
+                                                <a type="button" href="{{ route('maintenancecontactvendor_create') }}"
+                                                    class="text-white">
+                                                    <i class="fas fa-plus"></i> New</a>
+                                            @endcan
+
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ $list->ACCOUNT_NO }}</td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('maintenancecontactvendor_edit', ['id' => $list->ID]) }}">
+                                                    {{ $list->ACCOUNT_NO }}</a>
+                                            </td>
                                             <td> {{ $list->NAME }}</td>
                                             <td> {{ $list->POSTAL_ADDRESS }}</td>
                                             <td> {{ $list->MOBILE_NO }}</td>
                                             <td> {{ $list->EMAIL }}</td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
-                                                @else                     
+                                                @else
                                                     <strong class="text-primary">No</strong>
                                                 @endif
-                                                
+
                                             </td>
-                                            <td class="text-center">             
+                                            <td class="text-center">
                                                 <a href="{{ route('maintenancecontactvendor_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
+
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+                                                @can('contact.vendor.delete')
+                                                    <button type="button" title="Delete Active"
+                                                        wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" title="Delete Disabled"
+                                                        class="btn btn-xs btn-secondary">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @endcan
+
                                             </td>
                                         </tr>
                                     @endforeach

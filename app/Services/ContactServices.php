@@ -10,10 +10,10 @@ use Livewire\WithPagination;
 class ContactServices
 {
     use WithPagination;
-    private $object;
+    private $objectService;
     public function __construct(ObjectServices $objectService)
     {
-        $this->object = $objectService;
+        $this->objectService = $objectService;
     }
     public function is12CharRequired(string $value): bool
     {
@@ -109,22 +109,22 @@ class ContactServices
         $OBJECT_TYPE = 0;
         switch ($TYPE) {
             case 0:
-                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Vendor');
+                $OBJECT_TYPE = (int) $this->objectService->ObjectTypeIdByName('Vendor');
                 break;
             case 1:
-                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Customer');
+                $OBJECT_TYPE = (int) $this->objectService->ObjectTypeIdByName('Customer');
                 break;
             case 2:
-                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Employee');
+                $OBJECT_TYPE = (int) $this->objectService->ObjectTypeIdByName('Employee');
                 break;
             case 3:
-                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Tax Agency');
+                $OBJECT_TYPE = (int) $this->objectService->ObjectTypeIdByName('Tax Agency');
                 break;
             case 4:
-                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Other Contact');
+                $OBJECT_TYPE = (int) $this->objectService->ObjectTypeIdByName('Other Contact');
                 break;
             case 5:
-                $OBJECT_TYPE = (int) $this->object->ObjectTypeIdByName('Patient');
+                $OBJECT_TYPE = (int) $this->objectService->ObjectTypeIdByName('Patient');
                 break;
             default:
                 # code...
@@ -132,7 +132,7 @@ class ContactServices
                 break;
         }
 
-        $ID = $this->object->ObjectNextIdByName('Contact');
+        $ID = $this->objectService->ObjectNextIdByName('Contact');
 
         Contacts::create([
             "ID"                    => $ID,
@@ -152,7 +152,7 @@ class ContactServices
             "ALT_TELEPHONE_NO"      => $ALT_TELEPHONE_NO,
             "ALT_CONTACT_PERSON"    => $ALT_CONTACT_PERSON,
             "EMAIL"                 => $EMAIL,
-            "ACCOUNT_NO"            => $ACCOUNT_NO != '' ? $ACCOUNT_NO : $this->object->GetSequence($OBJECT_TYPE, $CUSTOM_FIELD1),
+            "ACCOUNT_NO"            => $ACCOUNT_NO != '' ? $ACCOUNT_NO : $this->objectService->GetSequence($OBJECT_TYPE, $CUSTOM_FIELD1),
             "INACTIVE"              => $INACTIVE,
             "GROUP_ID"              => $GROUP_ID > 0 ? $GROUP_ID : null,
             "PAYMENT_TERMS_ID"      => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,

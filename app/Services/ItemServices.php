@@ -189,14 +189,16 @@ class ItemServices
             ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'item.BASE_UNIT_ID')
             ->where('item.INACTIVE', 0)
             ->when($search, function ($query) use (&$search) {
-                $query->where('item.CODE', 'like', '%' . $search . '%')
-                    ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
-                    ->orWhere('item_type_map.DESCRIPTION', 'like', '%' . $search . '%')
-                    ->orWhere('item_sub_class.DESCRIPTION', 'like', '%' . $search . '%')
-                    ->orWhere('item_class.DESCRIPTION', 'like', '%' . $search . '%')
-                    ->orWhere('item_group.DESCRIPTION', 'like', '%' . $search . '%')
-                    ->orWhere('stock_type_map.DESCRIPTION', 'like', '%' . $search . '%')
-                    ->orWhere('unit_of_measure.NAME', 'like', '%' . $search . '%');
+                $query->where(function ($q) use (&$search) {
+                    $q->where('item.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('item_type_map.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('item_sub_class.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('item_class.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('item_group.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('stock_type_map.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('unit_of_measure.NAME', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy('item.ID', 'desc')
             ->paginate($perPage);
