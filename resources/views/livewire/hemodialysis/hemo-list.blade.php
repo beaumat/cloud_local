@@ -180,10 +180,9 @@
                                                 @endif
                                             </td>
                                             <td class="text-center">
-
-
-                                                <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
+                                                <a type="button"
+                                                    href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
+                                                    class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
 
@@ -191,32 +190,33 @@
                                                     @if ($list->STATUS_ID == 1)
                                                         <a href="#" wire:click='delete({{ $list->ID }})'
                                                             wire:confirm="Are you sure you want to delete this?"
-                                                            class="btn-sm text-danger">
+                                                            class="btn btn-xs btn-danger">
                                                             <i class="fas fa-trash" aria-hidden="true"></i>
                                                         </a>
                                                     @else
-                                                        <a class="btn-sm text-secondary">
+                                                        <a class="btn btn-xs btn-secondary">
                                                             <i class="fas fa-trash" aria-hidden="true"></i>
                                                         </a>
                                                     @endif
                                                 @endcan
 
                                                 @can('patient.treatment.print')
-                                                    <a target="_blank"
+                                                    <a target="_blank" type="button"
                                                         href="{{ route('patientshemo_print', ['id' => $list->ID]) }}"
-                                                        class="btn-sm text-primary">
+                                                        class="btn btn-xs btn-primary">
                                                         <i class="fa fa-print" aria-hidden="true"></i>
                                                     </a>
 
                                                     @if ($list->FILE_PATH)
-                                                        <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
-                                                            target="_blank" class="btn-sm text-danger">
+                                                        <a type="button"
+                                                            href="{{ asset('storage/' . $list->FILE_PATH) }}"
+                                                            target="_blank" class="btn btn-xs btn-danger">
                                                             <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                                         </a>
                                                     @else
-                                                        <a href="#" class="btn-sm text-secondary">
+                                                        <button type="button" class="btn btn-xs btn-secondary">
                                                             <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                        </a>
+                                                        </button>
                                                     @endif
                                                 @endcan
 
@@ -226,6 +226,22 @@
 
                                 </tbody>
                                 {{-- end of pending --}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
@@ -280,46 +296,45 @@
                                             </td>
                                             <td class="text-center">
 
-                                                <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
+                                                <a type="button"
+                                                    href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
+                                                    class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
 
                                                 @can('patient.treatment.delete')
                                                     @if ($list->STATUS_ID == 1)
-                                                        <a href="#" wire:click='delete({{ $list->ID }})'
+                                                        <button wire:click='delete({{ $list->ID }})'
                                                             wire:confirm="Are you sure you want to delete this?"
-                                                            class="btn-sm text-danger">
+                                                            class="btn btn-xs btn-danger">
                                                             <i class="fas fa-trash" aria-hidden="true"></i>
-                                                        </a>
+                                                        </button>
                                                     @else
-                                                        <a class="btn-sm text-secondary">
+                                                        <button type="button" class="btn btn-xs btn-secondary">
                                                             <i class="fas fa-trash" aria-hidden="true"></i>
-                                                        </a>
+                                                        </button>
                                                     @endif
                                                 @endcan
 
                                                 @can('patient.treatment.print')
-                                                    <a target="_blank"
+                                                    <a target="_blank" type="button"
                                                         href="{{ route('patientshemo_print', ['id' => $list->ID]) }}"
-                                                        class="btn-sm text-primary">
+                                                        class="btn btn-xs btn-primary">
                                                         <i class="fa fa-print" aria-hidden="true"></i>
                                                     </a>
 
                                                     @if ($list->FILE_PATH)
-                                                        <a href="{{ asset('storage/' . $list->FILE_PATH) }}"
-                                                            target="_blank" class="btn-sm text-danger">
+                                                        <a type="button"
+                                                            href="{{ asset('storage/' . $list->FILE_PATH) }}"
+                                                            target="_blank" class="btn btn-xs btn-danger">
                                                             <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                                         </a>
                                                     @else
-                                                        <a href="#" class="btn-sm text-secondary">
+                                                        <button type="button" class="btn btn-xs btn-secondary">
                                                             <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                        </a>
+                                                        </button>
                                                     @endif
                                                 @endcan
-
-
-
                                             </td>
                                         </tr>
                                     @endforeach
