@@ -4,6 +4,7 @@ namespace App\Livewire\PhilHealth;
 
 use App\Services\ContactServices;
 use App\Services\HemoServices;
+use App\Services\PatientDoctorServices;
 use App\Services\PhilHealthServices;
 use Livewire\Component;
 
@@ -20,14 +21,17 @@ class PrintCf4Back extends Component
     public $dataMed = [];
     public $DATE_DISCHARGED;
     public $DOCTOR_ORDER = "UNDERGO HEMODIALYSIS TREATMENT WITH NO COMPLICATIONS";
+    private $patientDoctorServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         HemoServices $hemoServices,
-        ContactServices $contactServices
+        ContactServices $contactServices,
+        PatientDoctorServices $patientDoctorServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
+        $this->patientDoctorServices = $patientDoctorServices;
     }
     public function mount($id = null,  int $PATIENT_ID = 0)
     {
@@ -76,6 +80,13 @@ class PrintCf4Back extends Component
         }
 
         if ($PATIENT_ID > 0) {
+
+            $fee = $this->patientDoctorServices->GetList($PATIENT_ID);
+            foreach ($fee as $list) {
+                $this->DR_NAME = strtoupper($list->NAME);
+                return;
+            }
+
         }
     }
     public function getMed(int $ID)
