@@ -91,59 +91,149 @@ class PrintCf4 extends Component
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
     }
-    public function mount($id = null)
+    public function mount(int $id = 0,  int $PATIENT_ID = 0)
     {
-        $this->FIRST_CASE_RATE = '90935';
+        if ($id > 0) {
+            $this->FIRST_CASE_RATE = '90935';
+            $data = $this->philHealthServices->get($id);
+            if ($data) {
+                $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
+                $this->TIME_ADMITTED = $data->TIME_ADMITTED ? Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A') : '';
+                $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
+                $this->TIME_DISCHARGED = $data->TIME_DISCHARGED ? Carbon::createFromFormat('H:i:s', $data->TIME_DISCHARGED)->format('h:i A') : '';
 
-        $data = $this->philHealthServices->get($id);
+                $this->LOCATION_ID = $data->LOCATION_ID;
+                $fee = $this->philHealthServices->getProfFee($id);
+                $row = 1;
 
-        if ($data) {
-            $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
-            $this->TIME_ADMITTED = $data->TIME_ADMITTED ? Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A') : '';
-            $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
-            $this->TIME_DISCHARGED = $data->TIME_DISCHARGED ? Carbon::createFromFormat('H:i:s', $data->TIME_DISCHARGED)->format('h:i A') : '';
+                foreach ($fee as $list) {
+                    switch ($row) {
+                        case '1':
+                            $this->HCP_1_AN = $list->PIN;
+                            $this->HCP_1_NAME = strtoupper($list->NAME);
+                            break;
+                        case '2':
+                            $this->HCP_2_AN = $list->PIN;
+                            $this->HCP_2_NAME = strtoupper($list->NAME);
+                            break;
+                        case '3':
+                            $this->HCP_3_AN = $list->PIN;
+                            $this->HCP_3_NAME = strtoupper($list->NAME);
+                            break;
+                        default:
+                            # code...
+                            break;
+                    }
 
-            $this->LOCATION_ID = $data->LOCATION_ID;
-            $fee = $this->philHealthServices->getProfFee($id);
-            $row = 1;
-
-            foreach ($fee as $list) {
-                switch ($row) {
-                    case '1':
-                        $this->HCP_1_AN = $list->PIN;
-                        $this->HCP_1_NAME = strtoupper($list->NAME);
-                        break;
-                    case '2':
-                        $this->HCP_2_AN = $list->PIN;
-                        $this->HCP_2_NAME = strtoupper($list->NAME);
-                        break;
-                    case '3':
-                        $this->HCP_3_AN = $list->PIN;
-                        $this->HCP_3_NAME = strtoupper($list->NAME);
-                        break;
-                    default:
-                        # code...
-                        break;
+                    $row++;
                 }
 
-                $row++;
+
+
+                $contact = $this->contactServices->get($data->CONTACT_ID, 3);
+
+                if ($contact) {
+
+                    $this->LOCATION_ID = $contact->LOCATION_ID;
+                    $locData = $this->locationServices->get($this->LOCATION_ID);
+
+                    if ($locData) {
+                        $this->NAME_OF_BUSINESS = $locData->NAME_OF_BUSINESS;
+                        $this->ACCREDITATION_NO = $locData->ACCREDITATION_NO;
+                        $this->BLDG_NAME_LOT_BLOCK = $locData->BLDG_NAME_LOT_BLOCK;
+                        $this->STREET_SUB_VALL = $locData->STREET_SUB_VALL;
+                        $this->BRGY_CITY_MUNI = $locData->BRGY_CITY_MUNI;
+                        $this->PROVINCE = $locData->PROVINCE;
+                        $this->ZIP_CODE = $locData->ZIP_CODE;
+                    }
+
+
+                    $this->HEIGHT = $contact->HEIGHT ?? 0;
+                    $this->PATIENT_LASTNAME = $contact->LAST_NAME;
+                    $this->PATIENT_FIRSTNAME = strtoupper($contact->FIRST_NAME);
+                    $this->PATIENT_MIDDLENAME = strtoupper($contact->MIDDLE_NAME);
+                    $this->PATIENT_EXTENSION = strtoupper($contact->SALUTATION);
+                    $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
+                    $this->PATIENT_GENDER = $contact->GENDER;
+                    $this->IS_PATIENT = $contact->IS_PATIENT;
+                    $this->FINAL_DIAGNOSIS =  strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
+                    $this->AGE = $this->contactServices->calculateUserAge($this->PATIENT_BIRTH_DATE);
+
+                    if ($this->IS_PATIENT) {
+                        $this->MEMBER_FIRST_NAME = strtoupper($contact->FIRST_NAME);
+                        $this->MEMBER_LAST_NAME = strtoupper($contact->LAST_NAME);
+                        $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MIDDLE_NAME);
+                        $this->MEMBER_EXTENSION =  strtoupper($contact->SALUTATION);
+                        $this->MEMBER_BIRTH_DATE = $contact->DATE_OF_BIRTH;
+                        $this->MEMBER_GENDER = $contact->GENDER;
+                    } else {
+                        $this->MEMBER_FIRST_NAME = strtoupper($contact->MEMBER_FIRST_NAME);
+                        $this->MEMBER_LAST_NAME = strtoupper($contact->MEMBER_LAST_NAME);
+                        $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MEMBER_MIDDLE_NAME);
+                        $this->MEMBER_EXTENSION = strtoupper($contact->MEMBER_EXTENSION);
+                        $this->MEMBER_BIRTH_DATE = $contact->MEMBER_BIRTH_DATE;
+                        $this->MEMBER_GENDER = $contact->MEMBER_GENDER;
+                    }
+
+                    $this->IS_DEPENDENT = $contact->IS_DEPENDENT;
+                    $this->PIN = $contact->PIN ?? '';
+
+                    if ($this->IS_DEPENDENT) {
+                        $this->PIN_DEPENDENT = $contact->PIN_DEPENDENT;
+                    } else {
+                        $this->PIN_DEPENDENT = $this->PIN;
+                    }
+
+                    $this->IS_PATIENT = $contact->IS_PATIENT;
+                    $this->MEMBER_IS_CHILD = $contact->MEMBER_IS_CHILD;
+                    $this->MEMBER_IS_PARENT = $contact->MEMBER_IS_PARENT;
+                    $this->MEMBER_IS_SPOUSE = $contact->MEMBER_IS_SPOUSE;
+                    $this->IS_REPRESENTATIVE = $contact->IS_REPRESENTATIVE;
+
+                    if ($this->IS_REPRESENTATIVE) {
+                        $this->NAME_REPRESENTATIVE = strtoupper($contact->CONTACT_PERSON);
+                    } else {
+                        $this->NAME_REPRESENTATIVE = "";
+                    }
+
+                    $this->PEN = $contact->PEN ?? '';
+                    $this->PEN_CONTACT = $contact->PEN_CONTACT ?? '';
+                    $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
+                }
+
+
+                $hemo = $this->hemoServices->GetPost($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE_DISCHARGED);
+                if ($hemo) {
+                    $this->POST_WEIGHT = $hemo->POST_WEIGHT;
+                    $this->POST_BLOOD_PRESSURE = $hemo->POST_BLOOD_PRESSURE;
+                    $this->POST_HEART_RATE =  $hemo->POST_HEART_RATE;
+                    $this->POST_O2_SATURATION =  $hemo->POST_O2_SATURATION;
+                    $this->POST_TEMPERATURE = $hemo->POST_TEMPERATURE;
+                    $this->POST_BLOOD_PRESSURE2 =  $hemo->POST_BLOOD_PRESSURE2;
+                }
             }
+        }
+        if ($PATIENT_ID > 0) {
 
-            $locData = $this->locationServices->get($this->LOCATION_ID);
 
-            if ($locData) {
-                $this->NAME_OF_BUSINESS = $locData->NAME_OF_BUSINESS;
-                $this->ACCREDITATION_NO = $locData->ACCREDITATION_NO;
-                $this->BLDG_NAME_LOT_BLOCK = $locData->BLDG_NAME_LOT_BLOCK;
-                $this->STREET_SUB_VALL = $locData->STREET_SUB_VALL;
-                $this->BRGY_CITY_MUNI = $locData->BRGY_CITY_MUNI;
-                $this->PROVINCE = $locData->PROVINCE;
-                $this->ZIP_CODE = $locData->ZIP_CODE;
-            }
-
-            $contact = $this->contactServices->get($data->CONTACT_ID, 3);
+            $contact = $this->contactServices->get($PATIENT_ID, 3);
 
             if ($contact) {
+
+                $this->LOCATION_ID = $contact->LOCATION_ID;
+                $locData = $this->locationServices->get($this->LOCATION_ID);
+
+                if ($locData) {
+                    $this->NAME_OF_BUSINESS = $locData->NAME_OF_BUSINESS;
+                    $this->ACCREDITATION_NO = $locData->ACCREDITATION_NO;
+                    $this->BLDG_NAME_LOT_BLOCK = $locData->BLDG_NAME_LOT_BLOCK;
+                    $this->STREET_SUB_VALL = $locData->STREET_SUB_VALL;
+                    $this->BRGY_CITY_MUNI = $locData->BRGY_CITY_MUNI;
+                    $this->PROVINCE = $locData->PROVINCE;
+                    $this->ZIP_CODE = $locData->ZIP_CODE;
+                }
+
+
                 $this->HEIGHT = $contact->HEIGHT ?? 0;
                 $this->PATIENT_LASTNAME = $contact->LAST_NAME;
                 $this->PATIENT_FIRSTNAME = strtoupper($contact->FIRST_NAME);
@@ -195,17 +285,6 @@ class PrintCf4 extends Component
                 $this->PEN = $contact->PEN ?? '';
                 $this->PEN_CONTACT = $contact->PEN_CONTACT ?? '';
                 $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
-            }
-
-
-            $hemo = $this->hemoServices->GetPost($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE_DISCHARGED);
-            if ($hemo) {
-                $this->POST_WEIGHT = $hemo->POST_WEIGHT;
-                $this->POST_BLOOD_PRESSURE = $hemo->POST_BLOOD_PRESSURE;
-                $this->POST_HEART_RATE =  $hemo->POST_HEART_RATE;
-                $this->POST_O2_SATURATION =  $hemo->POST_O2_SATURATION;
-                $this->POST_TEMPERATURE = $hemo->POST_TEMPERATURE;
-                $this->POST_BLOOD_PRESSURE2 =  $hemo->POST_BLOOD_PRESSURE2;
             }
         }
     }

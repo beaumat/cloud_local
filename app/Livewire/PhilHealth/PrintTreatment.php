@@ -5,6 +5,7 @@ namespace App\Livewire\PhilHealth;
 use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
+use App\Services\PatientDoctorServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -98,12 +99,14 @@ class PrintTreatment extends Component
     public string $REPORT_HEADER_3;
     public $hemoList = [];
     public $i;
-    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, HemoServices $hemoServices, LocationServices $locationServices)
+    private $patientDoctorServices;
+    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, HemoServices $hemoServices, LocationServices $locationServices, PatientDoctorServices $patientDoctorServices)
     {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
+        $this->patientDoctorServices = $patientDoctorServices;
     }
 
 
@@ -112,10 +115,58 @@ class PrintTreatment extends Component
         $this->i = 0;
         $this->hemoList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
     }
-    public function mount($PRINT_ID)
+    public function mount(int $PRINT_ID,  int $PATIENT_ID = 0)
     {
-        $this->PreLoad($PRINT_ID);
-        $this->getSumamry();
+        if ($PRINT_ID > 0) {
+            $this->PreLoad($PRINT_ID);
+            $this->getSumamry();
+
+            return;
+        }
+
+
+        if ($PATIENT_ID > 0) {
+            $contact = $this->contactServices->get($PATIENT_ID, 3);
+            if ($contact) {
+                $this->LOCATION_ID = $contact->LOCATION_ID;
+                $this->PATIENT_NAME = $contact->NAME;
+                $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
+                $this->ADDRESS = $contact->POSTAL_ADDRESS;
+                $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
+                $this->FINAL_DIAGNOSIS =  $this->philHealthServices->DEFAULT_DIAGNOSIS . strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
+                $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
+                $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
+                $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
+            }
+
+
+            $PF = $this->patientDoctorServices->GetList($PATIENT_ID);
+            foreach ($PF as $p) {
+                $this->PHYSICIAN = strtoupper($p->NAME);
+            }
+            $this->i = -1;
+            $locData = $this->locationServices->get($this->LOCATION_ID);
+            if ($locData) {
+                $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+                $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
+                $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                
+                $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                if ($conPHIC) {
+                    $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
+                    $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
+                }
+
+                // $HCI_MANAGER_ID
+
+                $conMgr = $this->contactServices->get($locData->HCI_MANAGER_ID ?? 0, 2); // Employee
+
+                if ($conMgr) {
+
+                    $this->ADMINISTRATOR_NAME = strtoupper($conMgr->PRINT_NAME_AS) ?? '';
+                }
+            }
+        }
     }
     public function PreLoad($ID)
     {

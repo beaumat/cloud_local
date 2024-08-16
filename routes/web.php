@@ -43,6 +43,7 @@ use App\Livewire\PhilHealth\PhilHealthForm;
 use App\Livewire\PhilHealth\PhilHealthList;
 use App\Livewire\PhilHealth\PhilHealthPrint;
 use App\Livewire\PhilHealth\PhilHealthPrintForm;
+use App\Livewire\PhilHealth\PhilHealthPrintFormTemp;
 use App\Livewire\Requirement\RequirementForm;
 use App\Livewire\Requirement\RequirementList;
 use App\Livewire\SalesOrder\SalesOrderForm;
@@ -88,6 +89,7 @@ use App\Livewire\PaymentMethod\PaymentMethodForm;
 use App\Livewire\PaymentMethod\PaymentMethodList;
 use App\Livewire\PaymentTerm\PaymentTermForm;
 use App\Livewire\PaymentTerm\PaymentTermList;
+use App\Livewire\PhilHealth\PhilHealthPrintTemp;
 use App\Livewire\PriceLevelPage\PriceLevelForm;
 use App\Livewire\PriceLevelPage\PriceLevelList;
 use App\Livewire\PullOut\PullOutForm;
@@ -165,6 +167,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', PhilHealthForm::class)->name('phic_edit')->middleware(['permission:patient.philhealth.view']);
             Route::get('/{id}/print', PhilHealthPrint::class)->name('phic_print')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/print-form', PhilHealthPrintForm::class)->name('phic_print_form')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/print-templeted', PhilHealthPrintTemp::class)->name('phic_print_templeted')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/print-form-templeted', PhilHealthPrintFormTemp::class)->name('phic_print_form_templeted')->middleware(['permission:patient.philhealth.print']);
         });
 
         Route::prefix('/statement-of-account')->group(function () {

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\PatientDoctor;
+use Illuminate\Support\Facades\DB;
 
 class PatientDoctorServices
 {
@@ -34,6 +35,25 @@ class PatientDoctorServices
             ->leftJoin('contact as c', 'c.ID', '=', 'patient_doctor.DOCTOR_ID')
             ->where('patient_doctor.PATIENT_ID', $id)
             ->get();
+    }
+    public function GetbyTemp(int $id)
+    {
+        
+        $result = PatientDoctor::query()
+            ->select([
+                'patient_doctor.ID',
+                DB::raw('0 as AMOUNT'),
+                DB::raw('0 as DISCOUNT'),
+                DB::raw('0 as FIRST_CASE'),
+                'c.PIN',
+                'c.NAME'
+            ])
+            ->leftJoin('contact as c', 'c.ID', '=', 'patient_doctor.DOCTOR_ID')
+            ->where('patient_doctor.PATIENT_ID', $id)
+            ->get();
+
+
+        return $result;
     }
     public function Delete(int $ID)
     {

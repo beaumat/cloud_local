@@ -29,7 +29,7 @@ class PrintCf4Back extends Component
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
     }
-    public function mount($id = null)
+    public function mount($id = null,  int $PATIENT_ID = 0)
     {
         $getData = ['GENERIC_NAME' => '', 'QUANTITY' => '', 'DOSSAGE' => '', 'ROUTE' => '', 'FREQUENCY' => '', 'TOTAL_COST' => '', 'CONT_GENERIC_NAME' => '', 'CONT_QUANTITY' => '', 'CONT_DOSSAGE' => '', 'CONT_ROUTE' => '', 'CONT_FREQUENCY' => '', 'CONT_TOTAL_COST' => ''];
 
@@ -43,33 +43,39 @@ class PrintCf4Back extends Component
             [$getData],
         ];
 
-        $this->getMed($id);
 
-        $data = $this->philHealthServices->get($id);
+        if ($id > 0) {
+            $this->getMed($id);
 
-        if ($data) {
-            $this->DATE_DISCHARGED =  $data->DATE_DISCHARGED ?? '';
+            $data = $this->philHealthServices->get($id);
 
-            $getData = $this->hemoServices->GetSummary(
-                $data->CONTACT_ID,
-                $data->LOCATION_ID,
-                $data->DATE_ADMITTED ?? '',
-                $data->DATE_DISCHARGED ?? ''
-            );
-            $r = 0;
-            foreach ($getData as $item) {
-                $this->dateList[$r] = $item->DATE;
-                $r++;
+            if ($data) {
+                $this->DATE_DISCHARGED =  $data->DATE_DISCHARGED ?? '';
+
+                $getData = $this->hemoServices->GetSummary(
+                    $data->CONTACT_ID,
+                    $data->LOCATION_ID,
+                    $data->DATE_ADMITTED ?? '',
+                    $data->DATE_DISCHARGED ?? ''
+                );
+                $r = 0;
+                foreach ($getData as $item) {
+                    $this->dateList[$r] = $item->DATE;
+                    $r++;
+                }
+
+                for ($i = $r; $i < 15; $i++) {
+                    $this->dateList[$i] = null;
+                }
             }
-
-            for ($i = $r; $i < 15; $i++) {
-                $this->dateList[$i] = null;
+            $fee = $this->philHealthServices->getProfFee($id);
+            foreach ($fee as $list) {
+                $this->DR_NAME = strtoupper($list->NAME);
+                return;
             }
         }
-        $fee = $this->philHealthServices->getProfFee($id);
-        foreach ($fee as $list) {
-            $this->DR_NAME = strtoupper($list->NAME);
-            return;
+
+        if ($PATIENT_ID > 0) {
         }
     }
     public function getMed(int $ID)

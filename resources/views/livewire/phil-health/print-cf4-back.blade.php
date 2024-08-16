@@ -242,7 +242,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[0])
+                        @if ($dateList && $dateList[0])
                             {{ \Carbon\Carbon::parse($dateList[0])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -251,7 +251,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[0])
+                        @if ($dateList && $dateList[0])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -262,7 +262,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[1])
+                        @if ($dateList && $dateList[1])
                             {{ \Carbon\Carbon::parse($dateList[1])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -272,7 +272,7 @@
 
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[1])
+                        @if ($dateList && $dateList[1])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -283,7 +283,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[2])
+                        @if ($dateList && $dateList[2])
                             {{ \Carbon\Carbon::parse($dateList[2])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -293,7 +293,7 @@
 
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[2])
+                        @if ($dateList && $dateList[2])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -304,7 +304,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[3])
+                        @if ($dateList && $dateList[3])
                             {{ \Carbon\Carbon::parse($dateList[3])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -313,7 +313,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[3])
+                        @if ($dateList && $dateList[3])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -324,7 +324,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[4])
+                        @if ($dateList && $dateList[4])
                             {{ \Carbon\Carbon::parse($dateList[4])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -333,7 +333,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[4])
+                        @if ($dateList && $dateList[4])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -344,7 +344,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[5])
+                        @if ($dateList && $dateList[5])
                             {{ \Carbon\Carbon::parse($dateList[5])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -353,7 +353,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[5])
+                        @if ($dateList && $dateList[5])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -364,7 +364,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[6])
+                        @if ($dateList && $dateList[6])
                             {{ \Carbon\Carbon::parse($dateList[6])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -373,7 +373,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[6])
+                        @if ($dateList && $dateList[6])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -384,7 +384,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[7])
+                        @if ($dateList && $dateList[7])
                             {{ \Carbon\Carbon::parse($dateList[7])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -393,7 +393,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[7])
+                        @if ($dateList && $dateList[7])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -405,7 +405,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[8])
+                        @if ($dateList && $dateList[8])
                             {{ \Carbon\Carbon::parse($dateList[8])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -414,7 +414,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[8])
+                        @if ($dateList && $dateList[8])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -427,7 +427,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[9])
+                        @if ($dateList && $dateList[9])
                             {{ \Carbon\Carbon::parse($dateList[9])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -436,7 +436,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[9])
+                        @if ($dateList && $dateList[9])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -448,7 +448,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[10])
+                        @if ($dateList && $dateList[10])
                             {{ \Carbon\Carbon::parse($dateList[10])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -457,7 +457,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[11])
+                        @if ($dateList && $dateList[11])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -469,7 +469,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[11])
+                        @if ($dateList && $dateList[11])
                             {{ \Carbon\Carbon::parse($dateList[11])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -478,7 +478,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[11])
+                        @if ($dateList && $dateList[11])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -490,7 +490,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[12])
+                        @if ($dateList && $dateList[12])
                             {{ \Carbon\Carbon::parse($dateList[12])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -499,7 +499,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[12])
+                        @if ($dateList && $dateList[12])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -511,7 +511,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[13])
+                        @if ($dateList && $dateList[13])
                             {{ \Carbon\Carbon::parse($dateList[13])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -520,7 +520,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[13])
+                        @if ($dateList && $dateList[13])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -532,7 +532,7 @@
 
                 <div class="col-2 top-line2">
                     <h5 class="text-primary">
-                        @if ($dateList[14])
+                        @if ($dateList && $dateList[14])
                             {{ \Carbon\Carbon::parse($dateList[14])->format('m-d-Y') }}
                         @else
                             &nbsp;
@@ -541,7 +541,7 @@
                 </div>
                 <div class="col-10 left-line2  top-line2">
                     <h5 class="text-primary text-left segoe">
-                        @if ($dateList[14])
+                        @if ($dateList && $dateList[14])
                             {{ $DOCTOR_ORDER }}
                         @else
                             &nbsp;
@@ -569,33 +569,33 @@
                     <p> Generic Name </p>
                     <div class="row top-line2 ">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[0]['GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[0]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
 
                     <div class="row top-line2 ">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[1]['GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[1]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
 
                     <div class="row top-line2 ">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[2]['GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[2]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2 ">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[3]['GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[3]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[4]['GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[4]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[5]['GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[5]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2 ">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[6]['GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[6]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
 
 
@@ -604,7 +604,7 @@
                     <p>Quantity/Dosage/Route/Frequency</p>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[0]['GENERIC_NAME'] != '')
+                        @if ($dataMed[0]['GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[0]['QUANTITY'] }}/{{ $dataMed[0]['DOSSAGE'] }}/{{ $dataMed[0]['ROUTE'] }}/{{ $dataMed[0]['FREQUENCY'] }}
                             </strong>
@@ -615,7 +615,7 @@
 
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[1]['GENERIC_NAME'] != '')
+                        @if ($dataMed[1]['GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[1]['QUANTITY'] }}/{{ $dataMed[1]['DOSSAGE'] }}/{{ $dataMed[1]['ROUTE'] }}/{{ $dataMed[1]['FREQUENCY'] }}
                             </strong>
@@ -626,7 +626,7 @@
 
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[2]['GENERIC_NAME'] != '')
+                        @if ($dataMed[2]['GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[2]['QUANTITY'] }}/{{ $dataMed[2]['DOSSAGE'] }}/{{ $dataMed[2]['ROUTE'] }}/{{ $dataMed[2]['FREQUENCY'] }}
                             </strong>
@@ -636,7 +636,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[3]['GENERIC_NAME'] != '')
+                        @if ($dataMed[3]['GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[3]['QUANTITY'] }}/{{ $dataMed[3]['DOSSAGE'] }}/{{ $dataMed[3]['ROUTE'] }}/{{ $dataMed[3]['FREQUENCY'] }}
                             </strong>
@@ -646,7 +646,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[4]['GENERIC_NAME'] != '')
+                        @if ($dataMed[4]['GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[4]['QUANTITY'] }}/{{ $dataMed[4]['DOSSAGE'] }}/{{ $dataMed[4]['ROUTE'] }}/{{ $dataMed[4]['FREQUENCY'] }}
                             </strong>
@@ -656,7 +656,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[5]['GENERIC_NAME'] != '')
+                        @if ($dataMed[5]['GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[5]['QUANTITY'] }}/{{ $dataMed[5]['DOSSAGE'] }}/{{ $dataMed[5]['ROUTE'] }}/{{ $dataMed[5]['FREQUENCY'] }}
                             </strong>
@@ -666,7 +666,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[6]['GENERIC_NAME'] != '')
+                        @if ($dataMed[6]['GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[6]['QUANTITY'] }}/{{ $dataMed[6]['DOSSAGE'] }}/{{ $dataMed[6]['ROUTE'] }}/{{ $dataMed[6]['FREQUENCY'] }}
                             </strong>
@@ -679,7 +679,7 @@
                     <p>Total Cost</p>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[0]['GENERIC_NAME'] != '')
+                        @if ($dataMed[0]['GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[0]['TOTAL_COST'] }}</strong>
                             </div>
@@ -689,7 +689,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[1]['GENERIC_NAME'] != '')
+                        @if ($dataMed[1]['GENERIC_NAME'] ?? ('' ?? '' != ''))
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[1]['TOTAL_COST'] }}</strong>
                             </div>
@@ -700,7 +700,7 @@
 
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[2]['GENERIC_NAME'] != '')
+                        @if ($dataMed[2]['GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[2]['TOTAL_COST'] }}</strong>
                             </div>
@@ -710,7 +710,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[3]['GENERIC_NAME'] != '')
+                        @if ($dataMed[3]['GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[3]['TOTAL_COST'] }}</strong>
                             </div>
@@ -720,7 +720,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[4]['GENERIC_NAME'] != '')
+                        @if ($dataMed[4]['GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[4]['TOTAL_COST'] }}</strong>
                             </div>
@@ -730,7 +730,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[5]['GENERIC_NAME'] != '')
+                        @if ($dataMed[5]['GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[5]['TOTAL_COST'] }}</strong>
                             </div>
@@ -740,7 +740,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[6]['GENERIC_NAME'] != '')
+                        @if ($dataMed[6]['GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[6]['TOTAL_COST'] }}</strong>
                             </div>
@@ -753,40 +753,40 @@
                     <p>Generic Name (cont)</p>
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[0]['CONT_GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[0]['CONT_GENERIC_NAME'] ?? '' }} </strong>
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[1]['CONT_GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[1]['CONT_GENERIC_NAME'] ?? '' }} </strong>
                     </div>
 
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[2]['CONT_GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[2]['CONT_GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[3]['CONT_GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[3]['CONT_GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[4]['CONT_GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[4]['CONT_GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[5]['CONT_GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[5]['CONT_GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[6]['CONT_GENERIC_NAME'] }} </strong>
+                        &nbsp; <strong class="h6"> {{ $dataMed[6]['CONT_GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                 </div>
                 <div class="col-3 left-line2 bottom-line2">
                     <p>Quantity/Dosage/Route/Frequency (cont)</p>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[0]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[0]['CONT_GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[0]['CONT_QUANTITY'] }}/{{ $dataMed[0]['CONT_DOSSAGE'] }}/{{ $dataMed[0]['CONT_ROUTE'] }}/{{ $dataMed[0]['CONT_FREQUENCY'] }}
                             </strong>
@@ -797,7 +797,7 @@
 
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[1]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[1]['CONT_GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[1]['CONT_QUANTITY'] }}/{{ $dataMed[1]['CONT_DOSSAGE'] }}/{{ $dataMed[1]['CONT_ROUTE'] }}/{{ $dataMed[1]['CONT_FREQUENCY'] }}
                             </strong>
@@ -808,7 +808,7 @@
 
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[2]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[2]['CONT_GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[2]['CONT_QUANTITY'] }}/{{ $dataMed[2]['CONT_DOSSAGE'] }}/{{ $dataMed[2]['CONT_ROUTE'] }}/{{ $dataMed[2]['CONT_FREQUENCY'] }}
                             </strong>
@@ -818,7 +818,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[3]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[3]['CONT_GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[3]['CONT_QUANTITY'] }}/{{ $dataMed[3]['CONT_DOSSAGE'] }}/{{ $dataMed[3]['CONT_ROUTE'] }}/{{ $dataMed[3]['CONT_FREQUENCY'] }}
                             </strong>
@@ -828,7 +828,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[4]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[4]['CONT_GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[4]['CONT_QUANTITY'] }}/{{ $dataMed[4]['CONT_DOSSAGE'] }}/{{ $dataMed[4]['CONT_ROUTE'] }}/{{ $dataMed[4]['CONT_FREQUENCY'] }}
                             </strong>
@@ -838,7 +838,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[5]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[5]['CONT_GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[5]['CONT_QUANTITY'] }}/{{ $dataMed[5]['CONT_DOSSAGE'] }}/{{ $dataMed[5]['CONT_ROUTE'] }}/{{ $dataMed[5]['CONT_FREQUENCY'] }}
                             </strong>
@@ -848,7 +848,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[6]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[6]['CONT_GENERIC_NAME'] ?? '' != '')
                             &nbsp; <strong class="h6">
                                 {{ $dataMed[6]['CONT_QUANTITY'] }}/{{ $dataMed[6]['CONT_DOSSAGE'] }}/{{ $dataMed[6]['CONT_ROUTE'] }}/{{ $dataMed[6]['CONT_FREQUENCY'] }}
                             </strong>
@@ -861,7 +861,7 @@
                     <p>Total Cost (cont)</p>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[0]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[0]['CONT_GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[0]['CONT_TOTAL_COST'] }}</strong>
                             </div>
@@ -872,7 +872,7 @@
 
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[1]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[1]['CONT_GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[1]['CONT_TOTAL_COST'] }}</strong>
                             </div>
@@ -883,7 +883,7 @@
 
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[2]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[2]['CONT_GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[2]['CONT_TOTAL_COST'] }}</strong>
                             </div>
@@ -893,7 +893,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[3]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[3]['CONT_GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[3]['CONT_TOTAL_COST'] }}</strong>
                             </div>
@@ -903,7 +903,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[4]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[4]['CONT_GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[4]['CONT_TOTAL_COST'] }}</strong>
                             </div>
@@ -913,7 +913,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[5]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[5]['CONT_GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[5]['CONT_TOTAL_COST'] }}</strong>
                             </div>
@@ -923,7 +923,7 @@
                     </div>
                     <div class="row top-line2">
                         <br />
-                        @if ($dataMed[6]['CONT_GENERIC_NAME'] != '')
+                        @if ($dataMed[6]['CONT_GENERIC_NAME'] ?? '' != '')
                             <div class="col-12 text-center" style="margin-bottom: 14px;">
                                 <strong class="h6"> {{ $dataMed[6]['CONT_TOTAL_COST'] }}</strong>
                             </div>
@@ -1028,7 +1028,8 @@
                                 {{ substr($DATE_DISCHARGED, 3, 1) }}
                             </div>
                             <br>
-                            <p style="position: absolute;top:27px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;month
+                            <p style="position: absolute;top:27px;">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;month
                                 &nbsp;&nbsp;&nbsp;&nbsp;day
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 year</p>

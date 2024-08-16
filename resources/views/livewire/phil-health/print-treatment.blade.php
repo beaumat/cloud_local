@@ -73,6 +73,9 @@
                                 if ($i == 0) {
                                     $i = 1;
                                 }
+                                if ($i < 0) {
+                                    $i = 0;
+                                }
                             @endphp
                             @for ($n = $i; $n < 15; $n++)
                                 <tr class="blackbox">

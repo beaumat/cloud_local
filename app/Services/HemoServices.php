@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 class HemoServices
 {
 
-    private int $ITEM_USED_ID = 5;
     private int $ITEM_NOT_ADDED_ID = 4;
     private $object;
     private $user;
@@ -90,7 +89,7 @@ class HemoServices
             return '';
         }
     }
-    public function GetSummary(int $CONTACT_ID, int $LOCATION_ID, string $DATE_START, string $DATE_END)
+    public function GetSummary(int $CONTACT_ID = 0, int $LOCATION_ID = 0, string $DATE_START = '', string $DATE_END = '')
     {
         $dataList = Hemodialysis::query()
             ->select([
@@ -111,6 +110,7 @@ class HemoServices
             ->whereBetween('hemodialysis.DATE', [$DATE_START, $DATE_END])
             ->orderBy('hemodialysis.DATE', 'asc')
             ->get();
+
 
         return $dataList;
     }

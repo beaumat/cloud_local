@@ -46,17 +46,8 @@ class PullOutForm extends Component
     private $itemInventoryServices;
     private $accountJournalServices;
     private $objectServices;
-    public function boot(
-        PullOutServices $pullOutServices,
-        LocationServices $locationServices,
-        DocumentTypeServices $documentTypeServices,
-        DocumentStatusServices $documentStatusServices,
-        ItemInventoryServices $itemInventoryServices,
-        ContactServices $contactServices,
-        UserServices     $userServices,
-        AccountJournalServices $accountJournalServices,
-        ObjectServices $objectServices
-    ) {
+    public function boot(PullOutServices $pullOutServices, LocationServices $locationServices, DocumentTypeServices $documentTypeServices, DocumentStatusServices $documentStatusServices, ItemInventoryServices $itemInventoryServices, ContactServices $contactServices, UserServices     $userServices, AccountJournalServices $accountJournalServices, ObjectServices $objectServices)
+    {
         $this->pullOutServices = $pullOutServices;
         $this->locationServices = $locationServices;
         $this->documentTypeServices = $documentTypeServices;
@@ -279,10 +270,7 @@ class PullOutForm extends Component
         // $data = $this->pullOutServices->GetSum($this->ID);
         // $this->AMOUNT = $data['AMOUNT'];
     }
-    public function Print()
-    {
-
-    }
+    public function Print() {}
     public function render()
     {
         return view('livewire.pull-out.pull-out-form');

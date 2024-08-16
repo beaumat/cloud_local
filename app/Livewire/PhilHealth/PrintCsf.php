@@ -63,99 +63,162 @@ class PrintCsf extends Component
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
     }
-    public function mount($id = null)
+    public function mount(int $id = 0, int  $PATIENT_ID = 0)
     {
-        $data = $this->philHealthServices->get($id);
+        if ($id > 0) {
+            $data = $this->philHealthServices->get($id);
 
-        if ($data) {
-            $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
-            $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
-            $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE ?? '';
-            $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE ?? '';
-            $this->LOCATION_ID = $data->LOCATION_ID;
-            $fee = $this->philHealthServices->getProfFee($id);
-            $row = 1;
-            foreach ($fee as $list) {
+            if ($data) {
+                $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
+                $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
+                $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE ?? '';
+                $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE ?? '';
+                $this->LOCATION_ID = $data->LOCATION_ID;
+                $fee = $this->philHealthServices->getProfFee($id);
+                $row = 1;
+                foreach ($fee as $list) {
 
-                switch ($row) {
-                    case '1':
-                        $this->HCP_1_AN = $list->PIN;
-                        $this->HCP_1_NAME = strtoupper($list->NAME);
-                        break;
-                    case '2':
-                        $this->HCP_2_AN = $list->PIN;
-                        $this->HCP_2_NAME = strtoupper($list->NAME);
-                        break;
-                    case '3':
-                        $this->HCP_3_AN = $list->PIN;
-                        $this->HCP_3_NAME = strtoupper($list->NAME);
-                        break;
-                    default:
-                        # code...
-                        break;
+                    switch ($row) {
+                        case '1':
+                            $this->HCP_1_AN = $list->PIN;
+                            $this->HCP_1_NAME = strtoupper($list->NAME);
+                            break;
+                        case '2':
+                            $this->HCP_2_AN = $list->PIN;
+                            $this->HCP_2_NAME = strtoupper($list->NAME);
+                            break;
+                        case '3':
+                            $this->HCP_3_AN = $list->PIN;
+                            $this->HCP_3_NAME = strtoupper($list->NAME);
+                            break;
+                        default:
+                            # code...
+                            break;
+                    }
+
+                    $row++;
                 }
 
-                $row++;
+                $contact = $this->contactServices->get($data->CONTACT_ID, 3);
+                if ($contact) {
+
+                    $this->PATIENT_LASTNAME = strtoupper($contact->LAST_NAME);
+                    $this->PATIENT_FIRSTNAME = strtoupper($contact->FIRST_NAME);
+                    $this->PATIENT_MIDDLENAME = strtoupper($contact->MIDDLE_NAME);
+                    $this->PATIENT_EXTENSION = strtoupper($contact->SALUTATION);
+                    $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
+
+                    $this->IS_PATIENT = $contact->IS_PATIENT;
+                    if ($this->IS_PATIENT) {
+                        $this->MEMBER_FIRST_NAME = strtoupper($contact->FIRST_NAME);
+                        $this->MEMBER_LAST_NAME = strtoupper($contact->LAST_NAME);
+                        $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MIDDLE_NAME);
+                        $this->MEMBER_EXTENSION = strtoupper($contact->SALUTATION);
+                        $this->MEMBER_BIRTH_DATE = $contact->DATE_OF_BIRTH;
+                        $this->MEMBER_GENDER = $contact->GENDER;
+                    } else {
+                        $this->MEMBER_FIRST_NAME = strtoupper($contact->MEMBER_FIRST_NAME);
+                        $this->MEMBER_LAST_NAME = strtoupper($contact->MEMBER_LAST_NAME);
+                        $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MEMBER_MIDDLE_NAME);
+                        $this->MEMBER_EXTENSION = strtoupper($contact->MEMBER_EXTENSION);
+                        $this->MEMBER_BIRTH_DATE = $contact->MEMBER_BIRTH_DATE;
+                        $this->MEMBER_GENDER = $contact->MEMBER_GENDER;
+                    }
+                    $this->IS_DEPENDENT = $contact->IS_DEPENDENT;
+                    $this->PIN = $contact->PIN ?? '';
+                    if ($this->IS_DEPENDENT) {
+                        $this->PIN_DEPENDENT = $contact->PIN_DEPENDENT;
+                    } else {
+                        $this->PIN_DEPENDENT = $this->PIN;
+                    }
+
+
+                    $this->IS_PATIENT = $contact->IS_PATIENT;
+
+                    $this->MEMBER_IS_CHILD = $contact->MEMBER_IS_CHILD;
+                    $this->MEMBER_IS_PARENT = $contact->MEMBER_IS_PARENT;
+                    $this->MEMBER_IS_SPOUSE = $contact->MEMBER_IS_SPOUSE;
+                    $this->IS_REPRESENTATIVE = $contact->IS_REPRESENTATIVE;
+
+                    if ($this->IS_REPRESENTATIVE) {
+                        $this->NAME_REPRESENTATIVE = $contact->CONTACT_PERSON;
+                    } else {
+                        $this->NAME_REPRESENTATIVE = "";
+                    }
+
+                    $this->PEN = $contact->PEN ?? '';
+                    $this->PEN_CONTACT = $contact->PEN_CONTACT ?? '';
+                    $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
+                    $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
+                    $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
+                    $locData =   $this->locationServices->getPesonel($this->LOCATION_ID);
+                    if ($locData) {
+                        $this->HCI_NAME = strtoupper($locData->MANAGER_NAME)  ?? '';
+                        $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION)  ?? '';
+                    }
+                }
             }
+        }
 
-            $contact = $this->contactServices->get($data->CONTACT_ID, 3);
-            if ($contact) {
+        if($PATIENT_ID > 0) {
+            $contact = $this->contactServices->get($PATIENT_ID, 3);
+                if ($contact) {
 
-                $this->PATIENT_LASTNAME = strtoupper($contact->LAST_NAME);
-                $this->PATIENT_FIRSTNAME = strtoupper($contact->FIRST_NAME);
-                $this->PATIENT_MIDDLENAME = strtoupper($contact->MIDDLE_NAME);
-                $this->PATIENT_EXTENSION = strtoupper($contact->SALUTATION);
-                $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
+                    $this->PATIENT_LASTNAME = strtoupper($contact->LAST_NAME);
+                    $this->PATIENT_FIRSTNAME = strtoupper($contact->FIRST_NAME);
+                    $this->PATIENT_MIDDLENAME = strtoupper($contact->MIDDLE_NAME);
+                    $this->PATIENT_EXTENSION = strtoupper($contact->SALUTATION);
+                    $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
 
-                $this->IS_PATIENT = $contact->IS_PATIENT;
-                if ($this->IS_PATIENT) {
-                    $this->MEMBER_FIRST_NAME = strtoupper($contact->FIRST_NAME);
-                    $this->MEMBER_LAST_NAME = strtoupper($contact->LAST_NAME);
-                    $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MIDDLE_NAME);
-                    $this->MEMBER_EXTENSION = strtoupper($contact->SALUTATION);
-                    $this->MEMBER_BIRTH_DATE = $contact->DATE_OF_BIRTH;
-                    $this->MEMBER_GENDER = $contact->GENDER;
-                } else {
-                    $this->MEMBER_FIRST_NAME = strtoupper($contact->MEMBER_FIRST_NAME);
-                    $this->MEMBER_LAST_NAME = strtoupper($contact->MEMBER_LAST_NAME);
-                    $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MEMBER_MIDDLE_NAME);
-                    $this->MEMBER_EXTENSION = strtoupper($contact->MEMBER_EXTENSION);
-                    $this->MEMBER_BIRTH_DATE = $contact->MEMBER_BIRTH_DATE;
-                    $this->MEMBER_GENDER = $contact->MEMBER_GENDER;
-                }
-                $this->IS_DEPENDENT = $contact->IS_DEPENDENT;
-                $this->PIN = $contact->PIN ?? '';
-                if ($this->IS_DEPENDENT) {
-                    $this->PIN_DEPENDENT = $contact->PIN_DEPENDENT;
-                } else {
-                    $this->PIN_DEPENDENT = $this->PIN;
-                }
+                    $this->IS_PATIENT = $contact->IS_PATIENT;
+                    if ($this->IS_PATIENT) {
+                        $this->MEMBER_FIRST_NAME = strtoupper($contact->FIRST_NAME);
+                        $this->MEMBER_LAST_NAME = strtoupper($contact->LAST_NAME);
+                        $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MIDDLE_NAME);
+                        $this->MEMBER_EXTENSION = strtoupper($contact->SALUTATION);
+                        $this->MEMBER_BIRTH_DATE = $contact->DATE_OF_BIRTH;
+                        $this->MEMBER_GENDER = $contact->GENDER;
+                    } else {
+                        $this->MEMBER_FIRST_NAME = strtoupper($contact->MEMBER_FIRST_NAME);
+                        $this->MEMBER_LAST_NAME = strtoupper($contact->MEMBER_LAST_NAME);
+                        $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MEMBER_MIDDLE_NAME);
+                        $this->MEMBER_EXTENSION = strtoupper($contact->MEMBER_EXTENSION);
+                        $this->MEMBER_BIRTH_DATE = $contact->MEMBER_BIRTH_DATE;
+                        $this->MEMBER_GENDER = $contact->MEMBER_GENDER;
+                    }
+                    $this->IS_DEPENDENT = $contact->IS_DEPENDENT;
+                    $this->PIN = $contact->PIN ?? '';
+                    if ($this->IS_DEPENDENT) {
+                        $this->PIN_DEPENDENT = $contact->PIN_DEPENDENT;
+                    } else {
+                        $this->PIN_DEPENDENT = $this->PIN;
+                    }
 
 
-                $this->IS_PATIENT = $contact->IS_PATIENT;
+                    $this->IS_PATIENT = $contact->IS_PATIENT;
 
-                $this->MEMBER_IS_CHILD = $contact->MEMBER_IS_CHILD;
-                $this->MEMBER_IS_PARENT = $contact->MEMBER_IS_PARENT;
-                $this->MEMBER_IS_SPOUSE = $contact->MEMBER_IS_SPOUSE;
-                $this->IS_REPRESENTATIVE = $contact->IS_REPRESENTATIVE;
+                    $this->MEMBER_IS_CHILD = $contact->MEMBER_IS_CHILD;
+                    $this->MEMBER_IS_PARENT = $contact->MEMBER_IS_PARENT;
+                    $this->MEMBER_IS_SPOUSE = $contact->MEMBER_IS_SPOUSE;
+                    $this->IS_REPRESENTATIVE = $contact->IS_REPRESENTATIVE;
 
-                if ($this->IS_REPRESENTATIVE) {
-                    $this->NAME_REPRESENTATIVE = $contact->CONTACT_PERSON;
-                } else {
-                    $this->NAME_REPRESENTATIVE = "";
-                }
+                    if ($this->IS_REPRESENTATIVE) {
+                        $this->NAME_REPRESENTATIVE = $contact->CONTACT_PERSON;
+                    } else {
+                        $this->NAME_REPRESENTATIVE = "";
+                    }
 
-                $this->PEN = $contact->PEN ?? '';
-                $this->PEN_CONTACT = $contact->PEN_CONTACT ?? '';
-                $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
-                $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
-                $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
-                $locData =   $this->locationServices->getPesonel($this->LOCATION_ID);
-                if ($locData) {
-                    $this->HCI_NAME = strtoupper($locData->MANAGER_NAME)  ?? '';
-                    $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION)  ?? '';
-                }
-            }
+                    $this->PEN = $contact->PEN ?? '';
+                    $this->PEN_CONTACT = $contact->PEN_CONTACT ?? '';
+                    $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
+                    $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
+                    $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
+                    $locData =   $this->locationServices->getPesonel($contact->LOCATION_ID);
+                    if ($locData) {
+                        $this->HCI_NAME = strtoupper($locData->MANAGER_NAME)  ?? '';
+                        $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION)  ?? '';
+                    }
+                } 
         }
     }
 

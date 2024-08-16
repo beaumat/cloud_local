@@ -27,6 +27,11 @@ class PhilhealthRecord extends Component
     public function AddTemp()
     {
         $this->philHealthServices->PreSaveTemp($this->CONTACT_ID, $this->LOCATION_ID);
+        // $this->philHealthServices->PrintPreSign();
+    }
+    public function PrintPreSign()
+    {
+        $this->philHealthServices->PrintEmpty($this->CONTACT_ID);
     }
     public function delete($id)
     {

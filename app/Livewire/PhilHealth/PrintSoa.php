@@ -5,6 +5,7 @@ namespace App\Livewire\PhilHealth;
 use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
+use App\Services\PatientDoctorServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -103,12 +104,14 @@ class PrintSoa extends Component
     public string $REPORT_HEADER_1;
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
-    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, LocationServices $locationServices, HemoServices $hemoServices)
+    private $patientDoctorServices;
+    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, LocationServices $locationServices, HemoServices $hemoServices, PatientDoctorServices $patientDoctorServices)
     {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
+        $this->patientDoctorServices = $patientDoctorServices;
     }
 
     public function profFeeList($PHIC_ID)
@@ -116,10 +119,45 @@ class PrintSoa extends Component
         $this->i = 0;
         $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
     }
-    public function mount($PRINT_ID)
+    public function mount(int $PRINT_ID, int $PATIENT_ID = 0)
     {
-        $this->PreLoad($PRINT_ID);
-        $this->profFeeList($PRINT_ID);
+        if ($PRINT_ID > 0) {
+            $this->PreLoad($PRINT_ID);
+            $this->profFeeList($PRINT_ID);
+            return;
+        }
+
+        if ($PATIENT_ID > 0) {
+
+            $contact = $this->contactServices->get($PATIENT_ID, 3);
+
+            if ($contact) {
+                $this->PATIENT_NAME = $contact->NAME;
+                $this->LOCATION_ID = $contact->LOCATION_ID;
+                $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
+                $this->ADDRESS1 = $this->GetAddress1($contact);
+                $this->ADDRESS2 = $this->GetAddress2($contact);
+                $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
+                $this->FINAL_DIAGNOSIS = $this->philHealthServices->DEFAULT_DIAGNOSIS2 . $contact->FINAL_DIAGNOSIS ?? '';
+                $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
+                $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
+                $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
+            }
+            $this->i = 0;
+            $this->feeList  = $this->patientDoctorServices->GetbyTemp($PATIENT_ID);
+
+            $locData = $this->locationServices->get($this->LOCATION_ID);
+            if ($locData) {
+                $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+                $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
+                $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                if ($conUser) {
+                    $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
+                    $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
+                }
+            }
+        }
     }
     public function PreLoad($ID)
     {
@@ -225,6 +263,7 @@ class PrintSoa extends Component
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
                 }
 
+
                 $locData = $this->locationServices->get($this->LOCATION_ID);
                 if ($locData) {
                     $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
@@ -242,6 +281,7 @@ class PrintSoa extends Component
                 $this->allDate == '';
 
                 $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
+                $LastDate = '';
                 foreach ($dataList as $list) {
 
                     if ($this->allDate == '') {
@@ -249,10 +289,11 @@ class PrintSoa extends Component
                     } else {
                         $this->allDate = $this->allDate . ', ' .  date('d', strtotime($list->DATE));
                     }
+                    $LastDate = $list->DATE;
                 }
-
-                $this->allDate = $this->allDate . ', ' .  date('Y', strtotime($list->DATE));
-                return;
+                if ($LastDate !== '') {
+                    $this->allDate = $this->allDate . ', ' .  date('Y', strtotime($LastDate));
+                }
             }
         }
     }

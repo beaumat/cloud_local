@@ -234,6 +234,9 @@ class PhilHealthServices
 
         return $ID;
     }
+    public function PrintEmpty(int $PATIENT_ID) {
+
+    }
     public function Update(int $ID, float $CHARGES_ROOM_N_BOARD, float $CHARGES_DRUG_N_MEDICINE, float $CHARGES_LAB_N_DIAGNOSTICS, float $CHARGES_OPERATING_ROOM_FEE, float $CHARGES_SUPPLIES, float $CHARGES_OTHERS, float $CHARGES_SUB_TOTAL, string $OTHER_SPECIFY, float $VAT_ROOM_N_BOARD, float $VAT_DRUG_N_MEDICINE, float $VAT_LAB_N_DIAGNOSTICS, float $VAT_OPERATING_ROOM_FEE, float $VAT_SUPPLIES, float $VAT_OTHERS, float $VAT_SUB_TOTAL, float $SP_ROOM_N_BOARD, float $SP_DRUG_N_MEDICINE, float $SP_LAB_N_DIAGNOSTICS, float $SP_OPERATING_ROOM_FEE, float $SP_SUPPLIES, float $SP_OTHERS, float $SP_SUB_TOTAL, float $GOV_ROOM_N_BOARD, float $GOV_DRUG_N_MEDICINE, float $GOV_LAB_N_DIAGNOSTICS, float $GOV_OPERATING_ROOM_FEE, float $GOV_SUPPLIES, float $GOV_OTHERS, float $GOV_SUB_TOTAL, bool $GOV_PCSO, bool $GOV_DSWD, bool $GOV_DOH, bool $GOV_HMO, bool $GOV_LINGAP, float $P1_ROOM_N_BOARD, float $P1_DRUG_N_MEDICINE, float $P1_LAB_N_DIAGNOSTICS, float $P1_OPERATING_ROOM_FEE, float $P1_SUPPLIES, float $P1_OTHERS, float $P1_SUB_TOTAL, float $P2_ROOM_N_BOARD, float $P2_DRUG_N_MEDICINE, float $P2_LAB_N_DIAGNOSTICS, float $P2_OPERATING_ROOM_FEE, float $P2_SUPPLIES, float $P2_OTHERS, float $P2_SUB_TOTAL, float $OP_ROOM_N_BOARD, float $OP_DRUG_N_MEDICINE, float $OP_LAB_N_DIAGNOSTICS, float $OP_OPERATING_ROOM_FEE, float $OP_SUPPLIES, float $OP_OTHERS, float $OP_SUB_TOTAL, float $PROFESSIONAL_FEE_SUB_TOTAL, float $PROFESSIONAL_DISCOUNT_SUB_TOTAL, float $CHARGE_TOTAL, float $VAT_TOTAL, float $SP_TOTAL, float $GOV_TOTAL, float $P1_TOTAL, float $P2_TOTAL, float $OP_TOTAL, int $PREPARED_BY_ID, string $DATE_SIGNED, string $OTHER_NAME)
     {
 
@@ -440,8 +443,6 @@ class PhilHealthServices
             'LINE_NO'    => $LINE_NO,
             'DISCOUNT'   => $DISCOUNT,
             'FIRST_CASE' => $FIRST_CASE
-
-
         ]);
     }
     public function UpdateProfFee(int $ID, float $AMOUNT, float $DISCOUNT, float $FIRST_CASE)
@@ -626,4 +627,6 @@ class PhilHealthServices
 
         return 0;
     }
+
+    public function PrintPreSign(int $PETAINT_ID, int $LOCATION_ID) {}
 }

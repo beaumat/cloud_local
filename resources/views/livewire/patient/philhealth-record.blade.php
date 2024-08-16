@@ -97,10 +97,23 @@
                      </tbody>
                  </table>
                  <div class="form-group mt-2">
-                     <button type="button" class="btn btn-xs btn-warning" wire:click='AddTemp'
+                     {{-- <button type="button" class="btn btn-xs btn-warning" wire:click='AddTemp'
                          wire:confirm="Are you sure you want to add temporary files?">
                          <i class="fas fa-plus"></i> Add
-                     </button>
+                     </button> --}}
+
+
+                     <a type="button" target="_BLANK" title="Print Soa"
+                         href="{{ route('patientsphic_print_templeted', ['id' => $CONTACT_ID]) }}"
+                         class=" btn  btn-sm btn-primary">
+                         <i class="fa fa-print" aria-hidden="true"></i> SOA & Treatment (Pre-sign)
+                     </a>
+                     <a type="button" target="_BLANK" title="Print Philheath Form"
+                         href="{{ route('patientsphic_print_form_templeted', ['id' => $CONTACT_ID]) }}"
+                         class="btn btn-info btn-sm"> <i class="fa fa-print" aria-hidden="true"></i>
+                         CSF & CF4 (Pre-sign)
+                     </a>
+
                  </div>
              </div>
          </div>
