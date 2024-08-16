@@ -7,7 +7,7 @@ use App\Services\ItemServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 
-use Livewire\Attributes\On;
+
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -66,6 +66,10 @@ class ItemActiveList extends Component
     $this->refreshItem();
   }
   public function updatedsearch()
+  {
+    $this->refreshItem();
+  }
+  public function updatedLocationId()
   {
     $this->refreshItem();
   }
