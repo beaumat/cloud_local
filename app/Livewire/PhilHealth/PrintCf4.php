@@ -53,8 +53,7 @@ class PrintCf4 extends Component
     public string $MEMBER_EXTENSION;
     public string $MEMBER_BIRTH_DATE;
     public int $MEMBER_GENDER;
-
-
+    
     public string $NAME_OF_BUSINESS;
     public string $ACCREDITATION_NO;
     public string $BLDG_NAME_LOT_BLOCK;
@@ -62,14 +61,12 @@ class PrintCf4 extends Component
     public string $BRGY_CITY_MUNI;
     public string $PROVINCE;
     public string $ZIP_CODE;
-
     public string $CHIEF_OF_COMPLAINT = 'HEMODIALYSIS';
     public string $ADMITTING_DIAGNOSIS = 'CHRONIC KIDNEY DISEASE';
     public string $FINAL_DIAGNOSIS;
     public string $HISTORY_OF_PRESENT_ILLNESS = 'CHRONIC KIDNEY DISEASE STAGE 5';
     public int $AGE;
     public float $HEIGHT;
-
     public string $POST_WEIGHT;
     public string $POST_BLOOD_PRESSURE;
     public string $POST_HEART_RATE;

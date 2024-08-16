@@ -9,8 +9,6 @@ use Livewire\Component;
 #[Title('PhilHealth Printing Form Templeted')]
 class PhilHealthPrintFormTemp extends Component
 {
-
-    
     public $PRINT_ID = [];
     public function mount($id)
     {

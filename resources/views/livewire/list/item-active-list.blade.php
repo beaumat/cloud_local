@@ -39,8 +39,8 @@
                                                     name="location" wire:model.live='LOCATION_ID'
                                                     class="form-control form-control-sm">
                                                     @foreach ($locationList as $item)
-                                                        <option value="{{ $item->ID }}"> 
-                                                        {{ $item->NAME }}
+                                                        <option value="{{ $item->ID }}">
+                                                            {{ $item->NAME }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -53,7 +53,8 @@
                                 <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>
-                                            <span type='button' wire:click="sorting('c.DESCRIPTION')">Category</span>
+                                            <span name="category" type='button'
+                                                wire:click="sorting('c.DESCRIPTION')">Category</span>
                                             @if ($sortby == 'c.DESCRIPTION')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -63,7 +64,8 @@
                                             @endif
                                         </th>
                                         <th>
-                                            <span type='button' wire:click="sorting('s.DESCRIPTION')">Sub
+                                            <span name="sub_category" type='button'
+                                                wire:click="sorting('s.DESCRIPTION')">Sub
                                                 Category</span>
                                             @if ($sortby == 's.DESCRIPTION')
                                                 @if ($isDesc)
@@ -74,7 +76,8 @@
                                             @endif
                                         </th>
                                         <th class="bg-primary">
-                                            <span type='button' wire:click="sorting('item.CODE')">Code</span>
+                                            <span name="item_code" type='button'
+                                                wire:click="sorting('item.CODE')">Code</span>
                                             @if ($sortby == 'item.CODE')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -84,7 +87,8 @@
                                             @endif
                                         </th>
                                         <th class="bg-primary">
-                                            <span type='button' wire:click="sorting('item.DESCRIPTION')">
+                                            <span name="item_description" type='button'
+                                                wire:click="sorting('item.DESCRIPTION')">
                                                 Item Description
                                             </span>
                                             @if ($sortby == 'item.DESCRIPTION')
@@ -96,7 +100,8 @@
                                             @endif
                                         </th>
                                         <th class="text-center bg-info">
-                                            <span type='button' wire:click="sorting('u.SYMBOL')">Unit</span>
+                                            <span name="symbol" type='button'
+                                                wire:click="sorting('u.SYMBOL')">Unit</span>
                                             @if ($sortby == 'u.SYMBOL')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -106,7 +111,8 @@
                                             @endif
                                         </th>
                                         <th class="text-center bg-warning">
-                                            <span type='button' wire:click="sorting('QTY_ON_HAND')">Onhand</span>
+                                            <span name="qty_onhand" type='button'
+                                                wire:click="sorting('QTY_ON_HAND')">Onhand</span>
                                             @if ($sortby == 'QTY_ON_HAND')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -129,21 +135,29 @@
                                             <td> {{ $list->DESCRIPTION }}</td>
                                             <td class="text-center"> {{ $list->SYMBOL }} </td>
                                             <td class="text-center">
-                                                <span type="button"
+                                                <span
                                                     class="text-sm @if ($list->QTY_ON_HAND < 0) text-danger @elseif ($list->QTY_ON_HAND == 0) text-info  @else text-primary @endif"
-                                                    wire:click='OnClick({{ $list->ID }})'>{{ number_format($list->QTY_ON_HAND ?? 0, 2) }}
+                                                    wire:click='OnClick({{ $list->ID }})'>
+                                                    {{ number_format($list->QTY_ON_HAND ?? 0, 2) }}
                                                 </span>
+
+
                                             </td>
                                             <td class="text-center">
-                                                <span title="Qty Details" type="button" class="btn btn-xs btn-info"
+                                                <button name="qtyDetails{{ $list->ID }}" title="Qty Details"
+                                                    type="button" class="btn btn-xs btn-info"
                                                     wire:click='OnClick({{ $list->ID }})'>
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
-                                                </span>
-                                                <a title="Item Details" target="_BLANK" type="button"
-                                                    class="btn btn-xs btn-primary"
-                                                    href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}">
-                                                    <i class="fas fa-info-circle" aria-hidden="true"></i>
-                                                </a>
+                                                </button>
+
+                                                @can('items.view')
+                                                    <a name="ItemDetails{{ $list->ID }}" title="Item Details"
+                                                        target="_BLANK" type="button" class="btn btn-xs btn-primary"
+                                                        href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}">
+                                                        <i class="fas fa-info-circle" aria-hidden="true"></i>
+                                                    </a>
+                                                @endcan
+
                                             </td>
                                         </tr>
                                     @endforeach

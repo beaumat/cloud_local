@@ -7,6 +7,7 @@ use App\Services\ItemServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -22,6 +23,8 @@ class ItemActiveList extends Component
   public $locationList = [];
   public $DATE;
   private $itemServices;
+  public bool $isDesc = false;
+  public string $sortby;
   public $dataList = [];
 
   public function OnClick(int $ID)
@@ -43,25 +46,37 @@ class ItemActiveList extends Component
   }
   public function mount()
   {
+    $this->sortby = 'c.DESCRIPTION';
     $this->LOCATION_ID = $this->userServices->getLocationDefault();
     $this->DATE = $this->dateServices->NowDate();
     $this->locationList = $this->locationServices->getList();
     $this->LOCATION_ID = $this->userServices->getLocationDefault();
+    $this->refreshItem();
   }
-  public bool $isDesc = false;
-  public string $sortby = 'c.DESCRIPTION';
+
   public function sorting(string $column)
   {
     if ($this->sortby  == $column) {
       $this->isDesc = $this->isDesc ? false : true;
+      $this->refreshItem();
       return;
     }
-    $this->isDesc = true;
+    $this->isDesc = $this->isDesc ? false : true;
     $this->sortby = $column;
+    $this->refreshItem();
   }
-  public function render()
+  public function updatedsearch()
+  {
+    $this->refreshItem();
+  }
+  private function refreshItem()
   {
     $this->dataList = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc);
+  }
+
+  public function render()
+  {
+
     return view('livewire.list.item-active-list');
   }
 }

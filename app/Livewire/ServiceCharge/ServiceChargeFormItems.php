@@ -213,15 +213,15 @@ class ServiceChargeFormItems extends Component
     {
         $this->validate(
             [
-                'ITEM_ID' => 'required|not_in:0',
-                'QUANTITY' => 'required|not_in:0',
-                'RATE' => 'required'
+                'ITEM_ID'   => 'required|not_in:0',
+                'QUANTITY'  => 'required|numeric|not_in:0',
+                'RATE'      => 'required|numeric'
             ],
             [],
             [
-                'ITEM_ID' => 'Item',
-                'QUANTITY' => 'Quantitity',
-                'RATE' => 'Price'
+                'ITEM_ID'   => 'Item',
+                'QUANTITY'  => 'Quantity',
+                'RATE'      => 'Rate'
             ]
         );
         DB::beginTransaction();
@@ -259,12 +259,11 @@ class ServiceChargeFormItems extends Component
             if ($dataSC) {
                 $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->ITEM_ID,  $this->QUANTITY, false, $this->UNIT_ID > 0 ? $this->UNIT_ID : 0);
             }
-
             DB::commit();
 
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
-
+            // Philhealth Purpose
             $prime_item_id =  $this->ITEM_ID;
 
             $this->ITEM_ID = 0;
@@ -284,11 +283,9 @@ class ServiceChargeFormItems extends Component
 
 
             if ($this->philHealthServices->PHIL_HEALTH_ITEM_ID == $prime_item_id) {
-
                 $count = $this->serviceChargeServices->GetCountByYear($prime_item_id, $this->dateServices->NowYear(), $this->PATIENT_ID, $this->LOCATION_ID);
                 $countAdjust = $this->philHealthServices->ItemAdjustGet($this->PATIENT_ID, $this->LOCATION_ID, $this->dateServices->NowYear());
                 $totalCount = $count + $countAdjust;
-
                 $resultcount = ['count' => $totalCount];
                 $this->dispatch('phic-message', result: $resultcount);
             }
@@ -309,7 +306,6 @@ class ServiceChargeFormItems extends Component
         }
 
         session()->flash('error', 'PHIC 156 Treatment: The number of uses is ' . $result['count']);
-
     }
     public function updatedlineqty()
     {
@@ -349,11 +345,13 @@ class ServiceChargeFormItems extends Component
 
         $this->validate(
             [
-                'lineQty' => 'required|not_in:0',
+                'lineQty'   => 'required|numeric|not_in:0',
+                'lineRate'  => 'required|numeric'
             ],
             [],
             [
-                'lineQty' => 'Quantity',
+                'lineQty'   => 'Quantity',
+                'lineRate'  => 'Rate'
             ]
         );
 
@@ -385,14 +383,11 @@ class ServiceChargeFormItems extends Component
                 $this->linePriceLevelId
             );
 
-
             $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
             if ($dataSC) {
                 $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->lineItemId,  $this->lineQty, false,  $this->lineUnitId > 0 ? $this->lineUnitId : 0);
             }
-
             DB::commit();
-
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
             $this->itemList = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID);

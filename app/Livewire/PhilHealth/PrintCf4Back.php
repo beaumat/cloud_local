@@ -22,12 +22,8 @@ class PrintCf4Back extends Component
     public $DATE_DISCHARGED;
     public $DOCTOR_ORDER = "UNDERGO HEMODIALYSIS TREATMENT WITH NO COMPLICATIONS";
     private $patientDoctorServices;
-    public function boot(
-        PhilHealthServices $philHealthServices,
-        HemoServices $hemoServices,
-        ContactServices $contactServices,
-        PatientDoctorServices $patientDoctorServices
-    ) {
+    public function boot(PhilHealthServices $philHealthServices, HemoServices $hemoServices, ContactServices $contactServices, PatientDoctorServices $patientDoctorServices)
+    {
         $this->philHealthServices = $philHealthServices;
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
@@ -47,21 +43,12 @@ class PrintCf4Back extends Component
             [$getData],
         ];
 
-
         if ($id > 0) {
             $this->getMed($id);
-
             $data = $this->philHealthServices->get($id);
-
             if ($data) {
                 $this->DATE_DISCHARGED =  $data->DATE_DISCHARGED ?? '';
-
-                $getData = $this->hemoServices->GetSummary(
-                    $data->CONTACT_ID,
-                    $data->LOCATION_ID,
-                    $data->DATE_ADMITTED ?? '',
-                    $data->DATE_DISCHARGED ?? ''
-                );
+                $getData = $this->hemoServices->GetSummary( $data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED ?? '', $data->DATE_DISCHARGED ?? '' );
                 $r = 0;
                 foreach ($getData as $item) {
                     $this->dateList[$r] = $item->DATE;
@@ -86,7 +73,6 @@ class PrintCf4Back extends Component
                 $this->DR_NAME = strtoupper($list->NAME);
                 return;
             }
-
         }
     }
     public function getMed(int $ID)

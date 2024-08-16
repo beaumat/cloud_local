@@ -8,14 +8,12 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
-
                             @can('contact.patient.print')
                                 <button class="btn btn-success btn-sm" wire:click='export()'>
                                     <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                                     Export
                                 </button>
                             @endcan
-
                         </li>
                     </ol>
                 </div>
@@ -62,7 +60,8 @@
                                 <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>
-                                            <span type="button" wire:click="sorting('contact.ACCOUNT_NO')">No.</span>
+                                            <span name="accountNo" type="button"
+                                                wire:click="sorting('contact.ACCOUNT_NO')">No.</span>
                                             @if ($sortby == 'contact.ACCOUNT_NO')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -73,8 +72,7 @@
 
                                         </th>
                                         <th class="col-1">
-
-                                            <span type="button"
+                                            <span name="lastName" type="button"
                                                 wire:click="sorting('contact.LAST_NAME')">Lastname</span>
                                             @if ($sortby == 'contact.LAST_NAME')
                                                 @if ($isDesc)
@@ -85,7 +83,7 @@
                                             @endif
                                         </th>
                                         <th class="col-1">
-                                            <span type="button"
+                                            <span name="firstName" type="button"
                                                 wire:click="sorting('contact.FIRST_NAME')">Firstname</span>
                                             @if ($sortby == 'contact.FIRST_NAME')
                                                 @if ($isDesc)
@@ -96,7 +94,7 @@
                                             @endif
                                         </th>
                                         <th class="col-1">
-                                            <span type="button"
+                                            <span name="middleName" type="button"
                                                 wire:click="sorting('contact.MIDDLE_NAME')">Middlename</span>
                                             @if ($sortby == 'contact.MIDDLE_NAME')
                                                 @if ($isDesc)
@@ -107,7 +105,7 @@
                                             @endif
                                         </th>
                                         <th>
-                                            <span type="button"
+                                            <span name="genderDesc" type="button"
                                                 wire:click="sorting('gender_map.DESCRIPTION')">Sex</span>
                                             @if ($sortby == 'gender_map.DESCRIPTION')
                                                 @if ($isDesc)
@@ -119,7 +117,8 @@
 
                                         </th>
                                         <th class="text-center">
-                                            <span type="button" wire:click="sorting('contact.DATE_OF_BIRTH')">Date of
+                                            <span name="dateOfBirth" type="button"
+                                                wire:click="sorting('contact.DATE_OF_BIRTH')">Date of
                                                 Birth</span>
                                             @if ($sortby == 'contact.DATE_OF_BIRTH')
                                                 @if ($isDesc)
@@ -130,7 +129,7 @@
                                             @endif
                                         </th>
                                         <th>
-                                            <span type="button" wire:click="sorting('AGE')">Age</span>
+                                            <span name="ageSort" type="button" wire:click="sorting('AGE')">Age</span>
                                             @if ($sortby == 'AGE')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -141,7 +140,8 @@
 
                                         </th>
                                         <th class="col-1">
-                                            <span type="button" wire:click="sorting('contact.PIN')">Philhealth
+                                            <span name="philhealthSort" type="button"
+                                                wire:click="sorting('contact.PIN')">Philhealth
                                                 No.</span>
                                             @if ($sortby == 'contact.PIN')
                                                 @if ($isDesc)
@@ -152,7 +152,7 @@
                                             @endif
                                         </th>
                                         <th class="col-2">
-                                            <span type="button"
+                                            <span name="doctorNameSort" type="button"
                                                 wire:click="sorting('DOCTOR_NAME')">Nephro/Doctors</span>
                                             @if ($sortby == 'DOCTOR_NAME')
                                                 @if ($isDesc)
@@ -164,7 +164,7 @@
 
                                         </th>
                                         <th class="col-1 text-center">
-                                            <span type="button"
+                                            <span name="diagnosisOnSort" type="button"
                                                 wire:click="sorting('contact.DATE_ADMISSION')">Diagnosis On</span>
                                             @if ($sortby == 'contact.DATE_ADMISSION')
                                                 @if ($isDesc)
@@ -175,7 +175,8 @@
                                             @endif
                                         </th>
                                         <th>
-                                            <span type="button" wire:click="sorting('l.NAME')">Location</span>
+                                            <span name="locationSort" type="button"
+                                                wire:click="sorting('l.NAME')">Location</span>
                                             @if ($sortby == 'l.NAME')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -185,7 +186,7 @@
                                             @endif
                                         </th>
                                         <th class="text-center">
-                                            <span type="button"
+                                            <span name="isCompleted" type="button"
                                                 wire:click="sorting('contact.IS_COMPLETE')">Req.(S)</span>
                                             @if ($sortby == 'contact.IS_COMPLETE')
                                                 @if ($isDesc)
@@ -196,7 +197,7 @@
                                             @endif
                                         </th>
                                         <th class="text-center">
-                                            <span type="button"
+                                            <span name="isInactive" type="button"
                                                 wire:click="sorting('contact.INACTIVE')">Inactive</span>
                                             @if ($sortby == 'contact.INACTIVE')
                                                 @if ($isDesc)

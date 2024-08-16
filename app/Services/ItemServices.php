@@ -205,7 +205,9 @@ class ItemServices
     }
 
     public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc)
-    {
+    {   
+
+       
         $items = DB::table('item')
             ->select(
                 [
