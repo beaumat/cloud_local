@@ -2,7 +2,6 @@
 
 namespace App\Livewire\PatientReport;
 
-use App\Exports\HtmlTableExport;
 use App\Exports\PatientSalesReportExport;
 use App\Services\ContactServices;
 use App\Services\PatientReportServices;
@@ -10,10 +9,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Services\LocationServices;
 
 use App\Services\UserServices;
-use Illuminate\Support\Facades\DB;
+
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Maatwebsite\Excel\Excel as ExcelExcel;
 
 #[Title('Sales Report')]
 class PatientSalesReport extends Component
@@ -43,13 +41,8 @@ class PatientSalesReport extends Component
     public int $NO_OF_PATIENT = 0;
     private $contactServices;
     private $patientReportServices;
-    public function boot(
-        LocationServices $locationServices,
-        UserServices $userServices,
-        ContactServices $contactServices,
-        PatientReportServices $patientReportServices
-
-    ) {
+    public function boot(LocationServices $locationServices, UserServices $userServices, ContactServices $contactServices, PatientReportServices $patientReportServices)
+    {
 
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -73,14 +66,13 @@ class PatientSalesReport extends Component
             $this->LOCATION_ID,
             $this->PATIENT_ID
         ), 'sales-report.xlsx');
-
     }
     public function showfilter()
     {
         $this->NO_OF_PATIENT  = 0;
         $this->TOTAL_CHARGE = 0;
         $this->TOTAL_PAID = 0;
-        
+
         $this->dataList = $this->patientReportServices->generateSalesReportData(
             $this->DATE_COLLECTION_FROM,
             $this->DATE_COLLECTION_TO,
@@ -102,9 +94,10 @@ class PatientSalesReport extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->PATIENT_ID = 0;
     }
+    
     public function render()
     {
-    
+
         return view('livewire.patient-report.patient-sales-report');
     }
 }

@@ -32,7 +32,6 @@
                                         <livewire:date-input name="DATE_TRANSACTION_TO" titleName="(SC) To"
                                             wire:model.live='DATE_TRANSACTION_TO' :isDisabled="false" />
                                     </div>
-
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -47,9 +46,7 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-4">
-
                                 <div class="row">
                                     <div class="col-md-8">
                                         <livewire:select-option name="PATIENT_ID" titleName="Selected patient"
@@ -59,7 +56,9 @@
                                     <div class="col-md-4">
                                         <div class="mt-0">
                                             <label class="text-xs pt-2">Location:</label>
-                                            <select @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif name="location" wire:model.live='LOCATION_ID'
+                                            <select
+                                                @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                name="location" wire:model.live='LOCATION_ID'
                                                 class="form-control form-control-sm text-xs mt-1">
                                                 <option value="0"> All Location</option>
                                                 @foreach ($locationList as $item)
@@ -76,16 +75,21 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-6">
-                                <button class="btn btn-sm btn-primary" wire:click='showfilter()'>Filter</button>
+                                <div wire:loading.delay>
+                                    <span class="spinner"></span>
+                                </div>
+                                <button class="btn btn-sm btn-primary" wire:click='showfilter()'
+                                    wire:loading.attr='disabled'>Filter</button>
+                                <button class="btn btn-sm btn-success" wire:click='export()'
+                                    wire:loading.attr='disabled'>Export</button>
                             </div>
-                            <div class="col-6 text-right">
-                                <button class="btn btn-sm btn-success " wire:click='export()'> Export </button>
+                            <div class="col-6">
+
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12" style="max-height: 80vh; overflow-y: auto;">
-                
                     <table class="table table-sm table-bordered table-hover">
                         <thead class="text-xs bg-sky sticky-header">
                             <tr>
