@@ -56,7 +56,8 @@
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-4" @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="col-md-4"
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($ID == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
@@ -74,32 +75,45 @@
                                 <div class="row">
                                     <div class="col-md-6 col-6">
                                         @if ($Modify)
-                                            <button type="submit" class="btn btn-sm btn-primary"> <i
-                                                    class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
-                                            @if ($ID > 0)
-                                                <button type="button" wire:click='updateCancel'
+
+                                            @if ($STATUS == 4)
+                                                <button name="btnSavePosted" type="submit"
+                                                    class="btn btn-sm btn-primary"> <i class="fa fa-floppy-o"
+                                                        aria-hidden="true"></i> Save &
+                                                    Posted</button>
+                                                <button name="btnCanceled" type='button' wire:click='updateCancel'
+                                                    class="btn btn-sm btn-danger"><i class="fa fa-ban"
+                                                        aria-hidden="true"></i> Cancel</button>
+                                            @else
+                                                <button name="btnSave" type="submit" class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                    {{ $ID === 0 ? 'Pre-save' : 'Save' }}</button>
+
+                                                <button name="btnCanceled" type='button' wire:click='updateCancel'
                                                     class="btn btn-sm btn-danger"><i class="fa fa-ban"
                                                         aria-hidden="true"></i> Cancel</button>
                                             @endif
                                         @else
                                             @if ($STATUS == 1 || $STATUS == 4)
-                                                <button type="button" wire:click='getModify()'
+                                                <button name="btnModify" type='button' wire:click='getModify()'
                                                     class="btn btn-sm btn-info">
-                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Edit
                                                 </button>
-                                                @can('patient.treatment.update')
-                                                    @if (($ID > 0 && $STATUS == 1) || ($ID > 0 && $STATUS == 4))
-                                                        <button type="button" wire:click='getPosted()'
+
+
+                                                @if (($ID > 0 && $STATUS == 1) || ($ID > 0 && $STATUS == 4))
+                                                    @if (auth()->user()->can('patient.treatment.update'))
+                                                        <button name="btnPosted" type='button' wire:click='getPosted()'
                                                             class="btn btn-sm btn-warning"
                                                             wire:confirm="Are you sure you want to post?">
                                                             <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                         </button>
                                                     @endif
-                                                @endcan
+                                                @endif
                                             @else
                                                 @can('patient.treatment.update')
-                                                    <button type="button" class="btn btn-sm btn-secondary"
+                                                    <button name="btnUnposted" type='button'
+                                                        class="btn btn-sm btn-secondary"
                                                         wire:confirm="Are you sure you want to un-posted?"
                                                         wire:click='getUnposted()'>
                                                         Unposted
