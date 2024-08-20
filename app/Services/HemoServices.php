@@ -1096,4 +1096,12 @@ class HemoServices
             $this->ItemStore($hemoData->ID, $ITEM_ID, $QTY, $UNIT_ID, $UNIT_BASE_QUANTITY, true, false);
         }
     }
+
+    public function IsRestrictedFromUnposted(string $DATE, int $LOCATION_ID): bool
+    {
+        return  Hemodialysis::where('DATE', '<', $DATE)
+            ->where('STATUS_ID', 4)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->exists();
+    }
 }

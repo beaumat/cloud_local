@@ -86,19 +86,8 @@ class HemoForm extends Component
     private $unitOfMeasureServices;
     private $scheduleServices;
     private $patientDoctorServices;
-    public function boot(
-        HemoServices $hemoServices,
-        ContactServices $contactServices,
-        LocationServices $locationServices,
-        UserServices $userServices,
-        UploadServices $uploadServices,
-        ItemInventoryServices $itemInventoryServices,
-        DocumentTypeServices $documentTypeServices,
-        ItemTreatmentServices $itemTreatmentServices,
-        UnitOfMeasureServices $unitOfMeasureServices,
-        ScheduleServices $scheduleServices,
-        PatientDoctorServices $patientDoctorServices
-    ) {
+    public function boot(HemoServices $hemoServices, ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices, UploadServices $uploadServices, ItemInventoryServices $itemInventoryServices, DocumentTypeServices $documentTypeServices, ItemTreatmentServices $itemTreatmentServices, UnitOfMeasureServices $unitOfMeasureServices, ScheduleServices $scheduleServices, PatientDoctorServices $patientDoctorServices)
+    {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
@@ -164,6 +153,15 @@ class HemoForm extends Component
         if (is_numeric($id)) {
             $data = $this->hemoServices->Get($id);
             if ($data) {
+
+                // checking if 
+                if ($data->STATUS_ID  <> 4) {
+                    $isRestrik = (bool)   $this->hemoServices->IsRestrictedFromUnposted($data->DATE, $data->LOCATION_ID);
+                    if ($isRestrik) {
+                        return Redirect::route('patientshemo')->with('error', 'Invalid action. Please complete the unposted(U) transaction before proceeding.');
+                    }
+                }
+
                 $this->LoadDropDown();
                 $this->reloadData($data);
                 $statusData = DB::table('hemo_status')->select('description')->where('ID', $data->STATUS_ID)->first();
@@ -257,8 +255,6 @@ class HemoForm extends Component
             $this->IS_INCOMPLETE
         );
 
-
-
         session()->flash('message', 'Successfully save');
     }
     public function uploaddoc()
@@ -272,13 +268,11 @@ class HemoForm extends Component
             $this->uploadServices->RemoveIfExists($this->FILE_PATH);
             $returnData = $this->uploadServices->Treatment($this->IMAGE);
             $this->hemoServices->UpdateFile($this->ID, $returnData['filename'] . '.' . $returnData['extension'], $returnData['new_path']);
-
             return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully upload');
         }
     }
     public function getModify()
     {
-
 
         if ($this->ActiveRequired == true && $this->STATUS == 1) {
             $isRequiredItemAdded = $this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->ID);
@@ -307,17 +301,17 @@ class HemoForm extends Component
     {
         $this->validate(
             [
-                'CUSTOMER_ID' => 'required|not_in:0',
-                'CODE' => 'unique:hemodialysis,code,' . $this->ID,
-                'DATE' => 'required',
-                'LOCATION_ID' => 'required',
+                'CUSTOMER_ID'   => 'required|not_in:0',
+                'CODE'          => 'unique:hemodialysis,code,' . $this->ID,
+                'DATE'          => 'required',
+                'LOCATION_ID'   => 'required',
             ],
             [],
             [
-                'CUSTOMER_ID' => 'Patient',
-                'DATE' => 'Date',
-                'CODE' => 'Reference No.',
-                'LOCATION_ID' => 'Location'
+                'CUSTOMER_ID'   => 'Patient',
+                'DATE'          => 'Date',
+                'CODE'          => 'Reference No.',
+                'LOCATION_ID'   => 'Location'
             ]
         );
 

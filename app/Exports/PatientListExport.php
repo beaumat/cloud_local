@@ -30,9 +30,6 @@ class PatientListExport implements FromCollection, ShouldAutoSize
     public function collection()
     {
         $dataList = $this->contactServices->SearchPatient($this->search, 1000, $this->locationId, $this->sortBy, $this->isDesc, $this->doctorid);
-
-
-
         $headers = [
             'NO'            => 'No.',
             'LN'            => 'Lastname',
@@ -50,7 +47,6 @@ class PatientListExport implements FromCollection, ShouldAutoSize
         ];
         $finalData[] = array_values($headers);
         foreach ($dataList as $list) {
-
             $rowData = [
                 'NO'            =>  $list->ACCOUNT_NO,
                 'LN'            =>  $list->LAST_NAME,

@@ -15,7 +15,6 @@
             </div>
         </div>
     </div>
-
     <section class="content">
         <div class="container-fluid bg-light">
             <div class="row">

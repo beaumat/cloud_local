@@ -36,7 +36,7 @@ class TimerServices
         }
     }
     private function generateWaitingList()
-    {   
+    {
         $transDate =  $this->dateServices->NowDate();
         $schedlist = $this->scheduleServices->getWaitingList($transDate);
         foreach ($schedlist as $sched) {
@@ -128,11 +128,9 @@ class TimerServices
                     } else {
                         $this->hemoServices->StatusUpdate($ID, 4); // UNPOSTED
                     }
-                    $this->hemoServices->StatusUpdate($ID, 4); // UNPOSTED
                 } else {
                     $this->hemoServices->StatusUpdate($ID, 2); // POSTED
                 }
-
                 DB::commit();
             } else {
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 3); // CANCELLED
@@ -143,7 +141,4 @@ class TimerServices
             Log::error('Error executing Schedule executed in getPosted: ' . $e->getMessage() . '[' . $CONTACT_ID . ',' . $LOCATION_ID . ', ' . $DATE . ']');
         }
     }
-
-
-
 }
