@@ -119,6 +119,7 @@ class InventoryAdjustmentFormItems extends Component
                 return;
             }
 
+
             if ($this->inventoryAdjustmentServices->haveExists($this->INVENTORY_ADJUSTMENT_ID, $this->ITEM_ID)) {
                 session()->flash('error', 'Item already added.');
                 return;

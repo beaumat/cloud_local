@@ -120,13 +120,23 @@ class InventoryAdjustmentServices
             ->where('ITEM_ID', $ITEM_ID)
             ->exists();
     }
-    public function ItemHasAdjustmentThatBefore(int $ITEM_ID, string $DATE, int $LOCATION_ID)
+    public function ItemHasAdjustmentThatBefore(int $ITEM_ID, string $DATE, int $LOCATION_ID): bool
     {
-        return InventoryAdjustmentItems::join('inventory_adjustment as i', 'i.ID', '=', 'inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID')
+        $data = InventoryAdjustmentItems::join('inventory_adjustment as i', 'i.ID', '=', 'inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID')
             ->where('ITEM_ID', $ITEM_ID)
             ->where('i.DATE', '>=', $DATE)
             ->where('i.LOCATION_ID', $LOCATION_ID)
-            ->exists();
+            ->orderBy('i.DATE', 'desc')
+            ->first();
+
+        if ($data) {
+            if ($data->DATE == $DATE) {
+                return false;
+            }
+            return  true;
+        }
+
+        return false;
     }
     public function ItemStore(int $INVENTORY_ADJUSTMENT_ID, int $ITEM_ID, float $QUANTITY, float $UNIT_COST, int $ASSET_ACCOUNT_ID, int $BATCH_ID, int $UNIT_ID, float $UNIT_BASE_QUANTITY)
     {
