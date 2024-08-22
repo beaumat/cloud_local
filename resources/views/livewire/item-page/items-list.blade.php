@@ -50,9 +50,11 @@
                                         <th class="text-right">COST</th>
                                         <th class="text-center">INACTIVE</th>
                                         <th class="text-center col-1 bg-success">
-                                            <a href="{{ route('maintenanceinventoryitem_create') }}"
-                                                class="text-white btn-sm"> <i class="fas fa-plus"></i>
-                                            </a>
+                                            @can('items.create')
+                                                <a href="{{ route('maintenanceinventoryitem_create') }}"
+                                                    class="text-white btn-sm"> <i class="fas fa-plus"></i> New
+                                                </a>
+                                            @endcan
                                         </th>
                                     </tr>
                                 </thead>
@@ -79,15 +81,24 @@
                                                 {{ $list->COST ? number_format($list->COST, 2) : '' }}</td>
                                             <td class="text-center"> {{ $list->INACTIVE ? 'Yes' : 'No' }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                <a title="View Details"
+                                                    href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}"
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+
+                                                @can('items.delete')
+                                                    <button type="button" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn btn-xs btn-secondary">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @endcan
+
 
                                             </td>
                                         </tr>
