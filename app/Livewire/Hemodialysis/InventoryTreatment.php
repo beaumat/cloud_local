@@ -4,8 +4,11 @@ namespace App\Livewire\Hemodialysis;
 
 use App\Services\HemoServices;
 use App\Services\ItemServices;
+use App\Services\ItemSubClassServices;
 use App\Services\ItemTreatmentServices;
+use App\Services\ServiceChargeServices;
 use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -23,16 +26,21 @@ class InventoryTreatment extends Component
     public int $openStatus = 1; // draft default
     public bool $saveSuccess = false;
     public $dataList = [];
+    public $subClassList = [];
     private $hemoServices;
     private $itemServices;
     private $unitOfMeasureServices;
     private $itemTreatmentServices;
-    public function boot(HemoServices $hemoServices, ItemServices $itemServices, UnitOfMeasureServices $unitOfMeasureServices, ItemTreatmentServices $itemTreatmentServices)
+    private $itemSubClassServices;
+    private $serviceChargeServices;
+    public function boot(HemoServices $hemoServices, ItemServices $itemServices, UnitOfMeasureServices $unitOfMeasureServices, ItemTreatmentServices $itemTreatmentServices, ItemSubClassServices $itemSubClassServices, ServiceChargeServices $serviceChargeServices)
     {
         $this->hemoServices = $hemoServices;
         $this->itemServices = $itemServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemTreatmentServices = $itemTreatmentServices;
+        $this->itemSubClassServices = $itemSubClassServices;
+        $this->serviceChargeServices = $serviceChargeServices;
     }
 
     public string $ITEM_CODE;
@@ -94,6 +102,41 @@ class InventoryTreatment extends Component
         }
         session()->flash('message', 'Successfully deleted');
     }
+    public function deleteItemInCash(int $ID, int $ITEM_ID)
+    {
+
+        $data =   $this->hemoServices->ItemGet($ID);
+        if ($data) {
+            DB::beginTransaction();
+            try {
+    
+                if ($data->SC_ITEM_ID > 0) {
+
+                    $dataItem = $this->serviceChargeServices->getItem($data->SC_ITEM_ID);
+
+                    if ($dataItem) {
+
+                        if ($dataItem->PAID_AMOUNT > 0) {
+                            session()->flash('error', 'Delete action cannot proceed. This item has already been paid.');
+                            return;
+                        }
+
+                        $SC_ID  = $dataItem->SERVICE_CHARGES_ID;
+                        $this->serviceChargeServices->ItemDelete($dataItem->ID, $SC_ID);
+                        $this->serviceChargeServices->ReComputed($SC_ID);
+                    }
+                }
+
+                $this->hemoServices->ItemDelete($ID, $this->HEMO_ID, $ITEM_ID, false);
+                DB::commit();
+                session()->flash('message', 'Successfully deleted');
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                session()->flash('error', $th->getMessage());
+            }
+        }
+    }
+
     public function saveItem()
     {
         $this->validate(
@@ -157,7 +200,6 @@ class InventoryTreatment extends Component
 
     public function updateItem()
     {
-
         $this->validate(
             [
                 'lineQty' => 'required|not_in:0',
@@ -185,13 +227,7 @@ class InventoryTreatment extends Component
         $this->cancelItem();
     }
 
-    #[On('clear-alert')]
-    public function clearAlert()
-    {
-        $this->resetErrorBag();
-        session()->forget('message');
-        session()->forget('error');
-    }
+
     public function loadItemRequired()
     {
         if ($this->ActiveRequired) {
@@ -230,7 +266,6 @@ class InventoryTreatment extends Component
                 }
 
                 $this->hemoServices->ItemStore($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew, true);
-
                 $dataTrigger = $this->itemTreatmentServices->listItemTrigger($ItemTreatmentId);
                 foreach ($dataTrigger  as $list) {
                     $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
@@ -244,15 +279,6 @@ class InventoryTreatment extends Component
             }
         }
     }
-    #[On('refresh-item-treatment')]
-    public function render()
-    {
-        $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
-        $this->dataList = $this->hemoServices->ItemView($this->HEMO_ID);
-        $this->loadItemRequired();
-        return view('livewire.hemodialysis.inventory-treatment');
-    }
-
     public function OpenUsageHistory(int $ITEM_ID)
     {
         $data = $this->hemoServices->get($this->HEMO_ID);
@@ -266,5 +292,26 @@ class InventoryTreatment extends Component
 
             $this->dispatch('usage-modal-open', result: $result);
         }
+    }
+    public function openSubClass(int $SUB_ID)
+    {
+        $data = ['SUB_CLASS_ID' => $SUB_ID];
+        $this->dispatch('open-list-sub-item', result: $data);
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
+    }
+    #[On('refresh-item-treatment')]
+    public function render()
+    {
+        $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
+        $this->dataList = $this->hemoServices->ItemView($this->HEMO_ID);
+        $this->subClassList = $this->itemSubClassServices->ListHemo();
+        $this->loadItemRequired();
+        return view('livewire.hemodialysis.inventory-treatment');
     }
 }

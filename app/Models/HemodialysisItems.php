@@ -22,6 +22,8 @@ class HemodialysisItems extends Model
         'UNIT_BASE_QUANTITY',
         'IS_NEW',
         'IS_DEFAULT',
-        'IS_POST'
+        'IS_POST',
+        'SC_ITEM_ID',
+        'IS_CASHIER'
     ];
 }

@@ -522,7 +522,6 @@ class HemoForm extends Component
             session()->flash("error", $message);
         }
     }
-
     public function backtoList()
     {
         return Redirect::route('patientshemo');

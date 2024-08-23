@@ -18,6 +18,7 @@ class ItemSubClassForm extends Component
     public string $CODE;
     public string $DESCRIPTION;
     public int $CLASS_ID;
+    public bool $IN_HEMO;
     public function mount($id = null)
     {
         $this->itemClass = ItemClass::all();
@@ -30,6 +31,7 @@ class ItemSubClassForm extends Component
                 $this->CODE = $itemSubClass->CODE;
                 $this->DESCRIPTION = $itemSubClass->DESCRIPTION;
                 $this->CLASS_ID = $itemSubClass->CLASS_ID;
+                $this->IN_HEMO = $itemSubClass->IN_HEMO ?? false;
                 return;
             }
 
@@ -41,6 +43,7 @@ class ItemSubClassForm extends Component
         $this->CODE = '';
         $this->DESCRIPTION = '';
         $this->CLASS_ID = 0;
+        $this->IN_HEMO = false;
     }
 
 
@@ -78,10 +81,10 @@ class ItemSubClassForm extends Component
         try {
 
             if ($this->ID === 0) {
-                $this->ID = $itemSubClassServices->Store($this->CODE, $this->DESCRIPTION, $this->CLASS_ID);
+                $this->ID = $itemSubClassServices->Store($this->CODE, $this->DESCRIPTION, $this->CLASS_ID, $this->IN_HEMO);
                 return Redirect::route('maintenanceinventoryitem_sub_class_edit', ['id' => $this->ID])->with('message', 'Successfully created.');
             } else {
-                $itemSubClassServices->Update($this->ID, $this->CODE, $this->DESCRIPTION, $this->CLASS_ID);
+                $itemSubClassServices->Update($this->ID, $this->CODE, $this->DESCRIPTION, $this->CLASS_ID,  $this->IN_HEMO);
                 session()->flash('message', 'Successfully updated.');
             }
         } catch (\Exception $e) {

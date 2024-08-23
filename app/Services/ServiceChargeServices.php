@@ -171,39 +171,40 @@ class ServiceChargeServices
     {
 
         $result = ServiceChargesItems::where('SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)->get();
-
         return $result;
     }
     public function getItem(int $ID)
     {
-        return ServiceChargesItems::where('ID', $ID)->first();
+        $result = ServiceChargesItems::where('ID', $ID)->first();
+        if ($result) {
+            return $result;
+        }
+        return [];
     }
     public function Store(string $CODE, string $DATE, int $PATIENT_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_RECEIVABLE_ID, int $STATUS, int $OUTPUT_TAX_ID, float $OUTPUT_TAX_RATE, int $OUTPUT_TAX_VAT_METHOD, int $OUTPUT_TAX_ACCOUNT_ID): int
     {
 
         $ID = (int) $this->object->ObjectNextID('SERVICE_CHARGES');
-
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('SERVICE_CHARGES');
-
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         ServiceCharges::create([
-            'ID'            => $ID,
-            'RECORDED_ON'   => $this->dateServices->Now(),
-            'CODE'          => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'          => $DATE,
-            'PATIENT_ID'    => $PATIENT_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'NOTES' => $NOTES ?? null,
-            'AMOUNT' => 0,
-            'BALANCE_DUE' => 0,
-            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID,
-            'STATUS' => $STATUS,
-            'STATUS_DATE' => $this->dateServices->NowDate(),
-            'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
-            'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
-            'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
-            'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null
+            'ID'                        => $ID,
+            'RECORDED_ON'               => $this->dateServices->Now(),
+            'CODE'                      => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                      => $DATE,
+            'PATIENT_ID'                => $PATIENT_ID,
+            'LOCATION_ID'               => $LOCATION_ID,
+            'NOTES'                     => $NOTES ?? null,
+            'AMOUNT'                    => 0,
+            'BALANCE_DUE'               => 0,
+            'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID,
+            'STATUS'                    => $STATUS,
+            'STATUS_DATE'               => $this->dateServices->NowDate(),
+            'OUTPUT_TAX_ID'             => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
+            'OUTPUT_TAX_RATE'           => $OUTPUT_TAX_RATE,
+            'OUTPUT_TAX_VAT_METHOD'     => $OUTPUT_TAX_VAT_METHOD,
+            'OUTPUT_TAX_ACCOUNT_ID'     => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null
         ]);
 
         return $ID;
@@ -241,6 +242,17 @@ class ServiceChargeServices
     public function ServicesChargesExists(string $DATE, int $PATIENT_ID, int $LOCATION_ID): bool
     {
         return  ServiceCharges::where('DATE', $DATE)->where('PATIENT_ID', $PATIENT_ID)->where('LOCATION_ID', $LOCATION_ID)->exists();
+    }
+
+    public function ServicesChargesGetFirst(string $DATE, int $PATIENT_ID, int $LOCATION_ID)
+    {
+        $data =  ServiceCharges::where('DATE', $DATE)->where('PATIENT_ID', $PATIENT_ID)->where('LOCATION_ID', $LOCATION_ID)->first();
+
+        if ($data) {
+            return $data;
+        }
+
+        return [];
     }
     public function Search($search, int $locationId, int $perPage, string $dateFrom, string $dateTo)
     {
@@ -441,19 +453,19 @@ class ServiceChargeServices
                 $balance = (float) $originalAmount - $this->GetPaymentAppliedViaServiceCharges($ID);
                 ServiceCharges::where('ID', $ID)
                     ->update([
-                        'AMOUNT' => $originalAmount,
-                        'BALANCE_DUE' => $balance,
+                        'AMOUNT'            => $originalAmount,
+                        'BALANCE_DUE'       => $balance,
                         'OUTPUT_TAX_AMOUNT' => $list['TAX_AMOUNT'],
-                        'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
+                        'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
                         'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                     ]);
 
                 $result = array(
                     [
-                        'AMOUNT' => $originalAmount,
-                        'BALANCE_DUE' => $balance,
-                        'TAX_AMOUNT' => $list['TAX_AMOUNT'],
-                        'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
+                        'AMOUNT'            => $originalAmount,
+                        'BALANCE_DUE'       => $balance,
+                        'TAX_AMOUNT'        => $list['TAX_AMOUNT'],
+                        'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
                         'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                     ]
                 );
@@ -481,9 +493,9 @@ class ServiceChargeServices
 
             ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)
                 ->update([
-                    'PAID_AMOUNT' => $ITEM_PAID
+                    'PAID_AMOUNT'   =>  $ITEM_PAID
                 ]);
-            $this->updateServiceChargesBalance($data->SERVICE_CHARGES_ID);   
+            $this->updateServiceChargesBalance($data->SERVICE_CHARGES_ID);
         }
     }
     public function getPaidItemCharge(int $SERVICE_CHARGES_ITEM_ID): float
@@ -494,7 +506,7 @@ class ServiceChargeServices
             ->where('SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)
             ->first();
 
-        return $result->pay;
+        return $result->pay ?? 0;
     }
     public function updateServiceChargesBalance(int $SERVICE_CHARGES_ID)
     {
@@ -524,9 +536,9 @@ class ServiceChargeServices
     {
         ServiceCharges::where('ID', $SERVICE_CHARGES_ID)
             ->update([
-                'BALANCE_DUE' => $BALANCE,
-                'STATUS'      => $STATUS,
-                'STATUS_DATE' => $this->dateServices->NowDate()
+                'BALANCE_DUE'   => $BALANCE,
+                'STATUS'        => $STATUS,
+                'STATUS_DATE'   => $this->dateServices->NowDate()
             ]);
     }
     public function getUpdateTaxItem(int $SERVICE_CHARGES_ID, int $TAX_ID)

@@ -40,6 +40,10 @@
                                             <livewire:select-option name="CLASS_ID" :options="$itemClass" :zero="true"
                                                 titleName="Item Class" wire:model='CLASS_ID' :key="$itemClass->pluck('ID')->join('_')">
                                         </div>
+                                        <div class="col-md-2">
+                                            <livewire:custom-check-box name="IN_HEMO" titleName="In Hemo"
+                                                wire:model='IN_HEMO' />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

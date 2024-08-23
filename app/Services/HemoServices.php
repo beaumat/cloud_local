@@ -671,7 +671,7 @@ class HemoServices
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('DATE', '<', $DATE)
             ->where('STATUS_ID', 2)
-            ->orderBy('Date', 'desc')
+            ->orderBy('DATE', 'desc')
             ->first();
 
         return $result;
@@ -741,7 +741,7 @@ class HemoServices
 
         return $IsExist;
     }
-    public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT)
+    public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT, bool $IS_CASHIER = false, $SC_ITEM_ID = null)
     {
         $ID = (int) $this->object->ObjectNextID('HEMODIALYSIS_ITEMS');
 
@@ -757,7 +757,10 @@ class HemoServices
             'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
             'IS_NEW'                => $IS_NEW,
             'IS_DEFAULT'            => $IS_DEFAULT,
-            'IS_POST'               => false
+            'IS_POST'               => false,
+            'SC_ITEM_ID'            => $SC_ITEM_ID,
+            'IS_CASHIER'            => $IS_CASHIER,
+
         ]);
     }
     public function ItemUpdate(int $ID, int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT)
@@ -814,14 +817,20 @@ class HemoServices
                 'hemodialysis_items.UNIT_BASE_QUANTITY',
                 'hemodialysis_items.IS_NEW',
                 'hemodialysis_items.IS_DEFAULT',
+                'hemodialysis_items.IS_CASHIER',
                 'item.CODE',
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
                 'u.SYMBOL',
-                't.NO_OF_USED'
+                't.NO_OF_USED',
+                'c.DESCRIPTION as CLASS_NAME'
+
             ])
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
             ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')
+            ->leftJoin('item_sub_class as s', 's.ID', '=', 'item.SUB_CLASS_ID')
+            ->leftJoin('item_class as c', 'c.ID', '=', 's.CLASS_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'hemodialysis_items.UNIT_ID')
             ->leftJoin('item_treatment as t', function ($q) {
                 $q->on('t.ITEM_ID', '=', 'hemodialysis_items.ITEM_ID');
@@ -1019,7 +1028,6 @@ class HemoServices
             }
         }
     }
-
     public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
     {
         return (int) Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)

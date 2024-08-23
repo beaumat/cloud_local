@@ -205,9 +205,9 @@ class ItemServices
     }
 
     public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc)
-    {   
+    {
 
-       
+
         $items = DB::table('item')
             ->select(
                 [
@@ -250,5 +250,26 @@ class ItemServices
             ->get();
 
         return $items;
+    }
+    public function getItemListBySubId(int $itemSubId, $search)
+    {
+        $data = Items::query()
+            ->select([
+                'ID',
+                'DESCRIPTION',
+                'RATE'
+            ])
+            ->where('INACTIVE', 0)
+            ->where('SUB_CLASS_ID', $itemSubId)
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use (&$search) {
+                    $q->where('item.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('DESCRIPTION', 'asc')
+            ->get();
+
+        return $data;
     }
 }

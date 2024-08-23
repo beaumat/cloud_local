@@ -16,6 +16,7 @@ class ItemSubClass extends Model
         'ID',
         'CODE',
         'DESCRIPTION',
-        'CLASS_ID'
+        'CLASS_ID',
+        'IN_HEMO'
     ];
 }
