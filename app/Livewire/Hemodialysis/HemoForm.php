@@ -81,7 +81,7 @@ class HemoForm extends Component
     public bool $IsPostedButton;
     public bool $ActiveRequired;
     public bool $IsDocmentUploaded;
-    
+
     // end old
     private $hemoServices;
     private $locationServices;
@@ -433,7 +433,7 @@ class HemoForm extends Component
 
                 $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
                 foreach ($dataList as $item) {
-                    $this->hemoServices->AddItem($item->ID,  $hemoData);
+                    $this->hemoServices->AddItemDefault($item->ID,  $hemoData);
                 }
                 DB::commit();
                 return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');

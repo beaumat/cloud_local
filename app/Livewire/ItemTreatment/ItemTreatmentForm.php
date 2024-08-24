@@ -25,6 +25,9 @@ class ItemTreatmentForm extends Component
     public bool $IS_AUTO;
     public bool $IS_REQUIRED;
     public float $NEW_TREATMENT_QTY;
+    public bool $FIRST_TIME_AUTO_NEW;
+
+
     public $locationList = [];
     public $itemList = [];
     public $unitList = [];
@@ -65,6 +68,7 @@ class ItemTreatmentForm extends Component
                 $this->IS_AUTO = $data->IS_AUTO;
                 $this->IS_REQUIRED = $data->IS_REQUIRED;
                 $this->NEW_TREATMENT_QTY = $data->NEW_TREATMENT_QTY ?? 0;
+                $this->FIRST_TIME_AUTO_NEW = $data->FIRST_TIME_AUTO_NEW ?? false;
                 return;
             }
 
@@ -82,6 +86,7 @@ class ItemTreatmentForm extends Component
         $this->IS_AUTO =  false;
         $this->IS_REQUIRED = false;
         $this->NEW_TREATMENT_QTY = 0;
+        $this->FIRST_TIME_AUTO_NEW = false;
     }
     public function save()
     {
@@ -101,11 +106,33 @@ class ItemTreatmentForm extends Component
         try {
             DB::beginTransaction();
             if ($this->ID === 0) {
-                $this->ID = $this->itemTreatmentServices->Store($this->LOCATION_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, $this->NO_OF_USED, $this->IS_AUTO, $this->IS_REQUIRED, $this->NEW_TREATMENT_QTY);
+                $this->ID = $this->itemTreatmentServices->Store(
+                    $this->LOCATION_ID,
+                    $this->ITEM_ID,
+                    $this->QUANTITY,
+                    $this->UNIT_ID,
+                    $this->NO_OF_USED,
+                    $this->IS_AUTO,
+                    $this->IS_REQUIRED,
+                    $this->NEW_TREATMENT_QTY,
+                    $this->FIRST_TIME_AUTO_NEW
+                );
                 DB::commit();
                 return Redirect::route('maintenanceothersitem_treatment_edit', ['id' => $this->ID])->with('message', 'Successfully created.');
             } else {
-                $this->itemTreatmentServices->Update($this->ID, $this->LOCATION_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, $this->NO_OF_USED, $this->INACTIVE, $this->IS_AUTO, $this->IS_REQUIRED, $this->NEW_TREATMENT_QTY);
+                $this->itemTreatmentServices->Update(
+                    $this->ID,
+                    $this->LOCATION_ID,
+                    $this->ITEM_ID,
+                    $this->QUANTITY,
+                    $this->UNIT_ID,
+                    $this->NO_OF_USED,
+                    $this->INACTIVE,
+                    $this->IS_AUTO,
+                    $this->IS_REQUIRED,
+                    $this->NEW_TREATMENT_QTY,
+                    $this->FIRST_TIME_AUTO_NEW
+                );
                 DB::commit();
                 session()->flash('message', 'Successfully updated.');
             }
@@ -135,7 +162,6 @@ class ItemTreatmentForm extends Component
     public function render()
     {
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
-
         return view('livewire.item-treatment.item-treatment-form');
     }
 }

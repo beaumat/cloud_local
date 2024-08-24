@@ -5,7 +5,9 @@ namespace App\Livewire\Hemodialysis;
 use App\Services\HemoServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
+use App\Services\ItemTreatmentServices;
 use App\Services\ServiceChargeServices;
+use App\Services\UnitOfMeasureServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -25,13 +27,22 @@ class OtherCharges extends Component
     public $search = '';
     private $hemoServices;
     private $serviceChargeServices;
-
-    public function boot(ItemSubClassServices  $itemSubClassServices, ItemServices $itemServices, HemoServices $hemoServices, ServiceChargeServices $serviceChargeServices)
-    {
+    private $itemTreatmentServices;
+    private $unitOfMeasureServices;
+    public function boot(
+        ItemSubClassServices  $itemSubClassServices,
+        ItemServices $itemServices,
+        HemoServices $hemoServices,
+        ServiceChargeServices $serviceChargeServices,
+        ItemTreatmentServices    $itemTreatmentServices,
+        UnitOfMeasureServices    $unitOfMeasureServices
+    ) {
         $this->itemSubClassServices = $itemSubClassServices;
         $this->itemServices = $itemServices;
         $this->hemoServices = $hemoServices;
         $this->serviceChargeServices = $serviceChargeServices;
+        $this->itemTreatmentServices = $itemTreatmentServices;
+        $this->unitOfMeasureServices = $unitOfMeasureServices;
     }
     #[On('open-list-sub-item')]
     public function openModal($result)
@@ -49,7 +60,7 @@ class OtherCharges extends Component
         $this->showModal = false;
     }
     public function AddCharge(int $ITEM_ID)
-    {   
+    {
 
         $data = $this->itemServices->get($ITEM_ID);
         if ($data) {
@@ -59,7 +70,7 @@ class OtherCharges extends Component
             $UNIT_ID  = $data->BASE_UNIT_ID ?? 0;
             $RATE = $data->RATE ?? 0;
             $TAX = $data->TAXABLE ?? 0;
-
+            $SK_LINE_ID = null;
             DB::beginTransaction();
             try {
 
@@ -69,13 +80,22 @@ class OtherCharges extends Component
                     // from cashier
                     $SC_ITEM_ID =   $this->serviceChargeServices->ItemStore($scData->ID, $ITEM_ID, $QTY, $UNIT_ID, $QTY_BASED, $RATE, 0, $QTY * $RATE, $TAX, 0, 0, $data->COGS_ACCOUNT_ID ?? 0, $data->ASSET_ACCOUNT_ID ?? 0, $data->GL_ACCOUNT_ID ?? 0, 0, false, $PRICE_LEVEL_ID);
                     // from treatment
-                    $this->hemoServices->ItemStore($this->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID, $QTY_BASED, true, false, true, $SC_ITEM_ID);
+                    $SK_LINE_ID =  $this->hemoServices->ItemStore($this->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID, $QTY_BASED, true, false, true, $SC_ITEM_ID);
                     // calculate
                     $this->serviceChargeServices->ReComputed($scData->ID); // recompute balance
                 } else {
                     // only treatment
-                    $this->hemoServices->ItemStore($this->HEMO_ID, $ITEM_ID, 1, $UNIT_ID, 1, true, false, true);
+                    $SK_LINE_ID = $this->hemoServices->ItemStore($this->HEMO_ID, $ITEM_ID, 1, $UNIT_ID, 1, true, false, true);
                 }
+
+                $dataTrigger = $this->itemTreatmentServices->getItemTrigger($ITEM_ID, $this->hemoData->LOCATION_ID, $UNIT_ID);
+                foreach ($dataTrigger  as $list) {
+                    $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
+                    $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+                    $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
+                }
+
+
 
                 DB::commit();
                 session()->flash('message', 'Successsfully added');

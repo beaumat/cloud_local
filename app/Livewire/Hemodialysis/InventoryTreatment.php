@@ -88,18 +88,10 @@ class InventoryTreatment extends Component
         }
         $this->itemDescList = $this->itemTreatmentServices->getItemList(false, $this->LOCATION_ID);
     }
-    public function deleteItem(int $ID, int $ITEM_ID, int  $UNIT_ID = 0)
+    public function deleteItem(int $ID, int $ITEM_ID)
     {
         $this->hemoServices->ItemDelete($ID, $this->HEMO_ID, $ITEM_ID, true);
-
-        $ITEM_TREATMENT_ID = (int)  $this->itemTreatmentServices->getItemTreatmentID($ITEM_ID, $this->LOCATION_ID,  $UNIT_ID);
-
-        if ($ITEM_TREATMENT_ID > 0) {
-            $dataList = $this->itemTreatmentServices->listItemTrigger($ITEM_TREATMENT_ID);
-            foreach ($dataList as $item) {
-                $this->hemoServices->ItemDelete2($this->HEMO_ID, $item->ITEM_ID, $item->UNIT_ID, true);
-            }
-        }
+        $this->hemoServices->ItemDeleteTrigger($ID, $this->HEMO_ID);
         session()->flash('message', 'Successfully deleted');
     }
     public function deleteItemInCash(int $ID, int $ITEM_ID)
@@ -111,11 +103,8 @@ class InventoryTreatment extends Component
             try {
 
                 if ($data->SC_ITEM_ID > 0) {
-
                     $dataItem = $this->serviceChargeServices->getItem($data->SC_ITEM_ID);
-
                     if ($dataItem) {
-
                         if ($dataItem->PAID_AMOUNT > 0) {
                             session()->flash('error', 'Delete action cannot proceed. This item has already been paid.');
                             return;
@@ -128,6 +117,8 @@ class InventoryTreatment extends Component
                 }
 
                 $this->hemoServices->ItemDelete($ID, $this->HEMO_ID, $ITEM_ID, false);
+                $this->hemoServices->ItemDeleteTrigger($ID, $this->HEMO_ID);
+
                 DB::commit();
                 session()->flash('message', 'Successfully deleted');
             } catch (\Throwable $th) {
@@ -239,27 +230,11 @@ class InventoryTreatment extends Component
         $data = $this->itemTreatmentServices->Get($ItemTreatmentId);
         if ($data) {
             $gotNew = true;
-            if ($data->NO_OF_USED > 1) {
-
-                $hemoData =  $this->hemoServices->Get($this->HEMO_ID);
-
-                if ($hemoData) {
-                    $totalused = (int)  $this->hemoServices->getItemTotalUsed($data->ITEM_ID, $this->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
-
-                    if ($totalused == 0) {
-                        $gotNew = true;
-                    } elseif ($totalused < $data->NO_OF_USED) {
-                        $gotNew = false;
-                    }
-                }
-            }
             try {
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
                 $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
 
-                // check if exists
                 if ($this->hemoServices->ItemStoreExists($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew, true)) {
-                    //  force to stop;
                     $this->dispatch('refresh-item-treatment');
                     session()->flash('error', 'Item already exists');
                     return;

@@ -5,7 +5,7 @@
 
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h6 class="modal-title">Item Trigger</h6>
@@ -54,6 +54,7 @@
                                     </td>
                                     <td>
                                         <select wire:model='UNIT_ID' class="w-100">
+                                            <option value="0"> </option>
                                             @foreach ($unitList as $list)
                                                 <option value="{{ $list->ID }}">
                                                     {{ $list->SYMBOL }}

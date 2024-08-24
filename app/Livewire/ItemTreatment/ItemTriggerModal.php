@@ -55,9 +55,7 @@ class ItemTriggerModal extends Component
             'UNIT_ID' => 'Unit'
         ]);
         DB::beginTransaction();
-
         try {
-
             $this->itemTreatmentServices->storeItemTrigger($this->ITEM_TREATMENT_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID);
             DB::commit();
             $this->ITEM_ID = 0;
@@ -68,7 +66,6 @@ class ItemTriggerModal extends Component
             session()->flash('error', $th->getMessage());
         }
     }
-
     public function delete(int $id)
     {
         try {

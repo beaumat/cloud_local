@@ -64,17 +64,16 @@
                                                         <i class="fas fa-edit " aria-hidden="true"></i>
                                                     </button>
                                                 @endif
-
                                                 @if ($list->IS_DEFAULT)
                                                     <button type="button" title="Delete" id="deletebtn"
-                                                        wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }}, {{ $list->UNIT_ID }})'
+                                                        wire:click='deleteItem({{ $list->ID }}, {{ $list->ITEM_ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-xs btn-danger">
                                                         <i class="fas fa-trash " aria-hidden="true"></i>
                                                     </button>
                                                 @elseif ($list->IS_CASHIER)
                                                     <button type="button" title="Delete" id="deletebtn"
-                                                        wire:click='deleteItemInCash({{ $list->ID }}, {{ $list->ITEM_ID }}, {{ $list->UNIT_ID }})'
+                                                        wire:click='deleteItemInCash({{ $list->ID }}, {{ $list->ITEM_ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-xs btn-danger">
                                                         <i class="fas fa-trash " aria-hidden="true"></i>

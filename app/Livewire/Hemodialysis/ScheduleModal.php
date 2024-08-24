@@ -8,6 +8,7 @@ use App\Services\ItemTreatmentServices;
 use App\Services\ScheduleServices;
 use App\Services\ServiceChargeServices;
 use App\Services\ShiftServices;
+use App\Services\UnitOfMeasureServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -32,13 +33,15 @@ class ScheduleModal extends Component
     private $dateServices;
     private $itemTreatmentServices;
     private $serviceChargeServices;
+    private $unitOfMeasureServices;
     public function boot(
         ScheduleServices $scheduleServices,
         HemoServices $hemoServices,
         ShiftServices $shiftServices,
         DateServices $dateServices,
         ItemTreatmentServices $itemTreatmentServices,
-        ServiceChargeServices $serviceChargeServices
+        ServiceChargeServices $serviceChargeServices,
+        UnitOfMeasureServices $unitOfMeasureServices
     ) {
         $this->scheduleServices = $scheduleServices;
         $this->hemoServices = $hemoServices;
@@ -46,6 +49,7 @@ class ScheduleModal extends Component
         $this->dateServices = $dateServices;
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->serviceChargeServices = $serviceChargeServices;
+        $this->unitOfMeasureServices = $unitOfMeasureServices;
     }
 
     public function create()
@@ -60,34 +64,48 @@ class ScheduleModal extends Component
                         DB::beginTransaction();
                         $HEMO_ID = (int) $this->hemoServices->PreSave($this->DATE, "", $data->CONTACT_ID, $this->LOCATION_ID);
                         $this->hemoServices->GetOtherDetailsDefault($HEMO_ID,  $data->CONTACT_ID, $this->DATE, $this->LOCATION_ID);
-                        $hemoData =  $this->hemoServices->Get($HEMO_ID);
 
-                        $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
-                        foreach ($dataList as $item) {
-                            $this->hemoServices->AddItem($item->ID,  $hemoData);
-                        }
-                        if ($this->ids == "") {
-                            $this->ids = $HEMO_ID;
+                        $NO = (int) $this->hemoServices->GetNoTreatment($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE);
+
+                        if ($NO <= 1) { // New
+                            $dataList = $this->itemTreatmentServices->NewAutoItemList($this->LOCATION_ID);           // show add new items
                         } else {
-                            $this->ids = $this->ids . "," . $HEMO_ID;
+                            $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
                         }
 
-                        $dataSC = $this->serviceChargeServices->get2($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE);       
-                        if ($dataSC) {                        
-                            $dataScItem = $this->serviceChargeServices->getItemList($dataSC->ID);
-                            foreach ($dataScItem as $list) {
-                                $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $list->ITEM_ID,  $list->QUANTITY, false, $list->UNIT_ID > 0 ? $list->UNIT_ID : 0);
+                        foreach ($dataList as $data) {
+                            
+                            $IS_CASHIER = true;
+                            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
+
+                            $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+
+                            $SK_LINE_ID  =  $this->hemoServices->ItemStore($HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, true, true, $IS_CASHIER, null, null);
+
+                            $dataTrigger = $this->itemTreatmentServices->getItemTrigger($data->ITEM_ID, $this->LOCATION_ID, $data->UNIT_ID);
+
+                            foreach ($dataTrigger  as $list) {
+                                $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
+                                $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+                                $this->hemoServices->ItemStore($HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
                             }
                         }
 
 
 
 
+                        if ($this->ids == "") {
+                            $this->ids = $HEMO_ID;
+                        } else {
+                            $this->ids = $this->ids . "," . $HEMO_ID;
+                        }
+
+
 
                         DB::commit();
                         $isDone = true;
                     } catch (\Throwable $th) {
-                        //throw $th;
+                        session()->flash('error', $th->getMessage());
                         DB::rollBack();
                     }
                 }

@@ -242,17 +242,17 @@ class HemoServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Hemodialysis::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'CUSTOMER_ID' => $CUSTOMER_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'USER_ID' => $this->user->UserId(),
-            'NO_OF_TREATMENT' => $NO_OF_TREATMENT,
-            'MACHINE_NO' => $MACHINE_NO,
-            'STATUS_ID' => 1,
-            'STATUS_DATE' =>  $this->dateServices->Now(),
+            'ID'                => $ID,
+            'RECORDED_ON'       => $this->dateServices->Now(),
+            'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'              => $DATE,
+            'CUSTOMER_ID'       => $CUSTOMER_ID,
+            'LOCATION_ID'       => $LOCATION_ID,
+            'USER_ID'           => $this->user->UserId(),
+            'NO_OF_TREATMENT'   => $NO_OF_TREATMENT,
+            'MACHINE_NO'        => $MACHINE_NO,
+            'STATUS_ID'         => 1,
+            'STATUS_DATE'       =>  $this->dateServices->Now(),
         ]);
 
         return $ID;
@@ -771,7 +771,7 @@ class HemoServices
 
         return $IsExist;
     }
-    public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT, bool $IS_CASHIER = false, $SC_ITEM_ID = null)
+    public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT, bool $IS_CASHIER = false, $SC_ITEM_ID = null, $SK_LINE_ID = null): int
     {
         $ID = (int) $this->object->ObjectNextID('HEMODIALYSIS_ITEMS');
 
@@ -790,8 +790,12 @@ class HemoServices
             'IS_POST'               => false,
             'SC_ITEM_ID'            => $SC_ITEM_ID,
             'IS_CASHIER'            => $IS_CASHIER,
+            'SK_LINE_ID'            => $SK_LINE_ID
 
         ]);
+
+
+        return $ID;
     }
     public function ItemUpdate(int $ID, int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT)
     {
@@ -838,6 +842,13 @@ class HemoServices
             ->where('HEMO_ID', $HEMO_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->where('IS_DEFAULT', $IS_DEFAULT)
+            ->delete();
+    }
+
+    public function ItemDeleteTrigger(int $ID, int $HEMO_ID)
+    {
+        HemodialysisItems::where('SK_LINE_ID', $ID)
+            ->where('HEMO_ID', $HEMO_ID)
             ->delete();
     }
     public function ItemDelete2(int $HEMO_ID, int $ITEM_ID, int $UNIT_ID, bool $IS_DEFAULT)
@@ -1040,21 +1051,12 @@ class HemoServices
         ];
     }
 
-    public function AddItem(int $ItemTreatmentId, $hemoData)
+    public function AddItemDefault(int $ItemTreatmentId, $hemoData)
     {
         $data = $this->itemTreatmentServices->Get($ItemTreatmentId); // get item treatment details
         if ($data) {
             $gotNew = true;
-            if ($data->NO_OF_USED > 1) {
-                if ($hemoData) {
-                    $totalused = (int)  $this->getItemTotalUsed($data->ITEM_ID, $hemoData->LOCATION_ID, $hemoData->CUSTOMER_ID, $hemoData->DATE);
-                    if ($totalused == 0) {
-                        $gotNew = true;
-                    } elseif ($totalused < $data->NO_OF_USED) {
-                        $gotNew = false;
-                    }
-                }
-            }
+  
             $NEW_TREATMENT_QTY = (float) $data->NEW_TREATMENT_QTY ?? 0;
             $QTY = 0;
             if ($NEW_TREATMENT_QTY > 0) {
