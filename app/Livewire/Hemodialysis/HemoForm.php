@@ -299,8 +299,8 @@ class HemoForm extends Component
                 return;
             }
         }
-        if ($this->EMPLOYEE_ID  == 0) {
-            if ($this->PIN_ALLOWED) {
+        if ($this->PIN_ALLOWED) {
+            if ($this->EMPLOYEE_ID  == 0) {
                 $this->dispatch('open-pin-code');
                 return;
             }
@@ -329,7 +329,6 @@ class HemoForm extends Component
         }
         $this->Modify = false;
     }
-
     public function save()
     {
         $this->validate(
