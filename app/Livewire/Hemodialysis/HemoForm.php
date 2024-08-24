@@ -29,7 +29,7 @@ class HemoForm extends Component
     public $IMAGE = null;
     public $data;
     public int $ID;
-    public bool $PIN_ALLOWED = true;
+    public bool $PIN_ALLOWED = false;
     public bool $Modify;
     public int $STATUS;
     public int $openStatus = 1; // draft default
