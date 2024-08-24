@@ -66,53 +66,14 @@ class ContactServices
     {
         try {
             $date = Carbon::parse($dateString);
-            return $date->age;
+            return (int) $date->age;
         } catch (\Exception $e) {
             // Handle invalid date string or other errors
-            return null;
+            return 0;
         }
     }
-    public function Store(
-        int $TYPE,
-        string $NAME,
-        string $COMPANY_NAME,
-        string $SALUTATION,
-        string $FIRST_NAME,
-        string $MIDDLE_NAME,
-        string $LAST_NAME,
-        string $PRINT_NAME_AS,
-        string $POSTAL_ADDRESS,
-        string $CONTACT_PERSON,
-        string $TELEPHONE_NO,
-        string $FAX_NO,
-        string $MOBILE_NO,
-        string $ALT_TELEPHONE_NO,
-        string $ALT_CONTACT_PERSON,
-        string $EMAIL,
-        string $ACCOUNT_NO,
-        bool $INACTIVE,
-        int $GROUP_ID,
-        int $PAYMENT_TERMS_ID,
-        float $CREDIT_LIMIT,
-        int $PREF_PAYMENT_METHOD_ID,
-        string $CREDIT_CARD_NO,
-        string $CREDIT_CARD_EXPIRY_DATE,
-        int $SALES_REP_ID,
-        int $PRICE_LEVEL_ID,
-        string $TAXPAYER_ID,
-        int $TAX_ID,
-        int $EW_TAX_ID,
-        string $SSS_NO,
-        int $GENDER,
-        string $DATE_OF_BIRTH,
-        string $NICKNAME,
-        string $HIRE_DATE,
-        $CUSTOM_FIELD1 = null,
-        $CUSTOM_FIELD2 = null,
-        $CUSTOM_FIELD3 = null,
-        $CUSTOM_FIELD4 = null,
-        $CUSTOM_FIELD5 = null
-    ): int {
+    public function Store(int $TYPE, string $NAME, string $COMPANY_NAME, string $SALUTATION, string $FIRST_NAME, string $MIDDLE_NAME, string $LAST_NAME, string $PRINT_NAME_AS, string $POSTAL_ADDRESS, string $CONTACT_PERSON, string $TELEPHONE_NO, string $FAX_NO, string $MOBILE_NO, string $ALT_TELEPHONE_NO, string $ALT_CONTACT_PERSON, string $EMAIL, string $ACCOUNT_NO, bool $INACTIVE, int $GROUP_ID, int $PAYMENT_TERMS_ID, float $CREDIT_LIMIT, int $PREF_PAYMENT_METHOD_ID, string $CREDIT_CARD_NO, string $CREDIT_CARD_EXPIRY_DATE, int $SALES_REP_ID, int $PRICE_LEVEL_ID, string $TAXPAYER_ID, int $TAX_ID, int $EW_TAX_ID, string $SSS_NO, int $GENDER, string $DATE_OF_BIRTH, string $NICKNAME, string $HIRE_DATE, $CUSTOM_FIELD1 = null, $CUSTOM_FIELD2 = null, $CUSTOM_FIELD3 = null, $CUSTOM_FIELD4 = null, $CUSTOM_FIELD5 = null): int
+    {
         $OBJECT_TYPE = 0;
         switch ($TYPE) {
             case 0:
@@ -188,48 +149,8 @@ class ContactServices
         return $ID;
     }
 
-    public function Update(
-        int $ID,
-        int $TYPE,
-        string $NAME,
-        string $COMPANY_NAME,
-        string $SALUTATION,
-        string $FIRST_NAME,
-        string $MIDDLE_NAME,
-        string $LAST_NAME,
-        string $PRINT_NAME_AS,
-        string $POSTAL_ADDRESS,
-        string $CONTACT_PERSON,
-        string $TELEPHONE_NO,
-        string $FAX_NO,
-        string $MOBILE_NO,
-        string $ALT_TELEPHONE_NO,
-        string $ALT_CONTACT_PERSON,
-        string $EMAIL,
-        string $ACCOUNT_NO,
-        bool $INACTIVE,
-        int $GROUP_ID,
-        int $PAYMENT_TERMS_ID,
-        float $CREDIT_LIMIT,
-        int $PREF_PAYMENT_METHOD_ID,
-        string $CREDIT_CARD_NO,
-        string $CREDIT_CARD_EXPIRY_DATE,
-        int $SALES_REP_ID,
-        int $PRICE_LEVEL_ID,
-        string $TAXPAYER_ID,
-        int $TAX_ID,
-        int $EW_TAX_ID,
-        string $SSS_NO,
-        int $GENDER,
-        string $DATE_OF_BIRTH,
-        string $NICKNAME,
-        string $HIRE_DATE,
-        $CUSTOM_FIELD1 = null,
-        $CUSTOM_FIELD2 = null,
-        $CUSTOM_FIELD3 = null,
-        $CUSTOM_FIELD4 = null,
-        $CUSTOM_FIELD5 = null
-    ): void {
+    public function Update(int $ID, int $TYPE, string $NAME, string $COMPANY_NAME, string $SALUTATION, string $FIRST_NAME, string $MIDDLE_NAME, string $LAST_NAME, string $PRINT_NAME_AS, string $POSTAL_ADDRESS, string $CONTACT_PERSON, string $TELEPHONE_NO, string $FAX_NO, string $MOBILE_NO, string $ALT_TELEPHONE_NO, string $ALT_CONTACT_PERSON, string $EMAIL, string $ACCOUNT_NO, bool $INACTIVE, int $GROUP_ID, int $PAYMENT_TERMS_ID, float $CREDIT_LIMIT, int $PREF_PAYMENT_METHOD_ID, string $CREDIT_CARD_NO, string $CREDIT_CARD_EXPIRY_DATE, int $SALES_REP_ID, int $PRICE_LEVEL_ID, string $TAXPAYER_ID, int $TAX_ID, int $EW_TAX_ID, string $SSS_NO, int $GENDER, string $DATE_OF_BIRTH, string $NICKNAME, string $HIRE_DATE, $CUSTOM_FIELD1 = null, $CUSTOM_FIELD2 = null, $CUSTOM_FIELD3 = null, $CUSTOM_FIELD4 = null, $CUSTOM_FIELD5 = null): void
+    {
         Contacts::where('ID', $ID)
             ->where('TYPE', $TYPE)
             ->update([
@@ -404,10 +325,11 @@ class ContactServices
     }
     public function UpdateIsCompleted(int $CONTACT_ID, bool $VALUE)
     {
-        Contacts::where('ID', $CONTACT_ID)->update(
-            [
-                'IS_COMPLETE' => $VALUE
-            ]
-        );
+        Contacts::where('ID', $CONTACT_ID)
+            ->update(
+                [
+                    'IS_COMPLETE' => $VALUE
+                ]
+            );
     }
 }

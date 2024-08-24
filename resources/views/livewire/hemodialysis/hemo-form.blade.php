@@ -48,9 +48,6 @@
                                                         {{ $EMPLOYEE_NAME }}</label>
                                                 </div>
                                             </div>
-
-
-
                                         </div>
                                         <div class="col-md-6">
                                             <div class="row">
@@ -462,11 +459,7 @@
                                                                 Choose file
                                                             @endif
                                                         </label>
-
                                                     </div>
-
-
-
                                                 </div>
                                             </div>
                                         </div>
@@ -493,8 +486,5 @@
             </div>
         </section>
     @endif
-
     @livewire('PincodeEnter');
-
-
 </div>

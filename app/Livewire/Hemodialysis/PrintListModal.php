@@ -9,7 +9,6 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Redirect;
 
 class PrintListModal extends Component
 {

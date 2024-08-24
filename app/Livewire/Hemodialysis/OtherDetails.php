@@ -26,6 +26,9 @@ class OtherDetails extends Component
     public string $DIALSATE_C;
     public bool $DETAILS_USE_NEXT;
     public bool $ORDER_USE_NEXT;
+    public string $SE_DETAILS_NEXT;
+    public string $HEPARIN;
+
     private $hemoServices;
     public function boot(HemoServices $hemoServices)
     {
@@ -52,6 +55,8 @@ class OtherDetails extends Component
             $this->DIALSATE_C = $data->DIALSATE_C ?? '';
             $this->DETAILS_USE_NEXT = $data->DETAILS_USE_NEXT ?? false;
             $this->ORDER_USE_NEXT = $data->ORDER_USE_NEXT ?? false;
+            $this->SE_DETAILS_NEXT = $data->SE_DETAILS_NEXT ?? '';
+            $this->HEPARIN = $data->HEPARIN ?? '';
         }
     }
     #[On('save-other')]
@@ -69,7 +74,9 @@ class OtherDetails extends Component
             $this->DIALSATE_K,
             $this->DIALSATE_C,
             $this->DETAILS_USE_NEXT,
-            $this->ORDER_USE_NEXT
+            $this->ORDER_USE_NEXT,
+            $this->SE_DETAILS_NEXT,
+            $this->HEPARIN
 
         );
         //  session()->flash('message','Save change successfully'); 

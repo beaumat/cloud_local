@@ -52,6 +52,8 @@ class Hemodialysis extends Model
         'DETAILS_USE_NEXT',
         'ORDER_USE_NEXT',
         'IS_INCOMPLETE',
-        'EMPLOYEE_ID'
+        'EMPLOYEE_ID',
+        'SE_DETAILS_NEXT',
+        'HEPARIN'
     ];
 }

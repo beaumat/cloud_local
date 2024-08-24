@@ -64,14 +64,14 @@ class HemoServices
     }
     public function GetEmployeeName(int $EMP_ID): string
     {
-        $data = Contacts::where('ID',$EMP_ID)->first();
+        $data = Contacts::where('ID', $EMP_ID)->first();
 
-        if($data) {
+        if ($data) {
             return $data->NAME ?? '';
         }
 
         return '';
-    }   
+    }
     private function getTime(bool $isStart, string $DATE, int $CONTACT_ID, int $LOCATION_ID): string
     {
 
@@ -279,15 +279,17 @@ class HemoServices
                 ->where('LOCATION_ID', $LOCATION_ID)
                 ->where('ID', $HEMO_ID)
                 ->update([
-                    'SE_DETAILS'    => $data->DETAILS_USE_NEXT == true ? $data->SE_DETAILS ?? null : null,
-                    'SO_DETAILS'    => $data->ORDER_USE_NEXT == true ? $data->SO_DETAILS ?? null : null,
-                    'BFR'           => $data->BFR ?? null,
-                    'DFR'           => $data->DFR ?? null,
-                    'DURATION'      => $data->DURATION ?? null,
-                    'DIALYZER'      => $data->DIALYZER ?? null,
-                    'DIALSATE_N'    => $data->DIALSATE_N ?? null,
-                    'DIALSATE_K'    => $data->DIALSATE_K ?? null,
-                    'DIALSATE_C'    => $data->DIALSATE_C ?? null
+                    'SE_DETAILS'        => $data->SE_DETAILS_NEXT ?? null,
+                    'SE_DETAILS_NEXT'   => '',
+                    'SO_DETAILS'        => $data->ORDER_USE_NEXT == true ? $data->SO_DETAILS ?? null : null,
+                    'BFR'               => $data->BFR ?? null,
+                    'DFR'               => $data->DFR ?? null,
+                    'DURATION'          => $data->DURATION ?? null,
+                    'DIALYZER'          => $data->DIALYZER ?? null,
+                    'HEPARIN'           => $data->HEPARIN ?? null,
+                    'DIALSATE_N'        => $data->DIALSATE_N ?? null,
+                    'DIALSATE_K'        => $data->DIALSATE_K ?? null,
+                    'DIALSATE_C'        => $data->DIALSATE_C ?? null
                 ]);
         }
     }
@@ -345,7 +347,7 @@ class HemoServices
                 'EMPLOYEE_ID'            => $EMPLOYEE_ID > 0 ? $EMPLOYEE_ID : null,
             ]);
     }
-    public function SaveOthers(int $ID, string $SE_DETAILS, string $SO_DETAILS, int $BFR, int $DFR, int $DURATION, string $DIALYZER, string  $DIALSATE_N, string $DIALSATE_K, string $DIALSATE_C, bool $DETAILS_USE_NEXT, bool $ORDER_USE_NEXT)
+    public function SaveOthers(int $ID, string $SE_DETAILS, string $SO_DETAILS, int $BFR, int $DFR, int $DURATION, string $DIALYZER, string  $DIALSATE_N, string $DIALSATE_K, string $DIALSATE_C, bool $DETAILS_USE_NEXT, bool $ORDER_USE_NEXT, string $SE_DETAILS_NEXT, string $HEPARIN)
     {
         Hemodialysis::where('ID', $ID)
             ->update([
@@ -359,7 +361,9 @@ class HemoServices
                 'DIALSATE_K'        => $DIALSATE_K,
                 'DIALSATE_C'        => $DIALSATE_C,
                 'DETAILS_USE_NEXT'  => $DETAILS_USE_NEXT,
-                'ORDER_USE_NEXT'    => $ORDER_USE_NEXT
+                'ORDER_USE_NEXT'    => $ORDER_USE_NEXT,
+                'SE_DETAILS_NEXT'   => $SE_DETAILS_NEXT,
+                'HEPARIN'           => $HEPARIN
             ]);
     }
     public function UpdatedSpecialOrder(int $ID): bool
@@ -382,7 +386,6 @@ class HemoServices
         $isBool =  Hemodialysis::where('ID', $ID)->first()->ORDER_USE_NEXT ?? false;
 
         if ($isBool) {
-            // make it false
             Hemodialysis::where('ID', $ID)->update(['ORDER_USE_NEXT' => false]);
             return false;
         }
@@ -507,7 +510,7 @@ class HemoServices
                 'hemodialysis.STATUS_ID',
                 'hemodialysis.FILE_PATH',
                 'hemodialysis.IS_INCOMPLETE',
-                DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where  sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC')
+                DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC')
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')
@@ -1105,7 +1108,6 @@ class HemoServices
     {
 
         $itemDetails =  $this->itemServices->get($ITEM_ID);
-
         if ($itemDetails) {
             $hasSubClass =  ItemSubClass::where('ID', $itemDetails->SUB_CLASS_ID)->first();
             if ($hasSubClass) {

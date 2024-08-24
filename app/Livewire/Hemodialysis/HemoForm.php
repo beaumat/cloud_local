@@ -29,7 +29,7 @@ class HemoForm extends Component
     public $IMAGE = null;
     public $data;
     public int $ID;
-    public bool $PIN_ALLOWED = false;
+    public bool $PIN_ALLOWED = true;
     public bool $Modify;
     public int $STATUS;
     public int $openStatus = 1; // draft default
@@ -77,6 +77,11 @@ class HemoForm extends Component
     public bool $IS_INCOMPLETE;
     public int $EMPLOYEE_ID;
     public string $EMPLOYEE_NAME;
+
+    public bool $IsPostedButton;
+    public bool $ActiveRequired;
+    public bool $IsDocmentUploaded;
+    
     // end old
     private $hemoServices;
     private $locationServices;
@@ -148,9 +153,7 @@ class HemoForm extends Component
         }
         $this->getPreviousTreatment();
     }
-    public bool $IsPostedButton;
-    public bool $ActiveRequired;
-    public bool $IsDocmentUploaded;
+
     private function LoadDropDown()
     {
         $this->patientList = $this->contactServices->getList(3);

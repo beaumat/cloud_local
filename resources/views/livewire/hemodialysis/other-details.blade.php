@@ -9,11 +9,21 @@
                 <div class="form-group row">
                     <div class="col-md-12  border-bottom border-secondary">
                         <div class="row">
-                            <div class=col-6>
-                                <label class='text-sm'>SPECIAL ORDER :</label>
-                                <textarea class="form-control form-control-sm" rows='6' wire:model='SE_DETAILS'
-                                    @if ($Modify == false) disabled @endif></textarea>
-                                <div class="form-group text-sm">
+                            <div class=col-8>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class='text-sm'>SPECIAL ORDER : <i class="text-primary text-xs">Current</i></label>
+                                        <textarea class="form-control form-control-sm" rows='6' wire:model='SE_DETAILS'
+                                            @if ($Modify == false) disabled @endif></textarea>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class='text-sm'>SPECIAL ORDER : <i class="text-info text-xs">Next</i></label>
+                                        <textarea class="form-control form-control-sm" rows='6' wire:model='SE_DETAILS_NEXT'
+                                            @if ($Modify == false) disabled @endif></textarea>
+                                    </div>
+                                </div>
+                                {{-- <div class="form-group text-sm">
                                     <label  wire:click.live='detailsUseNext()'>Use for next treatment :</label>
                                     <input type="radio" name="DETAILS_USE_NEXT" class="mt-2"
                                         wire:model="DETAILS_USE_NEXT" value="true"
@@ -23,14 +33,14 @@
                                         wire:model="DETAILS_USE_NEXT" value="false"
                                         @if ($Modify == false) disabled @endif />
                                     No
-                                </div>
+                                </div> --}}
                             </div>
-                            <div class=col-6>
+                            <div class=col-4>
                                 <label class='text-sm'>STANDING ORDER :</label>
                                 <textarea class="form-control form-control-sm" rows='6' wire:model='SO_DETAILS'
                                     @if ($Modify == false) disabled @endif></textarea>
                                 <div class="form-group text-sm">
-                                    <label  wire:click.live='orderUseNext()'>Use for next treatment :</label>
+                                    <label wire:click.live='orderUseNext()'>Use for next treatment :</label>
                                     <input type="radio" name="ORDER_USE_NEXT" class="mt-2"
                                         wire:model="ORDER_USE_NEXT" value="true"
                                         @if ($Modify == false) disabled @endif />
@@ -67,6 +77,11 @@
                         <div class="row">
                             <div class="col-6 text-right"> <label class='text-xs '>DIALYZER :</label></div>
                             <div class="col-6"> <input type='text' class='w-75 text-xs' wire:model='DIALYZER'
+                                    maxlength='10' @if ($Modify == false) disabled @endif /> </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 text-right"> <label class='text-xs '>HEPARIN :</label></div>
+                            <div class="col-6"> <input type='text' class='w-75 text-xs' wire:model='HEPARIN'
                                     maxlength='10' @if ($Modify == false) disabled @endif /> </div>
                         </div>
                     </div>

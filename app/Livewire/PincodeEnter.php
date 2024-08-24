@@ -9,7 +9,6 @@ use Livewire\Component;
 class PincodeEnter extends Component
 {
     public string $PIN;
-
     public bool $showModal = false;
     private $contactServices;
     public function boot(ContactServices $contactServices)
