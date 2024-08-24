@@ -48,6 +48,7 @@ class EmployeeForm extends Component
     public string $DATE_OF_BIRTH;
     public string $NICKNAME;
     public string $HIRE_DATE;
+    public string $PIN;
     public $taxList = [];
     public $genders = [];
     public string $selectTab = 'gen';
@@ -107,7 +108,7 @@ class EmployeeForm extends Component
                 $this->DATE_OF_BIRTH = $contact->DATE_OF_BIRTH ? $contact->DATE_OF_BIRTH : '';
                 $this->NICKNAME = $contact->NICKNAME ? $contact->NICKNAME : '';
                 $this->HIRE_DATE = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
-
+                $this->PIN = $contact->PIN ?  $contact->PIN : '';
 
                 return;
             }
@@ -150,7 +151,7 @@ class EmployeeForm extends Component
         $this->DATE_OF_BIRTH = '';
         $this->NICKNAME = '';
         $this->HIRE_DATE = '';
-
+        $this->PIN = '';
     }
 
     public function save()
@@ -221,7 +222,7 @@ class EmployeeForm extends Component
                     $this->NICKNAME,
                     $this->HIRE_DATE
                 );
-
+                $this->contactServices->UpdatePin($this->ID, $this->PIN);
                 Redirect::route('maintenancecontactemployees_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 $this->contactServices->Update(
@@ -261,7 +262,7 @@ class EmployeeForm extends Component
                     $this->NICKNAME,
                     $this->HIRE_DATE
                 );
-
+                $this->contactServices->UpdatePin($this->ID, $this->PIN);
                 session()->flash('message', 'Successfully updated');
             }
         } catch (\Exception $e) {

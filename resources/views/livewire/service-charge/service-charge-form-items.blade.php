@@ -18,7 +18,7 @@
         </thead>
         <tbody class="text-xs">
             @foreach ($itemList as $list)
-                <tr>
+                <tr class="@if ($list->other_charge) text-success font-weight-bold active @endif">
                     <td>{{ $list->CODE }}</td>
                     <td>{{ $list->DESCRIPTION }}</td>
                     <td> {{ $list->CLASS_DESCRIPTION }}</td>
@@ -80,7 +80,7 @@
                                 <i class="fas fa-ban" aria-hidden="true"></i>
                             </button>
                         @else
-                            @if ($list->count_pay == 0 && $list->DATE_LOG == $DATE_NOW)
+                            @if (($list->count_pay == 0 && $list->DATE_LOG == $DATE_NOW) || $isAdmin == true)
                                 <button title="Edit Active" id="editbtn"
                                     wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
                                     class="btn btn-xs btn-info">
@@ -205,14 +205,9 @@
                             </div>
                         </div>
                     </td>
-
                 </tr>
-
             </form>
-            {{-- @endif --}}
-
         </tbody>
-
     </table>
     {{-- @if ($STATUS == $openStatus) --}}
     <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase' />

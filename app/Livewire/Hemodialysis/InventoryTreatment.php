@@ -109,7 +109,7 @@ class InventoryTreatment extends Component
         if ($data) {
             DB::beginTransaction();
             try {
-    
+
                 if ($data->SC_ITEM_ID > 0) {
 
                     $dataItem = $this->serviceChargeServices->getItem($data->SC_ITEM_ID);
@@ -295,6 +295,13 @@ class InventoryTreatment extends Component
     }
     public function openSubClass(int $SUB_ID)
     {
+
+        $isRequiredItemAdded = $this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->HEMO_ID);
+        if (!$isRequiredItemAdded) {
+            session()->flash('error', ' You must select either a CVC Kit or an AVF Kit before adding other charges.');
+            return;
+        }
+
         $data = ['SUB_CLASS_ID' => $SUB_ID];
         $this->dispatch('open-list-sub-item', result: $data);
     }

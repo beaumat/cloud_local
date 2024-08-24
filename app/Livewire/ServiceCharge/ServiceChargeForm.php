@@ -5,6 +5,7 @@ namespace App\Livewire\ServiceCharge;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
+use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PaymentTermServices;
 use App\Services\ScheduleServices;
@@ -13,6 +14,7 @@ use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -61,7 +63,7 @@ class ServiceChargeForm extends Component
     private $accountServices;
     private $scheduleServices;
     private $serviceChargeServices;
-
+    private $hemoServices;
     public string $tab = "item";
     public function SelectTab(string $select)
     {
@@ -78,8 +80,8 @@ class ServiceChargeForm extends Component
         DocumentStatusServices $documentStatusServices,
         SystemSettingServices $systemSettingServices,
         AccountServices $accountServices,
-        ScheduleServices $scheduleServices
-
+        ScheduleServices $scheduleServices,
+        HemoServices $hemoServices
     ) {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->locationServices = $locationServices;
@@ -92,6 +94,7 @@ class ServiceChargeForm extends Component
         $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
         $this->scheduleServices = $scheduleServices;
+        $this->hemoServices = $hemoServices;
     }
 
     public function LoadDropdown(bool $isAllContact)
@@ -222,7 +225,7 @@ class ServiceChargeForm extends Component
                     return;
                 }
 
-
+                DB::beginTransaction();
                 $this->getTax();
                 $this->ID = (int) $this->serviceChargeServices->Store(
                     $this->CODE,
@@ -237,6 +240,20 @@ class ServiceChargeForm extends Component
                     $this->OUTPUT_TAX_VAT_METHOD,
                     $this->OUTPUT_TAX_ACCOUNT_ID
                 );
+
+
+                $dataItem =  $this->hemoServices->ItemListWithIsCashier($this->PATIENT_ID, $this->LOCATION_ID, $this->DATE);
+                foreach ($dataItem as $list) {
+                    $AMOUNT = $list->QUANTITY  * $list->RATE;
+                    $SC_ITEM_ID = $this->serviceChargeServices->ItemStore($this->ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $list->UNIT_BASE_QUANTITY ?? 1, $list->RATE ?? 0, 0, $AMOUNT, $list->TAXABLE, 0, 0, $list->COGS_ACCOUNT_ID ?? 0, $list->ASSET_ACCOUNT_ID ?? 0, $list->GL_ACCOUNT_ID ?? 0, 0, false, 0);
+                    $this->hemoServices->ItemUpdateSC_ITEM_ID($list->ID, $list->HEMO_ID, $list->ITEM_ID, $SC_ITEM_ID);
+                }
+
+
+                $this->serviceChargeServices->ReComputed($this->ID);
+
+
+                DB::commit();
                 return Redirect::route('patientsservice_charges_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
@@ -259,7 +276,7 @@ class ServiceChargeForm extends Component
                         'PAYMENT_TERMS_ID' => 'Payment Terms'
                     ]
                 );
-
+                DB::beginTransaction();
                 $this->getTax();
                 $this->serviceChargeServices->Update(
                     $this->ID,
@@ -281,7 +298,7 @@ class ServiceChargeForm extends Component
                 $getResult = $this->serviceChargeServices->ReComputed($this->ID);
 
                 $this->getUpdateAmount($getResult);
-
+                DB::commit();
                 session()->flash('message', 'Successfully updated');
             }
 
@@ -293,6 +310,7 @@ class ServiceChargeForm extends Component
 
             $this->Modify = false;
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

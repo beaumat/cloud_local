@@ -33,7 +33,14 @@ class ContactServices
     {
         return contacts::where('ID', $ID)->where('TYPE', $TYPE)->first();
     }
-
+    public function pinLogin(string $PIN): int
+    {
+        $data =  Contacts::where('PIN', $PIN)->where('TYPE', 2)->first();
+        if ($data) {
+            return (int) $data->ID;
+        }
+        return 0;
+    }
     public function getFirstFromListByID(int $TYPE): int
     {
         // Temporary
@@ -387,7 +394,14 @@ class ContactServices
 
         return $result;
     }
-
+    public function UpdatePin(int $ID, string $PIN)
+    {
+        Contacts::where('ID', $ID)->update(
+            [
+                'PIN' => $PIN
+            ]
+        );
+    }
     public function UpdateIsCompleted(int $CONTACT_ID, bool $VALUE)
     {
         Contacts::where('ID', $CONTACT_ID)->update(

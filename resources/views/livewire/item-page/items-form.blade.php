@@ -321,6 +321,18 @@
                                                                                         titleName="Inactive"
                                                                                         wire:model='INACTIVE' />
                                                                                 </div>
+                                                                                <div class="col-md-12">
+                                                                                    <livewire:custom-check-box
+                                                                                        name="NON_HEMO"
+                                                                                        titleName="Non-hemodialyisis"
+                                                                                        wire:model='NON_HEMO' />
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <livewire:custom-check-box
+                                                                                        name="HEMO_NON_INVENTORY"
+                                                                                        titleName="hemo non-inventory"
+                                                                                        wire:model='HEMO_NON_INVENTORY' />
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     @else

@@ -12,7 +12,12 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
-                                 @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+                                <input type="text" wire:model.live.debounce.150ms='search'
+                                    class="w-100 form-control form-control-sm" placeholder="Search" />
+
+                            </div>
+                            <div class="col-md-12">
+                                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                                 <table class="table table-sm table-bordered table-hover">
                                     <thead class="text-xs bg-sky">
                                         <tr>

@@ -25,8 +25,6 @@ class TimerServices
         $this->documentTypeServices = $documentTypeServices;
         $this->itemInventoryServices = $itemInventoryServices;
     }
-
-
     private function generateUnposted()
     {
         // $ php artisan schedule:work = must run per minute
@@ -112,13 +110,6 @@ class TimerServices
                     DB::commit();
                     return;
                 }
-
-                // if ($STATUS_ID == 1) {
-                //     if (!$this->ItemInventory($ID, $DATE, $LOCATION_ID)) {
-                //         DB::rollBack();
-                //         return;
-                //     }
-                // }
 
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 1); //PRESENT
 

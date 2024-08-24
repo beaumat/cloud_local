@@ -37,12 +37,9 @@ class OtherCharges extends Component
     public function openModal($result)
     {
         $this->SUB_CLASS_ID = $result['SUB_CLASS_ID'];
-
         $data = $this->itemSubClassServices->Get($this->SUB_CLASS_ID);
-
         if ($data) {
             $this->hemoData = $this->hemoServices->Get($this->HEMO_ID);
-
             $this->ITEM_SUB_NAME = $data->DESCRIPTION ?? '';
             $this->showModal = true;
         }
@@ -52,10 +49,9 @@ class OtherCharges extends Component
         $this->showModal = false;
     }
     public function AddCharge(int $ITEM_ID)
-    {
+    {   
 
         $data = $this->itemServices->get($ITEM_ID);
-
         if ($data) {
             $QTY = 1;
             $QTY_BASED = 1;

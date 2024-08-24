@@ -22,7 +22,7 @@
                         <tbody class="text-xs">
                             @foreach ($dataList as $list)
                                 <tr
-                                    class="@if ($list->IS_CASHIER) font-weight-bold text-primary @else font-weight-normal text-dark @endif">
+                                    class="@if ($list->IS_CASHIER) font-weight-bold text-success @else font-weight-normal text-dark @endif">
                                     <td> {{ $list->CODE }} </td>
                                     <td> {{ $list->DESCRIPTION }} </td>
                                     <td> {{ $list->CLASS_NAME }} </td>
@@ -97,13 +97,13 @@
                     @if ($ActiveRequired)
                         @if ($STATUS == $openStatus)
                             @foreach ($ItemRequiredList as $list)
-                                <button wire:click='addItem({{ $list->ID }})' class="btn btn-warning btn-xs m-1">
+                                <button wire:click='addItem({{ $list->ID }})' class="btn btn-warning btn-sm m-1">
                                     <i class="fas fa-plus " aria-hidden="true"></i> {{ $list->ITEM_NAME }}
                                 </button>
                             @endforeach
                             @foreach ($subClassList as $list)
                                 <button wire:click='openSubClass({{ $list->ID }})'
-                                    class="btn btn-success active btn-xs m-1">
+                                    class="btn btn-success active btn-sm m-1">
                                     <i class="fas fa-star " aria-hidden="true"></i> {{ $list->DESCRIPTION }}
                                 </button>
                             @endforeach

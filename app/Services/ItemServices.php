@@ -88,8 +88,34 @@ class ItemServices
             ->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])
             ->get();
     }
-    public function Store(string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE): int
-    {
+    public function Store(
+        string $CODE,
+        string $DESCRIPTION,
+        string $PURCHASE_DESCRIPTION,
+        int $GROUP_ID,
+        int $SUB_CLASS_ID,
+        int $TYPE,
+        int $STOCK_TYPE,
+        int $GL_ACCOUNT_ID,
+        int $COGS_ACCOUNT_ID,
+        int $ASSET_ACCOUNT_ID,
+        bool $TAXABLE,
+        int $PREFERRED_VENDOR_ID,
+        int $MANUFACTURER_ID,
+        float $RATE,
+        float $COST,
+        int $RATE_TYPE,
+        int $PAYMENT_METHOD_ID,
+        string $NOTES,
+        int $BASE_UNIT_ID,
+        int $PURCHASES_UNIT_ID,
+        int $SHIPPING_UNIT_ID,
+        int $SALES_UNIT_ID,
+        bool $PRINT_INDIVIDUAL_ITEMS,
+        bool $INACTIVE,
+        bool $NON_HEMO,
+        bool $HEMO_NON_INVENTORY
+    ): int {
 
         $ID = $this->object->ObjectNextID('ITEM');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('ITEM');
@@ -118,14 +144,43 @@ class ItemServices
             'SHIPPING_UNIT_ID'          => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
             'SALES_UNIT_ID'             => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
             'PRINT_INDIVIDUAL_ITEMS'    => $PRINT_INDIVIDUAL_ITEMS,
-            'INACTIVE'                  => $INACTIVE
+            'INACTIVE'                  => $INACTIVE,
+            'NON_HEMO'                  => $NON_HEMO,
+            'HEMO_NON_INVENTORY'        => $HEMO_NON_INVENTORY
         ]);
 
         return $ID;
     }
 
-    public function Update(int $ID, string $CODE, string $DESCRIPTION, string $PURCHASE_DESCRIPTION, int $GROUP_ID, int $SUB_CLASS_ID, int $TYPE, int $STOCK_TYPE, int $GL_ACCOUNT_ID, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, bool $TAXABLE, int $PREFERRED_VENDOR_ID, int $MANUFACTURER_ID, float $RATE, float $COST, int $RATE_TYPE, int $PAYMENT_METHOD_ID, string $NOTES, int $BASE_UNIT_ID, int $PURCHASES_UNIT_ID, int $SHIPPING_UNIT_ID, int $SALES_UNIT_ID, bool $PRINT_INDIVIDUAL_ITEMS, bool $INACTIVE): void
-    {
+    public function Update(
+        int $ID,
+        string $CODE,
+        string $DESCRIPTION,
+        string $PURCHASE_DESCRIPTION,
+        int $GROUP_ID,
+        int $SUB_CLASS_ID,
+        int $TYPE,
+        int $STOCK_TYPE,
+        int $GL_ACCOUNT_ID,
+        int $COGS_ACCOUNT_ID,
+        int $ASSET_ACCOUNT_ID,
+        bool $TAXABLE,
+        int $PREFERRED_VENDOR_ID,
+        int $MANUFACTURER_ID,
+        float $RATE,
+        float $COST,
+        int $RATE_TYPE,
+        int $PAYMENT_METHOD_ID,
+        string $NOTES,
+        int $BASE_UNIT_ID,
+        int $PURCHASES_UNIT_ID,
+        int $SHIPPING_UNIT_ID,
+        int $SALES_UNIT_ID,
+        bool $PRINT_INDIVIDUAL_ITEMS,
+        bool $INACTIVE,
+        bool $NON_HEMO,
+        bool $HEMO_NON_INVENTORY
+    ): void {
 
         Items::where('ID', $ID)
             ->update([
@@ -152,7 +207,9 @@ class ItemServices
                 'SHIPPING_UNIT_ID'          => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
                 'SALES_UNIT_ID'             => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
                 'PRINT_INDIVIDUAL_ITEMS'    => $PRINT_INDIVIDUAL_ITEMS,
-                'INACTIVE'                  => $INACTIVE
+                'INACTIVE'                  => $INACTIVE,
+                'NON_HEMO'                  => $NON_HEMO,
+                'HEMO_NON_INVENTORY'        => $HEMO_NON_INVENTORY
             ]);
     }
 
@@ -260,6 +317,7 @@ class ItemServices
                 'RATE'
             ])
             ->where('INACTIVE', 0)
+            ->where('NON_HEMO', 0)
             ->where('SUB_CLASS_ID', $itemSubId)
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {

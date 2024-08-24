@@ -50,6 +50,8 @@ class ItemsForm extends Component
     public int $SALES_UNIT_ID;
     public bool $PRINT_INDIVIDUAL_ITEMS;
     public bool $INACTIVE;
+    public bool $NON_HEMO;
+    public bool $HEMO_NON_INVENTORY;
 
     public $itemType = [];
     public $stockType = [];
@@ -114,6 +116,8 @@ class ItemsForm extends Component
         $this->SALES_UNIT_ID = 0;
         $this->PRINT_INDIVIDUAL_ITEMS = true;
         $this->INACTIVE = false;
+        $this->NON_HEMO =  false;
+        $this->HEMO_NON_INVENTORY = false;
         $this->AccountInsert();
     }
     public function mount($id = null)
@@ -151,7 +155,8 @@ class ItemsForm extends Component
                 $this->SALES_UNIT_ID = $item->SALES_UNIT_ID ? $item->SALES_UNIT_ID : 0;
                 $this->PRINT_INDIVIDUAL_ITEMS = $item->PRINT_INDIVIDUAL_ITEMS ? $item->PRINT_INDIVIDUAL_ITEMS : false;
                 $this->INACTIVE = $item->INACTIVE;
-
+                $this->NON_HEMO = $item->NON_HEMO ?? false;
+                $this->HEMO_NON_INVENTORY = $item->HEMO_NON_INVENTORY ?? false;
                 $getSubClass = ItemSubClass::where('ID', $this->SUB_CLASS_ID)->first();
 
                 if ($getSubClass) {
@@ -307,7 +312,9 @@ class ItemsForm extends Component
                     $this->SHIPPING_UNIT_ID,
                     $this->SALES_UNIT_ID,
                     $this->PRINT_INDIVIDUAL_ITEMS,
-                    $this->INACTIVE
+                    $this->INACTIVE,
+                    $this->NON_HEMO,
+                    $this->HEMO_NON_INVENTORY
                 );
 
                 $Message = 'Successfully created.';
@@ -339,8 +346,10 @@ class ItemsForm extends Component
                     $this->SHIPPING_UNIT_ID,
                     $this->SALES_UNIT_ID,
                     $this->PRINT_INDIVIDUAL_ITEMS,
-                    $this->INACTIVE
-                 
+                    $this->INACTIVE,
+                    $this->NON_HEMO,
+                    $this->HEMO_NON_INVENTORY
+
                 );
                 $Message = 'Successfully updated.';
             }

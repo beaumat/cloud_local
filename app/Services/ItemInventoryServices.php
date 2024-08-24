@@ -256,15 +256,30 @@ class ItemInventoryServices
 
     public function InventoryModify(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_ID, int $SOURCE_REF_TYPE, string $SOURCE_REF_DATE, int $BATCH_ID, float $QTY, float $COST)
     {
-        $isInventoryExists = (bool) DB::table('item')->where('ID', $ITEM_ID)->whereIn('TYPE', [0, 1])->exists();
+
+        $isInventoryExists = (bool) DB::table('item')
+            ->where('ID', $ITEM_ID)
+            ->whereIn('TYPE', [0, 1])
+            ->exists();
 
         if (!$isInventoryExists) {
             return;
         }
 
+        // if have a latest inventory adjustment
+        $itsHave = (bool) ItemInventory::query()
+            ->where('ITEM_ID', $ITEM_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('SOURCE_REF_TYPE', '=', 6)
+            ->where('SOURCE_REF_DATE', '>', $SOURCE_REF_DATE)
+            ->exists();
+
+        if ($itsHave) {
+            // stop to procceed.
+            return;
+        }
 
         $dataExist = $this->getInvItem($ITEM_ID, $LOCATION_ID, $SOURCE_REF_ID, $SOURCE_REF_TYPE, $SOURCE_REF_DATE);
-
         if (!$dataExist) {
             // new store
             $PREVIOUS_ID        = $this->getPreviousID($LOCATION_ID, $ITEM_ID); // FIXED

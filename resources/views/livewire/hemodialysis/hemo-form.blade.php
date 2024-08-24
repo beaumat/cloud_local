@@ -31,15 +31,26 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            @if ($ID == 0)
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Patient"
-                                                    :options="$patientList" :zero="true" :isDisabled=false
-                                                    wire:model='CUSTOMER_ID' />
-                                            @else
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Patient"
-                                                    :options="$patientList" :zero="true" :isDisabled=true
-                                                    wire:model='CUSTOMER_ID' />
-                                            @endif
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    @if ($ID == 0)
+                                                        <livewire:select-option name="CUSTOMER_ID" titleName="Patient"
+                                                            :options="$patientList" :zero="true" :isDisabled=false
+                                                            wire:model='CUSTOMER_ID' />
+                                                    @else
+                                                        <livewire:select-option name="CUSTOMER_ID" titleName="Patient"
+                                                            :options="$patientList" :zero="true" :isDisabled=true
+                                                            wire:model='CUSTOMER_ID' />
+                                                    @endif
+                                                </div>
+                                                <div class="col-md-12 text-left">
+                                                    <label class="text-xs text-primary forn-weight-bold">Encoded by :
+                                                        {{ $EMPLOYEE_NAME }}</label>
+                                                </div>
+                                            </div>
+
+
+
                                         </div>
                                         <div class="col-md-6">
                                             <div class="row">
@@ -477,22 +488,13 @@
                                 @endif
                             </div>
                         </div>
-
-
-
-
-
                     </div>
-
-
-
-
-
-
                 </div>
             </div>
         </section>
     @endif
+
+    @livewire('PincodeEnter');
 
 
 </div>

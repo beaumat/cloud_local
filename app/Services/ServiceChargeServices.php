@@ -17,12 +17,13 @@ class ServiceChargeServices
     private $locationReference;
     private $systemSettingServices;
     private $dateServices;
+
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         LocationReferenceServices $locationReferenceServices,
         SystemSettingServices $systemSettingServices,
-        DateServices $dateServices,
+        DateServices $dateServices
 
     ) {
         $this->object = $objectService;
@@ -414,7 +415,8 @@ class ServiceChargeServices
                 'u.SYMBOL',
                 'c.DESCRIPTION as CLASS_DESCRIPTION',
                 DB::raw('(select count(*) from patient_payment_charges where SERVICE_CHARGES_ITEM_ID = service_charges_items.ID) as count_pay'),
-                'service_charges_items.DATE_LOG'
+                'service_charges_items.DATE_LOG',
+                DB::raw('(select if(count(*) > 0, true, false)  from hemodialysis_items where hemodialysis_items.SC_ITEM_ID = service_charges_items.ID and hemodialysis_items.IS_CASHIER = 1) as other_charge ')
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'service_charges_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'service_charges_items.UNIT_ID')

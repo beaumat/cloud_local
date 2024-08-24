@@ -29,6 +29,7 @@ class HemoForm extends Component
     public $IMAGE = null;
     public $data;
     public int $ID;
+    public bool $PIN_ALLOWED = true;
     public bool $Modify;
     public int $STATUS;
     public int $openStatus = 1; // draft default
@@ -74,6 +75,8 @@ class HemoForm extends Component
     public bool $USE_OTHER_DETAILS = true;
 
     public bool $IS_INCOMPLETE;
+    public int $EMPLOYEE_ID;
+    public string $EMPLOYEE_NAME;
     // end old
     private $hemoServices;
     private $locationServices;
@@ -100,7 +103,15 @@ class HemoForm extends Component
         $this->scheduleServices = $scheduleServices;
         $this->patientDoctorServices = $patientDoctorServices;
     }
-
+    public function getEmpName()
+    {
+        $data = $this->contactServices->get($this->EMPLOYEE_ID, 2);
+        if ($data) {
+            $this->EMPLOYEE_NAME  = $data->NAME ?? '';
+            return;
+        }
+        $this->EMPLOYEE_NAME = '';
+    }
     public function reloadData($data)
     {
         $this->ID = $data->ID;
@@ -128,6 +139,8 @@ class HemoForm extends Component
         $this->STATUS = $data->STATUS_ID ?? 1;
         $this->IsDocmentUploaded = false;
         $this->IS_INCOMPLETE = $data->IS_INCOMPLETE ?? false;
+        $this->EMPLOYEE_ID = $data->EMPLOYEE_ID ?? 0;
+        $this->getEmpName();
         if ($this->TIME_START != "" &&   $this->TIME_END != "") {
             if ($this->STATUS <> 3) {
                 $this->IsDocmentUploaded = true;
@@ -153,7 +166,6 @@ class HemoForm extends Component
         if (is_numeric($id)) {
             $data = $this->hemoServices->Get($id);
             if ($data) {
-
                 // checking if 
                 if ($data->STATUS_ID  <> 4) {
                     $isRestrik = (bool) $this->hemoServices->IsRestrictedFromUnposted($data->DATE, $data->LOCATION_ID);
@@ -161,7 +173,6 @@ class HemoForm extends Component
                         return Redirect::route('patientshemo')->with('error', 'Invalid action. Please complete the unposted(U) treatment before proceeding.');
                     }
                 }
-
                 $this->LoadDropDown();
                 $this->reloadData($data);
                 $statusData = DB::table('hemo_status')->select('description')->where('ID', $data->STATUS_ID)->first();
@@ -200,6 +211,8 @@ class HemoForm extends Component
         $this->IsDocmentUploaded = false;
 
         $this->IS_INCOMPLETE =  false;
+        $this->EMPLOYEE_ID =  0;
+        $this->EMPLOYEE_NAME = '';
     }
     public function getPreviousTreatment()
     {
@@ -286,7 +299,22 @@ class HemoForm extends Component
                 return;
             }
         }
+        if ($this->EMPLOYEE_ID  == 0) {
+            if ($this->PIN_ALLOWED) {
+                $this->dispatch('open-pin-code');
+                return;
+            }
+        }
 
+
+        $this->Modify = true;
+    }
+    #[On('pin-login-success')]
+    public function getPinSuccess($result)
+    {
+        $this->EMPLOYEE_ID = $result['EMPLOYEE_ID'];
+        $this->hemoServices->UpdateEmployee($this->ID, $this->EMPLOYEE_ID);
+        $this->getEmpName();
         $this->Modify = true;
     }
     public function updateCancel()

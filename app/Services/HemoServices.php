@@ -5,12 +5,12 @@ namespace App\Services;
 use App\Models\Contacts;
 use App\Models\Hemodialysis;
 use App\Models\HemodialysisItems;
+use App\Models\ItemSubClass;
 use Illuminate\Support\Facades\DB;
 
 class HemoServices
 {
 
-    private int $ITEM_NOT_ADDED_ID = 4;
     private $object;
     private $user;
     private $systemSettingServices;
@@ -62,6 +62,16 @@ class HemoServices
             ->where('STATUS_ID', 2)
             ->first();
     }
+    public function GetEmployeeName(int $EMP_ID): string
+    {
+        $data = Contacts::where('ID',$EMP_ID)->first();
+
+        if($data) {
+            return $data->NAME ?? '';
+        }
+
+        return '';
+    }   
     private function getTime(bool $isStart, string $DATE, int $CONTACT_ID, int $LOCATION_ID): string
     {
 
@@ -290,8 +300,24 @@ class HemoServices
             'LOCATION_ID' => $LOCATION_ID,
         ]);
     }
-    public function Update(int $ID, string $PRE_WEIGHT, string $PRE_BLOOD_PRESSURE, string $PRE_BLOOD_PRESSURE2, string $PRE_HEART_RATE, string $PRE_O2_SATURATION, string $PRE_TEMPERATURE, string $POST_WEIGHT, string $POST_BLOOD_PRESSURE, string $POST_BLOOD_PRESSURE2, string $POST_HEART_RATE, string $POST_O2_SATURATION, string $POST_TEMPERATURE, string $TIME_START, string $TIME_END, bool $IS_INCOMPLETE)
-    {
+    public function Update(
+        int $ID,
+        string $PRE_WEIGHT,
+        string $PRE_BLOOD_PRESSURE,
+        string $PRE_BLOOD_PRESSURE2,
+        string $PRE_HEART_RATE,
+        string $PRE_O2_SATURATION,
+        string $PRE_TEMPERATURE,
+        string $POST_WEIGHT,
+        string $POST_BLOOD_PRESSURE,
+        string $POST_BLOOD_PRESSURE2,
+        string $POST_HEART_RATE,
+        string $POST_O2_SATURATION,
+        string $POST_TEMPERATURE,
+        string $TIME_START,
+        string $TIME_END,
+        bool $IS_INCOMPLETE
+    ) {
         Hemodialysis::where('ID', $ID)
             ->update([
                 'PRE_WEIGHT'            => $PRE_WEIGHT,
@@ -311,12 +337,13 @@ class HemoServices
                 'IS_INCOMPLETE'         => $IS_INCOMPLETE
 
             ]);
-
-        // if ($TIME_START != "" && $TIME_END != "") {
-        //     $this->statusUpdate($ID, 2);
-        // } else {
-        //     $this->statusUpdate($ID, 1);
-        // }
+    }
+    public function UpdateEmployee(int $ID, int $EMPLOYEE_ID)
+    {
+        Hemodialysis::where('ID', $ID)
+            ->update([
+                'EMPLOYEE_ID'            => $EMPLOYEE_ID > 0 ? $EMPLOYEE_ID : null,
+            ]);
     }
     public function SaveOthers(int $ID, string $SE_DETAILS, string $SO_DETAILS, int $BFR, int $DFR, int $DURATION, string $DIALYZER, string  $DIALSATE_N, string $DIALSATE_K, string $DIALSATE_C, bool $DETAILS_USE_NEXT, bool $ORDER_USE_NEXT)
     {
@@ -765,23 +792,41 @@ class HemoServices
     }
     public function ItemUpdate(int $ID, int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT)
     {
+
+        $itemData =  $this->ItemGet($ID);
+        if ($itemData) {
+            if ($itemData->IS_POST) {
+                $data = $this->Get($HEMO_ID);
+                $this->itemInventoryServices->InventoryModify($ITEM_ID, $data->LOCATION_ID, $ID, 27, $data->DATE, 0, $QUANTITY, 0);
+            }
+        }
+
         HemodialysisItems::where('ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->where('IS_DEFAULT', $IS_DEFAULT)
             ->update([
-                'QUANTITY'              => $QUANTITY,
-                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-                'IS_NEW'                => $IS_NEW,
+                'QUANTITY'              =>  $QUANTITY,
+                'UNIT_ID'               =>  $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY'    =>  $UNIT_BASE_QUANTITY,
+                'IS_NEW'                =>  $IS_NEW,
+            ]);
+    }
+    public function ItemUpdateSC_ITEM_ID(int $ID, int $HEMO_ID, int $ITEM_ID, int $SC_ITEM_ID)
+    {
+        HemodialysisItems::where('ID', $ID)
+            ->where('HEMO_ID', $HEMO_ID)
+            ->where('ITEM_ID', $ITEM_ID)
+            ->update([
+                'SC_ITEM_ID' => $SC_ITEM_ID
             ]);
     }
     public function ItemDelete(int $ID, int $HEMO_ID, int $ITEM_ID, bool $IS_DEFAULT)
     {
-
-        $data = $this->Get($HEMO_ID);
-        if ($data) {
-            if ($data->STATUS_ID == 2 || $data->STATUS_ID == 4) {
+        $itemData =  $this->ItemGet($ID);
+        if ($itemData) {
+            if ($itemData->IS_POST) {
+                $data = $this->Get($HEMO_ID);
                 $this->itemInventoryServices->DeleteInv($ITEM_ID, $data->LOCATION_ID, 27, $ID, $data->DATE);
             }
         }
@@ -880,6 +925,7 @@ class HemoServices
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
             ->join('hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
             ->whereIn('item.TYPE', ['0', '1'])
+            ->where('item.HEMO_NON_INVENTORY', 0)
             ->whereIn('hemodialysis.STATUS_ID', ['2', '4'])
             ->where('hemodialysis_items.IS_NEW', true)
             ->where('hemodialysis_items.IS_POST', false)
@@ -1057,15 +1103,15 @@ class HemoServices
     }
     public function ItemQuery(int $PATIENT_ID, string $DATE, int $LOCATION_ID, int $ITEM_ID, float $QTY, bool $IS_DELETE, int $UNIT_ID)
     {
-        if ($ITEM_ID == $this->ITEM_NOT_ADDED_ID) {
-            return;
-        }
 
         $itemDetails =  $this->itemServices->get($ITEM_ID);
 
         if ($itemDetails) {
-            if ($itemDetails->TYPE >= 2) {
-                return;
+            $hasSubClass =  ItemSubClass::where('ID', $itemDetails->SUB_CLASS_ID)->first();
+            if ($hasSubClass) {
+                if ($hasSubClass->IN_HEMO == false) {
+                    return;
+                }
             }
         }
 
@@ -1083,12 +1129,12 @@ class HemoServices
 
         if ($dataItem) { // HEMO EXISTS
             if ($IS_DELETE) {
-                $this->ItemDelete($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, false);
+                $this->ItemDelete($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, false); // deleted
                 return;
             }
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-            $this->ItemUpdate($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID,  $UNIT_BASE_QUANTITY, true, false);
+            $this->ItemUpdate($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID,  $UNIT_BASE_QUANTITY, true, false); // updated
             return;
         }
         // new item
@@ -1101,7 +1147,7 @@ class HemoServices
         if ($hemoData) {
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-            $this->ItemStore($hemoData->ID, $ITEM_ID, $QTY, $UNIT_ID, $UNIT_BASE_QUANTITY, true, false);
+            $this->ItemStore($hemoData->ID, $ITEM_ID, $QTY, $UNIT_ID, $UNIT_BASE_QUANTITY, true, false); // created
         }
     }
 
@@ -1111,5 +1157,34 @@ class HemoServices
             ->where('STATUS_ID', 4)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->exists();
+    }
+
+    public function ItemListWithIsCashier(int $PATIENT_ID, int $LOCATION_ID, string $DATE)
+    {
+        $result = HemodialysisItems::query()
+            ->select([
+                'hemodialysis_items.ID',
+                'hemodialysis_items.HEMO_ID',
+                'hemodialysis_items.ITEM_ID',
+                'hemodialysis_items.QUANTITY',
+                'hemodialysis_items.UNIT_ID',
+                'hemodialysis_items.UNIT_BASE_QUANTITY',
+                'i.RATE',
+                'i.TAXABLE',
+                'i.COGS_ACCOUNT_ID',
+                'i.ASSET_ACCOUNT_ID',
+                'i.GL_ACCOUNT_ID'
+            ])
+            ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->join('item as i', 'i.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->where('h.CUSTOMER_ID', $PATIENT_ID)
+            ->where('h.LOCATION_ID', $LOCATION_ID)
+            ->where('h.DATE', $DATE)
+            ->where('IS_CASHIER', true)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
+
+        return $result;
     }
 }

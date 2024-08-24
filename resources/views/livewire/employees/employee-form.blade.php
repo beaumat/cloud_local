@@ -240,9 +240,23 @@
                                                                 <input type="date" name="hireDate"
                                                                     class="form-control form-control-sm"
                                                                     wire:model='HIRE_DATE' />
+
+
+
                                                             </div>
                                                         </div>
+                                                        <div class="col-md-3">
+                                                            <div class="mt-2">
+                                                                <label for="dob" class="text-sm">Pin Code
+                                                                </label>
+                                                                <input type="text" name="PIN"
+                                                                    class="form-control form-control-sm"
+                                                                    wire:model='PIN' />
 
+
+
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                 </div>

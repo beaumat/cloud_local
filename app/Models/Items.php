@@ -44,6 +44,8 @@ class Items extends Model
         'CUSTOM_FIELD2',
         'CUSTOM_FIELD3',
         'CUSTOM_FIELD4',
-        'CUSTOM_FIELD5'
+        'CUSTOM_FIELD5',
+        'NON_HEMO',
+        'HEMO_NON_INVENTORY'
     ];
 }
