@@ -55,6 +55,17 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         $PREV_SC_ITEM_REF_ID = 0;
         $TOTAL_CHARGE = 0;
         $TOTAL_PAID = 0;
+
+
+
+        $CASH_AMOUNT = 0;
+        $PHILHEALTH_AMOUNT = 0;
+        $DSWD_AMOUNT = 0;
+        $LINGAP_AMOUNT = 0;
+        $PCSO_AMOUNT = 0;
+        $OTHER_GL_AMOUNT = 0;
+
+
         $running_balance = 0;
         $NO_OF_PATIENT = 0;
         $sc_code = '';
@@ -100,6 +111,36 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
 
             if ($list->PP_PAID > 0) {
                 $TOTAL_PAID = $TOTAL_PAID + $list->PP_PAID ?? 0;
+
+
+                if ($list->PAYMENT_METHOD_ID == 1) {
+                    //Cash
+                    $CASH_AMOUNT = $CASH_AMOUNT + $list->PP_PAID ?? 0;
+                }
+
+                if ($list->PAYMENT_METHOD_ID == 91) {
+                    //Philhealth
+                    $PHILHEALTH_AMOUNT = $PHILHEALTH_AMOUNT + $list->PP_PAID ?? 0;
+                }
+
+                if ($list->PAYMENT_METHOD_ID == 92) {
+                    //DSWD
+                    $DSWD_AMOUNT = $DSWD_AMOUNT + $list->PP_PAID ?? 0;
+                }
+
+                if ($list->PAYMENT_METHOD_ID == 93) {
+                    //LINGAP
+                    $LINGAP_AMOUNT = $LINGAP_AMOUNT + $list->PP_PAID ?? 0;
+                }
+
+                if ($list->PAYMENT_METHOD_ID == 94) {
+                    //PCSO
+                    $PCSO_AMOUNT = $PCSO_AMOUNT + $list->PP_PAID ?? 0;
+                }
+                if ($list->PAYMENT_METHOD_ID == 96) {
+                    //Other GL
+                    $OTHER_GL_AMOUNT = $OTHER_GL_AMOUNT + $list->PP_PAID ?? 0;
+                }
             }
 
             if ($is_add) {
@@ -131,14 +172,25 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         $finalData[] = array_values($rowData);
 
         // No. of Patient - SC TOTAL
-        $rowData = ['PN' => 'No. of Patient: ' . $NO_OF_PATIENT, 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => '', 'BAL' => '', 'DOCTOR' => 'TOTAL CHARGE :' . $TOTAL_CHARGE, 'LOCATION' => '',];
+        $rowData = ['PN' => 'No. of Patient: ' . $NO_OF_PATIENT, 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Cash Paid: ' . $CASH_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL CHARGE :' . $TOTAL_CHARGE, 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
         // PAID TOTAL
-        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => '', 'BAL' => '', 'DOCTOR' => 'TOTAL PAID :' . $TOTAL_PAID, 'LOCATION' => '',];
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Philhealth Paid: ' . $PHILHEALTH_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL PAID :' . $TOTAL_PAID, 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
         // BALANCE TOTAL
-        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => '', 'BAL' => '', 'DOCTOR' => 'TOTAL BALANCE :' . $TOTAL_CHARGE - $TOTAL_PAID, 'LOCATION' => '',];
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'DSWD Paid: ' . $DSWD_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL BALANCE :' . $TOTAL_CHARGE - $TOTAL_PAID, 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
+
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'LINGAP Paid: ' . $LINGAP_AMOUNT, 'BAL' => '', 'DOCTOR' => '', 'LOCATION' => '',];
+        $finalData[] = array_values($rowData);
+
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'PCSO Paid: ' . $PCSO_AMOUNT, 'BAL' => '', 'DOCTOR' => '', 'LOCATION' => '',];
+        $finalData[] = array_values($rowData);
+
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Other GL Paid: ' . $OTHER_GL_AMOUNT, 'BAL' => '', 'DOCTOR' => '', 'LOCATION' => '',];
+        $finalData[] = array_values($rowData);
+
+
 
         return collect($finalData);
     }

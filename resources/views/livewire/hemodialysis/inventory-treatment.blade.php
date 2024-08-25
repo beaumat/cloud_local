@@ -13,7 +13,6 @@
                                 <th>Category</th>
                                 <th class="col-1 text-center">Qty</th>
                                 <th class="col-1 text-center">Unit</th>
-                                {{-- <th class="col-1 text-center">New</th> --}}
                                 @if ($STATUS == $openStatus)
                                     <th class="col-2 text-center">Action</th>
                                 @endif
@@ -88,7 +87,6 @@
                                     @endif
                                 </tr>
                             @endforeach
-
                         </tbody>
                     </table>
                 </div>

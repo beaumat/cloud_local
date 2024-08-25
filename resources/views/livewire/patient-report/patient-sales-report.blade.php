@@ -54,11 +54,11 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">
-                                            <label class="text-xs pt-2">Location:</label>
+                                            <label class="text-xs ">Location:</label>
                                             <select
                                                 @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
                                                 name="location" wire:model.live='LOCATION_ID'
-                                                class="form-control form-control-sm text-xs mt-1">
+                                                class="form-control form-control-sm text-xs ">
                                                 <option value="0"> All Location</option>
                                                 @foreach ($locationList as $item)
                                                     <option value="{{ $item->ID }}"> {{ $item->NAME }}
@@ -211,6 +211,36 @@
 
                                             @php
                                                 $TOTAL_PAID = $TOTAL_PAID + $list->PP_PAID ?? 0;
+
+                                                if ($list->PAYMENT_METHOD_ID == 1) {
+                                                    //Cash
+                                                    $CASH_AMOUNT = $CASH_AMOUNT + $list->PP_PAID ?? 0;
+                                                }
+
+                                                if ($list->PAYMENT_METHOD_ID == 91) {
+                                                    //Philhealth
+                                                    $PHILHEALTH_AMOUNT = $PHILHEALTH_AMOUNT + $list->PP_PAID ?? 0;
+                                                }
+
+                                                if ($list->PAYMENT_METHOD_ID == 92) {
+                                                    //DSWD
+                                                    $DSWD_AMOUNT = $DSWD_AMOUNT + $list->PP_PAID ?? 0;
+                                                }
+
+                                                if ($list->PAYMENT_METHOD_ID == 93) {
+                                                    //LINGAP
+                                                    $LINGAP_AMOUNT = $LINGAP_AMOUNT + $list->PP_PAID ?? 0;
+                                                }
+
+                                                if ($list->PAYMENT_METHOD_ID == 94) {
+                                                    //PCSO
+                                                    $PCSO_AMOUNT = $PCSO_AMOUNT + $list->PP_PAID ?? 0;
+                                                }
+                                                if ($list->PAYMENT_METHOD_ID == 96) {
+                                                    //Other GL
+                                                    $OTHER_GL_AMOUNT = $OTHER_GL_AMOUNT + $list->PP_PAID ?? 0;
+                                                }
+
                                             @endphp
                                         @endif
                                     </td>
@@ -239,16 +269,44 @@
                 </div>
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="col-md-12">
-                            <h6 class="text-xs"> <label>TOTAL (SC) : </label>
+                        <div class="col-md-6">
+                            <h6 class="text-xs"> <label class="text-xs">Cash Paid : </label>
+                                <span
+                                    class="text-success font-weight-bold text-xs">{{ number_format($CASH_AMOUNT, 2) }}</span>
+                            </h6>
+
+                            <h6 class="text-xs"> <label class="text-xs">Philhealth Paid : </label>
+                                <span
+                                    class="text-success font-weight-bold text-xs">{{ number_format($PHILHEALTH_AMOUNT, 2) }}</span>
+                            </h6>
+                            <h6 class="text-xs"> <label class="text-xs">DSWD Paid : </label>
+                                <span
+                                    class="text-success font-weight-bold text-xs">{{ number_format($DSWD_AMOUNT, 2) }}</span>
+                            </h6>
+                            <h6 class="text-xs"> <label class="text-xs">LINGAP Paid : </label>
+                                <span
+                                    class="text-success font-weight-bold text-xs">{{ number_format($LINGAP_AMOUNT, 2) }}</span>
+                            </h6>
+                            <h6 class="text-xs"> <label class="text-xs">PCSO Paid : </label>
+                                <span
+                                    class="text-success active font-weight-bold text-xs">{{ number_format($PCSO_AMOUNT, 2) }}</span>
+                            </h6>
+                            <h6 class="text-xs"> <label class="text-xs">OTHER GL Paid : </label>
+                                <span
+                                    class="text-success font-weight-bold text-xs">{{ number_format($OTHER_GL_AMOUNT, 2) }}</span>
+                            </h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-xs"> <label class="text-xs">TOTAL (SC) : </label>
                                 <span
                                     class="text-primary font-weight-bold h6">{{ number_format($TOTAL_CHARGE, 2) }}</span>
                             </h6>
-                            <h6 class="text-xs"> <label>TOTAL (P) : </label>
+
+                            <h6 class="text-xs"> <label class="text-xs">TOTAL (Payment) : </label>
                                 <span
                                     class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID, 2) }}</span>
                             </h6>
-                            <h6 class="text-xs"> <label>TOTAL BALANCE : </label>
+                            <h6 class="text-xs"> <label class="text-xs">TOTAL BALANCE : </label>
                                 <span
                                     class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - $TOTAL_PAID, 2) }}</span>
                             </h6 class="text-xs">

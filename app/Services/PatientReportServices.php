@@ -25,7 +25,8 @@ class PatientReportServices
                 DB::raw('IFNULL(pp.AMOUNT, 0) as PP_DEPOSIT'),
                 DB::raw('IFNULL(ppc.AMOUNT_APPLIED, 0) as PP_PAID'),
                 'l.NAME as LOCATION_NAME',
-                DB::raw('(select d.PRINT_NAME_AS  from patient_doctor  as pd join contact as d on d.ID = pd.DOCTOR_ID where pd.PATIENT_ID = c.ID limit 1) as DOCTOR_NAME ')
+                DB::raw('(select d.PRINT_NAME_AS  from patient_doctor  as pd join contact as d on d.ID = pd.DOCTOR_ID where pd.PATIENT_ID = c.ID limit 1) as DOCTOR_NAME '),
+                'pp.PAYMENT_METHOD_ID'
             ])
             ->join('item as i', 'i.ID', '=', 'sci.ITEM_ID')
             ->join('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')

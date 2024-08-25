@@ -17,6 +17,9 @@ use Livewire\Component;
 class PatientSalesReport extends Component
 {
 
+
+
+
     public int $PATIENT_ID;
     public int $LOCATION_ID;
     public $locationList = [];
@@ -37,8 +40,21 @@ class PatientSalesReport extends Component
     public int $PREV_SC_ITEM_REF_ID = 0;
     public bool $not_to_charge = false;
     public float $TOTAL_CHARGE = 0;
+
+
     public float $TOTAL_PAID = 0;
+    public float $CASH_AMOUNT;
+    public float $PHILHEALTH_AMOUNT;
+    public float $DSWD_AMOUNT;
+    public float $LINGAP_AMOUNT;
+    public float $PCSO_AMOUNT;
+    public float $OTHER_GL_AMOUNT;
+
+
+
     public int $NO_OF_PATIENT = 0;
+
+
     private $contactServices;
     private $patientReportServices;
     public function boot(LocationServices $locationServices, UserServices $userServices, ContactServices $contactServices, PatientReportServices $patientReportServices)
@@ -72,6 +88,13 @@ class PatientSalesReport extends Component
         $this->NO_OF_PATIENT  = 0;
         $this->TOTAL_CHARGE = 0;
         $this->TOTAL_PAID = 0;
+        $this->CASH_AMOUNT = 0;
+        $this->PHILHEALTH_AMOUNT = 0;
+        $this->DSWD_AMOUNT = 0;
+        $this->LINGAP_AMOUNT = 0;
+        $this->PCSO_AMOUNT = 0;
+        $this->OTHER_GL_AMOUNT = 0;
+
 
         $this->dataList = $this->patientReportServices->generateSalesReportData(
             $this->DATE_COLLECTION_FROM,
@@ -94,7 +117,7 @@ class PatientSalesReport extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->PATIENT_ID = 0;
     }
-    
+
     public function render()
     {
 

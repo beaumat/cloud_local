@@ -11,9 +11,7 @@
                 <th class="col-1 text-right">Rate</th>
                 <th class="col-1 text-right">Amount</th>
                 <th class="text-center">Tax</th>
-                {{-- @if ($STATUS == $openStatus) --}}
-                <th class="text-center col-2">Action</th>
-                {{-- @endif --}}
+                <th class="text-center col-2">Action</th> 
             </tr>
         </thead>
         <tbody class="text-xs">

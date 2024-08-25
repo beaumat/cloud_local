@@ -271,8 +271,9 @@ class ServiceChargeServices
                 't.NAME as TAX_NAME',
                 's.DESCRIPTION as STATUS',
                 's.ID as STATUS_ID',
-                DB::raw('(select s.DESCRIPTION from hemodialysis as h join hemo_status as s on s.ID = h.STATUS_ID where h.CUSTOMER_ID = service_charges.PATIENT_ID and h.DATE = service_charges.DATE and h.LOCATION_ID = service_charges.LOCATION_ID limit 1 ) as TR_STATUS')
-            ])
+                DB::raw('(select s.DESCRIPTION from hemodialysis as h join hemo_status as s on s.ID = h.STATUS_ID where h.CUSTOMER_ID = service_charges.PATIENT_ID and h.DATE = service_charges.DATE and h.LOCATION_ID = service_charges.LOCATION_ID limit 1 ) as TR_STATUS'),
+                DB::raw('(select if(count(*) > 0, true, false)  from hemodialysis_items inner join service_charges_items on service_charges_items.ID = hemodialysis_items.SC_ITEM_ID  where service_charges_items.SERVICE_CHARGES_ID = service_charges.ID and hemodialysis_items.IS_CASHIER = 1) as got_charge')
+                ])
             ->join('contact as c', 'c.ID', '=', 'service_charges.PATIENT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'service_charges.LOCATION_ID');

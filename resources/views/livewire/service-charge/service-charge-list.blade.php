@@ -70,7 +70,7 @@
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Amount</th>
                                         <th class="col-1">Balance</th>
-                                        {{-- <th class="col-1">Tax</th> --}}
+                                        <th class="text-center">C</th>
                                         <th class="text-center">S</th>
                                         </th>
                                         <th class="text-center">T</th>
@@ -99,6 +99,11 @@
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->BALANCE_DUE, 2) }}</td>
+                                            <td class="text-center    @if ($list->got_charge) bg-success @endif">
+                                                @if ($list->got_charge)
+                                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                                @endif
+                                            </td>
                                             <td
                                                 class="text-center
                                             @if ($list->STATUS_ID == 0) bg-warning @elseif ($list->STATUS_ID == 2) bg-primary  @elseif ($list->STATUS_ID == 11) bg-success @else bg-secondary @endif
@@ -107,6 +112,7 @@
                                             <td
                                                 class="text-center @if ($list->TR_STATUS == 'Draft') bg-warning  @elseif ($list->TR_STATUS == 'Posted') bg-success  @elseif ($list->TR_STATUS == 'Unposted') bg-secondary @else bg-danger @endif ">
                                                 {{ substr($list->TR_STATUS, 0, 1) }}</td>
+
                                             @can('patient.service-charges.create')
                                                 <td class="text-center">
                                                     <a type="button" title="View details"
