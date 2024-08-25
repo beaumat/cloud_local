@@ -20,8 +20,9 @@
                         <button type="submit" class="btn btn-warning btn-md"> <i class="fa fa-lock"
                                 aria-hidden="true"></i> OK </button>
                         <button type="button" class="btn btn-secondary btn-md" wire:click="closeModal">Close</button>
-                        <i class="text-xs text-danger">Note: Enter the pin by using the first letters of the first name,
-                            middle name, and last name (e.g., Mario Santos Garcia becomes "msg").</i>
+                        Note: Only <b>nurses</b> are authorized to enter the PIN. Please use the first letter of the first
+                        name, middle name, and last name (e.g., Mario Santos Garcia becomes "msg").
+
                     </div>
                 </form>
             </div>
