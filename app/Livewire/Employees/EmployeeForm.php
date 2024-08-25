@@ -159,27 +159,12 @@ class EmployeeForm extends Component
         $this->validate(
             [
                 'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
-                'ACCOUNT_NO' => [
-                    'required',
-                    'max:50',
-                    function ($attribute, $value, $fail) {
-                        $count = Contacts::query()
-                            ->where('account_no', $value)
-                            ->where('type', $this->TYPE)
-                            ->where('id', '<>', $this->ID)
-                            ->count();
-                        if ($count > 0) {
-                            $fail('The specified Employee ID is not unique.');
-                        }
-                    },
-                ],
                 'PRINT_NAME_AS' => 'required|max:100',
 
             ],
             [],
             [
                 'NAME' => 'Name',
-                'ACCOUNT_NO' => 'Emp ID',
                 'PRINT_NAME_AS' => 'Print As',
             ]
         );
