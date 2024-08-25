@@ -28,16 +28,13 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' />
+                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'
+                                                maxlength='60' />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:text-input name="ACCOUNT_NO" titleName="Employee ID"
                                                 wire:model='ACCOUNT_NO' />
                                         </div>
-                                        {{-- <div class="col-md-2">
-                                            <livewire:select-option name="LOCATION_ID" :options="$locationList"
-                                                :zero="true" titleName="Branch" wire:model='LOCATION_ID' />
-                                        </div> --}}
                                         <div class="col-nd-2">
                                             <div class="row">
                                                 <div class="col-md-12"><br /></div>
@@ -121,7 +118,8 @@
                                                         </div>
                                                         <div class="col-md-12">
                                                             <livewire:text-input name="PRINT_NAME_AS"
-                                                                titleName="Print As" wire:model='PRINT_NAME_AS' />
+                                                                titleName="Print As" wire:model='PRINT_NAME_AS'
+                                                                maxlength='60' />
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="row">
