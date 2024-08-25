@@ -509,10 +509,12 @@ class HemoServices
                 'hemodialysis.STATUS_ID',
                 'hemodialysis.FILE_PATH',
                 'hemodialysis.IS_INCOMPLETE',
-                DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC')
+                DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC'),
+                'e.NAME as NURSE_NAME'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')
+            ->leftJoin('contact as e', 'e.ID', '=', 'hemodialysis.EMPLOYEE_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
                 $join->on('l.ID', '=', 'hemodialysis.LOCATION_ID');
                 if ($LOCATION_ID > 0) {
@@ -523,7 +525,8 @@ class HemoServices
                 $query->where(function ($q) use ($search) {
                     $q->where('hemodialysis.CODE', 'like', '%' . $search . '%')
                         ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%')
+                        ->orWhere('e.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
             ->when($statusId > 0, function ($query) use (&$statusId) {
@@ -578,10 +581,12 @@ class HemoServices
                 'hemodialysis.STATUS_ID',
                 'hemodialysis.FILE_PATH',
                 'hemodialysis.IS_INCOMPLETE',
-                DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where  sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC')
+                DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where  sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC'),
+                'e.NAME as NURSE_NAME'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')
+            ->leftJoin('contact as e', 'e.ID', '=', 'hemodialysis.EMPLOYEE_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
                 $join->on('l.ID', '=', 'hemodialysis.LOCATION_ID');
                 if ($LOCATION_ID > 0) {
@@ -592,7 +597,8 @@ class HemoServices
                 $query->where(function ($q) use ($search) {
                     $q->where('hemodialysis.CODE', 'like', '%' . $search . '%')
                         ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%')
+                        ->orWhere('e.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
             ->where('hemodialysis.STATUS_ID', 4)
