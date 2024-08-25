@@ -18,28 +18,54 @@ class ItemTreatmentServices
     {
         return ItemTreatment::where('ID', $Id)->first();
     }
-    public function Store(int $LOCATION_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, int $NO_OF_USED, bool $IS_AUTO, bool $IS_REQUIRED, float $NEW_TREATMENT_QTY, bool $FIRST_TIME_AUTO_NEW): int
-    {
+    public function Store(
+        int $LOCATION_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        int $NO_OF_USED,
+        bool $IS_AUTO,
+        bool $IS_REQUIRED,
+        float $NEW_TREATMENT_QTY,
+        bool $FIRST_TIME_AUTO_NEW,
+        bool $IS_AUTO_SC,
+        bool $FT_AUTO_SC
+    ): int {
         $ID =  (int) $this->object->ObjectNextID('ITEM_TREATMENT');
         ItemTreatment::create([
-            'ID'                => $ID,
-            'LOCATION_ID'       => $LOCATION_ID,
-            'ITEM_ID'           => $ITEM_ID,
-            'QUANTITY'          => $QUANTITY,
-            'UNIT_ID'           => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'NO_OF_USED'        => $NO_OF_USED,
-            'INACTIVE'          => false,
-            'IS_AUTO'           => $IS_AUTO,
-            'IS_REQUIRED'       =>  $IS_REQUIRED,
-            'NEW_TREATMENT_QTY' => $NEW_TREATMENT_QTY,
-            'FIRST_TIME_AUTO_NEW' => $FIRST_TIME_AUTO_NEW
+            'ID'                    => $ID,
+            'LOCATION_ID'           => $LOCATION_ID,
+            'ITEM_ID'               => $ITEM_ID,
+            'QUANTITY'              => $QUANTITY,
+            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'NO_OF_USED'            => $NO_OF_USED,
+            'INACTIVE'              => false,
+            'IS_AUTO'               => $IS_AUTO,
+            'IS_REQUIRED'           => $IS_REQUIRED,
+            'NEW_TREATMENT_QTY'     => $NEW_TREATMENT_QTY,
+            'FIRST_TIME_AUTO_NEW'   => $FIRST_TIME_AUTO_NEW,
+            'IS_AUTO_SC'            => $IS_AUTO_SC,
+            'FT_AUTO_SC'            => $FT_AUTO_SC
         ]);
 
         return $ID;
     }
 
-    public function Update(int $ID, int $LOCATION_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, int $NO_OF_USED, bool $INACTIVE, bool $IS_AUTO, bool $IS_REQUIRED, float $NEW_TREATMENT_QTY, bool $FIRST_TIME_AUTO_NEW)
-    {
+    public function Update(
+        int $ID,
+        int $LOCATION_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        int $NO_OF_USED,
+        bool $INACTIVE,
+        bool $IS_AUTO,
+        bool $IS_REQUIRED,
+        float $NEW_TREATMENT_QTY,
+        bool $FIRST_TIME_AUTO_NEW,
+        bool $IS_AUTO_SC,
+        bool $FT_AUTO_SC
+    ) {
         ItemTreatment::where('ID', $ID)
             ->update([
                 'LOCATION_ID'           => $LOCATION_ID,
@@ -51,7 +77,9 @@ class ItemTreatmentServices
                 'IS_AUTO'               => $IS_AUTO,
                 'IS_REQUIRED'           => $IS_REQUIRED,
                 'NEW_TREATMENT_QTY'     => $NEW_TREATMENT_QTY,
-                'FIRST_TIME_AUTO_NEW'   => $FIRST_TIME_AUTO_NEW
+                'FIRST_TIME_AUTO_NEW'   => $FIRST_TIME_AUTO_NEW,
+                'IS_AUTO_SC'            => $IS_AUTO_SC,
+                'FT_AUTO_SC'            => $FT_AUTO_SC
             ]);
     }
 
@@ -74,7 +102,9 @@ class ItemTreatmentServices
                 'item_treatment.IS_AUTO',
                 'item_treatment.IS_REQUIRED',
                 'item_treatment.NEW_TREATMENT_QTY',
-                'item_treatment.FIRST_TIME_AUTO_NEW'
+                'item_treatment.FIRST_TIME_AUTO_NEW',
+                'item_treatment.IS_AUTO_SC',
+                'item_treatment.FT_AUTO_SC'
             ])
             ->join('location as l', 'l.ID', '=', 'item_treatment.LOCATION_ID')
             ->join('item as i', 'i.ID', '=', 'item_treatment.ITEM_ID')
@@ -132,20 +162,19 @@ class ItemTreatmentServices
     {
         $result = ItemTreatment::query()
             ->select([
-                'item_treatment.ID',
-                'item_treatment.ITEM_ID',
-                'item_treatment.QUANTITY',
-                'item_treatment.UNIT_ID',
-                'item_treatment.NO_OF_USED'
+                'ID',
+                'ITEM_ID',
+                'QUANTITY',
+                'UNIT_ID',
+                'NO_OF_USED',
+                'IS_AUTO_SC as IS_CASHIER'
             ])
-            ->join('location as l', 'l.ID', '=', 'item_treatment.LOCATION_ID')
-            ->join('item as i', 'i.ID', '=', 'item_treatment.ITEM_ID')
-            ->leftJoin('unit_of_measure as u', 'u.ID', 'item_treatment.UNIT_ID')
-            ->where('item_treatment.LOCATION_ID', $locationId)
-            ->where('item_treatment.IS_AUTO', 1)
-            ->where('item_treatment.QUANTITY', '>', 0)
-            ->where('item_treatment.INACTIVE', 0)
-            ->orderBy('item_treatment.ID', 'desc')
+
+            ->where('LOCATION_ID', $locationId)
+            ->where('IS_AUTO', 1)
+            ->where('QUANTITY', '>', 0)
+            ->where('INACTIVE', 0)
+            ->orderBy('ID', 'desc')
             ->get();
 
         return $result;
@@ -155,20 +184,18 @@ class ItemTreatmentServices
     {
         $result = ItemTreatment::query()
             ->select([
-                'item_treatment.ID',
-                'item_treatment.ITEM_ID',
-                'item_treatment.NEW_TREATMENT_QTY as QUANTITY',
-                'item_treatment.UNIT_ID',
-                'item_treatment.NO_OF_USED'
+                'ID',
+                'ITEM_ID',
+                'NEW_TREATMENT_QTY as QUANTITY',
+                'UNIT_ID',
+                'NO_OF_USED',
+                'FT_AUTO_SC as IS_CASHIER'
             ])
-            ->join('location as l', 'l.ID', '=', 'item_treatment.LOCATION_ID')
-            ->join('item as i', 'i.ID', '=', 'item_treatment.ITEM_ID')
-            ->leftJoin('unit_of_measure as u', 'u.ID', 'item_treatment.UNIT_ID')
-            ->where('item_treatment.LOCATION_ID', $locationId)
-            ->where('item_treatment.FIRST_TIME_AUTO_NEW', 1)
-            ->where('item_treatment.NEW_TREATMENT_QTY', '>', 0)
-            ->where('item_treatment.INACTIVE', 0)
-            ->orderBy('item_treatment.ID', 'desc')
+            ->where('LOCATION_ID', $locationId)
+            ->where('FIRST_TIME_AUTO_NEW', 1)
+            ->where('NEW_TREATMENT_QTY', '>', 0)
+            ->where('INACTIVE', 0)
+            ->orderBy('ID', 'desc')
             ->get();
 
         return $result;

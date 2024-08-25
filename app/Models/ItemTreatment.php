@@ -21,6 +21,10 @@ class ItemTreatment extends Model
         'INACTIVE',
         'IS_AUTO',
         'IS_REQUIRED',
-        'NEW_TREATMENT_QTY'
+        'NEW_TREATMENT_QTY',
+        'FIRST_TIME_AUTO_NEW',
+        'IS_AUTO_SC',
+        'FT_AUTO_SC'
+    
     ];
 }

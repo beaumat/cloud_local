@@ -57,6 +57,7 @@ class ServiceChargeFormItems extends Component
     public int $PRICE_LEVEL_ID;
     public $itemList = [];
     public $editItemId = null;
+    public bool $canBeQtyEdit = false;
     public bool $codeBase = false;
     public $itemDescList = [];
     public $itemCodeList = [];
@@ -280,7 +281,7 @@ class ServiceChargeFormItems extends Component
             $this->CLASS_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
-            
+
             if ($this->philHealthServices->PHIL_HEALTH_ITEM_ID == $prime_item_id) {
                 $count = $this->serviceChargeServices->GetCountByYear($prime_item_id, $this->dateServices->NowYear(), $this->PATIENT_ID, $this->LOCATION_ID);
                 $countAdjust = $this->philHealthServices->ItemAdjustGet($this->PATIENT_ID, $this->LOCATION_ID, $this->dateServices->NowYear());
@@ -329,6 +330,13 @@ class ServiceChargeFormItems extends Component
     }
     public function editItem(int $lineId, float $lineQty, int $lineUnitId, float $lineRate, float $lineAmount, bool $lineTax, int $itemId)
     {
+
+        if ($this->hemoServices->IsExist_SC_ITEM($lineId)) {
+            $this->canBeQtyEdit = false;
+        } else {
+            $this->canBeQtyEdit = true;
+        }
+
         $this->editItemId = $lineId;
         $this->lineQty = $lineQty;
         $this->lineUnitId = $lineUnitId;
@@ -381,11 +389,13 @@ class ServiceChargeFormItems extends Component
                 $this->lineTaxAmount,
                 $this->linePriceLevelId
             );
-
-            $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
-            if ($dataSC) {
-                $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->lineItemId,  $this->lineQty, false,  $this->lineUnitId > 0 ? $this->lineUnitId : 0);
+            if ($this->canBeQtyEdit) {
+                $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
+                if ($dataSC) {
+                    $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->lineItemId,  $this->lineQty, false,  $this->lineUnitId > 0 ? $this->lineUnitId : 0);
+                }
             }
+
             DB::commit();
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
@@ -413,6 +423,12 @@ class ServiceChargeFormItems extends Component
     }
     public function deleteItem(int $Id)
     {
+        // checking if homo created
+        if ($this->hemoServices->IsExist_SC_ITEM($Id)) {
+            session()->flash('error', 'Delete action invalid. Only items from the treatment page can be deleted.');
+            return;
+        }
+
         DB::beginTransaction();
         try {
             $getItemInfo = $this->serviceChargeServices->getItemDetails($Id);

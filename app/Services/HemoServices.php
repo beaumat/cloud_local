@@ -150,7 +150,6 @@ class HemoServices
             }
         }
 
-
         return [
             'FIRST_DATE' => '',
             'FIRST_TIME' => '',
@@ -828,6 +827,10 @@ class HemoServices
                 'SC_ITEM_ID' => $SC_ITEM_ID
             ]);
     }
+    public function IsExist_SC_ITEM(int $SC_ITEM_ID): bool
+    {
+        return  HemodialysisItems::where('SC_ITEM_ID', $SC_ITEM_ID)->exists();
+    }
     public function ItemDelete(int $ID, int $HEMO_ID, int $ITEM_ID, bool $IS_DEFAULT)
     {
         $itemData =  $this->ItemGet($ID);
@@ -1051,34 +1054,7 @@ class HemoServices
         ];
     }
 
-    public function AddItemDefault(int $ItemTreatmentId, $hemoData)
-    {
-        $data = $this->itemTreatmentServices->Get($ItemTreatmentId); // get item treatment details
-        if ($data) {
-            $gotNew = true;
-  
-            $NEW_TREATMENT_QTY = (float) $data->NEW_TREATMENT_QTY ?? 0;
-            $QTY = 0;
-            if ($NEW_TREATMENT_QTY > 0) {
-                $isNew = (bool)  $this->IsNewHemo($hemoData->CUSTOMER_ID, $hemoData->LOCATION_ID, $hemoData->DATE);
-                if ($isNew == true) {
-                    $QTY = $NEW_TREATMENT_QTY;
-                } else {
-                    $QTY = (float) $data->QUANTITY;
-                }
-            } else {
-                $QTY = (float) $data->QUANTITY;
-            }
 
-            try {
-                $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
-                $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-                $this->ItemStore($hemoData->ID, $data->ITEM_ID, $QTY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew, true);
-            } catch (\Throwable $th) {
-                session()->flash('error', $th->getMessage());
-            }
-        }
-    }
     public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
     {
         return (int) Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)
@@ -1136,6 +1112,8 @@ class HemoServices
                 $this->ItemDelete($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, false); // deleted
                 return;
             }
+
+
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
             $this->ItemUpdate($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID,  $UNIT_BASE_QUANTITY, true, false); // updated
@@ -1190,5 +1168,35 @@ class HemoServices
 
 
         return $result;
+    }
+
+
+
+    public function AutoDefaultItem(int $NoTrtment, int $HEMO_ID, int $LOCATION_ID)
+    {
+        if ($NoTrtment <= 1) { // New
+            $dataList = $this->itemTreatmentServices->NewAutoItemList($LOCATION_ID);           // show add new items
+        } else {
+            $dataList = $this->itemTreatmentServices->AutoItemList($LOCATION_ID);           // show add default items
+        }
+
+        foreach ($dataList as $data) {
+
+            $IS_CASHIER = (bool) $data->IS_CASHIER;
+
+            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
+
+            $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+
+            $SK_LINE_ID  =  $this->ItemStore($HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, true, true, $IS_CASHIER, null, null);
+
+            $dataTrigger = $this->itemTreatmentServices->getItemTrigger($data->ITEM_ID, $LOCATION_ID, $data->UNIT_ID);
+
+            foreach ($dataTrigger as $list) {
+                $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
+                $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+                $this->ItemStore($HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
+            }
+        }
     }
 }

@@ -25,7 +25,8 @@
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm text-right"
-                                name="lineQty" wire:model.live.debounce.1000ms='lineQty' wire:blur="getEditAmount" />
+                                @if (!$canBeQtyEdit) disabled @endif name="lineQty"
+                                wire:model.live.debounce.1000ms='lineQty' wire:blur="getEditAmount" />
                         @else
                             {{ number_format($list->QUANTITY, 0) }}
                         @endif

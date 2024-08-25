@@ -27,6 +27,8 @@ class ItemTreatmentForm extends Component
     public float $NEW_TREATMENT_QTY;
     public bool $FIRST_TIME_AUTO_NEW;
 
+    public bool $IS_AUTO_SC;
+    public bool $FT_AUTO_SC;
 
     public $locationList = [];
     public $itemList = [];
@@ -69,6 +71,8 @@ class ItemTreatmentForm extends Component
                 $this->IS_REQUIRED = $data->IS_REQUIRED;
                 $this->NEW_TREATMENT_QTY = $data->NEW_TREATMENT_QTY ?? 0;
                 $this->FIRST_TIME_AUTO_NEW = $data->FIRST_TIME_AUTO_NEW ?? false;
+                $this->IS_AUTO_SC = $data->IS_AUTO_SC ?? false;
+                $this->FT_AUTO_SC = $data->FT_AUTO_SC ?? false;
                 return;
             }
 
@@ -87,6 +91,8 @@ class ItemTreatmentForm extends Component
         $this->IS_REQUIRED = false;
         $this->NEW_TREATMENT_QTY = 0;
         $this->FIRST_TIME_AUTO_NEW = false;
+        $this->IS_AUTO_SC = false;
+        $this->FT_AUTO_SC = false;
     }
     public function save()
     {
@@ -115,7 +121,9 @@ class ItemTreatmentForm extends Component
                     $this->IS_AUTO,
                     $this->IS_REQUIRED,
                     $this->NEW_TREATMENT_QTY,
-                    $this->FIRST_TIME_AUTO_NEW
+                    $this->FIRST_TIME_AUTO_NEW,
+                    $this->IS_AUTO_SC,
+                    $this->FT_AUTO_SC
                 );
                 DB::commit();
                 return Redirect::route('maintenanceothersitem_treatment_edit', ['id' => $this->ID])->with('message', 'Successfully created.');
@@ -131,7 +139,9 @@ class ItemTreatmentForm extends Component
                     $this->IS_AUTO,
                     $this->IS_REQUIRED,
                     $this->NEW_TREATMENT_QTY,
-                    $this->FIRST_TIME_AUTO_NEW
+                    $this->FIRST_TIME_AUTO_NEW,
+                    $this->IS_AUTO_SC,
+                    $this->FT_AUTO_SC
                 );
                 DB::commit();
                 session()->flash('message', 'Successfully updated.');

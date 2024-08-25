@@ -38,12 +38,6 @@
                                                 titleName="Item Name" wire:model.live='ITEM_ID' />
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:number-input name="QUANTITY" titleName="Default Qty"
-                                                wire:model='QUANTITY' />
-                                            <livewire:custom-check-box name="IS_AUTO" titleName="Auto Default"
-                                                wire:model='IS_AUTO' />
-                                        </div>
-                                        <div class="col-md-2">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <label class="text-xs">Unit of Measure</label>
@@ -68,16 +62,26 @@
                                                 wire:model='NO_OF_USED' />
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
-                                                wire:model='INACTIVE' />
-                                        </div>
-                                        <div class="col-md-2">
 
                                         </div>
+
                                         <div class="col-md-2">
                                             <livewire:custom-check-box name="IS_REQUIRED" titleName="Is Required"
                                                 wire:model='IS_REQUIRED' />
+                                            <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
+                                                wire:model='INACTIVE' />
                                         </div>
+
+                                        <div class="col-md-2">
+                                            <livewire:number-input name="QUANTITY" titleName="Default Qty"
+                                                wire:model='QUANTITY' />
+                                            <livewire:custom-check-box name="IS_AUTO" titleName="Auto Default"
+                                                wire:model='IS_AUTO' />
+                                            <livewire:custom-check-box name="IS_AUTO_SC" titleName="Auto Charges"
+                                                wire:model='IS_AUTO_SC' />
+                                        </div>
+
+
 
                                         <div class="col-md-2">
                                             <livewire:number-input name="NEW_TREATMENT_QTY"
@@ -85,6 +89,8 @@
                                             {{-- FIRST_TIME_AUTO_NEW --}}
                                             <livewire:custom-check-box name="FIRST_TIME_AUTO_NEW"
                                                 titleName="Auto on New" wire:model='FIRST_TIME_AUTO_NEW' />
+                                            <livewire:custom-check-box name="FT_AUTO_SC" titleName="Auto New Charges"
+                                                wire:model='FT_AUTO_SC' />
                                         </div>
 
                                     </div>

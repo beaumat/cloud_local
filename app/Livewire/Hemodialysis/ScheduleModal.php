@@ -66,41 +66,13 @@ class ScheduleModal extends Component
                         $this->hemoServices->GetOtherDetailsDefault($HEMO_ID,  $data->CONTACT_ID, $this->DATE, $this->LOCATION_ID);
 
                         $NO = (int) $this->hemoServices->GetNoTreatment($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE);
-
-                        if ($NO <= 1) { // New
-                            $dataList = $this->itemTreatmentServices->NewAutoItemList($this->LOCATION_ID);           // show add new items
-                        } else {
-                            $dataList = $this->itemTreatmentServices->AutoItemList($this->LOCATION_ID);           // show add default items
-                        }
-
-                        foreach ($dataList as $data) {
-                            
-                            $IS_CASHIER = true;
-                            $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
-
-                            $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-
-                            $SK_LINE_ID  =  $this->hemoServices->ItemStore($HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, true, true, $IS_CASHIER, null, null);
-
-                            $dataTrigger = $this->itemTreatmentServices->getItemTrigger($data->ITEM_ID, $this->LOCATION_ID, $data->UNIT_ID);
-
-                            foreach ($dataTrigger  as $list) {
-                                $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
-                                $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
-                                $this->hemoServices->ItemStore($HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
-                            }
-                        }
-
-
-
-
+                        $this->hemoServices->AutoDefaultItem($NO,$HEMO_ID,$this->LOCATION_ID);
+                     
                         if ($this->ids == "") {
                             $this->ids = $HEMO_ID;
                         } else {
                             $this->ids = $this->ids . "," . $HEMO_ID;
                         }
-
-
 
                         DB::commit();
                         $isDone = true;

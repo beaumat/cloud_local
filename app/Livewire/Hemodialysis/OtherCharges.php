@@ -77,14 +77,14 @@ class OtherCharges extends Component
                 $scData =  $this->serviceChargeServices->ServicesChargesGetFirst($this->hemoData->DATE, $this->hemoData->CUSTOMER_ID, $this->hemoData->LOCATION_ID);
 
                 if ($scData) {
-                    // from cashier
+          
                     $SC_ITEM_ID =   $this->serviceChargeServices->ItemStore($scData->ID, $ITEM_ID, $QTY, $UNIT_ID, $QTY_BASED, $RATE, 0, $QTY * $RATE, $TAX, 0, 0, $data->COGS_ACCOUNT_ID ?? 0, $data->ASSET_ACCOUNT_ID ?? 0, $data->GL_ACCOUNT_ID ?? 0, 0, false, $PRICE_LEVEL_ID);
-                    // from treatment
+
                     $SK_LINE_ID =  $this->hemoServices->ItemStore($this->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID, $QTY_BASED, true, false, true, $SC_ITEM_ID);
-                    // calculate
+                 
                     $this->serviceChargeServices->ReComputed($scData->ID); // recompute balance
                 } else {
-                    // only treatment
+          
                     $SK_LINE_ID = $this->hemoServices->ItemStore($this->HEMO_ID, $ITEM_ID, 1, $UNIT_ID, 1, true, false, true);
                 }
 
@@ -94,8 +94,6 @@ class OtherCharges extends Component
                     $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
                     $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
                 }
-
-
 
                 DB::commit();
                 session()->flash('message', 'Successsfully added');
