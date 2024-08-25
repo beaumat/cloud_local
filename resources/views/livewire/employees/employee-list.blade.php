@@ -39,6 +39,7 @@
                                         <th>Address</th>
                                         <th>Mobile No.</th>
                                         <th>Email</th>
+                                        <th>Pin</th>
                                         <th class="text-center">Inactive</th>
                                         <th class="text-center bg-success col-1">
                                             <a href="{{ route('maintenancecontactemployees_create') }}"
@@ -55,6 +56,7 @@
                                             <td> {{ $list->POSTAL_ADDRESS }}</td>
                                             <td> {{ $list->MOBILE_NO }}</td>
                                             <td> {{ $list->EMAIL }}</td>
+                                            <td>{{ $list->PIN }}</td>
                                             <td class="text-center">
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
