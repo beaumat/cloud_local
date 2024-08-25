@@ -15,7 +15,7 @@ class EmployeeList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public int $perPage = 15;
+    public int $perPage = 25;
     public int $locationid = 0;
     private $contactServices;
 

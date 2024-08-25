@@ -70,7 +70,6 @@
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-
                                                 @can('contact.employee.delete')
                                                     <button type="button" wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"

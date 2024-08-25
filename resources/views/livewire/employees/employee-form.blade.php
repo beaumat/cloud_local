@@ -47,7 +47,7 @@
 
                                     </div>
                                 </div>
-                                <div class="card  card-tabs mt-2">
+                                <div class="card  card-tabs mt-1">
                                     <div class="card-header p-0 pt-1 border-bottom-0">
                                         <ul class="nav nav-tabs text-sm p-1" id="custom-content-below-tab"
                                             role="tablist">
@@ -89,7 +89,7 @@
                                                     <div class="row">
                                                         <div class="col-md-2">
 
-                                                            <div class="mt-2">
+                                                            <div class="mt-1">
                                                                 <label for="title" class="text-sm">Title</label>
                                                                 <select wire:model='SALUTATION'
                                                                     class="form-control form-control-sm"
@@ -106,15 +106,15 @@
                                                         </div>
                                                         <div class="col-md-4">
                                                             <livewire:text-input name="FIRST_NAME"
-                                                                titleName="First Name" wire:model='FIRST_NAME' />
+                                                                titleName="First Name" wire:model='FIRST_NAME' maxlength='60' />
                                                         </div>
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="MIDDLE_NAME" titleName="M.I"
-                                                                wire:model='MIDDLE_NAME' />
+                                                                wire:model='MIDDLE_NAME' maxlength='60' />
                                                         </div>
                                                         <div class="col-md-4">
                                                             <livewire:text-input name="LAST_NAME"
-                                                                titleName="Last Name" wire:model='LAST_NAME' />
+                                                                titleName="Last Name" wire:model='LAST_NAME' maxlength='60' />
                                                         </div>
                                                         <div class="col-md-12">
                                                             <livewire:text-input name="PRINT_NAME_AS"
@@ -126,7 +126,7 @@
                                                                 <div class="col-md-6">
                                                                     <div class="row">
                                                                         <div class="col-md-12">
-                                                                            <div class="mt-2">
+                                                                            <div class="mt-1">
                                                                                 <label for="postal-address"
                                                                                     class="text-sm">Postal
                                                                                     Address</label>
@@ -138,7 +138,7 @@
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="EMAIL"
                                                                                 titleName="Email"
-                                                                                wire:model='EMAIL' />
+                                                                                wire:model='EMAIL' maxlength='60'/>
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="SSS"
@@ -146,7 +146,7 @@
                                                                                 wire:model='SSS_NO' />
                                                                         </div>
                                                                         <div class="col-md-12">
-                                                                            <div class="mt-2">
+                                                                            <div class="mt-1">
                                                                                 <label for="dob"
                                                                                     class="text-sm">Date Of Birth
                                                                                 </label>
@@ -159,26 +159,25 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="row">
-
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="TELEPHONE_NO"
                                                                                 titleName="Telephone Number"
-                                                                                wire:model='TELEPHONE_NO' />
+                                                                                wire:model='TELEPHONE_NO' maxlength='60' />
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="FAX_NO"
                                                                                 titleName="Fax Number"
-                                                                                wire:model='FAX_NO' />
+                                                                                wire:model='FAX_NO' maxlength='60' />
 
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="MOBILE_NO"
                                                                                 titleName="Mobile Number"
-                                                                                wire:model='MOBILE_NO' />
+                                                                                wire:model='MOBILE_NO' maxlength='60' />
                                                                         </div>
                                                                         <div class="col-md-6">
 
-                                                                            <div class="mt-2">
+                                                                            <div class="mt-1">
                                                                                 <label for="gender"
                                                                                     class="text-sm">Gender</label>
                                                                                 <select wire:model='GENDER'
@@ -197,7 +196,7 @@
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="Nickname"
                                                                                 titleName="Position"
-                                                                                wire:model='NICKNAME' />
+                                                                                wire:model='NICKNAME' maxlength='60' />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -216,7 +215,7 @@
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="TAXPAYER_ID"
                                                                 titleName="Taxpayer ID No."
-                                                                wire:model='TAXPAYER_ID' />
+                                                                wire:model='TAXPAYER_ID' maxlength='60' />
                                                         </div>
                                                         <div class="col-md-4">
 
@@ -232,7 +231,7 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-md-3">
-                                                            <div class="mt-2">
+                                                            <div class="mt-1">
                                                                 <label for="dob" class="text-sm">Hire Date
                                                                 </label>
                                                                 <input type="date" name="hireDate"
@@ -244,22 +243,17 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <div class="mt-2">
+                                                            <div class="mt-1">
                                                                 <label for="dob" class="text-sm">Pin Code
                                                                 </label>
                                                                 <input type="text" name="PIN"
                                                                     class="form-control form-control-sm"
                                                                     wire:model='PIN' />
-
-
-
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -279,7 +273,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </form>
                     </div>
                 </div>
