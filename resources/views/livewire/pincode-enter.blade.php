@@ -17,11 +17,11 @@
                             title="Pin password" placeholder="Pin password" />
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-warning btn-md">
-                            <i class="fa fa-lock" aria-hidden="true"></i> OK
-                        </button>
+                        <button type="submit" class="btn btn-warning btn-md"> <i class="fa fa-lock"
+                                aria-hidden="true"></i> OK </button>
                         <button type="button" class="btn btn-secondary btn-md" wire:click="closeModal">Close</button>
-                        <i class="text-xs text-danger">Note: Enter the pin by using the first letters of the first name, middle name, and last name (e.g., Mario Santos Garcia becomes "msg").</i>
+                        <i class="text-xs text-danger">Note: Enter the pin by using the first letters of the first name,
+                            middle name, and last name (e.g., Mario Santos Garcia becomes "msg").</i>
                     </div>
                 </form>
             </div>

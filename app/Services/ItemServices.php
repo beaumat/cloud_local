@@ -236,7 +236,9 @@ class ItemServices
                 'item_class.DESCRIPTION as CLASS',
                 'item_group.DESCRIPTION as GROUP_NAME',
                 'stock_type_map.DESCRIPTION as STOCK_TYPE',
-                'unit_of_measure.NAME as UNIT_BASE'
+                'unit_of_measure.NAME as UNIT_BASE',
+                'item.NON_HEMO',
+                'item.HEMO_NON_INVENTORY'
             ])
             ->join('item_type_map', 'item_type_map.ID', '=', 'item.TYPE')
             ->leftJoin('item_sub_class', 'item_sub_class.ID', '=', 'item.SUB_CLASS_ID')

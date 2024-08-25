@@ -16,7 +16,7 @@ class ItemsList extends Component
     protected $paginationTheme = 'bootstrap';
     protected $queryString = ['search' => ['except' => '']];
     public $search = '';
-    public int $perPage = 30;
+    public int $perPage = 40;
     private $itemServices;
     public function boot(ItemServices $itemServices)
     {
@@ -32,12 +32,6 @@ class ItemsList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function render()
-    {
-
-        $items = $this->itemServices->Search($this->search, $this->perPage);
-        return view('livewire.item-page.items-list', ['items' => $items]);
-    }
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -45,5 +39,11 @@ class ItemsList extends Component
         // Clear session message and error
         session()->forget('message');
         session()->forget('error');
+    }
+    public function render()
+    {
+
+        $items = $this->itemServices->Search($this->search, $this->perPage);
+        return view('livewire.item-page.items-list', ['items' => $items]);
     }
 }
