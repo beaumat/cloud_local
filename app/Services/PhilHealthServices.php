@@ -64,7 +64,8 @@ class PhilHealthServices
     }
     public function setRRUpdate($ID, $RR_NO)
     {
-        PhilHealth::where('ID', $ID)->update(['RR_NO', $RR_NO]);
+        PhilHealth::where('ID', $ID)
+            ->update(['RR_NO' =>  $RR_NO]);
     }
     public function AutoMakeProfFeeDetails(int $PHIC_ID, int $PATIENT_ID, int $COUNT)
     {
@@ -214,6 +215,7 @@ class PhilHealthServices
             'STATUS_DATETIME'   => $this->dateServices->Now(),
         ]);
 
+        $this->setRRUpdate($ID, 20);
         return $ID;
     }
     public function PreSaveTemp(int $CONTACT_ID, int $LOCATION_ID,)
