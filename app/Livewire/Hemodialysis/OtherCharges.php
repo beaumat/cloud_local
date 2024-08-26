@@ -79,12 +79,9 @@ class OtherCharges extends Component
                 if ($scData) {
           
                     $SC_ITEM_ID =   $this->serviceChargeServices->ItemStore($scData->ID, $ITEM_ID, $QTY, $UNIT_ID, $QTY_BASED, $RATE, 0, $QTY * $RATE, $TAX, 0, 0, $data->COGS_ACCOUNT_ID ?? 0, $data->ASSET_ACCOUNT_ID ?? 0, $data->GL_ACCOUNT_ID ?? 0, 0, false, $PRICE_LEVEL_ID);
-
                     $SK_LINE_ID =  $this->hemoServices->ItemStore($this->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID, $QTY_BASED, true, false, true, $SC_ITEM_ID);
-                 
                     $this->serviceChargeServices->ReComputed($scData->ID); // recompute balance
                 } else {
-          
                     $SK_LINE_ID = $this->hemoServices->ItemStore($this->HEMO_ID, $ITEM_ID, 1, $UNIT_ID, 1, true, false, true);
                 }
 

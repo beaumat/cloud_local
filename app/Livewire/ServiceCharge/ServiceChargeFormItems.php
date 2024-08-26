@@ -235,7 +235,8 @@ class ServiceChargeFormItems extends Component
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
-            $this->serviceChargeServices->ItemStore(
+
+            $SK_ID =  $this->serviceChargeServices->ItemStore(
                 $this->SERVICE_CHARGES_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
@@ -258,7 +259,7 @@ class ServiceChargeFormItems extends Component
 
             $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
             if ($dataSC) {
-                $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->ITEM_ID,  $this->QUANTITY, false, $this->UNIT_ID > 0 ? $this->UNIT_ID : 0);
+                $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->ITEM_ID,  $this->QUANTITY, false, $this->UNIT_ID > 0 ? $this->UNIT_ID : 0, $SK_ID);
             }
             DB::commit();
 
@@ -392,7 +393,7 @@ class ServiceChargeFormItems extends Component
             if ($this->canBeQtyEdit) {
                 $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
                 if ($dataSC) {
-                    $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->lineItemId,  $this->lineQty, false,  $this->lineUnitId > 0 ? $this->lineUnitId : 0);
+                    $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->lineItemId,  $this->lineQty, false,  $this->lineUnitId > 0 ? $this->lineUnitId : 0, $Id);
                 }
             }
 
@@ -436,7 +437,7 @@ class ServiceChargeFormItems extends Component
                 $this->serviceChargeServices->ItemDelete($Id, $this->SERVICE_CHARGES_ID); // Delete Transaction
                 $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
                 if ($dataSC) {
-                    $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $getItemInfo->ITEM_ID, 0, true, $getItemInfo->UNIT_ID ?? 0);
+                    $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $getItemInfo->ITEM_ID, 0, true, $getItemInfo->UNIT_ID ?? 0, $Id);
                 }
             }
             DB::commit();

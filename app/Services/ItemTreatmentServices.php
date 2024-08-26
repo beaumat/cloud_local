@@ -331,6 +331,26 @@ class ItemTreatmentServices
         return $result;
     }
 
+    public function getItemTriggerQuantity(int $ITEM_ID, int $LOCATION_ID, int $UNIT_ID, int  $TRIGGER_ITEM_ID, int $TRIGGER_UNIT_ID): int
+    {
+        $result =  ItemTreatmentTrigger::query()
+            ->select([
+                'item_treatment_trigger.QUANTITY'
+            ])
+            ->join('item_treatment', 'item_treatment.ID', '=', 'item_treatment_trigger.ITEM_TREATMENT_ID')
+            ->where('item_treatment.ITEM_ID', $ITEM_ID)
+            ->where('item_treatment.LOCATION_ID', $LOCATION_ID)
+            ->where('item_treatment.UNIT_ID', $UNIT_ID)
+            ->where('item_treatment_trigger.ITEM_ID', $TRIGGER_ITEM_ID)
+            ->where('item_treatment_trigger.UNIT_ID', $TRIGGER_UNIT_ID)
+            ->first();
+
+
+
+
+        return (int) $result->QUANTITY ?? 0;
+    }
+
     public function getItemTreatmentID(int $ITEM_ID, int $LOCATION_ID, int $UNIT_ID): int
     {
         $result = ItemTreatment::where('ITEM_ID', $ITEM_ID)

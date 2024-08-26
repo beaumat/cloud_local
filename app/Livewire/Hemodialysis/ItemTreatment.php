@@ -44,9 +44,7 @@ class ItemTreatment extends Component
                 }
 
                 $SK_LINE_ID  =  $this->hemoServices->ItemStore($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew, true);
-
                 $dataTrigger = $this->itemTreatmentServices->listItemTrigger($ItemTreatmentId);
-
                 foreach ($dataTrigger  as $list) {
                     $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
                     $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];

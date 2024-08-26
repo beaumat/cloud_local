@@ -19,8 +19,16 @@ class HemoServices
     private $unitOfMeasureServices;
     private $itemServices;
     private $itemInventoryServices;
-    public function __construct(ObjectServices $objectService, UserServices $userServices, SystemSettingServices $systemSettingServices, DateServices $dateServices, ItemTreatmentServices $itemTreatmentServices, UnitOfMeasureServices $unitOfMeasureServices, ItemServices $itemServices, ItemInventoryServices $itemInventoryServices)
-    {
+    public function __construct(
+        ObjectServices $objectService,
+        UserServices $userServices,
+        SystemSettingServices $systemSettingServices,
+        DateServices $dateServices,
+        ItemTreatmentServices $itemTreatmentServices,
+        UnitOfMeasureServices $unitOfMeasureServices,
+        ItemServices $itemServices,
+        ItemInventoryServices $itemInventoryServices
+    ) {
         $this->object = $objectService;
         $this->user = $userServices;
         $this->systemSettingServices = $systemSettingServices;
@@ -835,7 +843,7 @@ class HemoServices
     }
     public function IsExist_SC_ITEM(int $SC_ITEM_ID): bool
     {
-        return  HemodialysisItems::where('SC_ITEM_ID', $SC_ITEM_ID)->exists();
+        return  HemodialysisItems::where('SC_ITEM_ID', $SC_ITEM_ID)->where('IS_CASHIER', true)->exists();
     }
     public function ItemDelete(int $ID, int $HEMO_ID, int $ITEM_ID, bool $IS_DEFAULT)
     {
@@ -886,6 +894,7 @@ class HemoServices
                 'hemodialysis_items.IS_NEW',
                 'hemodialysis_items.IS_DEFAULT',
                 'hemodialysis_items.IS_CASHIER',
+                'hemodialysis_items.SK_LINE_ID',
                 'item.CODE',
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
@@ -1088,7 +1097,7 @@ class HemoServices
 
         return false;
     }
-    public function ItemQuery(int $PATIENT_ID, string $DATE, int $LOCATION_ID, int $ITEM_ID, float $QTY, bool $IS_DELETE, int $UNIT_ID)
+    public function ItemQuery(int $PATIENT_ID, string $DATE, int $LOCATION_ID, int $ITEM_ID, float $QTY, bool $IS_DELETE, int $UNIT_ID, int $SC_ITEM_ID)
     {
 
         $itemDetails =  $this->itemServices->get($ITEM_ID);
@@ -1116,13 +1125,34 @@ class HemoServices
         if ($dataItem) { // HEMO EXISTS
             if ($IS_DELETE) {
                 $this->ItemDelete($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, false); // deleted
+                $this->ItemDeleteTrigger($dataItem->ID, $dataItem->HEMO_ID);
                 return;
             }
 
 
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+
             $this->ItemUpdate($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID,  $UNIT_BASE_QUANTITY, true, false); // updated
+            $dataTrigger = HemodialysisItems::query()
+                ->select([
+                    'hemodialysis_items.ID',
+                    'hemodialysis_items.HEMO_ID',
+                    'hemodialysis_items.ITEM_ID',
+                    'hemodialysis_items.UNIT_ID',
+                    'hemodialysis_items.UNIT_BASE_QUANTITY'
+                ])
+                ->where('hemodialysis_items.SK_LINE_ID', $dataItem->ID)
+                ->get();
+
+            foreach ($dataTrigger  as $list) {
+                $ORG_QTY = $this->itemTreatmentServices->getItemTriggerQuantity($ITEM_ID, $LOCATION_ID, $UNIT_ID, $list->ITEM_ID, $list->UNIT_ID);
+                $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
+                $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+                $N_QTY =  $ORG_QTY * $QTY;
+                $this->ItemUpdate($list->ID, $list->HEMO_ID, $list->ITEM_ID, $N_QTY, $list->UNIT_ID, $TR_UNIT_BASE_QUANTITY, true, true);
+            }
+
             return;
         }
         // new item
@@ -1135,7 +1165,16 @@ class HemoServices
         if ($hemoData) {
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-            $this->ItemStore($hemoData->ID, $ITEM_ID, $QTY, $UNIT_ID, $UNIT_BASE_QUANTITY, true, false); // created
+            $SK_LINE_ID =  $this->ItemStore($hemoData->ID, $ITEM_ID, $QTY, $UNIT_ID, $UNIT_BASE_QUANTITY, true, false, false, $SC_ITEM_ID, null); // created
+
+            $dataTrigger = $this->itemTreatmentServices->getItemTrigger($ITEM_ID, $LOCATION_ID, $UNIT_ID);
+
+            foreach ($dataTrigger  as $list) {
+                $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
+                $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+                $N_QTY =  $list->QUANTITY * $QTY;
+                $this->ItemStore($hemoData->ID, $list->ITEM_ID, $N_QTY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
+            }
         }
     }
 
@@ -1189,15 +1228,11 @@ class HemoServices
         foreach ($dataList as $data) {
 
             $IS_CASHIER = (bool) $data->IS_CASHIER;
-
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
-
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-
             $SK_LINE_ID  =  $this->ItemStore($HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, true, true, $IS_CASHIER, null, null);
 
             $dataTrigger = $this->itemTreatmentServices->getItemTrigger($data->ITEM_ID, $LOCATION_ID, $data->UNIT_ID);
-
             foreach ($dataTrigger as $list) {
                 $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
                 $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
