@@ -620,7 +620,7 @@
                                     RR:
                                 </div>
                                 <div class="col-8 bottom-line2">
-                                    {{ $POST_O2_SATURATION }} &nbsp;
+                                    {{ $RR_NO }} &nbsp;
                                 </div>
                             </div>
                         </div>

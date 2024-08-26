@@ -101,7 +101,8 @@ class PhilHealth extends Model
         'IS_TEMP',
         'PF_RECEIVED_DATE',
         'AR_NO',
-        'AR_DATE'
+        'AR_DATE',
+        'RR_NO'
     ];
 
 }

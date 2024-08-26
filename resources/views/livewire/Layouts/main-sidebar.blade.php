@@ -47,7 +47,7 @@
                 @endif
                 @if (Auth::user()->can('report.patient.sales') ||
                 Auth::user()->can('report.patient.balance') ||
-                Auth::user()-can('report.patient.doctor-pf') ||
+                Auth::user()->can('report.patient.doctor-pf') ||
                 Auth::user()->can('report.financial.income-statement') ||
                 Auth::user()->can('report.financial.balance-sheet') ||
                 Auth::user()->can('report.financial.cash-flow') ||

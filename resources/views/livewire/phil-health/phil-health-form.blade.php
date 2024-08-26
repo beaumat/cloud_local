@@ -6,7 +6,8 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' =>
+                session('message'), 'error' => session('error')])
                 <div class="col-md-12">
                     <div class="card">
                         <div class="pt-1 pb-1 card-header bg-sky">
@@ -19,7 +20,7 @@
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)
-                                        <i> {{ $STATUS_DESCRIPTION }}</i>
+                                    <i> {{ $STATUS_DESCRIPTION }}</i>
                                     @endif
                                 </div>
                             </div>
@@ -32,35 +33,31 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     @if ($Modify)
-                                                        <livewire:select-option name="CONTACT_ID" titleName="Patient"
-                                                            :options="$patientList" :zero="true" :isDisabled=false
-                                                            wire:model.live='CONTACT_ID' />
+                                                    <livewire:select-option name="CONTACT_ID" titleName="Patient"
+                                                        :options="$patientList" :zero="true" :isDisabled=false
+                                                        wire:model.live='CONTACT_ID' />
                                                     @else
-                                                        <livewire:select-option name="CONTACT_ID" titleName="Patient"
-                                                            :options="$patientList" :zero="true" :isDisabled=true
-                                                            wire:model.live='CONTACT_ID' />
+                                                    <livewire:select-option name="CONTACT_ID" titleName="Patient"
+                                                        :options="$patientList" :zero="true" :isDisabled=true
+                                                        wire:model.live='CONTACT_ID' />
                                                     @endif
                                                 </div>
                                                 <div class="col-md-6">
                                                     @if ($Modify)
-                                                        <livewire:date-input name="DATE_ADMITTED"
-                                                            titleName="Date Admitted" wire:model='DATE_ADMITTED'
-                                                            :isDisabled="false" />
+                                                    <livewire:date-input name="DATE_ADMITTED" titleName="Date Admitted"
+                                                        wire:model='DATE_ADMITTED' :isDisabled="false" />
                                                     @else
-                                                        <livewire:date-input name="DATE_ADMITTED"
-                                                            titleName="Date Admitted" wire:model='DATE_ADMITTED'
-                                                            :isDisabled="true" />
+                                                    <livewire:date-input name="DATE_ADMITTED" titleName="Date Admitted"
+                                                        wire:model='DATE_ADMITTED' :isDisabled="true" />
                                                     @endif
                                                 </div>
                                                 <div class="col-md-6">
                                                     @if ($Modify)
-                                                        <livewire:time-input name="TIME_ADMITTED"
-                                                            titleName="Time Admitted" wire:model='TIME_ADMITTED'
-                                                            :isDisabled="false" />
+                                                    <livewire:time-input name="TIME_ADMITTED" titleName="Time Admitted"
+                                                        wire:model='TIME_ADMITTED' :isDisabled="false" />
                                                     @else
-                                                        <livewire:time-input name="TIME_ADMITTED"
-                                                            titleName="Time Admitted" wire:model='TIME_ADMITTED'
-                                                            :isDisabled="true" />
+                                                    <livewire:time-input name="TIME_ADMITTED" titleName="Time Admitted"
+                                                        wire:model='TIME_ADMITTED' :isDisabled="true" />
                                                     @endif
                                                 </div>
 
@@ -70,29 +67,29 @@
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <livewire:date-input name="DATE" titleName="Date"
-                                                        wire:model='DATE' :isDisabled="true" />
+                                                    <livewire:date-input name="DATE" titleName="Date" wire:model='DATE'
+                                                        :isDisabled="true" />
                                                 </div>
                                                 <div class="col-md-3">
                                                     @if ($Modify)
-                                                        <livewire:text-input name="Code" titleName="SOA No."
-                                                            :isDisabled=false wire:model='CODE' />
+                                                    <livewire:text-input name="Code" titleName="SOA No."
+                                                        :isDisabled=false wire:model='CODE' />
                                                     @else
-                                                        <livewire:text-input name="Code" titleName="SOA No."
-                                                            :isDisabled=true wire:model='CODE' />
+                                                    <livewire:text-input name="Code" titleName="SOA No."
+                                                        :isDisabled=true wire:model='CODE' />
                                                     @endif
 
                                                 </div>
-                                                <div class="col-md-3"
-                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="col-md-3" @if (Auth::user()->locked_location)
+                                                    style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($Modify)
-                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                            :options="$locationList" :zero="false" :isDisabled=false
-                                                            wire:model='LOCATION_ID' />
+                                                    <livewire:select-option name="LOCATION_ID" titleName="Location"
+                                                        :options="$locationList" :zero="false" :isDisabled=false
+                                                        wire:model='LOCATION_ID' />
                                                     @else
-                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                            :options="$locationList" :zero="false" :isDisabled=true
-                                                            wire:model='LOCATION_ID' />
+                                                    <livewire:select-option name="LOCATION_ID" titleName="Location"
+                                                        :options="$locationList" :zero="false" :isDisabled=true
+                                                        wire:model='LOCATION_ID' />
                                                     @endif
                                                 </div>
                                                 <div class="col-md-3">
@@ -100,24 +97,24 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     @if ($Modify)
-                                                        <livewire:date-input name="DATE_DISCHARGED"
-                                                            titleName="Date Discharged" wire:model='DATE_DISCHARGED'
-                                                            :isDisabled="false" />
+                                                    <livewire:date-input name="DATE_DISCHARGED"
+                                                        titleName="Date Discharged" wire:model='DATE_DISCHARGED'
+                                                        :isDisabled="false" />
                                                     @else
-                                                        <livewire:date-input name="DATE_DISCHARGED"
-                                                            titleName="Date Discharged" wire:model='DATE_DISCHARGED'
-                                                            :isDisabled="true" />
+                                                    <livewire:date-input name="DATE_DISCHARGED"
+                                                        titleName="Date Discharged" wire:model='DATE_DISCHARGED'
+                                                        :isDisabled="true" />
                                                     @endif
                                                 </div>
                                                 <div class="col-md-3">
                                                     @if ($Modify)
-                                                        <livewire:time-input name="TIME_DISCHARGED"
-                                                            titleName="Time Discharged" wire:model='TIME_DISCHARGED'
-                                                            :isDisabled="false" />
+                                                    <livewire:time-input name="TIME_DISCHARGED"
+                                                        titleName="Time Discharged" wire:model='TIME_DISCHARGED'
+                                                        :isDisabled="false" />
                                                     @else
-                                                        <livewire:time-input name="TIME_DISCHARGED"
-                                                            titleName="Time Discharged" wire:model='TIME_DISCHARGED'
-                                                            :isDisabled="true" />
+                                                    <livewire:time-input name="TIME_DISCHARGED"
+                                                        titleName="Time Discharged" wire:model='TIME_DISCHARGED'
+                                                        :isDisabled="true" />
                                                     @endif
                                                 </div>
                                                 <div class="col-md-3">
@@ -138,47 +135,46 @@
                                 <div class="row">
                                     <div class="col-md-6 col-6">
                                         @if ($STATUS == 0)
-                                            @if ($Modify)
-                                                <button type="submit" class="btn btn-sm btn-success text-xs">
-                                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
+                                        @if ($Modify)
+                                        <button type="submit" class="btn btn-sm btn-success text-xs">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                            {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
-                                                @if ($ID > 0)
-                                                    <button type="button" wire:click='updateCancel'
-                                                        class="btn btn-sm btn-danger text-xs"><i class="fa fa-ban"
-                                                            aria-hidden="true"></i> Cancel</button>
-                                                @endif
-                                            @else
-                                                <button type="button" wire:click='getModify()'
-                                                    class="btn btn-sm btn-info text-xs"
-                                                    @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                                </button>
+                                        @if ($ID > 0)
+                                        <button type="button" wire:click='updateCancel'
+                                            class="btn btn-sm btn-danger text-xs"><i class="fa fa-ban"
+                                                aria-hidden="true"></i> Cancel</button>
+                                        @endif
+                                        @else
+                                        <button type="button" wire:click='getModify()'
+                                            class="btn btn-sm btn-info text-xs" @if ($STATUS> 0) style="opacity:
+                                            0.5;pointer-events: none;" @endif>
+                                            <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                        </button>
 
-                                                <button type="button" wire:click="getARForm()"
-                                                    class="btn btn-success active btn-sm text-xs">
-                                                    <i class="fa fa-registered" aria-hidden="true"></i> LHIO Form
-                                                </button>
-                                            @endif
+                                        <button type="button" wire:click="getARForm()"
+                                            class="btn btn-success active btn-sm text-xs">
+                                            <i class="fa fa-registered" aria-hidden="true"></i> LHIO Form
+                                        </button>
+                                        @endif
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @can('patient.philhealth.print')
 
-                                            @if ($ID > 0)
-                                                <button type="button" class="btn btn-sm btn-primary text-xs"
-                                                    wire:click='print()'>
-                                                    <i class="fa fa-print" aria-hidden="true"></i> Print
-                                                </button>
-                                            @endif
+                                        @if ($ID > 0)
+                                        <button type="button" class="btn btn-sm btn-primary text-xs"
+                                            wire:click='print()'>
+                                            <i class="fa fa-print" aria-hidden="true"></i> Print
+                                        </button>
+                                        @endif
                                         @endcan
                                         @can('patient.philhealth.create')
-                                            @if ($ID > 0)
-                                                <a id="new" title="Create"
-                                                    href="{{ route('patientsphic_create') }}"
-                                                    class="btn btn-success btn-sm text-xs"> <i class="fas fa-plus"></i>
-                                                    New </a>
-                                            @endif
+                                        @if ($ID > 0)
+                                        <a id="new" title="Create" href="{{ route('patientsphic_create') }}"
+                                            class="btn btn-success btn-sm text-xs"> <i class="fas fa-plus"></i>
+                                            New </a>
+                                        @endif
                                         @endcan
 
                                     </div>
@@ -192,107 +188,117 @@
         </div>
     </section>
     @if ($ID > 0)
-        <section class="content">
-            <div class="container-fluid bg-light">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card card-primary card-outline card-outline-tabs">
-                            <div class="card-header p-0 border-bottom-0">
-                                <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link @if ($tab == 'soa') active @endif"
-                                            id="custom-tabs-four-soa-tab" wire:click="SelectTab('soa')"
-                                            data-toggle="pill" href="#custom-tabs-four-soa" role="tab"
-                                            aria-controls="custom-tabs-four-soa" aria-selected="true">
-                                            Summary of Fees
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @if ($tab == 'treatment') active @endif"
-                                            id="custom-tabs-four-treatment-tab" wire:click="SelectTab('treatment')"
-                                            data-toggle="pill" href="#custom-tabs-four-treatment" role="tab"
-                                            aria-controls="custom-tabs-four-treatment" aria-selected="true">Treatment
-                                            Summary</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @if ($tab == 'drugNmed') active @endif"
-                                            id="custom-tabs-four-drugNmed-tab" wire:click="SelectTab('drugNmed')"
-                                            data-toggle="pill" href="#custom-tabs-four-drugNmed" role="tab"
-                                            aria-controls="custom-tabs-four-drugNmed" aria-selected="true">Drug &
-                                            Medicines</a>
-                                    </li>
+    <section class="content">
+        <div class="container-fluid bg-light">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary card-outline card-outline-tabs">
+                        <div class="card-header p-0 border-bottom-0">
+                            <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link @if ($tab == 'soa') active @endif" id="custom-tabs-four-soa-tab"
+                                        wire:click="SelectTab('soa')" data-toggle="pill" href="#custom-tabs-four-soa"
+                                        role="tab" aria-controls="custom-tabs-four-soa" aria-selected="true">
+                                        Summary of Fees
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if ($tab == 'treatment') active @endif"
+                                        id="custom-tabs-four-treatment-tab" wire:click="SelectTab('treatment')"
+                                        data-toggle="pill" href="#custom-tabs-four-treatment" role="tab"
+                                        aria-controls="custom-tabs-four-treatment" aria-selected="true">Treatment
+                                        Summary</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if ($tab == 'drugNmed') active @endif"
+                                        id="custom-tabs-four-drugNmed-tab" wire:click="SelectTab('drugNmed')"
+                                        data-toggle="pill" href="#custom-tabs-four-drugNmed" role="tab"
+                                        aria-controls="custom-tabs-four-drugNmed" aria-selected="true">Drug &
+                                        Medicines</a>
+                                </li>
 
-                                    <li class="nav-item">
-                                        <a class="nav-link @if ($tab == 'payment') active @endif"
-                                            id="custom-tabs-four-payment-tab" wire:click="SelectTab('payment')"
-                                            data-toggle="pill" href="#custom-tabs-four-payment" role="tab"
-                                            aria-controls="custom-tabs-four-payment" aria-selected="true">Payments</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="card-body">
-                                <div class="tab-content" id="custom-tabs-four-tabContent">
-                                    <div class="tab-pane fade @if ($tab == 'soa') show active @endif"
-                                        id="custom-tabs-four-soa" role="tabpanel"
-                                        aria-labelledby="custom-tabs-four-soa-tab">
-                                        <div class="row"
-                                            @if ($ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <div class="col-md-12">
-                                                @livewire('PhilHealth.StatementOfAccount', ['ID' => $ID])
-                                            </div>
+                                <li class="nav-item">
+                                    <a class="nav-link @if ($tab == 'payment') active @endif"
+                                        id="custom-tabs-four-payment-tab" wire:click="SelectTab('payment')"
+                                        data-toggle="pill" href="#custom-tabs-four-payment" role="tab"
+                                        aria-controls="custom-tabs-four-payment" aria-selected="true">Payments</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if ($tab == 'other') active @endif"
+                                        id="custom-tabs-four-other-tab" wire:click="SelectTab('other')"
+                                        data-toggle="pill" href="#custom-tabs-four-other" role="tab"
+                                        aria-controls="custom-tabs-four-other" aria-selected="true">Others</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="custom-tabs-four-tabContent">
+                                <div class="tab-pane fade @if ($tab == 'soa') show active @endif"
+                                    id="custom-tabs-four-soa" role="tabpanel"
+                                    aria-labelledby="custom-tabs-four-soa-tab">
+                                    <div class="row" @if ($ID==0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                        <div class="col-md-12">
+                                            @livewire('PhilHealth.StatementOfAccount', ['ID' => $ID])
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade @if ($tab == 'treatment') show active @endif"
-                                        id="custom-tabs-four-treatment" role="tabpanel"
-                                        aria-labelledby="custom-tabs-four-treatment-tab">
-                                        <div class="row"
-                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <div class="col-md-12"
-                                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('PhilHealth.TreatmentSummary', ['CONTACT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE_ADMITTED' => $DATE_ADMITTED, 'DATE_DISCHARGED' => $DATE_DISCHARGED])
-                                            </div>
+                                <div class="tab-pane fade @if ($tab == 'treatment') show active @endif"
+                                    id="custom-tabs-four-treatment" role="tabpanel"
+                                    aria-labelledby="custom-tabs-four-treatment-tab">
+                                    <div class="row" @if ($ID===0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                        <div class="col-md-12" @if ($Modify==true)
+                                            style="opacity: 0.5;pointer-events: none;" @endif>
+                                            @livewire('PhilHealth.TreatmentSummary', ['CONTACT_ID' => $CONTACT_ID,
+                                            'LOCATION_ID' => $LOCATION_ID, 'DATE_ADMITTED' => $DATE_ADMITTED,
+                                            'DATE_DISCHARGED' => $DATE_DISCHARGED])
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade @if ($tab == 'drugNmed') show active @endif"
-                                        id="custom-tabs-four-drugNmed" role="tabpanel"
-                                        aria-labelledby="custom-tabs-four-drugNmed-tab">
-                                        <div class="row"
-                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <div class="col-md-12">
-                                                @livewire('PhilHealth.DrugMedicines', ['PHILHEALTH_ID' => $ID])
-                                            </div>
+                                </div>
+                                <div class="tab-pane fade @if ($tab == 'drugNmed') show active @endif"
+                                    id="custom-tabs-four-drugNmed" role="tabpanel"
+                                    aria-labelledby="custom-tabs-four-drugNmed-tab">
+                                    <div class="row" @if ($ID===0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                        <div class="col-md-12">
+                                            @livewire('PhilHealth.DrugMedicines', ['PHILHEALTH_ID' => $ID])
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade @if ($tab == 'payment') show active @endif"
-                                        id="custom-tabs-four-payment" role="tabpanel"
-                                        aria-labelledby="custom-tabs-four-payment-tab">
-                                        <div class="row"
-                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <div class="col-md-12">
-                                                @livewire('PhilHealth.PaymentList', ['PHILHEALTH_ID' => $ID, 'PATIENT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID])
-                                            </div>
+                                <div class="tab-pane fade @if ($tab == 'payment') show active @endif"
+                                    id="custom-tabs-four-payment" role="tabpanel"
+                                    aria-labelledby="custom-tabs-four-payment-tab">
+                                    <div class="row" @if ($ID===0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                        <div class="col-md-12">
+                                            @livewire('PhilHealth.PaymentList', ['PHILHEALTH_ID' => $ID, 'PATIENT_ID' =>
+                                            $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID])
                                         </div>
                                     </div>
-
+                                </div>
+                                <div class="tab-pane fade @if ($tab == 'other') show active @endif"
+                                    id="custom-tabs-four-other" role="tabpanel"
+                                    aria-labelledby="custom-tabs-four-other-tab">
+                                    <div class="row" @if ($ID===0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                        <div class="col-md-12">
+                                            @livewire('PhilHealth.Others', ['PHILHEALTH_ID' => $ID ])
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <div class="row">
-                                    <div class="col-md-4 text-left">
-
-                                    </div>
-                                    <div class="col-md-8">
-
-                                    </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-md-4 text-left">
+                                </div>
+                                <div class="col-md-8">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
     @endif
     @livewire('PhilHealth.ArForm')
     @livewire('PhilHealth.PrintModal')

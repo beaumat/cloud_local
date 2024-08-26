@@ -53,7 +53,7 @@ class PrintCf4 extends Component
     public string $MEMBER_EXTENSION;
     public string $MEMBER_BIRTH_DATE;
     public int $MEMBER_GENDER;
-    
+
     public string $NAME_OF_BUSINESS;
     public string $ACCREDITATION_NO;
     public string $BLDG_NAME_LOT_BLOCK;
@@ -73,6 +73,8 @@ class PrintCf4 extends Component
     public string $POST_O2_SATURATION;
     public string $POST_TEMPERATURE;
     public string $POST_BLOOD_PRESSURE2;
+
+    public string $RR_NO;
     private $philHealthServices;
     private $contactServices;
     private $locationServices;
@@ -94,6 +96,7 @@ class PrintCf4 extends Component
             $this->FIRST_CASE_RATE = '90935';
             $data = $this->philHealthServices->get($id);
             if ($data) {
+                $this->RR_NO = $data->RR_NO ?? '';
                 $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
                 $this->TIME_ADMITTED = $data->TIME_ADMITTED ? Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A') : '';
                 $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
