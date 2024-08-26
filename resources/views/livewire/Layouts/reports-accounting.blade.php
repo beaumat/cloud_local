@@ -7,19 +7,25 @@
         <li class="nav-item">
             <a href="#" class="nav-link">
                 <i class="fa fa-print  nav-icon"></i>
-                <p>Level 3</p>
+                <p>General Journal</p>
             </a>
         </li>
         <li class="nav-item">
             <a href="#" class="nav-link">
                 <i class="fa fa-print  nav-icon"></i>
-                <p>Level 3</p>
+                <p>Trial Balance</p>
             </a>
         </li>
         <li class="nav-item">
             <a href="#" class="nav-link">
                 <i class="fa fa-print  nav-icon"></i>
-                <p>Level 3</p>
+                <p>Transaction Details</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="fa fa-print  nav-icon"></i>
+                <p>Transaction Journal</p>
             </a>
         </li>
     </ul>

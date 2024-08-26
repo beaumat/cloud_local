@@ -45,18 +45,43 @@
                 Auth::user()->can('banking.make-cheque.view'))
                 @livewire('Layouts.BankingMenu')
                 @endif
-                @if (Auth::user()->can('report.patient.sales') || Auth::user()->can('report.patient.balance') ||
-                Auth::user()-can('report.patient.doctor-pf'))
+                @if (Auth::user()->can('report.patient.sales') ||
+                Auth::user()->can('report.patient.balance') ||
+                Auth::user()-can('report.patient.doctor-pf') ||
+                Auth::user()->can('report.financial.income-statement') ||
+                Auth::user()->can('report.financial.balance-sheet') ||
+                Auth::user()->can('report.financial.cash-flow') ||
+                Auth::user()->can('report.accounting.general-ledger') ||
+                Auth::user()->can('report.accounting.trial-balance') ||
+                Auth::user()->can('report.accounting.transaction-details') ||
+                Auth::user()->can('report.accounting.transaction-journal') )
                 <li class="nav-item {{ request()->is('reports*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}">
                         <i class="nav-icon fa fa-line-chart"></i>
                         <p> Reports <i class="right fas fa-angle-left"></i> </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        @if (Auth::user()->can('report.patient.sales') || Auth::user()->can('report.patient.balance') ||
-                        Auth::user()-can('report.patient.doctor-pf'))
+                        @if (Auth::user()->can('report.patient.sales') ||
+                        Auth::user()->can('report.patient.balance') ||
+                        Auth::user()->can('report.patient.doctor-pf'))
                         @livewire('Layouts.ReportsPatients')
                         @endif
+
+                        @if (Auth::user()->can('report.accounting.general-ledge') ||
+                        Auth::user()->can('report.accounting.trial-balance') ||
+                        Auth::user()->can('report.accounting.transaction-journal') ||
+                        Auth::user()->can('report.accounting.transaction-details'))
+                        @livewire('Layouts.ReportsAccounting')
+                        @endif
+
+
+                        @if (Auth::user()->can('report.financial.income-statement') ||
+                        Auth::user()->can('report.financial.balance-sheet') ||
+                        Auth::user()->can('report.financial.cash-flow'))
+                        @livewire('Layouts.ReportsFinancial')
+                        @endif
+
+
                     </ul>
                 </li>
                 @endif

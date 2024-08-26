@@ -154,18 +154,18 @@
                         <div class="col-3 left-line2 bottom-line2">
                             <label> 2. PIN</label> <br />
                             <h5 class="text-uppercase times-new-roman"> <b class="">
-                                    {{ substr($PIN, 0, 1) }}
-                                    {{ substr($PIN, 1, 1) }} -
-                                    {{ substr($PIN, 2, 1) }}
-                                    {{ substr($PIN, 3, 1) }}
-                                    {{ substr($PIN, 4, 1) }}
-                                    {{ substr($PIN, 5, 1) }}
-                                    {{ substr($PIN, 6, 1) }}
-                                    {{ substr($PIN, 7, 1) }}
-                                    {{ substr($PIN, 8, 1) }}
-                                    {{ substr($PIN, 9, 1) }}
-                                    {{ substr($PIN, 10, 1) }} -
-                                    {{ substr($PIN, 11, 1) }}
+                                    {{ substr($PIN_DEPENDENT, 0, 1) }}
+                                    {{ substr($PIN_DEPENDENT, 1, 1) }} -
+                                    {{ substr($PIN_DEPENDENT, 2, 1) }}
+                                    {{ substr($PIN_DEPENDENT, 3, 1) }}
+                                    {{ substr($PIN_DEPENDENT, 4, 1) }}
+                                    {{ substr($PIN_DEPENDENT, 5, 1) }}
+                                    {{ substr($PIN_DEPENDENT, 6, 1) }}
+                                    {{ substr($PIN_DEPENDENT, 7, 1) }}
+                                    {{ substr($PIN_DEPENDENT, 8, 1) }}
+                                    {{ substr($PIN_DEPENDENT, 9, 1) }}
+                                    {{ substr($PIN_DEPENDENT, 10, 1) }} -
+                                    {{ substr($PIN_DEPENDENT, 11, 1) }}
                                 </b></h5>
 
                         </div>
