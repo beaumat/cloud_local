@@ -894,7 +894,7 @@ class HemoServices
                 'hemodialysis_items.IS_NEW',
                 'hemodialysis_items.IS_DEFAULT',
                 'hemodialysis_items.IS_CASHIER',
-                'hemodialysis_items.SK_LINE_ID',
+                DB::raw('IFNULL(hemodialysis_items.SK_LINE_ID,0) as SK_LINE_ID'),
                 'item.CODE',
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
