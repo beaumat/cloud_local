@@ -5,7 +5,7 @@
         <div class="form-group">
             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' =>
             session('message'), 'error' => session('error')])
-            <label class="text-xs">RR No.</label>
+            <label class="text-xs">RR :</label>
             <input type="text" class="form-control text-xs w-25"  wire:model='RR_NO' title="RR :"
                 placeholder="Please enter RR" maxlength="3" />
         </div>
