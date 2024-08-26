@@ -83,6 +83,7 @@ use App\Livewire\Patient\PatientForm;
 use App\Livewire\Patient\PatientList;
 use App\Livewire\PatientReport\DoctorProFeeReport;
 use App\Livewire\PatientReport\DoctorsFeeReportPrint;
+use App\Livewire\PatientReport\PatientBalanceReport;
 use App\Livewire\PatientReport\PatientSalesReport;
 use App\Livewire\PatientReport\PatientSalesReportPrint;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
@@ -463,6 +464,11 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/sales')->group(function () {
                 Route::get('/', PatientSalesReport::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
             });
+
+            Route::prefix('/balance')->group(function () {
+                Route::get('/', PatientBalanceReport::class)->name('patient_balance_report')->middleware(['permission:report.patient.balance']);
+            });
+
 
             Route::prefix('/doctor-pro-fees')->group(function () {
                 Route::get('/', DoctorProFeeReport::class)->name('patient_doctor_fee_report')->middleware(['permission:report.patient.doctor-pf']);

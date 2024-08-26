@@ -1,8 +1,7 @@
 
                     <li class="nav-item {{ request()->is('customers*') ? 'menu-open' : '' }}">
-
-                        <a href="#" class="nav-link {{ request()->is('customers*') ? 'active ' : '' }}"> <i
-                                class="nav-icon fas fa-users "></i>
+                        <a href="#" class="nav-link {{ request()->is('customers*') ? 'active ' : '' }}"> 
+                            <i class="nav-icon fas fa-users "></i>
                             <p> Customers <i class="fas fa-angle-left right"></i> </p>
                         </a>
 
