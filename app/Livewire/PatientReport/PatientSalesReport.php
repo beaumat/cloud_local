@@ -17,9 +17,6 @@ use Livewire\Component;
 class PatientSalesReport extends Component
 {
 
-
-
-
     public int $PATIENT_ID;
     public int $LOCATION_ID;
     public $locationList = [];

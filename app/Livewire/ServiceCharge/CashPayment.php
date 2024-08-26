@@ -34,6 +34,7 @@ class CashPayment extends Component
     public function openModal($itemdata)
     {
         $this->SERVICE_CHARGES_ITEM_ID = (int) $itemdata['SERVICE_CHARGES_ITEM_ID'];
+        $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ITEM_ID);
         $this->ITEM_AMOUNT = (float) $itemdata['SERVICE_CHARGES_ITEM_AMOUNT'];
         $this->AMOUNT = $this->ITEM_AMOUNT;
         $this->showModal = true;

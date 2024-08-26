@@ -63,8 +63,8 @@ class PaymentAvailable extends Component
                 DB::beginTransaction();
                 $this->patientPaymentServices->PaymentChargeStore($PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $AMOUNT_APPLIED, 0, 0);
                 DB::commit();
-                $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ID);
                 $this->patientPaymentServices->UpdatePaymentChargesApplied($PATIENT_PAYMENT_ID);
+                $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ITEM_ID);
                 $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
                 $this->dispatch('update-amount', result: $getResult);
                 $this->closeModal();
@@ -81,6 +81,7 @@ class PaymentAvailable extends Component
         $this->gotInsert = false;
         $this->reset('paymentAmounts');
         $this->SERVICE_CHARGES_ITEM_ID = (int) $itemdata['SERVICE_CHARGES_ITEM_ID'];
+        $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ITEM_ID);
         $this->SERVICE_CHARGES_ITEM_AMOUNT = (float) $itemdata['SERVICE_CHARGES_ITEM_AMOUNT'];
         $this->GOT_APPLIED = (float) $this->patientPaymentServices->GetPaymentRemainingItem($this->SERVICE_CHARGES_ITEM_ID);
         $data = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);

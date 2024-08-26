@@ -273,7 +273,7 @@ class ServiceChargeServices
                 's.ID as STATUS_ID',
                 DB::raw('(select s.DESCRIPTION from hemodialysis as h join hemo_status as s on s.ID = h.STATUS_ID where h.CUSTOMER_ID = service_charges.PATIENT_ID and h.DATE = service_charges.DATE and h.LOCATION_ID = service_charges.LOCATION_ID limit 1 ) as TR_STATUS'),
                 DB::raw('(select if(count(*) > 0, true, false)  from hemodialysis_items inner join service_charges_items on service_charges_items.ID = hemodialysis_items.SC_ITEM_ID  where service_charges_items.SERVICE_CHARGES_ID = service_charges.ID and hemodialysis_items.IS_CASHIER = 1) as got_charge')
-                ])
+            ])
             ->join('contact as c', 'c.ID', '=', 'service_charges.PATIENT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'service_charges.LOCATION_ID');
@@ -598,6 +598,37 @@ class ServiceChargeServices
             ->join('service_charges as sc', 'sc.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
             ->join('item as i', 'i.ID', '=', 'service_charges_items.ITEM_ID')
             ->where('sc.PATIENT_ID', $PATIENT_ID)
+            ->whereNotIn('service_charges_items.ITEM_ID', [2])
+            ->having('BALANCE', '>', 0)
+            ->orderBy('sc.DATE')
+            ->get();
+
+        return $result;
+    }
+
+    public function balanceList(int $PATIENT_ID, int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)
+    {
+        $result = ServiceChargesItems::query()
+            ->select([
+                'sc.DATE',
+                'sc.CODE',
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as CONTACT_NAME"),
+                'service_charges_items.SERVICE_CHARGES_ID',
+                'i.DESCRIPTION as ITEM_NAME',
+                'service_charges_items.AMOUNT',
+                'service_charges_items.PAID_AMOUNT',
+                DB::raw('(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) as BALANCE')
+            ])
+            ->join('service_charges as sc', 'sc.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->join('contact as c', 'c.ID', '=', 'sc.PATIENT_ID')
+            ->join('item as i', 'i.ID', '=', 'service_charges_items.ITEM_ID')
+            ->whereBetween('sc.DATE', [$DATE_FROM, $DATE_TO])
+            ->when($PATIENT_ID > 0, function ($query) use (&$PATIENT_ID) {
+                $query->where('sc.PATIENT_ID', $PATIENT_ID);
+            })
+            ->when($LOCATION_ID > 0, function ($query)  use (&$LOCATION_ID) {
+                $query->where('sc.LOCATION_ID', $LOCATION_ID);
+            })
             ->whereNotIn('service_charges_items.ITEM_ID', [2])
             ->having('BALANCE', '>', 0)
             ->orderBy('sc.DATE')
