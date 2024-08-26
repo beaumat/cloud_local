@@ -28,8 +28,8 @@
                                             wire:model.live='DATE_FROM' :isDisabled="false" />
                                     </div>
                                     <div class="col-md-5">
-                                        <livewire:date-input name="DATE_FROM" titleName="(SC) To"
-                                            wire:model.live='DATE_FROM' :isDisabled="false" />
+                                        <livewire:date-input name="DATE_TO" titleName="(SC) To"
+                                            wire:model.live='DATE_TO' :isDisabled="false" />
                                     </div>
                                 </div>
                             </div>
