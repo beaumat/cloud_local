@@ -9,32 +9,32 @@
         </li>
 
         @if (Auth::user()->can('contact.customer.view') ||
-                Auth::user()->can('contact.vendor.view') ||
-                Auth::user()->can('contact.employee.view') ||
-                Auth::user()->can('contact.patient.view') ||
-                Auth::user()->can('contact.doctor.view'))
-            <li class="nav-item dropdown">
-                <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false" class="nav-link dropdown-toggle">Contacts</a>
-                <ul aria-labelledby="dropdownSubMenu2" class="border-0 shadow dropdown-menu">
-                    @can('contact.patient.view')
-                        <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a></li>
-                    @endcan
-                    @can('contact.doctor.view')
-                        <li><a href="{{ route('maintenancecontactdoctors') }}" class="dropdown-item"> Doctors</a></li>
-                    @endcan
-                    @can('contact.customer.view')
-                        <li><a href="{{ route('maintenancecontactcustomer') }}" class="dropdown-item">Customers</a></li>
-                    @endcan
-                    @can('contact.vendor.view')
-                        <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Vendors</a></li>
-                    @endcan
-                    @can('contact.employee.view')
-                        <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
-                    @endcan
+        Auth::user()->can('contact.vendor.view') ||
+        Auth::user()->can('contact.employee.view') ||
+        Auth::user()->can('contact.patient.view') ||
+        Auth::user()->can('contact.doctor.view'))
+        <li class="nav-item dropdown">
+            <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                class="nav-link dropdown-toggle">Contacts</a>
+            <ul aria-labelledby="dropdownSubMenu2" class="border-0 shadow dropdown-menu">
+                @can('contact.patient.view')
+                <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a></li>
+                @endcan
+                @can('contact.doctor.view')
+                <li><a href="{{ route('maintenancecontactdoctors') }}" class="dropdown-item"> Doctors</a></li>
+                @endcan
+                @can('contact.customer.view')
+                <li><a href="{{ route('maintenancecontactcustomer') }}" class="dropdown-item">Customers</a></li>
+                @endcan
+                @can('contact.vendor.view')
+                <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Vendors</a></li>
+                @endcan
+                @can('contact.employee.view')
+                <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
+                @endcan
 
-                </ul>
-            </li>
+            </ul>
+        </li>
         @endif
 
         <li class="nav-item dropdown">
@@ -48,7 +48,9 @@
                 <li>
                     <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">Item Inventory </a>
                 </li>
-
+                <li>
+                    <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">Price Adjust </a>
+                </li>
                 <div class="dropdown-divider"></div>
 
             </ul>
@@ -180,8 +182,8 @@
                         <i class="fas fa-expand-arrows-alt"></i> Fullscreen
 
                     </a></li>
-                <li> <a class="nav-link" wire:click="logout" title="exit" data-slide="true" href="#"
-                        role="button" wire:confirm="Are you sure you want to logout?">
+                <li> <a class="nav-link" wire:click="logout" title="exit" data-slide="true" href="#" role="button"
+                        wire:confirm="Are you sure you want to logout?">
                         <i class="fa fa-sign-out"></i> Logout
                     </a>
                 </li>

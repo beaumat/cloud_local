@@ -3,7 +3,6 @@
 namespace App\Livewire\Location;
 
 use App\Models\LocationGroup;
-use App\Models\Locations;
 use App\Models\PriceLevels;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
@@ -48,7 +47,7 @@ class LocationForm extends Component
     }
     public function loadDropDown()
     {
-        $this->priceLevels = PriceLevels::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->where('TYPE', '0')->get();
+        $this->priceLevels = PriceLevels::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->where('TYPE', '1')->get();
         $this->locationGroups = LocationGroup::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
         $contactList = $this->contactServices->getList(2);
         $this->managerList = $contactList;
@@ -60,26 +59,25 @@ class LocationForm extends Component
 
         $this->loadDropDown();
         if (is_numeric($id)) {
-            $location = Locations::where('ID', $id)->first();
-
-            if ($location) {
-                $this->ID = $location->ID;
-                $this->NAME = $location->NAME;
-                $this->INACTIVE = $location->INACTIVE;
-                $this->PRICE_LEVEL_ID = $location->PRICE_LEVEL_ID ? $location->PRICE_LEVEL_ID : 0;
-                $this->GROUP_ID = $location->GROUP_ID ? $location->GROUP_ID : 0;
-                $this->HCI_MANAGER_ID = $location->HCI_MANAGER_ID ?? 0;
-                $this->PHIC_INCHARGE_ID = $location->PHIC_INCHARGE_ID ?? 0;
-                $this->NAME_OF_BUSINESS = $location->NAME_OF_BUSINESS ?? '';
-                $this->ACCREDITATION_NO = $location->ACCREDITATION_NO ?? '';
-                $this->BLDG_NAME_LOT_BLOCK = $location->BLDG_NAME_LOT_BLOCK ?? '';
-                $this->STREET_SUB_VALL = $location->STREET_SUB_VALL ?? '';
-                $this->BRGY_CITY_MUNI = $location->BRGY_CITY_MUNI ?? '';
-                $this->PROVINCE = $location->PROVINCE ?? '';
-                $this->ZIP_CODE = $location->ZIP_CODE ?? '';
-                $this->REPORT_HEADER_1 = $location->REPORT_HEADER_1 ?? '';
-                $this->REPORT_HEADER_2 = $location->REPORT_HEADER_2 ?? '';
-                $this->REPORT_HEADER_3 = $location->REPORT_HEADER_3 ?? '';
+            $data =   $this->locationServices->get($id);
+            if ($data) {
+                $this->ID = $data->ID;
+                $this->NAME = $data->NAME;
+                $this->INACTIVE = $data->INACTIVE;
+                $this->PRICE_LEVEL_ID = $data->PRICE_LEVEL_ID ? $data->PRICE_LEVEL_ID : 0;
+                $this->GROUP_ID = $data->GROUP_ID ? $data->GROUP_ID : 0;
+                $this->HCI_MANAGER_ID = $data->HCI_MANAGER_ID ?? 0;
+                $this->PHIC_INCHARGE_ID = $data->PHIC_INCHARGE_ID ?? 0;
+                $this->NAME_OF_BUSINESS = $data->NAME_OF_BUSINESS ?? '';
+                $this->ACCREDITATION_NO = $data->ACCREDITATION_NO ?? '';
+                $this->BLDG_NAME_LOT_BLOCK = $data->BLDG_NAME_LOT_BLOCK ?? '';
+                $this->STREET_SUB_VALL = $data->STREET_SUB_VALL ?? '';
+                $this->BRGY_CITY_MUNI = $data->BRGY_CITY_MUNI ?? '';
+                $this->PROVINCE = $data->PROVINCE ?? '';
+                $this->ZIP_CODE = $data->ZIP_CODE ?? '';
+                $this->REPORT_HEADER_1 = $data->REPORT_HEADER_1 ?? '';
+                $this->REPORT_HEADER_2 = $data->REPORT_HEADER_2 ?? '';
+                $this->REPORT_HEADER_3 = $data->REPORT_HEADER_3 ?? '';
                 return;
             }
 

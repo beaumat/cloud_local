@@ -8,6 +8,7 @@ use App\Services\DocumentStatusServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PaymentTermServices;
+use App\Services\PriceLevelLineServices;
 use App\Services\ScheduleServices;
 use App\Services\ServiceChargeServices;
 use App\Services\ShipViaServices;
@@ -63,6 +64,7 @@ class ServiceChargeForm extends Component
     private $accountServices;
     private $scheduleServices;
     private $serviceChargeServices;
+    private $priceLevelLineServices;
     private $hemoServices;
     public string $tab = "item";
     public function SelectTab(string $select)
@@ -81,7 +83,8 @@ class ServiceChargeForm extends Component
         SystemSettingServices $systemSettingServices,
         AccountServices $accountServices,
         ScheduleServices $scheduleServices,
-        HemoServices $hemoServices
+        HemoServices $hemoServices,
+        PriceLevelLineServices $priceLevelLineServices
     ) {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->locationServices = $locationServices;
@@ -95,6 +98,7 @@ class ServiceChargeForm extends Component
         $this->accountServices = $accountServices;
         $this->scheduleServices = $scheduleServices;
         $this->hemoServices = $hemoServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
     }
 
     public function LoadDropdown(bool $isAllContact)
@@ -241,18 +245,47 @@ class ServiceChargeForm extends Component
                     $this->OUTPUT_TAX_ACCOUNT_ID
                 );
 
-
+                $PRICE_LEVEL_ID = 0;
                 $dataItem =  $this->hemoServices->ItemListWithIsCashier($this->PATIENT_ID, $this->LOCATION_ID, $this->DATE);
-                foreach ($dataItem as $list) {
-                    $AMOUNT = $list->QUANTITY  * $list->RATE;
-                    $SC_ITEM_ID = $this->serviceChargeServices->ItemStore($this->ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $list->UNIT_BASE_QUANTITY ?? 1, $list->RATE ?? 0, 0, $AMOUNT, $list->TAXABLE, 0, 0, $list->COGS_ACCOUNT_ID ?? 0, $list->ASSET_ACCOUNT_ID ?? 0, $list->GL_ACCOUNT_ID ?? 0, 0, false, 0);
-                    $this->hemoServices->ItemUpdateSC_ITEM_ID($list->ID, $list->HEMO_ID, $list->ITEM_ID, $SC_ITEM_ID);
+                $dataLoc = $this->locationServices->get($this->LOCATION_ID);
+                if ($dataLoc) {
+                    if ($dataLoc->PRICE_LEVEL_ID > 0) {
+                        $PRICE_LEVEL_ID = (int) $dataLoc->PRICE_LEVEL_ID ?? 0;
+                    }
                 }
 
+                foreach ($dataItem as $list) {
+                    $RATE = 0;
+                    if ($PRICE_LEVEL_ID > 0) {
+                        $RATE = (float) $this->priceLevelLineServices->PriceExists($list->ITEM_ID, $this->LOCATION_ID);
+                    } else {
+                        $RATE = (float) $list->RATE ?? 0;
+                    }
 
+                    $AMOUNT = $list->QUANTITY  * $RATE;
+
+                    $SC_ITEM_ID = $this->serviceChargeServices->ItemStore(
+                        $this->ID,
+                        $list->ITEM_ID,
+                        $list->QUANTITY,
+                        $list->UNIT_ID ?? 0,
+                        $list->UNIT_BASE_QUANTITY ?? 1,
+                        $RATE ?? 0,
+                        0,
+                        $AMOUNT,
+                        $list->TAXABLE,
+                        0,
+                        0,
+                        $list->COGS_ACCOUNT_ID ?? 0,
+                        $list->ASSET_ACCOUNT_ID ?? 0,
+                        $list->GL_ACCOUNT_ID ?? 0,
+                        0,
+                        false,
+                        $PRICE_LEVEL_ID
+                    );
+                    $this->hemoServices->ItemUpdateSC_ITEM_ID($list->ID, $list->HEMO_ID, $list->ITEM_ID, $SC_ITEM_ID);
+                }
                 $this->serviceChargeServices->ReComputed($this->ID);
-
-
                 DB::commit();
                 return Redirect::route('patientsservice_charges_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {

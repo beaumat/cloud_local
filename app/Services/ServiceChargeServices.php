@@ -150,9 +150,14 @@ class ServiceChargeServices
 
         return $result;
     }
-    public function get(int $ID): object
+    public function get(int $ID)
     {
-        return ServiceCharges::where('ID', $ID)->first();
+        $result = ServiceCharges::where('ID', $ID)->first();
+        if ($result) {
+            return $result;
+        }
+
+        return [];
     }
     public function get2(int $PATIENT_ID, int $LOCATION_ID, string $DATE)
     {

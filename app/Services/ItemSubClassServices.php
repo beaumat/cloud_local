@@ -105,4 +105,14 @@ class ItemSubClassServices
             ->orderBy('item_sub_class.ID', 'desc')
             ->get();
     }
+    public function getList()
+    {
+        $result = ItemSubClass::query()
+            ->select([
+                'ID',
+                'DESCRIPTION'
+            ])->get();
+
+        return $result;
+    }
 }

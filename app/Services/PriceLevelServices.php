@@ -20,29 +20,30 @@ class PriceLevelServices
     {
         $ID = $this->object->ObjectNextID('PRICE_LEVEL');
         PriceLevels::create([
-            'ID' => $ID,
-            'CODE' => $CODE,
-            'DESCRIPTION' => $DESCRIPTION,
-            'TYPE' => $TYPE,
-            'RATE' => $RATE > 0 ? $RATE : null,
+            'ID'            => $ID,
+            'CODE'          => $CODE,
+            'DESCRIPTION'   => $DESCRIPTION,
+            'TYPE'          => $TYPE,
+            'RATE'          => $RATE > 0 ? $RATE : null,
             'ITEM_GROUP_ID' => $ITEM_GROUP_ID === 0 ? null : $ITEM_GROUP_ID,
-            'INACTIVE' => $INACTIVE
+            'INACTIVE'      => $INACTIVE
         ]);
+        
         return $ID;
     }
 
     public function Update(int $ID, string $CODE, string $DESCRIPTION, int $TYPE, float $RATE, int $ITEM_GROUP_ID, bool $INACTIVE)
     {
         PriceLevels::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DESCRIPTION' => $DESCRIPTION,
-            'TYPE' => $TYPE,
-            'RATE' => $RATE > 0 ? $RATE : null,
+            'CODE'          => $CODE,
+            'DESCRIPTION'   => $DESCRIPTION,
+            'TYPE'          => $TYPE,
+            'RATE'          => $RATE > 0 ? $RATE : null,
             'ITEM_GROUP_ID' => $ITEM_GROUP_ID === 0 ? null : $ITEM_GROUP_ID,
-            'INACTIVE' => $INACTIVE
+            'INACTIVE'      => $INACTIVE
         ]);
     }
-
+ 
     public function Delete(int $ID): void
     {
         PriceLevels::where('ID', $ID)->delete();

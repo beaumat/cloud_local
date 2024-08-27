@@ -7,7 +7,9 @@ use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
+use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
+use App\Services\PriceLevelLineServices;
 use App\Services\ServiceChargeServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
@@ -86,6 +88,8 @@ class ServiceChargeFormItems extends Component
     private $hemoServices;
     private $dateServices;
     private $philHealthServices;
+    private $locationServices;
+    private $priceLevelLineServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         ServiceChargeServices $serviceChargeServices,
@@ -95,7 +99,9 @@ class ServiceChargeFormItems extends Component
         ItemServices $itemServices,
         ItemSubClassServices $itemSubClassServices,
         HemoServices $hemoServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        LocationServices $locationServices,
+        PriceLevelLineServices $priceLevelLineServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->serviceChargeServices = $serviceChargeServices;
@@ -106,6 +112,8 @@ class ServiceChargeFormItems extends Component
         $this->itemSubClassServices = $itemSubClassServices;
         $this->hemoServices = $hemoServices;
         $this->dateServices = $dateServices;
+        $this->locationServices = $locationServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
     }
     public function updatedcodeBase()
     {
@@ -171,8 +179,14 @@ class ServiceChargeFormItems extends Component
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
-                $this->RATE = $item->TYPE == 6 ? $this->getGroupPrice($item->ID) : $item->RATE ?? 0;
-                $this->ITEM_CODE = $item->CODE;
+
+                if ($this->PRICE_LEVEL_ID > 0) {
+                    $this->RATE = $this->priceLevelLineServices->PriceExists($this->ITEM_ID, $this->LOCATION_ID);
+                } else {
+                    $this->RATE =  $item->RATE;
+                }
+
+
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
                 $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
@@ -181,7 +195,6 @@ class ServiceChargeFormItems extends Component
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
                 $this->GROUP_LINE_ID = false;
                 $this->PRINT_IN_FORMS = false;
-                $this->PRICE_LEVEL_ID = 0;
                 $this->getAmount();
                 $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);
             }
@@ -202,6 +215,14 @@ class ServiceChargeFormItems extends Component
     }
     public function mount()
     {
+
+        $dataLoc = $this->locationServices->get($this->LOCATION_ID);
+        if ($dataLoc) {
+            if ($dataLoc->PRICE_LEVEL_ID > 0) {
+                $this->PRICE_LEVEL_ID = $dataLoc->PRICE_LEVEL_ID ?? 0;
+            }
+        }
+
         $this->QUANTITY = 0;
         $this->RATE = 0;
         $this->AMOUNT = 0.00;

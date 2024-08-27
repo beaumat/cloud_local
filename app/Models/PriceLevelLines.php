@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PriceLevelLines extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'price_level_lines';
     protected $primaryKey = 'ID';
     public $timestamps = false;
@@ -16,6 +16,7 @@ class PriceLevelLines extends Model
         'ID',
         'PRICE_LEVEL_ID',
         'ITEM_ID',
-        'CUSTOM_PRICE'
+        'CUSTOM_PRICE',
+        'CUSTOM_COST'
     ];
 }

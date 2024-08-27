@@ -6,6 +6,8 @@ use App\Services\HemoServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
 use App\Services\ItemTreatmentServices;
+use App\Services\LocationServices;
+use App\Services\PriceLevelLineServices;
 use App\Services\ServiceChargeServices;
 use App\Services\UnitOfMeasureServices;
 use Illuminate\Support\Facades\DB;
@@ -29,13 +31,17 @@ class OtherCharges extends Component
     private $serviceChargeServices;
     private $itemTreatmentServices;
     private $unitOfMeasureServices;
+    private $locationServices;
+    private $priceLevelLineServices;
     public function boot(
         ItemSubClassServices  $itemSubClassServices,
         ItemServices $itemServices,
         HemoServices $hemoServices,
         ServiceChargeServices $serviceChargeServices,
-        ItemTreatmentServices    $itemTreatmentServices,
-        UnitOfMeasureServices    $unitOfMeasureServices
+        ItemTreatmentServices $itemTreatmentServices,
+        UnitOfMeasureServices $unitOfMeasureServices,
+        LocationServices $locationServices,
+        PriceLevelLineServices   $priceLevelLineServices
     ) {
         $this->itemSubClassServices = $itemSubClassServices;
         $this->itemServices = $itemServices;
@@ -43,6 +49,8 @@ class OtherCharges extends Component
         $this->serviceChargeServices = $serviceChargeServices;
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
+        $this->locationServices = $locationServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
     }
     #[On('open-list-sub-item')]
     public function openModal($result)
@@ -75,9 +83,17 @@ class OtherCharges extends Component
             try {
 
                 $scData =  $this->serviceChargeServices->ServicesChargesGetFirst($this->hemoData->DATE, $this->hemoData->CUSTOMER_ID, $this->hemoData->LOCATION_ID);
-
                 if ($scData) {
-          
+                    $dataLoc = $this->locationServices->get($this->hemoData->LOCATION_ID);
+                    if ($dataLoc) {
+                        if ($dataLoc->PRICE_LEVEL_ID > 0) {
+                            $PRICE_LEVEL_ID = $dataLoc->PRICE_LEVEL_ID ?? 0;
+                            if ($PRICE_LEVEL_ID > 0) {
+                                $RATE = $this->priceLevelLineServices->PriceExists($ITEM_ID, $this->hemoData->LOCATION_ID);
+                            }
+                        }
+                    }
+
                     $SC_ITEM_ID =   $this->serviceChargeServices->ItemStore($scData->ID, $ITEM_ID, $QTY, $UNIT_ID, $QTY_BASED, $RATE, 0, $QTY * $RATE, $TAX, 0, 0, $data->COGS_ACCOUNT_ID ?? 0, $data->ASSET_ACCOUNT_ID ?? 0, $data->GL_ACCOUNT_ID ?? 0, 0, false, $PRICE_LEVEL_ID);
                     $SK_LINE_ID =  $this->hemoServices->ItemStore($this->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID, $QTY_BASED, true, false, true, $SC_ITEM_ID);
                     $this->serviceChargeServices->ReComputed($scData->ID); // recompute balance

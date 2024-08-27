@@ -105,6 +105,7 @@
                 Auth::user()->can('inventory-adjustment-type.view') ||
                 Auth::user()->can('stock-bin.view') ||
                 Auth::user()->can('price-level.view') ||
+                Auth::user()->can('price-location') ||
                 Auth::user()->can('others.shift.view') ||
                 Auth::user()->can('others.hemodialysis-machine.view') ||
                 Auth::user()->can('others.requirement.view') ||
@@ -143,7 +144,8 @@
                         Auth::user()->can('unit-of-measure.view') ||
                         Auth::user()->can('inventory-adjustment-type.view') ||
                         Auth::user()->can('stock-bin.view') ||
-                        Auth::user()->can('price-level.view'))
+                        Auth::user()->can('price-level.view') ||
+                        Auth::user()->can('price-location'))
                         @livewire('Layouts.MaintenanceInventory')
                         @endif
                         @if (Auth::user()->can('others.shift.view') ||

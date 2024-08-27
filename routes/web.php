@@ -93,6 +93,7 @@ use App\Livewire\PaymentTerm\PaymentTermList;
 use App\Livewire\PhilHealth\PhilHealthPrintTemp;
 use App\Livewire\PriceLevelPage\PriceLevelForm;
 use App\Livewire\PriceLevelPage\PriceLevelList;
+use App\Livewire\PriceLocation\PriceLocationList;
 use App\Livewire\PullOut\PullOutForm;
 use App\Livewire\PullOut\PullOutList;
 use App\Livewire\PullOut\PullOutPrint;
@@ -397,6 +398,10 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', PriceLevelList::class)->name('price_level')->middleware(['permission:price-level.view']);
                 Route::get('/create', PriceLevelForm::class)->name('price_level_create')->middleware(['permission:price-level.create']);
                 Route::get('/{id}/edit', PriceLevelForm::class)->name('price_level_edit')->middleware(['permission:price-level.edit']);
+            });
+
+            Route::prefix('/price-location')->group(function () {
+                Route::get('/', PriceLocationList::class)->name('price_location')->middleware(['permission:price-location']);
             });
         });
 
