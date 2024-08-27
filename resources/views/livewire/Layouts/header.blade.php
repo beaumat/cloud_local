@@ -1,4 +1,4 @@
-<nav class="main-header navbar navbar-expand navbar-light text-sm">
+<nav class="main-header navbar navbar-expand navbar-dark text-sm">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -41,7 +41,7 @@
             <a id="dropdownSubMenu3" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                 class="nav-link dropdown-toggle">Files</a>
 
-            <ul aria-labelledby="dropdownSubMenu3" class="border-0 shadow dropdown-menu">
+            <ul aria-labelledby="dropdownSubMenu3" class="border-0 shadow dropdown-menu ">
                 <li>
                     <a href="{{ route('maintenanceinventoryitem') }}" class="dropdown-item">Item Master List </a>
                 </li>
@@ -49,10 +49,8 @@
                     <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">Item Inventory </a>
                 </li>
                 <li>
-                    <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">Price Adjust </a>
+                    <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">Price Adjust by Location </a>
                 </li>
-                <div class="dropdown-divider"></div>
-
             </ul>
         </li>
 
@@ -172,16 +170,13 @@
                 <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a> --}}
             </div>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown ">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                 class="nav-link dropdown-toggle text-sm"><i class="fa fa-user-circle" aria-hidden="true"></i>
                 {{ auth()->user()->name }}</a>
-            <ul aria-labelledby="dropdownSubMenu1" class="border-0 shadow dropdown-menu">
+            <ul aria-labelledby="dropdownSubMenu1" class="border-0 shadow dropdown-menu bg-dark">
 
-                <li> <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                        <i class="fas fa-expand-arrows-alt"></i> Fullscreen
-
-                    </a></li>
+          
                 <li> <a class="nav-link" wire:click="logout" title="exit" data-slide="true" href="#" role="button"
                         wire:confirm="Are you sure you want to logout?">
                         <i class="fa fa-sign-out"></i> Logout
