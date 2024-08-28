@@ -484,37 +484,34 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/{locationid}/print-form', DoctorsFeeReportPrint::class)->name('patient_doctor_fee_report_print');
             });
         });
-        Route::prefix('/accounting')->group(function () {
-            Route::prefix('/general-journal')->group(function () {
+        Route::prefix('/accounting')->name('accounting')->group(function () {
+            Route::prefix('/general-journal')->middleware(['permission:report.accounting.general-ledge'])->group(function () {
                 Route::get('/', GeneralJournalReport::class)->name('general_journal_report');
             });
-            Route::prefix('/trial-balance')->group(function () {
+            Route::prefix('/trial-balance')->middleware(['permission:report.accounting.trial-balance'])->group(function () {
                 Route::get('/', TrialBalanceReport::class)->name('trial_balance_report');
             });
 
-            Route::prefix('/transaction-details')->group(function () {
+            Route::prefix('/transaction-details')->middleware(['permission:report.accounting.transaction-details'])->group(function () {
                 Route::get('/', TransactionDetailsReport::class)->name('transaction_details_report');
             });
 
-            Route::prefix('/transaction-journal')->group(function () {
+            Route::prefix('/transaction-journal')->middleware(['permission:report.accounting.transaction-details'])->group(function () {
                 Route::get('/', TransactionJournalReport::class)->name('transaction_journal_report');
             });
         });
 
-        Route::prefix('/financial')->group(function () {
-            Route::prefix('/income-statement')->group(function () {
+        Route::prefix('/financial')->name('financial')->group(function () {
+            Route::prefix('/income-statement')->middleware(['permission:report.financial.income-statement'])->group(function () {
                 Route::get('/', IncomeStatementReport::class)->name('income_statement_report');
             });
-            Route::prefix('/balance-sheet')->group(function () {
+            Route::prefix('/balance-sheet')->middleware(['permission:report.financial.balance-sheet'])->group(function () {
                 Route::get('/', BalanceSheetReport::class)->name('balance_sheet_report');
             });
 
-            Route::prefix('/cash-flow')->group(function () {
+            Route::prefix('/cash-flow')->middleware(['permission:report.financial.cash-flow'])->group(function () {
                 Route::get('/', CashFlowReport::class)->name('cash_flow_report');
             });
-
-
-          
         });
 
         Route::prefix('/sales')->group(function () {});

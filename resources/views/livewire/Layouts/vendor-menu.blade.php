@@ -7,7 +7,7 @@
         @can('vendor.purchase-order.view')
             <li class="nav-item">
                 <a href="{{ route('vendorspurchase_order') }}"
-                    class="nav-link {{ request()->is('vendors/purchase-order*') ? 'active' : '' }}">
+                    class="nav-link {{ request()->is('vendors/purchase-order*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fas fa-shopping-cart nav-icon"></i>
                     <p>Purchase Order</p>
                 </a>
@@ -16,7 +16,7 @@
         @can('vendor.bill.view')
             <li class="nav-item">
                 <a href="{{ route('vendorsbills') }}"
-                    class="nav-link {{ request()->is('vendors/bills*') ? 'active' : '' }}">
+                    class="nav-link {{ request()->is('vendors/bills*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fas fa-file-invoice nav-icon"></i>
                     <p>Bills</p>
                 </a>
@@ -25,7 +25,7 @@
         @can('vendor.bill-payment.view')
             <li class="nav-item">
                 <a href="{{ route('vendorsbill_payment') }}"
-                    class="nav-link {{ request()->is('vendors/bill-payments*') ? 'active' : '' }}">
+                    class="nav-link {{ request()->is('vendors/bill-payments*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fas fa-money-bill nav-icon"></i>
                     <p>Pay Bills</p>
                 </a>
@@ -34,7 +34,7 @@
         @can('vendor.bill-credit.view')
             <li class="nav-item">
                 <a href="{{ route('vendorsbill_credit') }}"
-                    class="nav-link {{ request()->is('vendors/bill-credits*') ? 'active' : '' }}">
+                    class="nav-link {{ request()->is('vendors/bill-credits*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fas fa-credit-card nav-icon"></i>
                     <p>Bill Credits</p>
                 </a>

@@ -9,7 +9,7 @@
                     @can('banking.deposit.view')
                         <li class="nav-item">
                             <a href="{{ route('bankingdeposit') }}"
-                                class="nav-link  {{ request()->is('banking/deposit*') ? 'active' : '' }}">
+                                class="nav-link  {{ request()->is('banking/deposit*') ? 'text-warning font-weight-bold' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Deposit</p>
                             </a>
@@ -18,7 +18,7 @@
                     @can('banking.fund-transfer.view')
                         <li class="nav-item">
                             <a href="{{ route('bankingfund_transfer') }}"
-                                class="nav-link  {{ request()->is('banking/fund-transfer*') ? 'active' : '' }}">
+                                class="nav-link  {{ request()->is('banking/fund-transfer*') ? 'text-warning font-weight-bold' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Fund Transfer</p>
                             </a>
@@ -27,7 +27,7 @@
                     @can('banking.make-cheque.view')
                         <li class="nav-item">
                             <a href="{{ route('bankingmake_cheque') }}"
-                                class="nav-link  {{ request()->is('banking/make-cheque*') ? 'active' : '' }}">
+                                class="nav-link  {{ request()->is('banking/make-cheque*') ? 'text-warning font-weight-bold' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Make Cheque</p>
                             </a>

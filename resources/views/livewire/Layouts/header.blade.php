@@ -36,23 +36,38 @@
             </ul>
         </li>
         @endif
-
+        @if (Auth::user()->can('items.view') ||
+        Auth::user()->can('others.item-active-list.view') ||
+        Auth::user()->can('price-location') )
         <li class="nav-item dropdown">
             <a id="dropdownSubMenu3" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                 class="nav-link dropdown-toggle">Files</a>
-
             <ul aria-labelledby="dropdownSubMenu3" class="border-0 shadow dropdown-menu ">
+                @can('items.view')
                 <li>
                     <a href="{{ route('maintenanceinventoryitem') }}" class="dropdown-item">Item Master List </a>
                 </li>
+
+                @endcan
+
+                @can('others.item-active-list.view')
                 <li>
                     <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">Item Inventory </a>
                 </li>
+                @endcan
+
+                @can('price-location')
                 <li>
-                    <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">Price Adjust by Location </a>
+                    <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">Price Adjust by
+                        Location </a>
                 </li>
+                @endcan
+
             </ul>
         </li>
+        @endif
+
+
 
 
     </ul>
@@ -176,7 +191,7 @@
                 {{ auth()->user()->name }}</a>
             <ul aria-labelledby="dropdownSubMenu1" class="border-0 shadow dropdown-menu bg-dark">
 
-          
+
                 <li> <a class="nav-link" wire:click="logout" title="exit" data-slide="true" href="#" role="button"
                         wire:confirm="Are you sure you want to logout?">
                         <i class="fa fa-sign-out"></i> Logout

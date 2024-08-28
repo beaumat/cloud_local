@@ -2,8 +2,10 @@
 
 namespace App\Livewire\AccountingReport;
 
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Trial Balance Report')]
 class TrialBalanceReport extends Component
 {
     public function render()

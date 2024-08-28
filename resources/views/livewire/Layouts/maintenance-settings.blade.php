@@ -7,8 +7,8 @@
               @can('users')
                   <li class="nav-item">
                       <a href="{{ route('maintenancesettingsusers') }}"
-                          class="nav-link {{ request()->is('maintenance/settings/user*') ? 'active' : '' }}">
-                          <i class="fa fa-file nav-icon"></i>
+                          class="nav-link {{ request()->is('maintenance/settings/user*') ? 'text-warning font-weight-bold' : '' }}">
+                          <i class="fa fa-user nav-icon"></i>
                           <p>Users</p>
                       </a>
                   </li>
@@ -17,8 +17,8 @@
               @can('roles-and-permission')
                   <li class="nav-item">
                       <a href="{{ route('maintenancesettingsroles') }}"
-                          class="nav-link {{ request()->is('maintenance/settings/rolespermission*') ? 'active' : '' }}">
-                          <i class="fa fa-file nav-icon"></i>
+                          class="nav-link {{ request()->is('maintenance/settings/rolespermission*') ? 'text-warning font-weight-bold' : '' }}">
+                          <i class="fa fa-hand-o-right nav-icon"></i>
                           <p>Roles & Permission</p>
                       </a>
                   </li>
@@ -28,8 +28,8 @@
               @can('location.view')
                   <li class="nav-item">
                       <a href="{{ route('maintenancesettingslocation') }}"
-                          class="nav-link {{ request()->is('maintenance/settings/location*') ? 'active' : '' }}">
-                          <i class="fa fa-file nav-icon"></i>
+                          class="nav-link {{ request()->is('maintenance/settings/location*') ? 'text-warning font-weight-bold' : '' }}">
+                          <i class="fa fa-map-marker nav-icon"></i>
                           <p>Location</p>
                       </a>
                   </li>
@@ -38,8 +38,8 @@
               @can('location-group.view')
                   <li class="nav-item">
                       <a href="{{ route('maintenancesettingslocation_group') }}"
-                          class="nav-link {{ request()->is('maintenance/settings/location-group*') ? 'active' : '' }}">
-                          <i class="fa fa-file nav-icon"></i>
+                          class="nav-link {{ request()->is('maintenance/settings/location-group*') ? 'text-warning font-weight-bold' : '' }}">
+                          <i class="fa fa-location-arrow nav-icon"></i>
                           <p>Location Group</p>
                       </a>
                   </li>
@@ -48,8 +48,8 @@
               @can('option')
                   <li class="nav-item">
                       <a href="{{ route('maintenancesettingsoption') }}"
-                          class="nav-link {{ request()->is('maintenance/settings/option*') ? 'active' : '' }}">
-                          <i class="fa fa-file nav-icon"></i>
+                          class="nav-link {{ request()->is('maintenance/settings/option*') ? 'text-warning font-weight-bold' : '' }}">
+                          <i class="fa fa-wrench nav-icon"></i>
                           <p>Options</p>
                       </a>
                   </li>
