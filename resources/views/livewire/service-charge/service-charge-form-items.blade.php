@@ -43,7 +43,7 @@
                     @endif
 
                 </td>
-                <td class="text-right @if($list->RATE == 0) text-success font-weight-bold @endif">
+                <td class="text-right @if($list->RATE == 0) text-primary font-weight-bold @endif">
                     @if ($editItemId === $list->ID)
                     <input type="number" step="0.01" class="form-control form-control-sm text-right" name="lineRate"
                         wire:model.live.debounce.1000ms='lineRate' wire:blur="getEditAmount" @if ($editPrice==false)
