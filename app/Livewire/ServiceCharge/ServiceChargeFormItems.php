@@ -353,21 +353,32 @@ class ServiceChargeFormItems extends Component
     public function editItem(int $lineId, float $lineQty, int $lineUnitId, float $lineRate, float $lineAmount, bool $lineTax, int $itemId)
     {
 
-        if ($this->hemoServices->IsExist_SC_ITEM($lineId)) {
-            $this->canBeQtyEdit = false;
-        } else {
-            $this->canBeQtyEdit = true;
-        }
+        $data =  $this->serviceChargeServices->getItem($lineId);
+        if ($data) {
 
-        $this->editItemId = $lineId;
-        $this->lineQty = $lineQty;
-        $this->lineUnitId = $lineUnitId;
-        $this->lineRate = $lineRate;
-        $this->lineAmount = $lineAmount;
-        $this->lineTax = $lineTax;
-        $this->lineItemId = $itemId;
-        $this->lineBatchId = 0;
-        $this->linePriceLevelId = 0;
+
+
+            if ($this->hemoServices->IsExist_SC_ITEM($lineId)) {
+                $this->canBeQtyEdit = false;
+            } else {
+
+                if ($this->DATE_NOW <> $data->DATE_LOG) {
+                    $this->canBeQtyEdit = false;
+                } else {
+                    $this->canBeQtyEdit = true;
+                }
+            }
+
+            $this->editItemId = $lineId;
+            $this->lineQty = $lineQty;
+            $this->lineUnitId = $lineUnitId;
+            $this->lineRate = $lineRate;
+            $this->lineAmount = $lineAmount;
+            $this->lineTax = $lineTax;
+            $this->lineItemId = $itemId;
+            $this->lineBatchId = 0;
+            $this->linePriceLevelId = 0;
+        }
     }
     public function updateItem(int $Id)
     {
