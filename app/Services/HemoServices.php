@@ -231,6 +231,7 @@ class HemoServices
                 'hemodialysis.BFR',
                 'hemodialysis.DFR',
                 'hemodialysis.DURATION',
+                'hemodialysis.HEPARIN',
                 'hemodialysis.DIALYZER',
                 'hemodialysis.DIALSATE_N',
                 'hemodialysis.DIALSATE_K',
@@ -1232,7 +1233,7 @@ class HemoServices
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
 
 
-            
+
             $SK_LINE_ID  =  $this->ItemStore($HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, true, true, $IS_CASHIER, null, null);
 
             $dataTrigger = $this->itemTreatmentServices->getItemTrigger($data->ITEM_ID, $LOCATION_ID, $data->UNIT_ID);

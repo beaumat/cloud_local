@@ -24,9 +24,9 @@
                 <div class="col-6 text-right">
                     <b>PHIC NO.:</b> <u class="text-primary font-weight-bold">
                         @if ($PHIC_NO)
-                            {{ $PHIC_NO }}
+                        {{ $PHIC_NO }}
                         @else
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         @endif
                     </u>
                 </div>
@@ -38,11 +38,11 @@
                         <div class="col-1">AGE:
                             <label class="text-primary font-weight-bold text-uppercase">{{ $AGE }}</label>
                         </div>
-                        <div class="col-3">NO. OF TREATMENT: <label
-                                class="text-primary font-weight-bold">{{ $NO_OF_TREATMENT }}</label></div>
+                        <div class="col-3">NO. OF TREATMENT: <label class="text-primary font-weight-bold">{{
+                                $NO_OF_TREATMENT }}</label></div>
                         <div class="col-2">MACHINE NO. :</div>
-                        <div class="col-2">DATE: <label
-                                class="text-primary font-weight-bold">{{ \Carbon\Carbon::parse($DATE)->format('m/d/Y') }}</label>
+                        <div class="col-2">DATE: <label class="text-primary font-weight-bold">{{
+                                \Carbon\Carbon::parse($DATE)->format('m/d/Y') }}</label>
                         </div>
                     </div>
                 </div>
@@ -266,7 +266,7 @@
                                         <div class="col-12 bottom-line-hide">
                                             <div class="row right-space">
                                                 <div class="col-7">HEPARIN</div>
-                                                <div class="col-5 text-right bottom-line2">&nbsp;</div>
+                                                <div class="col-5 text-center bottom-line2 text-primary font-weight-normal">&nbsp; {{ $HEPARIN }}</div>
                                             </div>
                                         </div>
                                         <div class="col-12  ">
@@ -359,392 +359,128 @@
                                         <b> SPECIAL ENDORSEMENT</b>
                                     </div>
                                     @foreach ($SE_PARTS as $parts)
-                                        @php
-                                            $SE_COUNT++;
-                                        @endphp
-                                        <div class="col-12  text-center bottom-line2 ">
-                                            &nbsp;{{ $parts }}
-                                        </div>
+                                    @php
+                                    $SE_COUNT++;
+                                    @endphp
+                                    <div class="col-12  text-center bottom-line2 ">
+                                        &nbsp;{{ $parts }}
+                                    </div>
                                     @endforeach
-                                    @if ($SE_COUNT < 9)
-                                        @for ($i = $SE_COUNT; $i < 9; $i++)
-                                            <div class="col-12  text-center bottom-line2 ">
-                                                &nbsp;
-                                            </div>
-                                        @endfor
-                                    @endif
+                                    @if ($SE_COUNT < 9) @for ($i=$SE_COUNT; $i < 9; $i++) <div
+                                        class="col-12  text-center bottom-line2 ">
+                                        &nbsp;
                                 </div>
-
+                                @endfor
+                                @endif
                             </div>
-                        </div>
-                        <div class="col-4 left-line">
-                            <label class="text-sm">DIAGNOSIS:</label>
-                            <div class="form-group px-3">
-                                <div class="row">
-                                    <div class="col-12 bottom-line2 text-uppercase text-center text-primary">
-                                        &nbsp; {{ $DIAGNOSIS }}
-                                    </div>
-                                    <div class="col-12  text-center">
-                                        <b>STANDING ORDER</b>
-                                    </div>
-                                    @foreach ($SO_PARTS as $parts)
-                                        @php
-                                            $SO_COUNT++;
-                                        @endphp
-                                        <div class="col-12  text-center bottom-line2 ">
-                                            &nbsp;{{ $parts }}
-                                        </div>
-                                    @endforeach
-                                    @if ($SO_COUNT < 9)
-                                        @for ($i = $SO_COUNT; $i < 9; $i++)
-                                            <div class="col-12  text-center bottom-line2 ">
-                                                &nbsp;
-                                            </div>
-                                        @endfor
-                                    @endif
 
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-4 text-center left-line right-line">
-                            <div class="row bottom-line">
-                                <div class="col-12">
-                                    <label>FISTULA / GRAFT ACCESS</label>
-                                </div>
-                                <div class="col-3 text-left">
-                                    <div class="text-xs">ACCESS TYPE</div>
-                                    <div class="text-xs">BRUIT</div>
-                                    <div class="text-xs">THRILL</div>
-                                    <div class="text-xs">HEMATOMA</div>
-                                </div>
-                                <div class="col-3 text-left">
-                                    <div class="text-xs"> [&nbsp;&nbsp;] FISTULA </div>
-                                    <div class="text-xs"> [&nbsp;&nbsp;] STRONG </div>
-                                    <div class="text-xs"> [&nbsp;&nbsp;] STRONG </div>
-                                    <div class="text-xs"> [&nbsp;&nbsp;] PRESENT </div>
-                                </div>
-                                <div class="col-3 text-left">
-                                    <div class="text-xs"> [&nbsp;&nbsp;] GRAFT </div>
-                                    <div class="text-xs"> [&nbsp;&nbsp;] WEAK </div>
-                                    <div class="text-xs"> [&nbsp;&nbsp;] WEAK </div>
-                                    <div class="text-xs"> [&nbsp;&nbsp;] ABSENT </div>
-                                </div>
-                                <div class="col-3 text-left">
-                                    <div class="text-xs"> [&nbsp;&nbsp;] R [&nbsp;&nbsp;] L </div>
-                                    <div class="text-xs"> [&nbsp;&nbsp;] ABSENT </div>
-                                    <div class="text-xs"> [&nbsp;&nbsp;] ABSENT </div>
-
-                                </div>
-                                <div class="col-12">
-                                    <div class="text-xs"><b>OTHERS:
-                                            ____________________________________________________ </b></div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <label>CVC ACCESS</label>
-                                </div>
-                                <div class="col-3">
-                                    <div class="text-xs">[&nbsp;&nbsp;] SUBCATH </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="text-xs">[&nbsp;&nbsp;] JUGCATH </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="text-xs">[&nbsp;&nbsp;] FEMCATH </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="text-xs">[&nbsp;&nbsp;]PERMCATH</div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="text-xs"> LOCATION : </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="text-xs"> [&nbsp;&nbsp;] R [&nbsp;&nbsp;] L </div>
-                                </div>
-                                <div class="col-12 mt-4">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="text-xs"> CATHETER PORTS </div>
-                                            <div class="text-xs text-right"> GOOD FLOW </div>
-                                            <div class="text-xs text-right"> W/ RESISTANCE </div>
-                                            <div class="text-xs text-right"> CLOTTED/NON PATENT </div>
-                                        </div>
-                                        <div class="col-3">
-                                            <div class="text-xs"> ARTERIAL </div>
-                                            <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
-                                            <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
-                                            <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
-                                        </div>
-                                        <div class="col-3">
-                                            <div class="text-xs"> VENOUS </div>
-                                            <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
-                                            <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
-                                            <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
+                    <div class="col-4 left-line">
+                        <label class="text-sm">DIAGNOSIS:</label>
+                        <div class="form-group px-3">
+                            <div class="row">
+                                <div class="col-12 bottom-line2 text-uppercase text-center text-primary">
+                                    &nbsp; {{ $DIAGNOSIS }}
+                                </div>
+                                <div class="col-12  text-center">
+                                    <b>STANDING ORDER</b>
+                                </div>
+                                @foreach ($SO_PARTS as $parts)
+                                @php
+                                $SO_COUNT++;
+                                @endphp
+                                <div class="col-12  text-center bottom-line2 ">
+                                    &nbsp;{{ $parts }}
+                                </div>
+                                @endforeach
+                                @if ($SO_COUNT < 9) @for ($i=$SO_COUNT; $i < 9; $i++) <div
+                                    class="col-12  text-center bottom-line2 ">
+                                    &nbsp;
+                            </div>
+                            @endfor
+                            @endif
+
+                        </div>
+
+                    </div>
                 </div>
-                <div class="col-12 left-line right-line bottom-line">
+                <div class="col-4 text-center left-line right-line">
+                    <div class="row bottom-line">
+                        <div class="col-12">
+                            <label>FISTULA / GRAFT ACCESS</label>
+                        </div>
+                        <div class="col-3 text-left">
+                            <div class="text-xs">ACCESS TYPE</div>
+                            <div class="text-xs">BRUIT</div>
+                            <div class="text-xs">THRILL</div>
+                            <div class="text-xs">HEMATOMA</div>
+                        </div>
+                        <div class="col-3 text-left">
+                            <div class="text-xs"> [&nbsp;&nbsp;] FISTULA </div>
+                            <div class="text-xs"> [&nbsp;&nbsp;] STRONG </div>
+                            <div class="text-xs"> [&nbsp;&nbsp;] STRONG </div>
+                            <div class="text-xs"> [&nbsp;&nbsp;] PRESENT </div>
+                        </div>
+                        <div class="col-3 text-left">
+                            <div class="text-xs"> [&nbsp;&nbsp;] GRAFT </div>
+                            <div class="text-xs"> [&nbsp;&nbsp;] WEAK </div>
+                            <div class="text-xs"> [&nbsp;&nbsp;] WEAK </div>
+                            <div class="text-xs"> [&nbsp;&nbsp;] ABSENT </div>
+                        </div>
+                        <div class="col-3 text-left">
+                            <div class="text-xs"> [&nbsp;&nbsp;] R [&nbsp;&nbsp;] L </div>
+                            <div class="text-xs"> [&nbsp;&nbsp;] ABSENT </div>
+                            <div class="text-xs"> [&nbsp;&nbsp;] ABSENT </div>
+
+                        </div>
+                        <div class="col-12">
+                            <div class="text-xs"><b>OTHERS:
+                                    ____________________________________________________ </b></div>
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="col-6">
-                            <div class="row">
-                                <div class="col-12 bottom-line text-center">
-                                    <b>PRE-HEMODIALYSIS ASSESSMENT</b>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row">
-                                        <div class="col-12 text-center font-weight-bold">
-                                            MOBILIZATION
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] AMBULATORY</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] AMBULATORY W/ ASSSIT</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] WHEEL CHAIR</div>
-                                            <div class="text-xs text-center">L.O.C</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] CONSCIOUS</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] COHERENT</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] DISORIENTED</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] DROWSY</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="row">
-                                        <div class="col-12 text-center font-weight-bold">
-                                            LUNGS
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] CLEAR</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] CRACKLES</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] RHONCHI</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] WHEEZES</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] RALES</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row">
-                                        <div class="col-12 text-center font-weight-bold">
-                                            FLUID STATUS
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] DISTENDED JUGULAR VIEW</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] ASCITES</div>
-                                            <div class="text-xs text-left"> </div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] EDEMA</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] LOCATION: ____________</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] DEPTH: _______________</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="row">
-                                        <div class="col-12 text-center font-weight-bold">
-                                            HEART
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="text-xs text-left">[&nbsp;&nbsp;] REGULAR</div>
-                                            <div class="text-xs text-left float-left">[&nbsp;&nbsp;]IRREGULAR</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="text-xs text-right"> SIGNATURE:
-                                        _______________________________________________</div>
-                                </div>
-                            </div>
+                        <div class="col-12">
+                            <label>CVC ACCESS</label>
                         </div>
-                        <div class="col-6 left-line">
-                            <div class="row">
-                                <div class="col-12 bottom-line text-center">
-                                    <b>POST-HEMODIALYSIS ASSESSMENT</b>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row">
-                                        <div class="col-12 text-center font-weight-bold">
-                                            MOBILIZATION
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] AMBULATORY</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] AMBULATORY W/ ASSSIT</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] WHEEL CHAIR</div>
-                                            <div class="text-xs text-center">L.O.C</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] CONSCIOUS</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] COHERENT</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] DISORIENTED</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] DROWSY</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="row">
-                                        <div class="col-12 text-center font-weight-bold">
-                                            LUNGS
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] CLEAR</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] CRACKLES</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] RHONCHI</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] WHEEZES</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] RALES</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row">
-                                        <div class="col-12 text-center font-weight-bold">
-                                            FLUID STATUS
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] DISTENDED JUGULAR VIEW</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] ASCITES</div>
-                                            <div class="text-xs text-left"> </div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] EDEMA</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] LOCATION: ____________</div>
-                                            <div class="text-xs text-left"> [&nbsp;&nbsp;] DEPTH: _______________</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="row">
-                                        <div class="col-12 text-center font-weight-bold">
-                                            HEART
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="text-xs text-left">[&nbsp;&nbsp;] REGULAR</div>
-                                            <div class="text-xs text-left float-left">[&nbsp;&nbsp;]IRREGULAR</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="text-xs text-right"> SIGNATURE:
-                                        _______________________________________________</div>
-                                </div>
-                            </div>
+                        <div class="col-3">
+                            <div class="text-xs">[&nbsp;&nbsp;] SUBCATH </div>
                         </div>
-                    </div>
-                </div>
-                <table width="100%" class="col-12 left-line right-line bottom-line">
-                    <thead>
-                        <tr class="text-center">
-                            <th class="col-1">TIME</th>
-                            <th class="col-1 left-line">BP</th>
-                            <th class="col-1 left-line">HR</th>
-                            <th class="col-1 left-line">BFR</th>
-                            <th class="col-1 left-line">AP | VP</th>
-                            <th class="col-1 left-line">TFR</th>
-                            <th class="col-1 left-line">TMP</th>
-                            <th class="col-1 left-line">HEPARIN | <br /> FLUSHING</th>
-                            <th class="col-4 left-line">NURSES NOTES</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($collection as $item)
-                            <tr class="text-center top-line">
-                                <td></td>
-                                <td class="left-line"></td>
-                                <td class="left-line"></td>
-                                <td class="left-line"></td>
-                                <td class="left-line">|</td>
-                                <td class="left-line"></td>
-                                <td class="left-line"></td>
-                                <td class="left-line">|</td>
-                                <td class="left-line"></td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <div class="col-12 left-line right-line bottom-line">
-                    <div class="row mt-2 px-2">
-                        <div class="col-4">
-                            <div class="row">
-                                <div class="col-5 text-sm text-left"><b>CANNULATED&nbsp;BY&nbsp;:</b></div>
-                                <div class="col-7 text-sm bottom-line2"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4 text-sm text-left"> <b>NO&nbsp;OF&nbsp;ATTEMPT:</b> </div>
-                                <div class="col-8">
-                                    <div class="row">
-                                        <div class="col-4  text-right text-sm">
-                                            <b>ARTERIAL:</b>
-                                        </div>
-                                        <div class="col-3 text-sm bottom-line2">
-                                        </div>
-                                        <div class="col-2 text-right text-sm">
-                                            <b>G:</b>
-                                        </div>
-                                        <div class="col-3 text-sm bottom-line2">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4 text-sm text-left"> </div>
-                                <div class="col-8">
-                                    <div class="row">
-                                        <div class="col-4  text-right text-sm">
-                                            <b>VENOUS:</b>
-                                        </div>
-                                        <div class="col-3 text-sm bottom-line2">
-                                        </div>
-                                        <div class="col-2 text-right text-sm">
-                                            <b>G:</b>
-                                        </div>
-                                        <div class="col-3 text-sm bottom-line2">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-3">
+                            <div class="text-xs">[&nbsp;&nbsp;] JUGCATH </div>
                         </div>
-                        <div class="col-4">
-                            <div class="row">
-                                <div class="col-4 text-sm text-left"><b>PRIMED&nbsp;BY&nbsp;:</b></div>
-                                <div class="col-8 text-sm bottom-line2"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4 text-sm text-left"><b>INITIATED&nbsp;BY&nbsp;:</b></div>
-                                <div class="col-8 text-sm bottom-line2"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4 text-sm text-left"><b>TERMINATED&nbsp;BY&nbsp;:</b></div>
-                                <div class="col-8 text-sm bottom-line2"></div>
-                            </div>
+                        <div class="col-3">
+                            <div class="text-xs">[&nbsp;&nbsp;] FEMCATH </div>
                         </div>
-                        <div class="col-4">
-                            <div class="row">
-                                <div class="col-2 text-sm text-left"><b>RML&nbsp;:</b></div>
-                                <div class="col-10 text-sm bottom-line2 px-1"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4 text-sm text-left"><b>HEPA&nbsp;PROFILE&nbsp;:</b></div>
-                                <div class="col-8 text-sm bottom-line2"></div>
-                            </div>
-
+                        <div class="col-3">
+                            <div class="text-xs">[&nbsp;&nbsp;]PERMCATH</div>
                         </div>
-                        <div class="col-12 pb-1">
+                        <div class="col-3">
+                            <div class="text-xs"> LOCATION : </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-xs"> [&nbsp;&nbsp;] R [&nbsp;&nbsp;] L </div>
+                        </div>
+                        <div class="col-12 mt-4">
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="row">
-                                        <div class="col-4 text-sm text-left">
-                                            <b>EPO&nbsp;GIVEN:</b>&nbsp;[&nbsp;&nbsp;]<b>NO</b>&nbsp;&nbsp;[&nbsp;&nbsp;]<b>YES</b>
-                                        </div>
-                                        <div class="col-8 text-sm text-left bottom-line2"></div>
-                                    </div>
-
+                                    <div class="text-xs"> CATHETER PORTS </div>
+                                    <div class="text-xs text-right"> GOOD FLOW </div>
+                                    <div class="text-xs text-right"> W/ RESISTANCE </div>
+                                    <div class="text-xs text-right"> CLOTTED/NON PATENT </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="row">
-                                        <div class="col-4 text-sm text-right">
-                                            <b>GIVEN&nbsp;BY: </b>
-                                        </div>
-                                        <div class="col-8 text-sm text-left bottom-line2"></div>
-                                    </div>
+                                <div class="col-3">
+                                    <div class="text-xs"> ARTERIAL </div>
+                                    <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
+                                    <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
+                                    <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="text-xs"> VENOUS </div>
+                                    <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
+                                    <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
+                                    <div class="text-xs text-center"> [&nbsp;&nbsp;] </div>
+
                                 </div>
                             </div>
                         </div>
@@ -752,6 +488,268 @@
                 </div>
             </div>
         </div>
-    </section>
+        <div class="col-12 left-line right-line bottom-line">
+            <div class="row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-12 bottom-line text-center">
+                            <b>PRE-HEMODIALYSIS ASSESSMENT</b>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-12 text-center font-weight-bold">
+                                    MOBILIZATION
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] AMBULATORY</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] AMBULATORY W/ ASSSIT</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] WHEEL CHAIR</div>
+                                    <div class="text-xs text-center">L.O.C</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] CONSCIOUS</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] COHERENT</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] DISORIENTED</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] DROWSY</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="row">
+                                <div class="col-12 text-center font-weight-bold">
+                                    LUNGS
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] CLEAR</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] CRACKLES</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] RHONCHI</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] WHEEZES</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] RALES</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-12 text-center font-weight-bold">
+                                    FLUID STATUS
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] DISTENDED JUGULAR VIEW</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] ASCITES</div>
+                                    <div class="text-xs text-left"> </div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] EDEMA</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] LOCATION: ____________</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] DEPTH: _______________</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="row">
+                                <div class="col-12 text-center font-weight-bold">
+                                    HEART
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-xs text-left">[&nbsp;&nbsp;] REGULAR</div>
+                                    <div class="text-xs text-left float-left">[&nbsp;&nbsp;]IRREGULAR</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="text-xs text-right"> SIGNATURE:
+                                _______________________________________________</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 left-line">
+                    <div class="row">
+                        <div class="col-12 bottom-line text-center">
+                            <b>POST-HEMODIALYSIS ASSESSMENT</b>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-12 text-center font-weight-bold">
+                                    MOBILIZATION
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] AMBULATORY</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] AMBULATORY W/ ASSSIT</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] WHEEL CHAIR</div>
+                                    <div class="text-xs text-center">L.O.C</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] CONSCIOUS</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] COHERENT</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] DISORIENTED</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] DROWSY</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="row">
+                                <div class="col-12 text-center font-weight-bold">
+                                    LUNGS
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] CLEAR</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] CRACKLES</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] RHONCHI</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] WHEEZES</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] RALES</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col-12 text-center font-weight-bold">
+                                    FLUID STATUS
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] DISTENDED JUGULAR VIEW</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] ASCITES</div>
+                                    <div class="text-xs text-left"> </div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] EDEMA</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] LOCATION: ____________</div>
+                                    <div class="text-xs text-left"> [&nbsp;&nbsp;] DEPTH: _______________</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="row">
+                                <div class="col-12 text-center font-weight-bold">
+                                    HEART
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-xs text-left">[&nbsp;&nbsp;] REGULAR</div>
+                                    <div class="text-xs text-left float-left">[&nbsp;&nbsp;]IRREGULAR</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="text-xs text-right"> SIGNATURE:
+                                _______________________________________________</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table width="100%" class="col-12 left-line right-line bottom-line">
+            <thead>
+                <tr class="text-center">
+                    <th class="col-1">TIME</th>
+                    <th class="col-1 left-line">BP</th>
+                    <th class="col-1 left-line">HR</th>
+                    <th class="col-1 left-line">BFR</th>
+                    <th class="col-1 left-line">AP | VP</th>
+                    <th class="col-1 left-line">TFR</th>
+                    <th class="col-1 left-line">TMP</th>
+                    <th class="col-1 left-line">HEPARIN | <br /> FLUSHING</th>
+                    <th class="col-4 left-line">NURSES NOTES</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($collection as $item)
+                <tr class="text-center top-line">
+                    <td></td>
+                    <td class="left-line"></td>
+                    <td class="left-line"></td>
+                    <td class="left-line"></td>
+                    <td class="left-line">|</td>
+                    <td class="left-line"></td>
+                    <td class="left-line"></td>
+                    <td class="left-line">|</td>
+                    <td class="left-line"></td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <div class="col-12 left-line right-line bottom-line">
+            <div class="row mt-2 px-2">
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-5 text-sm text-left"><b>CANNULATED&nbsp;BY&nbsp;:</b></div>
+                        <div class="col-7 text-sm bottom-line2"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 text-sm text-left"> <b>NO&nbsp;OF&nbsp;ATTEMPT:</b> </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-4  text-right text-sm">
+                                    <b>ARTERIAL:</b>
+                                </div>
+                                <div class="col-3 text-sm bottom-line2">
+                                </div>
+                                <div class="col-2 text-right text-sm">
+                                    <b>G:</b>
+                                </div>
+                                <div class="col-3 text-sm bottom-line2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 text-sm text-left"> </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-4  text-right text-sm">
+                                    <b>VENOUS:</b>
+                                </div>
+                                <div class="col-3 text-sm bottom-line2">
+                                </div>
+                                <div class="col-2 text-right text-sm">
+                                    <b>G:</b>
+                                </div>
+                                <div class="col-3 text-sm bottom-line2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-4 text-sm text-left"><b>PRIMED&nbsp;BY&nbsp;:</b></div>
+                        <div class="col-8 text-sm bottom-line2"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 text-sm text-left"><b>INITIATED&nbsp;BY&nbsp;:</b></div>
+                        <div class="col-8 text-sm bottom-line2"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 text-sm text-left"><b>TERMINATED&nbsp;BY&nbsp;:</b></div>
+                        <div class="col-8 text-sm bottom-line2"></div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-2 text-sm text-left"><b>RML&nbsp;:</b></div>
+                        <div class="col-10 text-sm bottom-line2 px-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 text-sm text-left"><b>HEPA&nbsp;PROFILE&nbsp;:</b></div>
+                        <div class="col-8 text-sm bottom-line2"></div>
+                    </div>
+
+                </div>
+                <div class="col-12 pb-1">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-4 text-sm text-left">
+                                    <b>EPO&nbsp;GIVEN:</b>&nbsp;[&nbsp;&nbsp;]<b>NO</b>&nbsp;&nbsp;[&nbsp;&nbsp;]<b>YES</b>
+                                </div>
+                                <div class="col-8 text-sm text-left bottom-line2"></div>
+                            </div>
+
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-4 text-sm text-right">
+                                    <b>GIVEN&nbsp;BY: </b>
+                                </div>
+                                <div class="col-8 text-sm text-left bottom-line2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+</section>
 
 </div>

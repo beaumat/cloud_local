@@ -29,7 +29,6 @@
                     @else
                     {{ number_format($list->QUANTITY, 0) }}
                     @endif
-
                 </td>
                 <td class="text-center">
                     @if ($editItemId === $list->ID)
@@ -41,7 +40,6 @@
                     @else
                     {{ $list->SYMBOL }}
                     @endif
-
                 </td>
                 <td class="text-right @if($list->RATE == 0) text-primary font-weight-bold @endif">
                     @if ($editItemId === $list->ID)
@@ -160,9 +158,8 @@
                             readonly @endif />
                     </td>
                     <td>
-                        <select wire:model='UNIT_ID' name="UNIT_ID"
-                            class="text-xs text-center form-control form-control-sm mt-2" @if ($ITEM_ID==0) readonly
-                            @endif>
+                        <select wire:model='UNIT_ID' name="UNIT_ID" @if ($ITEM_ID==0) readonly @endif
+                            class="text-xs text-center form-control form-control-sm mt-2">
                             @foreach ($unitList as $list)
                             <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
                             @endforeach
@@ -177,8 +174,8 @@
                         <label class="mt-2 text-xs">{{ number_format($AMOUNT, 2) }}</label>
                     </td>
                     <td class="text-center">
-                        <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable" @if($ITEM_ID==0)
-                            disabled @endif />
+                        <input @if($ITEM_ID==0) disabled @endif type="checkbox" class="text-lg mt-2"
+                            wire:model='TAXABLE' name="taxable" />
                     </td>
                     <td>
                         <div class="mt-2">

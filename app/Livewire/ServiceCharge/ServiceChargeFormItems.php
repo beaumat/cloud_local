@@ -356,8 +356,6 @@ class ServiceChargeFormItems extends Component
         $data =  $this->serviceChargeServices->getItem($lineId);
         if ($data) {
 
-
-
             if ($this->hemoServices->IsExist_SC_ITEM($lineId)) {
                 $this->canBeQtyEdit = false;
             } else {

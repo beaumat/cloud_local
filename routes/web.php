@@ -1,5 +1,9 @@
 <?php
 
+use App\Livewire\AccountingReport\GeneralJournalReport;
+use App\Livewire\AccountingReport\TransactionDetailsReport;
+use App\Livewire\AccountingReport\TransactionJournalReport;
+use App\Livewire\AccountingReport\TrialBalanceReport;
 use App\Livewire\BillCredit\BillCreditForm;
 use App\Livewire\BillCredit\BillCreditList;
 use App\Livewire\BillPayments\BillPaymentForm;
@@ -21,6 +25,9 @@ use App\Livewire\Doctor\DoctorForm;
 use App\Livewire\Doctor\DoctorList;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
+use App\Livewire\FinancialReport\BalanceSheetReport;
+use App\Livewire\FinancialReport\CashFlowReport;
+use App\Livewire\FinancialReport\IncomeStatementReport;
 use App\Livewire\FundTransfer\FundTransferList;
 use App\Livewire\GeneralJournal\GeneralJournalForm;
 use App\Livewire\GeneralJournal\GeneralJournalList;
@@ -469,25 +476,54 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/sales')->group(function () {
                 Route::get('/', PatientSalesReport::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
             });
-
             Route::prefix('/balance')->group(function () {
                 Route::get('/', PatientBalanceReport::class)->name('patient_balance_report')->middleware(['permission:report.patient.balance']);
             });
-
-
             Route::prefix('/doctor-pro-fees')->group(function () {
                 Route::get('/', DoctorProFeeReport::class)->name('patient_doctor_fee_report')->middleware(['permission:report.patient.doctor-pf']);
                 Route::get('/{id}/{locationid}/print-form', DoctorsFeeReportPrint::class)->name('patient_doctor_fee_report_print');
             });
         });
-        Route::prefix('/financial')->group(function () {});
+        Route::prefix('/accounting')->group(function () {
+            Route::prefix('/general-journal')->group(function () {
+                Route::get('/', GeneralJournalReport::class)->name('general_journal_report');
+            });
+            Route::prefix('/trial-balance')->group(function () {
+                Route::get('/', TrialBalanceReport::class)->name('trial_balance_report');
+            });
+
+            Route::prefix('/transaction-details')->group(function () {
+                Route::get('/', TransactionDetailsReport::class)->name('transaction_details_report');
+            });
+
+            Route::prefix('/transaction-journal')->group(function () {
+                Route::get('/', TransactionJournalReport::class)->name('transaction_journal_report');
+            });
+        });
+
+        Route::prefix('/financial')->group(function () {
+            Route::prefix('/income-statement')->group(function () {
+                Route::get('/', IncomeStatementReport::class)->name('income_statement_report');
+            });
+            Route::prefix('/balance-sheet')->group(function () {
+                Route::get('/', BalanceSheetReport::class)->name('balance_sheet_report');
+            });
+
+            Route::prefix('/cash-flow')->group(function () {
+                Route::get('/', CashFlowReport::class)->name('cash_flow_report');
+            });
+
+
+          
+        });
+
         Route::prefix('/sales')->group(function () {});
         Route::prefix('/receivables')->group(function () {});
         Route::prefix('/purchases')->group(function () {});
         Route::prefix('/expenses')->group(function () {});
         Route::prefix('/payables')->group(function () {});
         Route::prefix('/inventory')->group(function () {});
-        Route::prefix('/accounting')->group(function () {});
+
         Route::prefix('/documents')->group(function () {});
     });
 });
