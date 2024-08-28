@@ -261,7 +261,13 @@ class PrintSoa extends Component
                 $contact = $this->contactServices->get($this->CONTACT_ID, 3);
 
                 if ($contact) {
-                    $this->PATIENT_NAME = $contact->NAME;
+                    $MI = substr($contact->MIDDLE_NAME, 0, 1);
+                    $MI_COUNT  = strlen($contact->MIDDLE_NAME);
+                    $EX_COUNT = strlen($contact->SALUTATION);
+                    $MI_NAME = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
+                    $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
+    
+                    $this->PATIENT_NAME = $contact->FIRST_NAME .   $MI_NAME   . $contact->LAST_NAME . $EX_NAME;
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS1 = $this->GetAddress1($contact);
                     $this->ADDRESS2 = $this->GetAddress2($contact);
