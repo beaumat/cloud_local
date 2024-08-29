@@ -134,7 +134,7 @@ class ContactServices
             "ALT_TELEPHONE_NO"          => $ALT_TELEPHONE_NO,
             "ALT_CONTACT_PERSON"        => $ALT_CONTACT_PERSON,
             "EMAIL"                     => $EMAIL,
-            "ACCOUNT_NO"                => $ACCOUNT_NO != '' ? $ACCOUNT_NO : $this->objectService->GetSequence($OBJECT_TYPE, null),
+            "ACCOUNT_NO"                => $ACCOUNT_NO != '' ? $ACCOUNT_NO : $this->objectService->GetSequence($OBJECT_TYPE, $CUSTOM_FIELD1),
             "INACTIVE"                  => $INACTIVE,
             "GROUP_ID"                  => $GROUP_ID > 0 ? $GROUP_ID : null,
             "PAYMENT_TERMS_ID"          => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,

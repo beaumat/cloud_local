@@ -10,8 +10,8 @@ class DoctorLocation extends Model
     use HasFactory;
 
     protected $table = 'doctor_location';
-    protected $primaryKey = ['LOCATION_ID','DOCTOR_ID'];
     public $timestamps = false;
+    protected $primaryKey = 'LOCATION_ID';
     protected $fillable = [
         'LOCATION_ID',
         'DOCTOR_ID'

@@ -3,6 +3,7 @@
 namespace App\Livewire\Patient;
 
 use App\Services\ContactServices;
+use App\Services\DoctorLocationServices;
 use App\Services\PatientDoctorServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -11,28 +12,27 @@ class DoctorPanel extends Component
 {
 
     #[Reactive]
-    public int $ID;
+    public int $ID; // Patient ID;
+    #[Reactive]
+    public int $LOCATION_ID;
     public int $DOCTOR_ID = 0;
     public bool $saveSuccess = false;
     public $dataList = [];
     public $contactList = [];
 
     private $patientDoctorServices;
-    private $contactServices;
 
+    private $doctorLocationServices;
     public function boot(
         PatientDoctorServices $patientDoctorServices,
-        ContactServices $contactServices
+        DoctorLocationServices $doctorLocationServices
     ) {
         $this->patientDoctorServices = $patientDoctorServices;
-        $this->contactServices = $contactServices;
+        $this->doctorLocationServices = $doctorLocationServices;
     }
     public function mount()
     {
-        $data = $this->contactServices->get($this->ID, 3);
-        if ($data) {
-            $this->contactList = $this->contactServices->getDoctorListByLocation($this->data->LOCATION_ID ?? 0);
-        }
+        $this->contactList = $this->doctorLocationServices->ViewList($this->LOCATION_ID ?? 0);
     }
     public function delete(int $id)
     {
@@ -55,17 +55,11 @@ class DoctorPanel extends Component
             session()->flash('error', 'Please select.');
             return;
         }
-
-
         if ($this->patientDoctorServices->AlreadyExists($this->ID)) {
             session()->flash('error', 'Nephro already added.');
             return;
         }
         try {
-
-
-
-
 
             $this->patientDoctorServices->Store($this->ID, $this->DOCTOR_ID);
             $this->DOCTOR_ID = 0;

@@ -4,6 +4,7 @@ namespace App\Livewire\Patient;
 
 use App\Exports\PatientListExport;
 use App\Services\ContactServices;
+use App\Services\DoctorLocationServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 use Livewire\Attributes\On;
@@ -30,12 +31,13 @@ class PatientList extends Component
     private $contactServices;
     private $locationServices;
     private $userServices;
-
-    public function boot(ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
+    private $doctorLocationServices;
+    public function boot(ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices, DoctorLocationServices   $doctorLocationServices)
     {
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
+        $this->doctorLocationServices = $doctorLocationServices;
     }
     public function mount()
     {
@@ -90,7 +92,7 @@ class PatientList extends Component
     }
     public function render()
     {
-        $this->doctorList = $this->contactServices->getDoctorListByLocation($this->locationid);
+        $this->doctorList = $this->doctorLocationServices->ViewList($this->locationid);
         $dataList = $this->contactServices->SearchPatient($this->search, $this->perPage, $this->locationid, $this->sortby, $this->isDesc, $this->doctorid);
 
         return view('livewire.patient.patient-list', ['dataList' => $dataList]);

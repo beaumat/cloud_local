@@ -44,7 +44,10 @@
                                 <tbody class="text-xs">
                                     @foreach ($locations as $list)
                                         <tr>
-                                            <td> {{ $list->NAME }}</td>
+                                            <td> <a
+                                                    href="{{ route('maintenancesettingslocation_edit', ['id' => $list->ID]) }}">
+                                                    {{ $list->NAME }}
+                                                </a> </td>
                                             <td>
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
