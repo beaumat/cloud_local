@@ -13,8 +13,6 @@
             </a>
         </li>
         @endcan
-
-
         @can('item-group.view')
         <li class="nav-item">
             <a href="{{ route('maintenanceinventoryitem_group') }}"
@@ -24,7 +22,6 @@
             </a>
         </li>
         @endcan
-
         @can('item-class.view')
         <li class="nav-item">
             <a href="{{ route('maintenanceinventoryitem_class') }}"
@@ -34,7 +31,6 @@
             </a>
         </li>
         @endcan
-
         @can('item-sub-class.view')
         <li class="nav-item">
             <a href="{{ route('maintenanceinventoryitem_sub_class') }}"
@@ -44,8 +40,6 @@
             </a>
         </li>
         @endcan
-
-
         @can('manufacturer.view')
         <li class="nav-item">
             <a href="{{ route('maintenanceinventorymanufacturers') }}"
@@ -55,7 +49,6 @@
             </a>
         </li>
         @endcan
-
         @can('ship-via.view')
         <li class="nav-item">
             <a href="{{ route('maintenanceinventoryship_via') }}"
@@ -65,7 +58,6 @@
             </a>
         </li>
         @endcan
-
         @can('price-level.view')
         <li class="nav-item">
             <a href="{{ route('maintenanceinventoryprice_level') }}"
@@ -75,7 +67,6 @@
             </a>
         </li>
         @endcan
-
         @can('unit-of-measure.view')
         <li class="nav-item">
             <a href="{{ route('maintenanceinventoryunit_of_measure') }}"
@@ -85,7 +76,6 @@
             </a>
         </li>
         @endcan
-
         @can('stock-bin.view')
         <li class="nav-item">
             <a href="{{ route('maintenanceinventorystock_bin') }}"
@@ -95,7 +85,6 @@
             </a>
         </li>
         @endcan
-
         @can('inventory-adjustment-type.view')
         <li class="nav-item">
             <a href="{{ route('maintenanceinventoryinventory_adjustment_type') }}"
@@ -105,7 +94,6 @@
             </a>
         </li>
         @endcan
-
         @can('price-location')
         <li class="nav-item">
             <a href="{{ route('maintenanceinventoryprice_location') }}"
@@ -115,7 +103,5 @@
             </a>
         </li>
         @endcan
-
-
     </ul>
 </li>

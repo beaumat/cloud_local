@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\AccountingReport\GeneralJournalReport;
+use App\Livewire\AccountingReport\GeneralLedgerReport;
 use App\Livewire\AccountingReport\TransactionDetailsReport;
 use App\Livewire\AccountingReport\TransactionJournalReport;
 use App\Livewire\AccountingReport\TrialBalanceReport;
@@ -485,8 +486,8 @@ Route::middleware(['auth'])->group(function () {
             });
         });
         Route::prefix('/accounting')->name('accounting')->group(function () {
-            Route::prefix('/general-journal')->middleware(['permission:report.accounting.general-ledge'])->group(function () {
-                Route::get('/', GeneralJournalReport::class)->name('general_journal_report');
+            Route::prefix('/general-ledger')->middleware(['permission:report.accounting.general-ledger'])->group(function () {
+                Route::get('/', GeneralLedgerReport::class)->name('general_ledeger_report');
             });
             Route::prefix('/trial-balance')->middleware(['permission:report.accounting.trial-balance'])->group(function () {
                 Route::get('/', TrialBalanceReport::class)->name('trial_balance_report');

@@ -5,12 +5,12 @@
     </a>
     <ul class="nav nav-treeview">
 
-        @can('report.accounting.general-ledge')
+        @can('report.accounting.general-ledger')
         <li class="nav-item">
-            <a href="{{ route('reportsaccountinggeneral_journal_report') }}"
-                class="nav-link {{ request()->is('reports/accounting/general-journal*') ? 'text-warning font-weight-bold' : '' }}">
+            <a href="{{ route('reportsaccountinggeneral_ledeger_report') }}"
+                class="nav-link {{ request()->is('reports/accounting/general-ledger*') ? 'text-warning font-weight-bold' : '' }}">
                 <i class="fa fa-print  nav-icon"></i>
-                <p>General Journal</p>
+                <p>General Ledger</p>
             </a>
         </li>
         @endcan

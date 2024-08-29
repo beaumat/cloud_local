@@ -47,22 +47,18 @@
                 <li>
                     <a href="{{ route('maintenanceinventoryitem') }}" class="dropdown-item">Item Master List </a>
                 </li>
-
                 @endcan
-
                 @can('others.item-active-list.view')
                 <li>
                     <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">Item Inventory </a>
                 </li>
                 @endcan
-
                 @can('price-location')
                 <li>
                     <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">Price Adjust by
                         Location </a>
                 </li>
                 @endcan
-
             </ul>
         </li>
         @endif
