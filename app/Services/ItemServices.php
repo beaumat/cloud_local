@@ -310,7 +310,7 @@ class ItemServices
 
         return $items;
     }
-    public function getItemListBySubId(int $itemSubId, $search)
+    public function getItemListBySubId(int $itemSubId, $search, int $HEMO_ID)
     {
         $data = Items::query()
             ->select([
@@ -326,6 +326,12 @@ class ItemServices
                     $q->where('item.CODE', 'like', '%' . $search . '%')
                         ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%');
                 });
+            })
+            ->whereNotExists(function ($query) use (&$HEMO_ID) {
+                $query->select(DB::raw(1))
+                    ->from('hemodialysis_items as h')
+                    ->whereRaw('h.ITEM_ID = item.ID')
+                    ->where('h.HEMO_ID', $HEMO_ID);
             })
             ->orderBy('DESCRIPTION', 'asc')
             ->get();

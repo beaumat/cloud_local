@@ -8,6 +8,7 @@ use App\Services\ItemSubClassServices;
 use App\Services\ItemTreatmentServices;
 use App\Services\ServiceChargeServices;
 use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -24,6 +25,8 @@ class InventoryTreatment extends Component
     #[Reactive]
     public int $LOCATION_ID;
     public int $openStatus = 1; // draft default
+
+    public $isDisabled = false;
     public bool $saveSuccess = false;
     public $dataList = [];
     public $subClassList = [];
@@ -57,10 +60,12 @@ class InventoryTreatment extends Component
     public $ItemRequiredList = [];
 
     public bool $CAN_BE_EDIT = false;
+    public bool $CAN_BE_DELETE = false;
     public function mount()
     {
         $this->codeBase = false;
         $this->updatedcodeBase();
+
     }
     public function updatedItemId()
     {
@@ -101,7 +106,6 @@ class InventoryTreatment extends Component
         if ($data) {
             DB::beginTransaction();
             try {
-
                 if ($data->SC_ITEM_ID > 0) {
                     $dataItem = $this->serviceChargeServices->getItem($data->SC_ITEM_ID);
                     if ($dataItem) {

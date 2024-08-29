@@ -1,7 +1,7 @@
 <div>
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h6>{{ $ITEM_SUB_NAME }}</h6>
@@ -22,7 +22,7 @@
                                     <thead class="text-xs bg-sky">
                                         <tr>
                                             <th>Item</th>
-                                            <th class="col-1">Action</th>
+                                            <th class="col-2 text-center">Add</th>
                                         </tr>
                                     </thead>
                                     <tbody class="text-xs">
@@ -31,7 +31,7 @@
                                                 <td> {{ $list->DESCRIPTION }}</td>
                                                 <td>
                                                     <button class="btn btn-success active btn-xs w-100"
-                                                        wire:click='AddCharge({{ $list->ID }})'>
+                                                        wire:click="Adding({{ $list->ID }})">
                                                         <i class="fas fa-plus" aria-hidden="true"></i>
                                                     </button>
                                                 </td>
@@ -48,5 +48,6 @@
                 </div>
             </div>
         </div>
+        @livewire('Hemodialysis.OtherChargesModal')
     @endif
 </div>

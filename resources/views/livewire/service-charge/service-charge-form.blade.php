@@ -36,7 +36,6 @@
                                                     :options="$patientList" :zero="true" :isDisabled=true
                                                     wire:model='PATIENT_ID' />
                                             @endif
-
                                         </div>
                                         <div class="col-md-6">
                                             <div class="row">
@@ -185,7 +184,13 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-4 text-left">
-
+                                        @if ($HEMO_ID > 0)
+                                            <a target="_BLANK"
+                                                href="{{ route('patientshemo_edit', ['id' => $HEMO_ID]) }}"
+                                                class="btn btn-warning btn-xs">
+                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                View Treatment </a>
+                                        @endif
                                     </div>
                                     <div class="col-md-8">
                                         <div class="row">

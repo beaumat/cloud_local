@@ -47,6 +47,10 @@ class ServiceChargeForm extends Component
     public float $TAXABLE_AMOUNT;
     public float $NONTAXABLE_AMOUNT;
     public int $ACCOUNTS_RECEIVABLE_ID;
+
+
+    public int $HEMO_ID;
+
     public $patientList = [];
     public $locationList = [];
     public $shipViaList = [];
@@ -164,6 +168,8 @@ class ServiceChargeForm extends Component
                 $this->LoadDropdown(true);
                 $this->getInfo($data);
                 $this->Modify = false;
+
+                $this->HEMO_ID = $this->hemoServices->GetHemoID($data->DATE, $data->PATIENT_ID, $data->LOCATION_ID);
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';

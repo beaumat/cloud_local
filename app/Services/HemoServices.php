@@ -48,6 +48,19 @@ class HemoServices
 
         return [];
     }
+    public function GetHemoID($DATE, $PATIENT_ID, $LOCATION_ID): int
+    {
+        $dataRecord = Hemodialysis::where('CUSTOMER_ID', $PATIENT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('DATE', $DATE)
+            ->first();
+
+        if ($dataRecord) {
+            return  (int)  $dataRecord->ID;
+        }
+
+        return 0;
+    }
     public function IsNewHemo(int $CONTACT_ID, int $LOCATION_ID, string $DATE): bool
     {
         $count = Hemodialysis::where('CUSTOMER_ID', $CONTACT_ID)
@@ -852,7 +865,9 @@ class HemoServices
         if ($itemData) {
             if ($itemData->IS_POST) {
                 $data = $this->Get($HEMO_ID);
-                $this->itemInventoryServices->DeleteInv($ITEM_ID, $data->LOCATION_ID, 27, $ID, $data->DATE);
+                if ($data) {
+                    $this->itemInventoryServices->DeleteInv($ITEM_ID, $data->LOCATION_ID, 27, $ID, $data->DATE);
+                }
             }
         }
 
@@ -865,6 +880,26 @@ class HemoServices
 
     public function ItemDeleteTrigger(int $ID, int $HEMO_ID)
     {
+
+
+        $dataList =  HemodialysisItems::where('SK_LINE_ID', $ID)
+            ->where('HEMO_ID', $HEMO_ID)
+            ->get();
+
+        foreach ($dataList as $list) {
+            $itemData =  $this->ItemGet($list->ID);
+            if ($itemData) {
+                if ($itemData->IS_POST) {
+                    $data = $this->Get($HEMO_ID);
+                    if ($data) {
+                        $this->itemInventoryServices->DeleteInv($list->ITEM_ID, $data->LOCATION_ID, 27, $list->ID, $data->DATE);
+                    }
+                }
+            }
+        }
+
+
+
         HemodialysisItems::where('SK_LINE_ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
             ->delete();
