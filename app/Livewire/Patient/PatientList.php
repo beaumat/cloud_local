@@ -41,7 +41,7 @@ class PatientList extends Component
     {
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
-        $this->doctorList = $this->contactServices->getList(4);
+
         $this->doctorid = 0;
     }
     public function delete($id)
@@ -54,7 +54,10 @@ class PatientList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
+    public function updatedlocationid()
+    {
+        $this->doctorid = 0;
+    }
     public function export()
     {
         return Excel::download(new PatientListExport(
@@ -87,7 +90,7 @@ class PatientList extends Component
     }
     public function render()
     {
-
+        $this->doctorList = $this->contactServices->getDoctorListByLocation($this->locationid);
         $dataList = $this->contactServices->SearchPatient($this->search, $this->perPage, $this->locationid, $this->sortby, $this->isDesc, $this->doctorid);
 
         return view('livewire.patient.patient-list', ['dataList' => $dataList]);

@@ -36,8 +36,18 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <livewire:select-option name="doctorid" :options="$doctorList" :zero="true"
-                                        titleName="Nephro/Doctors :" wire:model.live='doctorid' />
+
+                                    <div class="mt-0">
+                                        <label class="text-sm">Nephro/Doctors :</label>
+                                        <select name="doctorid" wire:model.live='doctorid'
+                                            class="form-control form-control-sm">
+                                            <option value="0"> All Doctors</option>
+                                            @foreach ($doctorList as $item)
+                                                <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mt-0">
