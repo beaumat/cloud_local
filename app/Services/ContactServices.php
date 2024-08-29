@@ -62,6 +62,20 @@ class ContactServices
         }
         return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();
     }
+
+    public function getDoctorListByLocation(int $LOCATION_ID)
+    {
+
+        $result = Contacts::query()
+            ->select(['ID', 'NAME'])
+            ->where('TYPE', 4)
+            ->where('INACTIVE', '0')
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->orderBy('LAST_NAME', 'asc')
+            ->get();
+
+        return $result;
+    }
     public function calculateUserAge($dateString)
     {
         try {

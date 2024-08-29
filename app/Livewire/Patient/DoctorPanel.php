@@ -29,7 +29,11 @@ class DoctorPanel extends Component
     }
     public function mount()
     {
-        $this->contactList = $this->contactServices->getList(4);
+        $data = $this->contactServices->get($this->ID, 3);
+        if ($data) {
+
+            $this->contactList = $this->contactServices->getDoctorListByLocation($data->LOCATION_ID ?? 0);
+        }
     }
     public function delete(int $id)
     {

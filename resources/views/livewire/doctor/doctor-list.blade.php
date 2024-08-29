@@ -31,7 +31,19 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-
+                                    <div class="mt-0">
+                                        <label class="text-sm">Location:</label>
+                                        <select
+                                            @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                            name="location" wire:model.live='locationid'
+                                            class="form-control form-control-sm">
+                                            <option value="0"> All Location</option>
+                                            @foreach ($locationList as $item)
+                                                <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
@@ -40,6 +52,7 @@
                                         <th>ID No.</th>
                                         <th>Name</th>
                                         <th>Accreditation No.</th>
+                                        <th>Location</th>
                                         <th class="text-center">Inactive</th>
                                         <th class="text-center bg-success col-1">
 
@@ -63,6 +76,7 @@
                                             </td>
                                             <td> {{ $list->NAME }}</td>
                                             <td> {{ $list->PIN }}</td>
+                                            <td>{{ $list->LOCATION }}</td>
                                             <td class="text-center">
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>

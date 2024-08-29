@@ -5,6 +5,8 @@ namespace App\Livewire\Doctor;
 use App\Models\Contacts;
 use App\Models\Gender;
 use App\Services\ContactServices;
+use App\Services\LocationServices;
+use App\Services\UserServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -16,6 +18,7 @@ class DoctorForm extends Component
     public int $ID;
     public int $TYPE = 4;
     public string $NAME;
+    public int $LOCATION_ID;
     public string $COMPANY_NAME;
     public string $SALUTATION;
     public string $FIRST_NAME;
@@ -55,10 +58,14 @@ class DoctorForm extends Component
     public string $selectTab = 'gen';
 
     private $contactServices;
-
-    public function boot(ContactServices $contactServices)
+    private $locationServices;
+    public $locationList = [];
+    private $userServices;
+    public function boot(ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
     {
         $this->contactServices = $contactServices;
+        $this->locationServices = $locationServices;
+        $this->userServices = $userServices;
     }
     public function SelectTab($tab)
     {
@@ -67,6 +74,9 @@ class DoctorForm extends Component
 
     public function mount($id = null)
     {
+        $this->locationList = $this->locationServices->getList();
+
+
         $this->genders = Gender::all();
         if (is_numeric($id)) {
             $contact = $this->contactServices->get($id, $this->TYPE);
@@ -106,6 +116,7 @@ class DoctorForm extends Component
                 $this->NICKNAME                 = $contact->NICKNAME ? $contact->NICKNAME : '';
                 $this->HIRE_DATE                = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
                 $this->PIN                      = $contact->PIN ?? '';
+                $this->LOCATION_ID              = $contact->LOCATION_ID ?? 0;
 
                 return;
             }
@@ -148,10 +159,11 @@ class DoctorForm extends Component
         $this->NICKNAME = '';
         $this->HIRE_DATE = '';
         $this->PIN = '';
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
     }
     private function getOtherUpdate()
     {
-        Contacts::where('ID', $this->ID)->update(['PIN' => $this->PIN]);
+        Contacts::where('ID', $this->ID)->update(['PIN' => $this->PIN, 'LOCATION_ID' => $this->LOCATION_ID]);
     }
     public function save()
     {
@@ -209,7 +221,8 @@ class DoctorForm extends Component
                     $this->GENDER,
                     $this->DATE_OF_BIRTH,
                     $this->NICKNAME,
-                    $this->HIRE_DATE
+                    $this->HIRE_DATE,
+                    $this->LOCATION_ID
                 );
                 $this->getOtherUpdate();
                 Redirect::route('maintenancecontactdoctors_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -249,7 +262,8 @@ class DoctorForm extends Component
                     $this->GENDER,
                     $this->DATE_OF_BIRTH,
                     $this->NICKNAME,
-                    $this->HIRE_DATE
+                    $this->HIRE_DATE,
+                    $this->LOCATION_ID
                 );
 
                 $this->getOtherUpdate();

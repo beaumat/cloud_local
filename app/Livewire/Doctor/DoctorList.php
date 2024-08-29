@@ -3,6 +3,8 @@
 namespace App\Livewire\Doctor;
 
 use App\Services\ContactServices;
+use App\Services\LocationServices;
+use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -17,12 +19,17 @@ class DoctorList extends Component
     public int $perPage = 15;
     public int $locationid = 0;
     private $contactServices;
-   
+    public $locationList = [];
+    private $locationServices;
+    private $userServices;
     public function boot(
-        ContactServices $contactServices
+        ContactServices $contactServices,
+        LocationServices $locationServices,
+        UserServices $userServices
     ) {
         $this->contactServices = $contactServices;
-   
+        $this->locationServices = $locationServices;
+        $this->userServices = $userServices;
     }
     public function delete($id)
     {
@@ -37,7 +44,9 @@ class DoctorList extends Component
     public function mount()
     {
      
-        $this->locationid = 0;
+        $this->locationid = $this->userServices->getLocationDefault();
+        $this->locationList = $this->locationServices->getList();
+
     }
     #[On('clear-alert')]
     public function clearAlert()
