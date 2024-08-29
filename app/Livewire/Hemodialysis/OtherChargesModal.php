@@ -89,7 +89,7 @@ class OtherChargesModal extends Component
             if ($data->TYPE < 2) {
                 $onHandQty  = $this->itemServices->getOnhand($data->ID, $hemoData->LOCATION_ID);
 
-                if ($onHandQty == 0) {
+                if ($onHandQty <= 0) {
                     session()->flash('error', 'Invalid add charges: The item is out of stock.');
                     return;
                 }
