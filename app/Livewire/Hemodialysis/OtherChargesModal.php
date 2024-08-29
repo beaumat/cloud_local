@@ -3,6 +3,7 @@
 namespace App\Livewire\Hemodialysis;
 
 use App\Services\HemoServices;
+use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use App\Services\ItemTreatmentServices;
 use App\Services\LocationServices;
@@ -28,6 +29,7 @@ class OtherChargesModal extends Component
     private $priceLevelLineServices;
     private $itemServices;
     private $hemoServices;
+    private $itemInventoryServices;
     public function boot(
         ServiceChargeServices $serviceChargeServices,
         ItemTreatmentServices $itemTreatmentServices,
@@ -35,7 +37,8 @@ class OtherChargesModal extends Component
         LocationServices $locationServices,
         PriceLevelLineServices  $priceLevelLineServices,
         ItemServices $itemServices,
-        HemoServices $hemoServices
+        HemoServices $hemoServices,
+        ItemInventoryServices  $itemInventoryServices
     ) {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->itemTreatmentServices = $itemTreatmentServices;
@@ -44,6 +47,7 @@ class OtherChargesModal extends Component
         $this->priceLevelLineServices = $priceLevelLineServices;
         $this->itemServices = $itemServices;
         $this->hemoServices = $hemoServices;
+        $this->itemInventoryServices = $itemInventoryServices;
     }
     #[On('adding-item')]
     public function openModal($result)
@@ -67,15 +71,30 @@ class OtherChargesModal extends Component
         ], [], [
             'QUANTITY' => 'Quantity'
         ]);
-        $hemoData = $this->hemoServices->Get($this->HEMO_ID);
+
+
+
         $data = $this->itemServices->get($this->ITEM_ID);
+
         if ($data) {
+
             $QTY_BASED = 1;
             $PRICE_LEVEL_ID  = 0;
             $UNIT_ID  = $data->BASE_UNIT_ID ?? 0;
             $RATE = $data->RATE ?? 0;
             $TAX = $data->TAXABLE ?? 0;
             $SK_LINE_ID = null;
+            $hemoData = $this->hemoServices->Get($this->HEMO_ID);
+
+            if ($data->TYPE < 2) {
+                $onHandQty  = $this->itemServices->getOnhand($data->ID, $hemoData->LOCATION_ID);
+
+                if ($onHandQty == 0) {
+                    session()->flash('error', 'Invalid add charges: The item is out of stock.');
+                    return;
+                }
+            }
+
             DB::beginTransaction();
             try {
                 $scData =  $this->serviceChargeServices->ServicesChargesGetFirst($hemoData->DATE, $hemoData->CUSTOMER_ID, $hemoData->LOCATION_ID);
