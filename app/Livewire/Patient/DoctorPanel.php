@@ -31,8 +31,7 @@ class DoctorPanel extends Component
     {
         $data = $this->contactServices->get($this->ID, 3);
         if ($data) {
-
-            $this->contactList = $this->contactServices->getDoctorListByLocation($data->LOCATION_ID ?? 0);
+            $this->contactList = $this->contactServices->getDoctorListByLocation($this->data->LOCATION_ID ?? 0);
         }
     }
     public function delete(int $id)

@@ -29,39 +29,46 @@
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
-                                
+
                                         <th>Name</th>
-                                        <th>Inactive</th>
+                                        <th clss="col-1">Inactive</th>
                                         <th class="text-center col-1">
-                                            <a href="{{ route('maintenancesettingslocation_create') }}" class="text-white">
+                                            <a href="{{ route('maintenancesettingslocation_create') }}"
+                                                class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
+                                <tbody class="text-xs">
                                     @foreach ($locations as $list)
                                         <tr>
                                             <td> {{ $list->NAME }}</td>
                                             <td>
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
-                                                @else                     
+                                                @else
                                                     <strong class="text-primary">No</strong>
                                                 @endif
                                             </td>
                                             <td class="text-center">
-                                       
                                                 <a href="{{ route('maintenancesettingslocation_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    class="btn btn-info btn-xs">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
+
+                                                <a href="{{ route('maintenancesettingslocation_doctor', ['id' => $list->ID]) }}"
+                                                    class="btn btn-success btn-xs">
+                                                    <i class="fas fa-user" aria-hidden="true"></i>
+                                                </a>
+
+
+                                                <button type="button" wire:click='delete({{ $list->ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+                                                    class="btn btn-danger btn-xs">
+                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </a>
                                             </td>
                                         </tr>
                                     @endforeach

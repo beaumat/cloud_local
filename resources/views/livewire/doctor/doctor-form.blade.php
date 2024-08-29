@@ -27,7 +27,7 @@
                             <div class="card-body bg-light">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' maxlength='50' />
                                         </div>
                                         <div class="col-md-2">
@@ -37,11 +37,6 @@
                                         <div class="col-md-2">
                                             <livewire:text-input name="PIN" titleName="Accreditation No."
                                                 wire:model='PIN' />
-                                        </div>
-                                         <div class="col-md-2" @if (Auth::user()->locked_location) style="opacity:
-                                            0.5;pointer-events: none;" @endif>
-                                            <livewire:select-option name="LOCATION_ID" :options="$locationList"
-                                                :zero="true" titleName="Branch" wire:model='LOCATION_ID' />
                                         </div>
                                         <div class="col-nd-2">
                                             <div class="row">

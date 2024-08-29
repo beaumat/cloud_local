@@ -262,33 +262,34 @@ class ItemServices
             ->orderBy('item.ID', 'desc')
             ->paginate($perPage);
     }
-    public function getOnhand(int $ITEM_ID, int $locationId) :int {
-        
-        $items = DB::table('item')
-        ->select(
-            [
-                'item.ID',
-            ]
-        )
-        ->selectSub(function ($query) use (&$locationId) {
-            $query->from('item_inventory')->select('item_inventory.ENDING_QUANTITY')
-                ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
-                ->where('item_inventory.LOCATION_ID', $locationId)
-                ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
-                ->orderBy('item_inventory.ID', 'DESC')->limit(1);
-        }, 'QTY_ON_HAND')
-        ->where('item.TYPE', '<', 2)
-        ->where('item.INACTIVE', false)
-        ->where('item.ID', $ITEM_ID)
-        ->first();
+    public function getOnhand(int $ITEM_ID, int $locationId): int
+    {
 
-        if($items) {
+        $items = DB::table('item')
+            ->select(
+                [
+                    'item.ID',
+                ]
+            )
+            ->selectSub(function ($query) use (&$locationId) {
+                $query->from('item_inventory')->select('item_inventory.ENDING_QUANTITY')
+                    ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
+                    ->where('item_inventory.LOCATION_ID', $locationId)
+                    ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
+                    ->orderBy('item_inventory.ID', 'DESC')->limit(1);
+            }, 'QTY_ON_HAND')
+            ->where('item.TYPE', '<', 2)
+            ->where('item.INACTIVE', false)
+            ->where('item.ID', $ITEM_ID)
+            ->first();
+
+        if ($items) {
 
             return (int) $items->QTY_ON_HAND ?? 0;
         }
 
         return 0;
-    } 
+    }
     public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc)
     {
 
@@ -357,6 +358,7 @@ class ItemServices
                 $query->select(DB::raw(1))
                     ->from('hemodialysis_items as h')
                     ->whereRaw('h.ITEM_ID = item.ID')
+                    ->where('h.IS_DEFAULT', 0)
                     ->where('h.HEMO_ID', $HEMO_ID);
             })
             ->orderBy('DESCRIPTION', 'asc')

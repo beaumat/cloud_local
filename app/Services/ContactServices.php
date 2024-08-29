@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Contacts;
+use App\Models\DoctorLocation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
@@ -65,14 +66,13 @@ class ContactServices
 
     public function getDoctorListByLocation(int $LOCATION_ID)
     {
-
-        $result = Contacts::query()
-            ->select(['ID', 'NAME'])
-            ->where('TYPE', 4)
-            ->where('INACTIVE', '0')
-            ->where('LOCATION_ID', $LOCATION_ID)
-            ->orderBy('LAST_NAME', 'asc')
+        $result = DoctorLocation::query()
+            ->select(['c.ID', 'c.NAME'])
+            ->join('contact as c', 'c.ID', '=', 'doctor_location.DOCTOR_ID')
+            ->where('doctor_location.LOCATION_ID', $LOCATION_ID)
+            ->orderBy('c.NAME', 'asc')
             ->get();
+
 
         return $result;
     }
