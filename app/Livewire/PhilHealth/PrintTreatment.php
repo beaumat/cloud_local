@@ -33,6 +33,8 @@ class PrintTreatment extends Component
     public string $FIRST_CASE_RATE;
     public string $SECOND_CASE_RATE;
 
+    public bool $PRE_SIGN_DATA =  false;
+    public bool $OUTPUT_SIGN = false;
     public float $CHARGES_ROOM_N_BOARD;
     public float $CHARGES_DRUG_N_MEDICINE;
     public float $CHARGES_LAB_N_DIAGNOSTICS;
@@ -115,17 +117,21 @@ class PrintTreatment extends Component
         $this->i = 0;
         $this->hemoList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
     }
-    public function mount(int $PRINT_ID,  int $PATIENT_ID = 0)
+    public function mount(int $PRINT_ID,  int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
+
+        $this->OUTPUT_SIGN = $OUTPUT;
+
         if ($PRINT_ID > 0) {
+            $this->PRE_SIGN_DATA = false;
             $this->PreLoad($PRINT_ID);
             $this->getSumamry();
-
             return;
         }
 
 
         if ($PATIENT_ID > 0) {
+            $this->PRE_SIGN_DATA = true;
             $contact = $this->contactServices->get($PATIENT_ID, 3);
             if ($contact) {
                 $this->LOCATION_ID = $contact->LOCATION_ID;
@@ -262,7 +268,7 @@ class PrintTreatment extends Component
                     $EX_COUNT = strlen($contact->SALUTATION);
                     $MI_NAME = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
                     $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
-    
+
                     $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME .   $MI_NAME   . $contact->LAST_NAME . $EX_NAME);
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS = $contact->POSTAL_ADDRESS;

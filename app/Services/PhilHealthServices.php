@@ -26,7 +26,6 @@ class PhilHealthServices
     public float $SUPPLIES = 1082;
     public float $PROF_FEE_AMOUNT = 437.50;
     public float $PROF_FEE_FIRST_CASE = 350;
-
     public int $PHIL_HEALTH_ITEM_ID  = 2;
 
     private $object;

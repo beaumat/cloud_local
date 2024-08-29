@@ -55846,3 +55846,11 @@ a.text-muted:hover {
 .modal-xl-2 .modal-dialog {
   max-width: 16.6667%; /* col-xl-2 is roughly 16.67% wide */
 }
+
+.tp-border {
+    border: 2px solid hsla(240, 100%, 50%, 0.5); /* Semi-transparent blue border */
+}
+
+.tp-bg {
+  background-color: transparent; /* Fully transparent */
+}

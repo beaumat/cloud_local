@@ -58,16 +58,39 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-10 text-left">
-                                    <a type="button" target="_BLANK" title="Print Soa"
-                                        href="{{ route('patientsphic_print', ['id' => $PHILHEALTH_ID]) }}"
-                                        class=" btn  btn-sm btn-primary">
-                                        <i class="fa fa-print" aria-hidden="true"></i> SOA & Treatment
-                                    </a>
-                                    <a type="button" target="_BLANK" title="Print Philheath Form"
-                                        href="{{ route('patientsphic_print_form', ['id' => $PHILHEALTH_ID]) }}"
-                                        class="btn btn-info btn-sm"> <i class="fa fa-print" aria-hidden="true"></i>
-                                        CSF & CF4
-                                    </a>
+                                    <div class="row">
+                                        <div class="col-md-6 text-center">
+                                            <a type="button" target="_BLANK" title="Print Soa"
+                                                href="{{ route('patientsphic_print', ['id' => $PHILHEALTH_ID]) }}"
+                                                class=" btn  btn-sm btn-primary">
+                                                <i class="fa fa-print" aria-hidden="true"></i> Print
+                                            </a>
+                                            <a type="button" target="_BLANK" title="Print Soa"
+                                                href="{{ route('patientsphic_print_templeted_out', ['id' => $PHILHEALTH_ID]) }}"
+                                                class=" btn  btn-sm btn-primary active">
+                                                <i class="fa fa-print" aria-hidden="true"></i> (Pre-sign)
+                                            </a>
+                                            <span class="text-xs text-secondary font-weight-bold">SOA & Treatment</span>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <a type="button" target="_BLANK" title="Print Philheath Form"
+                                                href="{{ route('patientsphic_print_form', ['id' => $PHILHEALTH_ID]) }}"
+                                                class="btn btn-info btn-sm"> <i class="fa fa-print"
+                                                    aria-hidden="true"></i>
+                                                Print
+                                            </a>
+                                            <a type="button" target="_BLANK" title="Print Philheath Form"
+                                                href="{{ route('patientsphic_print_form_templeted_out', ['id' => $PHILHEALTH_ID]) }}"
+                                                class="btn btn-info btn-sm active"> <i class="fa fa-print"
+                                                    aria-hidden="true"></i>
+                                                (Pre-sign)
+                                            </a>
+                                            <span class="text-xs text-secondary font-weight-bold">CSF & CF4</span>
+                                        </div>
+                                    </div>
+
+
+
                                 </div>
                                 <div class="col-2 text-right">
 

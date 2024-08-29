@@ -43,7 +43,6 @@ class PatientList extends Component
     {
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
-
         $this->doctorid = 0;
     }
     public function delete($id)

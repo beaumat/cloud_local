@@ -22,6 +22,8 @@ class PrintCf4Back extends Component
     public $DATE_DISCHARGED;
     public $DOCTOR_ORDER = "UNDERGO HEMODIALYSIS TREATMENT WITH NO COMPLICATIONS";
     private $patientDoctorServices;
+    public bool $PRE_SIGN_DATA =  false;
+    public bool $OUTPUT_SIGN = false;
     public function boot(PhilHealthServices $philHealthServices, HemoServices $hemoServices, ContactServices $contactServices, PatientDoctorServices $patientDoctorServices)
     {
         $this->philHealthServices = $philHealthServices;
@@ -29,8 +31,9 @@ class PrintCf4Back extends Component
         $this->contactServices = $contactServices;
         $this->patientDoctorServices = $patientDoctorServices;
     }
-    public function mount($id = null,  int $PATIENT_ID = 0)
+    public function mount($id = null,  int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
+        $this->OUTPUT_SIGN = $OUTPUT;
         $getData = ['GENERIC_NAME' => '', 'QUANTITY' => '', 'DOSSAGE' => '', 'ROUTE' => '', 'FREQUENCY' => '', 'TOTAL_COST' => '', 'CONT_GENERIC_NAME' => '', 'CONT_QUANTITY' => '', 'CONT_DOSSAGE' => '', 'CONT_ROUTE' => '', 'CONT_FREQUENCY' => '', 'CONT_TOTAL_COST' => ''];
 
         $this->dataMed = [
@@ -44,11 +47,12 @@ class PrintCf4Back extends Component
         ];
 
         if ($id > 0) {
+            $this->PRE_SIGN_DATA =  false;
             $this->getMed($id);
             $data = $this->philHealthServices->get($id);
             if ($data) {
                 $this->DATE_DISCHARGED =  $data->DATE_DISCHARGED ?? '';
-                $getData = $this->hemoServices->GetSummary( $data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED ?? '', $data->DATE_DISCHARGED ?? '' );
+                $getData = $this->hemoServices->GetSummary($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED ?? '', $data->DATE_DISCHARGED ?? '');
                 $r = 0;
                 foreach ($getData as $item) {
                     $this->dateList[$r] = $item->DATE;
@@ -67,7 +71,7 @@ class PrintCf4Back extends Component
         }
 
         if ($PATIENT_ID > 0) {
-
+            $this->PRE_SIGN_DATA =  true;
             $fee = $this->patientDoctorServices->GetList($PATIENT_ID);
             foreach ($fee as $list) {
                 $this->DR_NAME = strtoupper($list->NAME);

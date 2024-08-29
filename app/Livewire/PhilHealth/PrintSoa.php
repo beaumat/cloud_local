@@ -86,8 +86,8 @@ class PrintSoa extends Component
     public float $OP_TOTAL;
     public float $AD_SUB_TOTAL;
     public  float $AD_TOTAL = 0;
-
-
+    public bool $PRE_SIGN_DATA =  false;
+    public bool $OUTPUT_SIGN = false;
     public int $PREPARED_BY_ID;
     public string $DATE_SIGNED;
     public string $OTHER_NAME;
@@ -105,6 +105,8 @@ class PrintSoa extends Component
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
     private $patientDoctorServices;
+
+
     public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, LocationServices $locationServices, HemoServices $hemoServices, PatientDoctorServices $patientDoctorServices)
     {
         $this->philHealthServices = $philHealthServices;
@@ -119,18 +121,19 @@ class PrintSoa extends Component
         $this->i = 0;
         $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
     }
-    public function mount(int $PRINT_ID, int $PATIENT_ID = 0)
-    {
+    public function mount(int $PRINT_ID, int $PATIENT_ID = 0, bool $OUTPUT = true)
+    {   
+        $this->OUTPUT_SIGN = $OUTPUT;
         if ($PRINT_ID > 0) {
+            $this->PRE_SIGN_DATA = false;
             $this->PreLoad($PRINT_ID);
             $this->profFeeList($PRINT_ID);
             return;
         }
-
+        // pre-sign
         if ($PATIENT_ID > 0) {
-
+            $this->PRE_SIGN_DATA = true;
             $contact = $this->contactServices->get($PATIENT_ID, 3);
-
             if ($contact) {
 
 
@@ -173,17 +176,17 @@ class PrintSoa extends Component
         if (is_numeric($ID)) {
             $data = $this->philHealthServices->get($ID);
             if ($data) {
-                $this->LOCATION_ID = $data->LOCATION_ID;
-                $this->CONTACT_ID = $data->CONTACT_ID;
-                $this->CODE = $data->CODE;
-                $this->DATE_ADMITTED = $data->DATE_ADMITTED;
-                $this->TIME_ADMITTED = $data->TIME_ADMITTED;
-                $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
-                $this->TIME_DISCHARGED = $data->TIME_DISCHARGED;
-                $this->FINAL_DIAGNOSIS = $data->FINAL_DIAGNOSIS ?? '';
-                $this->OTHER_DIAGNOSIS = $data->OTHER_DIAGNOSIS ?? '';
-                $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE ?? '';
-                $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE ?? '';
+                $this->LOCATION_ID =        $data->LOCATION_ID;
+                $this->CONTACT_ID =         $data->CONTACT_ID;
+                $this->CODE =               $data->CODE;
+                $this->DATE_ADMITTED =      $data->DATE_ADMITTED;
+                $this->TIME_ADMITTED =      $data->TIME_ADMITTED;
+                $this->DATE_DISCHARGED =    $data->DATE_DISCHARGED;
+                $this->TIME_DISCHARGED =    $data->TIME_DISCHARGED;
+                $this->FINAL_DIAGNOSIS =    $data->FINAL_DIAGNOSIS ?? '';
+                $this->OTHER_DIAGNOSIS =    $data->OTHER_DIAGNOSIS ?? '';
+                $this->FIRST_CASE_RATE =    $data->FIRST_CASE_RATE ?? '';
+                $this->SECOND_CASE_RATE =   $data->SECOND_CASE_RATE ?? '';
 
                 $this->CHARGES_ROOM_N_BOARD = $data->CHARGES_ROOM_N_BOARD;
                 $this->CHARGES_DRUG_N_MEDICINE = $data->CHARGES_DRUG_N_MEDICINE;

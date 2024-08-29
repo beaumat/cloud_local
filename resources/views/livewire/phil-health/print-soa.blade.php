@@ -3,14 +3,14 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 text-center mb-4">
+                <div class="col-12 text-center mb-4" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
                     <div class="text-center">
                         <b class="print-address1 text-center">{{ $REPORT_HEADER_1 }} <br /> {{ $REPORT_HEADER_2 }}<br />
                             {{ $REPORT_HEADER_3 }}</b>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <div class="row">
                         <div class="col-6">
                             <b class="bottom-line">PHILHEALTH ACCREDITED:</b>
@@ -64,10 +64,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 text-center mt-4">
+                <div class="col-12 text-center mt-4" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <b class="text-lg">SUMMARY OF FEES</b>
                 </div>
-                <div class="col-12 mt-2" id="details">
+                <div class="col-12 mt-2" id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <div class="row top-line right-line left-line">
                         <div class="col-4">
                         </div>
@@ -598,38 +598,42 @@
                     </div>
                 </div>
 
-                <div class="col-12 mt-4">
-                    <div class="row">
-                        <div class="col-4">
-                            Prepared by:
-                            <div class="form-group row  mt-4">
-                                <div class="col-7 text-center"><strong class="bottom-line">
-                                        {{ $USER_NAME }}</strong>
+                @if ($OUTPUT_SIGN)
+                    <div class="col-12 mt-4">
+                        <div class="row">
+                            <div class="col-4">
+                                Prepared by:
+                                <div class="form-group row  mt-4">
+                                    <div class="col-7 text-center"><strong class="bottom-line">
+                                            {{ $USER_NAME }}</strong>
+                                    </div>
+                                    <div class="col-7 text-center">PHIC IN-Charge</div>
+                                    <div class="col-12 ">Date Signed:
+                                        {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
+                                    </div>
+                                    <div class="col-12 ">CONTACT No. {{ $USER_CONTACT }}</div>
                                 </div>
-                                <div class="col-7 text-center">PHIC IN-Charge</div>
-                                <div class="col-12 ">Date Signed:
-                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
-                                </div>
-                                <div class="col-12 ">CONTACT No. {{ $USER_CONTACT }}</div>
                             </div>
-                        </div>
-                        <div class="col-4"></div>
-                        <div class="col-4">
-                            Conforme:
-                            <div class="form-group row  mt-4">
-                                <div class="col-12 text-center bottom-line"><b>{{ $PATIENT_NAME }}</b></div>
-                                <div class="col-12 ">Member/Patient/Authorized Representative</div>
-                                <div class="col-12 ">(Signature over printed name)</div>
-                                <div class="col-12 text-xs">Relationship of member of authorized representative</div>
-                                <div class="col-12 bottom-line">&nbsp;</div>
-                                <div class="col-12 ">Date Signed:
-                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
+                            <div class="col-4"></div>
+                            <div class="col-4">
+                                Conforme:
+                                <div class="form-group row  mt-4">
+                                    <div class="col-12 text-center bottom-line"><b>{{ $PATIENT_NAME }}</b></div>
+                                    <div class="col-12 ">Member/Patient/Authorized Representative</div>
+                                    <div class="col-12 ">(Signature over printed name)</div>
+                                    <div class="col-12 text-xs">Relationship of member of authorized representative
+                                    </div>
+                                    <div class="col-12 bottom-line">&nbsp;</div>
+                                    <div class="col-12 ">Date Signed:
+                                        {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
+                                    </div>
+                                    <div class="col-12 ">CONTACT No. {{ $PATIENT_CONTACT }}</div>
                                 </div>
-                                <div class="col-12 ">CONTACT No. {{ $PATIENT_CONTACT }}</div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
+
             </div>
         </div>
     </section>

@@ -38,7 +38,7 @@
                                             <livewire:text-input name="PIN" titleName="Accreditation No."
                                                 wire:model='PIN' />
                                         </div>
-                                        <div class="col-nd-2">
+                                        <div class="col-md-2">
                                             <div class="row">
                                                 <div class="col-md-12"><br /></div>
                                                 <div class="col-md-12 text-right">

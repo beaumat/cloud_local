@@ -2,7 +2,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 text-center mb-4">
+                <div class="col-12 text-center mb-4" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
                     <div class="text-center">
                         <b class="print-address1 text-center">
@@ -11,7 +11,7 @@
                             {{ $REPORT_HEADER_3 }}</b>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <div class="row">
                         <div class="col-12 text-center">
                             <b class="h4">HEMODIALYSIS TREATMENT SUMMARY</b>
@@ -45,11 +45,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 mt-4">
+                <div class="col-12 mt-4" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                 </div>
-                <div class="col-3 text-center">
+                <div class="col-3 text-center" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                 </div>
-                <div class="col-6 text-center mt-4 ">
+                <div class="col-6 text-center mt-4 " @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <table class="table table-sm" border="1">
                         <thead>
                             <tr class="blackbox">
@@ -91,39 +91,38 @@
                 <div class="col-3 text-center">
                 </div>
                 <div class="col-12">
-
-                    <div class="row mt-4">
-                        <div class="col-4">
-                            Prepared by:
-                            <div class="form-group row ">
-                                <div class="col-7 text-center"><strong class="bottom-line">
-                                        {{ $USER_NAME }}</strong>
+                    @if ($OUTPUT_SIGN)
+                        <div class="row mt-4">
+                            <div class="col-4">
+                                Prepared by:
+                                <div class="form-group row ">
+                                    <div class="col-7 text-center"><strong class="bottom-line">
+                                            {{ $USER_NAME }}</strong>
+                                    </div>
+                                    <div class="col-7 text-center"><i>PHIC IN-Charge</i></div>
                                 </div>
-                                <div class="col-7 text-center"><i>PHIC IN-Charge</i></div>
-
-                            </div>
-
-
-                            <div class="form-group row  mt-4">
-                                <div class="col-12">Noted by:</div>
-                                <div class="col-7 text-center"><strong class="bottom-line">
-                                        {{ $ADMINISTRATOR_NAME }}
-                                    </strong>
+                                <div class="form-group row  mt-4">
+                                    <div class="col-12">Noted by:</div>
+                                    <div class="col-7 text-center"><strong class="bottom-line">
+                                            {{ $ADMINISTRATOR_NAME }}
+                                        </strong>
+                                    </div>
+                                    <div class="col-7 text-center"><i>Administrator</i></div>
                                 </div>
-                                <div class="col-7 text-center"><i>Administrator</i></div>
                             </div>
-                        </div>
-                        <div class="col-4">
+                            <div class="col-4">
 
 
-                        </div>
-                        <div class="col-4 text-right">
-                            <div class="form-group row  mt-4">
-                                <div class="col-12 text-center bottom-line"><b>{{ $PATIENT_NAME }}</b></div>
-                                <div class="col-12 text-center"><i>Patient Signature Over Printed Name</i></div>
+                            </div>
+                            <div class="col-4 text-right">
+                                <div class="form-group row  mt-4">
+                                    <div class="col-12 text-center bottom-line"><b>{{ $PATIENT_NAME }}</b></div>
+                                    <div class="col-12 text-center"><i>Patient Signature Over Printed Name</i></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
+
                 </div>
             </div>
         </div>

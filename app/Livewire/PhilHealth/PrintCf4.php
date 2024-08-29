@@ -73,7 +73,8 @@ class PrintCf4 extends Component
     public string $POST_O2_SATURATION;
     public string $POST_TEMPERATURE;
     public string $POST_BLOOD_PRESSURE2;
-
+    public bool $PRE_SIGN_DATA =  false;
+    public bool $OUTPUT_SIGN = false;
     public string $RR_NO;
     private $philHealthServices;
     private $contactServices;
@@ -90,9 +91,13 @@ class PrintCf4 extends Component
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
     }
-    public function mount(int $id = 0,  int $PATIENT_ID = 0)
-    {
+    public function mount(int $id = 0,  int $PATIENT_ID = 0, $OUTPUT = true)
+    {   
+       
+        $this->OUTPUT_SIGN = $OUTPUT;
+
         if ($id > 0) {
+            $this->PRE_SIGN_DATA =  false;
             $this->FIRST_CASE_RATE = '90935';
             $data = $this->philHealthServices->get($id);
             if ($data) {
@@ -214,7 +219,7 @@ class PrintCf4 extends Component
             }
         }
         if ($PATIENT_ID > 0) {
-
+            $this->PRE_SIGN_DATA =  true;
 
             $contact = $this->contactServices->get($PATIENT_ID, 3);
 
