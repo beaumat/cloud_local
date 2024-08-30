@@ -86,7 +86,7 @@ class UserForm extends Component
                 [
                     'name' => 'Username',
                     'Password' => 'Password',
-                
+
                 ]
             );
         } else {
@@ -101,19 +101,19 @@ class UserForm extends Component
                     [
                         'name' => 'Username',
                         'Password' => 'Password',
-         
+
                     ]
                 );
             } else {
                 $this->validate(
                     [
                         'name' => 'required|max:10|unique:users,name,' . $this->id,
-                     
+
                     ],
                     [],
                     [
                         'name' => 'Username',
-               
+
                     ]
                 );
             }
@@ -123,9 +123,9 @@ class UserForm extends Component
         try {
             if ($this->id === 0) {
                 $this->id = $this->userServices->Store($this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '', $this->locked_location);
-                session()->flash('message', 'Successfully created.');
+                return Redirect::route('maintenancesettingsusers_edit', ['id' => $this->id])->with('message', 'Successfully created.');
             } else {
-                $this->userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '',$this->locked_location);
+                $this->userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '', $this->locked_location);
                 session()->flash('message', 'Successfully updated.');
             }
         } catch (\Exception $e) {

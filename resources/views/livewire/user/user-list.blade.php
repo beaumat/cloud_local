@@ -31,14 +31,13 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>ID</th>
                                         <th class="col-2">Username</th>
-                                        <th class="col-4">Employee</th>
+                                        <th class="col-4">Employee Name</th>
                                         <th class="col-2">Location</th>
                                         <th class="text-center">Locked</th>
                                         <th class="text-center">Trans Date</th>
                                         <th class="text-center">Inactive</th>
-                                        <th class="text-center col-1">
+                                        <th class="text-center bg-success col-1">
                                             <a href="{{ route('maintenancesettingsusers_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
@@ -47,8 +46,12 @@
                                 <tbody class="text-xs">
                                     @foreach ($users as $list)
                                         <tr>
-                                            <td> {{ $list->id }}</td>
-                                            <td> {{ $list->name }}</td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('maintenancesettingsusers_edit', ['id' => $list->id]) }}">
+                                                    {{ $list->name }}
+                                                </a>
+                                            </td>
                                             <td> {{ $list->employee }}</td>
                                             <td> {{ $list->location }}</td>
                                             <td class="text-center">
@@ -63,19 +66,15 @@
                                                 @endif
                                             </td>
                                             <td class="text-center">
-                                                <a href="{{ route('maintenancesettingsusers_role', ['id' => $list->id]) }}"
-                                                    class="btn-sm text-primary" title="Permission">
-                                                    <i class="fa fa-shield" aria-hidden="true"></i>
+                                                <a type="button" title="View" href="{{ route('maintenancesettingsusers_edit', ['id' => $list->id]) }}"
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="{{ route('maintenancesettingsusers_edit', ['id' => $list->id]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                                </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
+                                                {{-- <button title="Delete" type="button" wire:click='delete({{ $list->ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+                                                    class="btn btn-xs btn-danger">
+                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                </button> --}}
                                             </td>
                                         </tr>
                                     @endforeach

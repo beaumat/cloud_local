@@ -95,10 +95,12 @@
                     </div>
                     <!-- /.card -->
                 </div>
-                <!--/.col (left) -->
-                <!-- right column -->
-                <div class="col-md-6">
 
+                <div class="col-md-8">
+                @if($id > 0)
+                    @livewire('User.UserRoles', ['id' => $id])
+
+                    @endif
                 </div>
                 <!--/.col (right) -->
             </div>

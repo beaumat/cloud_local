@@ -18,18 +18,16 @@ class UserRoles extends Component
     public $unassignedRoles = [];
     public function mount($id)
     {
+        if ($id) {
+            $this->id = $id;
+            $this->user = User::find($id);
 
-        $this->id = $id;
-        $this->user = User::find($id);
-
-        if ($this->user) {
-            $this->userName = $this->user->name;
-            $this->ReloadRole();
-            return;
+            if ($this->user) {
+                $this->userName = $this->user->name;
+                $this->ReloadRole();
+                return;
+            }
         }
-
-        $errorMessage = 'Error occurred: Record not found. ';
-        return Redirect::route('maintenancesettingsusers')->with('error', $errorMessage);
     }
     public function ReloadRole()
     {
