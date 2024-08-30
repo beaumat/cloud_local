@@ -1,6 +1,6 @@
 <div class="font-weight-light p-3">
     <div class="row">
-        <div class="col-12 blackbox2" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
+        <div class="col-12 blackbox2">
             <div class="row" style="height: 150px;">
                 <div class="col-3 text-center">
                     <img class="print-logo" style="width:220px;position:relative;top:25px;"
@@ -36,10 +36,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 ubox2 font-weight-light"
-            style="height: 90px;@if ($PRE_SIGN_DATA) opacity: 0.0; @endif">
-            <p style="font-size:14.4px; line-height: 1.3; @if ($PRE_SIGN_DATA) opacity: 0.0; @endif"
-                class="float-left mt-2">
+        <div class="col-12 ubox2 font-weight-light" style="height: 90px;">
+            <p style="font-size:14.4px; line-height: 1.3; " class="float-left mt-2">
                 <b class="font-weight-bold">IMPORTANT REMINDERS:</b>
                 <br />
                 PLEASE WRITE IN CAPITAL <b class="font-weight-bold">LETTERS</b> AND <b class="font-weight-bold">TICK</b>
@@ -51,7 +49,7 @@
                     ADMINISTRATIVE
                     LIABILITIES.</b>
             </p>
-            <div class="float-right mt-2" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
+            <div class="float-right mt-2">
                 <div class="row" style="position: absolute;right:1px;width:310px;">
                     <p class="mt-2"> Series#&nbsp;</p>
                     <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
@@ -72,15 +70,15 @@
 
         </div>
         <div class="col-12 text-center font-weight-light bgBlack"
-            @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
+            >
             <b class="text-white arial font-weight-bold" style="font-size: 19px">
                 PART I - MEMBER AND PATIENT INFORMATION AND CERTIFICATION
             </b>
         </div>
         <div class="col-12 ubox2 font-weight-light"
-            @if ($PRE_SIGN_DATA) style="border: 1px solid transparent; " @endif>
+           >
             <div class="row">
-                <div class="col-12" style="height: 30px; @if ($PRE_SIGN_DATA) opacity: 0.0; @endif">
+                <div class="col-12" style="height: 30px; ">
                     <label> 1. PhilHealth Identification Number (PIN) of Member: </label>
                     <div class="box text-primary courier-new font-weight-bold">
                         @if ($PIN)
@@ -169,7 +167,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-12" style="line-height: 1.2; @if ($PRE_SIGN_DATA) opacity: 0.0; @endif">
+                <div class="col-12" style="line-height: 1.2; ">
                     <div class="row">
                         <div class="col-9  text-sm">
                             <label> 2. Name of Member:</label>
@@ -247,7 +245,7 @@
 
                     </div>
                 </div>
-                <div class="col-12" style="height: 30px; @if ($PRE_SIGN_DATA) opacity: 0.0; @endif">
+                <div class="col-12" style="height: 30px; ">
                     <label> 4. PhilHealth Identification Number (PIN) of Dependent: </label>
                     <div class="box text-primary courier-new font-weight-bold">
                         @if ($PIN_DEPENDENT)
@@ -336,8 +334,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-12 "
-                    style="line-height: 1.2; @if ($PRE_SIGN_DATA) opacity: 0.0; @endif">
+                <div class="col-12 " style="line-height: 1.2; ">
                     <div class="row">
                         <div class="col-9">
                             <label> 5. Name of Patient:</label>
@@ -410,8 +407,7 @@
 
                     </div>
                 </div>
-                <div class="col-12 "
-                    style="line-height: 1.2; @if ($PRE_SIGN_DATA) opacity: 0.0; @endif">
+                <div class="col-12 " style="line-height: 1.2; ">
                     <div class="row">
                         <div class="col-9">
                             <label> 7. Confinement Period:</label>
@@ -552,11 +548,10 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <label @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif> 9. CERTIFICATION OF MEMBER:
+                    <label> 9. CERTIFICATION OF MEMBER:
                     </label>
                     <div class="row">
-                        <div class="col-12 text-center"
-                            @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                        <div class="col-12 text-center">
                             <b><i>Under the penalty of law, I attest that the information I provided in this form are
                                     true and accurate to the best of my knowledge.
                                 </i></b>
@@ -564,19 +559,19 @@
                         <div class="col-1"></div>
                         <div class="col-4 text-center text-sm">
                             <b class="h5 text-primary courier-new font-weight-bold">
-                                @if ($OUTPUT_SIGN)
-                                    {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
-                                        {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
-                                        @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
-                                            {{ $MEMBER_EXTENSION . '.' }}
-                                        @endif
-                                    @endif &nbsp;
+
+                                {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
+                                    {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
+                                    @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
+                                        {{ $MEMBER_EXTENSION . '.' }}
+                                    @endif
+                                    &nbsp;
                             </b>
-                            <div class="top-line2" @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                            <div class="top-line2">
                             </div>
-                            <span @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>Signature Over
+                            <span>Signature Over
                                 Printed Name of Member</span>
-                            <div class="row " @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                            <div class="row ">
                                 <div class="col-4 text-md">
                                     <div class="form-group mt-2 text-sm">
                                         <p class="float-right"> Date Signed</p>
@@ -622,8 +617,7 @@
                         </div>
                         <div class="col-2">
                         </div>
-                        <div class="col-5 text-center text-sm text-secondary"
-                            @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                        <div class="col-5 text-center text-sm text-secondary">
                             <b class="h5 text-primary courier-new font-weight-bold">
                                 {{ $NAME_REPRESENTATIVE }}&nbsp;</b>
                             <div class="top-line2 " style="width: 95%"></div>
@@ -658,7 +652,7 @@
 
                     </div>
                 </div>
-                <div class="col-12" @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                <div class="col-12">
                     <div class="row">
                         <div class="col-6">
                             <div class="row">
@@ -727,14 +721,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 text-center bgBlack text-white pt-1"
-                    @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                <div class="col-12 text-center bgBlack text-white pt-1">
                     <b class=" arial font-weight-bold" style="font-size: 19px">
                         PART II - EMPLOYER’S CERTIFICATION
                     </b>
                     (for employed members only)
                 </div>
-                <div class="col-12" style="height: 190px;  @if ($PRE_SIGN_DATA) opacity: 0.0; @endif">
+                <div class="col-12" style="height: 190px;  ">
                     <div class="row">
                         <div class="col-7">
                             <label> 1. PhilHealth Employer Number (PEN): </label>
@@ -963,13 +956,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 text-center bgBlack text-white pt-1 mt-1"
-                    @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                <div class="col-12 text-center bgBlack text-white pt-1 mt-1">
                     <b class="arial font-weight-bold" style="font-size: 19px">
                         PART III - CONSENT TO ACCESS PATIENT RECORD/S
                     </b>
                 </div>
-                <div class="col-12" style="height: 80px; @if ($PRE_SIGN_DATA) opacity: 0.0; @endif">
+                <div class="col-12" style="height: 80px; ">
                     <div class="row ">
                         <div class="col-12">
                             <label style="font-size: 13.5px;padding-left:10px;">
@@ -1000,23 +992,22 @@
                         <div class="col-1"></div>
                         <div class="col-6 text-center text-sm">
                             <b class="h5 text-primary courier-new font-weight-bold ">
-                                @if ($OUTPUT_SIGN)
-                                    {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
-                                        {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
-                                        @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
-                                            {{ $MEMBER_EXTENSION . '.' }}
-                                        @endif
-                                    @endif &nbsp;
+
+                                {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
+                                    {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
+                                    @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
+                                        {{ $MEMBER_EXTENSION . '.' }}
+                                    @endif
+                                    &nbsp;
                             </b>
-                            <div class="top-line2" @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                            <div class="top-line2">
                             </div>
-                            <span @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif> Signature Over
+                            <span> Signature Over
                                 Printed Name of Member/Patient/Authorized Representative </span>
                         </div>
                         <div class="col-1">
                         </div>
-                        <div class="col-4 text-center text-sm text-secondary"
-                            @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                        <div class="col-4 text-center text-sm text-secondary">
                             <div class="row">
                                 <div class="col-4 text-md">
                                     <div class="form-group mt-2 text-sm">
@@ -1062,7 +1053,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12" @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                <div class="col-12">
                     <div class="row">
                         <div class="col-6">
                             <div class="row">
@@ -1128,13 +1119,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 text-center bgBlack text-white pt-1"
-                    @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                <div class="col-12 text-center bgBlack text-white pt-1">
                     <b class="arial font-weight-bold" style="font-size: 19px">
                         PART IV - HEALTH CARE PROFESSIONAL INFORMATION
                     </b>
                 </div>
-                <div class="col-12" @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                <div class="col-12">
                     <div class="row">
                         <div class="col-12">
                             <div class="row">
@@ -1539,13 +1529,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 text-center bgBlack text-white pt-1"
-                    @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                <div class="col-12 text-center bgBlack text-white pt-1">
                     <b class="arial font-weight-bold" style="font-size: 19px">
                         PART V - PROVIDER INFORMATION AND CERTIFICATION
                     </b>
                 </div>
-                <div class="col-12 mt-1" @if ($PRE_SIGN_DATA) style="opacity: 0.0;" @endif>
+                <div class="col-12 mt-1">
                     <div class="row">
                         <div class="col-12">
                             <div class="row">

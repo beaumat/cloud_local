@@ -77,15 +77,15 @@
                                                 href="{{ route('patientsphic_print_form', ['id' => $PHILHEALTH_ID]) }}"
                                                 class="btn btn-info btn-sm"> <i class="fa fa-print"
                                                     aria-hidden="true"></i>
-                                                Print
+                                                Print CSF & CF4
                                             </a>
-                                            <a type="button" target="_BLANK" title="Print Philheath Form"
+                                            {{-- <a type="button" target="_BLANK" title="Print Philheath Form"
                                                 href="{{ route('patientsphic_print_form_templeted_out', ['id' => $PHILHEALTH_ID]) }}"
                                                 class="btn btn-info btn-sm active"> <i class="fa fa-print"
                                                     aria-hidden="true"></i>
                                                 (Pre-sign)
-                                            </a>
-                                            <span class="text-xs text-secondary font-weight-bold">CSF & CF4</span>
+                                            </a> --}}
+                                            {{-- <span class="text-xs text-secondary font-weight-bold">CSF & CF4</span> --}}
                                         </div>
                                     </div>
 
