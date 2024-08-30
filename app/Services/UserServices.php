@@ -94,36 +94,31 @@ class UserServices
 
     public function Search($search)
     {
-        if (!$search) {
-            return User::query()
-                ->select(
-                    [
-                        'users.id',
-                        'users.name',
-                        'contact.name as employee',
-                        'users.inactive',
-                        'l.NAME as location',
-                        'users.trans_date',
-                        'users.locked_location as locked'
-                    ]
-                )
-                ->leftJoin('contact', 'contact.id', '=', 'users.contact_id')
-                ->leftJoin('location as l', 'l.ID', '=', 'users.location_id')
-                ->orderBy('users.id', 'asc')
-                ->get();
-        } else {
-            return User::query()
-                ->select(
-                    [
-                        'users.name',
-                        'contact.name as employee',
-                        'users.inactive'
-                    ]
-                )
-                ->leftJoin('contact', 'contact.id', '=', 'users.contact_id')
-                ->where('users.name', 'like', '%' . $search . '%')
-                ->orderBy('users.id', 'asc')
-                ->get();
-        }
+
+        $result = User::query()
+            ->select(
+                [
+                    'users.id',
+                    'users.name',
+                    'contact.name as employee',
+                    'users.inactive',
+                    'l.NAME as location',
+                    'users.trans_date',
+                    'users.locked_location as locked'
+                ]
+            )
+            ->leftJoin('contact', 'contact.id', '=', 'users.contact_id')
+            ->leftJoin('location as l', 'l.ID', '=', 'users.location_id')
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use (&$search) {
+                    $q->orWhere('users.name', 'like', '%' . $search . '%');
+                    $q->orWhere('contact.NAME', 'like', '%' . $search . '%');
+                    $q->orWhere('l.NAME', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('users.id', 'asc')
+            ->get();
+
+        return   $result;
     }
 }
