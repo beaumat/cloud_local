@@ -1056,7 +1056,8 @@ class HemoServices
                 'TIME_START',
                 'TIME_END',
                 'STATUS_ID',
-                'IS_INCOMPLETE'
+                'IS_INCOMPLETE',
+                DB::raw('(select if(count(*) > 0, true, false) from hemodialysis_items where hemodialysis_items.HEMO_ID = hemodialysis.ID and hemodialysis_items.ITEM_ID = 176 ) as IS_PF ')
             ])
             ->where('CUSTOMER_ID', $CONTACT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
@@ -1082,7 +1083,8 @@ class HemoServices
                 'TIME_START'             => $result->TIME_START ?? '',
                 'TIME_END'               => $result->TIME_END ?? '',
                 'STATUS_ID'              => $result->STATUS_ID ?? 0,
-                'IS_INCOMPLETE'         => $result->IS_INCOMPLETE ?? false
+                'IS_INCOMPLETE'          => $result->IS_INCOMPLETE ?? false,
+                'IS_PF'                  => (bool) $result->IS_PF ?? false
             ];
         }
 

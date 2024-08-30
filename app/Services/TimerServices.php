@@ -50,6 +50,7 @@ class TimerServices
             $itemData = $this->hemoServices->CallOutItemUnPosted($transDate);
             foreach ($itemData as $list) {
                 $QTY = (float)  ($list->QUANTITY * $list->UNIT_BASE_QUANTITY ?? 1) * -1;
+
                 $this->itemInventoryServices->InventoryModify(
                     $list->ITEM_ID,
                     $list->LOCATION_ID,
@@ -85,7 +86,7 @@ class TimerServices
             $TIME_START = empty($data['TIME_START']) ?  null :  $data['TIME_START'];
             $TIME_END   = empty($data['TIME_END'])  ?   null : $data['TIME_END'];
             $STATUS_ID  = (int) $data['STATUS_ID'];
-
+            $IS_PF     = (bool) $data['IS_PF'];
 
 
             $PRE_WEIGHT             = (int) $data['PRE_WEIGHT'];
@@ -102,19 +103,25 @@ class TimerServices
             $IS_INCOMPLETE          = (bool) $data['IS_INCOMPLETE'];
 
             DB::beginTransaction();
-            if ($ID > 0) {
 
-                if ($PRE_WEIGHT == 0 || $PRE_BLOOD_PRESSURE == 0 || $PRE_BLOOD_PRESSURE2 == 0 || $PRE_HEART_RATE == 0 || $PRE_O2_SATURATION == 0) {
-                    $this->hemoServices->StatusUpdate($ID, 3); // VOID
-                    $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 2); // ABSENT
-                    DB::commit();
-                    return;
+            if ($ID > 0) {
+                if ($IS_INCOMPLETE == true) {
+                    // Do nothing
+                } elseif ($IS_PF == true) {
+                    // Do nothing
+                } else {
+                    if ($PRE_WEIGHT == 0 || $PRE_BLOOD_PRESSURE == 0 || $PRE_BLOOD_PRESSURE2 == 0 || $PRE_HEART_RATE == 0 || $PRE_O2_SATURATION == 0) {
+                        $this->hemoServices->StatusUpdate($ID, 3); // VOID
+                        $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 2); // ABSENT
+                        DB::commit();
+                        return;
+                    }
                 }
 
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 1); //PRESENT
 
                 if ($POST_WEIGHT == 0 || $POST_BLOOD_PRESSURE == 0 || $POST_BLOOD_PRESSURE2 == 0 || $POST_HEART_RATE == 0 || $POST_O2_SATURATION == 0 || empty($TIME_START) == true ||  empty($TIME_END) == true) {
-                    if ($IS_INCOMPLETE == true) {
+                    if ($IS_INCOMPLETE == true || $IS_PF == true) {
                         $this->hemoServices->StatusUpdate($ID, 2); // POSTED
                     } else {
                         $this->hemoServices->StatusUpdate($ID, 4); // UNPOSTED
