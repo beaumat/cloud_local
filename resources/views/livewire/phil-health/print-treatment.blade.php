@@ -2,7 +2,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 text-center mb-4" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
+                <div class="col-12 text-center mb-4" @if ($HEADER) style="opacity: 0.0" @endif>
                     <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
                     <div class="text-center">
                         <b class="print-address1 text-center">
@@ -11,34 +11,34 @@
                             {{ $REPORT_HEADER_3 }}</b>
                     </div>
                 </div>
-                <div class="col-12" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
+                <div class="col-12">
                     <div class="row">
-                        <div class="col-12 text-center">
+                        <div class="col-12 text-center" @if ($HEADER) style="opacity: 0.0" @endif>
                             <b class="h4">HEMODIALYSIS TREATMENT SUMMARY</b>
                         </div>
                         <div class="col-12">
                             <div class="row mt-4">
-                                <div class="col-3 text-right">NAME OF PATIENT : </div>
-                                <div class="col-6 bottom-line"> {{ $PATIENT_NAME }}</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-3 text-right">NAME OF PATIENT : </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6 bottom-line"> {{ $PATIENT_NAME }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-3 text-right">CONFINEMENT PERIOD :</div>
-                                <div class="col-6 bottom-line">
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-3 text-right">CONFINEMENT PERIOD :</div>
+                                <div class="col-6 @if ($OUTPUT_SIGN) bottom-line @endif">
                                     {{ $DATE_ADMITTED ? date('m/d/Y', strtotime($DATE_ADMITTED)) . ' TO ' : '' }}
                                     {{ $DATE_DISCHARGED ? date('m/d/Y', strtotime($DATE_DISCHARGED)) : '' }}
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-3 text-right">ATTENDING PHYSICIAN : </div>
-                                <div class="col-6 bottom-line"> {{ $PHYSICIAN }} </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-3 text-right">ATTENDING PHYSICIAN : </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6 bottom-line"> {{ $PHYSICIAN }} </div>
                             </div>
                             <div class="row">
-                                <div class="col-3 text-right"> FIRST CASE RATE : </div>
-                                <div class="col-6 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-3 text-right"> FIRST CASE RATE : </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-3 text-right"> DIAGNOSIS : </div>
-                                <div class="col-9 bottom-line"> {{ $FINAL_DIAGNOSIS }}</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-3 text-right"> DIAGNOSIS : </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-9 bottom-line"> {{ $FINAL_DIAGNOSIS }}</div>
                             </div>
                         </div>
                         <div class="col-6">

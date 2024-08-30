@@ -35,6 +35,7 @@ class PrintTreatment extends Component
 
     public bool $PRE_SIGN_DATA =  false;
     public bool $OUTPUT_SIGN = false;
+    public bool $HEADER = true; // default TRUE;
     public float $CHARGES_ROOM_N_BOARD;
     public float $CHARGES_DRUG_N_MEDICINE;
     public float $CHARGES_LAB_N_DIAGNOSTICS;
@@ -123,6 +124,7 @@ class PrintTreatment extends Component
         $this->OUTPUT_SIGN = $OUTPUT;
 
         if ($PRINT_ID > 0) {
+            $this->HEADER = !$OUTPUT;
             $this->PRE_SIGN_DATA = false;
             $this->PreLoad($PRINT_ID);
             $this->getSumamry();
@@ -131,6 +133,7 @@ class PrintTreatment extends Component
 
 
         if ($PATIENT_ID > 0) {
+            $this->HEADER = false;
             $this->PRE_SIGN_DATA = true;
             $contact = $this->contactServices->get($PATIENT_ID, 3);
             if ($contact) {

@@ -88,6 +88,8 @@ class PrintSoa extends Component
     public  float $AD_TOTAL = 0;
     public bool $PRE_SIGN_DATA =  false;
     public bool $OUTPUT_SIGN = false;
+    public bool $HEADER = true; // default TRUE;
+
     public int $PREPARED_BY_ID;
     public string $DATE_SIGNED;
     public string $OTHER_NAME;
@@ -122,10 +124,13 @@ class PrintSoa extends Component
         $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
     }
     public function mount(int $PRINT_ID, int $PATIENT_ID = 0, bool $OUTPUT = true)
-    {   
+    {
         $this->OUTPUT_SIGN = $OUTPUT;
         if ($PRINT_ID > 0) {
             $this->PRE_SIGN_DATA = false;
+
+            $this->HEADER = !$OUTPUT;
+
             $this->PreLoad($PRINT_ID);
             $this->profFeeList($PRINT_ID);
             return;
@@ -133,10 +138,9 @@ class PrintSoa extends Component
         // pre-sign
         if ($PATIENT_ID > 0) {
             $this->PRE_SIGN_DATA = true;
+            $this->HEADER = false;
             $contact = $this->contactServices->get($PATIENT_ID, 3);
             if ($contact) {
-
-
                 $MI = substr($contact->MIDDLE_NAME, 0, 1);
                 $MI_COUNT  = strlen($contact->MIDDLE_NAME);
                 $EX_COUNT = strlen($contact->SALUTATION);
