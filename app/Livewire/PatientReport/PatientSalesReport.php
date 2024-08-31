@@ -46,17 +46,11 @@ class PatientSalesReport extends Component
     public float $LINGAP_AMOUNT;
     public float $PCSO_AMOUNT;
     public float $OTHER_GL_AMOUNT;
-
-
-
     public int $NO_OF_PATIENT = 0;
-
-
     private $contactServices;
     private $patientReportServices;
     public function boot(LocationServices $locationServices, UserServices $userServices, ContactServices $contactServices, PatientReportServices $patientReportServices)
     {
-
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->contactServices = $contactServices;
@@ -117,7 +111,6 @@ class PatientSalesReport extends Component
 
     public function render()
     {
-
         return view('livewire.patient-report.patient-sales-report');
     }
 }

@@ -1,4 +1,4 @@
-<div class="sticky-top ">
+<div class="sticky-top " style="max-height: 60vh; overflow-y: auto;">
     <div class="card">
         <div class="card-header">
             <label class="card-title text-sm text-primary">{{ __('All Assistance Record') }}</label>

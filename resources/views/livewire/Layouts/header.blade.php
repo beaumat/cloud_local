@@ -7,60 +7,61 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
         </li>
-
         @if (Auth::user()->can('contact.customer.view') ||
-        Auth::user()->can('contact.vendor.view') ||
-        Auth::user()->can('contact.employee.view') ||
-        Auth::user()->can('contact.patient.view') ||
-        Auth::user()->can('contact.doctor.view'))
-        <li class="nav-item dropdown">
-            <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                class="nav-link dropdown-toggle">Contacts</a>
-            <ul aria-labelledby="dropdownSubMenu2" class="border-0 shadow dropdown-menu">
-                @can('contact.patient.view')
-                <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a></li>
-                @endcan
-                @can('contact.doctor.view')
-                <li><a href="{{ route('maintenancecontactdoctors') }}" class="dropdown-item"> Doctors</a></li>
-                @endcan
-                @can('contact.customer.view')
-                <li><a href="{{ route('maintenancecontactcustomer') }}" class="dropdown-item">Customers</a></li>
-                @endcan
-                @can('contact.vendor.view')
-                <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Vendors</a></li>
-                @endcan
-                @can('contact.employee.view')
-                <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
-                @endcan
+                Auth::user()->can('contact.vendor.view') ||
+                Auth::user()->can('contact.employee.view') ||
+                Auth::user()->can('contact.patient.view') ||
+                Auth::user()->can('contact.doctor.view'))
+            <li class="nav-item dropdown">
+                <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" class="nav-link dropdown-toggle">Contacts</a>
+                <ul aria-labelledby="dropdownSubMenu2" class="border-0 shadow dropdown-menu">
+                    @can('contact.patient.view')
+                        <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a></li>
+                    @endcan
+                    @can('contact.doctor.view')
+                        <li><a href="{{ route('maintenancecontactdoctors') }}" class="dropdown-item"> Doctors</a></li>
+                    @endcan
+                    @can('contact.customer.view')
+                        <li><a href="{{ route('maintenancecontactcustomer') }}" class="dropdown-item">Customers</a></li>
+                    @endcan
+                    @can('contact.vendor.view')
+                        <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Vendors</a></li>
+                    @endcan
+                    @can('contact.employee.view')
+                        <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
+                    @endcan
 
-            </ul>
-        </li>
+                </ul>
+            </li>
         @endif
         @if (Auth::user()->can('items.view') ||
-        Auth::user()->can('others.item-active-list.view') ||
-        Auth::user()->can('price-location') )
-        <li class="nav-item dropdown">
-            <a id="dropdownSubMenu3" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                class="nav-link dropdown-toggle">Files</a>
-            <ul aria-labelledby="dropdownSubMenu3" class="border-0 shadow dropdown-menu ">
-                @can('items.view')
-                <li>
-                    <a href="{{ route('maintenanceinventoryitem') }}" class="dropdown-item">Item Master List </a>
-                </li>
-                @endcan
-                @can('others.item-active-list.view')
-                <li>
-                    <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">Item Inventory </a>
-                </li>
-                @endcan
-                @can('price-location')
-                <li>
-                    <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">Price Adjust by
-                        Location </a>
-                </li>
-                @endcan
-            </ul>
-        </li>
+                Auth::user()->can('others.item-active-list.view') ||
+                Auth::user()->can('price-location'))
+            <li class="nav-item dropdown">
+                <a id="dropdownSubMenu3" href="#" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" class="nav-link dropdown-toggle">Files</a>
+                <ul aria-labelledby="dropdownSubMenu3" class="border-0 shadow dropdown-menu ">
+                    @can('items.view')
+                        <li>
+                            <a href="{{ route('maintenanceinventoryitem') }}" class="dropdown-item">Item Master List </a>
+                        </li>
+                    @endcan
+                    @can('others.item-active-list.view')
+                        <li>
+                            <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">Item Inventory
+                            </a>
+                        </li>
+                    @endcan
+                    @can('price-location')
+                        <li>
+                            <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">Price Adjust
+                                by
+                                Location </a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
         @endif
 
 
@@ -186,10 +187,16 @@
                 class="nav-link dropdown-toggle text-sm"><i class="fa fa-user-circle" aria-hidden="true"></i>
                 {{ auth()->user()->name }}</a>
             <ul aria-labelledby="dropdownSubMenu1" class="border-0 shadow dropdown-menu bg-dark">
+                <li>
+                    <a class="nav-link text-xs" wire:click="openChangePassword" title="Change Password" data-slide="true"
+                        href="#" role="button">
+                        <i class="fa fa-key"></i> Change-Password
+                    </a>
+                </li>
 
-
-                <li> <a class="nav-link" wire:click="logout" title="exit" data-slide="true" href="#" role="button"
-                        wire:confirm="Are you sure you want to logout?">
+                <li>
+                    <a class="nav-link text-xs" wire:click="logout" title="Log-out" data-slide="true" href="#"
+                        role="button" wire:confirm="Are you sure you want to logout?">
                         <i class="fa fa-sign-out"></i> Logout
                     </a>
                 </li>
@@ -198,4 +205,5 @@
         </li>
 
     </ul>
+
 </nav>

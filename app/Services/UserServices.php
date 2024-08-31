@@ -86,7 +86,31 @@ class UserServices
             'locked_location'   => $locked_location
         ]);
     }
+    public function IsPasswordCorrect(int $userID, string $Password): bool
+    {
+        // Retrieve the user by ID
+        $user = User::find($userID);
 
+        // Check if the user exists and the provided password matches the stored password
+        if ($user && Hash::check($Password, $user->password)) {
+            return true;
+        }
+        return false;
+    }
+    public function ChangePassword(int $userID, string $currentPassword, string $NewPassword): void
+    {   
+
+         // Retrieve the user by ID
+         $user = User::find($userID);
+
+         // Check if the user exists and the provided password matches the stored password
+         if ($user && Hash::check($currentPassword, $user->password)) {
+            $user->update([
+                'password' => Hash::make($NewPassword)
+            ]);
+         }
+     
+    }
     public function Delete(int $id): void
     {
         User::where('id', $id)->delete();

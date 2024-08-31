@@ -91,7 +91,7 @@
 
 
     @livewireScripts
-
+    @livewire('ChangePasswordModal');
 </body>
 
 </html>
