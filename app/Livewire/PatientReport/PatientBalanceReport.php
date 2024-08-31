@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PatientReport;
 
+use App\Exports\SalesPatientBalanceExport;
 use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\LocationServices;
@@ -9,6 +10,7 @@ use App\Services\ServiceChargeServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Patient Balance Report')]
 class PatientBalanceReport extends Component
@@ -18,9 +20,11 @@ class PatientBalanceReport extends Component
     public int $LOCATION_ID;
     public string $DATE_FROM;
     public string $DATE_TO;
+    public float $BALANCE;
     public $locationList = [];
     public $patientList = [];
     public $dataList = [];
+
     private $serviceChargeServices;
     private $dateServices;
     private $userServices;
@@ -34,6 +38,17 @@ class PatientBalanceReport extends Component
         $this->userServices = $userServices;
         $this->contactServices = $contactServices;
     }
+    public function export()
+    {
+        return Excel::download(new SalesPatientBalanceExport(
+            $this->serviceChargeServices,
+            $this->PATIENT_ID,
+            $this->LOCATION_ID,
+            $this->DATE_FROM,
+            $this->DATE_TO
+
+        ), 'patient-balance.xlsx');
+    }
     public function mount()
     {
         $this->locationList  = $this->locationServices->getList();
@@ -45,6 +60,7 @@ class PatientBalanceReport extends Component
     }
     public function generate()
     {
+        $this->BALANCE = 0;
         // balanceList
         $this->dataList = $this->serviceChargeServices->balanceList($this->PATIENT_ID, $this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
     }

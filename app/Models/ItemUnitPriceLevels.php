@@ -16,7 +16,8 @@ class ItemUnitPriceLevels extends Model
         'ID',
         'ITEM_UNIT_LINE_ID',
         'PRICE_LEVEL_ID',
-        'CUSTOM_PRICE'
+        'CUSTOM_PRICE',
+        'CUSTOM_COST'
     ];
 
 }

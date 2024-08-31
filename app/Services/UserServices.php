@@ -43,16 +43,16 @@ class UserServices
     {
 
         $user = User::create([
-            'name' => $Username,
-            'email' => null,
+            'name'              => $Username,
+            'email'             => null,
             'email_verified_at' => now(),
-            'password' => Hash::make($Password),
-            'remember_token' => Str::random(10),
-            'contact_id' => $Contact_id ? $Contact_id : null,
-            'inactive' => $Inactive,
-            'location_id' => $Location_id > 0 ? $Location_id : 0,
-            'trans_date' => $trans_date == '' ? null : $trans_date,
-            'locked_location' => $locked_location
+            'password'          => Hash::make($Password),
+            'remember_token'    => Str::random(10),
+            'contact_id'        => $Contact_id ? $Contact_id : null,
+            'inactive'          => $Inactive,
+            'location_id'       => $Location_id > 0 ? $Location_id : 0,
+            'trans_date'        => $trans_date == '' ? null : $trans_date,
+            'locked_location'   => $locked_location
         ]);
 
         return $user->id;
@@ -65,25 +65,25 @@ class UserServices
     {
         if ($Password) {
             User::where('id', $id)->update([
-                'name' => $Username,
-                'password' => Hash::make($Password),
-                'contact_id' => $Contact_id ? $Contact_id : null,
-                'inactive' => $Inactive,
-                'location_id' => $Location_id > 0 ? $Location_id : 0,
-                'trans_date' => $trans_date == '' ? null : $trans_date,
-                'locked_location' => $locked_location
+                'name'              => $Username,
+                'password'          => Hash::make($Password),
+                'contact_id'        => $Contact_id ? $Contact_id : null,
+                'inactive'          => $Inactive,
+                'location_id'       => $Location_id > 0 ? $Location_id : 0,
+                'trans_date'        => $trans_date == '' ? null : $trans_date,
+                'locked_location'   => $locked_location
             ]);
 
             return;
         }
 
         User::where('id', $id)->update([
-            'name' => $Username,
-            'contact_id' => $Contact_id ? $Contact_id : null,
-            'inactive' => $Inactive,
-            'location_id' => $Location_id > 0 ? $Location_id : 0,
-            'trans_date' => $trans_date == '' ? null : $trans_date,
-            'locked_location' => $locked_location
+            'name'              => $Username,
+            'contact_id'        => $Contact_id ? $Contact_id : null,
+            'inactive'          => $Inactive,
+            'location_id'       => $Location_id > 0 ? $Location_id : 0,
+            'trans_date'        => $trans_date == '' ? null : $trans_date,
+            'locked_location'   => $locked_location
         ]);
     }
 

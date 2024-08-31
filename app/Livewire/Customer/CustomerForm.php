@@ -17,7 +17,7 @@ use Livewire\Component;
 #[Title('Customer')]
 class CustomerForm extends Component
 {
-  
+
     public int $ID;
     public int $TYPE = 1;
     public string $NAME;
@@ -58,10 +58,10 @@ class CustomerForm extends Component
     public $contactGroup = [];
     public $paymentTermList = [];
     public $salesMan = [];
-    public $paymentMethod =[];
+    public $paymentMethod = [];
     public $priceLevels = [];
 
-    public string $selectTab='gen';
+    public string $selectTab = 'gen';
     public function SelectTab($tab)
     {
         $this->selectTab = $tab;
@@ -69,11 +69,11 @@ class CustomerForm extends Component
     public function mount($id = null)
     {
         $this->taxList = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', 3)->orderBy('ID', 'desc')->get();
-        $this->salesMan = Contacts::query()->select('ID','NAME')->where('INACTIVE','0')->where('TYPE','2')->get();
+        $this->salesMan = Contacts::query()->select('ID', 'NAME')->where('INACTIVE', '0')->where('TYPE', '2')->get();
         $this->contactGroup = ContactGroup::query()->where('TYPE', $this->TYPE)->get();
         $this->paymentTermList = PaymentTerms::query()->select('ID', 'DESCRIPTION')->where('INACTIVE', '0')->get();
-        $this->paymentMethod = PaymentMethods::query()->select("ID",'DESCRIPTION')->get();
-        $this->priceLevels = PriceLevels::query()->select('ID','DESCRIPTION')->where('INACTIVE','0')->get();
+        $this->paymentMethod = PaymentMethods::query()->select("ID", 'DESCRIPTION')->get();
+        $this->priceLevels = PriceLevels::query()->select('ID', 'DESCRIPTION')->where('INACTIVE', '0')->get();
 
         if (is_numeric($id)) {
 
@@ -164,28 +164,12 @@ class CustomerForm extends Component
         $this->validate(
             [
                 'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
-                'ACCOUNT_NO' => [
-                    'required',
-                    'max:50',
-                    function ($attribute, $value, $fail) {
-                        $count = Contacts::query()
-                            ->where('account_no', $value)
-                            ->where('type', $this->TYPE)
-                            ->where('id', '<>', $this->ID)
-                            ->count();
-
-                        if ($count > 0) {
-                            $fail('The specified Account No. is not unique.');
-                        }
-                    },
-                ],
                 'PRINT_NAME_AS' => 'required|max:100'
 
             ],
             [],
             [
                 'NAME' => 'Name',
-                'ACCOUNT_NO' => 'Account No.',
                 'PRINT_NAME_AS' => 'Print As'
             ]
         );
@@ -228,7 +212,8 @@ class CustomerForm extends Component
                     $this->NICKNAME,
                     $this->HIRE_DATE
                 );
-                session()->flash('message', 'Successfully created');
+
+                return Redirect::route('maintenancecontactcustomer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 $contactServices->Update(
                     $this->ID,

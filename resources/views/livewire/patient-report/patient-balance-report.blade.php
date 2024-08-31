@@ -44,14 +44,15 @@
                                     <div class="col-md-4">
                                         <div class="mt-0">
                                             <label class="text-xs ">Location:</label>
-                                            <select @if (Auth::user()->locked_location) style="opacity:
+                                            <select
+                                                @if (Auth::user()->locked_location) style="opacity:
                                                 0.5;pointer-events: none;" @endif
                                                 name="location" wire:model.live='LOCATION_ID'
                                                 class="form-control form-control-sm text-xs ">
                                                 <option value="0"> All Location</option>
                                                 @foreach ($locationList as $item)
-                                                <option value="{{ $item->ID }}"> {{ $item->NAME }}
-                                                </option>
+                                                    <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -68,8 +69,8 @@
                                 </div>
                                 <button class="btn btn-sm btn-primary" wire:click='generate()'
                                     wire:loading.attr='disabled'>Filter</button>
-                                {{-- <button class="btn btn-sm btn-success" wire:click='export()'
-                                    wire:loading.attr='disabled'>Export</button> --}}
+                                <button class="btn btn-sm btn-success" wire:click='export()'
+                                    wire:loading.attr='disabled'>Export</button>
                             </div>
                             <div class="col-6">
 
@@ -93,19 +94,34 @@
                             </tr>
                         </thead>
                         <tbody class="text-xs">
-                            @foreach ($dataList as $list )
-                            <tr>
-                                <td>{{ $list->CONTACT_NAME }}</td>
-                                <td>{{ $list->ITEM_NAME }}</td>
-                                <td>{{date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                <td><a target="_BLANK"
-                                        href="{{ route('patientsservice_charges_edit',['id' => $list->SERVICE_CHARGES_ID]) }}">{{
-                                        $list->CODE }}</a></td>
-                                <td class="text-right">{{ number_format($list->AMOUNT,2) }}</td>
-                                <td class="text-right">{{ number_format($list->PAID_AMOUNT,2) }}</td>
-                                <td class="text-right">{{ number_format($list->BALANCE,2) }}</td>
-                            </tr>
+                            @foreach ($dataList as $list)
+                                <tr>
+                                    <td>{{ $list->CONTACT_NAME }}</td>
+                                    <td>{{ $list->ITEM_NAME }}</td>
+                                    <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
+                                    <td><a target="_BLANK"
+                                            href="{{ route('patientsservice_charges_edit', ['id' => $list->SERVICE_CHARGES_ID]) }}">{{ $list->CODE }}</a>
+                                    </td>
+                                    <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
+                                    <td class="text-right">{{ number_format($list->PAID_AMOUNT, 2) }}</td>
+                                    <td class="text-right">{{ number_format($list->BALANCE, 2) }}</td>
+                                    @php
+                                        $BALANCE = $BALANCE + $list->BALANCE ?? 0;
+                                    @endphp
+                                </tr>
                             @endforeach
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                </td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-right text-danger font-weight-bold text-sm">
+                                    {{ number_format($BALANCE, 2) }}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

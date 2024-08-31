@@ -12,68 +12,62 @@ class PriceLevelLineServices
         $this->object = $objectService;
     }
 
-    public function Store(int $PRICE_LEVEL_ID, int  $ITEM_ID, float $CUSTOM_PRICE): int
+    public function Store(int $PRICE_LEVEL_ID, int  $ITEM_ID, float $CUSTOM_PRICE, float $CUSTOM_COST = 0): int
     {
         $ID = $this->object->ObjectNextID('PRICE_LEVEL_LINES');
         PriceLevelLines::create([
             'ID'                => $ID,
             'PRICE_LEVEL_ID'    => $PRICE_LEVEL_ID,
             'ITEM_ID'           => $ITEM_ID,
-            'CUSTOM_PRICE'      => $CUSTOM_PRICE
+            'CUSTOM_PRICE'      => $CUSTOM_PRICE,
+            'CUSTOM_COST'       => $CUSTOM_COST
         ]);
 
         return $ID;
     }
-
-
-    public function Update(int $ID, string $CUSTOM_PRICE): void
+    public function Update(int $ID, float $CUSTOM_PRICE): void
     {
         PriceLevelLines::where('ID', $ID)->update([
-            'CUSTOM_PRICE' => $CUSTOM_PRICE
+            'CUSTOM_PRICE' => $CUSTOM_PRICE,
         ]);
     }
-
+    public function UpdateCost(int $ID, float $CUSTOM_COST): void
+    {
+        PriceLevelLines::where('ID', $ID)->update([
+            'CUSTOM_COST' => $CUSTOM_COST,
+        ]);
+    }
     public function Delete(int $ID): void
     {
         PriceLevelLines::where('ID', $ID)->delete();
     }
     public function Search($search, int $PRICE_LEVEL_ID)
     {
-        if (!$search) {
-            return PriceLevelLines::query()
-                ->select([
-                    'price_level_lines.ID',
-                    'price_level_lines.PRICE_LEVEL_ID',
-                    'price_level_lines.ITEM_ID',
-                    'price_level_lines.CUSTOM_PRICE',
-                    'item.CODE',
-                    'item.DESCRIPTION',
-                    'item.RATE'
-                ])
-                ->join('item', 'item.ID', '=', 'price_level_lines.ITEM_ID')
-                ->where('price_level_lines.PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
-                ->orderBy('price_level_lines.ID', 'desc')->get();
-        } else {
-            return PriceLevelLines::query()
-                ->select([
-                    'price_level_lines.ID',
-                    'price_level_lines.PRICE_LEVEL_ID',
-                    'price_level_lines.ITEM_ID',
-                    'price_level_lines.CUSTOM_PRICE',
-                    'item.CODE',
-                    'item.DESCRIPTION',
-                    'item.RATE'
-                ])
-                ->join('item', 'item.ID', '=', 'price_level_lines.ITEM_ID')
-                ->where('price_level_lines.PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
-                ->where(function ($query) use ($search) {
-                    $query->where('item.CODE', 'like', '%' . $search . '%')
+        $result = PriceLevelLines::query()
+            ->select([
+                'price_level_lines.ID',
+                'price_level_lines.PRICE_LEVEL_ID',
+                'price_level_lines.ITEM_ID',
+                'price_level_lines.CUSTOM_PRICE',
+                'price_level_lines.CUSTOM_COST',
+                'item.CODE',
+                'item.DESCRIPTION',
+                'item.RATE'
+            ])
+            ->join('item', 'item.ID', '=', 'price_level_lines.ITEM_ID')
+            ->where('price_level_lines.PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use (&$search) {
+                    $q->where('item.CODE', 'like', '%' . $search . '%')
                         ->orWhere('price_level_lines.CUSTOM_PRICE', 'like', '%' . $search . '%')
+                        ->orWhere('price_level_lines.CUSTOM_COST', 'like', '%' . $search . '%')
                         ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%');
-                })
-                ->orderBy('price_level_lines.ID', 'asc')
-                ->get();
-        }
+                });
+            })
+            ->orderBy('price_level_lines.ID', 'desc')
+            ->get();
+
+        return $result;
     }
 
     public function LoadPriceLevelByItem(int $itemId)
@@ -107,13 +101,13 @@ class PriceLevelLineServices
             ->where('l.ID', $LOCATION_ID)
             ->first();
 
-        if($data) {
+        if ($data) {
             return (int) $data->ID;
         }
 
         return 0;
     }
-    public function PriceExists(int $ITEM_ID, int $LOCATION_ID):float
+    public function PriceExists(int $ITEM_ID, int $LOCATION_ID): float
     {
 
         $data =  PriceLevelLines::query()
@@ -124,7 +118,7 @@ class PriceLevelLineServices
             ->where('l.ID', $LOCATION_ID)
             ->first();
 
-        if($data) {
+        if ($data) {
             return (float) $data->CUSTOM_PRICE ?? 0;
         }
 
