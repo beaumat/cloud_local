@@ -5,6 +5,7 @@ namespace App\Livewire\Scheduler;
 
 use App\Services\ContactServices;
 use App\Services\DateServices;
+use App\Services\HemodialysisMachineServices;
 use App\Services\LocationServices;
 use App\Services\ScheduleServices;
 use App\Services\UserServices;
@@ -36,19 +37,21 @@ class SchedulerForm extends Component
     public $monthList = [];
     public $scheduleStatusList = [];
     public int $scheduleStatusId = 0;
-
+    private $hemodialysisMachineServices;
     public function boot(
         LocationServices $locationServices,
         ContactServices $contactServices,
         UserServices $userServices,
         DateServices $dateServices,
-        ScheduleServices $scheduleServices
+        ScheduleServices $scheduleServices,
+        HemodialysisMachineServices $hemodialysisMachineServices
     ) {
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
         $this->userServices = $userServices;
         $this->dateServices = $dateServices;
         $this->scheduleServices = $scheduleServices;
+        $this->hemodialysisMachineServices = $hemodialysisMachineServices;
     }
 
 
@@ -57,7 +60,7 @@ class SchedulerForm extends Component
         $this->reloadComponent();
         $data = $this->contactServices->get($this->CONTACT_ID, 3);
         if ($data) {
-            $this->HEMO_MACHINE_ID = $data->PATIENT_TYPE_ID;
+            $this->HEMO_MACHINE_ID = $this->hemodialysisMachineServices->getDefaultByLocation($data->LOCATION_ID);  //$data->PATIENT_TYPE_ID;
             return;
         }
         $this->HEMO_MACHINE_ID = 0;
@@ -118,7 +121,7 @@ class SchedulerForm extends Component
     public function render()
     {
 
-        $this->contactList = $this->contactServices->getList(3);
+        $this->contactList = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->locationList = $this->locationServices->getList();
         $scheduleList = $this->scheduleServices->ContactSchedule($this->CONTACT_ID ?? 0, $this->LOCATION_ID ?? 0, $this->scheduleStatusId, 10);
         return view('livewire.scheduler.scheduler-form', ['scheduleList' => $scheduleList]);

@@ -22,7 +22,7 @@ class HemodialysisMachineServices
         $ID = $this->object->ObjectNextID('HEMODIALYSIS_MACHINE');
 
         HemodialysisMachines::create([
-            'ID'            > $ID,
+            'ID'            => $ID,
             'CODE'          => $CODE,
             'TYPE'          => $TYPE,
             'DESCRIPTION'   => $DESCRIPTION,
@@ -78,5 +78,13 @@ class HemodialysisMachineServices
         }
 
         return [];
+    }
+    public function getDefaultByLocation(int $LOCATION_ID)
+    {
+        $result = HemodialysisMachines::where('LOCATION_ID', $LOCATION_ID)->first();
+        if ($result) {
+            return  $result->ID;
+        }
+        return 0;
     }
 }

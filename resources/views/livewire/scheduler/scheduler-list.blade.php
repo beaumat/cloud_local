@@ -108,8 +108,10 @@
                                             @endforeach
                                         </tbody>
                                     </table> --}}
+                                    @if ($DATE)
+                                        @livewire('Scheduler.SchedulerListShift', ['LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE->format('Y-m-d')])
+                                    @endif
 
-                                    @livewire('Scheduler.SchedulerListShift', ['LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE->format('Y-m-d')])
                                 </div>
 
 

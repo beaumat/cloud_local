@@ -156,7 +156,7 @@ class HemoForm extends Component
 
     private function LoadDropDown()
     {
-        $this->patientList = $this->contactServices->getList(3);
+        $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->locationList = $this->locationServices->getList();
     }
     public function mount($id = null)
@@ -176,8 +176,9 @@ class HemoForm extends Component
                         return Redirect::route('patientshemo')->with('error', 'Invalid action. Please complete the unposted(U) treatment before proceeding.');
                     }
                 }
-                $this->LoadDropDown();
+    
                 $this->reloadData($data);
+                $this->LoadDropDown();
                 $statusData = DB::table('hemo_status')->select('description')->where('ID', $data->STATUS_ID)->first();
                 if ($statusData) {
                     $this->STATUS_DESCRIPTION = $statusData->description ?? '';
@@ -187,10 +188,11 @@ class HemoForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('patientshemo')->with('error', $errorMessage);
         }
-        $this->LoadDropDown();
+
         $this->ID = 0;
         $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->LoadDropDown();
         $this->CUSTOMER_ID = 0;
         $this->CODE = '';
         $this->PRE_WEIGHT = "";
