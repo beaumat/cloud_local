@@ -120,6 +120,22 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group border-top border-secondary">
+                                    <h6 class="text-primary">Format</h6>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <livewire:text-input name="PHIC_SOA_FORMAT" titleName="SOA FORMAT"
+                                                wire:model='PHIC_SOA_FORMAT' maxlength='10' />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <livewire:custom-check-box name="PHIC_FORM_MODIFY"
+                                                titleName="Phic Form is Modify" wire:model='PHIC_FORM_MODIFY' />
+                                        </div>
+                                        <div class="col-md-4">
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-footer">
                                 <div class="row">

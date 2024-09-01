@@ -15,6 +15,17 @@ class LocationServices
     {
         return Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
     }
+    public function SOA_FORMAT(int $LOCATION_ID)
+    {
+        $data =  Locations::where('ID', $LOCATION_ID)->first();
+
+        if ($data->PHIC_SOA_FORMAT) {
+
+            return $data->PHIC_SOA_FORMAT ?? 'PrintSoa';
+        }
+
+        return "PrintSoa";
+    }
     public function getListExcept($ID)
     {
         return Locations::query()
@@ -42,8 +53,26 @@ class LocationServices
     {
         return Locations::where('ID', $ID)->first();
     }
-    public function Store(string $NAME, bool $INACTIVE, int $PRICE_LEVEL_ID, int $GROUP_ID, int $HCI_MANAGER_ID, int $PHIC_INCHARGE_ID, string $NAME_OF_BUSINESS, string $ACCREDITATION_NO, string $BLDG_NAME_LOT_BLOCK, string $STREET_SUB_VALL, string $BRGY_CITY_MUNI, string $PROVINCE, string $ZIP_CODE, string $REPORT_HEADER_1, string $REPORT_HEADER_2, string $REPORT_HEADER_3): int
-    {
+    public function Store(
+        string $NAME,
+        bool $INACTIVE,
+        int $PRICE_LEVEL_ID,
+        int $GROUP_ID,
+        int $HCI_MANAGER_ID,
+        int $PHIC_INCHARGE_ID,
+        string $NAME_OF_BUSINESS,
+        string $ACCREDITATION_NO,
+        string $BLDG_NAME_LOT_BLOCK,
+        string $STREET_SUB_VALL,
+        string $BRGY_CITY_MUNI,
+        string $PROVINCE,
+        string $ZIP_CODE,
+        string $REPORT_HEADER_1,
+        string $REPORT_HEADER_2,
+        string $REPORT_HEADER_3,
+        string $PHIC_SOA_FORMAT = 'PrintSoa',
+        bool $PHIC_FORM_MODIFY = false
+    ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
         Locations::create([
             'ID'                    => $ID,
@@ -62,7 +91,9 @@ class LocationServices
             'ZIP_CODE'              => $ZIP_CODE,
             'REPORT_HEADER_1'       => $REPORT_HEADER_1,
             'REPORT_HEADER_2'       => $REPORT_HEADER_2,
-            'REPORT_HEADER_3'       => $REPORT_HEADER_3
+            'REPORT_HEADER_3'       => $REPORT_HEADER_3,
+            'PHIC_SOA_FORMAT'       => $PHIC_SOA_FORMAT,
+            'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY
 
         ]);
 
@@ -86,7 +117,9 @@ class LocationServices
         string $ZIP_CODE,
         string $REPORT_HEADER_1,
         string $REPORT_HEADER_2,
-        string $REPORT_HEADER_3
+        string $REPORT_HEADER_3,
+        string $PHIC_SOA_FORMAT,
+        bool $PHIC_FORM_MODIFY
     ): void {
 
         Locations::where('ID', $ID)
@@ -106,7 +139,9 @@ class LocationServices
                 'ZIP_CODE'              => $ZIP_CODE,
                 'REPORT_HEADER_1'       => $REPORT_HEADER_1,
                 'REPORT_HEADER_2'       => $REPORT_HEADER_2,
-                'REPORT_HEADER_3'       => $REPORT_HEADER_3
+                'REPORT_HEADER_3'       => $REPORT_HEADER_3,
+                'PHIC_SOA_FORMAT'       => $PHIC_SOA_FORMAT,
+                'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY
 
             ]);
     }

@@ -30,6 +30,8 @@ class Locations extends Model
         'ZIP_CODE',
         'REPORT_HEADER_1',
         'REPORT_HEADER_2',
-        'REPORT_HEADER_3'
+        'REPORT_HEADER_3',
+        'PHIC_SOA_FORMAT',
+        'PHIC_FORM_MODIFY'
     ];
 }

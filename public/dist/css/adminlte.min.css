@@ -56052,7 +56052,13 @@ a.text-muted:hover {
     text-align: center;
 
 }
+.print-logo2 {
+    width: 1050px;
+    text-align: center;
+    position:absolute;
+    left: 0;
 
+}
 .print-address {
     position: absolute;
     top: 40px;

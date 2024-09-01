@@ -418,8 +418,10 @@ class PhilHealthServices
                 'philhealth_prof_fee.DISCOUNT',
                 'philhealth_prof_fee.FIRST_CASE',
                 'c.PRINT_NAME_AS as NAME',
-                'c.PIN'
+
             ])
+            ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
+
             ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
             ->where('PHIC_ID', $ID)
             ->orderBy('LINE_NO', 'asc')
@@ -629,5 +631,11 @@ class PhilHealthServices
         return 0;
     }
 
-    public function PrintPreSign(int $PETAINT_ID, int $LOCATION_ID) {}
+    public function DoctorPinformat(string $input): string
+    {
+        // Format the string
+        $formatted = substr($input, 0, 4) . '-' . substr($input, 4, 7) . '-' . substr($input, 11, 1);
+        return $formatted; // This will return: 1202-0500922-3
+
+    }
 }

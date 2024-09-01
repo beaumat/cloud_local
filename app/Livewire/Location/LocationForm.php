@@ -33,7 +33,8 @@ class LocationForm extends Component
     public string $REPORT_HEADER_1;
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
-
+    public string $PHIC_SOA_FORMAT;
+    public bool $PHIC_FORM_MODIFY;
     public $managerList = [];
     public $inchargeList = [];
     public $physicianList = [];
@@ -78,6 +79,8 @@ class LocationForm extends Component
                 $this->REPORT_HEADER_1 = $data->REPORT_HEADER_1 ?? '';
                 $this->REPORT_HEADER_2 = $data->REPORT_HEADER_2 ?? '';
                 $this->REPORT_HEADER_3 = $data->REPORT_HEADER_3 ?? '';
+                $this->PHIC_SOA_FORMAT = $data->PHIC_SOA_FORMAT ?? '';
+                $this->PHIC_FORM_MODIFY = $data->PHIC_FORM_MODIFY ?? false;
                 return;
             }
 
@@ -101,6 +104,8 @@ class LocationForm extends Component
         $this->REPORT_HEADER_1 =  '';
         $this->REPORT_HEADER_2 = '';
         $this->REPORT_HEADER_3 =  '';
+        $this->PHIC_SOA_FORMAT = '';
+        $this->PHIC_FORM_MODIFY  = false;
     }
 
 
@@ -130,7 +135,9 @@ class LocationForm extends Component
                     $this->ZIP_CODE,
                     $this->REPORT_HEADER_1,
                     $this->REPORT_HEADER_2,
-                    $this->REPORT_HEADER_3
+                    $this->REPORT_HEADER_3,
+                    $this->PHIC_SOA_FORMAT,
+                    $this->PHIC_FORM_MODIFY
                 );
 
                 Redirect::route('maintenancesettingslocation_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -152,7 +159,9 @@ class LocationForm extends Component
                     $this->ZIP_CODE,
                     $this->REPORT_HEADER_1,
                     $this->REPORT_HEADER_2,
-                    $this->REPORT_HEADER_3
+                    $this->REPORT_HEADER_3,
+                    $this->PHIC_SOA_FORMAT,
+                    $this->PHIC_FORM_MODIFY
                 );
                 session()->flash('message', 'Successfully updated');
             }

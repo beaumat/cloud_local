@@ -4,8 +4,8 @@
         <div class="container-fluid">
         </div>
     </div>
-    @foreach ($PRINT_ID as $ID)   
-        @livewire('PhilHealth.PrintSoa', ['PRINT_ID' => $ID])
+    @foreach ($PRINT_ID as $ID)
+        @livewire('PhilHealth.' . $SOA_FORMAT, ['PRINT_ID' => $ID])
         <div class="page-break"></div>
         @livewire('PhilHealth.PrintTreatment', ['PRINT_ID' => $ID])
         <div class="page-break"></div>
@@ -33,6 +33,5 @@
         window.addEventListener('beforeprint', function() {
             printPageAndClose();
         });
-        
     </script>
 @endscript
