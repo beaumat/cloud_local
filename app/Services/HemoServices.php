@@ -246,6 +246,7 @@ class HemoServices
                 'hemodialysis.DURATION',
                 'hemodialysis.HEPARIN',
                 'hemodialysis.REUSE_NO',
+                'hemodialysis.FLUSHING',
                 'hemodialysis.DIALYZER',
                 'hemodialysis.DIALSATE_N',
                 'hemodialysis.DIALSATE_K',
@@ -309,6 +310,8 @@ class HemoServices
                     'DURATION'          => $data->DURATION ?? null,
                     'DIALYZER'          => $data->DIALYZER ?? null,
                     'HEPARIN'           => $data->HEPARIN ?? null,
+                    'REUSE_NO'          => $data->REUSE_NEXT ?? null,
+                    'FLUSHING'          => $data->FLUSHING ?? null,
                     'DIALSATE_N'        => $data->DIALSATE_N ?? null,
                     'DIALSATE_K'        => $data->DIALSATE_K ?? null,
                     'DIALSATE_C'        => $data->DIALSATE_C ?? null
@@ -366,11 +369,28 @@ class HemoServices
     {
         Hemodialysis::where('ID', $ID)
             ->update([
-                'EMPLOYEE_ID'            => $EMPLOYEE_ID > 0 ? $EMPLOYEE_ID : null,
+                'EMPLOYEE_ID' => $EMPLOYEE_ID > 0 ? $EMPLOYEE_ID : null,
             ]);
     }
-    public function SaveOthers(int $ID, string $SE_DETAILS, string $SO_DETAILS, int $BFR, int $DFR, int $DURATION, string $DIALYZER, string  $DIALSATE_N, string $DIALSATE_K, string $DIALSATE_C, bool $DETAILS_USE_NEXT, bool $ORDER_USE_NEXT, string $SE_DETAILS_NEXT, string $HEPARIN, string $REUSE_NO)
-    {
+    public function SaveOthers(
+        int $ID,
+        string $SE_DETAILS,
+        string $SO_DETAILS,
+        int $BFR,
+        int $DFR,
+        int $DURATION,
+        string $DIALYZER,
+        string  $DIALSATE_N,
+        string $DIALSATE_K,
+        string $DIALSATE_C,
+        bool $DETAILS_USE_NEXT,
+        bool $ORDER_USE_NEXT,
+        string $SE_DETAILS_NEXT,
+        string $HEPARIN,
+        string $REUSE_NO,
+        string $REUSE_NEXT,
+        string $FLUSHING
+    ) {
         Hemodialysis::where('ID', $ID)
             ->update([
                 'SE_DETAILS'        => $SE_DETAILS,
@@ -386,7 +406,9 @@ class HemoServices
                 'ORDER_USE_NEXT'    => $ORDER_USE_NEXT,
                 'SE_DETAILS_NEXT'   => $SE_DETAILS_NEXT,
                 'HEPARIN'           => $HEPARIN,
-                'REUSE_NO'          => $REUSE_NO
+                'REUSE_NO'          => $REUSE_NO,
+                'REUSE_NEXT'        => $REUSE_NEXT,
+                'FLUSHING'          => $FLUSHING
             ]);
     }
     public function UpdatedSpecialOrder(int $ID): bool

@@ -48,8 +48,9 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="mt-0">
-                                                <label class="text-sm"> <a href="#"
-                                                        wire:click='refreshList()'>Search:</a> </label>
+                                                <label class="text-sm">
+                                                    <a href="#" wire:click='refreshList()'>Search:</a>
+                                                </label>
                                                 <input type="text" wire:model.live.debounce.150ms='search'
                                                     class="w-100 form-control form-control-sm" placeholder="Search" />
                                             </div>
@@ -71,14 +72,11 @@
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Status</option>
                                                     @foreach ($statusList as $item)
-                                                        <option value="{{ $item->ID }}"> {{ $item->DESCRIPTION }}
-                                                        </option>
+                                                        <option value="{{ $item->ID }}"> {{ $item->DESCRIPTION }} </option>
                                                     @endforeach
                                                 </select>
                                             </div>
-
                                         </div>
-
                                         <div class="col-md-2">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>

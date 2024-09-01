@@ -55,6 +55,8 @@ class Hemodialysis extends Model
         'EMPLOYEE_ID',
         'SE_DETAILS_NEXT',
         'HEPARIN',
-        'REUSE_NO'
+        'REUSE_NO',
+        'REUSE_NEXT',
+        'FLUSHING'
     ];
 }

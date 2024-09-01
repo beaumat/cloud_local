@@ -176,7 +176,7 @@ class HemoForm extends Component
                         return Redirect::route('patientshemo')->with('error', 'Invalid action. Please complete the unposted(U) treatment before proceeding.');
                     }
                 }
-    
+
                 $this->reloadData($data);
                 $this->LoadDropDown();
                 $statusData = DB::table('hemo_status')->select('description')->where('ID', $data->STATUS_ID)->first();
@@ -460,7 +460,8 @@ class HemoForm extends Component
     private function ItemInventory(): bool
     {
         try {
-            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Hemodialysis');
+            $SOURCE_REF_TYPE = 27; // always hemo;
+
             $data = $this->hemoServices->ItemInventory($this->ID);
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
@@ -543,17 +544,16 @@ class HemoForm extends Component
 
             session()->flash("message", 'Successfully posted');
             if ($this->STATUS == 4) {
-                $this->backtoList();
+                return Redirect::route('patientshemo');
             }
+            
+            return Redirect::route('patientshemo_edit',['id'=> $this->ID]);
+
         } catch (\Throwable $th) {
             DB::rollBack();
             $message = "Caught a Throwable: " . $th->getMessage();
             session()->flash("error", $message);
         }
-    }
-    public function backtoList()
-    {
-        return Redirect::route('patientshemo');
     }
     #[On('clear-alert')]
     public function clearAlert()

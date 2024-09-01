@@ -259,7 +259,8 @@
                                         <div class="col-12 bottom-line-hide">
                                             <div class="row right-space">
                                                 <div class="col-7">RE-USE NO.</div>
-                                                <div class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                <div
+                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
                                                     <span class="text-md"> &nbsp;{{ $REUSE_NO }}</span>
                                                 </div>
                                             </div>
@@ -276,7 +277,10 @@
                                         <div class="col-12  ">
                                             <div class="row right-space">
                                                 <div class="col-7">FLUSHING</div>
-                                                <div class="col-5 text-right bottom-line2">&nbsp;</div>
+                                                <div
+                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    <span class="text-xs">&nbsp; {{ $FLUSHING }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

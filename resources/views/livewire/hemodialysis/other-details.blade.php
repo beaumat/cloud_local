@@ -56,7 +56,7 @@
 
                         </div>
                     </div>
-                    <div class="col-md-5 bg-light m-1 p-1 border border-secondary">
+                    <div class="col-md-7 bg-light m-1 p-1 border border-secondary">
                         <div class="row">
                             <div class="col-6 text-right"> <label class='text-xs '>BFR :</label></div>
                             <div class="col-6"> <input type='number' class='w-50 text-xs' wire:model='BFR'
@@ -78,21 +78,36 @@
                         </div>
                         <div class="row">
                             <div class="col-6 text-right"> <label class='text-xs '>DIALYZER :</label></div>
-                            <div class="col-6"> <input type='text' class='w-75 text-xs' wire:model='DIALYZER'
+                            <div class="col-6"> <input type='text' class='w-50 text-xs' wire:model='DIALYZER'
                                     maxlength='10' @if ($Modify == false) disabled @endif /> </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-6 text-right"> <label class='text-xs '>REUSED NO. :</label></div>
+                            <div class="col-6"> <input type='text' class='w-50 text-xs' wire:model='REUSE_NO'
+                                    maxlength='10' @if ($Modify == false) disabled @endif /> </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-6 text-right"> <label class='text-xs '>NEXT TREATMENT REUSED NO. :</label>
+                            </div>
+                            <div class="col-6">
+                                <input type='text' class='w-50 text-xs' wire:model='REUSE_NEXT' maxlength='10'
+                                    @if ($Modify == false) disabled @endif />
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-6 text-right"> <label class='text-xs '>HEPARIN :</label></div>
-                            <div class="col-6"> <input type='text' class='w-75 text-xs' wire:model='HEPARIN'
+                            <div class="col-6"> <input type='text' class='w-50 text-xs' wire:model='HEPARIN'
                                     maxlength='10' @if ($Modify == false) disabled @endif /> </div>
                         </div>
                         <div class="row">
-                            <div class="col-6 text-right"> <label class='text-xs '>REUSE NO :</label></div>
-                            <div class="col-6"> <input type='text' class='w-75 text-xs' wire:model='REUSE_NO'
+                            <div class="col-6 text-right"> <label class='text-xs '>FLUSHING :</label></div>
+                            <div class="col-6"> <input type='text' class='w-50 text-xs' wire:model='FLUSHING'
                                     maxlength='10' @if ($Modify == false) disabled @endif /> </div>
                         </div>
                     </div>
-                    <div class="col-md-5 p-1">
+                    <div class="col-md-4 p-1">
                         <div class="row">
                             <div class="col-6 text-right"> <label class='text-xs'>NA :</label></div>
                             <div class="col-6"> <input type='text' class='w-50 text-xs' wire:model='DIALSATE_N'
@@ -112,12 +127,6 @@
                         </div>
                     </div>
                 </div>
-                <div class='form-group'>
-                    {{-- <button type="submit" class="btn btn-sm btn-info">
-                            Save change
-                        </button> --}}
-                </div>
-
             </div>
         </div>
     </section>
