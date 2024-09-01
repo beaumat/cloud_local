@@ -25,6 +25,8 @@ class HemodialysisItems extends Model
         'IS_POST',
         'SC_ITEM_ID',
         'IS_CASHIER',
-        'SK_LINE_ID'
+        'SK_LINE_ID',
+        'IS_JUSTIFY',
+        'JUSTIFY_NOTES'
     ];
 }

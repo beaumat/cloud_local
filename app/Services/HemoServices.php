@@ -245,6 +245,7 @@ class HemoServices
                 'hemodialysis.DFR',
                 'hemodialysis.DURATION',
                 'hemodialysis.HEPARIN',
+                'hemodialysis.REUSE_NO',
                 'hemodialysis.DIALYZER',
                 'hemodialysis.DIALSATE_N',
                 'hemodialysis.DIALSATE_K',
@@ -368,7 +369,7 @@ class HemoServices
                 'EMPLOYEE_ID'            => $EMPLOYEE_ID > 0 ? $EMPLOYEE_ID : null,
             ]);
     }
-    public function SaveOthers(int $ID, string $SE_DETAILS, string $SO_DETAILS, int $BFR, int $DFR, int $DURATION, string $DIALYZER, string  $DIALSATE_N, string $DIALSATE_K, string $DIALSATE_C, bool $DETAILS_USE_NEXT, bool $ORDER_USE_NEXT, string $SE_DETAILS_NEXT, string $HEPARIN)
+    public function SaveOthers(int $ID, string $SE_DETAILS, string $SO_DETAILS, int $BFR, int $DFR, int $DURATION, string $DIALYZER, string  $DIALSATE_N, string $DIALSATE_K, string $DIALSATE_C, bool $DETAILS_USE_NEXT, bool $ORDER_USE_NEXT, string $SE_DETAILS_NEXT, string $HEPARIN, string $REUSE_NO)
     {
         Hemodialysis::where('ID', $ID)
             ->update([
@@ -384,7 +385,8 @@ class HemoServices
                 'DETAILS_USE_NEXT'  => $DETAILS_USE_NEXT,
                 'ORDER_USE_NEXT'    => $ORDER_USE_NEXT,
                 'SE_DETAILS_NEXT'   => $SE_DETAILS_NEXT,
-                'HEPARIN'           => $HEPARIN
+                'HEPARIN'           => $HEPARIN,
+                'REUSE_NO'          => $REUSE_NO
             ]);
     }
     public function UpdatedSpecialOrder(int $ID): bool
@@ -532,7 +534,9 @@ class HemoServices
                 'hemodialysis.FILE_PATH',
                 'hemodialysis.IS_INCOMPLETE',
                 DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC'),
-                'e.NAME as NURSE_NAME'
+                'e.NAME as NURSE_NAME',
+                DB::raw('(SELECT IF(count(*) > 0,true,false) from hemodialysis_items as i where i.HEMO_ID = hemodialysis.ID and i.IS_JUSTIFY = 1  ) as JUSTIFY'),
+
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')
@@ -604,7 +608,9 @@ class HemoServices
                 'hemodialysis.FILE_PATH',
                 'hemodialysis.IS_INCOMPLETE',
                 DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where  sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC'),
-                'e.NAME as NURSE_NAME'
+                'e.NAME as NURSE_NAME',
+                DB::raw('(SELECT IF(count(*) > 0,true,false) from hemodialysis_items as i where i.HEMO_ID = hemodialysis.ID and i.IS_JUSTIFY = 1  ) as JUSTIFY'),
+
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')
@@ -798,7 +804,7 @@ class HemoServices
 
         return $IsExist;
     }
-    public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT, bool $IS_CASHIER = false, $SC_ITEM_ID = null, $SK_LINE_ID = null): int
+    public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT, bool $IS_CASHIER = false, $SC_ITEM_ID = null, $SK_LINE_ID = null, $IS_JUSTIFY = false, $JUSTIFY_NOTES = null): int
     {
         $ID = (int) $this->object->ObjectNextID('HEMODIALYSIS_ITEMS');
 
@@ -817,8 +823,9 @@ class HemoServices
             'IS_POST'               => false,
             'SC_ITEM_ID'            => $SC_ITEM_ID,
             'IS_CASHIER'            => $IS_CASHIER,
-            'SK_LINE_ID'            => $SK_LINE_ID
-
+            'SK_LINE_ID'            => $SK_LINE_ID,
+            'IS_JUSTIFY'            => $IS_JUSTIFY,
+            'JUSTIFY_NOTES'         => $JUSTIFY_NOTES
         ]);
 
 
@@ -930,6 +937,8 @@ class HemoServices
                 'hemodialysis_items.IS_NEW',
                 'hemodialysis_items.IS_DEFAULT',
                 'hemodialysis_items.IS_CASHIER',
+                'hemodialysis_items.IS_JUSTIFY',
+                'hemodialysis_items.JUSTIFY_NOTES',
                 DB::raw('IFNULL(hemodialysis_items.SK_LINE_ID,0) as SK_LINE_ID'),
                 'item.CODE',
                 'item.DESCRIPTION',

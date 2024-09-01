@@ -17,11 +17,20 @@ use Livewire\Component;
 class OtherChargesModal extends Component
 {
 
+    public int $ITEM_TREATMENT_ID;
+    public int $LOCATION_ID;
     public int $ITEM_ID;
     public string $ITEM_NAME;
     public int $HEMO_ID;
+    public bool $haveTrigger = false;
     public float $QUANTITY;
     public bool $showModal;
+
+    public int $J_QTY;
+    public string $J_ITEM_NAME;
+    public $dataList = [];
+    public bool $IS_JUSTIFY = false;
+    public string $JUSTIFY_NOTES;
     private $serviceChargeServices;
     private $itemTreatmentServices;
     private $unitOfMeasureServices;
@@ -52,11 +61,30 @@ class OtherChargesModal extends Component
     #[On('adding-item')]
     public function openModal($result)
     {
+        $this->dataList = [];
         $this->QUANTITY = 0;
         $this->HEMO_ID = $result['HEMO_ID'];
         $this->ITEM_ID = $result['ITEM_ID'];
         $this->ITEM_NAME = $result['ITEM_NAME'];
+        $this->haveTrigger = false;
+        $this->IS_JUSTIFY = false;
+        $this->JUSTIFY_NOTES = '';
+        $this->J_QTY = 0;
+        $this->J_ITEM_NAME = '';
 
+        $dataHemo =   $this->hemoServices->Get($this->HEMO_ID);
+        $dataItem = $this->itemServices->get($this->ITEM_ID);
+
+        if ($dataHemo && $dataItem) {
+            $this->LOCATION_ID  = $dataHemo->LOCATION_ID;
+            $this->ITEM_TREATMENT_ID =  $this->itemTreatmentServices->getItemTreatmentID($this->ITEM_ID, $this->LOCATION_ID, $dataItem->BASE_UNIT_ID ?? 0);
+            $this->dataList = $this->itemTreatmentServices->listItemTrigger($this->ITEM_TREATMENT_ID);
+            foreach ($this->dataList as $list) {
+                $this->J_QTY = $list->QUANTITY;
+                $this->J_ITEM_NAME = $list->ITEM_NAME;
+                $this->haveTrigger = true;
+            }
+        }
         $this->showModal = true;
     }
     public function closeModal()
@@ -66,18 +94,22 @@ class OtherChargesModal extends Component
 
     public function AddCharge()
     {
-        $this->validate([
-            'QUANTITY' => 'required|integer|min:1'
-        ], [], [
-            'QUANTITY' => 'Quantity'
-        ]);
 
+        $this->validate(
+            [
+                'QUANTITY' => 'required|integer|min:1',
+                'JUSTIFY_NOTES' => $this->IS_JUSTIFY ? 'required|string|min:4' : 'nullable',
+            ],
+            [],
+            [
+                'QUANTITY'  => 'Quantity',
+                'JUSTIFY_NOTES' => 'Justification Notes',
+            ]
+        );
 
 
         $data = $this->itemServices->get($this->ITEM_ID);
-
         if ($data) {
-
             $QTY_BASED = 1;
             $PRICE_LEVEL_ID  = 0;
             $UNIT_ID  = $data->BASE_UNIT_ID ?? 0;
@@ -88,7 +120,6 @@ class OtherChargesModal extends Component
 
             if ($data->TYPE < 2) {
                 $onHandQty  = $this->itemServices->getOnhand($data->ID, $hemoData->LOCATION_ID);
-
                 if ($onHandQty <= 0) {
                     session()->flash('error', 'Invalid add charges: The item is out of stock.');
                     return;
@@ -115,13 +146,26 @@ class OtherChargesModal extends Component
                     $SK_LINE_ID = $this->hemoServices->ItemStore($this->HEMO_ID, $this->ITEM_ID, $this->QUANTITY, $UNIT_ID, $QTY_BASED, true, false, true);
                 }
 
-                $dataTrigger = $this->itemTreatmentServices->getItemTrigger($this->ITEM_ID, $hemoData->LOCATION_ID, $UNIT_ID);
-                foreach ($dataTrigger  as $list) {
-                    $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
-                    $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
-                    $R_QTY = $list->QUANTITY * $this->QUANTITY;
-                    $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $R_QTY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
+
+                if ($this->IS_JUSTIFY) {
+
+                    $dataTrigger = $this->itemTreatmentServices->getItemTrigger($this->ITEM_ID, $hemoData->LOCATION_ID, $UNIT_ID);
+                    foreach ($dataTrigger  as $list) {
+                        $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
+                        $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+                        $R_QTY = $list->QUANTITY + 1 * $this->QUANTITY;
+                        $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $R_QTY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID, true, $this->JUSTIFY_NOTES);
+                    }
+                } else {
+                    $dataTrigger = $this->itemTreatmentServices->getItemTrigger($this->ITEM_ID, $hemoData->LOCATION_ID, $UNIT_ID);
+                    foreach ($dataTrigger  as $list) {
+                        $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
+                        $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+                        $R_QTY = $list->QUANTITY * $this->QUANTITY;
+                        $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $R_QTY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
+                    }
                 }
+
 
                 DB::commit();
                 $this->closeModal();

@@ -14,6 +14,7 @@
                                     <th>Category</th>
                                     <th class="col-1 text-center">Qty</th>
                                     <th class="col-1 text-center">Unit</th>
+                                    <th class="col-1 text-center">Justify <br/> Notes</th>
                                     @if ($STATUS == $openStatus || Auth::user()->can('patient.treatment.update'))
                                         <th class="col-2 text-center">Action</th>
                                     @endif
@@ -26,6 +27,7 @@
                                         <td> {{ $list->CODE }} </td>
                                         <td> {{ $list->DESCRIPTION }} </td>
                                         <td> {{ $list->CLASS_NAME }} </td>
+
                                         <td class="text-center">
                                             @if ($lineId == $list->ID)
                                                 <input type="number" step="0.01" class="w-100 text-xs text-right"
@@ -44,7 +46,11 @@
                                         <td class="text-center">
                                             {{ $list->SYMBOL }}
                                         </td>
-
+                                        <td class="text-center">
+                                            @if ($list->IS_JUSTIFY)
+                                                <i type="button" onclick="alert('Justification: {{ $list->JUSTIFY_NOTES }}')" class="fa fa-envelope fa-2x text-primary" aria-hidden="true"></i>
+                                            @endif
+                                        </td>
                                         @if ($STATUS == $openStatus || Auth::user()->can('patient.treatment.update'))
                                             <td class="text-center">
                                                 @if ($lineId == $list->ID)

@@ -252,22 +252,25 @@
                                                 <div class="col-7">DIALYZER</div>
                                                 <div
                                                     class="col-5 text-center bottom-line2 text-primary font-weight-normal">
-                                                    &nbsp;{{ $DIALYZER }}</div>
+                                                    <span class="text-xs">&nbsp;{{ $DIALYZER }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-12 bottom-line-hide">
                                             <div class="row right-space">
                                                 <div class="col-7">RE-USE NO.</div>
-                                                <div class="col-5 text-right bottom-line2">&nbsp;</div>
+                                                <div class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    <span class="text-md"> &nbsp;{{ $REUSE_NO }}</span>
+                                                </div>
                                             </div>
-
                                         </div>
                                         <div class="col-12 bottom-line-hide">
                                             <div class="row right-space">
                                                 <div class="col-7">HEPARIN</div>
                                                 <div
                                                     class="col-5 text-center bottom-line2 text-primary font-weight-normal">
-                                                    &nbsp; {{ $HEPARIN }}</div>
+                                                    <span class="text-xs">&nbsp; {{ $HEPARIN }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-12  ">

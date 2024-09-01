@@ -313,7 +313,10 @@ class ItemTreatmentServices
 
         return $result;
     }
-
+    public function itemTriggerExists(int $ITEM_TREATMENT_ID): bool
+    {
+        return  ItemTreatmentTrigger::where('ITEM_TREATMENT_ID', $ITEM_TREATMENT_ID)->exists();
+    }
     public function getItemTrigger(int $ITEM_ID, int $LOCATION_ID, int $UNIT_ID)
     {
         $result =  ItemTreatmentTrigger::query()

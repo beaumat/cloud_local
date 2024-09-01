@@ -47,6 +47,8 @@ class PrintContent extends Component
     public int $DURATION;
     public string $DIALYZER;
     public string $HEPARIN;
+    public string $REUSE_NO;
+    
     public string $DIALSATE_N;
     public string $DIALSATE_K;
     public string $DIALSATE_C;
@@ -119,6 +121,7 @@ class PrintContent extends Component
             $this->DURATION = $data->DURATION ?? 0;
             $this->DIALYZER = $data->DIALYZER ?? '';
             $this->HEPARIN = $data->HEPARIN ?? '';
+            $this->REUSE_NO = $data->REUSE_NO ??'';
             $this->DIALSATE_N =  $data->DIALSATE_N ?? '';
             $this->DIALSATE_K = $data->DIALSATE_K ?? '';
             $this->DIALSATE_C = $data->DIALSATE_C ?? '';

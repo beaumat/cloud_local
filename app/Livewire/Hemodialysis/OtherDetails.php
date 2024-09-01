@@ -28,6 +28,7 @@ class OtherDetails extends Component
     public bool $ORDER_USE_NEXT;
     public string $SE_DETAILS_NEXT;
     public string $HEPARIN;
+    public string $REUSE_NO;
 
     private $hemoServices;
     public function boot(HemoServices $hemoServices)
@@ -57,6 +58,7 @@ class OtherDetails extends Component
             $this->ORDER_USE_NEXT = $data->ORDER_USE_NEXT ?? false;
             $this->SE_DETAILS_NEXT = $data->SE_DETAILS_NEXT ?? '';
             $this->HEPARIN = $data->HEPARIN ?? '';
+            $this->REUSE_NO = $data->REUSE_NO ?? '';
         }
     }
     #[On('save-other')]
@@ -76,7 +78,8 @@ class OtherDetails extends Component
             $this->DETAILS_USE_NEXT,
             $this->ORDER_USE_NEXT,
             $this->SE_DETAILS_NEXT,
-            $this->HEPARIN
+            $this->HEPARIN,
+            $this->REUSE_NO
 
         );
         //  session()->flash('message','Save change successfully'); 

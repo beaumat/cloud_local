@@ -13,12 +13,14 @@
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class='text-sm'>SPECIAL ORDER : <i class="text-primary text-xs">Current</i></label>
+                                        <label class='text-sm'>SPECIAL ORDER : <i
+                                                class="text-primary text-xs">Current</i></label>
                                         <textarea class="form-control form-control-sm" rows='6' wire:model='SE_DETAILS'
                                             @if ($Modify == false) disabled @endif></textarea>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class='text-sm'>SPECIAL ORDER : <i class="text-info text-xs">Next</i></label>
+                                        <label class='text-sm'>SPECIAL ORDER : <i
+                                                class="text-info text-xs">Next</i></label>
                                         <textarea class="form-control form-control-sm" rows='6' wire:model='SE_DETAILS_NEXT'
                                             @if ($Modify == false) disabled @endif></textarea>
                                     </div>
@@ -82,6 +84,11 @@
                         <div class="row">
                             <div class="col-6 text-right"> <label class='text-xs '>HEPARIN :</label></div>
                             <div class="col-6"> <input type='text' class='w-75 text-xs' wire:model='HEPARIN'
+                                    maxlength='10' @if ($Modify == false) disabled @endif /> </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 text-right"> <label class='text-xs '>REUSE NO :</label></div>
+                            <div class="col-6"> <input type='text' class='w-75 text-xs' wire:model='REUSE_NO'
                                     maxlength='10' @if ($Modify == false) disabled @endif /> </div>
                         </div>
                     </div>

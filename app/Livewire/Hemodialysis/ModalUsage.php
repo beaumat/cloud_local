@@ -13,7 +13,6 @@ class ModalUsage extends Component
     public $dataList = [];
     public function boot(HemoServices $hemoServices)
     {
-
         $this->hemoServices = $hemoServices;
     }
     public bool $showModal = false;

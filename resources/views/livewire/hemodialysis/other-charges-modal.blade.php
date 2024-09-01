@@ -14,7 +14,6 @@
                     <form wire:submit.prevent="AddCharge" wire:loading.attr='disabled'>
                         <div class="modal-body">
                             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-
                             <div class="row">
                                 <div class="col-md-4 text-right text-sm text-primary">
                                     Item
@@ -28,7 +27,34 @@
                                 <div class="col-md-8">
                                     <input type="number" class="form-control form-control-sm" wire:model='QUANTITY' />
                                 </div>
+                                @if ($J_QTY > 0)
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <span class="text-info text-xs"> Free
+                                            <label>{{ $J_QTY ?? 0 }}</label>
+                                            <label>{{ $J_ITEM_NAME }}</label></span>
+                                    </div>
+                                @endif
                             </div>
+                            @if ($haveTrigger)
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <input type='checkbox' wire:model.live='IS_JUSTIFY' name="IS_JUSTIFY" />
+                                        <label class="text-xs font-weight-bold text-success"> +1
+                                            {{ $J_ITEM_NAME }}</label> <br />
+                                        @if ($IS_JUSTIFY)
+                                            <span class="text-xs font-weight-bold">
+                                                <i>Please provide a justification or a reasonable
+                                                    explanation for selecting this option:</i>
+                                            </span>
+                                            <textarea type='text' wire:model='JUSTIFY_NOTES' class="form-control form-control-sm" rows="3"></textarea>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+
                         </div>
                         <div class="modal-footer">
                             <div wire:loading.delay>
