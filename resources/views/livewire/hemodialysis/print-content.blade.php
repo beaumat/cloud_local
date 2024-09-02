@@ -270,7 +270,7 @@
                                                 <div class="col-7">HEPARIN</div>
                                                 <div
                                                     class="col-5 text-center bottom-line2 text-primary font-weight-normal">
-                                                    <span class="text-xs">&nbsp; {{ $HEPARIN }}</span>
+                                                    <span class="text-xs" style="position:absolute;width:80px;left:0">&nbsp; {{ $HEPARIN }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -279,7 +279,7 @@
                                                 <div class="col-7">FLUSHING</div>
                                                 <div
                                                     class="col-5 text-center bottom-line2 text-primary font-weight-normal">
-                                                    <span class="text-xs">&nbsp; {{ $FLUSHING }}</span>
+                                                    <span class="text-xs" style="position:absolute;width:80px;left:0">&nbsp; {{ $FLUSHING }}</span>
                                                 </div>
                                             </div>
                                         </div>
