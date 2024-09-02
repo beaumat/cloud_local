@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Livewire\PhilHealth;
+namespace App\Livewire\PhilhealthPrint;
 
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+#[Title('PhilHealth Print CSF (Pre-sign) Output')]
+class PrintOutCsfTempOut extends Component
+{   
 
-#[Title('PhilHealth Printing Form Templeted')]
-class PhilHealthPrintFormTemp extends Component
-{
     public $PRINT_ID = [];
     public function mount($id)
     {
@@ -27,6 +27,6 @@ class PhilHealthPrintFormTemp extends Component
     }
     public function render()
     {
-        return view('livewire.phil-health.phil-health-print-form-temp');
+        return view('livewire.philhealth-print.print-out-csf-temp-out');
     }
 }

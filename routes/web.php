@@ -50,9 +50,6 @@ use App\Livewire\Payment\PaymentForm;
 use App\Livewire\Payment\PaymentList;
 use App\Livewire\PhilHealth\PhilHealthForm;
 use App\Livewire\PhilHealth\PhilHealthList;
-use App\Livewire\PhilHealth\PhilHealthPrint;
-use App\Livewire\PhilHealth\PhilHealthPrintForm;
-use App\Livewire\PhilHealth\PhilHealthPrintFormTemp;
 use App\Livewire\Requirement\RequirementForm;
 use App\Livewire\Requirement\RequirementList;
 use App\Livewire\SalesOrder\SalesOrderForm;
@@ -102,6 +99,17 @@ use App\Livewire\PaymentTerm\PaymentTermList;
 use App\Livewire\PhilHealth\PhilHealthPrintFormTempOut;
 use App\Livewire\PhilHealth\PhilHealthPrintTemp;
 use App\Livewire\PhilHealth\PhilHealthPrintTempOut;
+use App\Livewire\PhilhealthPrint\PrintOutCf4;
+use App\Livewire\PhilhealthPrint\PrintOutCf4Temp;
+use App\Livewire\PhilhealthPrint\PrintOutCsf;
+use App\Livewire\PhilhealthPrint\PrintOutCsfTemp;
+use App\Livewire\PhilhealthPrint\PrintOutCsfTempOut;
+use App\Livewire\PhilhealthPrint\PrintOutSoa;
+use App\Livewire\PhilhealthPrint\PrintOutSoaTemp;
+use App\Livewire\PhilhealthPrint\PrintOutSoaTempOut;
+use App\Livewire\PhilhealthPrint\PrintOutSummary;
+use App\Livewire\PhilhealthPrint\PrintOutSummaryTemp;
+use App\Livewire\PhilhealthPrint\PrintOutSummaryTempOut;
 use App\Livewire\PriceLevelPage\PriceLevelForm;
 use App\Livewire\PriceLevelPage\PriceLevelList;
 use App\Livewire\PriceLocation\PriceLocationList;
@@ -178,18 +186,22 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', PhilHealthList::class)->name('phic')->middleware(['permission:patient.philhealth.view']);
             Route::get('/create', PhilHealthForm::class)->name('phic_create')->middleware(['permission:patient.philhealth.create']);
             Route::get('/{id}/edit', PhilHealthForm::class)->name('phic_edit')->middleware(['permission:patient.philhealth.view']);
-            Route::get('/{id}/print', PhilHealthPrint::class)->name('phic_print')->middleware(['permission:patient.philhealth.print']);
-            Route::get('/{id}/print-form', PhilHealthPrintForm::class)->name('phic_print_form')->middleware(['permission:patient.philhealth.print']);
-           
-            Route::get('/{id}/print-templeted', PhilHealthPrintTemp::class)->name('phic_print_templeted')->middleware(['permission:patient.philhealth.print']);
-            Route::get('/{id}/print-form-templeted', PhilHealthPrintFormTemp::class)->name('phic_print_form_templeted')->middleware(['permission:patient.philhealth.print']);
-         
-            Route::get('/{id}/print-templeted-out', PhilHealthPrintTempOut::class)->name('phic_print_templeted_out')->middleware(['permission:patient.philhealth.print']);
-            Route::get('/{id}/print-form-templeted-out', PhilHealthPrintFormTempOut::class)->name('phic_print_form_templeted_out')->middleware(['permission:patient.philhealth.print']);
-        });
 
-        Route::prefix('/statement-of-account')->group(function () {
-            Route::get('/', SoaModule::class)->name('soa');
+            // Print on Philhealth
+            Route::get('/{id}/printout-soa', PrintOutSoa::class)->name('printout_soa')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/printout-summary', PrintOutSummary::class)->name('printout_summary')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/printout-csf', PrintOutCsf::class)->name('printout_csf')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/printout-cf4', PrintOutCf4::class)->name('printout_cf4')->middleware(['permission:patient.philhealth.print']);
+
+            // Print Temporary Pre-sign
+            Route::get('/{id}/printout-soa-temp', PrintOutSoaTemp::class)->name('printout_soa_temp')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/printout-summary-temp', PrintOutSummaryTemp::class)->name('printout_summary_temp')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/printout-csf-temp', PrintOutCsfTemp::class)->name('printout_csf_temp')->middleware(['permission:patient.philhealth.print']);
+
+            // Print Temporary Pre-sign Result Only
+            Route::get('/{id}/printout-soa-temp-out', PrintOutSoaTempOut::class)->name('printout_soa_temp_out')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/printout-summary-temp-out', PrintOutSummaryTempOut::class)->name('printout_summary_temp_out')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/printout-csf-temp-temp-out', PrintOutCsfTempOut::class)->name('printout_csf_temp_out')->middleware(['permission:patient.philhealth.print']);
         });
     });
 

@@ -5,6 +5,10 @@
                 <div class="modal-content text-left">
                     <div class="modal-body">
                         <div class="form-group">
+                            <span class="text-xs">Pre-sign output</span>
+                            <input type="checkbox" wire:model.live='BASE_PRESIGN' />
+                        </div>
+                        <div class="form-group">
                             <table class="table table-sm table-bordered">
                                 <thead class="text-xs">
                                     <tr class="bg-sky">
@@ -57,35 +61,59 @@
                     <div class='modal-footer'>
                         <div class="container">
                             <div class="row">
+
                                 <div class="col-10 text-left">
                                     <div class="row">
                                         <div class="col-md-6 text-center">
-                                            <a type="button" target="_BLANK" title="Print Soa"
-                                                href="{{ route('patientsphic_print', ['id' => $PHILHEALTH_ID]) }}"
-                                                class=" btn  btn-sm btn-primary">
-                                                <i class="fa fa-print" aria-hidden="true"></i> Print
-                                            </a>
-                                            <a type="button" target="_BLANK" title="Print Soa"
-                                                href="{{ route('patientsphic_print_templeted_out', ['id' => $PHILHEALTH_ID]) }}"
-                                                class=" btn  btn-sm btn-primary active">
-                                                <i class="fa fa-print" aria-hidden="true"></i> (Pre-sign)
-                                            </a>
-                                            <span class="text-xs text-secondary font-weight-bold">SOA & Treatment</span>
+                                            @if ($BASE_PRESIGN)
+                                                <a type="button" target="_BLANK" title="Print Soa"
+                                                    href="{{ route('patientsprintout_soa_temp_out', ['id' => $PHILHEALTH_ID]) }}"
+                                                    class=" btn  btn-sm btn-primary">
+                                                    <i class="fa fa-print" aria-hidden="true"></i> SOA
+                                                </a>
+                                                <a type="button" target="_BLANK" title="Print Summary"
+                                                    href="{{ route('patientsprintout_summary_temp_out', ['id' => $PHILHEALTH_ID]) }}"
+                                                    class=" btn  btn-sm btn-primary ">
+                                                    <i class="fa fa-print" aria-hidden="true"></i> Summary
+                                                </a>
+                                            @else
+                                                <a type="button" target="_BLANK" title="Print Soa"
+                                                    href="{{ route('patientsprintout_soa', ['id' => $PHILHEALTH_ID]) }}"
+                                                    class=" btn  btn-sm btn-primary">
+                                                    <i class="fa fa-print" aria-hidden="true"></i> SOA
+                                                </a>
+                                                <a type="button" target="_BLANK" title="Print Summary"
+                                                    href="{{ route('patientsprintout_summary', ['id' => $PHILHEALTH_ID]) }}"
+                                                    class=" btn  btn-sm btn-primary ">
+                                                    <i class="fa fa-print" aria-hidden="true"></i> Summary
+                                                </a>
+                                            @endif
+
                                         </div>
                                         <div class="col-md-6 text-center">
-                                            <a type="button" target="_BLANK" title="Print Philheath Form"
-                                                href="{{ route('patientsphic_print_form', ['id' => $PHILHEALTH_ID]) }}"
-                                                class="btn btn-info btn-sm"> <i class="fa fa-print"
-                                                    aria-hidden="true"></i>
-                                                Print CSF & CF4
-                                            </a>
-                                            {{-- <a type="button" target="_BLANK" title="Print Philheath Form"
-                                                href="{{ route('patientsphic_print_form_templeted_out', ['id' => $PHILHEALTH_ID]) }}"
-                                                class="btn btn-info btn-sm active"> <i class="fa fa-print"
-                                                    aria-hidden="true"></i>
-                                                (Pre-sign)
-                                            </a> --}}
-                                            {{-- <span class="text-xs text-secondary font-weight-bold">CSF & CF4</span> --}}
+                                            @if ($BASE_PRESIGN)
+                                                <a type="button" target="_BLANK" title="Print Philheath Form"
+                                                    href="{{ route('patientsprintout_csf_temp_out', ['id' => $PHILHEALTH_ID]) }}"
+                                                    class="btn btn-info btn-sm ">
+                                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                                    CSF
+                                                </a>
+                                            @else
+                                                <a type="button" target="_BLANK" title="Print Philheath Form"
+                                                    href="{{ route('patientsprintout_csf', ['id' => $PHILHEALTH_ID]) }}"
+                                                    class="btn btn-info btn-sm ">
+                                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                                    CSF
+                                                </a>
+                                                <a type="button" target="_BLANK" title="Print Philheath Form"
+                                                    href="{{ route('patientsprintout_cf4', ['id' => $PHILHEALTH_ID]) }}"
+                                                    class="btn btn-info btn-sm">
+                                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                                    CF4
+                                                </a>
+                                            @endif
+
+
                                         </div>
                                     </div>
 
@@ -98,6 +126,7 @@
                                         Close
                                     </button>
                                 </div>
+
                             </div>
                         </div>
                     </div>

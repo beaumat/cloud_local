@@ -70,7 +70,7 @@
                                      @endif
                                  </td>
                                  <td class="text-center">
-                                     @can('patient.philhealth.print')
+                                     {{-- @can('patient.philhealth.print')
                                          <a target="_BLANK" title="Soa"
                                              href="{{ route('patientsphic_print', ['id' => $list->ID]) }}"
                                              class="btn-sm text-primary"> <i class="fa fa-file-pdf-o"
@@ -79,7 +79,7 @@
                                              href="{{ route('patientsphic_print_form', ['id' => $list->ID]) }}"
                                              class="btn-sm text-danger"> <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                          </a>
-                                     @endcan
+                                     @endcan --}}
                                      <a href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
                                          class="btn-sm text-info">
                                          <i class="fas fa-edit" aria-hidden="true"></i>
@@ -104,14 +104,19 @@
 
 
                      <a type="button" target="_BLANK" title="Print Soa"
-                         href="{{ route('patientsphic_print_templeted', ['id' => $CONTACT_ID]) }}"
+                         href="{{ route('patientsprintout_soa_temp', ['id' => $CONTACT_ID]) }}"
                          class=" btn  btn-sm btn-primary">
-                         <i class="fa fa-print" aria-hidden="true"></i> SOA & Treatment (Pre-sign)
+                         <i class="fa fa-print" aria-hidden="true"></i> SOA (Pre-sign)
                      </a>
-                     <a type="button" target="_BLANK" title="Print Philheath Form"
-                         href="{{ route('patientsphic_print_form_templeted', ['id' => $CONTACT_ID]) }}"
+                     <a type="button" target="_BLANK" title="Print Soa"
+                         href="{{ route('patientsprintout_summary_temp', ['id' => $CONTACT_ID]) }}"
+                         class=" btn  btn-sm btn-primary">
+                         <i class="fa fa-print" aria-hidden="true"></i> Summary (Pre-sign)
+                     </a>
+                     <a type="button" target="_BLANK" title="Print Philheath CF4 (pre-sign)"
+                         href="{{ route('patientsprintout_csf_temp', ['id' => $CONTACT_ID]) }}"
                          class="btn btn-info btn-sm"> <i class="fa fa-print" aria-hidden="true"></i>
-                         CSF & CF4 (Pre-sign)
+                         CSF (Pre-sign)
                      </a>
 
                  </div>

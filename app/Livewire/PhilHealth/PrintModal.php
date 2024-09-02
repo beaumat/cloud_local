@@ -8,6 +8,8 @@ use Livewire\Component;
 
 class PrintModal extends Component
 {
+
+    public bool $BASE_PRESIGN = false;
     public bool $showModal = false;
     public int $PHILHEALTH_ID;
     public string $CODE;
@@ -26,6 +28,8 @@ class PrintModal extends Component
     #[On('philhealth-print-data')]
     public function openModal($result)
     {
+
+        $this->BASE_PRESIGN = false;
         $this->PHILHEALTH_ID = $result['PHILHEALTH_ID'];
 
         $data =  $this->philHealthServices->getPrint($this->PHILHEALTH_ID);

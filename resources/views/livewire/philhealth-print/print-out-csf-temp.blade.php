@@ -1,16 +1,27 @@
 <div class="content-wrapper" id="printableContent">
+    <style>
+        @media print {
 
-    <div class="content-header">
-        <div class="container-fluid">
-        </div>
-    </div>
+            @page {
+                size: legal;
+                /* Sets the paper size to Legal */
+                /* Custom long size: width 8.5in (letter width), length 14in */
+                /* margin: 0.5in; */
+                /* Adjust margins as desired */
+                margin-left: 45px;
+                margin-right: 45px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+
+        }
+    </style>
+
+
     @foreach ($PRINT_ID as $ID)
-        @livewire('PhilHealth.PrintSoa', ['PRINT_ID' => $ID, 'PATIENT_ID' => 0, 'OUTPUT' => false])
-        <div class="page-break"></div>
-        @livewire('PhilHealth.PrintTreatment', ['PRINT_ID' => $ID, 'PATIENT_ID' => 0, 'OUTPUT' => false])
-        <div class="page-break"></div>
-        {{-- @livewire('PhilHealth.PrintComputation', ['PRINT_ID' => $ID]) --}}
+        @livewire('PhilHealth.PrintCsf', ['PATIENT_ID' => $ID])
     @endforeach
+
 </div>
 
 @script

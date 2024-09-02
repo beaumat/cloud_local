@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Livewire\PhilHealth;
+namespace App\Livewire\PhilhealthPrint;
 
 use App\Services\LocationServices;
-use App\Services\PhilHealthServices;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('PhilHealth Printing SOA')]
-class PhilHealthPrint extends Component
-{
+#[Title('PhilHealth Printing Statement of Account')]
+class PrintOutSoa extends Component
+{   
 
     public string $SOA_FORMAT = "";
     public $PRINT_ID = [];
@@ -41,6 +40,6 @@ class PhilHealthPrint extends Component
     }
     public function render()
     {
-        return view('livewire.phil-health.phil-health-print');
+        return view('livewire.philhealth-print.print-out-soa');
     }
 }

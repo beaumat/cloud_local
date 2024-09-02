@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Livewire\PhilHealth;
+namespace App\Livewire\PhilhealthPrint;
 
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('PhilHealth Printing SOA Pre-sign')]
-class PhilHealthPrintTempOut extends Component
+#[Title('PhilHealth Print CF4')]
+class PrintOutCf4 extends Component
 {
+
     public $PRINT_ID = [];
     public function mount($id)
     {
@@ -18,15 +19,16 @@ class PhilHealthPrintTempOut extends Component
         }
 
         $this->PRINT_ID = explode(',', $id);
-        $this->dispatch('preview_print');
+        $this->dispatch('preview_print_form');
     }
-    #[On('preview_print')]
+    #[On('preview_print_form')]
     public function print()
     {
         $this->dispatch('print');
     }
+
     public function render()
     {
-        return view('livewire.phil-health.phil-health-print-temp-out');
+        return view('livewire.philhealth-print.print-out-cf4');
     }
 }

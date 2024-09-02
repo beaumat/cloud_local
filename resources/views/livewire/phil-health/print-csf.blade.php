@@ -69,14 +69,12 @@
             </div>
 
         </div>
-        <div class="col-12 text-center font-weight-light bgBlack"
-            >
+        <div class="col-12 text-center font-weight-light bgBlack">
             <b class="text-white arial font-weight-bold" style="font-size: 19px">
                 PART I - MEMBER AND PATIENT INFORMATION AND CERTIFICATION
             </b>
         </div>
-        <div class="col-12 ubox2 font-weight-light"
-           >
+        <div class="col-12 ubox2 font-weight-light">
             <div class="row">
                 <div class="col-12" style="height: 30px; ">
                     <label> 1. PhilHealth Identification Number (PIN) of Member: </label>
@@ -569,8 +567,7 @@
                             </b>
                             <div class="top-line2">
                             </div>
-                            <span>Signature Over
-                                Printed Name of Member</span>
+                            <span>Signature Over Printed Name of Member</span>
                             <div class="row ">
                                 <div class="col-4 text-md">
                                     <div class="form-group mt-2 text-sm">
@@ -578,8 +575,7 @@
                                     </div>
                                 </div>
                                 <div class="col-8 text-left">
-                                    <div class="form-group text-md">
-
+                                    <div class="form-group text-md" style="width:300px;">
                                         <div class="box text-primary courier-new font-weight-bold">
                                             {{ substr($DATE_DISCHARGED, 5, 1) }}
                                         </div>
@@ -1015,7 +1011,7 @@
                                     </div>
                                 </div>
                                 <div class="col-8 text-left">
-                                    <div class="form-group text-md">
+                                    <div class="form-group text-md " style="width:300px;">
                                         <div class="box text-primary courier-new font-weight-bold">
                                             {{ substr($DATE_DISCHARGED, 5, 1) }}
                                         </div>

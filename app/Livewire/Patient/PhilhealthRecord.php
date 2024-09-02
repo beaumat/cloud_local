@@ -40,6 +40,7 @@ class PhilhealthRecord extends Component
     public function render()
     {
         $dataList = $this->philHealthServices->PatientRecord($this->search, $this->CONTACT_ID, 15);
+        
         return view('livewire.patient.philhealth-record', ['dataList' => $dataList]);
     }
 }

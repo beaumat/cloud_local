@@ -1,7 +1,6 @@
 <div class="content-wrapper" id="printableContent">
     <style>
         @media print {
-
             @page {
                 size: legal;
                 /* Sets the paper size to Legal */
@@ -22,10 +21,6 @@
     </div>
 
     @foreach ($PRINT_ID as $ID)
-        {{-- @livewire('PhilHealth.PrintCf1') --}}
-
-        @livewire('PhilHealth.PrintCsf', ['id' => $ID])
-        <div class="page-break"></div>
         @livewire('PhilHealth.PrintCf4', ['id' => $ID])
         <div class="page-break"></div>
         @livewire('PhilHealth.PrintCf4Back',['id'=> $ID])
