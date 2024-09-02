@@ -40,7 +40,7 @@
             <p style="font-size:14.4px; line-height: 1.3; " class="float-left mt-2">
                 <b class="font-weight-bold">IMPORTANT REMINDERS:</b>
                 <br />
-                PLEASE WRITE IN CAPITAL <b class="font-weight-bold">LETTERS</b> AND <b class="font-weight-bold">TICK</b>
+                PLEASE WRITE IN CAPITAL <b class="font-weight-bold">LETTERS</b> AND <b class="font-weight-bold">CHECK</b>
                 THE APPROPRIATE BOXES.<br />
                 All information required in this form are necessary. Claim forms with incomplete information
                 shall not be processed.<br />
