@@ -9,7 +9,6 @@
                         <button type="button" class="close" wire:click="closeModal()">
                             <span aria-hidden="true">&times;</span>
                         </button>
-
                     </div>
                     <form wire:submit.prevent="AddCharge" wire:loading.attr='disabled'>
                         <div class="modal-body">
