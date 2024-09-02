@@ -32,9 +32,9 @@
                                             <livewire:text-input name="NAME" titleName="Patients Name"
                                                 wire:model='NAME' :isDisabled='true' maxlength='100' />
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-2" >
                                             <livewire:text-input name="ACCOUNT_NO" titleName="Profile No."
-                                                wire:model='ACCOUNT_NO' maxlength='20' />
+                                                wire:model='ACCOUNT_NO' isDisabled=true maxlength='20' />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:date-input name="DATE_ADMISSION" titleName="Date Diagnosis"
@@ -56,8 +56,11 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:select-option name="PATIENT_TYPE_ID" :options="$patientTypeList"
-                                                :zero="true" titleName="Type" wire:model='PATIENT_TYPE_ID' />
+                                            {{-- <livewire:select-option name="PATIENT_TYPE_ID" :options="$patientTypeList"
+                                                :zero="true" titleName="Type" wire:model='PATIENT_TYPE_ID' /> --}}
+                                            <livewire:text-input name="NICKNAME" titleName="Account No."
+                                                wire:model='NICKNAME' maxlength='20' />
+
                                         </div>
                                     </div>
                                 </div>
