@@ -48,9 +48,17 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <livewire:select-option name="PATIENT_ID" titleName="Selected patient"
-                                            :options="$patientList" :zero="true" :isDisabled=false
-                                            wire:model.live='PATIENT_ID' />
+
+                                        @if ($refreshComponent)
+                                            <livewire:select-option name="PATIENT_ID1" titleName="Selected patient"
+                                                :options="$patientList" :zero="true" :isDisabled=false
+                                                wire:model.live='PATIENT_ID' />
+                                        @else
+                                            <livewire:select-option name="PATIENT_ID2" titleName="Selected patient"
+                                                :options="$patientList" :zero="true" :isDisabled=false
+                                                wire:model.live='PATIENT_ID' />
+                                        @endif
+
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">
@@ -115,6 +123,7 @@
                                         $is_sc = false;
                                     } else {
                                         $is_sc = true;
+                                        $NO_OF_TREATMENT = $NO_OF_TREATMENT + 1;
                                     }
 
                                     if ($PREV_SC_ITEM_REF_ID == $list->SC_ITEM_REF_ID) {
@@ -264,8 +273,16 @@
                     </table>
                 </div>
                 <div class="col-md-6">
-                    <h6 class="text-xs"><label>No. of Patient : </label> <span class="text-primary">
-                            {{ $NO_OF_PATIENT }}</span> </h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-xs"><label>No. of Patient : </label> <span class="text-primary">
+                                    {{ $NO_OF_PATIENT }}</span> </h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-xs"><label>No. of Treatment : </label> <span class="text-primary">
+                                    {{ $NO_OF_TREATMENT }}</span> </h6>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="row">

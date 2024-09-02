@@ -37,9 +37,16 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <livewire:select-option name="PATIENT_ID" titleName="Selected patient"
-                                            :options="$patientList" :zero="true" :isDisabled=false
-                                            wire:model.live='PATIENT_ID' />
+                                        @if ($refreshComponent)
+                                            <livewire:select-option name="PATIENT_ID1" titleName="Selected patient"
+                                                :options="$patientList" :zero="true" :isDisabled=false
+                                                wire:model.live='PATIENT_ID' />
+                                        @else
+                                            <livewire:select-option name="PATIENT_ID2" titleName="Selected patient"
+                                                :options="$patientList" :zero="true" :isDisabled=false
+                                                wire:model.live='PATIENT_ID' />
+                                        @endif
+
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">

@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class PatientBalanceReport extends Component
 {
 
+    public  bool $refreshComponent = false;
     public int $PATIENT_ID = 0;
     public int $LOCATION_ID;
     public string $DATE_FROM;
@@ -52,11 +53,19 @@ class PatientBalanceReport extends Component
     public function mount()
     {
         $this->locationList  = $this->locationServices->getList();
-        $this->patientList = $this->contactServices->getList(3);
-        $this->PATIENT_ID  = 0;
+
+
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->DATE_FROM = $this->dateServices->NowDate();
         $this->DATE_TO = $this->dateServices->NowDate();
+        $this->updatedlocationId();
+    }
+    public function updatedlocationId()
+    {
+
+        $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
+        $this->PATIENT_ID  = 0;
+        $this->refreshComponent = $this->refreshComponent ? false : true;
     }
     public function generate()
     {

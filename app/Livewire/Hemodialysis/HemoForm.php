@@ -433,7 +433,6 @@ class HemoForm extends Component
                 $this->hemoServices->GetOtherDetailsDefault($this->ID, $this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID);
                 $NO = (int) $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
                 $this->hemoServices->AutoDefaultItem($NO, $this->ID, $this->LOCATION_ID);
-
                 DB::commit();
                 return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {

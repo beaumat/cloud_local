@@ -17,6 +17,7 @@ use Livewire\Component;
 class PatientSalesReport extends Component
 {
 
+    public bool $refreshComponent = false;
     public int $PATIENT_ID;
     public int $LOCATION_ID;
     public $locationList = [];
@@ -47,6 +48,8 @@ class PatientSalesReport extends Component
     public float $PCSO_AMOUNT;
     public float $OTHER_GL_AMOUNT;
     public int $NO_OF_PATIENT = 0;
+
+    public int $NO_OF_TREATMENT = 0;
     private $contactServices;
     private $patientReportServices;
     public function boot(LocationServices $locationServices, UserServices $userServices, ContactServices $contactServices, PatientReportServices $patientReportServices)
@@ -59,9 +62,20 @@ class PatientSalesReport extends Component
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->patientList = $this->contactServices->getList(3);
+
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        
+        $this->updatedLocationId();
         $this->resetFilter();
     }
+    public function updatedLocationId()
+    {   
+        $this->PATIENT_ID = 0;
+        $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
+        $this->refreshComponent = $this->refreshComponent ? false : true;
+
+    }
+
     public function export()
     {
         return Excel::download(new PatientSalesReportExport(
@@ -85,7 +99,7 @@ class PatientSalesReport extends Component
         $this->LINGAP_AMOUNT = 0;
         $this->PCSO_AMOUNT = 0;
         $this->OTHER_GL_AMOUNT = 0;
-
+        $this->NO_OF_TREATMENT = 0;
 
         $this->dataList = $this->patientReportServices->generateSalesReportData(
             $this->DATE_COLLECTION_FROM,
@@ -104,8 +118,6 @@ class PatientSalesReport extends Component
 
         $this->DATE_TRANSACTION_FROM = $this->userServices->getTransactionDateDefault();
         $this->DATE_TRANSACTION_TO = $this->userServices->getTransactionDateDefault();
-
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->PATIENT_ID = 0;
     }
 

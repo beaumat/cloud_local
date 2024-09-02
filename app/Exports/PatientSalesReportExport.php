@@ -68,6 +68,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
 
         $running_balance = 0;
         $NO_OF_PATIENT = 0;
+        $NO_OF_TREATMENT = 0;
         $sc_code = '';
         $finalData = [];
         $finalData[] = array_values($headers); // Add headers as the first row
@@ -78,6 +79,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
             if ($sc_code == $list->SC_CODE) {
                 $is_sc = false;
             } else {
+                $NO_OF_TREATMENT = $NO_OF_TREATMENT  + 1;
                 $is_sc = true;
             }
 
@@ -172,7 +174,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         $finalData[] = array_values($rowData);
 
         // No. of Patient - SC TOTAL
-        $rowData = ['PN' => 'No. of Patient: ' . $NO_OF_PATIENT, 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Cash Paid: ' . $CASH_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL CHARGE :' . $TOTAL_CHARGE, 'LOCATION' => '',];
+        $rowData = ['PN' => 'No. of Patient: ' . $NO_OF_PATIENT, 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => 'No. of Treatment: ' . $NO_OF_TREATMENT, 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Cash Paid: ' . $CASH_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL CHARGE :' . $TOTAL_CHARGE, 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
         // PAID TOTAL
         $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Philhealth Paid: ' . $PHILHEALTH_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL PAID :' . $TOTAL_PAID, 'LOCATION' => '',];
