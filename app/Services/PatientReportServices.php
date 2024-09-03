@@ -2,11 +2,16 @@
 
 namespace App\Services;
 
+use App\Models\Items;
 use Illuminate\Support\Facades\DB;
 
 class PatientReportServices
 {
-    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, int $patientId = 0)
+    /**
+     * @param array $patientData
+     */
+
+    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [])
     {
         $results = DB::table('service_charges_items as sci')
             ->select([
@@ -45,8 +50,13 @@ class PatientReportServices
             ->when($locatoinId > 0, function ($query) use (&$locatoinId) {
                 $query->where('sc.LOCATION_ID', $locatoinId);
             })
-            ->when($patientId > 0, function ($query) use (&$patientId) {
-                $query->where('sc.PATIENT_ID', $patientId);
+            ->when($patientData, function ($query) use (&$patientData) {
+                $array = $patientData;
+                $query->whereIn('sc.PATIENT_ID', $array);
+            })
+            ->when($itemData, function ($query) use (&$itemData) {
+                $array = $itemData;
+                $query->whereIn('sci.ITEM_ID', $array);
             })
             ->orderBy('c.LAST_NAME')
             ->orderBy('sc.CODE')
@@ -54,5 +64,24 @@ class PatientReportServices
             ->get();
 
         return $results;
+    }
+
+    public function getItemListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)
+    {
+
+        return Items::query()
+            ->select(['ID', 'DESCRIPTION'])
+            ->whereExists(function ($query) use (&$LOCATION_ID, &$DATE_FROM, &$DATE_TO) {
+                $query->select(DB::raw(1))
+                    ->from('service_charges as s')
+                    ->join('service_charges_items as ci', function ($join) {
+                        $join->on('ci.SERVICE_CHARGES_ID', '=', 's.ID')
+                            ->on('ci.ITEM_ID', '=', 'item.ID');
+                    })
+                    ->where('s.LOCATION_ID', '=', $LOCATION_ID)
+                    ->whereBetween('s.DATE', [$DATE_FROM, $DATE_TO]);
+            })
+            ->orderBy('DESCRIPTION', 'asc')
+            ->get();
     }
 }

@@ -97,17 +97,28 @@
                     </div>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-6">
                                 {{-- filterPatient --}}
 
                                 @if ($refreshComponent)
                                     <livewire:select-checkbox name="PATIENT_ID1" titleName="Filter patient"
                                         :options="$filterPatient" :zero="true" :isDisabled=false
-                                        wire:model.live='PATIENT_ID' />
+                                        wire:model.live='selectedPatient' />
                                 @else
                                     <livewire:select-checkbox name="PATIENT_ID2" titleName="Filter patient"
                                         :options="$filterPatient" :zero="true" :isDisabled=false
-                                        wire:model.live='PATIENT_ID' />
+                                        wire:model.live='selectedPatient' />
+                                @endif
+                            </div>
+                            <div class="col-6">
+                                {{-- filterPatient --}}
+
+                                @if ($refreshComponent)
+                                    <livewire:select-checkbox name="ITEM1" titleName="Filter item" :options="$filterItem"
+                                        :zero="true" :isDisabled=false wire:model.live='selectedItem' />
+                                @else
+                                    <livewire:select-checkbox name="ITEM2" titleName="Filter item" :options="$filterItem"
+                                        :zero="true" :isDisabled=false wire:model.live='selectedItem' />
                                 @endif
                             </div>
                         </div>

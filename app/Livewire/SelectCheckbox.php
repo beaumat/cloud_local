@@ -9,8 +9,7 @@ use Livewire\Component;
 class SelectCheckbox extends Component
 {
 
-    #[Modelable]
-    public $value = null;
+   
     public string $name;
     public string $titleName;
     #[Reactive]
@@ -19,6 +18,7 @@ class SelectCheckbox extends Component
     public bool $vertical;
     public bool $withLabel;
     public bool $isDisabled;
+    #[Modelable]
     public $selectedOptions = []; // Array to store selected options
 
     public function updatedSelectedOptions()

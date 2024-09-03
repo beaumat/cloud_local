@@ -55,7 +55,10 @@ class PatientSalesReport extends Component
     private $patientReportServices;
     private $itemServices;
     public $filterPatient = [];
+    public $selectedPatient = [];
     public $filterItem = [];
+    public $selectedItem = [];
+
 
     public function boot(
         LocationServices $locationServices,
@@ -69,6 +72,14 @@ class PatientSalesReport extends Component
         $this->contactServices = $contactServices;
         $this->patientReportServices = $patientReportServices;
         $this->itemServices = $itemServices;
+    }
+    public function updatedselectedPatient()
+    {
+        $this->shortFilter();
+    }
+    public function updatedselectedItem()
+    {
+        $this->shortFilter();
     }
     public function mount()
     {
@@ -100,6 +111,18 @@ class PatientSalesReport extends Component
     }
     public function showfilter()
     {
+
+        $this->selectedItem = [];
+        $this->selectedPatient = [];
+        $this->shortFilter();
+        $this->filterPatient  = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
+        $this->filterItem =  $this->patientReportServices->getItemListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
+
+        $this->refreshComponent = $this->refreshComponent ? false : true;
+    }
+
+    public function shortFilter()
+    {
         $this->NO_OF_PATIENT  = 0;
         $this->TOTAL_CHARGE = 0;
         $this->TOTAL_PAID = 0;
@@ -117,13 +140,9 @@ class PatientSalesReport extends Component
             $this->DATE_TRANSACTION_FROM,
             $this->DATE_TRANSACTION_TO,
             $this->LOCATION_ID,
-            $this->PATIENT_ID
+            $this->selectedPatient,
+            $this->selectedItem
         );
-
-
-        $this->filterPatient  = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-        $this->filterItem = [];
-        $this->refreshComponent = $this->refreshComponent ? false : true;
     }
 
     public function resetFilter()
