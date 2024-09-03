@@ -25,11 +25,11 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <livewire:date-input name="DATE_TRANSACTION_FROM" titleName="(SC) From"
-                                            wire:model.live='DATE_TRANSACTION_FROM' :isDisabled="false" />
+                                            wire:model='DATE_TRANSACTION_FROM' :isDisabled="false" />
                                     </div>
                                     <div class="col-md-5">
                                         <livewire:date-input name="DATE_TRANSACTION_TO" titleName="(SC) To"
-                                            wire:model.live='DATE_TRANSACTION_TO' :isDisabled="false" />
+                                            wire:model='DATE_TRANSACTION_TO' :isDisabled="false" />
                                     </div>
                                 </div>
                             </div>
@@ -37,11 +37,11 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <livewire:date-input name="DATE_COLLECTION_FROM" titleName="(P) From"
-                                            wire:model.live='DATE_COLLECTION_FROM' :isDisabled="false" />
+                                            wire:model='DATE_COLLECTION_FROM' :isDisabled="false" />
                                     </div>
                                     <div class="col-md-5">
                                         <livewire:date-input name="DATE_COLLECTION_TO" titleName="(P) To"
-                                            wire:model.live='DATE_COLLECTION_TO' :isDisabled="false" />
+                                            wire:model='DATE_COLLECTION_TO' :isDisabled="false" />
                                     </div>
                                 </div>
                             </div>
