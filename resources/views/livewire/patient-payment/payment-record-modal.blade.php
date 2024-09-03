@@ -12,7 +12,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        @livewire('Patient.AssistanceRecord', ['CONTACT_ID' => $CONTACT_ID])
+                        @livewire('Patient.AssistanceRecord', ['CONTACT_ID' => $CONTACT_ID,'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">Close</button>
