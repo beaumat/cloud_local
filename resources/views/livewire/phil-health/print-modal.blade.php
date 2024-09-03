@@ -68,23 +68,23 @@
                                             @if ($BASE_PRESIGN)
                                                 <a type="button" target="_BLANK" title="Print Soa"
                                                     href="{{ route('patientsprintout_soa_temp_out', ['id' => $PHILHEALTH_ID]) }}"
-                                                    class=" btn  btn-sm btn-primary">
+                                                    class=" btn  btn-xs btn-primary">
                                                     <i class="fa fa-print" aria-hidden="true"></i> SOA
                                                 </a>
                                                 <a type="button" target="_BLANK" title="Print Summary"
                                                     href="{{ route('patientsprintout_summary_temp_out', ['id' => $PHILHEALTH_ID]) }}"
-                                                    class=" btn  btn-sm btn-primary ">
+                                                    class=" btn  btn-xs btn-primary ">
                                                     <i class="fa fa-print" aria-hidden="true"></i> Summary
                                                 </a>
                                             @else
                                                 <a type="button" target="_BLANK" title="Print Soa"
                                                     href="{{ route('patientsprintout_soa', ['id' => $PHILHEALTH_ID]) }}"
-                                                    class=" btn  btn-sm btn-primary">
+                                                    class=" btn  btn-xs btn-primary">
                                                     <i class="fa fa-print" aria-hidden="true"></i> SOA
                                                 </a>
                                                 <a type="button" target="_BLANK" title="Print Summary"
                                                     href="{{ route('patientsprintout_summary', ['id' => $PHILHEALTH_ID]) }}"
-                                                    class=" btn  btn-sm btn-primary ">
+                                                    class=" btn  btn-xs btn-primary ">
                                                     <i class="fa fa-print" aria-hidden="true"></i> Summary
                                                 </a>
                                             @endif
@@ -94,23 +94,29 @@
                                             @if ($BASE_PRESIGN)
                                                 <a type="button" target="_BLANK" title="Print Philheath Form"
                                                     href="{{ route('patientsprintout_csf_temp_out', ['id' => $PHILHEALTH_ID]) }}"
-                                                    class="btn btn-info btn-sm ">
+                                                    class="btn btn-info btn-xs ">
                                                     <i class="fa fa-print" aria-hidden="true"></i>
                                                     CSF
                                                 </a>
                                             @else
                                                 <a type="button" target="_BLANK" title="Print Philheath Form"
                                                     href="{{ route('patientsprintout_csf', ['id' => $PHILHEALTH_ID]) }}"
-                                                    class="btn btn-info btn-sm ">
+                                                    class="btn btn-info btn-xs ">
                                                     <i class="fa fa-print" aria-hidden="true"></i>
                                                     CSF
                                                 </a>
                                                 <a type="button" target="_BLANK" title="Print Philheath Form"
                                                     href="{{ route('patientsprintout_cf4', ['id' => $PHILHEALTH_ID]) }}"
-                                                    class="btn btn-info btn-sm">
+                                                    class="btn btn-info btn-xs">
                                                     <i class="fa fa-print" aria-hidden="true"></i>
                                                     CF4
                                                 </a>
+                                                {{-- <a type="button" target="_BLANK" title="Print Philheath CF2 Form"
+                                                    href="{{ route('patientsprintout_cf2', ['id' => $PHILHEALTH_ID]) }}"
+                                                    class="btn btn-info btn-xs">
+                                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                                    CF2
+                                                </a> --}}
                                             @endif
 
 

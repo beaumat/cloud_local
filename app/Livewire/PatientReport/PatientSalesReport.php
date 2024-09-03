@@ -4,6 +4,7 @@ namespace App\Livewire\PatientReport;
 
 use App\Exports\PatientSalesReportExport;
 use App\Services\ContactServices;
+use App\Services\ItemServices;
 use App\Services\PatientReportServices;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Services\LocationServices;
@@ -52,28 +53,37 @@ class PatientSalesReport extends Component
     public int $NO_OF_TREATMENT = 0;
     private $contactServices;
     private $patientReportServices;
-    public function boot(LocationServices $locationServices, UserServices $userServices, ContactServices $contactServices, PatientReportServices $patientReportServices)
-    {
+    private $itemServices;
+    public $filterPatient = [];
+    public $filterItem = [];
+
+    public function boot(
+        LocationServices $locationServices,
+        UserServices $userServices,
+        ContactServices $contactServices,
+        PatientReportServices $patientReportServices,
+        ItemServices $itemServices
+    ) {
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->contactServices = $contactServices;
         $this->patientReportServices = $patientReportServices;
+        $this->itemServices = $itemServices;
     }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
 
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        
+
         $this->updatedLocationId();
         $this->resetFilter();
     }
     public function updatedLocationId()
-    {   
+    {
         $this->PATIENT_ID = 0;
         $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->refreshComponent = $this->refreshComponent ? false : true;
-
     }
 
     public function export()
@@ -109,6 +119,11 @@ class PatientSalesReport extends Component
             $this->LOCATION_ID,
             $this->PATIENT_ID
         );
+
+
+        $this->filterPatient  = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
+        $this->filterItem = [];
+        $this->refreshComponent = $this->refreshComponent ? false : true;
     }
 
     public function resetFilter()

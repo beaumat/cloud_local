@@ -78,6 +78,28 @@ class ContactServices
             ->orderBy('LAST_NAME', 'asc')
             ->get();
     }
+    public function getPatientListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO): object
+    {
+
+        return Contacts::query()
+            ->select([
+                'ID',
+                DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME")
+            ])->where('TYPE', 3)
+
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('LOCATION_ID', $LOCATION_ID);
+            })
+            ->whereExists(function ($query) use (&$LOCATION_ID, &$DATE_FROM, &$DATE_TO) {
+                $query->select(DB::raw(1))
+                    ->from('service_charges as s')
+                    ->whereRaw('s.PATIENT_ID = contact.ID')
+                    ->where('s.LOCATION_ID', '=', $LOCATION_ID)
+                    ->whereBetween('s.DATE', [$DATE_FROM, $DATE_TO]);
+            })
+            ->orderBy('LAST_NAME', 'asc')
+            ->get();
+    }
     public function getDoctorListByLocation(int $LOCATION_ID)
     {
         $result = DoctorLocation::query()

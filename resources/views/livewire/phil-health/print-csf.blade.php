@@ -186,7 +186,7 @@
                                     <b
                                         class="text-primary courier-new font-weight-bold h6">{{ $MEMBER_EXTENSION }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
-                                    Name Extension </br>
+                                    Name Extension <br/>
                                     (JR/SR/III)
 
                                 </div>

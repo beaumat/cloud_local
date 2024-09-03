@@ -50,6 +50,7 @@ use App\Livewire\Payment\PaymentForm;
 use App\Livewire\Payment\PaymentList;
 use App\Livewire\PhilHealth\PhilHealthForm;
 use App\Livewire\PhilHealth\PhilHealthList;
+use App\Livewire\PhilhealthPrint\PrintOutCf2;
 use App\Livewire\Requirement\RequirementForm;
 use App\Livewire\Requirement\RequirementList;
 use App\Livewire\SalesOrder\SalesOrderForm;
@@ -192,6 +193,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/printout-summary', PrintOutSummary::class)->name('printout_summary')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-csf', PrintOutCsf::class)->name('printout_csf')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-cf4', PrintOutCf4::class)->name('printout_cf4')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/printout-cf2', PrintOutCf2::class)->name('printout_cf2')->middleware(['permission:patient.philhealth.print']);
+
 
             // Print Temporary Pre-sign
             Route::get('/{id}/printout-soa-temp', PrintOutSoaTemp::class)->name('printout_soa_temp')->middleware(['permission:patient.philhealth.print']);

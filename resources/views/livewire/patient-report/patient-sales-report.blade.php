@@ -49,7 +49,7 @@
                                 <div class="row">
                                     <div class="col-md-8">
 
-                                        @if ($refreshComponent)
+                                        {{-- @if ($refreshComponent)
                                             <livewire:select-option name="PATIENT_ID1" titleName="Selected patient"
                                                 :options="$patientList" :zero="true" :isDisabled=false
                                                 wire:model.live='PATIENT_ID' />
@@ -57,7 +57,7 @@
                                             <livewire:select-option name="PATIENT_ID2" titleName="Selected patient"
                                                 :options="$patientList" :zero="true" :isDisabled=false
                                                 wire:model.live='PATIENT_ID' />
-                                        @endif
+                                        @endif --}}
 
                                     </div>
                                     <div class="col-md-4">
@@ -92,6 +92,23 @@
                             </div>
                             <div class="col-6">
 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-2">
+                                {{-- filterPatient --}}
+
+                                @if ($refreshComponent)
+                                    <livewire:select-checkbox name="PATIENT_ID1" titleName="Filter patient"
+                                        :options="$filterPatient" :zero="true" :isDisabled=false
+                                        wire:model.live='PATIENT_ID' />
+                                @else
+                                    <livewire:select-checkbox name="PATIENT_ID2" titleName="Filter patient"
+                                        :options="$filterPatient" :zero="true" :isDisabled=false
+                                        wire:model.live='PATIENT_ID' />
+                                @endif
                             </div>
                         </div>
                     </div>
