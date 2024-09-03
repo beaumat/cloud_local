@@ -34,7 +34,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="row">
+                                {{-- <div class="row">
                                     <div class="col-md-5">
                                         <livewire:date-input name="DATE_COLLECTION_FROM" titleName="(P) From"
                                             wire:model='DATE_COLLECTION_FROM' :isDisabled="false" />
@@ -43,7 +43,7 @@
                                         <livewire:date-input name="DATE_COLLECTION_TO" titleName="(P) To"
                                             wire:model='DATE_COLLECTION_TO' :isDisabled="false" />
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
@@ -65,7 +65,7 @@
                                             <label class="text-xs ">Location:</label>
                                             <select
                                                 @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
-                                                name="location" wire:model.live='LOCATION_ID'
+                                                name="location" wire:model='LOCATION_ID'
                                                 class="form-control form-control-sm text-xs ">
                                                 <option value="0"> All Location</option>
                                                 @foreach ($locationList as $item)
@@ -85,9 +85,9 @@
                                 <div wire:loading.delay>
                                     <span class="spinner"></span>
                                 </div>
-                                <button class="btn btn-sm btn-primary" wire:click='showfilter()'
-                                    wire:loading.attr='disabled'>Filter</button>
-                                <button class="btn btn-sm btn-success" wire:click='export()'
+                                <button class="btn btn-xs btn-danger w-25" wire:click='showfilter()'
+                                    wire:loading.attr='disabled'>Generate</button>
+                                <button class="btn btn-xs btn-success w-25" wire:click='export()'
                                     wire:loading.attr='disabled'>Export</button>
                             </div>
                             <div class="col-6">
@@ -97,29 +97,33 @@
                     </div>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-4">
                                 {{-- filterPatient --}}
 
                                 @if ($refreshComponent)
                                     <livewire:select-checkbox name="PATIENT_ID1" titleName="Filter patient"
                                         :options="$filterPatient" :zero="true" :isDisabled=false
-                                        wire:model.live='selectedPatient' />
+                                        wire:model='selectedPatient' />
                                 @else
                                     <livewire:select-checkbox name="PATIENT_ID2" titleName="Filter patient"
                                         :options="$filterPatient" :zero="true" :isDisabled=false
-                                        wire:model.live='selectedPatient' />
+                                        wire:model='selectedPatient' />
                                 @endif
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 {{-- filterPatient --}}
 
                                 @if ($refreshComponent)
                                     <livewire:select-checkbox name="ITEM1" titleName="Filter item" :options="$filterItem"
-                                        :zero="true" :isDisabled=false wire:model.live='selectedItem' />
+                                        :zero="true" :isDisabled=false wire:model='selectedItem' />
                                 @else
                                     <livewire:select-checkbox name="ITEM2" titleName="Filter item" :options="$filterItem"
-                                        :zero="true" :isDisabled=false wire:model.live='selectedItem' />
+                                        :zero="true" :isDisabled=false wire:model='selectedItem' />
                                 @endif
+                            </div>
+                            <div class="col-6 p-1">
+                                <button class="btn btn-xs btn-info w-25" wire:click='shortFilter()'
+                                    wire:loading.attr='disabled'>Filter</button>
                             </div>
                         </div>
                     </div>

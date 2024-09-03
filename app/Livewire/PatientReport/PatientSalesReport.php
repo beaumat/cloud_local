@@ -106,7 +106,8 @@ class PatientSalesReport extends Component
             $this->DATE_COLLECTION_FROM,
             $this->DATE_COLLECTION_TO,
             $this->LOCATION_ID,
-            $this->PATIENT_ID
+            $this->selectedPatient,
+            $this->selectedItem
         ), 'sales-report.xlsx');
     }
     public function showfilter()

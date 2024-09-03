@@ -18,8 +18,9 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
     protected string $pFrom;
     protected string $pTo;
     protected int $locationId;
-    protected int $patientId;
-    public function __construct(PatientReportServices $patientReportServices, string $scFrom, string $scTo, string $pFrom, string $pTo, int $locationId, int $patientId)
+    protected array $patientData;
+    protected array $itemData;
+    public function __construct(PatientReportServices $patientReportServices, string $scFrom, string $scTo, string $pFrom, string $pTo, int $locationId, array $patientData, array $itemData)
     {
         $this->patientReportServices = $patientReportServices;
         $this->scFrom = $scFrom;
@@ -27,12 +28,13 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         $this->pFrom    = $pFrom;
         $this->pTo = $pTo;
         $this->locationId = $locationId;
-        $this->patientId = $patientId;
+        $this->patientData = $patientData;
+        $this->itemData = $itemData;
     }
 
     public function collection()
     {
-        $data =  $this->patientReportServices->generateSalesReportData($this->pFrom, $this->pTo, $this->scFrom, $this->scTo, $this->locationId, $this->patientId)->toArray();
+        $data =  $this->patientReportServices->generateSalesReportData($this->pFrom, $this->pTo, $this->scFrom, $this->scTo, $this->locationId, $this->patientData, $this->itemData)->toArray();
 
         $headers = [
             'PN'        => 'PATIENT NAME',
