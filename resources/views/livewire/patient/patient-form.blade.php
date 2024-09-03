@@ -626,7 +626,7 @@
                                                 aria-labelledby="custom-content-below-charges-info-tab">
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @livewire('Patient.ChargesRecord', ['CONTACT_ID' => $ID])
+                                                    @livewire('Patient.ChargesRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
 
                                                 </div>
                                             </div>
@@ -636,7 +636,7 @@
                                                 aria-labelledby="custom-content-below-assistance-info-tab">
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @livewire('Patient.AssistanceRecord', ['CONTACT_ID' => $ID])
+                                                    @livewire('Patient.AssistanceRecord', ['CONTACT_ID' => $ID,'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
 
                                                 </div>
                                             </div>
@@ -647,7 +647,7 @@
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
 
-                                                    @livewire('Patient.TreatmentRecord', ['CONTACT_ID' => $ID])
+                                                    @livewire('Patient.TreatmentRecord', ['CONTACT_ID' => $ID,'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade @if ($selectTab == 'philhealth') show active @endif"
@@ -655,7 +655,7 @@
                                                 aria-labelledby="custom-content-below-philhealth-info-tab">
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @livewire('Patient.PhilhealthRecord', ['CONTACT_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                    @livewire('Patient.PhilhealthRecord', ['CONTACT_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID,'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
                                                 </div>
                                             </div>
                                         </div>

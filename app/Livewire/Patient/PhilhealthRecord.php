@@ -15,7 +15,10 @@ class PhilhealthRecord extends Component
 
     #[Reactive]
     public int $CONTACT_ID;
+    #[Reactive]
     public int $LOCATION_ID;
+    #[Reactive]
+    public int $LOCK_LOCATION_ID;
 
     public $search = "";
 
@@ -39,8 +42,8 @@ class PhilhealthRecord extends Component
     }
     public function render()
     {
-        $dataList = $this->philHealthServices->PatientRecord($this->search, $this->CONTACT_ID, 15);
-        
+        $dataList = $this->philHealthServices->PatientRecord($this->search, $this->CONTACT_ID, 15, $this->LOCK_LOCATION_ID);
+
         return view('livewire.patient.philhealth-record', ['dataList' => $dataList]);
     }
 }

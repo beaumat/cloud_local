@@ -11,8 +11,15 @@ class PatientReportServices
      * @param array $patientData
      */
 
-    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [])
-    {
+    public function generateSalesReportData(
+        string $ppFrom,
+        string $ppTo,
+        string $scFrom,
+        string $scTo,
+        int  $locatoinId,
+        array  $patientData = [],
+        array $itemData = []
+    ) {
         $results = DB::table('service_charges_items as sci')
             ->select([
                 'sc.ID as SC_ID',
@@ -69,7 +76,7 @@ class PatientReportServices
     public function getItemListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)
     {
 
-        return Items::query()
+        $result = Items::query()
             ->select(['ID', 'DESCRIPTION'])
             ->whereExists(function ($query) use (&$LOCATION_ID, &$DATE_FROM, &$DATE_TO) {
                 $query->select(DB::raw(1))
@@ -83,5 +90,7 @@ class PatientReportServices
             })
             ->orderBy('DESCRIPTION', 'asc')
             ->get();
+
+        return $result;
     }
 }

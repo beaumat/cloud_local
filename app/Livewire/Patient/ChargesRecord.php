@@ -15,6 +15,8 @@ class ChargesRecord extends Component
 
     #[Reactive]
     public int $CONTACT_ID;
+    #[Reactive]
+    public int $LOCK_LOCATION_ID;
     public $search = "";
     private $serviceChargeServices;
     public function boot(ServiceChargeServices $serviceChargeServices)
@@ -23,7 +25,7 @@ class ChargesRecord extends Component
     }
     public function render()
     {
-        $dataList = $this->serviceChargeServices->PatientRecord($this->search, $this->CONTACT_ID, 15);
+        $dataList = $this->serviceChargeServices->PatientRecord($this->search, $this->CONTACT_ID, 15, $this->LOCK_LOCATION_ID);
         return view('livewire.patient.charges-record', ['dataList' => $dataList]);
     }
 }

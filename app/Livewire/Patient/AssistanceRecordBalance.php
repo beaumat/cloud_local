@@ -10,6 +10,8 @@ class AssistanceRecordBalance extends Component
 {
     #[Reactive]
     public int $CONTACT_ID;
+    #[Reactive]
+    public int $LOCK_LOCATION_ID;
     public $dataList = [];
     public float $BALANCE = 0;
     private $serviceChargeServices;
@@ -20,7 +22,7 @@ class AssistanceRecordBalance extends Component
 
     public function reload()
     {
-        $this->dataList = $this->serviceChargeServices->getBalanceItem($this->CONTACT_ID);
+        $this->dataList = $this->serviceChargeServices->getBalanceItem($this->CONTACT_ID, $this->LOCK_LOCATION_ID);
     }
     public function render()
     {

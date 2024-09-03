@@ -10,6 +10,10 @@ class AssistanceRecordDswd extends Component
 {
     #[Reactive]
     public int $CONTACT_ID;
+
+    #[Reactive]
+    public int $LOCK_LOCATION_ID;
+    
     public $dataList = [];
     private $patientPaymentServices;
     public float $BALANCE = 0;
@@ -19,7 +23,7 @@ class AssistanceRecordDswd extends Component
     }
     public function reload()
     {
-        $this->dataList = $this->patientPaymentServices->AssistanceByType($this->CONTACT_ID, 92);
+        $this->dataList = $this->patientPaymentServices->AssistanceByType($this->CONTACT_ID, 92, $this->LOCK_LOCATION_ID);
     }
     public function render()
     {

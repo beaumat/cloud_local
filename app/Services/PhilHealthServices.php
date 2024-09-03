@@ -376,7 +376,7 @@ class PhilHealthServices
     {
         return  PhilHealth::where('AR_NO', $AR_NO)->whereNot('ID', $ID)->exists();
     }
-    public function PatientRecord($search, int $contact_id, int $perPage)
+    public function PatientRecord($search, int $contact_id, int $perPage, int $LOCK_LOCATION_ID)
     {
         $result = PhilHealth::query()
             ->select([
@@ -401,6 +401,9 @@ class PhilHealthServices
                     $q->where('philhealth.CODE', 'like', '%' . $search . '%')
                         ->orWhere('philhealth.CHARGE_TOTAL', 'like', '%' . $search . '%');
                 });
+            })
+            ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
+                $query->where('philhealth.LOCATION_ID', $LOCK_LOCATION_ID);
             })
             ->orderBy('philhealth.ID', 'desc')
             ->paginate($perPage);

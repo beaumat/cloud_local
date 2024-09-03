@@ -301,7 +301,7 @@ class ServiceChargeServices
 
         return $result;
     }
-    public function PatientRecord($search, int $contact_id, int $perPage)
+    public function PatientRecord($search, int $contact_id, int $perPage, int $LOCK_LOCATION_ID)
     {
         $result = ServiceCharges::query()
             ->select([
@@ -320,12 +320,14 @@ class ServiceChargeServices
             ->join('document_status_map as s', 's.ID', '=', 'service_charges.STATUS')
             ->where('service_charges.PATIENT_ID', $contact_id)
             ->when($search, function ($query) use ($search) {
-
                 $query->where(function ($q) use ($search) {
                     $q->where('service_charges.CODE', 'like', '%' . $search . '%')
                         ->orWhere('service_charges.AMOUNT', 'like', '%' . $search . '%')
                         ->orWhere('service_charges.NOTES', 'like', '%' . $search . '%');
                 });
+            })
+            ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
+                $query->where('service_charges.LOCATION_ID', $LOCK_LOCATION_ID);
             })
             ->orderBy('service_charges.ID', 'desc')
             ->paginate($perPage);
@@ -588,7 +590,7 @@ class ServiceChargeServices
 
         return $result;
     }
-    public function getBalanceItem(int $PATIENT_ID)
+    public function getBalanceItem(int $PATIENT_ID, int $LOCK_LOCATION_ID)
     {
         $result = ServiceChargesItems::query()
             ->select([
@@ -604,6 +606,9 @@ class ServiceChargeServices
             ->join('item as i', 'i.ID', '=', 'service_charges_items.ITEM_ID')
             ->where('sc.PATIENT_ID', $PATIENT_ID)
             ->whereNotIn('service_charges_items.ITEM_ID', [2])
+            ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
+                $query->where('sc.LOCATION_ID', $LOCK_LOCATION_ID);
+            })
             ->having('BALANCE', '>', 0)
             ->orderBy('sc.DATE')
             ->get();

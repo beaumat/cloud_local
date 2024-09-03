@@ -24,6 +24,11 @@ class UserServices
 
         return Auth::user()->trans_date;
     }
+    public function isLocationLock(): bool
+    {
+        $isLock = (bool) Auth::user()->locked_location ?? false;
+        return $isLock;
+    }
     public function getLocationDefault(): int
     {
         if (intval(Auth::user()->name) === "superadmin") {
@@ -98,18 +103,17 @@ class UserServices
         return false;
     }
     public function ChangePassword(int $userID, string $currentPassword, string $NewPassword): void
-    {   
+    {
 
-         // Retrieve the user by ID
-         $user = User::find($userID);
+        // Retrieve the user by ID
+        $user = User::find($userID);
 
-         // Check if the user exists and the provided password matches the stored password
-         if ($user && Hash::check($currentPassword, $user->password)) {
+        // Check if the user exists and the provided password matches the stored password
+        if ($user && Hash::check($currentPassword, $user->password)) {
             $user->update([
                 'password' => Hash::make($NewPassword)
             ]);
-         }
-     
+        }
     }
     public function Delete(int $id): void
     {

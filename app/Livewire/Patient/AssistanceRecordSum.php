@@ -10,6 +10,8 @@ class AssistanceRecordSum extends Component
 {
     #[Reactive]
     public int $CONTACT_ID;
+    #[Reactive]
+    public int $LOCK_LOCATION_ID;
     public $dataList = [];
     private $patientPaymentServices;
     public float $TOTAL = 0;
@@ -21,7 +23,7 @@ class AssistanceRecordSum extends Component
     }
     public function reload()
     {
-        $this->dataList = $this->patientPaymentServices->AssistanceAll($this->CONTACT_ID);
+        $this->dataList = $this->patientPaymentServices->AssistanceAll($this->CONTACT_ID, $this->LOCK_LOCATION_ID);
     }
     public function render()
     {

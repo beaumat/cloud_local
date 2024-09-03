@@ -657,8 +657,9 @@ class HemoServices
 
         return $result;
     }
-    public function PatientRecord($search, int $CONTACT_ID, int $perPage)
+    public function PatientRecord($search, int $CONTACT_ID, int $perPage, int $LOCK_LOCATION_ID)
     {
+
         return Hemodialysis::query()
             ->select([
                 'hemodialysis.ID',
@@ -689,6 +690,9 @@ class HemoServices
                 $query->where(function ($q) use ($search) {
                     $q->where('hemodialysis.CODE', 'like', '%' . $search . '%');
                 });
+            })
+            ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
+                $query->where('hemodialysis.LOCATION_ID', $LOCK_LOCATION_ID);
             })
             ->orderBy('ID', 'desc')
             ->orderBy('hemodialysis.ID', 'desc')

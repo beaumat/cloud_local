@@ -26,6 +26,8 @@ use Livewire\Component;
 #[Title('Patients')]
 class PatientForm extends Component
 {
+
+
     public int $ID;
     public int $TYPE = 3;
     public string $NAME;
@@ -144,7 +146,7 @@ class PatientForm extends Component
     public $patientStatusList = [];
     public string $DATE_ADMISSION;
 
-
+    public int $LOCK_LOCATION_ID = 0;
 
     public function boot(
         ContactServices $contactServices,
@@ -169,6 +171,11 @@ class PatientForm extends Component
     }
     public function mount($id = null)
     {
+        if ($this->userServices->isLocationLock()) {
+            $this->LOCK_LOCATION_ID = $this->userServices->getLocationDefault();
+        }
+
+
         $this->taxList = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', 3)->orderBy('ID', 'desc')->get();
         $this->salesMan = Contacts::query()->select('ID', 'NAME')->where('INACTIVE', '0')->where('TYPE', '2')->get();
         $this->contactGroup = ContactGroup::query()->where('TYPE', $this->TYPE)->get();

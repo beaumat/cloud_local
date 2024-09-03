@@ -534,7 +534,7 @@ class PatientPaymentServices
 
         return 0;
     }
-    public function AssistanceAll(int $PATIENT_ID)
+    public function AssistanceAll(int $PATIENT_ID, int $LOCK_LOCATION_ID)
     {
         $result = PatientPayments::select([
             DB::raw('IF(ISNULL(RECEIPT_DATE), patient_payment.DATE, RECEIPT_DATE) AS TRANS_DATE'),
@@ -548,12 +548,15 @@ class PatientPaymentServices
             ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('PATIENT_ID', $PATIENT_ID)
             ->whereIn('PAYMENT_METHOD_ID', [91, 92, 93, 94, 96])
+            ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
+                $query->where('patient_payment.LOCATION_ID', $LOCK_LOCATION_ID);
+            })
             ->orderBy('TRANS_DATE', 'asc')
             ->get();
 
         return $result;
     }
-    public function AssistanceByType(int $PATIENT_ID, int $METHOD_ID = 0)
+    public function AssistanceByType(int $PATIENT_ID, int $METHOD_ID = 0, int $LOCK_LOCATION_ID)
     {
         // First query
         $query1 = PatientPayments::select([
@@ -573,6 +576,9 @@ class PatientPaymentServices
         ])
             ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('PATIENT_ID', $PATIENT_ID)
+            ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
+                $query->where('patient_payment.LOCATION_ID', $LOCK_LOCATION_ID);
+            })
             ->when($METHOD_ID > 0, function ($query) use (&$METHOD_ID) {
                 $query->where('patient_payment.PAYMENT_METHOD_ID', '=', $METHOD_ID);
             });
@@ -611,5 +617,4 @@ class PatientPaymentServices
 
         return $result;
     }
- 
 }
