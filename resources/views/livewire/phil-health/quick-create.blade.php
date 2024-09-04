@@ -8,6 +8,8 @@
                 <div class="modal-content text-left">
                     <div class="modal-header">Quick Create</div>
                     <div class="modal-body">
+                        @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+
                         <div class="row">
                             <div class="col-md-6">
                                 <livewire:text-input name="search" titleName="Search" :isDisabled=false

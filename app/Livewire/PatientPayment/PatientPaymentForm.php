@@ -127,10 +127,11 @@ class PatientPaymentForm extends Component
     {
 
 
-        $this->contactList = $this->contactServices->getList(3);
+
         $this->locationList = $this->locationServices->getList();
 
         if ($this->ID  == 0) {
+            $this->contactList = $this->contactServices->getPatientList($this->LOCATION_ID);
             $this->paymentMethodList = $this->paymentMethodServices->getListNotIncludeOneParam(9);
             return;
         }
@@ -142,20 +143,20 @@ class PatientPaymentForm extends Component
             $data = $this->patientPaymentServices->get($id);
             if ($data) {
 
-                $this->LoadDropDown();
+
                 $this->getInfo($data);
+                $this->LoadDropDown();
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('patientspayment')->with('error', $errorMessage);
         }
-
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->LoadDropDown();
         $this->ID = 0;
         $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->CODE = '';
         $this->PATIENT_ID = 0;
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->AMOUNT = 0;
         $this->AMOUNT_APPLIED = 0;
         $this->PAYMENT_METHOD_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentMethodId');

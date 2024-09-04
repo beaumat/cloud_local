@@ -8,6 +8,8 @@ use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 use function PHPUnit\Framework\isEmpty;
@@ -49,10 +51,9 @@ class QuickCreate extends Component
         $this->SelectAll = false;
         $this->patientSelected = [];
         $this->LoadList();
-        
     }
     public function updatedDateFrom()
-    { 
+    {
         $this->ResetValue();
     }
     public function updatedDateTo()
@@ -104,6 +105,8 @@ class QuickCreate extends Component
 
         $data = $this->hemoServices->getDateTimeByRange($CONTACT_ID, $this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
         if ($data) {
+
+            dd($data);
             $this->DATE_ADMITTED = $data['FIRST_DATE'];
             $this->TIME_ADMITTED = $data['FIRST_TIME'];
             $this->DATE_DISCHARGED = $data['LAST_DATE'];
@@ -132,43 +135,59 @@ class QuickCreate extends Component
     }
     public function create()
     {
-        $gotSelected = false;
-        foreach ($this->patientSelected as $patientID => $isSelected) {
-            if ($isSelected) {
-                $gotSelected = true;
-                if ($this->generateDateTime($patientID)) {
+        DB::beginTransaction();
+        try {
 
-                    if (empty($this->DATE_ADMITTED) == false && empty($this->DATE_DISCHARGED) == false) {
-                        $this->generateRemarks($patientID);
-                        $ID = (int) $this->philHealthServices->preSave(
-                            '',
-                            $this->dateServices->NowDate(),
-                            $this->LOCATION_ID,
-                            $patientID,
-                            $this->DATE_ADMITTED,
-                            $this->TIME_ADMITTED,
-                            $this->DATE_DISCHARGED,
-                            $this->TIME_DISCHARGED,
-                            $this->FINAL_DIAGNOSIS,
-                            $this->OTHER_DIAGNOSIS,
-                            $this->FIRST_CASE_RATE,
-                            $this->SECOND_CASE_RATE
-                        );
-                        $this->philHealthServices->DefaultEntry($ID);
+
+            $gotSelected = false;
+            foreach ($this->patientSelected as $patientID => $isSelected) {
+                if ($isSelected) {
+                    $gotSelected = true;
+                    if ($this->generateDateTime($patientID)) {
+
+                        if (empty($this->DATE_ADMITTED) == false && empty($this->DATE_DISCHARGED) == false) {
+                            $this->generateRemarks($patientID);
+                            $ID = (int) $this->philHealthServices->preSave(
+                                '',
+                                $this->dateServices->NowDate(),
+                                $this->LOCATION_ID,
+                                $patientID,
+                                $this->DATE_ADMITTED,
+                                $this->TIME_ADMITTED,
+                                $this->DATE_DISCHARGED,
+                                $this->TIME_DISCHARGED,
+                                $this->FINAL_DIAGNOSIS,
+                                $this->OTHER_DIAGNOSIS,
+                                $this->FIRST_CASE_RATE,
+                                $this->SECOND_CASE_RATE
+                            );
+                            $this->philHealthServices->DefaultEntry($ID);
+                        }
                     }
                 }
             }
-        }
 
-        if ($gotSelected == true) {
-            $this->resetMethod();
+            if ($gotSelected == true) {
+                $this->resetMethod();
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            session()->flash('error', $th->getMessage());
         }
     }
 
-    private function LoadList()
-    {   
-        
+    private function LoadList() {}
+
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
     }
+
     public function render()
     {
         $this->dataList = $this->hemoServices->QuickFilterByDateRange($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, $this->search);
