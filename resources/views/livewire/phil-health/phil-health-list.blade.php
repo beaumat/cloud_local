@@ -85,7 +85,7 @@
                                                 </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                            <td> {{ Carbon::parse($list->DATE)->diffForHumans() }} </td>
+                                            <td> {{ Carbon::parse($list->RECORDED_ON)->diffForHumans() }} </td>
                                             <td class="text-left">
                                                 @if ($list->AR_DATE)
                                                     {{ date('m/d/Y', strtotime($list->AR_DATE)) }}
