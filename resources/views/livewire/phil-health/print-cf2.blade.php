@@ -823,402 +823,315 @@
             </div>
         </div>
         <div class="col-12 ubox2 font-weight-light">
-            <div class="form-group">
-                <label style='font-size:17px;'>7. Discharge Diagnosis/es</label><span class="text-xs"> (Use additional
-                    CF2 if
-                    necessary):</span>
-                <table class="w-100">
-                    <tr class="text-xs">
-                        <th class="text-center col-1">
-                            Diagnosis
-                        </th>
-                        <th class="text-center col-2">
-                            ICD-10 Code/s
-                        </th>
-                        <th class="text-center col-3">
-                            Related Procedure/s (if there’s any)
-                        </th>
-
-                        <th class="text-center col-1">
-                            RVS Code
-                        </th>
-                        <th class="text-center col-2">
-                            Date of Procedure
-                        </th>
-                        <th class="text-center col-3">
-                            Laterality (check applicable box)
-                        </th>
-                    </tr>
-                    <tbody>
-                        <tr>
-                            <td class="text-center">
-                                <div class='row'>
-                                    <div class='col-2 text-left'>
-                                        a.
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
+            <div class="form-group" style='height:165px;'>
+                <label style='font-size:17px;'>7. Discharge Diagnosis/es</label>
+                <span class="text-xs"> (Use additional CF2 if necessary):</span>
+                <div class="row text-xs" style="top:-5px;position:relative">
+                    <div class="col-1 text-center">Diagnosis </div>
+                    <div class="col-2 text-center">ICD-10 Code/s </div>
+                    <div class="col-3 text-center">Related Procedure/s (if there’s any) </div>
+                    <div class="col-1 text-center">RVS Code </div>
+                    <div class="col-2 text-center">Date of Procedure </div>
+                    <div class="col-3 text-center">Laterality (check applicable box) </div>
+                </div>
+                <div class="row text-xs" style="position:absolute;width:100%;height:30px;top:50px;">
+                    <div class="col-1 text-center">
+                        <div class='row'>
+                            <div class='col-3 text-left'>
+                                a.
+                            </div>
+                            <div class='col-9 text-center'>
+                                <div class="bottom-line2"> &nbsp; </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class='row'>
+                            <div class='col-1 text-left'>
+                                <span>i.</span>
+                            </div>
+                            <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
                                 </div>
-                            </td>
-                            <td class="text-center">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        left &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        right &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        both
+                    </div>
+                </div>
+                <div class="row text-xs" style="position:absolute;width:100%;height:30px;top:70px;">
+                    <div class="col-1 text-center">
+                        <div class='row'>
+                            <div class='col-3 text-left'>
 
-                                <div class='row'>
-                                    <div class='col-2 text-left'>
-                                        <span style='margin-left:10px;'>i.</span>
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                left &nbsp;&nbsp;&nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                right &nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                both
-                            </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="text-center">
-                                <div class='row'>
-                                    <div class='col-2 text-right'>
-
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
+                            </div>
+                            <div class='col-9 text-center'>
+                                <div class="bottom-line2"> &nbsp; </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class='row'>
+                            <div class='col-1 text-left'>
+                                <span>ii.</span>
+                            </div>
+                            <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
                                 </div>
-                            </td>
-                            <td class="text-center">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        left &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        right &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        both
+                    </div>
+                </div>
+                <div class="row text-xs" style="position:absolute;width:100%;height:30px;top:90px;">
+                    <div class="col-1 text-center">
+                        <div class='row'>
+                            <div class='col-3 text-left'>
 
-                                <div class='row'>
-                                    <div class='col-2 text-left'>
-                                        <span style='margin-left:10px;'>ii.</span>
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                left &nbsp;&nbsp;&nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                right &nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                both
-                            </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="text-center">
-                                <div class='row'>
-                                    <div class='col-2 text-right'>
-
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
+                            </div>
+                            <div class='col-9 text-center'>
+                                <div class="bottom-line2"> &nbsp; </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class='row'>
+                            <div class='col-1 text-left'>
+                                <span>iiI.</span>
+                            </div>
+                            <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
                                 </div>
-                            </td>
-                            <td class="text-center">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        left &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        right &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        both
+                    </div>
+                </div>
 
-                                <div class='row'>
-                                    <div class='col-2 text-left'>
-                                        <span style='margin-left:10px;'>iii.</span>
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                left &nbsp;&nbsp;&nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                right &nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                both
-                            </td>
-
-                        </tr>
-                        {{-- b --}}
-
-                        <tr>
-                            <td class="text-center">
-                                <div class='row'>
-                                    <div class='col-2 text-left'>
-                                        b.
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
+                <div class="row text-xs" style="position:absolute;width:100%;height:30px;top:110px;">
+                    <div class="col-1 text-center">
+                        <div class='row'>
+                            <div class='col-3 text-left'>
+                                b.
+                            </div>
+                            <div class='col-9 text-center'>
+                                <div class="bottom-line2"> &nbsp; </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class='row'>
+                            <div class='col-1 text-left'>
+                                <span>i.</span>
+                            </div>
+                            <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
                                 </div>
-                            </td>
-                            <td class="text-center">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        left &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        right &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        both
+                    </div>
+                </div>
+                <div class="row text-xs" style="position:absolute;width:100%;height:30px;top:130px;">
+                    <div class="col-1 text-center">
+                        <div class='row'>
+                            <div class='col-3 text-left'>
 
-                                <div class='row'>
-                                    <div class='col-2 text-left'>
-                                        <span style='margin-left:10px;'>i.</span>
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                left &nbsp;&nbsp;&nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                right &nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                both
-                            </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="text-center">
-                                <div class='row'>
-                                    <div class='col-2 text-right'>
-
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
+                            </div>
+                            <div class='col-9 text-center'>
+                                <div class="bottom-line2"> &nbsp; </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class='row'>
+                            <div class='col-1 text-left'>
+                                <span>ii.</span>
+                            </div>
+                            <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
                                 </div>
-                            </td>
-                            <td class="text-center">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        left &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        right &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        both
+                    </div>
+                </div>
+                <div class="row text-xs" style="position:absolute;width:100%;height:30px;top:150px;">
+                    <div class="col-1 text-center">
+                        <div class='row'>
+                            <div class='col-3 text-left'>
 
-                                <div class='row'>
-                                    <div class='col-2 text-left'>
-                                        <span style='margin-left:10px;'>ii.</span>
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                left &nbsp;&nbsp;&nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                right &nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                both
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">
-                                <div class='row'>
-                                    <div class='col-2 text-right'>
-
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
+                            </div>
+                            <div class='col-9 text-center'>
+                                <div class="bottom-line2"> &nbsp; </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class='row'>
+                            <div class='col-1 text-left'>
+                                <span>iiI.</span>
+                            </div>
+                            <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
                                 </div>
-                            </td>
-                            <td class="text-center">
-
-                                <div class='row'>
-                                    <div class='col-2 text-left'>
-                                        <span style='margin-left:10px;'>iii.</span>
-                                    </div>
-                                    <div class='col-10'>
-                                        <div class="bottom-line2">
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="w-100 bottom-line2">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="text-center px-1">
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                left &nbsp;&nbsp;&nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                right &nbsp;&nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    &nbsp;
-                                </div> &nbsp;
-                                both
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-2 text-center">
+                        <div class="bottom-line2"> &nbsp; </div>
+                    </div>
+                    <div class="col-3 text-center">
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        left &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        right &nbsp;&nbsp;
+                        <div class="box text-primary courier-new font-weight-bold">
+                            &nbsp;
+                        </div> &nbsp;
+                        both
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-12 ubox2 font-weight-light">
             <label style='font-size:17px;width:400px;height:20px;'> 8. Special Considerations:</label>
         </div>
-        <div class="col-12 ubox2 font-weight-light">
+        <div class="col-12 ubox2 font-weight-light ">
             <div class="row">
                 <div class="col-md-12">
-                    <span class='text-sm'>
+                    <span class='text-xs'>
                         a. For the following repetitive procedures, check box that applies and enumerate the
                         procedure/sessions dates [mm-dd-yyyy]. For chemotherapy, see guidelines.
                     </span>
                 </div>
                 <div class="col-md-12">
-                    <div class="row px-1 text-sm">
+                    <div class="row px-1 text-xs">
                         <div class='col-6'>
                             <div class='row'>
                                 <div class="col-5">
@@ -1352,10 +1265,10 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <span class='text-sm'>
+                    <span class='text-xs'>
                         c. For MCP Package (enumerate four dates [mm-dd-year] of pre-natal check-ups)
                     </span>
-                    <div class="form-group">
+                    <div class="form-group text-xs">
                         <div class="row mx-2">
                             <div class="col-3">
                                 <div class="w-100 bottom-line2 px-2">
@@ -1377,6 +1290,232 @@
                                 <div class="w-100 bottom-line2 px-2">
                                     <span style="left:-5px;position:absolute;">4.</span> &nbsp;
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="row text-xs w-100 mb-2" style="top:-15px;position:relative;height:8px">
+                        <div class="col-2 ">
+                            d. For TB DOTS Package:
+                        </div>
+                        <div class="col-10">
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;&nbsp;
+                            Intensive Phase
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;&nbsp;
+                            Maintenance Phase
+                        </div>
+                    </div>
+                
+                </div>
+                <div class="col-md-12 text-xs">
+                    <span>e. For Animal Bite Package (write the dates [mm-dd-year] when the following doses of vaccine
+                        were
+                        given)</span> <span style="margin-left:50px;width:370px;position:absolute;right:0"
+                        class="font-weight-bold bottom-line2 top-line2 left-line2 right-line2 p-1"> Note: Anti Rabies
+                        Vaccine (ARV), Rabies Immunoglobulin
+                        (RIG)</span>
+
+                </div>
+                <div class="col-md-12 text-xs">
+                    <div class="row pt-3">
+
+                        <div class="col-2">
+                            <div class="row">
+                                <div class="col-5 text-right">
+                                    <b>Day 0 ARV</b>
+                                </div>
+                                <div class="col-7">
+                                    <div class="bottom-line2">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+
+                            <div class="row">
+                                <div class="col-5 text-right">
+                                    <b>Day 3 ARV</b>
+                                </div>
+                                <div class="col-7">
+                                    <div class="bottom-line2">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+
+                            <div class="row">
+                                <div class="col-5 text-right">
+                                    <b>Day 7 ARV</b>
+                                </div>
+                                <div class="col-7">
+                                    <div class="bottom-line2">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="row">
+                                <div class="col-5 text-right">
+                                    <b>RIG</b>
+                                </div>
+                                <div class="col-7">
+                                    <div class="bottom-line2">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="col-5 text-right">
+                                    <b>Others (Specify)</b>
+                                </div>
+                                <div class="col-7 ">
+                                    <div class="bottom-line2">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 text-xs">
+                    <div class="row">
+                        <div class='col-2'>
+                            f. For Newborn Care Package
+                        </div>
+                        <div class="col-2">
+                            <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;&nbsp;
+                            Essential Newborn Care
+                        </div>
+                        <div class="col-3">
+                            <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;&nbsp;
+                            Newborn Hearing Screening Test
+
+                        </div>
+                        <div class="col-2">
+                            <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
+                            Newborn Screening Test
+
+                        </div>
+                        <div class="col-3">
+                            <div class="bottom-line2 top-line2 left-line2 right-line2 p-1 w-100"> For Newborn
+                                Screening,<br /> please attach NBS
+                                Filter Sitcker here </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="bottom-line2 top-line2 left-line2 right-line2 p-1"
+                                style="top:-14px;position:absolute">
+                                <span class="font-weight-bold"> For Essential Newborn Care, </span>(check applicable
+                                boxes)
+                            </div>
+                            <br />
+                        </div>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
+                                    Immediate drying of newborn
+                                </div>
+                                <div class="col-2">
+                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
+                                    Timely cord clamping
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
+                                    Weighing of the newborn
+                                </div>
+                                <div class="col-2">
+                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
+                                    BCG vaccination
+                                </div>
+                                <div class="col-2">
+                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
+                                    Hepatitis B vaccination
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
+                                    Early skin-to-skin contact
+                                </div>
+                                <div class="col-2">
+                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
+                                    Eye Prophylaxis
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
+                                    Vitamin K administration
+                                </div>
+                                <div class="col-5">
+                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
+                                    Non-separation of mother/baby for early breastfeeding initiation
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-12 pb-1">
+                            <div class="row">
+                                <div class="col-4">
+                                    g. For Outpatient HIV/AIDS Treatment Package
+                                </div>
+                                <div class="col-4">
+                                    <div class="row">
+                                        <div class="col-5 text-right">
+                                            <b> Laboratory Number:</b>
+                                        </div>
+                                        <div class="col-7">
+                                            <div class="bottom-line2">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 ubox2 font-weight-light">
+            <label style='font-size:17px;width:400px;height:20px;'> 9. PhilHealth Benefits:</label>
+            <div class="row text-xs pb-1">
+         
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-6 text-right">
+                                 <b>ICD 10 or RVS Code:</b> &nbsp;&nbsp;&nbsp;    a. First Case Rate
+                        </div>
+                        <div class="col-6">
+                            <div class="bottom-line2">
+                                &nbsp;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-6 text-right">
+                            2. Second Case Rate
+                        </div>
+                        <div class="col-6">
+                            <div class="bottom-line2">
+                                &nbsp;
                             </div>
                         </div>
                     </div>

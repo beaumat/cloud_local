@@ -374,8 +374,8 @@
                                             &nbsp;{{ $parts }}
                                         </div>
                                     @endforeach
-                                    @if ($SE_COUNT < 9)
-                                        @for ($i = $SE_COUNT; $i < 9; $i++)
+                                    @if ($SE_COUNT < 8)
+                                        @for ($i = $SE_COUNT; $i < 8; $i++)
                                             <div class="col-12  text-center bottom-line2 ">
                                                 &nbsp;
                                             </div>
@@ -403,8 +403,8 @@
                                             &nbsp;{{ $parts }}
                                         </div>
                                     @endforeach
-                                    @if ($SO_COUNT < 9)
-                                        @for ($i = $SO_COUNT; $i < 9; $i++)
+                                    @if ($SO_COUNT < 8)
+                                        @for ($i = $SO_COUNT; $i < 8; $i++)
                                             <div class="col-12  text-center bottom-line2 ">
                                                 &nbsp;
                                             </div>
