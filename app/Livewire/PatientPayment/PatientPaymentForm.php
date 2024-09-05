@@ -135,6 +135,7 @@ class PatientPaymentForm extends Component
             $this->paymentMethodList = $this->paymentMethodServices->getListNotIncludeOneParam(9);
             return;
         }
+        $this->contactList = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->paymentMethodList = $this->paymentMethodServices->getList();
     }
     public function mount($id = null)

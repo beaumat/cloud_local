@@ -1241,13 +1241,8 @@
                                         &nbsp;
                                     </div>
                                 </div>
-
-
-
                             </div>
                         </div>
-
-
                     </div>
                 </div>
                 <div class="col-md-12 mt-1">
@@ -1325,7 +1320,6 @@
                 </div>
                 <div class="col-md-12 text-xs">
                     <div class="row pt-3">
-
                         <div class="col-2">
                             <div class="row">
                                 <div class="col-5 text-right">
@@ -1432,7 +1426,6 @@
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
                                     Timely cord clamping
                                 </div>
-
                                 <div class="col-2">
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
                                     Weighing of the newborn
@@ -1466,7 +1459,6 @@
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
                                     Non-separation of mother/baby for early breastfeeding initiation
                                 </div>
-
                             </div>
                         </div>
                         <div class="col-12 pb-1">
