@@ -211,9 +211,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
             <div class="row">
                 <div class="col-12">
@@ -594,9 +591,10 @@
                     <label style='font-size:17px;width:180px;'>4. Patient Disposition:</label><span
                         class="text-xs">(select only 1)</span>
                 </div>
-                <div class="col-12 text-xs">
+
+                <div class="col-12">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="box text-primary courier-new font-weight-bold">
                                 &nbsp;
                             </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -607,131 +605,143 @@
                                 &nbsp;
                             </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             e. Expired &nbsp;&nbsp;
-                            <span class="text-md">
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($DATE_ADMITTED)
-                                        {{ substr($DATE_ADMITTED, 5, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>
-                                <div class="box text-primary courier-new font-weight-bold">
-
-                                    @if ($DATE_ADMITTED)
-                                        {{ substr($DATE_ADMITTED, 6, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>
-                                <label class="px-1">&nbsp;-</label>
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($DATE_ADMITTED)
-                                        {{ substr($DATE_ADMITTED, 8, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($DATE_ADMITTED)
-                                        {{ substr($DATE_ADMITTED, 9, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>
-                                <label class="px-1">&nbsp;-</label>
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($DATE_ADMITTED)
-                                        {{ substr($DATE_ADMITTED, 0, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($DATE_ADMITTED)
-                                        {{ substr($DATE_ADMITTED, 1, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($DATE_ADMITTED)
-                                        {{ substr($DATE_ADMITTED, 2, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($DATE_ADMITTED)
-                                        {{ substr($DATE_ADMITTED, 3, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div> &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
-                                <span class="text-xs">Time:</span>
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($TIME_ADMITTED)
-                                        {{ substr($TIME_ADMITTED, 0, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($TIME_ADMITTED)
-                                        {{ substr($TIME_ADMITTED, 0, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div> <label class="px-1">&nbsp;-</label>
-
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($TIME_ADMITTED)
-                                        {{ substr($TIME_ADMITTED, 0, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($TIME_ADMITTED)
-                                        {{ substr($TIME_ADMITTED, 0, 1) }}
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>
-                                &nbsp; &nbsp; &nbsp; &nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-                                    @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) == 'A')
-                                        &#10004;
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>&nbsp;
-                                AM
-                                &nbsp;
-                                <div class="box text-primary courier-new font-weight-bold">
-
-                                    @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) != 'A')
-                                        &#10004;
-                                    @else
-                                        &nbsp;
-                                    @endif
-                                </div>&nbsp;
-                                PM
-
-                                <br>
-                                <p style="position: absolute;top:27px; left:330px;" class="text-xs"> &nbsp;
-                                    &nbsp;month
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;day
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    &nbsp; &nbsp;&nbsp;
-                                    year</p>
-
-                                <p style="position: absolute;top:27px;left:620px;" class="text-xs">
-                                    &nbsp;&nbsp;&nbsp;hour
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn
-                                </p>
-                            </span>
                         </div>
-                        <div class="col-12 pb-2">
+                        <div class="col-6">
+                            <div class="row">
+
+
+                                <div class='col-6'>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($DATE_ADMITTED)
+                                            {{ substr($DATE_ADMITTED, 5, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+
+                                        @if ($DATE_ADMITTED)
+                                            {{ substr($DATE_ADMITTED, 6, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($DATE_ADMITTED)
+                                            {{ substr($DATE_ADMITTED, 8, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($DATE_ADMITTED)
+                                            {{ substr($DATE_ADMITTED, 9, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <label class="px-1">&nbsp;-</label>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($DATE_ADMITTED)
+                                            {{ substr($DATE_ADMITTED, 0, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($DATE_ADMITTED)
+                                            {{ substr($DATE_ADMITTED, 1, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($DATE_ADMITTED)
+                                            {{ substr($DATE_ADMITTED, 2, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($DATE_ADMITTED)
+                                            {{ substr($DATE_ADMITTED, 3, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+
+                                    <p style="position:absolute;" class="text-xs"> &nbsp;
+                                        &nbsp;month
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;day
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp; &nbsp;&nbsp;
+                                        year</p>
+                                </div>
+
+                                <div class='col=6'>
+                                    <span class="text-xs">Time:</span>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($TIME_ADMITTED)
+                                            {{ substr($TIME_ADMITTED, 0, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($TIME_ADMITTED)
+                                            {{ substr($TIME_ADMITTED, 0, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div> <label class="px-1">&nbsp;-</label>
+
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($TIME_ADMITTED)
+                                            {{ substr($TIME_ADMITTED, 0, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($TIME_ADMITTED)
+                                            {{ substr($TIME_ADMITTED, 0, 1) }}
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>
+                                    &nbsp; &nbsp; &nbsp; &nbsp;
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) == 'A')
+                                            &#10004;
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>&nbsp;
+                                    AM
+                                    &nbsp;
+                                    <div class="box text-primary courier-new font-weight-bold">
+
+                                        @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) != 'A')
+                                            &#10004;
+                                        @else
+                                            &nbsp;
+                                        @endif
+                                    </div>&nbsp;
+                                    PM
+
+
+                                    <p style="position:absolute;top:30px;right:150px;" class="text-xs"> &nbsp;&nbsp;&nbsp;hour
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class='col-5'>
                             <div class="box text-primary courier-new font-weight-bold">
                                 &nbsp;
                             </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -741,11 +751,20 @@
                             <div class="box text-primary courier-new font-weight-bold">
                                 &nbsp;
                             </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            f. Transferred/Referred &nbsp;&nbsp; <div class="bottom-line2"
-                                style='width:600px;position:absolute;top:7px;left:390px;'> &nbsp;</div>
-                            <div class="text-xs text-center"
-                                style='width:600px;position:absolute;top:23px;left:390px;'> Name of Referral Health
-                                Care Institution </div>
+                            f. Transferred/Referred &nbsp;&nbsp;
+                        </div>
+                        <div class='col-7 text-center'>
+                            <div class="bottom-line2">
+                                &nbsp;
+                            </div>
+                            <div class="text-xs text-center"> Name of Referral Health Care Institution </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 text-xs">
+                    <div class="row">
+                        <div class="col-12 pb-2">
+
                         </div>
                         <div class="col-12">
                             <div class="box text-primary courier-new font-weight-bold">
@@ -787,15 +806,14 @@
                             <div class="bottom-line2" style='width:550px;position:absolute;top:7px;left:400px;'>
                                 &nbsp;</div>
 
-
                         </div>
                     </div>
-
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-2 ">
-                    <label style='font-size:17px;width:200px;'> 5. Type of Accomodation:</label>
+                    <label class="mt-1" style='font-size:17px;width:200px;'> 5. Type of Accomodation:</label>
                 </div>
                 <div class="col-10">
 
@@ -1307,7 +1325,7 @@
                             Maintenance Phase
                         </div>
                     </div>
-                
+
                 </div>
                 <div class="col-md-12 text-xs">
                     <span>e. For Animal Bite Package (write the dates [mm-dd-year] when the following doses of vaccine
@@ -1487,11 +1505,11 @@
         <div class="col-12 ubox2 font-weight-light">
             <label style='font-size:17px;width:400px;height:20px;'> 9. PhilHealth Benefits:</label>
             <div class="row text-xs pb-1">
-         
+
                 <div class="col-6">
                     <div class="row">
                         <div class="col-6 text-right">
-                                 <b>ICD 10 or RVS Code:</b> &nbsp;&nbsp;&nbsp;    a. First Case Rate
+                            <b>ICD 10 or RVS Code:</b> &nbsp;&nbsp;&nbsp; a. First Case Rate
                         </div>
                         <div class="col-6">
                             <div class="bottom-line2">

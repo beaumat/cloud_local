@@ -30,12 +30,13 @@ class PatientSalesReport extends Component
     public string $tempName;
     public bool $is_add;
     public float $running_balance;
+
     public string $sc_code;
     public bool $is_code;
     private $locationServices;
     private $userServices;
     public $dataList = [];
-
+    public $preDataList = [];
     public int $PREV_SC_ITEM_REF_ID = 0;
     public bool $not_to_charge = false;
     public float $TOTAL_CHARGE = 0;
@@ -43,6 +44,7 @@ class PatientSalesReport extends Component
 
     public float $TOTAL_PAID = 0;
     public float $CASH_AMOUNT;
+    public float $PRE_COLLECTION;
     public float $PHILHEALTH_AMOUNT;
     public float $DSWD_AMOUNT;
     public float $LINGAP_AMOUNT;
@@ -129,6 +131,7 @@ class PatientSalesReport extends Component
         $this->TOTAL_PAID = 0;
         $this->CASH_AMOUNT = 0;
         $this->PHILHEALTH_AMOUNT = 0;
+        $this->PRE_COLLECTION = 0;
         $this->DSWD_AMOUNT = 0;
         $this->LINGAP_AMOUNT = 0;
         $this->PCSO_AMOUNT = 0;
@@ -144,6 +147,18 @@ class PatientSalesReport extends Component
             $this->selectedPatient,
             $this->selectedItem
         );
+
+        $this->preDataList = $this->patientReportServices->generatePrevCollection(
+            $this->DATE_TRANSACTION_FROM,
+            $this->DATE_TRANSACTION_TO,
+            $this->LOCATION_ID,
+            $this->selectedPatient,
+            $this->selectedItem
+        );
+
+        foreach ($this->preDataList as $data) {
+            $this->PRE_COLLECTION =  $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
+        }
     }
 
     public function resetFilter()

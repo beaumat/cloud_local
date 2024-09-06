@@ -34,6 +34,15 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
 
     public function collection()
     {
+
+        $preData = $this->patientReportServices->generatePrevCollection(
+            $this->scFrom,
+            $this->scTo,
+            $this->locationId,
+            $this->patientData,
+            $this->itemData
+        );
+
         $data =  $this->patientReportServices->generateSalesReportData($this->pFrom, $this->pTo, $this->scFrom, $this->scTo, $this->locationId, $this->patientData, $this->itemData)->toArray();
 
         $headers = [
@@ -66,6 +75,13 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         $LINGAP_AMOUNT = 0;
         $PCSO_AMOUNT = 0;
         $OTHER_GL_AMOUNT = 0;
+        $PRE_COLLECTION = 0;
+
+        foreach ($preData as $dataList) {
+            $PRE_COLLECTION =  $PRE_COLLECTION + $dataList->PP_PAID ?? 0;
+        }
+
+
 
 
         $running_balance = 0;
@@ -179,10 +195,14 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         $rowData = ['PN' => 'No. of Patient: ' . $NO_OF_PATIENT, 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => 'No. of Treatment: ' . $NO_OF_TREATMENT, 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Cash Paid: ' . $CASH_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL CHARGE :' . $TOTAL_CHARGE, 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
         // PAID TOTAL
-        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Philhealth Paid: ' . $PHILHEALTH_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL PAID :' . $TOTAL_PAID, 'LOCATION' => '',];
+
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Previous Collection: ' . $PRE_COLLECTION, 'BAL' => '', 'DOCTOR' => 'TOTAL PAID :' . $TOTAL_PAID + $PRE_COLLECTION, 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
         // BALANCE TOTAL
-        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'DSWD Paid: ' . $DSWD_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL BALANCE :' . $TOTAL_CHARGE - $TOTAL_PAID, 'LOCATION' => '',];
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Philhealth Paid: ' . $PHILHEALTH_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL BALANCE :' . $TOTAL_CHARGE - ($TOTAL_PAID + $PRE_COLLECTION), 'LOCATION' => '',];
+        $finalData[] = array_values($rowData);
+
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'DSWD Paid: ' . $DSWD_AMOUNT, 'BAL' => '', 'DOCTOR' => '', 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
 
         $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'LINGAP Paid: ' . $LINGAP_AMOUNT, 'BAL' => '', 'DOCTOR' => '', 'LOCATION' => '',];

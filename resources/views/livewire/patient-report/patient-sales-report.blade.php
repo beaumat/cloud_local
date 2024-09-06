@@ -314,36 +314,55 @@
                             <h6 class="text-xs"><label>No. of Treatment : </label> <span class="text-primary">
                                     {{ $NO_OF_TREATMENT }}</span> </h6>
                         </div>
+                        <div class="col-md-12 text-xs">
+
+                            <label class="h6">Previous Collection </label>
+                            <ol>
+                                @foreach ($preDataList as $list)
+                                    <li> <b>{{ $list->PATIENT_NAME }}</b>/ <i>{{ $list->PAYMENT_METHOD }}</i> / Paid:
+                                        <span class="text-success">{{ number_format($list->PP_PAID, 2) }}</span> on
+                                        <span class="text-primary">{{ $list->ITEM_NAME }}</span>
+                                    </li>
+                                @endforeach
+
+                            </ol>
+                            <span class="h6">Total: <b class="text-success">{{ number_format($PRE_COLLECTION, 2) }}</b></span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-6">
-                            <h6 class="text-xs"> <label class="text-xs">Cash Paid : </label>
-                                <span
-                                    class="text-success font-weight-bold text-xs">{{ number_format($CASH_AMOUNT, 2) }}</span>
-                            </h6>
-
-                            <h6 class="text-xs"> <label class="text-xs">Philhealth Paid : </label>
-                                <span
-                                    class="text-success font-weight-bold text-xs">{{ number_format($PHILHEALTH_AMOUNT, 2) }}</span>
-                            </h6>
-                            <h6 class="text-xs"> <label class="text-xs">DSWD Paid : </label>
-                                <span
-                                    class="text-success font-weight-bold text-xs">{{ number_format($DSWD_AMOUNT, 2) }}</span>
-                            </h6>
-                            <h6 class="text-xs"> <label class="text-xs">LINGAP Paid : </label>
-                                <span
-                                    class="text-success font-weight-bold text-xs">{{ number_format($LINGAP_AMOUNT, 2) }}</span>
-                            </h6>
-                            <h6 class="text-xs"> <label class="text-xs">PCSO Paid : </label>
-                                <span
-                                    class="text-success active font-weight-bold text-xs">{{ number_format($PCSO_AMOUNT, 2) }}</span>
-                            </h6>
-                            <h6 class="text-xs"> <label class="text-xs">OTHER GL Paid : </label>
-                                <span
-                                    class="text-success font-weight-bold text-xs">{{ number_format($OTHER_GL_AMOUNT, 2) }}</span>
-                            </h6>
+                            <div class="row">
+                                <div class=" col-12 text-xs"> <label class="text-xs">Cash Paid : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($CASH_AMOUNT, 2) }}</span>
+                                </div>
+                                <div class="col-12  text-xs"> <label class="text-xs">Previous Collection : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($PRE_COLLECTION, 2) }}</span>
+                                </div>
+                                <div class="col-12  text-xs"> <label class="text-xs">Philhealth Paid : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($PHILHEALTH_AMOUNT, 2) }}</span>
+                                </div>
+                                <div class="col-12 text-xs"> <label class="text-xs">DSWD Paid : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($DSWD_AMOUNT, 2) }}</span>
+                                </div>
+                                <div class="col-12 text-xs"> <label class="text-xs">LINGAP Paid : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($LINGAP_AMOUNT, 2) }}</span>
+                                </div>
+                                <div class="col-12  text-xs"> <label class="text-xs">PCSO Paid : </label>
+                                    <span
+                                        class="text-success active font-weight-bold text-xs">{{ number_format($PCSO_AMOUNT, 2) }}</span>
+                                </div>
+                                <div class="col-12 text-xs"> <label class="text-xs">OTHER GL Paid : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($OTHER_GL_AMOUNT, 2) }}</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <h6 class="text-xs"> <label class="text-xs">TOTAL (SC) : </label>
@@ -353,11 +372,11 @@
 
                             <h6 class="text-xs"> <label class="text-xs">TOTAL (Payment) : </label>
                                 <span
-                                    class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID, 2) }}</span>
+                                    class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID + $PRE_COLLECTION, 2) }}</span>
                             </h6>
                             <h6 class="text-xs"> <label class="text-xs">TOTAL BALANCE : </label>
                                 <span
-                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - $TOTAL_PAID, 2) }}</span>
+                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - ($TOTAL_PAID + $PRE_COLLECTION) , 2) }}</span>
                             </h6 class="text-xs">
                         </div>
                     </div>

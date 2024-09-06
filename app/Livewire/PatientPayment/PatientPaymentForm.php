@@ -126,10 +126,7 @@ class PatientPaymentForm extends Component
     private function LoadDropDown()
     {
 
-
-
         $this->locationList = $this->locationServices->getList();
-
         if ($this->ID  == 0) {
             $this->contactList = $this->contactServices->getPatientList($this->LOCATION_ID);
             $this->paymentMethodList = $this->paymentMethodServices->getListNotIncludeOneParam(9);
