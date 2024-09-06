@@ -689,46 +689,46 @@
                                     </div>
 
                                     <div class='col-6'>
-                                        <span >Time:</span>
-                                        
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                @if ($TIME_ADMITTED)
-                                                    {{ substr($TIME_ADMITTED, 0, 1) }}
-                                                @else
-                                                    &nbsp;
-                                                @endif
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                @if ($TIME_ADMITTED)
-                                                    {{ substr($TIME_ADMITTED, 0, 1) }}
-                                                @else
-                                                    &nbsp;
-                                                @endif
-                                            </div> <label class="px-1">&nbsp;-</label>
+                                        <span>Time:</span>
 
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                @if ($TIME_ADMITTED)
-                                                    {{ substr($TIME_ADMITTED, 0, 1) }}
-                                                @else
-                                                    &nbsp;
-                                                @endif
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                @if ($TIME_ADMITTED)
-                                                    {{ substr($TIME_ADMITTED, 0, 1) }}
-                                                @else
-                                                    &nbsp;
-                                                @endif
-                                            </div>
-                                            &nbsp; &nbsp; &nbsp; &nbsp;
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) == 'A')
-                                                    &#10004;
-                                                @else
-                                                    &nbsp;
-                                                @endif
-                                            </div>
-                                    
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            @if ($TIME_ADMITTED)
+                                                {{ substr($TIME_ADMITTED, 0, 1) }}
+                                            @else
+                                                &nbsp;
+                                            @endif
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            @if ($TIME_ADMITTED)
+                                                {{ substr($TIME_ADMITTED, 0, 1) }}
+                                            @else
+                                                &nbsp;
+                                            @endif
+                                        </div> <label class="px-1">&nbsp;-</label>
+
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            @if ($TIME_ADMITTED)
+                                                {{ substr($TIME_ADMITTED, 0, 1) }}
+                                            @else
+                                                &nbsp;
+                                            @endif
+                                        </div>
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            @if ($TIME_ADMITTED)
+                                                {{ substr($TIME_ADMITTED, 0, 1) }}
+                                            @else
+                                                &nbsp;
+                                            @endif
+                                        </div>
+                                        &nbsp; &nbsp; &nbsp; &nbsp;
+                                        <div class="box text-primary courier-new font-weight-bold">
+                                            @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) == 'A')
+                                                &#10004;
+                                            @else
+                                                &nbsp;
+                                            @endif
+                                        </div>
+
 
                                         &nbsp;
                                         AM
@@ -1352,23 +1352,29 @@
                     </div>
 
                 </div>
-                <div class="col-md-12 text-sm">
-                    <span>e. For Animal Bite Package (write the dates [mm-dd-year] when the following doses of vaccine
-                        were
-                        given)</span> <span style="margin-left:50px;width:370px;position:absolute;right:0"
-                        class="font-weight-bold bottom-line2 top-line2 left-line2 right-line2 p-1"> Note: Anti Rabies
-                        Vaccine (ARV), Rabies Immunoglobulin
-                        (RIG)</span>
-
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-8">
+                            <span class="text-md">e. For Animal Bite Package (write the dates [mm-dd-year] when the
+                                following doses of
+                                vaccine were given)</span>
+                        </div>
+                        <div class="col-4">
+                            <span style="margin-left:50px;width:480px;position:absolute;right:0"
+                                class="font-weight-bold bottom-line2 top-line2 left-line2 right-line2 p-1 text-md">
+                                Note: Anti Rabies Vaccine (ARV), Rabies Immunoglobulin (RIG)
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-12 ">
-                    <div class="row pt-3">
+                <div class="col-12">
+                    <div class="row pt-3 pb-2">
                         <div class="col-2">
                             <div class="row">
-                                <div class="col-5 text-right">
-                                    <b>Day 0 ARV</b>
+                                <div class="col-6 text-right">
+                                    <b class="font-weight-bold">Day 0 ARV</b>
                                 </div>
-                                <div class="col-7">
+                                <div class="col-6">
                                     <div class="bottom-line2">
                                         &nbsp;
                                     </div>
@@ -1378,10 +1384,10 @@
                         <div class="col-2">
 
                             <div class="row">
-                                <div class="col-5 text-right">
-                                    <b>Day 3 ARV</b>
+                                <div class="col-6 text-right">
+                                    <b class="font-weight-bold">Day 3 ARV</b>
                                 </div>
-                                <div class="col-7">
+                                <div class="col-6">
                                     <div class="bottom-line2">
                                         &nbsp;
                                     </div>
@@ -1391,10 +1397,10 @@
                         <div class="col-2">
 
                             <div class="row">
-                                <div class="col-5 text-right">
-                                    <b>Day 7 ARV</b>
+                                <div class="col-6 text-right">
+                                    <b class="font-weight-bold">Day 7 ARV</b>
                                 </div>
-                                <div class="col-7">
+                                <div class="col-6">
                                     <div class="bottom-line2">
                                         &nbsp;
                                     </div>
@@ -1403,10 +1409,10 @@
                         </div>
                         <div class="col-2">
                             <div class="row">
-                                <div class="col-5 text-right">
-                                    <b>RIG</b>
+                                <div class="col-4 text-right">
+                                    <b class="font-weight-bold">RIG</b>
                                 </div>
-                                <div class="col-7">
+                                <div class="col-8">
                                     <div class="bottom-line2">
                                         &nbsp;
                                     </div>
@@ -1415,10 +1421,10 @@
                         </div>
                         <div class="col-3">
                             <div class="row">
-                                <div class="col-5 text-right">
-                                    <b>Others (Specify)</b>
+                                <div class="col-6 text-right">
+                                    <b class="font-weight-bold">Others (Specify)</b>
                                 </div>
-                                <div class="col-7 ">
+                                <div class="col-6 ">
                                     <div class="bottom-line2">
                                         &nbsp;
                                     </div>
@@ -1427,59 +1433,62 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 ">
+                <div class="col-12">
                     <div class="row">
                         <div class='col-2'>
-                            f. For Newborn Care Package
+                            <span style="position:absolute;width:300px;">f. For Newborn Care Package</span>
                         </div>
                         <div class="col-2">
-                            <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;&nbsp;
-                            Essential Newborn Care
+                            <div class="box text-primary courier-new font-weight-bold "> &nbsp; </div> &nbsp;&nbsp;
+                            <span style="position:absolute;width:300px; top:5px;">Essential Newborn Care</span>
                         </div>
                         <div class="col-3">
                             <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;&nbsp;
-                            Newborn Hearing Screening Test
+                            <span style="position:absolute;width:300px;top:5px;">Newborn Hearing Screening Test</span>
 
                         </div>
                         <div class="col-2">
                             <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
-                            Newborn Screening Test
+                            <span style="position:absolute;width:300px;top:5px;">Newborn Screening Test</span>
 
                         </div>
                         <div class="col-3">
-                            <div class="bottom-line2 top-line2 left-line2 right-line2 p-1 w-100"> For Newborn
-                                Screening,<br /> please attach NBS
-                                Filter Sitcker here </div>
-                        </div>
-                        <div class="col-4">
                             <div class="bottom-line2 top-line2 left-line2 right-line2 p-1"
-                                style="top:-14px;position:absolute">
+                                style="width:260px;position:absolute;right:0px;">
+                                For Newborn
+                                Screening,<br /> <i>please attach NBS
+                                    Filter Sitcker here </i>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-1">
+                            <div class="bottom-line2 top-line2 left-line2 right-line2 p-1"
+                                style="top:0px;position:absolute">
                                 <span class="font-weight-bold"> For Essential Newborn Care, </span>(check applicable
                                 boxes)
                             </div>
                             <br />
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 mt-3">
                             <div class="row">
                                 <div class="col-3">
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
-                                    Immediate drying of newborn
+                                    <span style="position:absolute"> Immediate drying of newborn</span>
                                 </div>
                                 <div class="col-2">
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
-                                    Timely cord clamping
+                                    <span style="position:absolute">Timely cord clamping</span>
                                 </div>
                                 <div class="col-2">
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
-                                    Weighing of the newborn
+                                    <span style="position:absolute">Weighing of the newborn</span>
                                 </div>
                                 <div class="col-2">
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
-                                    BCG vaccination
+                                    <span style="position:absolute">BCG vaccination</span>
                                 </div>
                                 <div class="col-2">
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
-                                    Hepatitis B vaccination
+                                    <span style="position:absolute">Hepatitis B vaccination</span>
                                 </div>
                             </div>
                         </div>
@@ -1487,20 +1496,21 @@
                             <div class="row">
                                 <div class="col-3">
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
-                                    Early skin-to-skin contact
+                                    <span style="position:absolute">Early skin-to-skin contact</span>
                                 </div>
                                 <div class="col-2">
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
-                                    Eye Prophylaxis
+                                    <span style="position:absolute">Eye Prophylaxis</span>
                                 </div>
 
                                 <div class="col-2">
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
-                                    Vitamin K administration
+                                    <span style="position:absolute">Vitamin K administration</span>
                                 </div>
                                 <div class="col-5">
                                     <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div> &nbsp;
-                                    Non-separation of mother/baby for early breastfeeding initiation
+                                    <span style="position:absolute">Non-separation of mother/baby for early
+                                        breastfeeding initiation</span>
                                 </div>
                             </div>
                         </div>
@@ -1512,7 +1522,7 @@
                                 <div class="col-4">
                                     <div class="row">
                                         <div class="col-5 text-right">
-                                            <b> Laboratory Number:</b>
+                                            <b class='font-weight-bold'> Laboratory Number:</b>
                                         </div>
                                         <div class="col-7">
                                             <div class="bottom-line2">
@@ -1534,7 +1544,7 @@
                 <div class="col-6">
                     <div class="row">
                         <div class="col-6 text-right">
-                            <b>ICD 10 or RVS Code:</b> &nbsp;&nbsp;&nbsp; a. First Case Rate
+                            <b class="font-weight-bold">ICD 10 or RVS Code:</b> &nbsp;&nbsp;&nbsp; a. First Case Rate
                         </div>
                         <div class="col-6">
                             <div class="bottom-line2">

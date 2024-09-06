@@ -83,9 +83,6 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
             $PRE_COLLECTION =  $PRE_COLLECTION +  (float) $dataList->PP_PAID  ?? 0;
         }
 
-
-
-
         $running_balance = 0;
         $NO_OF_PATIENT = 0;
         $NO_OF_TREATMENT = 0;
