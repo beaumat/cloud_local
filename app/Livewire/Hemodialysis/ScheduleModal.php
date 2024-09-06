@@ -61,21 +61,25 @@ class ScheduleModal extends Component
                 $data = $this->scheduleServices->getInfo($scheId);
                 if ($data) {
                     try {
-                        DB::beginTransaction();
-                        $HEMO_ID = (int) $this->hemoServices->PreSave($this->DATE, "", $data->CONTACT_ID, $this->LOCATION_ID);
-                        $this->hemoServices->GetOtherDetailsDefault($HEMO_ID,  $data->CONTACT_ID, $this->DATE, $this->LOCATION_ID);
 
-                        $NO = (int) $this->hemoServices->GetNoTreatment($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE);
-                        $this->hemoServices->AutoDefaultItem($NO,$HEMO_ID,$this->LOCATION_ID);
-                     
-                        if ($this->ids == "") {
-                            $this->ids = $HEMO_ID;
-                        } else {
-                            $this->ids = $this->ids . "," . $HEMO_ID;
+                        // make if already exists
+
+                        if (!$this->hemoServices->CheckingExistsThatDay($this->DATE, $data->CONTACT_ID, $this->LOCATION_ID)) {
+                            DB::beginTransaction();
+                            $HEMO_ID = (int) $this->hemoServices->PreSave($this->DATE, "", $data->CONTACT_ID, $this->LOCATION_ID);
+                            $this->hemoServices->GetOtherDetailsDefault($HEMO_ID,  $data->CONTACT_ID, $this->DATE, $this->LOCATION_ID);
+
+                            $NO = (int) $this->hemoServices->GetNoTreatment($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE);
+                            $this->hemoServices->AutoDefaultItem($NO, $HEMO_ID, $this->LOCATION_ID);
+
+                            if ($this->ids == "") {
+                                $this->ids = $HEMO_ID;
+                            } else {
+                                $this->ids = $this->ids . "," . $HEMO_ID;
+                            }
+                            DB::commit();
+                            $isDone = true;
                         }
-
-                        DB::commit();
-                        $isDone = true;
                     } catch (\Throwable $th) {
                         session()->flash('error', $th->getMessage());
                         DB::rollBack();

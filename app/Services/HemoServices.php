@@ -322,6 +322,15 @@ class HemoServices
 
         return $ID;
     }
+    public function CheckingExistsThatDay(string $DATE, int $CUSTOMER_ID, int $LOCATION_ID): bool
+    {
+        $isExist = (bool) Hemodialysis::where('DATE', $DATE)
+            ->where('CUSTOMER_ID', $CUSTOMER_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->exists();
+
+        return $isExist;
+    }
     private function GetPreviousTreatment(int $HEMO_ID, int $CUSTOMER_ID, string $DATE, int $LOCATION_ID)
     {
         $result = Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)
