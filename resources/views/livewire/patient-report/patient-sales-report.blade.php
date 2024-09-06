@@ -315,8 +315,7 @@
                                     {{ $NO_OF_TREATMENT }}</span> </h6>
                         </div>
                         <div class="col-md-12 text-xs">
-
-                            <label class="h6">Previous Collection </label>
+                            <label class="h6">Previous Cash Collection </label>
                             <ol>
                                 @foreach ($preDataList as $list)
                                     <li> <b>{{ $list->PATIENT_NAME }}</b>/ <i>{{ $list->PAYMENT_METHOD }}</i> / Paid:
@@ -339,7 +338,8 @@
                                     <span
                                         class="text-success font-weight-bold text-xs">{{ number_format($CASH_AMOUNT, 2) }}</span>
                                 </div>
-                                <div class="col-12  text-xs"> <label class="text-xs">Previous Collection : </label>
+                                <div class="col-12  text-xs"> <label class="text-xs">Previous Cash Collection :
+                                    </label>
                                     <span
                                         class="text-success font-weight-bold text-xs">{{ number_format($PRE_COLLECTION, 2) }}</span>
                                 </div>
@@ -376,11 +376,11 @@
                             </h6>
                             <h6 class="text-xs"> <label class="text-xs">TOTAL (Payment) : </label>
                                 <span
-                                    class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID , 2) }}</span>
+                                    class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID, 2) }}</span>
                             </h6>
                             <h6 class="text-xs"> <label class="text-xs">TOTAL BALANCE : </label>
                                 <span
-                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - $TOTAL_PAID , 2) }}</span>
+                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - $TOTAL_PAID, 2) }}</span>
                             </h6 class="text-xs">
                         </div>
                     </div>

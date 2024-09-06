@@ -103,6 +103,7 @@ class PatientReportServices
                     ->on('pp.LOCATION_ID', '=', 'sc.LOCATION_ID');
             })
             ->leftJoin('payment_method as pm', 'pm.ID', '=', 'pp.PAYMENT_METHOD_ID')
+            ->where('pp.PAYMENT_METHOD_ID', 1)
             ->where(function ($query) use (&$scFrom, &$scTo) {
                 $query->whereBetween('pp.DATE', [$scFrom, $scTo])
                     ->whereNotBetween('sc.DATE', [$scFrom, $scTo]);
