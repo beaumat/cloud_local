@@ -595,7 +595,6 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-5">
-
                             <div class="row">
                                 <div class="col-4">
                                     <div class="box text-primary courier-new font-weight-bold">
@@ -603,7 +602,6 @@
                                     </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     a. Improved
                                 </div>
-
                                 <div class="col-8">
                                     <div style="position:absolute; right:88px;">
                                         <div class="box text-primary courier-new font-weight-bold">
@@ -613,8 +611,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                         <div class="col-7">
                             <div style="position:relative;left:-80px;">
@@ -835,9 +831,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
             <div class="row">
                 <div class="col-2 ">
                     <label class="mt-1" style='font-size:17px;width:200px;'> 5. Type of Accomodation:</label>
@@ -857,7 +851,6 @@
                     Non-Private (Charity/Service)
                 </div>
             </div>
-
         </div>
         <div class="col-12 ubox2 font-weight-light">
             <div class="form-group">
@@ -866,24 +859,30 @@
             </div>
         </div>
         <div class="col-12 ubox2 font-weight-light">
-            <div class="form-group" style='height:165px;'>
+            <div class="form-group" style='height:175px;'>
                 <label style='font-size:17px;'>7. Discharge Diagnosis/es</label>
                 <span class="text-sm"> (Use additional CF2 if necessary):</span>
                 <div class="row" style="top:-5px;position:relative">
-                    <div class="col-1 text-center">Diagnosis </div>
-                    <div class="col-2 text-center">ICD-10 Code/s </div>
+                    <div class="col-2 text-center">Diagnosis </div>
+                    <div class="col-2 text-center">
+                        ICD-10 Code/s
+                    </div>
                     <div class="col-3 text-center">Related Procedure/s (if there’s any) </div>
                     <div class="col-1 text-center">RVS Code </div>
                     <div class="col-2 text-center">Date of Procedure </div>
-                    <div class="col-3 text-center">Laterality (check applicable box) </div>
+                    <div class="col-2 text-center text-left">
+                        <span style="position:absolute;width:230px;left:-20px;">
+                            Laterality (check applicable box)
+                        </span>
+                    </div>
                 </div>
-                <div class="row " style="position:absolute;width:100%;height:30px;top:50px;">
-                    <div class="col-1 text-center">
+                <div class="row" style="position:absolute;width:100%;height:30px;top:50px;">
+                    <div class="col-2 text-center">
                         <div class='row'>
-                            <div class='col-3 text-left'>
+                            <div class='col-1 text-left'>
                                 a.
                             </div>
-                            <div class='col-9 text-center'>
+                            <div class='col-11 text-center'>
                                 <div class="bottom-line2"> &nbsp; </div>
                             </div>
                         </div>
@@ -909,28 +908,30 @@
                     <div class="col-2 text-center">
                         <div class="bottom-line2"> &nbsp; </div>
                     </div>
-                    <div class="col-3 text-center">
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        left &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        right &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        both
+                    <div class="col-2 text-center">
+                        <div style="position:absolute;width:300px;left:-50px;">
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            left &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            right &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            both
+                        </div>
                     </div>
                 </div>
-                <div class="row" style="position:absolute;width:100%;height:30px;top:70px;">
-                    <div class="col-1 text-center">
+                <div class="row " style="position:absolute;width:100%;height:30px;top:75px;">
+                    <div class="col-2 text-center">
                         <div class='row'>
-                            <div class='col-3 text-left'>
-
+                            <div class='col-1 text-left'>
+                                &nbsp;
                             </div>
-                            <div class='col-9 text-center'>
+                            <div class='col-11 text-center'>
                                 <div class="bottom-line2"> &nbsp; </div>
                             </div>
                         </div>
@@ -956,28 +957,30 @@
                     <div class="col-2 text-center">
                         <div class="bottom-line2"> &nbsp; </div>
                     </div>
-                    <div class="col-3 text-center">
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        left &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        right &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        both
+                    <div class="col-2 text-center">
+                        <div style="position:absolute;width:300px;left:-50px;">
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            left &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            right &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            both
+                        </div>
                     </div>
                 </div>
-                <div class="row" style="position:absolute;width:100%;height:30px;top:90px;">
-                    <div class="col-1 text-center">
+                <div class="row " style="position:absolute;width:100%;height:30px;top:95px;">
+                    <div class="col-2 text-center">
                         <div class='row'>
-                            <div class='col-3 text-left'>
-
+                            <div class='col-1 text-left'>
+                                &nbsp;
                             </div>
-                            <div class='col-9 text-center'>
+                            <div class='col-11 text-center'>
                                 <div class="bottom-line2"> &nbsp; </div>
                             </div>
                         </div>
@@ -1003,29 +1006,30 @@
                     <div class="col-2 text-center">
                         <div class="bottom-line2"> &nbsp; </div>
                     </div>
-                    <div class="col-3 text-center">
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        left &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        right &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        both
+                    <div class="col-2 text-center">
+                        <div style="position:absolute;width:300px;left:-50px;">
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            left &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            right &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            both
+                        </div>
                     </div>
                 </div>
-
-                <div class="row" style="position:absolute;width:100%;height:30px;top:110px;">
-                    <div class="col-1 text-center">
+                <div class="row " style="position:absolute;width:100%;height:30px;top:115px;">
+                    <div class="col-2 text-center">
                         <div class='row'>
-                            <div class='col-3 text-left'>
+                            <div class='col-1 text-left'>
                                 b.
                             </div>
-                            <div class='col-9 text-center'>
+                            <div class='col-11 text-center'>
                                 <div class="bottom-line2"> &nbsp; </div>
                             </div>
                         </div>
@@ -1051,28 +1055,30 @@
                     <div class="col-2 text-center">
                         <div class="bottom-line2"> &nbsp; </div>
                     </div>
-                    <div class="col-3 text-center">
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        left &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        right &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        both
+                    <div class="col-2 text-center">
+                        <div style="position:absolute;width:300px;left:-50px;">
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            left &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            right &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            both
+                        </div>
                     </div>
                 </div>
-                <div class="row" style="position:absolute;width:100%;height:30px;top:130px;">
-                    <div class="col-1 text-center">
+                <div class="row " style="position:absolute;width:100%;height:30px;top:135px;">
+                    <div class="col-2 text-center">
                         <div class='row'>
-                            <div class='col-3 text-left'>
-
+                            <div class='col-1 text-left'>
+                                &nbsp;
                             </div>
-                            <div class='col-9 text-center'>
+                            <div class='col-11 text-center'>
                                 <div class="bottom-line2"> &nbsp; </div>
                             </div>
                         </div>
@@ -1098,28 +1104,30 @@
                     <div class="col-2 text-center">
                         <div class="bottom-line2"> &nbsp; </div>
                     </div>
-                    <div class="col-3 text-center">
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        left &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        right &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        both
+                    <div class="col-2 text-center">
+                        <div style="position:absolute;width:300px;left:-50px;">
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            left &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            right &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            both
+                        </div>
                     </div>
                 </div>
-                <div class="row" style="position:absolute;width:100%;height:30px;top:150px;">
-                    <div class="col-1 text-center">
+                <div class="row " style="position:absolute;width:100%;height:30px;top:155px;">
+                    <div class="col-2 text-center">
                         <div class='row'>
-                            <div class='col-3 text-left'>
-
+                            <div class='col-1 text-left'>
+                                &nbsp;
                             </div>
-                            <div class='col-9 text-center'>
+                            <div class='col-11 text-center'>
                                 <div class="bottom-line2"> &nbsp; </div>
                             </div>
                         </div>
@@ -1145,19 +1153,21 @@
                     <div class="col-2 text-center">
                         <div class="bottom-line2"> &nbsp; </div>
                     </div>
-                    <div class="col-3 text-center">
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        left &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        right &nbsp;&nbsp;
-                        <div class="box text-primary courier-new font-weight-bold">
-                            &nbsp;
-                        </div> &nbsp;
-                        both
+                    <div class="col-2 text-center">
+                        <div style="position:absolute;width:300px;left:-50px;">
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            left &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            right &nbsp;
+                            <div class="box text-primary courier-new font-weight-bold">
+                                &nbsp;
+                            </div> &nbsp;
+                            both
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1167,13 +1177,13 @@
         </div>
         <div class="col-12 ubox2 font-weight-light ">
             <div class="row">
-                <div class="col-md-12">
-                    <span class='text-sm'>
+                <div class="col-12">
+                    <span >
                         a. For the following repetitive procedures, check box that applies and enumerate the
                         procedure/sessions dates [mm-dd-yyyy]. For chemotherapy, see guidelines.
                     </span>
                 </div>
-                <div class="col-md-12">
+                <div class="col-12">
                     <div class="row px-1 ">
                         <div class='col-6'>
                             <div class='row'>
@@ -1288,33 +1298,33 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 mt-1">
+                <div class="col-12 mt-1">
                     <div class="row">
-                        <div class="col-4">
-                            <span class='text-sm'>
+                        <div class="col-3">
+                            <span>
                                 b. For Z-Benefit Package
                             </span>
                         </div>
-                        <div class="col-8">
-                            <span class='text-sm font-weight-bold'>
+                        <div class="col-7">
+                            <span class='font-weight-bold'>
                                 Z-Benefit Package Code: ___________________________________
                             </span>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <span class=''>
+                <div class="col-12">
+                    <span>
                         c. For MCP Package (enumerate four dates [mm-dd-year] of pre-natal check-ups)
                     </span>
                     <div class="form-group ">
                         <div class="row mx-2">
                             <div class="col-3">
-                                <div class="w-100 bottom-line2 px-2">
+                                <div class="w-100 bottom-line2 px-4">
                                     <span style="left:-5px;position:absolute;">1.</span> &nbsp;
                                 </div>
                             </div>
                             <div class="col-3">
-                                <div class="w-100 bottom-line2 px-2">
+                                <div class="w-100 bottom-line2 px-4">
                                     <span style="left:-5px;position:absolute;">2.</span> &nbsp;
                                 </div>
                             </div>
@@ -1325,15 +1335,15 @@
                                 </div>
                             </div>
                             <div class="col-3">
-                                <div class="w-100 bottom-line2 px-2">
+                                <div class="w-100 bottom-line2 px-4">
                                     <span style="left:-5px;position:absolute;">4.</span> &nbsp;
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <div class="row  w-100 mb-2" style="top:-15px;position:relative;height:8px">
+                <div class="col-12">
+                    <div class="row  w-100 mb-2 mt-2" style="top:-15px;position:relative;height:8px">
                         <div class="col-2 ">
                             d. For TB DOTS Package:
                         </div>
