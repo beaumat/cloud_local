@@ -33,6 +33,7 @@ class ServiceChargesItems extends Model
         'PRICE_LEVEL_ID',
         'PRINT_IN_FORMS',
         'PAID_AMOUNT',
-        'DATE_LOG'
+        'DATE_LOG',
+        'IS_POSTED'
     ];
 }

@@ -659,4 +659,43 @@ class ServiceChargeServices
 
         return $result;
     }
+
+    public function GetWalkInServiceChargeTransaction(string $DATE)
+    {
+        // runs once a day.
+        $result = ServiceChargesItems::query()
+            ->select([
+                'service_charges_items.ID',
+                'service_charges_items.SERVICE_CHARGES_ID',
+                'service_charges_items.ITEM_ID',
+                'service_charges_items.QUANTITY',
+                'service_charges_items.UNIT_BASE_QUANTITY',
+                'item.COST',
+                'service_charges.DATE',
+                'service_charges.LOCATION_ID',
+                'service_charges.PATIENT_ID'
+            ])
+            ->join('item', 'item.ID', '=', 'service_charges_items.ITEM_ID')
+            ->join('service_charges', 'service_charges.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('service_charges.DATE', '<=', $DATE)
+            ->where('service_charges.WALK_IN', true)
+            ->where('service_charges_items.IS_POSTED', false)
+            ->orderBy('service_charges.DATE', 'asc')
+            ->get();
+
+        return $result;
+    }
+    public function GetWalkInServiceChargePosted(string $DATE)
+    {
+        ServiceChargesItems::join('item', 'item.ID', '=', 'service_charges_items.ITEM_ID')
+            ->join('service_charges', 'service_charges.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('service_charges.DATE', '<=', $DATE)
+            ->where('service_charges.WALK_IN', true)
+            ->where('service_charges_items.IS_POSTED', false)
+            ->update([
+                'service_charges_items.IS_POSTED' => true
+            ]);
+    }
 }

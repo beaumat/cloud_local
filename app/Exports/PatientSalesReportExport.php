@@ -35,13 +35,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
     public function collection()
     {
 
-        $preData = $this->patientReportServices->generatePrevCollection(
-            $this->scFrom,
-            $this->scTo,
-            $this->locationId,
-            $this->patientData,
-            $this->itemData
-        );
+  
 
         $data =  $this->patientReportServices->generateSalesReportData($this->pFrom, $this->pTo, $this->scFrom, $this->scTo, $this->locationId, $this->patientData, $this->itemData)->toArray();
 
@@ -77,8 +71,16 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         $OTHER_GL_AMOUNT = 0;
         $PRE_COLLECTION = 0;
 
+        $preData = $this->patientReportServices->generatePrevCollection(
+            $this->scFrom,
+            $this->scTo,
+            $this->locationId,
+            $this->patientData,
+            $this->itemData
+        );
+        
         foreach ($preData as $dataList) {
-            $PRE_COLLECTION =  $PRE_COLLECTION + $dataList->PP_PAID ?? 0;
+            $PRE_COLLECTION =  $PRE_COLLECTION +  (float) $dataList->PP_PAID  ?? 0;
         }
 
 

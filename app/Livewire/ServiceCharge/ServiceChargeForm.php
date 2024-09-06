@@ -106,6 +106,14 @@ class ServiceChargeForm extends Component
     }
     public function updatedwalkin()
     {
+        $this->contactLoad();
+    }
+    public function updatedLocationid()
+    {
+        $this->contactLoad();
+    }
+    private function contactLoad()
+    {
         if ($this->WALK_IN) {
             $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
         } else {
@@ -237,7 +245,7 @@ class ServiceChargeForm extends Component
                     ]
                 );
 
-       
+
                 if ($this->serviceChargeServices->ServicesChargesExists($this->DATE, $this->PATIENT_ID, $this->LOCATION_ID)) {
                     session()->flash('error', 'A service charge for this patient already exists for the date ' . date('M/d/Y', strtotime($this->DATE)) . '.');
                     return;

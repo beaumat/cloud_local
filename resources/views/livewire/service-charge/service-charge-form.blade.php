@@ -65,7 +65,7 @@
                                                     @if ($Modify && $AMOUNT == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
-                                                            wire:model.iive='LOCATION_ID' />
+                                                            wire:model.live='LOCATION_ID' />
                                                     @else
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=true

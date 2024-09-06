@@ -10,20 +10,21 @@ class TimerServices
     private $scheduleServices;
     private $hemoServices;
     private $dateServices;
-    private $documentTypeServices;
     private $itemInventoryServices;
+    private $serviceChargeServices;
     function __construct(
         ScheduleServices $scheduleServices,
         HemoServices $hemoServices,
         DateServices $dateServices,
-        DocumentTypeServices $documentTypeServices,
-        ItemInventoryServices $itemInventoryServices
+        ItemInventoryServices $itemInventoryServices,
+        ServiceChargeServices $serviceChargeServices
+
     ) {
         $this->scheduleServices = $scheduleServices;
         $this->hemoServices = $hemoServices;
         $this->dateServices = $dateServices;
-        $this->documentTypeServices = $documentTypeServices;
         $this->itemInventoryServices = $itemInventoryServices;
+        $this->serviceChargeServices = $serviceChargeServices;
     }
     private function generateUnposted()
     {
@@ -41,7 +42,7 @@ class TimerServices
             $this->getPosted($sched->CONTACT_ID, $sched->SCHED_DATE, $sched->LOCATION_ID);
         }
     }
-    private function generateItem()
+    private function generateItemHemo()
     {
         $transDate =  $this->dateServices->NowDate();
         DB::beginTransaction();
@@ -50,7 +51,6 @@ class TimerServices
             $itemData = $this->hemoServices->CallOutItemUnPosted($transDate);
             foreach ($itemData as $list) {
                 $QTY = (float)  ($list->QUANTITY * $list->UNIT_BASE_QUANTITY ?? 1) * -1;
-
                 $this->itemInventoryServices->InventoryModify(
                     $list->ITEM_ID,
                     $list->LOCATION_ID,
@@ -69,12 +69,44 @@ class TimerServices
             Log::error('Error executing generateItem() : ' . $th->getMessage());
         }
     }
+
+    private function GenerateItemServiceCharges()
+    {   
+        $transDate =  $this->dateServices->NowDate();
+
+        DB::beginTransaction();
+        try {
+            $SOURCE_REF_TYPE = 29;
+            $itemData = $this->serviceChargeServices->GetWalkInServiceChargeTransaction($transDate);
+            foreach ($itemData as $list) {
+                $QTY = (float)  ($list->QUANTITY * $list->UNIT_BASE_QUANTITY ?? 1) * -1;
+
+                $this->itemInventoryServices->InventoryModify(
+                    $list->ITEM_ID,
+                    $list->LOCATION_ID,
+                    $list->ID,
+                    $SOURCE_REF_TYPE,
+                    $list->DATE,
+                    0,
+                    $QTY,
+                    $list->COST ?? 0
+                );
+            }
+            $this->serviceChargeServices->GetWalkInServiceChargePosted($transDate); // to update update
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error('Error executing SC generateItem() : ' . $th->getMessage());
+        }
+
+    }
     public function getExecute()
     {
 
         $this->generateUnposted();
         $this->generateWaitingList();
-        $this->generateItem();
+        $this->generateItemHemo();
+        $this->GenerateItemServiceCharges();
     }
     private function getPosted(int $CONTACT_ID, string $DATE, int  $LOCATION_ID)
     {
@@ -139,4 +171,7 @@ class TimerServices
             Log::error('Error executing Schedule executed in getPosted: ' . $e->getMessage() . '[' . $CONTACT_ID . ',' . $LOCATION_ID . ', ' . $DATE . ']');
         }
     }
+
+
+
 }
