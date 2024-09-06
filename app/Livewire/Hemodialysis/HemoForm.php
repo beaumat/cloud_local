@@ -122,6 +122,7 @@ class HemoForm extends Component
         $this->ID = $data->ID;
         $this->DATE = $data->DATE;
         $this->LOCATION_ID = $data->LOCATION_ID;
+        $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->CUSTOMER_ID = $data->CUSTOMER_ID;
         $this->CODE = $data->CODE;
         $this->Modify = false;
@@ -154,18 +155,14 @@ class HemoForm extends Component
         $this->getPreviousTreatment();
     }
 
-    private function LoadDropDown()
-    {
-        $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
-        $this->locationList = $this->locationServices->getList();
-    }
+    private function LoadDropDown() {}
     public function mount($id = null)
     {
         $this->ActiveRequired = true;
         $this->IsPostedButton = false;
 
         $this->Modify = true;
-
+        $this->locationList = $this->locationServices->getList();
         if (is_numeric($id)) {
             $data = $this->hemoServices->Get($id);
             if ($data) {
@@ -178,7 +175,7 @@ class HemoForm extends Component
                 }
 
                 $this->reloadData($data);
-                $this->LoadDropDown();
+
                 $statusData = DB::table('hemo_status')->select('description')->where('ID', $data->STATUS_ID)->first();
                 if ($statusData) {
                     $this->STATUS_DESCRIPTION = $statusData->description ?? '';
@@ -192,7 +189,7 @@ class HemoForm extends Component
         $this->ID = 0;
         $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->LoadDropDown();
+        $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->CUSTOMER_ID = 0;
         $this->CODE = '';
         $this->PRE_WEIGHT = "";
@@ -545,9 +542,8 @@ class HemoForm extends Component
             if ($this->STATUS == 4) {
                 return Redirect::route('patientshemo');
             }
-            
-            return Redirect::route('patientshemo_edit',['id'=> $this->ID]);
 
+            return Redirect::route('patientshemo_edit', ['id' => $this->ID]);
         } catch (\Throwable $th) {
             DB::rollBack();
             $message = "Caught a Throwable: " . $th->getMessage();

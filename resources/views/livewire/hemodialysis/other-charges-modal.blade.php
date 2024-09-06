@@ -28,7 +28,6 @@
                                 </div>
                                 @if ($J_QTY > 0)
                                     <div class="col-md-4">
-
                                     </div>
                                     <div class="col-md-8">
                                         <span class="text-info text-xs"> Free
@@ -38,7 +37,7 @@
                                 @endif
                             </div>
                             @if ($haveTrigger)
-                                <div class="row mt-2">
+                                {{-- <div class="row mt-2">
                                     <div class="col-md-12">
                                         <input type='checkbox' wire:model.live='IS_JUSTIFY' name="IS_JUSTIFY" />
                                         <label class="text-xs font-weight-bold text-success"> +1
@@ -51,7 +50,7 @@
                                             <textarea type='text' wire:model='JUSTIFY_NOTES' class="form-control form-control-sm" rows="3"></textarea>
                                         @endif
                                     </div>
-                                </div>
+                                </div> --}}
                             @endif
 
                         </div>
