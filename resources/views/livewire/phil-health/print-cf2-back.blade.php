@@ -371,9 +371,6 @@
                             </div>
                         </div>
 
-
-
-
                         <div class="col-12 top-line2">
                             <div class="row">
                                 <div class="col-6 text-center right-line2">
@@ -810,7 +807,7 @@
                                             <td class="pl-1"> <span>
                                                     Total cost of diagnostic/laboratory examinations paid by the
                                                     patient/member done <br />
-                                                    within/outside the HCI during confinement
+                                                    within/outside the HCI during confinement</span>
                                             <td>
                                                 <div class="row">
                                                     <div class="col-4 text-center">

@@ -30,7 +30,8 @@ class ServiceCharges extends Model
         'TAXABLE_AMOUNT',
         'NONTAXABLE_AMOUNT',
         'STATUS',
-        'STATUS_DATE'
+        'STATUS_DATE',
+        'WALK_IN'
     ];
 
    

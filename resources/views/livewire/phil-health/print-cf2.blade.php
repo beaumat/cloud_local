@@ -178,11 +178,11 @@
             </b>
         </div>
         <div class="col-12 ubox2 font-weight-light">
-            <div class="row">
+            <div class="row pt-2">
                 <div class="col-2">
                     <label style='font-size:17px;'> 1. Name of Patient:</label>
                 </div>
-                <div class="col-10  text-xs">
+                <div class="col-10  ">
 
                     <div class="row">
                         <div class="col-3 text-center">
@@ -231,7 +231,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-10 text-xs">
+                <div class="col-10">
                     <div class="row">
                         <div class="col-4 text-center">
                             <b class="text-primary courier-new font-weight-bold h6">&nbsp;</b>
@@ -269,7 +269,7 @@
                 <div class="col-2">
                     <label style='font-size:17px;width:200px;'> 3. Confinement Period:</label>
                 </div>
-                <div class="col-10 text-xs">
+                <div class="col-10 ">
                     <div class="row mt-1" style="margin-left:20px; margin-bottom:-16px;">
                         <div class="col-5">
                             <div class="row">
@@ -589,27 +589,35 @@
             <div class="row">
                 <div class="col-12 text-left">
                     <label style='font-size:17px;width:180px;'>4. Patient Disposition:</label><span
-                        class="text-xs">(select only 1)</span>
+                        class="text-sm">(select only 1)</span>
                 </div>
 
                 <div class="col-12">
                     <div class="row">
-                        <div class="col-6">
-                            <div class="box text-primary courier-new font-weight-bold">
-                                &nbsp;
-                            </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            a. Improved
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <div class="box text-primary courier-new font-weight-bold">
-                                &nbsp;
-                            </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            e. Expired &nbsp;&nbsp;
-                        </div>
-                        <div class="col-6">
+                        <div class="col-5">
+
                             <div class="row">
+                                <div class="col-4">
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        &nbsp;
+                                    </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    a. Improved
+                                </div>
 
+                                <div class="col-8">
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        &nbsp;
+                                    </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    e. Expired &nbsp;&nbsp;
+                                </div>
+                            </div>
 
+                            {{-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         --}}
+                        </div>
+                        <div class="col-7">
+                            <div class="row">
                                 <div class='col-6'>
                                     <div class="box text-primary courier-new font-weight-bold">
                                         @if ($DATE_ADMITTED)
@@ -671,7 +679,7 @@
                                         @endif
                                     </div>
 
-                                    <p style="position:absolute;" class="text-xs"> &nbsp;
+                                    <p style="position:absolute;top:30px;" class="text-xs"> &nbsp;
                                         &nbsp;month
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;day
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -679,8 +687,8 @@
                                         year</p>
                                 </div>
 
-                                <div class='col=6'>
-                                    <span class="text-xs">Time:</span>
+                                <div class='col-6'>
+                                    <span class="text-sm">Time:</span>
                                     <div class="box text-primary courier-new font-weight-bold">
                                         @if ($TIME_ADMITTED)
                                             {{ substr($TIME_ADMITTED, 0, 1) }}
@@ -731,7 +739,8 @@
                                     PM
 
 
-                                    <p style="position:absolute;top:30px;right:150px;" class="text-xs"> &nbsp;&nbsp;&nbsp;hour
+                                    <p style="position:absolute;top:30px;right:180px;" class="text-xs">
+                                        &nbsp;&nbsp;&nbsp;hour
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn
                                     </p>
                                 </div>
@@ -742,73 +751,83 @@
                 <div class="col-12">
                     <div class="row">
                         <div class='col-5'>
-                            <div class="box text-primary courier-new font-weight-bold">
-                                &nbsp;
-                            </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            b. Recovered
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <div class="box text-primary courier-new font-weight-bold">
-                                &nbsp;
-                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            f. Transferred/Referred &nbsp;&nbsp;
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        &nbsp;
+                                    </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    b. Recovered
+                                </div>
+                                <div class="col-8">
+                                    <div class="box text-primary courier-new font-weight-bold">
+                                        &nbsp;
+                                    </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    f. Transferred/Referred &nbsp;&nbsp;
+                                </div>
+                            </div>
                         </div>
                         <div class='col-7 text-center'>
                             <div class="bottom-line2">
                                 &nbsp;
                             </div>
-                            <div class="text-xs text-center"> Name of Referral Health Care Institution </div>
+                            <div class="text-sm text-center"> Name of Referral Health Care Institution </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 text-xs">
-                    <div class="row">
-                        <div class="col-12 pb-2">
 
-                        </div>
-                        <div class="col-12">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-5">
                             <div class="box text-primary courier-new font-weight-bold">
                                 &nbsp;
-                            </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             c. Home/Discharged Against Medical Advise
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <div style='width:660px;position:absolute;top:5px;left:330px;'>
+                        </div>
+                        <div class="col-7">
+                            <div>
                                 <div class="row">
                                     <div class="col-4">
                                         <div class="w-100 bottom-line2">&nbsp;</div>
-                                        <div class="w-100 text-center"> Building Number and Street Name</div>
+                                        <div class="w-100 text-center text-sm"> Building Number and Street Name</div>
                                     </div>
                                     <div class="col-4">
                                         <div class="w-100 bottom-line2">&nbsp;</div>
-                                        <div class="w-100 text-center"> City/Municipality</div>
+                                        <div class="w-100 text-center text-sm"> City/Municipality</div>
                                     </div>
                                     <div class="col-3">
                                         <div class="w-100 bottom-line2">&nbsp;</div>
-                                        <div class="w-100 text-center"> Province</div>
+                                        <div class="w-100 text-center text-sm"> Province</div>
                                     </div>
                                     <div class="col-1">
                                         <div class="w-100 bottom-line2">&nbsp;</div>
-                                        <div class="w-100 text-center"> Zipcode</div>
+                                        <div class="w-100 text-center text-sm"> Zipcode</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 mt-1">
+                    </div>
+                </div>
+                <div class='col-12'>
+                    <div class="row">
+                        <div class="col-3">
                             <div class="box text-primary courier-new font-weight-bold">
                                 &nbsp;
                             </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             d. Absconded
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span> Reason/s for referral/transfer:</span>
-                            <div class="bottom-line2" style='width:550px;position:absolute;top:7px;left:400px;'>
-                                &nbsp;</div>
+                        </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-4 text-right"> <span> Reason/s for referral/transfer:</span> </div>
+                                <div class="col-7 bottom-line2">
+
+                                    &nbsp;
+                                </div>
+                            </div>
 
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="row">
@@ -822,8 +841,6 @@
                         &nbsp;
                     </div> &nbsp;&nbsp;
                     Private
-
-
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                     <div class="box text-primary courier-new font-weight-bold">

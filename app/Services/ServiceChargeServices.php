@@ -187,8 +187,20 @@ class ServiceChargeServices
         }
         return [];
     }
-    public function Store(string $CODE, string $DATE, int $PATIENT_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_RECEIVABLE_ID, int $STATUS, int $OUTPUT_TAX_ID, float $OUTPUT_TAX_RATE, int $OUTPUT_TAX_VAT_METHOD, int $OUTPUT_TAX_ACCOUNT_ID): int
-    {
+    public function Store(
+        string $CODE,
+        string $DATE,
+        int $PATIENT_ID,
+        int $LOCATION_ID,
+        string $NOTES,
+        int $ACCOUNTS_RECEIVABLE_ID,
+        int $STATUS,
+        int $OUTPUT_TAX_ID,
+        float $OUTPUT_TAX_RATE,
+        int $OUTPUT_TAX_VAT_METHOD,
+        int $OUTPUT_TAX_ACCOUNT_ID,
+        bool $WALK_IN = false
+    ): int {
 
         $ID = (int) $this->object->ObjectNextID('SERVICE_CHARGES');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('SERVICE_CHARGES');
@@ -210,7 +222,8 @@ class ServiceChargeServices
             'OUTPUT_TAX_ID'             => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
             'OUTPUT_TAX_RATE'           => $OUTPUT_TAX_RATE,
             'OUTPUT_TAX_VAT_METHOD'     => $OUTPUT_TAX_VAT_METHOD,
-            'OUTPUT_TAX_ACCOUNT_ID'     => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null
+            'OUTPUT_TAX_ACCOUNT_ID'     => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
+            'WALK_IN'                   => $WALK_IN
         ]);
 
         return $ID;

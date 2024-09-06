@@ -47,7 +47,7 @@ class ServiceChargeForm extends Component
     public float $TAXABLE_AMOUNT;
     public float $NONTAXABLE_AMOUNT;
     public int $ACCOUNTS_RECEIVABLE_ID;
-
+    public bool $WALK_IN = false;
 
     public int $HEMO_ID;
 
@@ -104,11 +104,18 @@ class ServiceChargeForm extends Component
         $this->hemoServices = $hemoServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
     }
-
+    public function updatedwalkin()
+    {
+        if ($this->WALK_IN) {
+            $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
+        } else {
+            $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID);
+        }
+    }
     public function LoadDropdown(bool $isAllContact)
     {
         if ($isAllContact) {
-            $this->patientList = $this->contactServices->getList(3);
+            $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
         } else {
             $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID);
         }
@@ -153,6 +160,7 @@ class ServiceChargeForm extends Component
         $this->TAXABLE_AMOUNT = $Data->TAXABLE_AMOUNT ? $Data->TAXABLE_AMOUNT : 0;
         $this->NONTAXABLE_AMOUNT = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+        $this->WALK_IN  = $Data->WALK_IN ?? false;
     }
     public function updatedPAYMENTTERMSID()
     {
@@ -164,7 +172,7 @@ class ServiceChargeForm extends Component
         if (is_numeric($id)) {
             $data = $this->serviceChargeServices->get($id);
             if ($data) {
-
+                $this->LOCATION_ID = $data->LOCATION_ID ?? 0;
                 $this->LoadDropdown(true);
                 $this->getInfo($data);
                 $this->Modify = false;
@@ -229,7 +237,7 @@ class ServiceChargeForm extends Component
                     ]
                 );
 
-
+       
                 if ($this->serviceChargeServices->ServicesChargesExists($this->DATE, $this->PATIENT_ID, $this->LOCATION_ID)) {
                     session()->flash('error', 'A service charge for this patient already exists for the date ' . date('M/d/Y', strtotime($this->DATE)) . '.');
                     return;
@@ -248,7 +256,8 @@ class ServiceChargeForm extends Component
                     $this->OUTPUT_TAX_ID,
                     $this->OUTPUT_TAX_RATE,
                     $this->OUTPUT_TAX_VAT_METHOD,
-                    $this->OUTPUT_TAX_ACCOUNT_ID
+                    $this->OUTPUT_TAX_ACCOUNT_ID,
+                    $this->WALK_IN
                 );
 
                 $PRICE_LEVEL_ID = 0;

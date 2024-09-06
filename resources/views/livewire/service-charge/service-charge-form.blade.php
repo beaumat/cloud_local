@@ -28,13 +28,20 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             @if ($Modify)
-                                                <livewire:select-option name="PATIENT_ID" titleName="Patient"
-                                                    :options="$patientList" :zero="true" :isDisabled=false
-                                                    wire:model='PATIENT_ID' />
+                                                @if ($WALK_IN)
+                                                    <livewire:select-option name="PATIENT_ID2" titleName="Patient"
+                                                        :options="$patientList" :zero="true" :isDisabled=false
+                                                        wire:model='PATIENT_ID' />
+                                                @else
+                                                    <livewire:select-option name="PATIENT_ID1" titleName="Patient"
+                                                        :options="$patientList" :zero="true" :isDisabled=false
+                                                        wire:model='PATIENT_ID' />
+                                                @endif
                                             @else
-                                                <livewire:select-option name="PATIENT_ID" titleName="Patient"
+                                                <livewire:select-option name="PATIENT_ID3" titleName="Patient"
                                                     :options="$patientList" :zero="true" :isDisabled=true
                                                     wire:model='PATIENT_ID' />
+
                                             @endif
                                         </div>
                                         <div class="col-md-6">
@@ -120,13 +127,16 @@
                                                     href="{{ route('patientsservice_charges_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endif
+                                        @else
                                         @endcan
 
+                                        @if ($ID == 0)
+                                            <input type="checkbox" wire:model.live = 'WALK_IN' />
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
