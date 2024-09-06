@@ -326,7 +326,8 @@
                                 @endforeach
 
                             </ol>
-                            <span class="h6">Total: <b class="text-success">{{ number_format($PRE_COLLECTION, 2) }}</b></span>
+                            <span class="h6">Total: <b
+                                    class="text-success">{{ number_format($PRE_COLLECTION, 2) }}</b></span>
                         </div>
                     </div>
                 </div>
@@ -341,6 +342,10 @@
                                 <div class="col-12  text-xs"> <label class="text-xs">Previous Collection : </label>
                                     <span
                                         class="text-success font-weight-bold text-xs">{{ number_format($PRE_COLLECTION, 2) }}</span>
+                                </div>
+                                <div class="col-12  text-xs"> <label class="text-xs ">Net Cash Sales : </label>
+                                    <span
+                                        class="text-info font-weight-bold text-xs">{{ number_format($CASH_AMOUNT + $PRE_COLLECTION, 2) }}</span>
                                 </div>
                                 <div class="col-12  text-xs"> <label class="text-xs">Philhealth Paid : </label>
                                     <span
@@ -369,14 +374,13 @@
                                 <span
                                     class="text-primary font-weight-bold h6">{{ number_format($TOTAL_CHARGE, 2) }}</span>
                             </h6>
-
                             <h6 class="text-xs"> <label class="text-xs">TOTAL (Payment) : </label>
                                 <span
-                                    class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID + $PRE_COLLECTION, 2) }}</span>
+                                    class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID , 2) }}</span>
                             </h6>
                             <h6 class="text-xs"> <label class="text-xs">TOTAL BALANCE : </label>
                                 <span
-                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - ($TOTAL_PAID + $PRE_COLLECTION) , 2) }}</span>
+                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - $TOTAL_PAID , 2) }}</span>
                             </h6 class="text-xs">
                         </div>
                     </div>

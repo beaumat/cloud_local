@@ -196,10 +196,13 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         $finalData[] = array_values($rowData);
         // PAID TOTAL
 
-        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Previous Collection: ' . $PRE_COLLECTION, 'BAL' => '', 'DOCTOR' => 'TOTAL PAID :' . $TOTAL_PAID + $PRE_COLLECTION, 'LOCATION' => '',];
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Previous Collection: ' . $PRE_COLLECTION, 'BAL' => '', 'DOCTOR' => 'TOTAL PAID :' . $TOTAL_PAID, 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
         // BALANCE TOTAL
-        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Philhealth Paid: ' . $PHILHEALTH_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL BALANCE :' . $TOTAL_CHARGE - ($TOTAL_PAID + $PRE_COLLECTION), 'LOCATION' => '',];
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Net Cash Sales: ' . $CASH_AMOUNT + $PRE_COLLECTION, 'BAL' => '', 'DOCTOR' => 'TOTAL BALANCE :' . $TOTAL_CHARGE - $TOTAL_PAID, 'LOCATION' => '',];
+        $finalData[] = array_values($rowData);
+
+        $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Philhealth Paid: ' . $PHILHEALTH_AMOUNT, 'BAL' => '', 'DOCTOR' => '', 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
 
         $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'DSWD Paid: ' . $DSWD_AMOUNT, 'BAL' => '', 'DOCTOR' => '', 'LOCATION' => '',];
