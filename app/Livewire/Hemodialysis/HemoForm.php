@@ -155,7 +155,14 @@ class HemoForm extends Component
         $this->getPreviousTreatment();
     }
 
-    private function LoadDropDown() {}
+    public function setNullEmployee()
+    {
+
+        if ($this->EMPLOYEE_ID > 0) {
+            $this->hemoServices->NullEmployee($this->ID);
+            return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully nurse remove');
+        }
+    }
     public function mount($id = null)
     {
         $this->ActiveRequired = true;

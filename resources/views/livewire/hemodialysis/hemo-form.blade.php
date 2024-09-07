@@ -45,7 +45,12 @@
                                                 </div>
                                                 <div class="col-md-12 text-left">
                                                     <label class="text-xs text-primary forn-weight-bold">Encoded by :
-                                                        {{ $EMPLOYEE_NAME }}</label>
+                                                        @if ($EMPLOYEE_NAME)
+                                                            <span type="button" wire:click='setNullEmployee()'
+                                                                wire:confirm="Are you sure you want to remove this?">
+                                                                {{ $EMPLOYEE_NAME }}</span>
+                                                        @endif
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>

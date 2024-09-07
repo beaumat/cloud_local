@@ -48,6 +48,12 @@ class HemoServices
 
         return [];
     }
+    public function NullEmployee(int $ID)
+    {
+
+        Hemodialysis::where('ID', $ID)
+            ->update(['EMPLOYEE_ID' => null]);
+    }
     public function GetHemoID($DATE, $PATIENT_ID, $LOCATION_ID): int
     {
         $dataRecord = Hemodialysis::where('CUSTOMER_ID', $PATIENT_ID)
