@@ -231,332 +231,39 @@
             additional sheet(s).
 
         </div>
-        <div class="col-12 text-center text-xs">
-            <div class="row">
-                <div class="col-2 ">
-                    Date <br /> &nbsp;
-                </div>
-                <div class="col-10 left-line2 ">
-                    DOCTOR'S ORDER/ACTION
-                </div>
+        <table class="p-0" style='width:100%'>
+            <thead class="p-0">
+                <tr class="bottom-line2">
+                    <td class="right-line2">
+                        <div class="text-center">DATE</div>
+                    </td>
+                    <td>
+                        <div class="text-center">
+                            DOCTOR'S ORDER/ACTION
+                        </div>
+                    </td>
+                </tr>
+            </thead>
+            <tbody class="p-0">
+                @foreach ($dateList as $list)
+                    <tr class="bottom-line2">
+                        <td class="right-line2  text-center text-sm">
+                            <span class="p-1 font-weight-bold">
+                                      &nbsp;{{ $list['DATE'] ? date('m/d/Y', strtotime($list['DATE'])) : '' }}
+                            </span>
+                            </td>
+                        <td>
+                            @if ($list['DOCTOR_ORDER'] == $DOCTOR_ORDER)
+                                <span class="text-sm p-1 font-weight-bold"> &nbsp;{{ $list['DOCTOR_ORDER'] }}</span>
+                            @else
+                                <span class="text-sm p-1"> &nbsp;{{ $list['DOCTOR_ORDER'] }}</span>
+                            @endif
 
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[0])
-                            {{ \Carbon\Carbon::parse($dateList[0])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[0])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[1])
-                            {{ \Carbon\Carbon::parse($dateList[1])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[1])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[2])
-                            {{ \Carbon\Carbon::parse($dateList[2])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[2])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[3])
-                            {{ \Carbon\Carbon::parse($dateList[3])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[3])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[4])
-                            {{ \Carbon\Carbon::parse($dateList[4])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[4])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[5])
-                            {{ \Carbon\Carbon::parse($dateList[5])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[5])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[6])
-                            {{ \Carbon\Carbon::parse($dateList[6])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[6])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[7])
-                            {{ \Carbon\Carbon::parse($dateList[7])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[7])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[8])
-                            {{ \Carbon\Carbon::parse($dateList[8])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[8])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-
-                </div>
-
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[9])
-                            {{ \Carbon\Carbon::parse($dateList[9])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[9])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[10])
-                            {{ \Carbon\Carbon::parse($dateList[10])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[11])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[11])
-                            {{ \Carbon\Carbon::parse($dateList[11])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[11])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[12])
-                            {{ \Carbon\Carbon::parse($dateList[12])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[12])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[13])
-                            {{ \Carbon\Carbon::parse($dateList[13])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[13])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-
-                </div>
-
-
-                <div class="col-2 top-line2">
-                    <h5 class="text-primary">
-                        @if ($dateList && $dateList[14])
-                            {{ \Carbon\Carbon::parse($dateList[14])->format('m-d-Y') }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-                </div>
-                <div class="col-10 left-line2  top-line2">
-                    <h5 class="text-primary text-left segoe">
-                        @if ($dateList && $dateList[14])
-                            {{ $DOCTOR_ORDER }}
-                        @else
-                            &nbsp;
-                        @endif
-                    </h5>
-
-                </div>
-
-                <div class="col-12 top-line2 text-left">
-                    SURGICAL PROCEOURE/ RVS CODE (Attach photocopy of OR technique): <br /> &nbsp;
-                </div>
-
-            </div>
-        </div>
-
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
         <div id='part_id' class="col-12 text-center text-sm pb-1 bottom-line2 top-line2">
             <b class="verdana font-weight-bold" style="font-size: 14.4">
                 V. DRUGS/MEDICINES</b> &nbsp; <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>

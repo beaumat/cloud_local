@@ -102,7 +102,11 @@ class PhilHealth extends Model
         'PF_RECEIVED_DATE',
         'AR_NO',
         'AR_DATE',
-        'RR_NO'
+        'RR_NO',
+        'CF4_DD_NOTES',
+        'CF4_COMPLAINT',
+        'CF4_HPI',
+        'CF4_PPMH'
     ];
 
 }

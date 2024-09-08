@@ -197,7 +197,7 @@
                                 <div class="col-12 bottom-line2 pb-3" style="height: 30px;">
                                     <label> 3. AGE</label> <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b style="position: absolute;top:0px;left:60px;"
-                                        class="text-uppercase times-new-roman p-0 m-0 text-lg text-primary">
+                                        class="text-uppercase times-new-roman p-0 m-0 text-lg">
                                         {{ $AGE }}
                                     </b>
 
@@ -228,15 +228,20 @@
                     <div class="row">
                         <div class="col-9">
                             <div class="row">
-                                <div class="col-6 right-line2" style="height: 100px;">
+                                <div class="col-6 right-line2" style="height: 200px;">
                                     <label> 6. Admitting Diagnosis</label>
                                     <h4 class="p-0 m-0 times-new-roman">
                                         &nbsp;&nbsp;<b>{{ $ADMITTING_DIAGNOSIS }}</b> &nbsp;</h4>
                                 </div>
                                 <div class="col-6">
-                                    <label> 7. Discharge Diagnosis</label>
-                                    <h4 class="p-0 m-0 times-new-roman">
-                                        &nbsp;&nbsp;<b>{{ $FINAL_DIAGNOSIS }}</b> &nbsp;</h4>
+                                    <label> 7. Discharge Diagnosis</label><br />
+                                    @if ($CF4_DD_NOTES)
+                                        <span class="p-0 m-0 text-sm">
+                                            &nbsp;{{ $CF4_DD_NOTES }}</span>
+                                    @else
+                                        <h4 class="p-0 m-0 times-new-roman ">
+                                            &nbsp;&nbsp;<b >{{ $FINAL_DIAGNOSIS }}</b> &nbsp;</h4>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -245,7 +250,7 @@
                                 <div class="col-12 bottom-line2 pb-3">
                                     <label style="top:0; position: absolute;"> 8. a. 1st Case Rate Code </label> <label
                                         style="position: relative; top:2px;left:170px;" class="h4"> <b
-                                            class=" times-new-roman text-primary" style="margin-top: 10px;">
+                                            class="times-new-roman " style="margin-top: 10px;">
                                             {{ $FIRST_CASE_RATE }}</b></label>
 
                                 </div>
@@ -459,17 +464,32 @@
                 </div>
                 <div class="col-12 bottom-line2" style="height: 150px;">
                     <label class="text-xs">1. History of Present Illness:</label>
-                    <br />
-                    <br />
 
-                    <h4 class="p-0 m-0 times-new-roman">
-                        &nbsp;&nbsp;<b>{{ $HISTORY_OF_PRESENT_ILLNESS }}</b> &nbsp;</h4>
+                    @if ($CF4_HPI)
+                        <br />
+                        <h5 class="p-0 m-0 times-new-roman">
+                            &nbsp;&nbsp;<b>{{ $CF4_HPI }}</b> &nbsp;</h5>
+                    @else
+                        <br />
+                        <br />
+                        <h4 class="p-0 m-0 times-new-roman">
+                            &nbsp;&nbsp;<b >{{ $HISTORY_OF_PRESENT_ILLNESS }}</b> &nbsp;</h4>
+                    @endif
+
 
                 </div>
                 <div class="col-12 bottom-line2" style="height: 150px;">
                     <label class="text-xs">2.a Pertinent Past Medical History: </label>
-                    <h4 class="p-0 m-0 times-new-roman">
-                        &nbsp;&nbsp;<b>{{ $FINAL_DIAGNOSIS }}</b> &nbsp;</h4>
+
+                    @if ($CF4_PPMH)
+                        <h6 class="p-0 m-0 times-new-roman">
+                            &nbsp;&nbsp;<b >{{ $CF4_PPMH }}</b> &nbsp;</h6>
+                    @else
+                        <h4 class="p-0 m-0 times-new-roman">
+                            &nbsp;&nbsp;<b>{{ $FINAL_DIAGNOSIS }}</b> &nbsp;</h4>
+                    @endif
+
+
                     <div class="" style="bottom: -10px; position: absolute;">
                         <label class="text-xs">2.b OB/GYN History </label>
                         <p class="text-xs">G ___ P ___ ( ___ - ___ - ____ - ____ ) LMP: ________________________ <b
@@ -512,7 +532,7 @@
                         </div>
                         <div class="col-3">
                             <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Hematemesis
-                            <br />
+                        <br />
                             <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Hematuria<br />
                             <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Hemoptysis<br />
                             <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>

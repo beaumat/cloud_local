@@ -55,12 +55,18 @@ class PrintCf4Back extends Component
                 $getData = $this->hemoServices->GetSummary($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED ?? '', $data->DATE_DISCHARGED ?? '');
                 $r = 0;
                 foreach ($getData as $item) {
-                    $this->dateList[$r] = $item->DATE;
+                    $this->dateList[$r] = [
+                        'DATE' =>  $item->DATE,
+                        'DOCTOR_ORDER' =>  empty($item->DOCTOR_ORDER) ?  $this->DOCTOR_ORDER  : $item->DOCTOR_ORDER ?? ''
+                    ];
                     $r++;
                 }
 
                 for ($i = $r; $i < 15; $i++) {
-                    $this->dateList[$i] = null;
+                    $this->dateList[$i] =  [
+                        'DATE' =>  '',
+                        'DOCTOR_ORDER' => ''
+                    ];
                 }
             }
             $fee = $this->philHealthServices->getProfFee($id);

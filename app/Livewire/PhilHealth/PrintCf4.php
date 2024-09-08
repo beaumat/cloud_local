@@ -53,7 +53,6 @@ class PrintCf4 extends Component
     public string $MEMBER_EXTENSION;
     public string $MEMBER_BIRTH_DATE;
     public int $MEMBER_GENDER;
-
     public string $NAME_OF_BUSINESS;
     public string $ACCREDITATION_NO;
     public string $BLDG_NAME_LOT_BLOCK;
@@ -76,6 +75,16 @@ class PrintCf4 extends Component
     public bool $PRE_SIGN_DATA =  false;
     public bool $OUTPUT_SIGN = false;
     public string $RR_NO;
+
+
+    public string $CF4_DD_NOTES;
+    public string $CF4_COMPLAINT;
+    public string $CF4_HPI;
+    public string $CF4_PPMH;
+
+
+
+
     private $philHealthServices;
     private $contactServices;
     private $locationServices;
@@ -92,15 +101,20 @@ class PrintCf4 extends Component
         $this->hemoServices = $hemoServices;
     }
     public function mount(int $id = 0,  int $PATIENT_ID = 0, $OUTPUT = true)
-    {   
-       
+    {
+
         $this->OUTPUT_SIGN = $OUTPUT;
         if ($id > 0) {
             $this->PRE_SIGN_DATA =  false;
-            $this->FIRST_CASE_RATE = '90935';
+            $this->FIRST_CASE_RATE = $this->philHealthServices->FIRST_CASE_RATE;
             $data = $this->philHealthServices->get($id);
             if ($data) {
                 $this->RR_NO = $data->RR_NO ?? '';
+                $this->CF4_DD_NOTES = $data->CF4_DD_NOTES ?? '';
+                $this->CF4_COMPLAINT = $data->CF4_COMPLAINT ?? '';
+                $this->CF4_HPI = $data->CF4_HPI ?? '';
+                $this->CF4_PPMH = $data->CF4_PPMH ?? '';
+
                 $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
                 $this->TIME_ADMITTED = $data->TIME_ADMITTED ? Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A') : '';
                 $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
@@ -131,11 +145,7 @@ class PrintCf4 extends Component
 
                     $row++;
                 }
-
-
-
                 $contact = $this->contactServices->get($data->CONTACT_ID, 3);
-
                 if ($contact) {
 
                     $this->LOCATION_ID = $contact->LOCATION_ID;
@@ -150,7 +160,6 @@ class PrintCf4 extends Component
                         $this->PROVINCE = $locData->PROVINCE;
                         $this->ZIP_CODE = $locData->ZIP_CODE;
                     }
-
 
                     $this->HEIGHT = $contact->HEIGHT ?? 0;
                     $this->PATIENT_LASTNAME = $contact->LAST_NAME;
@@ -236,7 +245,6 @@ class PrintCf4 extends Component
                     $this->PROVINCE = $locData->PROVINCE;
                     $this->ZIP_CODE = $locData->ZIP_CODE;
                 }
-
 
                 $this->HEIGHT = $contact->HEIGHT ?? 0;
                 $this->PATIENT_LASTNAME = $contact->LAST_NAME;

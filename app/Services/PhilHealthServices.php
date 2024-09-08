@@ -13,10 +13,18 @@ use App\Models\PhilhealthItemAdjustment;
 class PhilHealthServices
 {
 
-
+    public string $FIRST_CASE_RATE = "90935";
     public float $OP_LAB_N_DIAGNOSTICS_AMOUNT = 250;
     public string $DEFAULT_DIAGNOSIS = "CHRONIC KIDNEY DISEASE STAGE 5 TO ";
     public string $DEFAULT_DIAGNOSIS2 = "CKD Stage 5 Sec to ";
+
+    public string $CHIEF_OF_COMPLAINT_DEFAULT = 'HEMODIALYSIS';
+    public string $ADMITTING_DIAGNOSIS_DEFAULT = 'CHRONIC KIDNEY DISEASE';
+    public string $FINAL_DIAGNOSIS_DEFAULT;
+    public string $HISTORY_OF_PRESENT_ILLNESS_DEFAULT = 'CHRONIC KIDNEY DISEASE STAGE 5';
+
+
+
     private float $DISCOUNT_PERCENT = 20;
     public float $P1_PHIC_AMOUNT = 2250;
     public float $DRUG_N_MEDINE_AMOUNT = 1270.00;
@@ -41,6 +49,18 @@ class PhilHealthServices
     {
         return PhilHealth::where('ID', $ID)->first();
     }
+    public function getCF4(int $ID)
+    {
+        return PhilHealth::select([
+            'RR_NO',
+            'CF4_DD_NOTES',
+            'CF4_COMPLAINT',
+            'CF4_HPI',
+            'CF4_PPMH',
+            'CONTACT_ID'
+        ])->where('ID', $ID)
+            ->first();
+    }
     public function getPrint($ID)
     {
         $result = PhilHealth::query()
@@ -61,10 +81,16 @@ class PhilHealthServices
 
         return $result;
     }
-    public function setRRUpdate($ID, $RR_NO)
+    public function setCF4Update(int $ID, string $RR_NO,  string $CF4_DD_NOTES = '',  string  $CF4_COMPLAINT = '', string  $CF4_HPI = '',  string $CF4_PPMH = '')
     {
         PhilHealth::where('ID', $ID)
-            ->update(['RR_NO' =>  $RR_NO]);
+            ->update([
+                'RR_NO'         => $RR_NO,
+                'CF4_DD_NOTES'  => $CF4_DD_NOTES == '' ? null : $CF4_DD_NOTES,
+                'CF4_COMPLAINT' => $CF4_COMPLAINT == '' ? null : $CF4_COMPLAINT,
+                'CF4_HPI'       => $CF4_HPI == '' ? null : $CF4_HPI,
+                'CF4_PPMH'      => $CF4_PPMH == '' ? null : $CF4_PPMH
+            ]);
     }
     public function AutoMakeProfFeeDetails(int $PHIC_ID, int $PATIENT_ID, int $COUNT)
     {
@@ -214,7 +240,7 @@ class PhilHealthServices
             'STATUS_DATETIME'   => $this->dateServices->Now(),
         ]);
 
-        $this->setRRUpdate($ID, 20);
+        $this->setCF4Update($ID, 20);
         return $ID;
     }
     public function PreSaveTemp(int $CONTACT_ID, int $LOCATION_ID,)

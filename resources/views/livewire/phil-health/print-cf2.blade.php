@@ -170,7 +170,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </span> </label>
+                        </span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -184,8 +185,7 @@
                 <div class="col-2">
                     <label style='font-size:17px;'> 1. Name of Patient:</label>
                 </div>
-                <div class="col-10  ">
-
+                <div class="col-10">
                     <div class="row">
                         <div class="col-3 text-center">
                             <b class="text-primary courier-new font-weight-bold h5">

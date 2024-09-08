@@ -50,9 +50,17 @@ class HemoServices
     }
     public function NullEmployee(int $ID)
     {
-
         Hemodialysis::where('ID', $ID)
-            ->update(['EMPLOYEE_ID' => null]);
+            ->update([
+                'EMPLOYEE_ID' => null
+            ]);
+    }
+    public function UpdateDoctorOrder(int $ID, string $DOCTOR_ORDER = '')
+    {
+        Hemodialysis::where('ID', $ID)
+            ->update([
+                'DOCTOR_ORDER' => $DOCTOR_ORDER == '' ? null : $DOCTOR_ORDER
+            ]);
     }
     public function GetHemoID($DATE, $PATIENT_ID, $LOCATION_ID): int
     {
@@ -150,7 +158,8 @@ class HemoServices
             ->select([
                 'hemodialysis.ID',
                 'hemodialysis.CODE',
-                'hemodialysis.DATE'
+                'hemodialysis.DATE',
+                'hemodialysis.DOCTOR_ORDER'
             ])
             ->join('service_charges as s', function ($join) {
                 $join->on('s.PATIENT_ID', '=', 'hemodialysis.CUSTOMER_ID');

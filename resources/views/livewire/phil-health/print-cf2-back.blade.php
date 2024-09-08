@@ -558,7 +558,7 @@
                     <table class="width:100%">
                         <tr>
                             <td style='width:1%' class="text-center">
-                                <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div>
+                                <div class="box text-primary courier-new font-weight-bold"> &#10004; </div>
                             </td>
                             <td style='width:25%'> The benefit of the member/patient was completely consumed prior to
                                 co-pay OR the

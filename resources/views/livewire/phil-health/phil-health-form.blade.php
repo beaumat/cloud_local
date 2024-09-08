@@ -219,8 +219,7 @@
                                         <a class="nav-link @if ($tab == 'drugNmed') active @endif"
                                             id="custom-tabs-four-drugNmed-tab" wire:click="SelectTab('drugNmed')"
                                             data-toggle="pill" href="#custom-tabs-four-drugNmed" role="tab"
-                                            aria-controls="custom-tabs-four-drugNmed" aria-selected="true">Drug &
-                                            Medicines</a>
+                                            aria-controls="custom-tabs-four-drugNmed" aria-selected="true">CF4 Form</a>
                                     </li>
 
                                     <li class="nav-item">
@@ -229,12 +228,12 @@
                                             data-toggle="pill" href="#custom-tabs-four-payment" role="tab"
                                             aria-controls="custom-tabs-four-payment" aria-selected="true">Payments</a>
                                     </li>
-                                    <li class="nav-item">
+                                    {{-- <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'other') active @endif"
                                             id="custom-tabs-four-other-tab" wire:click="SelectTab('other')"
                                             data-toggle="pill" href="#custom-tabs-four-other" role="tab"
                                             aria-controls="custom-tabs-four-other" aria-selected="true">Others</a>
-                                    </li>
+                                    </li> --}}
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -282,16 +281,16 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade @if ($tab == 'other') show active @endif"
+                                    {{-- <div class="tab-pane fade @if ($tab == 'other') show active @endif"
                                         id="custom-tabs-four-other" role="tabpanel"
                                         aria-labelledby="custom-tabs-four-other-tab">
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-                                                @livewire('PhilHealth.Others', ['PHILHEALTH_ID' => $ID])
+                                            
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="card-footer">

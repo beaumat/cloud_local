@@ -1,5 +1,12 @@
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                @livewire('PhilHealth.Others', ['PHILHEALTH_ID' => $PHILHEALTH_ID], key('other-cf4'))
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
         <table class="table table-sm w-100 table-bordered">
             <thead class="text-xs bg-sky ">
                 <tr>

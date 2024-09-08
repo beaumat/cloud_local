@@ -3,6 +3,7 @@
 namespace App\Livewire\PhilHealth;
 
 use App\Services\HemoServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -30,6 +31,14 @@ class TreatmentSummary extends Component
         $this->DATE_ADMITTED = $DATE_ADMITTED;
         $this->DATE_DISCHARGED = $DATE_DISCHARGED;
     }
+    public function OpenModify(int $ID)
+    {
+        $data = [
+            'HEMO_ID' => $ID
+        ];
+        $this->dispatch('doctor-order-show', result: $data);
+    }
+    #[On('refresh-treatment-summary')]
     public function render()
     {
         $this->i = 0;
