@@ -8,12 +8,13 @@
                 </div>
                 <div class="col-6 text-center">
                     <div style="padding-top:15px;" class="text-center">
-                        <div style="position:absolute;width:500px;top:50px;">
-                            <i class="times-new-roman">Republic of the Philippines</i><br />
-                            <b style="font-size: 20px;position: absolute;width:1000px; left:-250px;top:20px;"
+                        <div style="position:absolute;width:500px;top:30px;">
+                            <i class="times-new-roman" style="left:50px;position:relative;font-size:16px;">Republic of
+                                the Philippines</i><br />
+                            <b style="font-size: 25px;position: absolute;width:1000px; left:-200px;top:20px;"
                                 class="times-new-roman font-weight-bold">PHILIPPINE HEALTH INSURANCE CORPORATION</b>
                             <p class="times-new-roman"
-                                style="padding: 0;position: absolute;top:50px;left:100px; line-height: 1;font-size: 13px;">
+                                style="padding: 0;position: absolute;top:55px;left:125px; line-height: 1.2;font-size: 15px;">
                                 Citystate Centre 709 Shaw Boulevard, Pasig City <br />
                                 Call Center (02) 441-7442 &#8226; Trunkline (02) 441-7444<br />
                                 www.philhealth.gov.ph <br />
@@ -29,7 +30,7 @@
                         <b class="text-center noto font-weight-bold"
                             style="font-size: 65px;top:25px;position:absolute;right:60px;">CF-2</b><br />
                         <b class="text-center noto font-weight-bold"
-                            style="font-size:20px; top:100px;position: absolute;right:65px;">
+                            style="font-size:18px; top:105px;position: absolute;right:65px;">
                             (Claim Form 2)</b> <br />
                         <p class="text-center text-sm" style="top:130px;position: absolute;right:40px;">Revised
                             September 2018</p>
@@ -87,83 +88,84 @@
                 <div class="col-12 mb-1" style="height: 10px; ">
                     <label> 1. PhilHealth Accreditation Number (PAN) of Health Care Institution: </label>
                     <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
+                        {{ substr($ACCREDITATION_NO, 0, 1) }}
                     </div>
                     <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
-                    </div>
-                    <label class="px-1">&nbsp;-</label>
-                    <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
+                        {{ substr($ACCREDITATION_NO, 1, 1) }}
                     </div>
                     <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
+                        {{ substr($ACCREDITATION_NO, 2, 1) }}
                     </div>
                     <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
+                        {{ substr($ACCREDITATION_NO, 3, 1) }}
                     </div>
                     <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
+                        {{ substr($ACCREDITATION_NO, 4, 1) }}
                     </div>
                     <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
+                        {{ substr($ACCREDITATION_NO, 5, 1) }}
                     </div>
                     <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
+                        {{ substr($ACCREDITATION_NO, 6, 1) }}
                     </div>
                     <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
+                        {{ substr($ACCREDITATION_NO, 7, 1) }}
                     </div>
                     <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
+                        {{ substr($ACCREDITATION_NO, 8, 1) }}
                     </div>
-                    <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
-                    </div>
-                    <label class="px-1">&nbsp;-</label>
-                    <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
-                    </div>
+
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col-12 mb-1" style="height: 5px; ">
                     <label class="font-weight-bold"> 2. Name of Health Care Institution:
-                        <span class="bottom-line2 " style="width:73%; position:absolute;"> &nbsp;</span> </label>
+                        <span class="bottom-line2 text-primary" style="width:77%; position:absolute;">
+                            &nbsp;&nbsp;{{ $NAME_OF_BUSINESS }}</span> </label>
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col-12 mb-2">
-                    <label class="font-weight-bold"> 3. Address:
+                    <label> <span class="font-weight-bold">3. Address:</span>
                         <span style="width:90%; position:absolute;">
                             <div class="row">
                                 <div class="col-4">
                                     <div class="row px-1">
-                                        <div class="col-12 bottom-line2">
-                                            &nbsp;
+                                        <div class="col-12 bottom-line2 text-primary text-center">
+                                            {{ $BLDG_NAME_LOT_BLOCK }} {{ $STREET_SUB_VALL }}
                                         </div>
                                         <div class="col-12 text-center">
-                                            <span class="font-weight-normal"> Building Number and Street Name</span>
+                                            <span class="font-weight-light"> Building Number and Street Name</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="row px-1">
-                                        <div class="col-12 bottom-line2 ">
-                                            &nbsp;
+                                        <div class="col-12 bottom-line2  text-primary text-center">
+                                            {{ $BRGY_CITY_MUNI }}
                                         </div>
                                         <div class="col-12 text-center">
-                                            <span class="font-weight-normal"> City/Municipality</span>
+                                            <span class="font-weight-light"> City/Municipality</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-4 ">
+                                <div class="col-3">
                                     <div class="row px-1">
-                                        <div class="col-12 bottom-line2">
-                                            &nbsp;
+                                        <div class="col-12 bottom-line2 text-primary text-center">
+                                            {{ $PROVINCE }}
                                         </div>
                                         <div class="col-12 text-center">
-                                            <span class="font-weight-normal"> Province</span>
+                                            <span class="font-weight-light"> Province</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                    <div class="row px-1">
+                                        <div class="col-12 bottom-line2 text-primary text-center">
+                                            {{ $ZIP_CODE }}
+                                        </div>
+                                        <div class="col-12 text-center">
+                                            <span class="font-weight-light"> Zipcode</span>
                                         </div>
                                     </div>
                                 </div>
@@ -186,24 +188,34 @@
 
                     <div class="row">
                         <div class="col-3 text-center">
-                            <b class="text-primary courier-new font-weight-bold h6">&nbsp;</b>
+                            <b class="text-primary courier-new font-weight-bold h5">
+                                &nbsp;{{ $PATIENT_LASTNAME }}
+                            </b>
                             <div class="w-100 top-line2 "></div>
                             Last Name
                         </div>
                         <div class="col-3 text-center">
-                            <b class="text-primary courier-new font-weight-bold h6">&nbsp;</b>
+                            <b class="text-primary courier-new font-weight-bold h5">
+
+                                &nbsp;{{ $PATIENT_FIRSTNAME }}
+
+                            </b>
                             <div class="w-100 top-line2"></div>
                             First Name
                         </div>
                         <div class="col-2 text-center">
-                            <b class="text-primary courier-new font-weight-bold h6">&nbsp;</b>
+                            <b class="text-primary courier-new font-weight-bold h5">
+                                &nbsp;{{ $PATIENT_EXTENSION }}
+                            </b>
                             <div class="w-100 top-line2"></div>
                             Name Extension <br />
                             (JR/SR/III)
 
                         </div>
                         <div class="col-4 text-center">
-                            <b class="text-primary courier-new font-weight-bold h6">&nbsp;</b>
+                            <b class="text-primary courier-new font-weight-bold h5">
+                                &nbsp;{{ $PATIENT_MIDDLENAME }}
+                            </b>
                             <div class="w-100 top-line2"></div>
                             Middle Name<br />
                             (ex: DELA CRUZ JUAN JR SIPAG)
@@ -225,7 +237,7 @@
                             </div>
                             &nbsp;&nbsp;NO
                             <div class="box text-primary courier-new font-weight-bold" style="margin-left:10px;">
-                                &#10004;
+                                {{-- &#10004; --}} &nbsp;
                             </div>
                             &nbsp;&nbsp;YES
                         </div>
@@ -440,60 +452,60 @@
                                 <div class="col-7 text-left">
                                     <div class="form-group text-md" style="width:300px;">
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 5, 1) }}
+                                            @if ($DATE_DISCHARGED)
+                                                {{ substr($DATE_DISCHARGED, 5, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
 
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 6, 1) }}
+                                            @if ($DATE_DISCHARGED)
+                                                {{ substr($DATE_DISCHARGED, 6, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 8, 1) }}
+                                            @if ($DATE_DISCHARGED)
+                                                {{ substr($DATE_DISCHARGED, 8, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 9, 1) }}
+                                            @if ($DATE_DISCHARGED)
+                                                {{ substr($DATE_DISCHARGED, 9, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 0, 1) }}
+                                            @if ($DATE_DISCHARGED)
+                                                {{ substr($DATE_DISCHARGED, 0, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 1, 1) }}
+                                            @if ($DATE_DISCHARGED)
+                                                {{ substr($DATE_DISCHARGED, 1, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 2, 1) }}
+                                            @if ($DATE_DISCHARGED)
+                                                {{ substr($DATE_DISCHARGED, 2, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 3, 1) }}
+                                            @if ($DATE_DISCHARGED)
+                                                {{ substr($DATE_DISCHARGED, 3, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
@@ -521,15 +533,15 @@
                                 <div class="col-8 text-left ">
                                     <div class="form-group text-md" style="width:300px;">
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED)
-                                                {{ substr($TIME_ADMITTED, 0, 1) }}
+                                            @if ($TIME_DISCHARGED)
+                                                {{ substr($TIME_DISCHARGED, 0, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED)
-                                                {{ substr($TIME_ADMITTED, 1, 1) }}
+                                            @if ($TIME_DISCHARGED)
+                                                {{ substr($TIME_DISCHARGED, 1, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
@@ -537,16 +549,16 @@
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED)
-                                                {{ substr($TIME_ADMITTED, 3, 1) }}
+                                            @if ($TIME_DISCHARGED)
+                                                {{ substr($TIME_DISCHARGED, 3, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
 
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED)
-                                                {{ substr($TIME_ADMITTED, 4, 1) }}
+                                            @if ($TIME_DISCHARGED)
+                                                {{ substr($TIME_DISCHARGED, 4, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
@@ -555,7 +567,7 @@
 
 
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) == 'A')
+                                            @if ($TIME_DISCHARGED && substr($TIME_DISCHARGED, 6, 1) == 'A')
                                                 &#10004;
                                             @else
                                                 &nbsp;
@@ -565,7 +577,7 @@
                                         &nbsp;
                                         <div class="box text-primary courier-new font-weight-bold">
 
-                                            @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) != 'A')
+                                            @if ($TIME_DISCHARGED && substr($TIME_DISCHARGED, 6, 1) != 'A')
                                                 &#10004;
                                             @else
                                                 &nbsp;
@@ -589,16 +601,15 @@
             <div class="row">
                 <div class="col-12 text-left">
                     <label style='font-size:17px;width:180px;'>4. Patient Disposition:</label><span
-                        class="text-sm">(select only 1)</span>
+                        class="">(select only 1)</span>
                 </div>
-
                 <div class="col-12">
                     <div class="row">
                         <div class="col-5">
                             <div class="row">
                                 <div class="col-4">
                                     <div class="box text-primary courier-new font-weight-bold">
-                                        &nbsp;
+                                        &#10004;
                                     </div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     a. Improved
                                 </div>
@@ -617,63 +628,30 @@
                                 <div class="row">
                                     <div class='col-6'>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 5, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 6, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 8, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 9, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 0, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 1, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 2, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($DATE_ADMITTED)
-                                                {{ substr($DATE_ADMITTED, 3, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
 
                                         <p style="position:absolute;top:30px;" class="text-xs"> &nbsp;
@@ -688,41 +666,21 @@
                                         <span>Time:</span>
 
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED)
-                                                {{ substr($TIME_ADMITTED, 0, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED)
-                                                {{ substr($TIME_ADMITTED, 0, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div> <label class="px-1">&nbsp;-</label>
 
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED)
-                                                {{ substr($TIME_ADMITTED, 0, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED)
-                                                {{ substr($TIME_ADMITTED, 0, 1) }}
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
                                         &nbsp; &nbsp; &nbsp; &nbsp;
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) == 'A')
-                                                &#10004;
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>
 
 
@@ -730,15 +688,9 @@
                                         AM
                                         &nbsp;
                                         <div class="box text-primary courier-new font-weight-bold">
-                                            @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) != 'A')
-                                                &#10004;
-                                            @else
-                                                &nbsp;
-                                            @endif
+                                            &nbsp;
                                         </div>&nbsp;
                                         PM
-
-
                                         <p style="position:absolute;top:30px;right:220px;" class="text-xs">
                                             &nbsp;&nbsp;&nbsp;hour
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mn
@@ -840,7 +792,7 @@
 
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <div class="box text-primary courier-new font-weight-bold">
-                        &nbsp;
+                        &#10004;
                     </div> &nbsp;&nbsp;
                     Private
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -855,7 +807,14 @@
         <div class="col-12 ubox2 font-weight-light">
             <div class="form-group">
                 <label style='font-size:17px;width:400px;'> 6. Admission Diagnosis/es:</label>
-                <br />
+                <div class='row'>
+                    <div class='col-2'>
+
+                    </div>
+                    <div class="col-6">
+                        <label class="h5 text-primary"> {{ $HISTORY_OF_PRESENT_ILLNESS }}</label>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-12 ubox2 font-weight-light">
@@ -883,12 +842,22 @@
                                 a.
                             </div>
                             <div class='col-11 text-center'>
-                                <div class="bottom-line2"> &nbsp; </div>
+                                <div class="bottom-line2">
+                                    <span class="text-sm w-100 text-primary font-weight-bold">
+
+                                        {{ $DEFAULT_SEC_TO }} </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-2 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2">
+                            <span class="text-sm w-100 text-primary font-weight-bold">
+                                <span class="text-sm w-100 text-primary font-weight-bold">
+
+                                    {{ $ICD_CODE }}</span>
+                            </span>
+                        </div>
                     </div>
                     <div class="col-3 text-center">
                         <div class='row'>
@@ -903,10 +872,18 @@
                         </div>
                     </div>
                     <div class="col-1 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2">
+                            <span class="text-sm w-100 text-primary font-weight-bold">
+
+                                {{ $FIRST_CASE_RATE }} </span>
+                        </div>
                     </div>
                     <div class="col-2 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2">
+                            <span class="text-sm w-100 text-primary font-weight-bold">
+
+                                {{ date('m-d-Y', strtotime($DATE_DISCHARGED)) }} </span>
+                        </div>
                     </div>
                     <div class="col-2 text-center">
                         <div style="position:absolute;width:300px;left:-50px;">
@@ -928,11 +905,15 @@
                 <div class="row " style="position:absolute;width:100%;height:30px;top:75px;">
                     <div class="col-2 text-center">
                         <div class='row'>
-                            <div class='col-1 text-left'>
+                            <div class='col-1 text-center'>
                                 &nbsp;
                             </div>
                             <div class='col-11 text-center'>
-                                <div class="bottom-line2"> &nbsp; </div>
+                                <div class="bottom-line2">
+                                    <span class="text-sm w-100 text-primary font-weight-bold"
+                                        stlye="position:absolute;width:300px;">{{ $FINAL_DIAGNOSIS }}</span>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1178,7 +1159,7 @@
         <div class="col-12 ubox2 font-weight-light ">
             <div class="row">
                 <div class="col-12">
-                    <span >
+                    <span>
                         a. For the following repetitive procedures, check box that applies and enumerate the
                         procedure/sessions dates [mm-dd-yyyy]. For chemotherapy, see guidelines.
                     </span>
@@ -1189,13 +1170,14 @@
                             <div class='row'>
                                 <div class="col-5">
                                     <div class="box text-primary courier-new font-weight-bold">
-                                        &nbsp;
+                                        &#10004;
                                     </div> &nbsp;&nbsp;
                                     Hemodialysis
                                 </div>
                                 <div class='col-7'>
                                     <div class="w-100 bottom-line2">
-                                        &nbsp;
+                                        <b
+                                            class="text-primary font-weight-bold">{{ date('m-d-Y', strtotime($DATE_DISCHARGED)) }}</b>
                                     </div>
                                 </div>
 
@@ -1553,22 +1535,22 @@
 
                 <div class="col-6">
                     <div class="row">
-                        <div class="col-6 text-right">
+                        <div class="col-8 text-right">
                             <b class="font-weight-bold">ICD 10 or RVS Code:</b> &nbsp;&nbsp;&nbsp; a. First Case Rate
                         </div>
-                        <div class="col-6">
-                            <div class="bottom-line2">
-                                &nbsp;
+                        <div class="col-3">
+                            <div class="bottom-line2 text-center">
+                                <span class="text-primary font-weight-bold">{{ $FIRST_CASE_RATE }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                     <div class="row">
-                        <div class="col-6 text-right">
+                        <div class="col-8 text-right">
                             2. Second Case Rate
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="bottom-line2">
                                 &nbsp;
                             </div>

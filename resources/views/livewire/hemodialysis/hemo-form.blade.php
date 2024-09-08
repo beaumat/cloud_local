@@ -88,7 +88,6 @@
                                 <div class="row">
                                     <div class="col-md-6 col-6">
                                         @if ($Modify)
-
                                             @if ($STATUS == 4)
                                                 <button name="btnSavePosted" type="submit"
                                                     class="btn btn-sm btn-primary"> <i class="fa fa-floppy-o"
@@ -112,8 +111,6 @@
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Edit
                                                 </button>
-
-
                                                 @if (($ID > 0 && $STATUS == 1) || ($ID > 0 && $STATUS == 4))
                                                     @if (auth()->user()->can('patient.treatment.update'))
                                                         <button name="btnPosted" type='button' wire:click='getPosted()'
@@ -135,9 +132,7 @@
                                             @endif
                                         @endif
                                     </div>
-
                                     <div class="text-right col-6 col-md-6">
-
                                         @if ($ID > 0 && $STATUS > 1)
                                             @can('patient.treatment.create')
                                                 <a id="new" title="Create" href="{{ route('patientshemo_create') }}"

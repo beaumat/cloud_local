@@ -95,7 +95,6 @@ class PrintCf4 extends Component
     {   
        
         $this->OUTPUT_SIGN = $OUTPUT;
-
         if ($id > 0) {
             $this->PRE_SIGN_DATA =  false;
             $this->FIRST_CASE_RATE = '90935';

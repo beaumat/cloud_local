@@ -421,6 +421,7 @@ class PhilHealthServices
                 'philhealth_prof_fee.DISCOUNT',
                 'philhealth_prof_fee.FIRST_CASE',
                 'c.PRINT_NAME_AS as NAME',
+                'c.PIN as PIN_NUM'
 
             ])
             ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
