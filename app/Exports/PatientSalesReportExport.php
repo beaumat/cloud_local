@@ -60,9 +60,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         $PREV_SC_ITEM_REF_ID = 0;
         $TOTAL_CHARGE = 0;
         $TOTAL_PAID = 0;
-
-
-
+        
         $CASH_AMOUNT = 0;
         $PHILHEALTH_AMOUNT = 0;
         $DSWD_AMOUNT = 0;

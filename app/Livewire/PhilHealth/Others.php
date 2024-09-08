@@ -13,6 +13,7 @@ class Others extends Component
     public int $PHILHEALTH_ID;
     public string $RR_NO;
     public string $CF4_DD_NOTES;
+    public string $CF4_AD_NOTES;
     public string $CF4_COMPLAINT;
     public string $CF4_HPI;
     public string $CF4_PPMH;
@@ -40,11 +41,11 @@ class Others extends Component
         $data = $this->philHealthServices->getCF4($this->PHILHEALTH_ID);
         if ($data) {
             $this->RR_NO = $data->RR_NO ?? '';
+            $this->CF4_AD_NOTES = $data->CF4_AD_NOTES ?? '';
             $this->CF4_DD_NOTES = $data->CF4_DD_NOTES ?? '';
             $this->CF4_COMPLAINT = $data->CF4_COMPLAINT ?? '';
             $this->CF4_HPI = $data->CF4_HPI ?? '';
             $this->CF4_PPMH = $data->CF4_PPMH ?? '';
-
             $contactData = $this->contactServices->get($data->CONTACT_ID,3);
             if($contactData) {
                 $this->FINAL_DIAGNOSIS = $contactData->FINAL_DIAGNOSIS ?? '';
@@ -57,6 +58,7 @@ class Others extends Component
         $this->philHealthServices->setCF4Update(
             $this->PHILHEALTH_ID,
             $this->RR_NO,
+            $this->CF4_AD_NOTES,
             $this->CF4_DD_NOTES,
             $this->CF4_COMPLAINT,
             $this->CF4_HPI,

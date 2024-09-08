@@ -76,7 +76,7 @@
                                         <div class="row pt-3">
                                             <div class="col-2"></div>
                                             <div class="col-8 bottom-line2 text-center">
-                                                <span class="text-primary font-weight-bold">{{ $HCP_1_NAME }}</span>
+                                                <span class="font-weight-bold h5">{{ $HCP_1_NAME }}</span>
                                             </div>
                                             <div class="col-2"></div>
                                         </div>
@@ -609,11 +609,11 @@
                                                     <td class="pl-1"> <span> Total Health Care <br /> Institution
                                                             Fees</span>
                                                     </td>
-                                                    <td class="text-center text-primary font-weight-bold">
+                                                    <td class="text-center  font-weight-bold">
                                                         {{ number_format($CHARGES_SUB_TOTAL, 2) }}</td>
-                                                    <td class="text-center text-primary font-weight-bold">
+                                                    <td class="text-center  font-weight-bold">
                                                         {{ number_format($P1_SUB_TOTAL, 2) }}</td>
-                                                    <td class="text-center text-primary font-weight-bold">
+                                                    <td class="text-center  font-weight-bold">
                                                         {{ number_format($P1_SUB_TOTAL, 2) }}</td>
                                                     <td class="pl-1">
                                                         <div class="row">
@@ -669,11 +669,11 @@
                                                             <br /> and
                                                             non-accredited <br /> professionals)</span>
                                                     </td>
-                                                    <td class="text-center text-primary font-weight-bold">
+                                                    <td class="text-center font-weight-bold">
                                                         {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL, 2) }}</td>
-                                                    <td class="text-center text-primary font-weight-bold">
+                                                    <td class="text-center  font-weight-bold">
                                                         {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}</td>
-                                                    <td class="text-center text-primary font-weight-bold">
+                                                    <td class="text-center  font-weight-bold">
                                                         {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}</td>
                                                     <td class="pl-1">
                                                         <div class="row">
@@ -876,7 +876,7 @@
                                     <div class="col-10">
                                         <div class="form-group">
                                             <div class="bottom-line2 text-center">
-                                                <span class=" text-primary font-weight-bold h5">
+                                                <span class=" font-weight-bold h5">
                                                     {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
                                                         {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
                                                         @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
@@ -1058,7 +1058,7 @@
                             <div class="ml-2 mr-2 mt-3">
                                 <div class="row">
                                     <div class="col-12 text-center"style="height: 25px; ">
-                                        <b class="h5 times-new-roman"><strong class='text-primary'> {{ $HCI_NAME }} &nbsp;
+                                        <b class="h5 times-new-roman"><strong > {{ $HCI_NAME }} &nbsp;
                                             </strong></b>
                                     </div>
                                     <div class="col-12 text-center top-line2 ">
@@ -1072,7 +1072,7 @@
                             <div class="ml-2 mr-2 mt-3">
                                 <div class="row">
                                     <div class="col-12 text-center"style="height: 25px; ">
-                                        <b class="h5 times-new-roman"><strong class='text-primary'> {{ $HCI_POSITION }} &nbsp;
+                                        <b class="h5 times-new-roman"><strong> {{ $HCI_POSITION }} &nbsp;
                                             </strong></b>
                                     </div>
                                     <div class="col-12 text-center top-line2 ">

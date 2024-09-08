@@ -188,8 +188,14 @@
                             <div class="col-12">
                                 <label> 5. Chief Complaint</label>
 
-                                <h4 class="p-0 m-0 times-new-roman">
-                                    &nbsp;&nbsp;<b>{{ $CHIEF_OF_COMPLAINT }}</b> &nbsp;</h4>
+                                @if ($CF4_COMPLAINT)
+                                    <h4 class="p-0 m-0 times-new-roman">
+                                        &nbsp;&nbsp;<b>{{ $CF4_COMPLAINT }}</b> &nbsp;</h4>
+                                @else
+                                    <h4 class="p-0 m-0 times-new-roman">
+                                        &nbsp;&nbsp;<b>{{ $CHIEF_OF_COMPLAINT }}</b> &nbsp;</h4>
+                                @endif
+
                             </div>
                         </div>
                         <div class="col-3 left-line2 ">
@@ -230,17 +236,24 @@
                             <div class="row">
                                 <div class="col-6 right-line2" style="height: 200px;">
                                     <label> 6. Admitting Diagnosis</label>
-                                    <h4 class="p-0 m-0 times-new-roman">
-                                        &nbsp;&nbsp;<b>{{ $ADMITTING_DIAGNOSIS }}</b> &nbsp;</h4>
+                                    @if ($CF4_AD_NOTES)
+                                        <h5 class="p-0 m-0 times-new-roman">
+                                            &nbsp;{{ $CF4_AD_NOTES }}</h5>
+                                    @else
+                                        <h4 class="p-0 m-0 times-new-roman">
+                                            &nbsp;&nbsp;<b>{{ $ADMITTING_DIAGNOSIS }}</b> &nbsp;</h4>
+                                    @endif
+
+
                                 </div>
                                 <div class="col-6">
                                     <label> 7. Discharge Diagnosis</label><br />
                                     @if ($CF4_DD_NOTES)
-                                        <span class="p-0 m-0 text-sm">
-                                            &nbsp;{{ $CF4_DD_NOTES }}</span>
+                                        <h5 class="p-0 m-0 times-new-roman">
+                                            &nbsp;{{ $CF4_DD_NOTES }}</h5>
                                     @else
                                         <h4 class="p-0 m-0 times-new-roman ">
-                                            &nbsp;&nbsp;<b >{{ $FINAL_DIAGNOSIS }}</b> &nbsp;</h4>
+                                            &nbsp;&nbsp;<b>{{ $FINAL_DIAGNOSIS }}</b> &nbsp;</h4>
                                     @endif
                                 </div>
                             </div>
@@ -473,7 +486,7 @@
                         <br />
                         <br />
                         <h4 class="p-0 m-0 times-new-roman">
-                            &nbsp;&nbsp;<b >{{ $HISTORY_OF_PRESENT_ILLNESS }}</b> &nbsp;</h4>
+                            &nbsp;&nbsp;<b>{{ $HISTORY_OF_PRESENT_ILLNESS }}</b> &nbsp;</h4>
                     @endif
 
 
@@ -483,7 +496,7 @@
 
                     @if ($CF4_PPMH)
                         <h6 class="p-0 m-0 times-new-roman">
-                            &nbsp;&nbsp;<b >{{ $CF4_PPMH }}</b> &nbsp;</h6>
+                            &nbsp;&nbsp;<b>{{ $CF4_PPMH }}</b> &nbsp;</h6>
                     @else
                         <h4 class="p-0 m-0 times-new-roman">
                             &nbsp;&nbsp;<b>{{ $FINAL_DIAGNOSIS }}</b> &nbsp;</h4>
@@ -532,7 +545,7 @@
                         </div>
                         <div class="col-3">
                             <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Hematemesis
-                        <br />
+                            <br />
                             <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Hematuria<br />
                             <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Hemoptysis<br />
                             <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>

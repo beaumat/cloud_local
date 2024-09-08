@@ -76,7 +76,7 @@ class PrintCf4 extends Component
     public bool $OUTPUT_SIGN = false;
     public string $RR_NO;
 
-
+    public string $CF4_AD_NOTES;
     public string $CF4_DD_NOTES;
     public string $CF4_COMPLAINT;
     public string $CF4_HPI;
@@ -110,6 +110,7 @@ class PrintCf4 extends Component
             $data = $this->philHealthServices->get($id);
             if ($data) {
                 $this->RR_NO = $data->RR_NO ?? '';
+                $this->CF4_AD_NOTES = $data->CF4_AD_NOTES ?? '';
                 $this->CF4_DD_NOTES = $data->CF4_DD_NOTES ?? '';
                 $this->CF4_COMPLAINT = $data->CF4_COMPLAINT ?? '';
                 $this->CF4_HPI = $data->CF4_HPI ?? '';

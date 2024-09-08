@@ -219,7 +219,7 @@
                                         <a class="nav-link @if ($tab == 'drugNmed') active @endif"
                                             id="custom-tabs-four-drugNmed-tab" wire:click="SelectTab('drugNmed')"
                                             data-toggle="pill" href="#custom-tabs-four-drugNmed" role="tab"
-                                            aria-controls="custom-tabs-four-drugNmed" aria-selected="true">CF4 Form</a>
+                                            aria-controls="custom-tabs-four-drugNmed" aria-selected="true">CF Form</a>
                                     </li>
 
                                     <li class="nav-item">

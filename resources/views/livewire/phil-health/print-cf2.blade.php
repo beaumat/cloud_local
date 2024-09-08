@@ -118,21 +118,21 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-12 mb-1" style="height: 5px; ">
+                <div class="col-12 mb-3 mt-2" style="height: 5px; ">
                     <label class="font-weight-bold"> 2. Name of Health Care Institution:
-                        <span class="bottom-line2 text-primary" style="width:77%; position:absolute;">
-                            &nbsp;&nbsp;{{ $NAME_OF_BUSINESS }}</span> </label>
+                        <span class="bottom-line2" style="width:77%; position:absolute;">
+                            &nbsp;&nbsp;<b class="h4">{{ $NAME_OF_BUSINESS }}</b></span> </label>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-4">
                     <label> <span class="font-weight-bold">3. Address:</span>
                         <span style="width:90%; position:absolute;">
                             <div class="row">
                                 <div class="col-4">
                                     <div class="row px-1">
-                                        <div class="col-12 bottom-line2 text-primary text-center">
-                                            {{ $BLDG_NAME_LOT_BLOCK }} {{ $STREET_SUB_VALL }}
+                                        <div class="col-12 bottom-line2 text-center h5">
+                                          <div style="position:relative;width:400px;">{{ $BLDG_NAME_LOT_BLOCK }} {{ $STREET_SUB_VALL }}</div>  
                                         </div>
                                         <div class="col-12 text-center">
                                             <span class="font-weight-light"> Building Number and Street Name</span>
@@ -141,7 +141,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="row px-1">
-                                        <div class="col-12 bottom-line2  text-primary text-center">
+                                        <div class="col-12 bottom-line2  text-center h5">
                                             {{ $BRGY_CITY_MUNI }}
                                         </div>
                                         <div class="col-12 text-center">
@@ -151,7 +151,7 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="row px-1">
-                                        <div class="col-12 bottom-line2 text-primary text-center">
+                                        <div class="col-12 bottom-line2 text-center h5">
                                             {{ $PROVINCE }}
                                         </div>
                                         <div class="col-12 text-center">
@@ -161,7 +161,7 @@
                                 </div>
                                 <div class="col-1">
                                     <div class="row px-1">
-                                        <div class="col-12 bottom-line2 text-primary text-center">
+                                        <div class="col-12 bottom-line2 text-center h5">
                                             {{ $ZIP_CODE }}
                                         </div>
                                         <div class="col-12 text-center">
@@ -188,14 +188,14 @@
                 <div class="col-10">
                     <div class="row">
                         <div class="col-3 text-center">
-                            <b class="text-primary courier-new font-weight-bold h5">
+                            <b class=" courier-new font-weight-bold h5">
                                 &nbsp;{{ $PATIENT_LASTNAME }}
                             </b>
                             <div class="w-100 top-line2 "></div>
                             Last Name
                         </div>
                         <div class="col-3 text-center">
-                            <b class="text-primary courier-new font-weight-bold h5">
+                            <b class=" courier-new font-weight-bold h5">
 
                                 &nbsp;{{ $PATIENT_FIRSTNAME }}
 
@@ -204,7 +204,7 @@
                             First Name
                         </div>
                         <div class="col-2 text-center">
-                            <b class="text-primary courier-new font-weight-bold h5">
+                            <b class=" courier-new font-weight-bold h5">
                                 &nbsp;{{ $PATIENT_EXTENSION }}
                             </b>
                             <div class="w-100 top-line2"></div>
@@ -213,7 +213,7 @@
 
                         </div>
                         <div class="col-4 text-center">
-                            <b class="text-primary courier-new font-weight-bold h5">
+                            <b class=" courier-new font-weight-bold h5">
                                 &nbsp;{{ $PATIENT_MIDDLENAME }}
                             </b>
                             <div class="w-100 top-line2"></div>
@@ -246,28 +246,28 @@
                 <div class="col-10">
                     <div class="row">
                         <div class="col-4 text-center">
-                            <b class="text-primary courier-new font-weight-bold h6">&nbsp;</b>
+                            <b class=" courier-new font-weight-bold h6">&nbsp;</b>
                             <div class="w-100 top-line2 "></div>
                             Name of referring Health Care Institution
                         </div>
                         <div class="col-3 text-center">
-                            <b class="text-primary courier-new font-weight-bold h6">&nbsp;</b>
+                            <b class=" courier-new font-weight-bold h6">&nbsp;</b>
                             <div class="w-100 top-line2"></div>
                             Building Number and Street Name
                         </div>
                         <div class="col-2 text-center">
-                            <b class="text-primary courier-new font-weight-bold h6">&nbsp;</b>
+                            <b class=" courier-new font-weight-bold h6">&nbsp;</b>
                             <div class="w-100 top-line2"></div>
                             City/Municipality
 
                         </div>
                         <div class="col-2 text-center">
-                            <b class="text-primary courier-new font-weight-bold h6">&nbsp;</b>
+                            <b class="courier-new font-weight-bold h6">&nbsp;</b>
                             <div class="w-100 top-line2"></div>
                             Province
                         </div>
                         <div class="col-1 text-center">
-                            <b class="text-primary courier-new font-weight-bold h6">&nbsp;</b>
+                            <b class="courier-new font-weight-bold h6">&nbsp;</b>
                             <div class="w-100 top-line2"></div>
                             Zipcode
                         </div>
@@ -812,7 +812,7 @@
 
                     </div>
                     <div class="col-6">
-                        <label class="h5 text-primary"> {{ $HISTORY_OF_PRESENT_ILLNESS }}</label>
+                        <label class="h5"> {{ $HISTORY_OF_PRESENT_ILLNESS }}</label>
                     </div>
                 </div>
             </div>
@@ -841,9 +841,9 @@
                             <div class='col-1 text-left'>
                                 a.
                             </div>
-                            <div class='col-11 text-center'>
+                            <div class='col-11 text-left'>
                                 <div class="bottom-line2">
-                                    <span class="text-sm w-100 text-primary font-weight-bold">
+                                    <span class="text-sm w-100 font-weight-bold">
 
                                         {{ $DEFAULT_SEC_TO }} </span>
                                 </div>
@@ -852,9 +852,8 @@
                     </div>
                     <div class="col-2 text-center">
                         <div class="bottom-line2">
-                            <span class="text-sm w-100 text-primary font-weight-bold">
-                                <span class="text-sm w-100 text-primary font-weight-bold">
-
+                            <span class="text-sm w-100 font-weight-bold">
+                                <span class="text-sm w-100  font-weight-bold">
                                     {{ $ICD_CODE }}</span>
                             </span>
                         </div>
@@ -873,14 +872,14 @@
                     </div>
                     <div class="col-1 text-center">
                         <div class="bottom-line2">
-                            <span class="text-sm w-100 text-primary font-weight-bold">
+                            <span class="text-sm w-100  font-weight-bold">
 
                                 {{ $FIRST_CASE_RATE }} </span>
                         </div>
                     </div>
                     <div class="col-2 text-center">
                         <div class="bottom-line2">
-                            <span class="text-sm w-100 text-primary font-weight-bold">
+                            <span class="text-sm w-100 font-weight-bold">
 
                                 {{ date('m-d-Y', strtotime($DATE_DISCHARGED)) }} </span>
                         </div>
@@ -909,9 +908,14 @@
                                 &nbsp;
                             </div>
                             <div class='col-11 text-center'>
-                                <div class="bottom-line2">
-                                    <span class="text-sm w-100 text-primary font-weight-bold"
-                                        stlye="position:absolute;width:300px;">{{ $FINAL_DIAGNOSIS }}</span>
+                                <div class="bottom-line2 " style="height:25px;">
+
+
+                                    <div class="text-sm w-100 font-weight-bold text-left">
+                                        <div style="position:absolute;width:500px;"> {{ $FINAL_DIAGNOSIS }}
+                                        </div>
+                                    </div>
+
 
                                 </div>
                             </div>
@@ -1177,7 +1181,7 @@
                                 <div class='col-7'>
                                     <div class="w-100 bottom-line2">
                                         <b
-                                            class="text-primary font-weight-bold">{{ date('m-d-Y', strtotime($DATE_DISCHARGED)) }}</b>
+                                            class=" font-weight-bold">{{ date('m-d-Y', strtotime($DATE_DISCHARGED)) }}</b>
                                     </div>
                                 </div>
 
@@ -1540,7 +1544,7 @@
                         </div>
                         <div class="col-3">
                             <div class="bottom-line2 text-center">
-                                <span class="text-primary font-weight-bold">{{ $FIRST_CASE_RATE }}</span>
+                                <span class="font-weight-bold">{{ $FIRST_CASE_RATE }}</span>
                             </div>
                         </div>
                     </div>

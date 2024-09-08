@@ -53,6 +53,7 @@ class PhilHealthServices
     {
         return PhilHealth::select([
             'RR_NO',
+            'CF4_AD_NOTES',
             'CF4_DD_NOTES',
             'CF4_COMPLAINT',
             'CF4_HPI',
@@ -81,11 +82,19 @@ class PhilHealthServices
 
         return $result;
     }
-    public function setCF4Update(int $ID, string $RR_NO,  string $CF4_DD_NOTES = '',  string  $CF4_COMPLAINT = '', string  $CF4_HPI = '',  string $CF4_PPMH = '')
-    {
+    public function setCF4Update(
+        int $ID,
+        string $RR_NO,
+        string $CF4_AD_NOTES = '',
+        string $CF4_DD_NOTES = '',
+        string  $CF4_COMPLAINT = '',
+        string  $CF4_HPI = '',
+        string $CF4_PPMH = ''
+    ) {
         PhilHealth::where('ID', $ID)
             ->update([
                 'RR_NO'         => $RR_NO,
+                'CF4_AD_NOTES'  => $CF4_AD_NOTES == '' ? null : $CF4_AD_NOTES,
                 'CF4_DD_NOTES'  => $CF4_DD_NOTES == '' ? null : $CF4_DD_NOTES,
                 'CF4_COMPLAINT' => $CF4_COMPLAINT == '' ? null : $CF4_COMPLAINT,
                 'CF4_HPI'       => $CF4_HPI == '' ? null : $CF4_HPI,
