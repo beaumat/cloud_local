@@ -132,7 +132,8 @@
                                 <div class="col-4">
                                     <div class="row px-1">
                                         <div class="col-12 bottom-line2 text-center h5">
-                                          <div style="position:relative;width:400px;">{{ $BLDG_NAME_LOT_BLOCK }} {{ $STREET_SUB_VALL }}</div>  
+                                            <div style="position:relative;width:400px;">{{ $BLDG_NAME_LOT_BLOCK }}
+                                                {{ $STREET_SUB_VALL }}</div>
                                         </div>
                                         <div class="col-12 text-center">
                                             <span class="font-weight-light"> Building Number and Street Name</span>
@@ -865,7 +866,8 @@
                             </div>
                             <div class='col-11'>
                                 <div class="bottom-line2">
-                                    &nbsp;
+                                    <span class="text-sm w-100  font-weight-bold">
+                                        {{ $RELATED_PROCEDURE }}</span>
                                 </div>
                             </div>
                         </div>
@@ -873,15 +875,14 @@
                     <div class="col-1 text-center">
                         <div class="bottom-line2">
                             <span class="text-sm w-100  font-weight-bold">
-
                                 {{ $FIRST_CASE_RATE }} </span>
                         </div>
                     </div>
                     <div class="col-2 text-center">
                         <div class="bottom-line2">
                             <span class="text-sm w-100 font-weight-bold">
-
-                                {{ date('m-d-Y', strtotime($DATE_DISCHARGED)) }} </span>
+                                {{ date('m-d-Y', strtotime($DATE_DISCHARGED)) }}
+                            </span>
                         </div>
                     </div>
                     <div class="col-2 text-center">

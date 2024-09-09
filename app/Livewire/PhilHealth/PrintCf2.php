@@ -73,6 +73,7 @@ class PrintCf2 extends Component
     public string $POST_O2_SATURATION;
     public string $POST_TEMPERATURE;
     public string $POST_BLOOD_PRESSURE2;
+    public string $RELATED_PROCEDURE;
     public bool $PRE_SIGN_DATA =  false;
     public bool $OUTPUT_SIGN = false;
     public string $RR_NO;
@@ -96,7 +97,7 @@ class PrintCf2 extends Component
     }
     public function mount(int $id = 0,  int $PATIENT_ID = 0, $OUTPUT = true)
     {
-
+        $this->RELATED_PROCEDURE = "HEMODIALYSIS";
         $this->OUTPUT_SIGN = $OUTPUT;
         if ($id > 0) {
             $this->PRE_SIGN_DATA =  false;
@@ -224,11 +225,8 @@ class PrintCf2 extends Component
         }
         if ($PATIENT_ID > 0) {
             $this->PRE_SIGN_DATA =  true;
-
             $contact = $this->contactServices->get($PATIENT_ID, 3);
-
             if ($contact) {
-
                 $this->LOCATION_ID = $contact->LOCATION_ID;
                 $locData = $this->locationServices->get($this->LOCATION_ID);
 
@@ -296,7 +294,6 @@ class PrintCf2 extends Component
                 $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
             }
         }
-
     }
 
     public function render()

@@ -31,5 +31,5 @@
             </tbody>
         </table>
     </div>
-    @livewire('PhilHealth.DoctorOrder');
+    @livewire('PhilHealth.DoctorOrder')
 </div>

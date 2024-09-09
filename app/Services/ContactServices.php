@@ -82,10 +82,12 @@ class ContactServices
     {
 
         return Contacts::query()
-            ->select([
-                'ID',
-                DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME")
-            ])->where('TYPE', 3)
+            ->select(
+                [
+                    'ID',
+                    DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME")
+                ]
+            )->where('TYPE', 3)
             ->whereExists(function ($query) use (&$LOCATION_ID, &$DATE_FROM, &$DATE_TO) {
                 $query->select(DB::raw(1))
                     ->from('service_charges as s')

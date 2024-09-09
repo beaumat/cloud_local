@@ -247,16 +247,15 @@
             <tbody class="p-0">
                 @foreach ($dateList as $list)
                     <tr class="bottom-line2">
-                        <td class="right-line2  text-center text-sm">
+                        <td class="right-line2  text-center text-sm " style="width:20%">
                             <span class="p-1 font-weight-bold">
-                                      &nbsp;{{ $list['DATE'] ? date('m/d/Y', strtotime($list['DATE'])) : '' }}
-                            </span>
-                            </td>
-                        <td>
+                                &nbsp;{{ $list['DATE'] ? date('m/d/Y', strtotime($list['DATE'])) : '' }} </span>
+                        </td>
+                        <td class="text-left">
                             @if ($list['DOCTOR_ORDER'] == $DOCTOR_ORDER)
                                 <span class="text-sm p-1 font-weight-bold"> &nbsp;{{ $list['DOCTOR_ORDER'] }}</span>
                             @else
-                                <span class="text-sm p-1"> &nbsp;{{ $list['DOCTOR_ORDER'] }}</span>
+                                <span class="text-sm p-1 font-weight-bold"> &nbsp;{{ $list['DOCTOR_ORDER'] }}</span>
                             @endif
 
                         </td>

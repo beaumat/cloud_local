@@ -75,7 +75,9 @@
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     Session Date :</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-7 bottom-line"> &nbsp; {{ $SECOND_CASE_RATE }}</div>
+                                    class="col-7 bottom-line">
+                                    {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') : '' }}
+                                </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     First Case Rate :</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
@@ -85,7 +87,7 @@
                     </div>
                 </div>
                 <div class="col-12 text-center" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
-                    <b class="text-xl" >SUMMARY OF FEES</b>
+                    <b class="text-xl">SUMMARY OF FEES</b>
                 </div>
                 <div class="col-12 mt-2" id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <div class="row top-line right-line left-line">
@@ -111,10 +113,10 @@
                             ACTUAL <br /> CHARGES
                         </div>
                         <div class="col-1 text-center left-line">
-                            VAT <br/> EXEMPTS
+                            VAT <br /> EXEMPTS
                         </div>
                         <div class="col-1 text-center left-line">
-                            SENIOR CITIZEN / <br/> PWD
+                            SENIOR CITIZEN / <br /> PWD
                         </div>
                         <div class="col-1 text-center  left-line text-xs">
                             <div class="row text-left">
@@ -133,7 +135,7 @@
                             Second Case Rate amount
                         </div>
                         <div class="col-1 text-center left-line">
-                            Ouf of <br/> Pocket <br/> of Patient
+                            Ouf of <br /> Pocket <br /> of Patient
                         </div>
                     </div>
 
@@ -468,7 +470,7 @@
                         </div>
                         <div class="row bottom-line right-line left-line">
                             <div id="p-particular" class="col-4 text-left  ">
-                                <i>Acreditation No. <b>{{  $list->PIN }}</b></i>
+                                <i>Acreditation No. <b>{{ $list->PIN }}</b></i>
                             </div>
                             <div id="p-charge" class="col-1 text-center  left-line">
                                 &nbsp;
@@ -621,11 +623,12 @@
                             <div class="col-4">
                                 Prepared by:
                                 <div class="form-group row  mt-4">
-                                    <div class="col-7 text-center"><strong class="bottom-line">
+                                    <div class="col-10 text-center bottom-line">
+                                    <strong >
                                             {{ $USER_NAME }}</strong>
                                     </div>
-                                    <div class="col-7 text-center">PHIC IN-Charge</div>
-                                    <div class="col-12 ">Date Signed:
+                                    <div class="col-10 text-center">PHIC IN-Charge</div>
+                                    <div class="col-10 mt-4 bottom-line text-center">Date Signed:
                                         {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
                                     </div>
                                     <div class="col-12 ">CONTACT No. {{ $USER_CONTACT }}</div>
@@ -641,7 +644,7 @@
                                     <div class="col-12 text-xs">Relationship of member of authorized representative
                                     </div>
                                     <div class="col-12 bottom-line">&nbsp;</div>
-                                    <div class="col-12 ">Date Signed:
+                                    <div class="col-12">Date Signed:
                                         {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
                                     </div>
                                     <div class="col-12 ">CONTACT No. {{ $PATIENT_CONTACT }}</div>

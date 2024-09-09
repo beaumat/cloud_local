@@ -3,7 +3,9 @@
 namespace App\Livewire\PhilHealth;
 
 use App\Services\ContactServices;
+use App\Services\DoctorOrderDefaultServices;
 use App\Services\HemoServices;
+use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
 use App\Services\PhilHealthServices;
 use Livewire\Component;
@@ -13,9 +15,12 @@ use Livewire\Component;
 class PrintCf4Back extends Component
 {
 
+    public int $LOCATION_ID;
     private $philHealthServices;
     private $hemoServices;
+    private $locationServices;
     private $contactServices;
+    private $doctorOrderDefaultServices;
     public string $DR_NAME;
     public $dateList = [];
     public $dataMed = [];
@@ -24,12 +29,21 @@ class PrintCf4Back extends Component
     private $patientDoctorServices;
     public bool $PRE_SIGN_DATA =  false;
     public bool $OUTPUT_SIGN = false;
-    public function boot(PhilHealthServices $philHealthServices, HemoServices $hemoServices, ContactServices $contactServices, PatientDoctorServices $patientDoctorServices)
-    {
+    public bool $PHIC_FORM_MODIFY = false;
+    public function boot(
+        PhilHealthServices $philHealthServices,
+        HemoServices $hemoServices,
+        ContactServices $contactServices,
+        PatientDoctorServices $patientDoctorServices,
+        LocationServices $locationServices,
+        DoctorOrderDefaultServices   $doctorOrderDefaultServices
+    ) {
         $this->philHealthServices = $philHealthServices;
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
         $this->patientDoctorServices = $patientDoctorServices;
+        $this->locationServices = $locationServices;
+        $this->doctorOrderDefaultServices = $doctorOrderDefaultServices;
     }
     public function mount($id = null,  int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
@@ -47,20 +61,67 @@ class PrintCf4Back extends Component
         ];
 
         if ($id > 0) {
-            $this->PRE_SIGN_DATA =  false;
+
+            $this->PRE_SIGN_DATA = false;
             $this->getMed($id);
             $data = $this->philHealthServices->get($id);
             if ($data) {
+                $this->LOCATION_ID = (int) $data->LOCATION_ID;
+                $dataLoc = $this->locationServices->get($this->LOCATION_ID);
+                if ($dataLoc) {
+                    $this->PHIC_FORM_MODIFY = $dataLoc->PHIC_FORM_MODIFY ?? false;
+                }
+
                 $this->DATE_DISCHARGED =  $data->DATE_DISCHARGED ?? '';
-                $getData = $this->hemoServices->GetSummary($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED ?? '', $data->DATE_DISCHARGED ?? '');
                 $r = 0;
-                foreach ($getData as $item) {
-                    $this->dateList[$r] = [
-                        'DATE' =>  $item->DATE,
-                        'DOCTOR_ORDER' =>  empty($item->DOCTOR_ORDER) ?  $this->DOCTOR_ORDER  : $item->DOCTOR_ORDER ?? ''
+                $KEEP_ORDER = '';
+                $KEEP_DATE = '';
+                $KEEP_MODIFY = false;
+
+                $getData = $this->hemoServices->GetSummary($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED ?? '', $data->DATE_DISCHARGED ?? '');
+
+                // Make it 
+                if ($this->PHIC_FORM_MODIFY == true) {
+
+                    foreach ($getData as $item) {
+                        $KEEP_ORDER = empty($item->DOCTOR_ORDER) ?  '' : $item->DOCTOR_ORDER ?? '';
+                        $KEEP_DATE = $item->DATE;
+                        break;
+                    }
+
+                    $dataList = $this->doctorOrderDefaultServices->getListByLocation($this->LOCATION_ID);
+
+                    foreach ($dataList as $item) {
+
+                        $this->dateList[$r] =  [
+                            'DATE' =>  $r == 0 ? $KEEP_DATE : '',
+                            'DOCTOR_ORDER' => $item->DESCRIPTION ?? ''
+                        ];
+
+                        $KEEP_MODIFY = $item->MODIFY;
+                        $r++;
+                    }
+
+                    if ($KEEP_MODIFY && empty($KEEP_ORDER) == false) {
+                        $r--;
+                    }
+
+                    $this->dateList[$r] =  [
+                        'DATE' =>  '',
+                        'DOCTOR_ORDER' =>  $KEEP_ORDER
                     ];
                     $r++;
+                } else {
+                    foreach ($getData as $item) {
+                        $KEEP_ORDER = empty($item->DOCTOR_ORDER) ?  '' : $item->DOCTOR_ORDER ?? '';
+                        $this->dateList[$r] = [
+                            'DATE'         =>  $item->DATE,
+                            'DOCTOR_ORDER' =>  empty($item->DOCTOR_ORDER) ?  $this->DOCTOR_ORDER  : $item->DOCTOR_ORDER ?? ''
+                        ];
+                        $r++;
+                    }
                 }
+
 
                 for ($i = $r; $i < 15; $i++) {
                     $this->dateList[$i] =  [
