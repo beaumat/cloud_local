@@ -2,20 +2,14 @@
 
 namespace App\Livewire\PatientReport;
 
-use App\Exports\PatientSalesReportExport;
 use App\Services\ContactServices;
 use App\Services\ItemServices;
-use App\Services\PatientReportServices;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Services\LocationServices;
-
+use App\Services\PatientReportServices;
 use App\Services\UserServices;
-
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Sales Report')]
-class PatientSalesReport extends Component
+class PatientSalesReportPrintContent extends Component
 {
 
     public bool $refreshComponent = false;
@@ -58,7 +52,6 @@ class PatientSalesReport extends Component
     public $filterItem = [];
     public $selectedItem = [];
 
-
     public function boot(
         LocationServices $locationServices,
         UserServices $userServices,
@@ -72,51 +65,23 @@ class PatientSalesReport extends Component
         $this->patientReportServices = $patientReportServices;
         $this->itemServices = $itemServices;
     }
-    public function updatedselectedPatient()
-    {
-        $this->shortFilter();
-    }
-    public function updatedselectedItem()
-    {
-        $this->shortFilter();
-    }
-    public function mount()
-    {
-        $this->locationList = $this->locationServices->getList();
 
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-
-        $this->updatedLocationId();
-        $this->resetFilter();
-    }
-    public function updatedLocationId()
+    public function mount($DATE_FROM, $DATE_TO, $LOCATION_ID)
     {
-        $this->PATIENT_ID = 0;
-        $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
-        $this->refreshComponent = $this->refreshComponent ? false : true;
+        $this->DATE_TRANSACTION_FROM = $DATE_FROM;
+        $this->DATE_TRANSACTION_TO = $DATE_TO;
+        $this->LOCATION_ID = $LOCATION_ID;
+        $this->showfilter();
     }
 
-    public function export()
-    {
-        return Excel::download(new PatientSalesReportExport(
-            $this->patientReportServices,
-            $this->DATE_TRANSACTION_FROM,
-            $this->DATE_TRANSACTION_TO,
-            $this->DATE_COLLECTION_FROM,
-            $this->DATE_COLLECTION_TO,
-            $this->LOCATION_ID,
-            $this->selectedPatient,
-            $this->selectedItem
-        ), 'sales-report.xlsx');
-    }
     public function showfilter()
     {
 
         $this->selectedItem = [];
         $this->selectedPatient = [];
         $this->shortFilter();
-        $this->filterPatient  = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-        $this->filterItem =  $this->patientReportServices->getItemListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
+        // $this->filterPatient  = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
+        // $this->filterItem =  $this->patientReportServices->getItemListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
 
         $this->refreshComponent = $this->refreshComponent ? false : true;
     }
@@ -134,6 +99,8 @@ class PatientSalesReport extends Component
         $this->PCSO_AMOUNT = 0;
         $this->OTHER_GL_AMOUNT = 0;
         $this->NO_OF_TREATMENT = 0;
+        $this->DATE_COLLECTION_FROM  = '';
+        $this->DATE_COLLECTION_TO = '';
 
         $this->dataList = $this->patientReportServices->generateSalesReportData(
             $this->DATE_COLLECTION_FROM,
@@ -157,23 +124,8 @@ class PatientSalesReport extends Component
             $this->PRE_COLLECTION =  $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
         }
     }
-    public function  print()
-    {
-
-        return redirect()->away(route('reportspatient_sales_report_print', []));
-    }
-    public function resetFilter()
-    {
-        $this->DATE_COLLECTION_FROM = '';
-        $this->DATE_COLLECTION_TO = '';
-
-        $this->DATE_TRANSACTION_FROM = $this->userServices->getTransactionDateDefault();
-        $this->DATE_TRANSACTION_TO = $this->userServices->getTransactionDateDefault();
-        $this->PATIENT_ID = 0;
-    }
-
     public function render()
     {
-        return view('livewire.patient-report.patient-sales-report');
+        return view('livewire.patient-report.patient-sales-report-print-content');
     }
 }

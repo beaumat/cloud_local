@@ -25,11 +25,11 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <livewire:date-input name="DATE_TRANSACTION_FROM" titleName="(SC) From"
-                                            wire:model='DATE_TRANSACTION_FROM' :isDisabled="false" />
+                                            wire:model.live='DATE_TRANSACTION_FROM' :isDisabled="false" />
                                     </div>
                                     <div class="col-md-5">
                                         <livewire:date-input name="DATE_TRANSACTION_TO" titleName="(SC) To"
-                                            wire:model='DATE_TRANSACTION_TO' :isDisabled="false" />
+                                            wire:model.live='DATE_TRANSACTION_TO' :isDisabled="false" />
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +65,7 @@
                                             <label class="text-xs ">Location:</label>
                                             <select
                                                 @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
-                                                name="location" wire:model='LOCATION_ID'
+                                                name="location" wire:model.live='LOCATION_ID'
                                                 class="form-control form-control-sm text-xs ">
                                                 <option value="0"> All Location</option>
                                                 @foreach ($locationList as $item)
@@ -89,6 +89,13 @@
                                     wire:loading.attr='disabled'>Generate</button>
                                 <button class="btn btn-xs btn-success w-25" wire:click='export()'
                                     wire:loading.attr='disabled'>Export</button>
+                           
+
+                                <a type="button" class="btn btn-xs btn-warning w-25"
+                                    href="{{ route('reportspatient_sales_report_print', ['date_from' => $DATE_TRANSACTION_FROM, 'date_to' => $DATE_TRANSACTION_TO, 'location_id' => $LOCATION_ID]) }}"
+                                    target="_BLANK">
+                                    Print
+                                </a>
                             </div>
                             <div class="col-6">
 
