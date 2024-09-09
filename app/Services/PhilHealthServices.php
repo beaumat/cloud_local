@@ -203,7 +203,7 @@ class PhilHealthServices
 
         //got professional fee
     }
-
+    
     public function preUpdate(int $ID, string $CODE, string $DATE, int $LOCATION_ID, int $CONTACT_ID, string $DATE_ADMITTED, string $TIME_ADMITTED, string $DATE_DISCHARGED, string $TIME_DISCHARGED, string $FINAL_DIAGNOSIS, string $OTHER_DIAGNOSIS, string $FIRST_CASE_RATE, string $SECOND_CASE_RATE)
     {
 

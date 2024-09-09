@@ -2,8 +2,10 @@
 
 namespace App\Livewire\PhilHealth;
 
+use App\Services\Cf4DoctorOrderServices;
 use App\Services\ContactServices;
 use App\Services\DateServices;
+use App\Services\DoctorOrderDefaultServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
@@ -31,13 +33,17 @@ class QuickCreate extends Component
     private $philHealthServices;
     private $contactServices;
     private $dateServices;
+    private $cf4DoctorOrderServices;
+    private $doctorOrderDefaultServices;
     public function boot(
         LocationServices $locationServices,
         UserServices $userServices,
         HemoServices $hemoServices,
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        Cf4DoctorOrderServices $cf4DoctorOrderServices,
+        DoctorOrderDefaultServices $doctorOrderDefaultServices
     ) {
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -45,12 +51,13 @@ class QuickCreate extends Component
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->dateServices = $dateServices;
+        $this->cf4DoctorOrderServices = $cf4DoctorOrderServices;
+        $this->doctorOrderDefaultServices = $doctorOrderDefaultServices;
     }
     public function ResetValue()
     {
         $this->SelectAll = false;
         $this->patientSelected = [];
-        $this->LoadList();
     }
     public function updatedDateFrom()
     {
@@ -62,6 +69,7 @@ class QuickCreate extends Component
     }
     public function updatedLocationId()
     {
+
         $this->ResetValue();
     }
 
@@ -161,6 +169,10 @@ class QuickCreate extends Component
                                 $this->SECOND_CASE_RATE
                             );
                             $this->philHealthServices->DefaultEntry($ID);
+                            if ($this->DATE_ADMITTED == $this->DATE_DISCHARGED) {
+                                $HEMO_ID = (int)   $this->hemoServices->GetHemoID($this->DATE_DISCHARGED, $patientID, $this->LOCATION_ID);
+                                $this->AutoDoctorOrder($HEMO_ID);
+                            }
                         }
                     }
                 }
@@ -176,8 +188,17 @@ class QuickCreate extends Component
             session()->flash('error', $th->getMessage());
         }
     }
-
-    private function LoadList() {}
+    public function AutoDoctorOrder(int $HEMO_ID)
+    {   // one time only
+        // check have item
+        if ($this->cf4DoctorOrderServices->dataIsExists($HEMO_ID)) {
+            return;
+        }
+        $data = $this->doctorOrderDefaultServices->getListByLocation($this->LOCATION_ID);
+        foreach ($data as $item) {
+            $this->cf4DoctorOrderServices->Store($HEMO_ID, $item->DESCRIPTION);
+        }
+    }
 
     #[On('clear-alert')]
     public function clearAlert()

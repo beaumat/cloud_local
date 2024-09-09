@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PhilHealth;
 
+use App\Services\Cf4DoctorOrderServices;
 use App\Services\ContactServices;
 use App\Services\DoctorOrderDefaultServices;
 use App\Services\HemoServices;
@@ -20,30 +21,32 @@ class PrintCf4Back extends Component
     private $hemoServices;
     private $locationServices;
     private $contactServices;
-    private $doctorOrderDefaultServices;
+
     public string $DR_NAME;
     public $dateList = [];
     public $dataMed = [];
     public $DATE_DISCHARGED;
     public $DOCTOR_ORDER = "UNDERGO HEMODIALYSIS TREATMENT WITH NO COMPLICATIONS";
     private $patientDoctorServices;
+    private $cf4DoctorOrderServices;
     public bool $PRE_SIGN_DATA =  false;
     public bool $OUTPUT_SIGN = false;
     public bool $PHIC_FORM_MODIFY = false;
+
     public function boot(
         PhilHealthServices $philHealthServices,
         HemoServices $hemoServices,
         ContactServices $contactServices,
         PatientDoctorServices $patientDoctorServices,
         LocationServices $locationServices,
-        DoctorOrderDefaultServices   $doctorOrderDefaultServices
+        Cf4DoctorOrderServices   $cf4DoctorOrderServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
         $this->patientDoctorServices = $patientDoctorServices;
         $this->locationServices = $locationServices;
-        $this->doctorOrderDefaultServices = $doctorOrderDefaultServices;
+        $this->cf4DoctorOrderServices = $cf4DoctorOrderServices;
     }
     public function mount($id = null,  int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
@@ -81,39 +84,23 @@ class PrintCf4Back extends Component
                 $getData = $this->hemoServices->GetSummary($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED ?? '', $data->DATE_DISCHARGED ?? '');
 
                 // Make it 
-                if ($this->PHIC_FORM_MODIFY == true) {
 
-                    foreach ($getData as $item) {
-                        $KEEP_ORDER = empty($item->DOCTOR_ORDER) ?  '' : $item->DOCTOR_ORDER ?? '';
+                foreach ($getData as $item) {
+
+
+
+                    $orderList =   $this->cf4DoctorOrderServices->GetList($item->ID);
+                    if ($orderList) {
                         $KEEP_DATE = $item->DATE;
-                        break;
-                    }
-
-                    $dataList = $this->doctorOrderDefaultServices->getListByLocation($this->LOCATION_ID);
-
-                    foreach ($dataList as $item) {
-
-                        $this->dateList[$r] =  [
-                            'DATE' =>  $r == 0 ? $KEEP_DATE : '',
-                            'DOCTOR_ORDER' => $item->DESCRIPTION ?? ''
-                        ];
-
-                        $KEEP_MODIFY = $item->MODIFY;
-                        $r++;
-                    }
-
-                    if ($KEEP_MODIFY && empty($KEEP_ORDER) == false) {
-                        $r--;
-                    }
-
-                    $this->dateList[$r] =  [
-                        'DATE' =>  '',
-                        'DOCTOR_ORDER' =>  $KEEP_ORDER
-                    ];
-                    $r++;
-                } else {
-                    foreach ($getData as $item) {
-                        $KEEP_ORDER = empty($item->DOCTOR_ORDER) ?  '' : $item->DOCTOR_ORDER ?? '';
+                        foreach ($orderList as $list) {
+                            $this->dateList[$r] = [
+                                'DATE'         =>  $KEEP_DATE,
+                                'DOCTOR_ORDER' =>  $list->DESCRIPTION
+                            ];
+                            $KEEP_DATE = '';
+                            $r++;
+                        }
+                    } else {
                         $this->dateList[$r] = [
                             'DATE'         =>  $item->DATE,
                             'DOCTOR_ORDER' =>  empty($item->DOCTOR_ORDER) ?  $this->DOCTOR_ORDER  : $item->DOCTOR_ORDER ?? ''
@@ -121,6 +108,7 @@ class PrintCf4Back extends Component
                         $r++;
                     }
                 }
+
 
 
                 for ($i = $r; $i < 15; $i++) {
