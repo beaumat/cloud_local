@@ -289,7 +289,8 @@ class ContactServices
                         ->orWhere('contact.LAST_NAME', 'like', '%' . $search . '%')
                         ->orWhere('contact.PRINT_NAME_AS', 'like', '%' . $search . '%')
                         ->orWhere('contact.MOBILE_NO', 'like', '%' . $search . '%')
-                        ->orWhere('contact.EMAIL', 'like', '%' . $search . '%');
+                        ->orWhere('contact.EMAIL', 'like', '%' . $search . '%')
+                        ->orWhere('contact.PIN', 'like', '%' . $search . '%');
                 });
             })
             ->when($locationId > 0, function ($query) use (&$locationId) {
