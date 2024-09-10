@@ -107,7 +107,7 @@ class QuickCreate extends Component
     private string $OTHER_DIAGNOSIS = '';
     private string $FIRST_CASE_RATE = '';
     private string $SECOND_CASE_RATE = '';
-
+    public bool $PHIC_FORM_MODIFY = false;
     private function generateDateTime($CONTACT_ID): bool
     {
 
@@ -142,6 +142,14 @@ class QuickCreate extends Component
     }
     public function create()
     {
+
+        $dataLoc =  $this->locationServices->get($this->LOCATION_ID);
+        $this->PHIC_FORM_MODIFY = false;
+        if ($dataLoc) {
+            $this->PHIC_FORM_MODIFY =  $dataLoc->PHIC_FORM_MODIFY ?? false;
+        }
+
+
         DB::beginTransaction();
         try {
 
@@ -169,8 +177,9 @@ class QuickCreate extends Component
                                 $this->SECOND_CASE_RATE
                             );
                             $this->philHealthServices->DefaultEntry($ID);
-                            if ($this->DATE_ADMITTED == $this->DATE_DISCHARGED) {
-                                $HEMO_ID = (int)   $this->hemoServices->GetHemoID($this->DATE_DISCHARGED, $patientID, $this->LOCATION_ID);
+
+                            if ($this->DATE_ADMITTED == $this->DATE_DISCHARGED && $this->PHIC_FORM_MODIFY == true) {
+                                $HEMO_ID = (int)  $this->hemoServices->GetHemoID($this->DATE_DISCHARGED, $patientID, $this->LOCATION_ID);
                                 $this->AutoDoctorOrder($HEMO_ID);
                             }
                         }
