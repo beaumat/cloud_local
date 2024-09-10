@@ -14,7 +14,7 @@ class PhilHealthServices
 {
 
     public string $FIRST_CASE_RATE = "90935";
-    public float $OP_LAB_N_DIAGNOSTICS_AMOUNT = 250;
+
     public string $DEFAULT_DIAGNOSIS = "CHRONIC KIDNEY DISEASE STAGE 5 TO ";
     public string $DEFAULT_DIAGNOSIS2 = "CKD Stage 5 Sec to ";
 
@@ -24,7 +24,7 @@ class PhilHealthServices
     public string $HISTORY_OF_PRESENT_ILLNESS_DEFAULT = 'CHRONIC KIDNEY DISEASE STAGE 5';
 
 
-
+    public float $OP_LAB_N_DIAGNOSTICS_AMOUNT = 250;
     private float $DISCOUNT_PERCENT = 20;
     public float $P1_PHIC_AMOUNT = 2250;
     public float $DRUG_N_MEDINE_AMOUNT = 1270.00;

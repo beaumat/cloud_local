@@ -36,7 +36,7 @@ class LocationServices
     }
     public function getPesonel(int $ID)
     {
-        return Locations::query()
+        $data = Locations::query()
             ->select([
                 'location.ID',
                 'm.PRINT_NAME_AS as MANAGER_NAME',
@@ -48,6 +48,8 @@ class LocationServices
             ->leftJoin('contact as p', 'p.ID', '=', 'location.PHIC_INCHARGE_ID')
             ->where('location.ID', $ID)
             ->first();
+
+        return $data;
     }
     public function get(int $ID)
     {

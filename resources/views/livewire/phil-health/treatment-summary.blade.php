@@ -23,8 +23,11 @@
                         </td>
                         <td class="text-center">{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }}</td>
                         <td>{{ $list->DOCTOR_ORDER }}</td>
-                        <td class="text-center"><button class="btn btn-xs btn-primary"
-                                wire:click='OpenModify({{ $list->ID }})'>Update</button></td>
+                        <td class="text-center">
+                            <button class="btn btn-xs btn-primary" wire:click='OpenModify({{ $list->ID }})'>
+                                <i class="fa fa-wrench" aria-hidden="true"></i>
+                            </button>
+                        </td>
                     </tr>
                 @endforeach
 

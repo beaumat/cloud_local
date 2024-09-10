@@ -111,6 +111,8 @@ use App\Livewire\PhilhealthPrint\PrintOutSoaTempOut;
 use App\Livewire\PhilhealthPrint\PrintOutSummary;
 use App\Livewire\PhilhealthPrint\PrintOutSummaryTemp;
 use App\Livewire\PhilhealthPrint\PrintOutSummaryTempOut;
+use App\Livewire\PhilHealthSoaCustom\PhilCustomSoaForm;
+use App\Livewire\PhilHealthSoaCustom\PhilCustomSoaList;
 use App\Livewire\PriceLevelPage\PriceLevelForm;
 use App\Livewire\PriceLevelPage\PriceLevelList;
 use App\Livewire\PriceLocation\PriceLocationList;
@@ -483,6 +485,10 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/doctor', LocationDoctors::class)->name('location_doctor')->middleware(['permission:location.view']);
                 Route::get('/create', LocationForm::class)->name('location_create')->middleware(['permission:location.create']);
                 Route::get('/{id}/edit', LocationForm::class)->name('location_edit')->middleware(['permission:location.edit']);
+
+                Route::get('/{id}/custom-soa', PhilCustomSoaList::class)->name('location_custom_soa')->middleware(['permission:location.view']);
+                Route::get('/{id}/custom-soa/create', PhilCustomSoaForm::class)->name('location_custom_soa_create')->middleware(['permission:location.view']);
+                Route::get('/{id}/custom-soa/{custom}/edit', PhilCustomSoaForm::class)->name('location_custom_soa_edit')->middleware(['permission:location.view']);
             });
             Route::prefix('/location-group')->group(function () {
                 Route::get('/', LocationGroupList::class)->name('location_group')->middleware(['permission:location-group.view']);
