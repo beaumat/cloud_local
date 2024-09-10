@@ -18,6 +18,10 @@ class DoctorOrderDefaultServices
 
         return $lineNo;
     }
+    public function HaveAData(int $LOCATION_ID): bool
+    {
+        return DoctorOrderDefault::where('LOCATION_ID', $LOCATION_ID)->exists();
+    }
     public function Store(int $LOCATION_ID, string $DESCRIPTION)
     {
 

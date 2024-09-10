@@ -29,6 +29,7 @@ class PrintCf4Back extends Component
     public $DOCTOR_ORDER = "UNDERGO HEMODIALYSIS TREATMENT WITH NO COMPLICATIONS";
     private $patientDoctorServices;
     private $cf4DoctorOrderServices;
+    private $doctorOrderDefaultServices;
     public bool $PRE_SIGN_DATA =  false;
     public bool $OUTPUT_SIGN = false;
     public bool $PHIC_FORM_MODIFY = false;
@@ -39,7 +40,8 @@ class PrintCf4Back extends Component
         ContactServices $contactServices,
         PatientDoctorServices $patientDoctorServices,
         LocationServices $locationServices,
-        Cf4DoctorOrderServices   $cf4DoctorOrderServices
+        Cf4DoctorOrderServices   $cf4DoctorOrderServices,
+        DoctorOrderDefaultServices $doctorOrderDefaultServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->hemoServices = $hemoServices;
@@ -47,6 +49,7 @@ class PrintCf4Back extends Component
         $this->patientDoctorServices = $patientDoctorServices;
         $this->locationServices = $locationServices;
         $this->cf4DoctorOrderServices = $cf4DoctorOrderServices;
+        $this->doctorOrderDefaultServices = $doctorOrderDefaultServices;
     }
     public function mount($id = null,  int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
@@ -82,16 +85,15 @@ class PrintCf4Back extends Component
                 $KEEP_MODIFY = false;
 
                 $getData = $this->hemoServices->GetSummary($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED ?? '', $data->DATE_DISCHARGED ?? '');
-
+                $getIsExist = $this->doctorOrderDefaultServices->HaveAData($data->LOCATION_ID);
                 // Make it 
 
                 foreach ($getData as $item) {
 
 
-
-                    $orderList =   $this->cf4DoctorOrderServices->GetList($item->ID);
-                    if ($orderList) {
+                    if ($getIsExist) {
                         $KEEP_DATE = $item->DATE;
+                        $orderList =  $this->cf4DoctorOrderServices->GetList($item->ID);
                         foreach ($orderList as $list) {
                             $this->dateList[$r] = [
                                 'DATE'         =>  $KEEP_DATE,
