@@ -285,7 +285,7 @@ class HemoServices
                 'hemodialysis.ID',
                 'hemodialysis.CODE',
                 'hemodialysis.DATE',
-                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', c.MIDDLE_NAME, IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
                 'c.DATE_OF_BIRTH',
                 'c.PIN as PHIC_NO',
                 'hemodialysis.PRE_WEIGHT',
