@@ -422,11 +422,6 @@
                                 </div>
                             </section>
                         </div>
-                        @if ($USE_OTHER_DETAILS == true)
-                            <div class="form-group">
-                                @livewire('Hemodialysis.OtherDetails', ['HEMO_ID' => $ID, 'Modify' => $Modify, 'STATUS' => $STATUS])
-                            </div>
-                        @endif
                     </div>
                     <div class="col-sm-6 col-md-6">
                         <div class="row">
@@ -438,7 +433,7 @@
                             <div class="col-md-12">
                                 @if ($IsDocmentUploaded)
                                     <div class="row form-group">
-                                        <div class="col-md-12">
+                                        <div class="col-md-10">
                                             <div class="form-group">
                                                 <label for="fileUpload" class="text-xs">Image
                                                     document
@@ -463,8 +458,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <button wire:click='uploaddoc' class="btn btn-dark btn-sm">
+                                        <div class="col-md-2 mt-2">
+                                            <button wire:click='uploaddoc' class="mt-4 btn btn-dark btn-sm">
                                                 <i class="fa fa-upload" aria-hidden="true"></i> Upload
                                             </button>
                                             @if ($FILE_PATH)
@@ -474,13 +469,18 @@
                                                     Preview
                                                 </a>
                                             @endif
-
-
                                         </div>
                                     </div>
                                 @endif
                             </div>
                         </div>
+                    </div>
+                    <div class="col-sm-6 col-md-12">
+                        @if ($USE_OTHER_DETAILS == true)
+                            <div class="form-group">
+                                @livewire('Hemodialysis.OtherDetails', ['HEMO_ID' => $ID, 'Modify' => $Modify, 'STATUS' => $STATUS])
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

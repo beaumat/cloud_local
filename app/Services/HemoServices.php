@@ -285,7 +285,7 @@ class HemoServices
                 'hemodialysis.ID',
                 'hemodialysis.CODE',
                 'hemodialysis.DATE',
-                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', c.MIDDLE_NAME, IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
                 'c.DATE_OF_BIRTH',
                 'c.PIN as PHIC_NO',
                 'hemodialysis.PRE_WEIGHT',
@@ -455,7 +455,10 @@ class HemoServices
         string $HEPARIN,
         string $REUSE_NO,
         string $REUSE_NEXT,
-        string $FLUSHING
+        string $FLUSHING,
+        string $UF_GOAL,
+        bool $DB_STANDARD_HCOA,
+        bool $DB_ACID
     ) {
         Hemodialysis::where('ID', $ID)
             ->update([
@@ -474,7 +477,10 @@ class HemoServices
                 'HEPARIN'           => $HEPARIN,
                 'REUSE_NO'          => $REUSE_NO,
                 'REUSE_NEXT'        => $REUSE_NEXT,
-                'FLUSHING'          => $FLUSHING
+                'FLUSHING'          => $FLUSHING,
+                'UF_GOAL'           => $UF_GOAL,
+                'DB_STANDARD_HCOA'  => $DB_STANDARD_HCOA,
+                'DB_ACID'           => $DB_ACID
             ]);
     }
     public function UpdatedSpecialOrder(int $ID): bool

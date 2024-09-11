@@ -31,6 +31,10 @@ class OtherDetails extends Component
     public string $REUSE_NO;
     public string $REUSE_NEXT;
     public string $FLUSHING;
+    public string $UF_GOAL;
+
+    public bool $DB_STANDARD_HCOA;
+    public bool $DB_ACID;
 
     private $hemoServices;
     public function boot(HemoServices $hemoServices)
@@ -63,6 +67,10 @@ class OtherDetails extends Component
             $this->REUSE_NO = $data->REUSE_NO ?? '';
             $this->REUSE_NEXT = $data->REUSE_NEXT ?? '';
             $this->FLUSHING = $data->FLUSHING ?? '';
+            $this->UF_GOAL = $data->UF_GOAL ?? '';
+            $this->DB_STANDARD_HCOA = $data->DB_STANDARD_HCOA ?? false;
+            $this->DB_ACID = $data->DB_ACID ?? false;
+            
         }
     }
     #[On('save-other')]
@@ -85,8 +93,10 @@ class OtherDetails extends Component
             $this->HEPARIN,
             $this->REUSE_NO,
             $this->REUSE_NEXT,
-            $this->FLUSHING
-
+            $this->FLUSHING,
+            $this->UF_GOAL,
+            $this->DB_STANDARD_HCOA,
+            $this->DB_ACID
         );
         //  session()->flash('message','Save change successfully'); 
     }
