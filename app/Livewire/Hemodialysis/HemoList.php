@@ -64,6 +64,7 @@ class HemoList extends Component
     }
     public function mount()
     {
+        
 
         $this->DATE_FROM = $this->dateServices->NowDate();
         $this->DATE_TO = $this->dateServices->NowDate();

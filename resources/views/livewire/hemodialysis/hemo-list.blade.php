@@ -295,11 +295,12 @@
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <button type="button" class="btn btn-xs btn-dark"
-                                                    wire:click="showNotes({{ $list->ID }},'{{ $list->CONTACT_NAME }}')">
-                                                    <i class="fa fa-list-ol" aria-hidden="true"></i>
-                                                </button>
-                                                
+                                                @can('full-treatment-sheet')
+                                                    <button type="button" class="btn btn-xs btn-dark"
+                                                        wire:click="showNotes({{ $list->ID }},'{{ $list->CONTACT_NAME }}')">
+                                                        <i class="fa fa-list-ol" aria-hidden="true"></i>
+                                                    </button>
+                                                @endcan
                                                 @can('patient.treatment.delete')
                                                     @if ($list->STATUS_ID == 1)
                                                         <button wire:click='delete({{ $list->ID }})'

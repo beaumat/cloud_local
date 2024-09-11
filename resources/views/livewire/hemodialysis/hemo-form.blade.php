@@ -132,10 +132,12 @@
                                             @endif
                                         @endif
 
+                                        @can('full-treatment-sheet')
+                                            <button wire:click='showNotes()' name="btnNotes" type='button'
+                                                class="btn btn-sm btn-dark"> <i class="fa fa-list-ol"
+                                                    aria-hidden="true"></i> Nurse Notes</button>
+                                        @endcan
 
-                                        <button wire:click='showNotes()' name="btnNotes" type='button'
-                                            class="btn btn-sm btn-dark"> <i class="fa fa-list-ol"
-                                                aria-hidden="true"></i> Nurse Notes</button>
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 1)
@@ -489,7 +491,7 @@
                         @endif
                     </div>
 
-             
+
                 </div>
             </div>
         </section>
