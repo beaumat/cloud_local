@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Contacts;
 use App\Models\Hemodialysis;
 use App\Models\HemodialysisItems;
+use App\Models\HemoNurseNotes;
 use App\Models\ItemSubClass;
 use Illuminate\Support\Facades\DB;
 
@@ -288,26 +289,121 @@ class HemoServices
                 DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', c.MIDDLE_NAME, IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
                 'c.DATE_OF_BIRTH',
                 'c.PIN as PHIC_NO',
-                'hemodialysis.PRE_WEIGHT',
-                'hemodialysis.PRE_BLOOD_PRESSURE',
-                'hemodialysis.PRE_BLOOD_PRESSURE2',
-                'hemodialysis.PRE_HEART_RATE',
-                'hemodialysis.PRE_O2_SATURATION',
-                'hemodialysis.PRE_TEMPERATURE',
+                'PRE_WEIGHT',
+                'PRE_BLOOD_PRESSURE',
+                'PRE_BLOOD_PRESSURE2',
+                'PRE_HEART_RATE',
+                'PRE_O2_SATURATION',
+                'PRE_TEMPERATURE',
+                'POST_WEIGHT',
+                'POST_BLOOD_PRESSURE',
+                'POST_BLOOD_PRESSURE2',
+                'POST_HEART_RATE',
+                'POST_O2_SATURATION',
+                'POST_TEMPERATURE',
                 'hemodialysis.CUSTOMER_ID',
                 'hemodialysis.LOCATION_ID',
-                'hemodialysis.SE_DETAILS',
-                'hemodialysis.SO_DETAILS',
-                'hemodialysis.BFR',
-                'hemodialysis.DFR',
-                'hemodialysis.DURATION',
-                'hemodialysis.HEPARIN',
-                'hemodialysis.REUSE_NO',
-                'hemodialysis.FLUSHING',
-                'hemodialysis.DIALYZER',
-                'hemodialysis.DIALSATE_N',
-                'hemodialysis.DIALSATE_K',
-                'hemodialysis.DIALSATE_C'
+                'SE_DETAILS',
+                'SO_DETAILS',
+                'BFR',
+                'DFR',
+                'DURATION',
+                'HEPARIN',
+                'REUSE_NO',
+                'FLUSHING',
+                'DIALYZER',
+                'DIALSATE_N',
+                'DIALSATE_K',
+                'DIALSATE_C',
+                'PRE_AMBULATORY',
+                'PRE_AMBULATORY_W_ASSIT',
+                'PRE_WHEEL_CHAIR',
+                'PRE_CONSCIOUS',
+                'PRE_COHERENT',
+                'PRE_DISORIENTED',
+                'PRE_DROWSY',
+
+                'PRE_CLEAR',
+                'PRE_CRACKLES',
+                'PRE_RHONCHI',
+                'PRE_WHEEZES',
+                'PRE_RALES',
+
+                'PRE_DISTENDED_JUGULAR_VIEW',
+                'PRE_ASCITES',
+                'PRE_EDEMA',
+                'PRE_LOCATION',
+                'PRE_LOCATION_NOTES',
+                'PRE_DEPTH',
+                'PRE_DEPTH_NOTES',
+
+                'PRE_REGULAR',
+                'PRE_IRREGULAR',
+
+                'POST_AMBULATORY',
+                'POST_AMBULATORY_W_ASSIT',
+                'POST_WHEEL_CHAIR',
+                'POST_CONSCIOUS',
+                'POST_COHERENT',
+                'POST_DISORIENTED',
+                'POST_DROWSY',
+
+                'POST_CLEAR',
+                'POST_CRACKLES',
+                'POST_RHONCHI',
+                'POST_WHEEZES',
+                'POST_RALES',
+
+                'POST_DISTENDED_JUGULAR_VIEW',
+                'POST_ASCITES',
+                'POST_EDEMA',
+                'POST_LOCATION',
+                'POST_LOCATION_NOTES',
+                'POST_DEPTH',
+                'POST_DEPTH_NOTES',
+
+                'POST_REGULAR',
+                'POST_IRREGULAR',
+
+                'SC_MACHINE_TEST',
+                'SC_SECURED_CONNECTIONS',
+                'SC_SALINE_LINE_DOUBLE_CLAMP',
+                'SC_CONDUCTIVITY',
+                'SC_DIALYSATE_TEMP',
+                'SC_RESIDUAL_TEST_NEGATIVE',
+                'DB_STANDARD_HCOA',
+                'DB_ACID',
+                'UF_GOAL',
+
+                'AT_FISTULA',
+                'AT_GRAFT',
+                'AT_RIGHT',
+                'B_STRONG',
+                'B_WEEK',
+                'B_ABSENT',
+                'T_STRONG',
+                'T_WEAK',
+                'T_ABSENT',
+                'H_PRESENT',
+                'H_ABSENT',
+                'H_OTHER_NOTES',
+
+                'CVC_SUBCATH',
+                'CVC_JUGCATH',
+                'CVC_FEMCATCH',
+                'CVC_PERMACATH',
+                'CVC_RIGHT',
+                'CVC_LEFT',
+                'CVC_GOOD_FLOW_A',
+                'CVC_GOOD_FLOW_V',
+                'CVC_W_RESISTANCE_A',
+                'CVC_W_RESISTANCE_V',
+                'CVC_CLOTTED_A',
+                'CVC_CLOTTED_V',
+                'AT_LEFT'
+
+
+
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->where('hemodialysis.ID', $ID)
@@ -458,14 +554,156 @@ class HemoServices
         string $FLUSHING,
         string $UF_GOAL,
         bool $DB_STANDARD_HCOA,
-        bool $DB_ACID
+        bool $DB_ACID,
+        bool $SC_MACHINE_TEST,
+        bool $SC_SECURED_CONNECTIONS,
+        bool $SC_SALINE_LINE_DOUBLE_CLAMP,
+        string $SC_CONDUCTIVITY,
+        string $SC_DIALYSATE_TEMP,
+        bool $SC_RESIDUAL_TEST_NEGATIVE,
+        bool $AT_FISTULA,
+        bool $AT_GRAFT,
+        bool $AT_RIGHT,
+        bool $AT_LEFT,
+        bool $B_STRONG,
+        bool $B_WEEK,
+        bool $B_ABSENT,
+        bool $T_STRONG,
+        bool $T_WEAK,
+        bool $T_ABSENT,
+        bool $H_PRESENT,
+        bool $H_ABSENT,
+        string $H_OTHER_NOTES,
+        bool $CVC_SUBCATH,
+        bool $CVC_JUGCATH,
+        bool $CVC_FEMCATCH,
+        bool $CVC_PERMACATH,
+        bool $CVC_RIGHT,
+        bool $CVC_LEFT,
+        bool $CVC_GOOD_FLOW_A,
+        bool $CVC_GOOD_FLOW_V,
+        bool $CVC_W_RESISTANCE_A,
+        bool $CVC_W_RESISTANCE_V,
+        bool $CVC_CLOTTED_A,
+        bool $CVC_CLOTTED_V,
+        bool $PRE_AMBULATORY,
+        bool $PRE_AMBULATORY_W_ASSIT,
+        bool $PRE_WHEEL_CHAIR,
+        bool $PRE_CONSCIOUS,
+        bool $PRE_COHERENT,
+        bool $PRE_DISORIENTED,
+        bool $PRE_DROWSY,
+        bool $PRE_CLEAR,
+        bool $PRE_CRACKLES,
+        bool $PRE_RHONCHI,
+        bool $PRE_WHEEZES,
+        bool $PRE_RALES,
+        bool $PRE_DISTENDED_JUGULAR_VIEW,
+        bool $PRE_ASCITES,
+        bool $PRE_EDEMA,
+        bool $PRE_LOCATION,
+        string $PRE_LOCATION_NOTES,
+        bool $PRE_DEPTH,
+        string $PRE_DEPTH_NOTES,
+        bool $PRE_REGULAR,
+        bool $PRE_IRREGULAR,
+        bool $POST_AMBULATORY,
+        bool $POST_AMBULATORY_W_ASSIT,
+        bool $POST_WHEEL_CHAIR,
+        bool $POST_CONSCIOUS,
+        bool $POST_COHERENT,
+        bool $POST_DISORIENTED,
+        bool $POST_DROWSY,
+        bool $POST_CLEAR,
+        bool $POST_CRACKLES,
+        bool $POST_RHONCHI,
+        bool $POST_WHEEZES,
+        bool $POST_RALES,
+        bool $POST_DISTENDED_JUGULAR_VIEW,
+        bool $POST_ASCITES,
+        bool $POST_EDEMA,
+        bool $POST_LOCATION,
+        string $POST_LOCATION_NOTES,
+        bool $POST_DEPTH,
+        string $POST_DEPTH_NOTES,
+        bool $POST_REGULAR,
+        bool $POST_IRREGULAR,
+
     ) {
         Hemodialysis::where('ID', $ID)
             ->update([
-                'SE_DETAILS'        => $SE_DETAILS,
-                'SO_DETAILS'        => $SO_DETAILS,
-                'BFR'               => $BFR,
-                'DFR'               => $DFR,
+
+                'PRE_AMBULATORY'            => $PRE_AMBULATORY,
+                'PRE_AMBULATORY_W_ASSIT'    => $PRE_AMBULATORY_W_ASSIT,
+                'PRE_WHEEL_CHAIR'           => $PRE_WHEEL_CHAIR,
+                'PRE_CONSCIOUS'             => $PRE_CONSCIOUS,
+                'PRE_COHERENT'              => $PRE_COHERENT,
+                'PRE_DISORIENTED'           => $PRE_DISORIENTED,
+                'PRE_DROWSY'                => $PRE_DROWSY,
+                'PRE_CLEAR'                 => $PRE_CLEAR,
+                'PRE_CRACKLES'              => $PRE_CRACKLES,
+                'PRE_RHONCHI'               => $PRE_RHONCHI,
+                'PRE_WHEEZES'               => $PRE_WHEEZES,
+                'PRE_RALES'                 => $PRE_RALES,
+                'PRE_DISTENDED_JUGULAR_VIEW' => $PRE_DISTENDED_JUGULAR_VIEW,
+                'PRE_ASCITES'               => $PRE_ASCITES,
+                'PRE_EDEMA'                 => $PRE_EDEMA,
+                'PRE_LOCATION'              => $PRE_LOCATION,
+                'PRE_LOCATION_NOTES'        => $PRE_LOCATION_NOTES,
+                'PRE_DEPTH'                 => $PRE_DEPTH,
+                'PRE_DEPTH_NOTES'           => $PRE_DEPTH_NOTES,
+                'PRE_REGULAR'               => $PRE_REGULAR,
+                'PRE_IRREGULAR'             => $PRE_IRREGULAR,
+                'POST_AMBULATORY'            => $POST_AMBULATORY,
+                'POST_AMBULATORY_W_ASSIT'    => $POST_AMBULATORY_W_ASSIT,
+                'POST_WHEEL_CHAIR'           => $POST_WHEEL_CHAIR,
+                'POST_CONSCIOUS'             => $POST_CONSCIOUS,
+                'POST_COHERENT'              => $POST_COHERENT,
+                'POST_DISORIENTED'           => $POST_DISORIENTED,
+                'POST_DROWSY'                => $POST_DROWSY,
+                'POST_CLEAR'                 => $POST_CLEAR,
+                'POST_CRACKLES'              => $POST_CRACKLES,
+                'POST_RHONCHI'               => $POST_RHONCHI,
+                'POST_WHEEZES'               => $POST_WHEEZES,
+                'POST_RALES'                 => $POST_RALES,
+                'POST_DISTENDED_JUGULAR_VIEW' => $POST_DISTENDED_JUGULAR_VIEW,
+                'POST_ASCITES'               => $POST_ASCITES,
+                'POST_EDEMA'                 => $POST_EDEMA,
+                'POST_LOCATION'              => $POST_LOCATION,
+                'POST_LOCATION_NOTES'        => $POST_LOCATION_NOTES,
+                'POST_DEPTH'                 => $POST_DEPTH,
+                'POST_DEPTH_NOTES'           => $POST_DEPTH_NOTES,
+                'POST_REGULAR'               => $POST_REGULAR,
+                'POST_IRREGULAR'             => $POST_IRREGULAR,
+                'CVC_CLOTTED_V'             => $CVC_CLOTTED_V,
+                'CVC_CLOTTED_A'             => $CVC_CLOTTED_A,
+                'CVC_W_RESISTANCE_V'        => $CVC_W_RESISTANCE_V,
+                'CVC_W_RESISTANCE_A'        => $CVC_W_RESISTANCE_A,
+                'CVC_GOOD_FLOW_V'           => $CVC_GOOD_FLOW_V,
+                'CVC_GOOD_FLOW_A'           => $CVC_GOOD_FLOW_A,
+                'CVC_LEFT'                  => $CVC_LEFT,
+                'CVC_RIGHT'                 => $CVC_RIGHT,
+                'CVC_PERMACATH'             => $CVC_PERMACATH,
+                'CVC_FEMCATCH'              => $CVC_FEMCATCH,
+                'CVC_JUGCATH'               => $CVC_JUGCATH,
+                'CVC_SUBCATH'               => $CVC_SUBCATH,
+                'AT_FISTULA'                => $AT_FISTULA,
+                'AT_GRAFT'                  => $AT_GRAFT,
+                'AT_RIGHT'                  => $AT_RIGHT,
+                'AT_LEFT'                   => $AT_LEFT,
+                'B_STRONG'                  => $B_STRONG,
+                'B_WEEK'                    => $B_WEEK,
+                'B_ABSENT'                  => $B_ABSENT,
+                'T_STRONG'                  => $T_STRONG,
+                'T_WEAK'                    => $T_WEAK,
+                'T_ABSENT'                  => $T_ABSENT,
+                'H_PRESENT'                 => $H_PRESENT,
+                'H_ABSENT'                  => $H_ABSENT,
+                'H_OTHER_NOTES'             => $H_OTHER_NOTES,
+                'SE_DETAILS'                => $SE_DETAILS,
+                'SO_DETAILS'                => $SO_DETAILS,
+                'BFR'                       => $BFR,
+                'DFR'                       => $DFR,
                 'DURATION'          => $DURATION,
                 'DIALYZER'          => $DIALYZER,
                 'DIALSATE_N'        => $DIALSATE_N,
@@ -480,7 +718,14 @@ class HemoServices
                 'FLUSHING'          => $FLUSHING,
                 'UF_GOAL'           => $UF_GOAL,
                 'DB_STANDARD_HCOA'  => $DB_STANDARD_HCOA,
-                'DB_ACID'           => $DB_ACID
+                'DB_ACID'           => $DB_ACID,
+                'SC_MACHINE_TEST'   => $SC_MACHINE_TEST,
+                'SC_SECURED_CONNECTIONS'        => $SC_SECURED_CONNECTIONS,
+                'SC_SALINE_LINE_DOUBLE_CLAMP'   => $SC_SALINE_LINE_DOUBLE_CLAMP,
+                'SC_CONDUCTIVITY'               => $SC_CONDUCTIVITY,
+                'SC_DIALYSATE_TEMP'             => $SC_DIALYSATE_TEMP,
+                'SC_RESIDUAL_TEST_NEGATIVE'     => $SC_RESIDUAL_TEST_NEGATIVE
+
             ]);
     }
     public function UpdatedSpecialOrder(int $ID): bool
@@ -1359,9 +1604,6 @@ class HemoServices
 
         return $result;
     }
-
-
-
     public function AutoDefaultItem(int $NoTrtment, int $HEMO_ID, int $LOCATION_ID)
     {
         if ($NoTrtment <= 1) { // New
@@ -1387,5 +1629,117 @@ class HemoServices
                 $this->ItemStore($HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
             }
         }
+    }
+    public function StoreNotes(
+        int $HEMO_ID,
+        string $TIME,
+        string $BP_1,
+        string $BP_2,
+        string $HR,
+        string $BFR,
+        string $AP,
+        string $VP,
+        string $TFP,
+        string $TMP,
+        string $HEPARIN,
+        string $FLUSHING,
+        string $NOTES
+    ) {
+        $ID = $this->object->ObjectNextID('HEMO_NURSE_NOTES');
+
+        HemoNurseNotes::create([
+            'ID'        => $ID,
+            'HEMO_ID'   => $HEMO_ID,
+            'TIME'      => $TIME,
+            'BP_1'      => $BP_1,
+            'BP_2'      => $BP_2,
+            'HR'        => $HR,
+            'BFR'       => $BFR,
+            'AP'        => $AP,
+            'VP'        => $VP,
+            'TFP'       => $TFP,
+            'TMP'       => $TMP,
+            'HEPARIN'   => $HEPARIN,
+            'FLUSHING'  => $FLUSHING,
+            'NOTES'     => $NOTES
+        ]);
+    }
+
+    public function UpdateNotes(
+        int $ID,
+        int $HEMO_ID,
+        string $TIME,
+        string $BP_1,
+        string $BP_2,
+        string $HR,
+        string $BFR,
+        string $AP,
+        string $VP,
+        string $TFP,
+        string $TMP,
+        string $HEPARIN,
+        string $FLUSHING,
+        string $NOTES
+    ) {
+
+        HemoNurseNotes::where('ID', $ID)
+            ->where('HEMO_ID', $HEMO_ID)
+            ->update([
+                'TIME'      => $TIME,
+                'BP_1'      => $BP_1,
+                'BP_2'      => $BP_2,
+                'HR'        => $HR,
+                'BFR'       => $BFR,
+                'AP'        => $AP,
+                'VP'        => $VP,
+                'TFP'       => $TFP,
+                'TMP'       => $TMP,
+                'HEPARIN'   => $HEPARIN,
+                'FLUSHING'  => $FLUSHING,
+                'NOTES'     => $NOTES
+            ]);
+    }
+    public function DeleteNotes(
+        int $ID,
+        int $HEMO_ID
+    ) {
+        HemoNurseNotes::where('ID', $ID)
+            ->where('HEMO_ID', $HEMO_ID)
+            ->delete();
+    }
+    public function ListNotes(int $HEMO_ID)
+    {
+        $result =  HemoNurseNotes::query()
+            ->select([
+                'ID',
+                'TIME',
+                'BP_1',
+                'BP_2',
+                'HR',
+                'BFR',
+                'AP',
+                'VP',
+                'TFP',
+                'TMP',
+                'HEPARIN',
+                'FLUSHING',
+                'NOTES'
+            ])
+            ->where('HEMO_ID', $HEMO_ID)
+            ->orderBy('ID', 'asc')
+            ->get();
+
+        return $result;
+    }
+    public function GetNotes(int $ID)
+    {
+        $result =   HemoNurseNotes::where('ID', $ID)
+            ->first();
+
+        if ($result) {
+            return $result;
+        }
+
+        return [];
     }
 }

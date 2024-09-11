@@ -67,11 +67,13 @@ class Hemodialysis extends Model
         'PRE_COHERENT',
         'PRE_DISORIENTED',
         'PRE_DROWSY',
+
         'PRE_CLEAR',
         'PRE_CRACKLES',
         'PRE_RHONCHI',
         'PRE_WHEEZES',
         'PRE_RALES',
+
         'PRE_DISTENDED_JUGULAR_VIEW',
         'PRE_ASCITES',
         'PRE_EDEMA',
@@ -79,8 +81,10 @@ class Hemodialysis extends Model
         'PRE_LOCATION_NOTES',
         'PRE_DEPTH',
         'PRE_DEPTH_NOTES',
+
         'PRE_REGULAR',
         'PRE_IRREGULAR',
+
         'POST_AMBULATORY',
         'POST_AMBULATORY_W_ASSIT',
         'POST_WHEEL_CHAIR',
@@ -88,11 +92,13 @@ class Hemodialysis extends Model
         'POST_COHERENT',
         'POST_DISORIENTED',
         'POST_DROWSY',
+
         'POST_CLEAR',
         'POST_CRACKLES',
         'POST_RHONCHI',
         'POST_WHEEZES',
         'POST_RALES',
+
         'POST_DISTENDED_JUGULAR_VIEW',
         'POST_ASCITES',
         'POST_EDEMA',
@@ -114,6 +120,7 @@ class Hemodialysis extends Model
         'AT_FISTULA',
         'AT_GRAFT',
         'AT_RIGHT',
+        'AT_LEFT',
         'B_STRONG',
         'B_WEEK',
         'B_ABSENT',
@@ -135,5 +142,6 @@ class Hemodialysis extends Model
         'CVC_W_RESISTANCE_V',
         'CVC_CLOTTED_A',
         'CVC_CLOTTED_V'
+
     ];
 }

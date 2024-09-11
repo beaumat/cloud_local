@@ -21,6 +21,21 @@ class PrintContent extends Component
     public int $AGE = 0;
     private $hemoServices;
     private $contactServices;
+
+
+    public string $PRE_WEIGHT;
+    public string $PRE_BLOOD_PRESSURE;
+    public string $PRE_BLOOD_PRESSURE2;
+    public string $PRE_HEART_RATE;
+    public string $PRE_O2_SATURATION;
+    public string $PRE_TEMPERATURE;
+    public string $POST_WEIGHT;
+    public string $POST_BLOOD_PRESSURE;
+    public string $POST_BLOOD_PRESSURE2;
+    public string $POST_HEART_RATE;
+    public string $POST_O2_SATURATION;
+    public string $POST_TEMPERATURE;
+
     public string $OLD_PRE_WEIGHT;
     public string $OLD_PRE_BLOOD_PRESSURE;
     public string $OLD_PRE_BLOOD_PRESSURE2;
@@ -52,6 +67,93 @@ class PrintContent extends Component
     public string $DIALSATE_N;
     public string $DIALSATE_K;
     public string $DIALSATE_C;
+
+
+    public bool $SC_MACHINE_TEST;
+    public bool $SC_SECURED_CONNECTIONS;
+    public bool $SC_SALINE_LINE_DOUBLE_CLAMP;
+    public string $SC_CONDUCTIVITY;
+    public string $SC_DIALYSATE_TEMP;
+    public bool $SC_RESIDUAL_TEST_NEGATIVE;
+    public string $UF_GOAL;
+    public bool $DB_STANDARD_HCOA;
+    public bool $DB_ACID;
+
+    public bool $AT_FISTULA;
+    public bool $AT_GRAFT;
+    public bool $AT_RIGHT;
+    public bool $AT_LEFT;
+    public bool $B_STRONG;
+    public bool $B_WEEK;
+    public bool $B_ABSENT;
+    public bool $T_STRONG;
+    public bool $T_WEAK;
+    public bool $T_ABSENT;
+    public bool $H_PRESENT;
+    public bool $H_ABSENT;
+    public string $H_OTHER_NOTES;
+
+    public bool $CVC_SUBCATH;
+    public bool $CVC_JUGCATH;
+    public bool $CVC_FEMCATCH;
+    public bool $CVC_PERMACATH;
+    public bool $CVC_RIGHT;
+    public bool $CVC_LEFT;
+    public bool $CVC_GOOD_FLOW_A;
+    public bool $CVC_GOOD_FLOW_V;
+    public bool $CVC_W_RESISTANCE_A;
+    public bool $CVC_W_RESISTANCE_V;
+    public bool $CVC_CLOTTED_A;
+    public bool $CVC_CLOTTED_V;
+
+    public bool $PRE_AMBULATORY;
+    public bool $PRE_AMBULATORY_W_ASSIT;
+    public bool $PRE_WHEEL_CHAIR;
+    public bool $PRE_CONSCIOUS;
+    public bool $PRE_COHERENT;
+    public bool $PRE_DISORIENTED;
+    public bool $PRE_DROWSY;
+    public bool $PRE_CLEAR;
+    public bool $PRE_CRACKLES;
+    public bool $PRE_RHONCHI;
+    public bool $PRE_WHEEZES;
+    public bool $PRE_RALES;
+    public bool $PRE_DISTENDED_JUGULAR_VIEW;
+    public bool $PRE_ASCITES;
+    public bool $PRE_EDEMA;
+    public bool $PRE_LOCATION;
+    public string $PRE_LOCATION_NOTES;
+    public bool $PRE_DEPTH;
+    public string $PRE_DEPTH_NOTES;
+    public bool $PRE_REGULAR;
+    public bool $PRE_IRREGULAR;
+
+
+    public bool $POST_AMBULATORY;
+    public bool $POST_AMBULATORY_W_ASSIT;
+    public bool $POST_WHEEL_CHAIR;
+    public bool $POST_CONSCIOUS;
+    public bool $POST_COHERENT;
+    public bool $POST_DISORIENTED;
+    public bool $POST_DROWSY;
+    public bool $POST_CLEAR;
+    public bool $POST_CRACKLES;
+    public bool $POST_RHONCHI;
+    public bool $POST_WHEEZES;
+    public bool $POST_RALES;
+    public bool $POST_DISTENDED_JUGULAR_VIEW;
+    public bool $POST_ASCITES;
+    public bool $POST_EDEMA;
+    public bool $POST_LOCATION;
+    public string $POST_LOCATION_NOTES;
+    public bool $POST_DEPTH;
+    public string $POST_DEPTH_NOTES;
+    public bool $POST_REGULAR;
+    public bool $POST_IRREGULAR;
+
+
+
+
     public $SE_PARTS = [];
     public $SO_PARTS = [];
     public int $SE_COUNT = 0;
@@ -85,6 +187,7 @@ class PrintContent extends Component
             $this->OLD_POST_HEART_RATE = $data->POST_HEART_RATE ?? "";
             $this->OLD_POST_O2_SATURATION = $data->POST_O2_SATURATION ?? "";
             $this->OLD_POST_TEMPERATURE = $data->POST_TEMPERATURE ?? "";
+            
             return;
         }
 
@@ -106,6 +209,108 @@ class PrintContent extends Component
         $data = $this->hemoServices->GetFirst($this->HEMO_ID);
 
         if ($data) {
+
+
+            $this->PRE_WEIGHT = $data->PRE_WEIGHT ?? '';
+            $this->PRE_BLOOD_PRESSURE = $data->PRE_BLOOD_PRESSURE ?? '';
+            $this->PRE_BLOOD_PRESSURE2 = $data->PRE_BLOOD_PRESSURE2 ?? '';
+            $this->PRE_HEART_RATE = $data->PRE_HEART_RATE ?? '';
+            $this->PRE_O2_SATURATION = $data->PRE_O2_SATURATION ?? '';
+            $this->PRE_TEMPERATURE = $data->PRE_TEMPERATURE ?? '';
+            
+            $this->POST_WEIGHT = $data->POST_WEIGHT ?? '';
+            $this->POST_BLOOD_PRESSURE = $data->POST_BLOOD_PRESSURE ?? '';
+            $this->POST_BLOOD_PRESSURE2 = $data->POST_BLOOD_PRESSURE2 ?? '';
+            $this->POST_HEART_RATE = $data->POST_HEART_RATE ?? '';
+            $this->POST_O2_SATURATION = $data->POST_O2_SATURATION ?? '';
+            $this->POST_TEMPERATURE = $data->POST_TEMPERATURE ?? '';
+    
+
+
+            $this->UF_GOAL = $data->UF_GOAL ?? '';
+            $this->DB_STANDARD_HCOA = $data->DB_STANDARD_HCOA ?? false;
+            $this->DB_ACID = $data->DB_ACID ?? false;
+
+            $this->SC_MACHINE_TEST  = $data->SC_MACHINE_TEST ?? false;
+            $this->SC_SECURED_CONNECTIONS = $data->SC_SECURED_CONNECTIONS ?? false;
+            $this->SC_SALINE_LINE_DOUBLE_CLAMP = $data->SC_SALINE_LINE_DOUBLE_CLAMP ?? false;
+            $this->SC_CONDUCTIVITY = $data->SC_CONDUCTIVITY ?? '';
+            $this->SC_DIALYSATE_TEMP = $data->SC_DIALYSATE_TEMP ?? '';
+            $this->SC_RESIDUAL_TEST_NEGATIVE = $data->SC_RESIDUAL_TEST_NEGATIVE ?? false;
+
+            $this->AT_FISTULA = $data->AT_FISTULA ?? false;
+            $this->AT_GRAFT = $data->AT_GRAFT ?? false;
+            $this->AT_RIGHT = $data->AT_RIGHT ?? false;
+            $this->AT_LEFT = $data->AT_LEFT ?? false;
+            $this->B_STRONG = $data->B_STRONG ?? false;
+            $this->B_WEEK = $data->B_WEEK ?? false;
+            $this->B_ABSENT = $data->B_ABSENT ?? false;
+            $this->T_STRONG = $data->T_STRONG ?? false;
+            $this->T_WEAK = $data->T_WEAK ?? false;
+            $this->T_ABSENT = $data->T_ABSENT ?? false;
+            $this->H_PRESENT = $data->H_PRESENT ?? false;
+            $this->H_ABSENT = $data->H_ABSENT ?? false;
+            $this->H_OTHER_NOTES = $data->H_OTHER_NOTES ?? '';
+
+            $this->CVC_SUBCATH = $data->CVC_SUBCATH ?? false;
+            $this->CVC_JUGCATH = $data->CVC_JUGCATH ?? false;
+            $this->CVC_FEMCATCH = $data->CVC_FEMCATCH ?? false;
+            $this->CVC_PERMACATH = $data->CVC_PERMACATH ?? false;
+            $this->CVC_RIGHT = $data->CVC_RIGHT ?? false;
+            $this->CVC_LEFT = $data->CVC_LEFT ?? false;
+            $this->CVC_GOOD_FLOW_A = $data->CVC_GOOD_FLOW_A ?? false;
+            $this->CVC_GOOD_FLOW_V = $data->CVC_GOOD_FLOW_V ?? false;
+            $this->CVC_W_RESISTANCE_A = $data->CVC_W_RESISTANCE_A ?? false;
+            $this->CVC_W_RESISTANCE_V = $data->CVC_W_RESISTANCE_V ?? false;
+            $this->CVC_CLOTTED_A = $data->CVC_CLOTTED_A ?? false;
+            $this->CVC_CLOTTED_V = $data->CVC_CLOTTED_V ?? false;
+
+            $this->PRE_AMBULATORY = $data->PRE_AMBULATORY ?? false;
+            $this->PRE_AMBULATORY_W_ASSIT = $data->PRE_AMBULATORY_W_ASSIT ?? false;
+            $this->PRE_WHEEL_CHAIR = $data->PRE_WHEEL_CHAIR ?? false;
+            $this->PRE_CONSCIOUS = $data->PRE_CONSCIOUS ?? false;
+            $this->PRE_COHERENT = $data->PRE_COHERENT ?? false;
+            $this->PRE_DISORIENTED = $data->PRE_DISORIENTED ?? false;
+            $this->PRE_DROWSY = $data->PRE_DROWSY ?? false;
+            $this->PRE_CLEAR = $data->PRE_CLEAR ?? false;
+            $this->PRE_CRACKLES = $data->PRE_CRACKLES ?? false;
+            $this->PRE_RHONCHI = $data->PRE_RHONCHI ?? false;
+            $this->PRE_WHEEZES = $data->PRE_WHEEZES ?? false;
+            $this->PRE_RALES = $data->PRE_RALES ?? false;
+            $this->PRE_DISTENDED_JUGULAR_VIEW = $data->PRE_DISTENDED_JUGULAR_VIEW ?? false;
+            $this->PRE_ASCITES = $data->PRE_ASCITES ?? false;
+            $this->PRE_EDEMA = $data->PRE_EDEMA ?? false;
+            $this->PRE_LOCATION = $data->PRE_LOCATION ?? false;
+            $this->PRE_LOCATION_NOTES = $data->PRE_LOCATION_NOTES ?? '';
+            $this->PRE_DEPTH = $data->PRE_DEPTH ?? false;
+            $this->PRE_DEPTH_NOTES = $data->PRE_DEPTH_NOTES ?? '';
+            $this->PRE_REGULAR = $data->PRE_REGULAR ?? false;
+            $this->PRE_IRREGULAR = $data->PRE_IRREGULAR ?? false;
+
+
+            $this->POST_AMBULATORY = $data->POST_AMBULATORY ?? false;
+            $this->POST_AMBULATORY_W_ASSIT = $data->POST_AMBULATORY_W_ASSIT ?? false;
+            $this->POST_WHEEL_CHAIR = $data->POST_WHEEL_CHAIR ?? false;
+            $this->POST_CONSCIOUS = $data->POST_CONSCIOUS ?? false;
+            $this->POST_COHERENT = $data->POST_COHERENT ?? false;
+            $this->POST_DISORIENTED = $data->POST_DISORIENTED ?? false;
+            $this->POST_DROWSY = $data->POST_DROWSY ?? false;
+            $this->POST_CLEAR = $data->POST_CLEAR ?? false;
+            $this->POST_CRACKLES = $data->POST_CRACKLES ?? false;
+            $this->POST_RHONCHI = $data->POST_RHONCHI ?? false;
+            $this->POST_WHEEZES = $data->POST_WHEEZES ?? false;
+            $this->POST_RALES = $data->POST_RALES ?? false;
+            $this->POST_DISTENDED_JUGULAR_VIEW = $data->POST_DISTENDED_JUGULAR_VIEW ?? false;
+            $this->POST_ASCITES = $data->POST_ASCITES ?? false;
+            $this->POST_EDEMA = $data->POST_EDEMA ?? false;
+            $this->POST_LOCATION = $data->POST_LOCATION ?? false;
+            $this->POST_LOCATION_NOTES = $data->POST_LOCATION_NOTES ?? '';
+            $this->POST_DEPTH = $data->POST_DEPTH ?? false;
+            $this->POST_DEPTH_NOTES = $data->POST_DEPTH_NOTES ?? '';
+            $this->POST_REGULAR = $data->POST_REGULAR ?? false;
+            $this->POST_IRREGULAR = $data->POST_IRREGULAR ?? false;
+
+            // 
             $this->FULL_NAME = $data->CONTACT_NAME;
             $this->DATE = $data->DATE;
             $this->CODE = $data->CODE;
