@@ -34,12 +34,12 @@
                                     <tr>
 
                                         <th>Description</th>
-                                        <th>Drug & Med</th>
-                                        <th>Laboratory & Diagnois</th>
-                                        <th>Operating Room Fee</th>
-                                        <th>Supplies</th>
-                                        <th>Admin & Other Fee</th>
-                                        <th clss="col-1">Inactive</th>
+                                        <th class='col-1'>Drug & Med</th>
+                                        <th class="col-2">Laboratory & Diagnois</th>
+                                        <th class='col-1'>Operating Room Fee</th>
+                                        <th class="col-1">Supplies</th>
+                                        <th class="col-1">Admin & Other Fee</th>
+                                        <th class="col-1 text-center">Inactive</th>
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenancesettingslocation_custom_soa_create', ['id' => $LOCATION_ID]) }}"
                                                 class="text-white">
@@ -51,7 +51,10 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>{{ $list->DESCRIPTION }}</td>
-                                            <td class="text-right">{{ $list->DRUG_MED }}</td>
+                                            <td class="text-right">
+                                             {{ $list->DRUG_MED }}
+
+                                            </td>
                                             <td class="text-right">{{ $list->LAB_DIAG }}</td>
                                             <td class="text-right">{{ $list->OPERATING_ROOM_FEE }}</td>
                                             <td class="text-right">{{ $list->SUPPLIES }}</td>

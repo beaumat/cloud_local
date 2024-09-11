@@ -16,7 +16,9 @@ class PhilHealthSoaCustomServices
 
     public function Get(int $ID, int $LOCATION_ID)
     {
-        $result =  PhilHealthSoaCustom::where('ID', $ID)->where('LOCATION_ID', $LOCATION_ID)->first();
+        $result =  PhilHealthSoaCustom::where('ID', $ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->first();
         if ($result) {
             return $result;
         }

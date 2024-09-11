@@ -56,8 +56,15 @@ class HemoList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public function showNotes( int $ID,  string $NAME)
+    {
+
+        $data = ['HEMO_ID' => $ID, 'PATIENT_NAME' => $NAME];
+        $this->dispatch('open-nurse-notes', result: $data);
+    }
     public function mount()
     {
+        
 
         $this->DATE_FROM = $this->dateServices->NowDate();
         $this->DATE_TO = $this->dateServices->NowDate();

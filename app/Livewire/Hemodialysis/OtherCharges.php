@@ -69,6 +69,7 @@ class OtherCharges extends Component
 
         $this->dispatch('adding-item', result: $data);
     }
+
     public function render()
     {
         if ($this->showModal) {

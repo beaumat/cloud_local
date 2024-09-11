@@ -72,7 +72,8 @@
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Status</option>
                                                     @foreach ($statusList as $item)
-                                                        <option value="{{ $item->ID }}"> {{ $item->DESCRIPTION }} </option>
+                                                        <option value="{{ $item->ID }}"> {{ $item->DESCRIPTION }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -112,7 +113,7 @@
                                         <th class="text-center ">End</th>
                                         <th class="text-center">IC</th>
                                         <th class="col-2">Nurse Encoded</th>
-                                        <th class="text-center">JTF</th>
+                                        {{-- <th class="text-center">JTF</th> --}}
                                         <th>Location</th>
                                         <th class="text-center">S</th>
                                         <th class="text-center"> SC</th>
@@ -168,11 +169,11 @@
                                                 @endif
                                             </td>
                                             <td>{{ $list->NURSE_NAME }}</td>
-                                            <td class="text-center">
+                                            {{-- <td class="text-center">
                                                 @if ($list->JUSTIFY)
                                                     <i class="fa fa-check text-primary" aria-hidden="true"></i>
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                             <td> {{ $list->LOCATION_NAME }} </td>
                                             <td
                                                 class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success  @elseif ($list->STATUS_ID == 4) bg-secondary @else bg-danger @endif ">
@@ -272,11 +273,11 @@
                                                 @endif
                                             </td>
                                             <td>{{ $list->NURSE_NAME }}</td>
-                                            <td class="text-center">
+                                            {{-- <td class="text-center">
                                                 @if ($list->JUSTIFY)
                                                     <i class="fa fa-check text-primary" aria-hidden="true"></i>
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                             <td> {{ $list->LOCATION_NAME }} </td>
                                             <td
                                                 class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success  @elseif ($list->STATUS_ID == 4) bg-secondary @else bg-danger @endif ">
@@ -294,7 +295,12 @@
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-
+                                                @can('full-treatment-sheet')
+                                                    <button type="button" class="btn btn-xs btn-dark"
+                                                        wire:click="showNotes({{ $list->ID }},'{{ $list->CONTACT_NAME }}')">
+                                                        <i class="fa fa-list-ol" aria-hidden="true"></i>
+                                                    </button>
+                                                @endcan
                                                 @can('patient.treatment.delete')
                                                     @if ($list->STATUS_ID == 1)
                                                         <button wire:click='delete({{ $list->ID }})'
@@ -342,4 +348,5 @@
             </div>
         </div>
     </section>
+    @livewire('Hemodialysis.NurseNotes')
 </div>
