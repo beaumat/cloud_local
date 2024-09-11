@@ -10,7 +10,7 @@ class NurseNotes extends Component
 {
 
     public int $HEMO_ID;
-
+    public string $PATIENT_NAME;
     public int $ID;
     public string $TIME;
     public string $BP_1;
@@ -39,16 +39,32 @@ class NurseNotes extends Component
     public string $EDIT_NOTES;
 
     public $dataList = [];
-
+    public bool $showModal = false;
     private $hemoServices;
+    public int $STATUS_ID = 0;
     public function boot(HemoServices $hemoServices)
     {
         $this->hemoServices = $hemoServices;
     }
-    public function mount($hemoId)
+
+    #[On('open-nurse-notes')]
+    public function openModal($result)
     {
-        $this->HEMO_ID = $hemoId;
+        $this->ClearEntry();
+        $this->HEMO_ID = $result['HEMO_ID'];
+        $this->PATIENT_NAME = $result['PATIENT_NAME'] ?? '';
+        $hemoData =   $this->hemoServices->get($this->HEMO_ID);
+        if ($hemoData) {
+            $this->STATUS_ID = $hemoData->STATUS_ID;
+        }
+        $this->showModal = true;
     }
+    public function closeModal()
+    {
+
+        $this->showModal = false;
+    }
+
     public function edit(int $ID)
     {
         $data = $this->hemoServices->GetNotes($ID);
@@ -72,6 +88,23 @@ class NurseNotes extends Component
     {
         $this->EDIT_ID = null;
     }
+
+    public function ClearEntry()
+    {
+
+        $this->TIME = '';
+        $this->BP_1 = '';
+        $this->BP_2 = '';
+        $this->HR = '';
+        $this->BFR = '';
+        $this->AP = '';
+        $this->VP = '';
+        $this->TFP = '';
+        $this->TMP = '';
+        $this->HEPARIN = '';
+        $this->FLUSHING = '';
+        $this->NOTES = '';
+    }
     public function save()
     {
 
@@ -83,7 +116,7 @@ class NurseNotes extends Component
             'BFR'       => 'required|string',
             'TFP'       => 'required|string',
             'TMP'       => 'required|string',
-            
+
 
         ], [], [
             'TIME'     => 'Time',
@@ -91,13 +124,9 @@ class NurseNotes extends Component
             'BP_2'     => 'BP[2]',
             'HR'       => 'HR',
             'BFR'      => 'BFR',
-            'AP'       => 'AP',
-            'VP'       => 'VP',
             'TFP'      => 'TFP',
             'TMP'      => 'TMP',
-            'HEPARIN'  => 'HEPARIN',
-            'FLUSHING' => 'FLUSHING',
-            'NOTES'    => 'NOTES'
+
         ]);
 
 
@@ -119,6 +148,8 @@ class NurseNotes extends Component
                 $this->FLUSHING,
                 $this->NOTES
             );
+
+            $this->ClearEntry();
         } catch (\Throwable $th) {
             session()->flash('error', $th->getMessage());
         }
@@ -179,7 +210,6 @@ class NurseNotes extends Component
         try {
 
             $this->hemoServices->DeleteNotes($ID, $this->HEMO_ID);
-
         } catch (\Throwable $th) {
             session()->flash('error', $th->getMessage());
         }
@@ -192,9 +222,14 @@ class NurseNotes extends Component
         session()->forget('message');
         session()->forget('error');
     }
+
     public function render()
     {
-        $this->dataList = $this->hemoServices->ListNotes($this->HEMO_ID);
+
+        if ($this->showModal) {
+            $this->dataList = $this->hemoServices->ListNotes($this->HEMO_ID);
+        }
+
         return view('livewire.hemodialysis.nurse-notes');
     }
 }

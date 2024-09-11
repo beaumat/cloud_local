@@ -131,11 +131,17 @@
                                                 @endcan
                                             @endif
                                         @endif
+
+
+                                        <button wire:click='showNotes()' name="btnNotes" type='button'
+                                            class="btn btn-sm btn-dark"> <i class="fa fa-list-ol"
+                                                aria-hidden="true"></i> Nurse Notes</button>
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 1)
                                             @can('patient.treatment.create')
-                                                <a id="new" title="Create" href="{{ route('patientshemo_create') }}"
+                                                <a id="new" title="Create"
+                                                    href="{{ route('patientshemo_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endcan
                                         @endif
@@ -483,16 +489,11 @@
                         @endif
                     </div>
 
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body p-2">
-                                @livewire('Hemodialysis.NurseNotes', ['hemoId' => $ID])
-                            </div>
-                        </div>
-                    </div>
+             
                 </div>
             </div>
         </section>
     @endif
-    @livewire('PincodeEnter');
+    @livewire('PincodeEnter')
+    @livewire('Hemodialysis.NurseNotes')
 </div>

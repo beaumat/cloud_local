@@ -557,6 +557,14 @@ class HemoForm extends Component
             session()->flash("error", $message);
         }
     }
+    public function showNotes()
+    {
+        $contact = $this->contactServices->get($this->CUSTOMER_ID, 3);
+        if ($contact) {
+            $data = ['HEMO_ID' => $this->ID, 'PATIENT_NAME' => $contact->NAME];
+            $this->dispatch('open-nurse-notes', result: $data);
+        }
+    }
     #[On('clear-alert')]
     public function clearAlert()
     {
