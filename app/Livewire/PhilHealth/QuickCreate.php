@@ -113,7 +113,6 @@ class QuickCreate extends Component
 
         $data = $this->hemoServices->getDateTimeByRange($CONTACT_ID, $this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
         if ($data) {
-
             $this->DATE_ADMITTED = $data['FIRST_DATE'];
             $this->TIME_ADMITTED = $data['FIRST_TIME'];
             $this->DATE_DISCHARGED = $data['LAST_DATE'];

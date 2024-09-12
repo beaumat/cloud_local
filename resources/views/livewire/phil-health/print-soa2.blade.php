@@ -186,7 +186,11 @@
 
                         <div id="p-first" class="col-2  left-line text-right "> </div>
                         <div id="p-second" class="col-1 left-line text-right "> </div>
-                        <div id="p-pocket" class="col-1 text-center left-line"> </div>
+                        <div id="p-pocket" class="col-1 text-center left-line">
+                            @if ($OP_ROOM_N_BOARD > 0)
+                                {{ number_format($OP_ROOM_N_BOARD, 2) }}
+                            @endif
+                        </div>
                     </div>
                     <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
@@ -220,7 +224,9 @@
 
                         </div>
                         <div id="p-pocket" class="col-1 text-center left-line">
-
+                            @if ($OP_DRUG_N_MEDICINE > 0)
+                                {{ number_format($OP_DRUG_N_MEDICINE, 2) }}
+                            @endif
                         </div>
                     </div>
                     <div class="row bottom-line right-line left-line">
@@ -255,7 +261,9 @@
 
                         </div>
                         <div id="p-pocket" class="col-1 text-center left-line">
-
+                            @if ($OP_LAB_N_DIAGNOSTICS > 0)
+                                {{ number_format($OP_LAB_N_DIAGNOSTICS, 2) }}
+                            @endif
                         </div>
                     </div>
                     <div class="row bottom-line right-line left-line">
@@ -263,9 +271,10 @@
                             Operating Room Fee
                         </div>
                         <div id="p-charge" class="col-1 text-right  left-line">
-                            {{-- @if ($CHARGES_OPERATING_ROOM_FEE > 0) --}}
-                            {{ number_format($CHARGES_OPERATING_ROOM_FEE, 2) }}
-                            {{-- @endif --}}
+
+                            @if ($CHARGES_OPERATING_ROOM_FEE > 0)
+                                {{ number_format($CHARGES_OPERATING_ROOM_FEE, 2) }}
+                            @endif
                         </div>
                         <div id="p-vat" class="col-1 text-right  left-line">
                             @if ($VAT_OPERATING_ROOM_FEE > 0)
@@ -288,7 +297,9 @@
                         <div id="p-second" class="col-1 left-line text-center ">
                         </div>
                         <div id="p-pocket" class="col-1 text-center left-line">
-
+                            @if ($OP_OPERATING_ROOM_FEE > 0)
+                                {{ number_format($OP_OPERATING_ROOM_FEE, 2) }}
+                            @endif
                         </div>
                     </div>
                     <div class="row bottom-line right-line left-line">
@@ -321,7 +332,9 @@
                         <div id="p-second" class="col-1 left-line text-center ">
                         </div>
                         <div id="p-pocket" class="col-1 text-center left-line">
-
+                            @if ($OP_SUPPLIES > 0)
+                                {{ number_format($OP_SUPPLIES, 2) }}
+                            @endif
                         </div>
                     </div>
                     <div class="row bottom-line right-line left-line">
@@ -351,7 +364,11 @@
 
                         <div id="p-first" class="col-2  left-line text-center "> </div>
                         <div id="p-second" class="col-1 left-line text-center "> </div>
-                        <div id="p-pocket" class="col-1 text-center left-line"> </div>
+                        <div id="p-pocket" class="col-1 text-center left-line">
+                            @if ($OP_OTHERS > 0)
+                                {{ number_format($OP_OTHERS, 2) }}
+                            @endif
+                        </div>
                     </div>
 
                     <div class="row bottom-line right-line left-line">
@@ -412,9 +429,7 @@
                             @endif
                         </div>
                         <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
-
                             {{ number_format($OP_SUB_TOTAL, 2) }}
-
                         </div>
                     </div>
 
@@ -610,9 +625,7 @@
                             @endif
                         </div>
                         <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
-
                             {{ number_format($OP_TOTAL, 2) }}
-
                         </div>
                     </div>
                 </div>
@@ -624,7 +637,7 @@
                                 Prepared by:
                                 <div class="form-group row  mt-4">
                                     <div class="col-10 text-center bottom-line">
-                                    <strong >
+                                        <strong>
                                             {{ $USER_NAME }}</strong>
                                     </div>
                                     <div class="col-10 text-center">PHIC IN-Charge</div>

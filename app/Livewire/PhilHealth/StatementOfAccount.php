@@ -287,6 +287,7 @@ class StatementOfAccount extends Component
         // $this->PROF_FEE_AMOUNT = $this->philHealthServices->PROF_FEE_AMOUNT;
 
         $this->profFeeList($ID);
+        $this->PreLoad($this->ID);
     }
     public function profFeeList($PHIC_ID)
     {
@@ -298,7 +299,7 @@ class StatementOfAccount extends Component
 
 
 
-        $this->PreLoad($this->ID);
+  
 
         return view('livewire.phil-health.statement-of-account');
     }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\PhilHealthSoaCustom;
 use App\Models\PhilHealthSoaCustomRequired;
+use Illuminate\Support\Facades\DB;
 
 class PhilHealthSoaCustomServices
 {
@@ -166,4 +167,20 @@ class PhilHealthSoaCustomServices
 
         return $result;
     }
+
+    public function CollectionRequirements(int $LOCATION_ID, array $itemList = [])
+    {
+
+        $result = PhilHealthSoaCustom::query()
+            ->select(['philhealth_soa_custom.ID'])
+            ->leftJoin('philhealth_soa_custom_required', 'philhealth_soa_custom_required.SOA_CUSTOM_ID', '=', 'philhealth_soa_custom.ID')
+            ->whereIn('philhealth_soa_custom_required.ITEM_ID', $itemList)
+            ->where('philhealth_soa_custom.LOCATION_ID', $LOCATION_ID)
+            ->where('philhealth_soa_custom.INACTIVE', false)
+            ->orderBy(DB::raw('(philhealth_soa_custom.DRUG_MED + philhealth_soa_custom.LAB_DIAG + philhealth_soa_custom.OPERATING_ROOM_FEE + philhealth_soa_custom.SUPPLIES + philhealth_soa_custom.ADMIN_OTHER_FEE)'), 'desc')
+            ->get();
+
+        return $result;
+    }
+    public function CheckingRequirements(int $SOA_ID) {}
 }

@@ -229,6 +229,8 @@ class PhilHealthForm extends Component
                 $this->FIRST_CASE_RATE,
                 $this->SECOND_CASE_RATE
             );
+
+    
             $this->philHealthServices->DefaultEntry($this->ID);
             $this->Modify = false;
 

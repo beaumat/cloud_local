@@ -698,4 +698,19 @@ class ServiceChargeServices
                 'service_charges_items.IS_POSTED' => true
             ]);
     }
+
+    public function GetItemForCustomSoa(string $DATE, int $PATIENT_ID, int $LOCATION_ID)
+    {
+        $result = ServiceChargesItems::select(['service_charges_items.ITEM_ID'])
+            ->join('item', 'item.ID', '=', 'service_charges_items.ITEM_ID')
+            ->join('service_charges', 'service_charges.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('service_charges.DATE', $DATE)
+            ->where('service_charges.LOCATION_ID', $LOCATION_ID)
+            ->where('service_charges.PATIENT_ID', $PATIENT_ID)
+            ->get();
+
+  
+        return $result->toArray();
+    }
 }
