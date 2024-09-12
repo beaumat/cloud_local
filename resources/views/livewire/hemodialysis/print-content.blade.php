@@ -536,7 +536,7 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="text-xs mb-2">
-                                        <b >
+                                        <b>
                                             <div class="row">
                                                 <div class="col-4 text-right">
                                                     OTHERS:
@@ -554,22 +554,44 @@
                                     <label>CVC ACCESS</label>
                                 </div>
                                 <div class="col-3">
-                                    <div class="text-xs">@if($CVC_SUBCATH)[&#10003;]@else[&nbsp;&nbsp;] @endif SUBCATH </div>
+                                    <div class="text-xs">
+                                        @if ($CVC_SUBCATH)
+                                        [&#10003;]@else[&nbsp;&nbsp;]
+                                        @endif SUBCATH
+                                    </div>
                                 </div>
                                 <div class="col-3">
-                                    <div class="text-xs">@if($CVC_JUGCATH)[&#10003;]@else[&nbsp;&nbsp;] @endif JUGCATH </div>
+                                    <div class="text-xs">
+                                        @if ($CVC_JUGCATH)
+                                        [&#10003;]@else[&nbsp;&nbsp;]
+                                        @endif JUGCATH
+                                    </div>
                                 </div>
                                 <div class="col-3">
-                                    <div class="text-xs">@if($CVC_FEMCATCH)[&#10003;]@else[&nbsp;&nbsp;] @endif FEMCATH </div>
+                                    <div class="text-xs">
+                                        @if ($CVC_FEMCATCH)
+                                        [&#10003;]@else[&nbsp;&nbsp;]
+                                        @endif FEMCATH
+                                    </div>
                                 </div>
                                 <div class="col-3 text-left">
-                                    <div class="text-xs" style="width:100px;">@if($CVC_PERMACATH)[&#10003;]@else[&nbsp;&nbsp;] @endif PERMCATH</div>
+                                    <div class="text-xs" style="width:100px;">
+                                        @if ($CVC_PERMACATH)
+                                        [&#10003;]@else[&nbsp;&nbsp;]
+                                        @endif PERMCATH
+                                    </div>
                                 </div>
                                 <div class="col-3">
                                     <div class="text-xs"> LOCATION : </div>
                                 </div>
                                 <div class="col-3 text-left">
-                                    <div class="text-xs"> @if($CVC_RIGHT)[&#10003;]@else[&nbsp;&nbsp;] @endif R @if($CVC_LEFT)[&#10003;]@else[&nbsp;&nbsp;] @endif L </div>
+                                    <div class="text-xs">
+                                        @if ($CVC_RIGHT)
+                                        [&#10003;]@else[&nbsp;&nbsp;]
+                                            @endif R @if ($CVC_LEFT)
+                                            [&#10003;]@else[&nbsp;&nbsp;]
+                                            @endif L
+                                    </div>
                                 </div>
                                 <div class="col-12 mt-4">
                                     <div class="row">
@@ -581,15 +603,39 @@
                                         </div>
                                         <div class="col-3">
                                             <div class="text-xs"> ARTERIAL </div>
-                                            <div class="text-xs text-center"> @if($CVC_GOOD_FLOW_A)[&#10003;]@else[&nbsp;&nbsp;] @endif </div>
-                                            <div class="text-xs text-center"> @if($CVC_W_RESISTANCE_A)[&#10003;]@else[&nbsp;&nbsp;] @endif </div>
-                                            <div class="text-xs text-center"> @if($CVC_CLOTTED_A)[&#10003;]@else[&nbsp;&nbsp;] @endif </div>
+                                            <div class="text-xs text-center">
+                                                @if ($CVC_GOOD_FLOW_A)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif
+                                            </div>
+                                            <div class="text-xs text-center">
+                                                @if ($CVC_W_RESISTANCE_A)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif
+                                            </div>
+                                            <div class="text-xs text-center">
+                                                @if ($CVC_CLOTTED_A)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif
+                                            </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="text-xs"> VENOUS </div>
-                                            <div class="text-xs text-center"> @if($CVC_GOOD_FLOW_V)[&#10003;]@else[&nbsp;&nbsp;] @endif </div>
-                                            <div class="text-xs text-center"> @if($CVC_W_RESISTANCE_V)[&#10003;]@else[&nbsp;&nbsp;] @endif </div>
-                                            <div class="text-xs text-center"> @if($CVC_CLOTTED_V)[&#10003;]@else[&nbsp;&nbsp;] @endif </div>
+                                            <div class="text-xs text-center">
+                                                @if ($CVC_GOOD_FLOW_V)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif
+                                            </div>
+                                            <div class="text-xs text-center">
+                                                @if ($CVC_W_RESISTANCE_V)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif
+                                            </div>
+                                            <div class="text-xs text-center">
+                                                @if ($CVC_CLOTTED_V)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif
+                                            </div>
 
                                         </div>
                                     </div>
@@ -611,14 +657,42 @@
                                             MOBILIZATION
                                         </div>
                                         <div class="col-12">
-                                            <div class="text-xs text-left"> @if($PRE_AMBULATORY)[&#10003;]@else[&nbsp;&nbsp;] @endif AMBULATORY</div>
-                                            <div class="text-xs text-left"> @if($PRE_AMBULATORY_W_ASSIT)[&#10003;]@else[&nbsp;&nbsp;] @endif AMBULATORY W/ ASSSIT</div>
-                                            <div class="text-xs text-left"> @if($PRE_WHEEL_CHAIR)[&#10003;]@else[&nbsp;&nbsp;] @endif WHEEL CHAIR</div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_AMBULATORY)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif AMBULATORY
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_AMBULATORY_W_ASSIT)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif AMBULATORY W/ ASSIT
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_WHEEL_CHAIR)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif WHEEL CHAIR
+                                            </div>
                                             <div class="text-xs text-center">L.O.C</div>
-                                            <div class="text-xs text-left"> @if($PRE_CONSCIOUS)[&#10003;]@else[&nbsp;&nbsp;] @endif CONSCIOUS</div>
-                                            <div class="text-xs text-left"> @if($PRE_COHERENT)[&#10003;]@else[&nbsp;&nbsp;] @endif COHERENT</div>
-                                            <div class="text-xs text-left"> @if($PRE_DISORIENTED)[&#10003;]@else[&nbsp;&nbsp;] @endif DISORIENTED</div>
-                                            <div class="text-xs text-left"> @if($PRE_DROWSY)[&#10003;]@else[&nbsp;&nbsp;] @endif DROWSY</div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_CONSCIOUS)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif CONSCIOUS
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_COHERENT)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif COHERENT
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_DISORIENTED)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif DISORIENTED
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_DROWSY)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif DROWSY
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -628,11 +702,31 @@
                                             LUNGS
                                         </div>
                                         <div class="col-12">
-                                            <div class="text-xs text-left"> @if($PRE_CLEAR)[&#10003;]@else[&nbsp;&nbsp;] @endif CLEAR</div>
-                                            <div class="text-xs text-left"> @if($PRE_CRACKLES)[&#10003;]@else[&nbsp;&nbsp;] @endif CRACKLES</div>
-                                            <div class="text-xs text-left"> @if($PRE_RHONCHI)[&#10003;]@else[&nbsp;&nbsp;] @endif RHONCHI</div>
-                                            <div class="text-xs text-left"> @if($PRE_WHEEZES)[&#10003;]@else[&nbsp;&nbsp;] @endif WHEEZES</div>
-                                            <div class="text-xs text-left"> @if($PRE_RALES)[&#10003;]@else[&nbsp;&nbsp;] @endif RALES</div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_CLEAR)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif CLEAR
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_CRACKLES)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif CRACKLES
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_RHONCHI)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif RHONCHI
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_WHEEZES)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif WHEEZES
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_RALES)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif RALES
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -642,26 +736,42 @@
                                             FLUID STATUS
                                         </div>
                                         <div class="col-12">
-                                            <div class="text-xs text-left"> @if($PRE_DISTENDED_JUGULAR_VIEW)[&#10003;]@else[&nbsp;&nbsp;] @endif DISTENDED JUGULAR VIEW</div>
-                                            <div class="text-xs text-left"> @if($PRE_ASCITES)[&#10003;]@else[&nbsp;&nbsp;] @endif ASCITES</div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_DISTENDED_JUGULAR_VIEW)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif DISTENDED JUGULAR VIEW
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_ASCITES)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif ASCITES
+                                            </div>
                                             <div class="text-xs text-left"> </div>
-                                            <div class="text-xs text-left"> @if($PRE_EDEMA)[&#10003;]@else[&nbsp;&nbsp;] @endif EDEMA</div>
-                                            <div class="text-xs text-left row"> 
-                                                    <div class="col-6">
-                                                        @if($PRE_LOCATION)[&#10003;]@else[&nbsp;&nbsp;] @endif LOCATION:
-                                                    </div>
-                                                    <div class="col-6 bottom-line2 text-left">
-                                                        &nbsp;{{ $PRE_LOCATION_NOTES }}
-                                                    </div>
-                                             </div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_EDEMA)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif EDEMA
+                                            </div>
                                             <div class="text-xs text-left row">
-                                                 <div class="col-5">
-                                                        @if($PRE_DEPTH)[&#10003;]@else[&nbsp;&nbsp;] @endif DEPTH:
-                                                    </div>
-                                                    <div class="col-7 bottom-line2 text-left">
-                                                       &nbsp;{{ $PRE_DEPTH_NOTES }}
+                                                <div class="col-6">
+                                                    @if ($PRE_LOCATION)
+                                                    [&#10003;]@else[&nbsp;&nbsp;]
+                                                    @endif LOCATION:
                                                 </div>
-                                              </div>
+                                                <div class="col-6 bottom-line2 text-left">
+                                                    &nbsp;{{ $PRE_LOCATION_NOTES }}
+                                                </div>
+                                            </div>
+                                            <div class="text-xs text-left row">
+                                                <div class="col-5">
+                                                    @if ($PRE_DEPTH)
+                                                    [&#10003;]@else[&nbsp;&nbsp;]
+                                                    @endif DEPTH:
+                                                </div>
+                                                <div class="col-7 bottom-line2 text-left">
+                                                    &nbsp;{{ $PRE_DEPTH_NOTES }}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -671,8 +781,16 @@
                                             HEART
                                         </div>
                                         <div class="col-12">
-                                            <div class="text-xs text-left">@if($PRE_REGULAR)[&#10003;]@else[&nbsp;&nbsp;] @endif REGULAR</div>
-                                            <div class="text-xs text-left float-left" style="width:200px;">@if($PRE_IRREGULAR)[&#10003;]@else[&nbsp;&nbsp;] @endif IRREGULAR</div>
+                                            <div class="text-xs text-left">
+                                                @if ($PRE_REGULAR)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif REGULAR
+                                            </div>
+                                            <div class="text-xs text-left float-left" style="width:200px;">
+                                                @if ($PRE_IRREGULAR)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif IRREGULAR
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -687,20 +805,48 @@
                                 <div class="col-12 bottom-line text-center">
                                     <b>POST-HEMODIALYSIS ASSESSMENT</b>
                                 </div>
-                                    <div class="col-4">
+                                <div class="col-4">
                                     <div class="row">
                                         <div class="col-12 text-center font-weight-bold">
                                             MOBILIZATION
                                         </div>
                                         <div class="col-12">
-                                            <div class="text-xs text-left"> @if($POST_AMBULATORY)[&#10003;]@else[&nbsp;&nbsp;] @endif AMBULATORY</div>
-                                            <div class="text-xs text-left"> @if($POST_AMBULATORY_W_ASSIT)[&#10003;]@else[&nbsp;&nbsp;] @endif AMBULATORY W/ ASSSIT</div>
-                                            <div class="text-xs text-left"> @if($POST_WHEEL_CHAIR)[&#10003;]@else[&nbsp;&nbsp;] @endif WHEEL CHAIR</div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_AMBULATORY)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif AMBULATORY
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_AMBULATORY_W_ASSIT)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif AMBULATORY W/ ASSIT
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_WHEEL_CHAIR)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif WHEEL CHAIR
+                                            </div>
                                             <div class="text-xs text-center">L.O.C</div>
-                                            <div class="text-xs text-left"> @if($POST_CONSCIOUS)[&#10003;]@else[&nbsp;&nbsp;] @endif CONSCIOUS</div>
-                                            <div class="text-xs text-left"> @if($POST_COHERENT)[&#10003;]@else[&nbsp;&nbsp;] @endif COHERENT</div>
-                                            <div class="text-xs text-left"> @if($POST_DISORIENTED)[&#10003;]@else[&nbsp;&nbsp;] @endif DISORIENTED</div>
-                                            <div class="text-xs text-left"> @if($POST_DROWSY)[&#10003;]@else[&nbsp;&nbsp;] @endif DROWSY</div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_CONSCIOUS)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif CONSCIOUS
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_COHERENT)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif COHERENT
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_DISORIENTED)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif DISORIENTED
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_DROWSY)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif DROWSY
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -710,11 +856,31 @@
                                             LUNGS
                                         </div>
                                         <div class="col-12">
-                                            <div class="text-xs text-left"> @if($POST_CLEAR)[&#10003;]@else[&nbsp;&nbsp;] @endif CLEAR</div>
-                                            <div class="text-xs text-left"> @if($POST_CRACKLES)[&#10003;]@else[&nbsp;&nbsp;] @endif CRACKLES</div>
-                                            <div class="text-xs text-left"> @if($POST_RHONCHI)[&#10003;]@else[&nbsp;&nbsp;] @endif RHONCHI</div>
-                                            <div class="text-xs text-left"> @if($POST_WHEEZES)[&#10003;]@else[&nbsp;&nbsp;] @endif WHEEZES</div>
-                                            <div class="text-xs text-left"> @if($POST_RALES)[&#10003;]@else[&nbsp;&nbsp;] @endif RALES</div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_CLEAR)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif CLEAR
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_CRACKLES)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif CRACKLES
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_RHONCHI)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif RHONCHI
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_WHEEZES)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif WHEEZES
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_RALES)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif RALES
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -724,26 +890,42 @@
                                             FLUID STATUS
                                         </div>
                                         <div class="col-12">
-                                            <div class="text-xs text-left"> @if($POST_DISTENDED_JUGULAR_VIEW)[&#10003;]@else[&nbsp;&nbsp;] @endif DISTENDED JUGULAR VIEW</div>
-                                            <div class="text-xs text-left"> @if($POST_ASCITES)[&#10003;]@else[&nbsp;&nbsp;] @endif ASCITES</div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_DISTENDED_JUGULAR_VIEW)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif DISTENDED JUGULAR VIEW
+                                            </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_ASCITES)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif ASCITES
+                                            </div>
                                             <div class="text-xs text-left"> </div>
-                                            <div class="text-xs text-left"> @if($POST_EDEMA)[&#10003;]@else[&nbsp;&nbsp;] @endif EDEMA</div>
-                                            <div class="text-xs text-left row"> 
-                                                    <div class="col-6">
-                                                        @if($POST_LOCATION)[&#10003;]@else[&nbsp;&nbsp;] @endif LOCATION:
-                                                    </div>
-                                                    <div class="col-6 bottom-line2 text-left">
-                                                        &nbsp;{{ $POST_LOCATION_NOTES }}
-                                                    </div>
-                                             </div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_EDEMA)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif EDEMA
+                                            </div>
                                             <div class="text-xs text-left row">
-                                                 <div class="col-5">
-                                                        @if($POST_DEPTH)[&#10003;]@else[&nbsp;&nbsp;] @endif DEPTH:
-                                                    </div>
-                                                    <div class="col-7 bottom-line2 text-left">
-                                                       &nbsp;{{ $POST_DEPTH_NOTES }}
+                                                <div class="col-6">
+                                                    @if ($POST_LOCATION)
+                                                    [&#10003;]@else[&nbsp;&nbsp;]
+                                                    @endif LOCATION:
                                                 </div>
-                                              </div>
+                                                <div class="col-6 bottom-line2 text-left">
+                                                    &nbsp;{{ $POST_LOCATION_NOTES }}
+                                                </div>
+                                            </div>
+                                            <div class="text-xs text-left row">
+                                                <div class="col-5">
+                                                    @if ($POST_DEPTH)
+                                                    [&#10003;]@else[&nbsp;&nbsp;]
+                                                    @endif DEPTH:
+                                                </div>
+                                                <div class="col-7 bottom-line2 text-left">
+                                                    &nbsp;{{ $POST_DEPTH_NOTES }}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -753,8 +935,16 @@
                                             HEART
                                         </div>
                                         <div class="col-12">
-                                            <div class="text-xs text-left">@if($POST_REGULAR)[&#10003;]@else[&nbsp;&nbsp;] @endif REGULAR</div>
-                                            <div class="text-xs text-left float-left" style="width:200px;">@if($POST_IRREGULAR)[&#10003;]@else[&nbsp;&nbsp;] @endif IRREGULAR</div>
+                                            <div class="text-xs text-left">
+                                                @if ($POST_REGULAR)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif REGULAR
+                                            </div>
+                                            <div class="text-xs text-left float-left" style="width:200px;">
+                                                @if ($POST_IRREGULAR)
+                                                [&#10003;]@else[&nbsp;&nbsp;]
+                                                @endif IRREGULAR
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -781,7 +971,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($collection as $item)
+
+                        @foreach ($noteList as $list)
+                            <tr class="text-center top-line">
+                                <td>{{ date('h:i:s A', strtotime($list->TIME)) }}</td>
+                                <td class="left-line">{{ $list->BP_1 }}/{{ $list->BP_2 }}</td>
+                                <td class="left-line">{{ $list->HR }}</td>
+                                <td class="left-line">{{ $list->BFR }}</td>
+                                <td class="left-line">{{ $list->AP }}|{{ $list->VP }}</td>
+                                <td class="left-line">{{ $list->TFP }}</td>
+                                <td class="left-line">{{ $list->TMP }}</td>
+                                <td class="left-line">{{ $list->HEPARIN }}|{{ $list->FLUSHING }}</td>
+                                <td class="left-line">{{ $list->NOTES }}</td>
+                            </tr>
+                            @php
+                                $r++;
+                            @endphp
+                        @endforeach
+                        @for ($i = $r; $i < $e; $i++)
                             <tr class="text-center top-line">
                                 <td></td>
                                 <td class="left-line"></td>
@@ -793,7 +1000,21 @@
                                 <td class="left-line">|</td>
                                 <td class="left-line"></td>
                             </tr>
-                        @endforeach
+                        @endfor
+
+                        {{-- @foreach ($collection as $item)
+                            <tr class="text-center top-line">
+                                <td></td>
+                                <td class="left-line"></td>
+                                <td class="left-line"></td>
+                                <td class="left-line"></td>
+                                <td class="left-line">|</td>
+                                <td class="left-line"></td>
+                                <td class="left-line"></td>
+                                <td class="left-line">|</td>
+                                <td class="left-line"></td>
+                            </tr>
+                        @endforeach --}}
                     </tbody>
                 </table>
                 <div class="col-12 left-line right-line bottom-line">

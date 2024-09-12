@@ -51,6 +51,8 @@ class PrintContent extends Component
     public int $CUSTOMER_ID;
     public int $LOCATION_ID;
     public array $collection = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+    public int $r =0;
+    public int $e = 15;
     public string $NEPRHO_NAME;
     public string $DIAGNOSIS = " ";
     public int $NO_OF_TREATMENT = 0;
@@ -152,7 +154,7 @@ class PrintContent extends Component
     public bool $POST_IRREGULAR;
 
 
-
+    public $noteList = [];
 
     public $SE_PARTS = [];
     public $SO_PARTS = [];
@@ -352,6 +354,8 @@ class PrintContent extends Component
            if($locData) {
             $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
            }
+
+           $this->noteList = $this->hemoServices->ListNotes($this->HEMO_ID);
         }
     }
 
