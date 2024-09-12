@@ -971,9 +971,8 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         @foreach ($noteList as $list)
-                            <tr class="text-center top-line text-primary text-sm">
+                            <tr class="text-center top-line text-primary">
                                 <td>{{ date('h:i:s A', strtotime($list->TIME)) }}</td>
                                 <td class="left-line">
                                     <div class="row">
