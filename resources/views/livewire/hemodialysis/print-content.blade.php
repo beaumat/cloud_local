@@ -977,27 +977,27 @@
                                 <td>{{ date('h:i:s A', strtotime($list->TIME)) }}</td>
                                 <td class="left-line">
                                     <div class="row">
-                                        <div class="col-5">{{ $list->BP_1 }}</div>
+                                        <div class="col-5 text-right">{{ $list->BP_1 }}</div>
                                         <div class="col-2">|</div>
-                                        <div class="col-5">{{ $list->BP_2 }}</div>
+                                        <div class="col-5 text-left">{{ $list->BP_2 }}</div>
                                     </div>
                                 </td>
                                 <td class="left-line">{{ $list->HR }}</td>
                                 <td class="left-line">{{ $list->BFR }}</td>
                                 <td class="left-line">
                                     <div class="row">
-                                        <div class="col-5">{{ $list->AP }}</div>
+                                        <div class="col-5 text-right">{{ $list->AP }}</div>
                                         <div class="col-2">|</div>
-                                        <div class="col-5">{{ $list->VP }}</div>
+                                        <div class="col-5 text-left">{{ $list->VP }}</div>
                                     </div>
                                 </td>
                                 <td class="left-line">{{ $list->TFP }}</td>
                                 <td class="left-line">{{ $list->TMP }}</td>
                                 <td class="left-line">
                                     <div class="row">
-                                        <div class="col-5">{{ $list->HEPARIN }}</div>
+                                        <div class="col-5 text-right">{{ $list->HEPARIN }}</div>
                                         <div class="col-2">|</div>
-                                        <div class="col-5">{{ $list->FLUSHING }}</div>
+                                        <div class="col-5 text-left">{{ $list->FLUSHING }}</div>
                                     </div>
                                 </td>
                                 <td class="left-line">{{ $list->NOTES }}</td>
