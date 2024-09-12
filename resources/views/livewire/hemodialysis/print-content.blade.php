@@ -973,15 +973,33 @@
                     <tbody>
 
                         @foreach ($noteList as $list)
-                            <tr class="text-center top-line">
+                            <tr class="text-center top-line text-primary">
                                 <td>{{ date('h:i:s A', strtotime($list->TIME)) }}</td>
-                                <td class="left-line">{{ $list->BP_1 }}/{{ $list->BP_2 }}</td>
+                                <td class="left-line">
+                                    <div class="row">
+                                        <div class="col-5">{{ $list->BP_1 }}</div>
+                                        <div class="col-2">|</div>
+                                        <div class="col-5">{{ $list->BP_2 }}</div>
+                                    </div>
+                                </td>
                                 <td class="left-line">{{ $list->HR }}</td>
                                 <td class="left-line">{{ $list->BFR }}</td>
-                                <td class="left-line">{{ $list->AP }}|{{ $list->VP }}</td>
+                                <td class="left-line">
+                                    <div class="row">
+                                        <div class="col-5">{{ $list->AP }}</div>
+                                        <div class="col-2">|</div>
+                                        <div class="col-5">{{ $list->VP }}</div>
+                                    </div>
+                                </td>
                                 <td class="left-line">{{ $list->TFP }}</td>
                                 <td class="left-line">{{ $list->TMP }}</td>
-                                <td class="left-line">{{ $list->HEPARIN }}|{{ $list->FLUSHING }}</td>
+                                <td class="left-line">
+                                    <div class="row">
+                                        <div class="col-5">{{ $list->HEPARIN }}</div>
+                                        <div class="col-2">|</div>
+                                        <div class="col-5">{{ $list->FLUSHING }}</div>
+                                    </div>
+                                </td>
                                 <td class="left-line">{{ $list->NOTES }}</td>
                             </tr>
                             @php
