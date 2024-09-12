@@ -218,7 +218,7 @@
                             <div class="row">
                                 <div class="col-12 bottom-line">
                                     <p class="up-space down-space"> <b>UF GOAL :</b><span
-                                            class="text-sm">&nbsp;{{ $UF_GOAL }}</span></p>
+                                            class="text-sm font-weight-bold text-primary">&nbsp;{{ $UF_GOAL }}</span></p>
                                 </div>
                                 <div class="col-4 ">
                                     <div class="row pb-2 font-weight-bold">
@@ -973,7 +973,7 @@
                     <tbody>
 
                         @foreach ($noteList as $list)
-                            <tr class="text-center top-line text-primary">
+                            <tr class="text-center top-line text-primary text-sm">
                                 <td>{{ date('h:i:s A', strtotime($list->TIME)) }}</td>
                                 <td class="left-line">
                                     <div class="row">
@@ -1019,20 +1019,6 @@
                                 <td class="left-line"></td>
                             </tr>
                         @endfor
-
-                        {{-- @foreach ($collection as $item)
-                            <tr class="text-center top-line">
-                                <td></td>
-                                <td class="left-line"></td>
-                                <td class="left-line"></td>
-                                <td class="left-line"></td>
-                                <td class="left-line">|</td>
-                                <td class="left-line"></td>
-                                <td class="left-line"></td>
-                                <td class="left-line">|</td>
-                                <td class="left-line"></td>
-                            </tr>
-                        @endforeach --}}
                     </tbody>
                 </table>
                 <div class="col-12 left-line right-line bottom-line">
