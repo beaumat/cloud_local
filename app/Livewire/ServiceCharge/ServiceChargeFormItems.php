@@ -229,6 +229,7 @@ class ServiceChargeFormItems extends Component
         $this->updatedcodeBase();
         if (Auth::user()->name == 'admin') {
             $this->isAdmin  =  true;
+            $this->canBeQtyEdit = true;
         }
     }
     public function saveItem()
@@ -280,7 +281,16 @@ class ServiceChargeFormItems extends Component
 
             $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
             if ($dataSC) {
-                $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->ITEM_ID,  $this->QUANTITY, false, $this->UNIT_ID > 0 ? $this->UNIT_ID : 0, $SK_ID);
+                $this->hemoServices->ItemQuery(
+                    $dataSC->PATIENT_ID,
+                    $dataSC->DATE,
+                    $dataSC->LOCATION_ID,
+                    $this->ITEM_ID,
+                    $this->QUANTITY,
+                    false,
+                    $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
+                    $SK_ID
+                );
             }
             DB::commit();
 
@@ -305,8 +315,17 @@ class ServiceChargeFormItems extends Component
             $this->updatedcodeBase();
 
             if ($this->philHealthServices->PHIL_HEALTH_ITEM_ID == $prime_item_id) {
-                $count = $this->serviceChargeServices->GetCountByYear($prime_item_id, $this->dateServices->NowYear(), $this->PATIENT_ID, $this->LOCATION_ID);
-                $countAdjust = $this->philHealthServices->ItemAdjustGet($this->PATIENT_ID, $this->LOCATION_ID, $this->dateServices->NowYear());
+                $count = $this->serviceChargeServices->GetCountByYear(
+                    $prime_item_id,
+                    $this->dateServices->NowYear(),
+                    $this->PATIENT_ID,
+                    $this->LOCATION_ID
+                );
+                $countAdjust = $this->philHealthServices->ItemAdjustGet(
+                    $this->PATIENT_ID,
+                    $this->LOCATION_ID,
+                    $this->dateServices->NowYear()
+                );
                 $totalCount = $count + $countAdjust;
                 $resultcount = ['count' => $totalCount];
                 $this->dispatch('phic-message', result: $resultcount);
@@ -367,6 +386,10 @@ class ServiceChargeFormItems extends Component
                 }
             }
 
+            if ($this->isAdmin) {
+                $this->canBeQtyEdit = true;
+            }
+
             $this->editItemId = $lineId;
             $this->lineQty = $lineQty;
             $this->lineUnitId = $lineUnitId;
@@ -423,7 +446,17 @@ class ServiceChargeFormItems extends Component
             if ($this->canBeQtyEdit) {
                 $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
                 if ($dataSC) {
-                    $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $this->lineItemId,  $this->lineQty, false,  $this->lineUnitId > 0 ? $this->lineUnitId : 0, $Id);
+                    $this->hemoServices->ItemQuery(
+                        $dataSC->PATIENT_ID,
+                        $dataSC->DATE,
+                        $dataSC->LOCATION_ID,
+                        $this->lineItemId,
+                        $this->lineQty,
+                        false,
+                        $this->lineUnitId > 0 ? $this->lineUnitId : 0,
+                        $Id,
+                        $this->canBeQtyEdit
+                    );
                 }
             }
 

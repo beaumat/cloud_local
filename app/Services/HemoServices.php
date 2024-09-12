@@ -1174,27 +1174,47 @@ class HemoServices
 
         return $ID;
     }
-    public function ItemUpdate(int $ID, int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT)
+    public function ItemUpdate(int $ID, int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT, bool $ON_CHANGE_POST = false)
     {
 
-        $itemData =  $this->ItemGet($ID);
-        if ($itemData) {
-            if ($itemData->IS_POST) {
-                $data = $this->Get($HEMO_ID);
-                $this->itemInventoryServices->InventoryModify($ITEM_ID, $data->LOCATION_ID, $ID, 27, $data->DATE, 0, $QUANTITY, 0);
-            }
-        }
+        // $itemData =  $this->ItemGet($ID);
+        // if ($itemData) {
+        //     if ($itemData->IS_POST) {
+        //         $data = $this->Get($HEMO_ID);
+        //         $this->itemInventoryServices->InventoryModify($ITEM_ID, $data->LOCATION_ID, $ID, 27, $data->DATE, 0, $QUANTITY, 0);
+        //     }
+        // }
 
-        HemodialysisItems::where('ID', $ID)
+        $dataCheck =  HemodialysisItems::where('ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
             ->where('ITEM_ID', $ITEM_ID)
-            ->where('IS_DEFAULT', $IS_DEFAULT)
-            ->update([
+            ->where('IS_DEFAULT', $IS_DEFAULT);
+
+        $getData = $dataCheck;
+
+        $list = $getData->first();
+        if ($list->IS_POST == false) {
+            $dataCheck->update([
                 'QUANTITY'              =>  $QUANTITY,
                 'UNIT_ID'               =>  $UNIT_ID > 0 ? $UNIT_ID : null,
                 'UNIT_BASE_QUANTITY'    =>  $UNIT_BASE_QUANTITY,
-                'IS_NEW'                =>  $IS_NEW,
+                'IS_NEW'                =>  $IS_NEW
             ]);
+
+            return;
+        }
+
+        if ($ON_CHANGE_POST == true) {
+            $dataCheck->update(
+                [
+                    'QUANTITY'              =>  $QUANTITY,
+                    'UNIT_ID'               =>  $UNIT_ID > 0 ? $UNIT_ID : null,
+                    'UNIT_BASE_QUANTITY'    =>  $UNIT_BASE_QUANTITY,
+                    'IS_NEW'                =>  $IS_NEW,
+                    'IS_POST'               =>  false
+                ]
+            );
+        }
     }
     public function ItemUpdateSC_ITEM_ID(int $ID, int $HEMO_ID, int $ITEM_ID, int $SC_ITEM_ID)
     {
@@ -1462,21 +1482,21 @@ class HemoServices
 
     public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
     {
-        return (int) Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)
-            ->where('LOCATION_ID', $LOCATION_ID)
+        return (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->where('DATE', '<=', $DATE)
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
     }
     public function codeIfExist(string $CODE): bool
     {
-        return Hemodialysis::where('CODE', $CODE)->exists();
+        return Hemodialysis::where('CODE', '=', $CODE)->exists();
     }
     public function UpdateQRFile($CODE, $FILE_NAME, $FILE_PATH): bool
     {
         $data =  $this->codeIfExist($CODE);
         if ($data) {
-            Hemodialysis::where('CODE', $CODE)
+            Hemodialysis::where('CODE', '=', $CODE)
                 ->update([
                     'FILE_NAME' => $FILE_NAME,
                     'FILE_PATH' => $FILE_PATH
@@ -1487,7 +1507,7 @@ class HemoServices
 
         return false;
     }
-    public function ItemQuery(int $PATIENT_ID, string $DATE, int $LOCATION_ID, int $ITEM_ID, float $QTY, bool $IS_DELETE, int $UNIT_ID, int $SC_ITEM_ID)
+    public function ItemQuery(int $PATIENT_ID, string $DATE, int $LOCATION_ID, int $ITEM_ID, float $QTY, bool $IS_DELETE, int $UNIT_ID, int $SC_ITEM_ID, bool $ON_CHANGE_POST  = false)
     {
 
         $itemDetails =  $this->itemServices->get($ITEM_ID);
@@ -1505,11 +1525,12 @@ class HemoServices
             'hemodialysis_items.HEMO_ID'
         ])
             ->join('hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
-            ->where('hemodialysis.CUSTOMER_ID', $PATIENT_ID)
-            ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
-            ->where('hemodialysis.DATE', $DATE)
-            ->where('hemodialysis_items.ITEM_ID', $ITEM_ID)
-            ->where('hemodialysis_items.IS_DEFAULT', false)
+            ->where('hemodialysis.CUSTOMER_ID', '=', $PATIENT_ID)
+            ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('hemodialysis.DATE', '=', $DATE)
+            ->where('hemodialysis_items.ITEM_ID', '=', $ITEM_ID)
+            ->where('hemodialysis_items.IS_DEFAULT', '=', false)
+            ->where('hemodialysis_items.SC_ITEM_ID', '=', $SC_ITEM_ID)
             ->first();
 
         if ($dataItem) { // HEMO EXISTS
@@ -1518,12 +1539,19 @@ class HemoServices
                 $this->ItemDeleteTrigger($dataItem->ID, $dataItem->HEMO_ID);
                 return;
             }
-
-
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-
-            $this->ItemUpdate($dataItem->ID, $dataItem->HEMO_ID, $ITEM_ID, $QTY, $UNIT_ID,  $UNIT_BASE_QUANTITY, true, false); // updated
+            $this->ItemUpdate(
+                $dataItem->ID,
+                $dataItem->HEMO_ID,
+                $ITEM_ID,
+                $QTY,
+                $UNIT_ID,
+                $UNIT_BASE_QUANTITY,
+                true,
+                false,
+                $ON_CHANGE_POST
+            );
             $dataTrigger = HemodialysisItems::query()
                 ->select([
                     'hemodialysis_items.ID',
@@ -1532,7 +1560,7 @@ class HemoServices
                     'hemodialysis_items.UNIT_ID',
                     'hemodialysis_items.UNIT_BASE_QUANTITY'
                 ])
-                ->where('hemodialysis_items.SK_LINE_ID', $dataItem->ID)
+                ->where('hemodialysis_items.SK_LINE_ID', '=', $dataItem->ID)
                 ->get();
 
             foreach ($dataTrigger  as $list) {
@@ -1540,30 +1568,72 @@ class HemoServices
                 $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
                 $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
                 $N_QTY =  $ORG_QTY * $QTY;
-                $this->ItemUpdate($list->ID, $list->HEMO_ID, $list->ITEM_ID, $N_QTY, $list->UNIT_ID, $TR_UNIT_BASE_QUANTITY, true, true);
+                $this->ItemUpdate(
+                    $list->ID,
+                    $list->HEMO_ID,
+                    $list->ITEM_ID,
+                    $N_QTY,
+                    $list->UNIT_ID,
+                    $TR_UNIT_BASE_QUANTITY,
+                    true,
+                    true
+                );
             }
 
             return;
         }
-        // new item
+        // get ID on HEMO
         $hemoData = Hemodialysis::select(['ID'])
-            ->where('hemodialysis.CUSTOMER_ID', $PATIENT_ID)
-            ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
+            ->where('hemodialysis.CUSTOMER_ID', '=', $PATIENT_ID)
+            ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
             ->where('hemodialysis.DATE', $DATE)
             ->first();
 
-        if ($hemoData) {
+        if ($hemoData) { // if exists
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-            $SK_LINE_ID =  $this->ItemStore($hemoData->ID, $ITEM_ID, $QTY, $UNIT_ID, $UNIT_BASE_QUANTITY, true, false, false, $SC_ITEM_ID, null); // created
+            $SK_LINE_ID =  $this->ItemStore(
+                $hemoData->ID,
+                $ITEM_ID,
+                $QTY,
+                $UNIT_ID,
+                $UNIT_BASE_QUANTITY,
+                true,
+                false,
+                false,
+                $SC_ITEM_ID,
+                null
+            ); // created
 
-            $dataTrigger = $this->itemTreatmentServices->getItemTrigger($ITEM_ID, $LOCATION_ID, $UNIT_ID);
+            if ($hemoData->DATE == $this->dateServices->NowDate()) {
+                // only trigger can u if current date
+                $dataTrigger = $this->itemTreatmentServices->getItemTrigger(
+                    $ITEM_ID,
+                    $LOCATION_ID,
+                    $UNIT_ID
+                );
 
-            foreach ($dataTrigger  as $list) {
-                $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
-                $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
-                $N_QTY =  $list->QUANTITY * $QTY;
-                $this->ItemStore($hemoData->ID, $list->ITEM_ID, $N_QTY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
+                foreach ($dataTrigger  as $list) {
+                    $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails(
+                        $list->ITEM_ID,
+                        $list->UNIT_ID ?? 0
+                    );
+
+                    $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+                    $N_QTY =  $list->QUANTITY * $QTY;
+                    $this->ItemStore(
+                        $hemoData->ID,
+                        $list->ITEM_ID,
+                        $N_QTY,
+                        $list->UNIT_ID ?? 0,
+                        $TR_UNIT_BASE_QUANTITY,
+                        true,
+                        true,
+                        false,
+                        null,
+                        $SK_LINE_ID
+                    );
+                }
             }
         }
     }
