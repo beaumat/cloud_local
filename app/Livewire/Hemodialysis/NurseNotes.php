@@ -124,7 +124,7 @@ class NurseNotes extends Component
             'BP_2'     => 'BP[2]',
             'HR'       => 'HR',
             'BFR'      => 'BFR',
-            'TFP'      => 'TFP',
+            'TFP'      => 'TFR',
             'TMP'      => 'TMP',
 
         ]);
@@ -175,7 +175,7 @@ class NurseNotes extends Component
             'EDIT_BFR'      => 'BFR',
             'EDIT_AP'       => 'AP',
             'EDIT_VP'       => 'VP',
-            'EDIT_TFP'      => 'TFP',
+            'EDIT_TFP'      => 'TFR',
             'EDIT_TMP'      => 'TMP',
             'EDIT_HEPARIN'  => 'HEPARIN',
             'EDIT_FLUSHING' => 'FLUSHING',

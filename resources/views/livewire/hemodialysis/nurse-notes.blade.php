@@ -25,7 +25,7 @@
                                                 <th class="text-center">HR</th>
                                                 <th class="text-center">BFR</th>
                                                 <th class="col-3 text-center">AP | VP</th>
-                                                <th class="text-center">TFP</th>
+                                                <th class="text-center">TFR</th>
                                                 <th class="text-center">TMP</th>
                                                 <th class="text-center">HEPARIN</th>
                                                 <th class="text-center">FLUSHING</th>
