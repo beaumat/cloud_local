@@ -98,7 +98,7 @@
                                     <th class="text-center">
                                         {{ date('d', strtotime($day)) }}<br />{{ date('D', strtotime($day)) }}</th>
                                 @endforeach
-                                <th>Total</th>
+                                <th class="text-center">Total</th>
                             </tr>
                         </thead>
                         <tbody class="text-xs">
@@ -119,7 +119,18 @@
                                     <td class="text-center text-primary">{{ $patient }}</td>
                                     <td>{{ $list->PATIENT_NAME }} </td>
                                     @foreach ($dailyList as $day)
-                                        <td class="text-center   @if ($list[date('d', strtotime($day))] == 1) bg-success @elseif ($list[date('d', strtotime($day))] == 2) bg-orange @endif">
+                                        @php
+                                            if ($list[date('d', strtotime($day))] == 1) {
+                                                $phicTotal[$index] = $phicTotal[$index] + 1;
+                                            }
+
+                                            if ($list[date('d', strtotime($day))] == 2) {
+                                                $premTotal[$index] = $premTotal[$index] + 1;
+                                            }
+
+                                        @endphp
+                                        <td
+                                            class="text-center   @if ($list[date('d', strtotime($day))] == 1) bg-success  @elseif ($list[date('d', strtotime($day))] == 2) bg-orange @endif">
                                             @if ($list[date('d', strtotime($day))])
                                                 <i class="fa fa-check" aria-hidden="true"></i>
                                                 @php
@@ -133,19 +144,72 @@
                                             $index++;
                                         @endphp
                                     @endforeach
-                                    <td class="text-center font-weight-bold">{{ $count }}</td>
+                                    <td class="text-center font-weight-bold text-danger h6">{{ $count }}</td>
                                     @php
 
                                         $total = $total + $count;
                                     @endphp
                                 </tr>
                             @endforeach
+                    <tr>
+                        <td><br/></td>
+                    </tr>
+
+                            <tr class="bg-green text-white">
+                                @php
+                                    $index = 0;
+                                    $sum = 0;
+                                @endphp
+                                <td>
+
+                                </td>
+                                <td class="font-weight-bold text-center">
+                                    <span>No. of Treatment W/ PHIC</span>
+                                </td>
+                                @foreach ($dailyList as $day)
+                                    <td class="text-center font-weight-bold ">
+                                        {{ $phicTotal[$index] }}
+                                        @php
+                                            $sum = $sum + $phicTotal[$index];
+                                        @endphp
+                                    </td>
+                                    @php
+                                        $index++;
+                                    @endphp
+                                @endforeach
+                                <td class="text-center font-weight-bold text-sm ">{{ $sum }}</td>
+                            </tr>
+
+                            <tr class="bg-orange text-white">
+                                @php
+                                    $index = 0;
+                                    $sum = 0;
+                                @endphp
+                                <td>
+                                </td>
+                                <td class="font-weight-bold text-center">
+                                    <span>No. of Treatment Priming</span>
+                                </td>
+                                @foreach ($dailyList as $day)
+                                    <td class="text-center font-weight-bold ">
+                                        {{ $premTotal[$index] }}
+                                        @php
+                                            $sum = $sum + $premTotal[$index];
+                                        @endphp
+                                    </td>
+                                    @php
+                                        $index++;
+                                    @endphp
+                                @endforeach
+                                <td class="text-center font-weight-bold text-sm ">{{ $sum }}</td>
+                            </tr>
+
 
                             <tr class="bg-dark text-white">
                                 @php
                                     $index = 0;
                                 @endphp
-                                <td >
+                                <td>
 
                                 </td>
                                 <td class="font-weight-bold text-center">
@@ -154,7 +218,6 @@
                                 @foreach ($dailyList as $day)
                                     <td class="text-center font-weight-bold ">
                                         {{ $storeTotal[$index] }}
-
                                     </td>
                                     @php
                                         $index++;
@@ -162,6 +225,8 @@
                                 @endforeach
                                 <td class="text-center font-weight-bold text-sm ">{{ $total }}</td>
                             </tr>
+
+
                         </tbody>
                     </table>
                 </div>
