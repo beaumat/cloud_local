@@ -28,6 +28,7 @@ class PatientTreatmentReport extends Component
     private $dateServices;
     public int $count = 0;
     public int $index = 0;
+    public int $row = 0;
     public int $total;
     public int $patient = 0;
     public $storeTotal = [];

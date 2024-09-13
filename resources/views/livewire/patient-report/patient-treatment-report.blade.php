@@ -64,9 +64,6 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-8">
-
-
-
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">
@@ -87,8 +84,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
             <div class="row">
@@ -97,12 +92,13 @@
                     <table class="table table-sm table-bordered table-hover">
                         <thead class='text-xs bg-sky'>
                             <tr>
-                                <td>Patient Name</td>
+                                <th class="text-center ">No.</th>
+                                <th class="col-4">Patient Name</th>
                                 @foreach ($dailyList as $day)
-                                    <td class="text-center">
-                                        {{ date('d', strtotime($day)) }}<br />{{ date('D', strtotime($day)) }}</td>
+                                    <th class="text-center">
+                                        {{ date('d', strtotime($day)) }}<br />{{ date('D', strtotime($day)) }}</th>
                                 @endforeach
-                                <td>Total</td>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody class="text-xs">
@@ -117,13 +113,11 @@
                                 @php
                                     $count = 0;
                                     $index = 0;
+                                    $patient = $patient + 1;
                                 @endphp
                                 <tr>
-                                    <td>{{ $list->PATIENT_NAME }}
-                                        @php
-                                            $patient = $patient + 1;
-                                        @endphp
-                                    </td>
+                                    <td class="text-center text-primary">{{ $patient }}</td>
+                                    <td>{{ $list->PATIENT_NAME }} </td>
                                     @foreach ($dailyList as $day)
                                         <td class="text-center   @if ($list[date('d', strtotime($day))]) bg-success @endif">
                                             @if ($list[date('d', strtotime($day))])
@@ -151,12 +145,14 @@
                                 @php
                                     $index = 0;
                                 @endphp
-                                <td class="font-weight-bold"> Total Patient : <span
-                                        class="text-danger">{{ $patient }}</span></td>
+                                <td class="font-weight-bold text-center"> <span
+                                        class="text-info"></span>
+                                        </td>
+                                        <td></td>
                                 @foreach ($dailyList as $day)
                                     <td class="text-center font-weight-bold text-danger ">
                                         {{ $storeTotal[$index] }}
-                                        
+
                                     </td>
                                     @php
                                         $index++;
