@@ -13,7 +13,7 @@ class ObjectServices
 
         try {
 
-            return ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first()->ID;
+            return ObjectTypeMap::where('TABLE_NAME', '=', $TABLE_NAME)->first()->ID;
         } catch (\Exception $e) {
             //throw $th;
             dd("$TABLE_NAME :" . $e->getMessage());
@@ -22,7 +22,8 @@ class ObjectServices
     public function ObjectTypeIdByName(string $NAME): int
     {
         try {
-            return ObjectTypeMap::where('NAME', $NAME)->first()->ID;
+            return ObjectTypeMap::where('NAME', '=', $NAME)
+                ->first()->ID;
         } catch (\Exception $e) {
 
             dd("$NAME :" . $e->getMessage());
@@ -31,13 +32,13 @@ class ObjectServices
     public function Store(int $ID, string $NAME, string $TABLE_NAME, bool $IS_DOCUMENT, $DOCUMENT_TYPE)
     {
         ObjectTypeMap::create([
-            'ID' => $ID,
-            'NAME' => $NAME,
-            'TABLE_NAME' => $TABLE_NAME,
-            'IS_DOCUMENT' => $IS_DOCUMENT,
+            'ID'            => $ID,
+            'NAME'          => $NAME,
+            'TABLE_NAME'    => $TABLE_NAME,
+            'IS_DOCUMENT'   => $IS_DOCUMENT,
             'DOCUMENT_TYPE' => $DOCUMENT_TYPE,
-            'NEXT_ID' => 1,
-            'INCREMENT' => 1
+            'NEXT_ID'       => 1,
+            'INCREMENT'     => 1
         ]);
     }
     public function ObjectNextID(string $TABLE_NAME): int
@@ -67,22 +68,38 @@ class ObjectServices
         } else {
             dd("$NAME name not found");
         }
-        ObjectTypeMap::where('NAME', $NAME)->update([
-            'NEXT_ID' => ($Nxt_ID + 1)
-        ]);
+        ObjectTypeMap::where('NAME', '=', $NAME)
+            ->update([
+                'NEXT_ID' => ($Nxt_ID + 1)
+            ]);
 
         return $Nxt_ID;
     }
     public function GetSequence(int $Type, $LocationId): string
     {
 
-        $data = ObjectCodeSequence::where('OBJECT_TYPE', $Type)->where('LOCATION_ID', $LocationId)->first();
+        $data = ObjectCodeSequence::where('OBJECT_TYPE', '=', $Type)
+            ->where('LOCATION_ID', '=', $LocationId)
+            ->first();
+
         if ($data) {
-            $this->SetSequence($data->ID, $data->NEXT_SEQUENCE, $data->INCREMENT);
-            return $this->codeFormat($LocationId, $data->NEXT_SEQUENCE, $data->WIDTH, $data->POSTFIX, $data->PREFIX);
+            $this->SetSequence(
+                $data->ID,
+                $data->NEXT_SEQUENCE,
+                $data->INCREMENT
+            );
+
+            return $this->codeFormat(
+                $LocationId,
+                $data->NEXT_SEQUENCE,
+                $data->WIDTH,
+                $data->POSTFIX,
+                $data->PREFIX
+            );
         }
 
         $this->NewSequence(1, $Type, (int) $LocationId, 1, null, null, 4);
+
         return $this->GetSequence($Type, $LocationId);
     }
     public function SetSequence(int $ID, int $NEXT_SEQUENCE, int $INCREMENT)

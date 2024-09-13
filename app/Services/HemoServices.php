@@ -770,8 +770,9 @@ class HemoServices
     }
     public function Delete(int $id)
     {
-        HemodialysisItems::where('HEMO_ID', $id)->delete();
-        Hemodialysis::where('ID', $id)->delete();
+        HemoNurseNotes::where('HEMO_ID', '=', $id)->delete();
+        HemodialysisItems::where('HEMO_ID', '', $id)->delete();
+        Hemodialysis::where('ID', '=', $id)->delete();
     }
     public function SearchList($search, int $LOCATION_ID)
     {
@@ -1183,10 +1184,10 @@ class HemoServices
         //     }
         // }
 
-        $dataCheck =  HemodialysisItems::where('ID', $ID)
-            ->where('HEMO_ID', $HEMO_ID)
-            ->where('ITEM_ID', $ITEM_ID)
-            ->where('IS_DEFAULT', $IS_DEFAULT);
+        $dataCheck =  HemodialysisItems::where('ID', '=', $ID)
+            ->where('HEMO_ID', '=', $HEMO_ID)
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('IS_DEFAULT', '=', $IS_DEFAULT);
 
         $getData = $dataCheck;
 
@@ -1217,15 +1218,17 @@ class HemoServices
     public function ItemUpdateSC_ITEM_ID(int $ID, int $HEMO_ID, int $ITEM_ID, int $SC_ITEM_ID)
     {
         HemodialysisItems::where('ID', $ID)
-            ->where('HEMO_ID', $HEMO_ID)
-            ->where('ITEM_ID', $ITEM_ID)
+            ->where('HEMO_ID', '=', $HEMO_ID)
+            ->where('ITEM_ID', '=', $ITEM_ID)
             ->update([
                 'SC_ITEM_ID' => $SC_ITEM_ID
             ]);
     }
     public function IsExist_SC_ITEM(int $SC_ITEM_ID): bool
     {
-        return  HemodialysisItems::where('SC_ITEM_ID', $SC_ITEM_ID)->where('IS_CASHIER', true)->exists();
+        return  HemodialysisItems::where('SC_ITEM_ID', '=', $SC_ITEM_ID)
+            ->where('IS_CASHIER', '=', true)
+            ->exists();
     }
     public function ItemDelete(int $ID, int $HEMO_ID, int $ITEM_ID, bool $IS_DEFAULT)
     {
@@ -1234,22 +1237,26 @@ class HemoServices
             if ($itemData->IS_POST) {
                 $data = $this->Get($HEMO_ID);
                 if ($data) {
-                    $this->itemInventoryServices->DeleteInv($ITEM_ID, $data->LOCATION_ID, 27, $ID, $data->DATE);
+                    $this->itemInventoryServices->DeleteInv(
+                        $ITEM_ID,
+                        $data->LOCATION_ID,
+                        27,
+                        $ID,
+                        $data->DATE
+                    );
                 }
             }
         }
 
-        HemodialysisItems::where('ID', $ID)
-            ->where('HEMO_ID', $HEMO_ID)
-            ->where('ITEM_ID', $ITEM_ID)
-            ->where('IS_DEFAULT', $IS_DEFAULT)
+        HemodialysisItems::where('ID', '=', $ID)
+            ->where('HEMO_ID', '=', $HEMO_ID)
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('IS_DEFAULT', '=', $IS_DEFAULT)
             ->delete();
     }
 
     public function ItemDeleteTrigger(int $ID, int $HEMO_ID)
     {
-
-
         $dataList =  HemodialysisItems::where('SK_LINE_ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
             ->get();
@@ -1260,7 +1267,13 @@ class HemoServices
                 if ($itemData->IS_POST) {
                     $data = $this->Get($HEMO_ID);
                     if ($data) {
-                        $this->itemInventoryServices->DeleteInv($list->ITEM_ID, $data->LOCATION_ID, 27, $list->ID, $data->DATE);
+                        $this->itemInventoryServices->DeleteInv(
+                            $list->ITEM_ID,
+                            $data->LOCATION_ID,
+                            27,
+                            $list->ID,
+                            $data->DATE
+                        );
                     }
                 }
             }
@@ -1268,16 +1281,16 @@ class HemoServices
 
 
 
-        HemodialysisItems::where('SK_LINE_ID', $ID)
-            ->where('HEMO_ID', $HEMO_ID)
+        HemodialysisItems::where('SK_LINE_ID', '=', $ID)
+            ->where('HEMO_ID', '=', $HEMO_ID)
             ->delete();
     }
     public function ItemDelete2(int $HEMO_ID, int $ITEM_ID, int $UNIT_ID, bool $IS_DEFAULT)
     {
         HemodialysisItems::where('HEMO_ID', $HEMO_ID)
-            ->where('ITEM_ID', $ITEM_ID)
-            ->where('UNIT_ID', $UNIT_ID)
-            ->where('IS_DEFAULT', $IS_DEFAULT)
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('UNIT_ID', '=', $UNIT_ID)
+            ->where('IS_DEFAULT', '=', $IS_DEFAULT)
             ->delete();
     }
     public function ItemGet(int $ID)
@@ -1319,14 +1332,14 @@ class HemoServices
                 $q->on('t.ITEM_ID', '=', 'hemodialysis_items.ITEM_ID');
                 $q->on('t.LOCATION_ID', '=', 'h.LOCATION_ID');
             })
-            ->where('hemodialysis_items.HEMO_ID', $HEMO_ID)
+            ->where('hemodialysis_items.HEMO_ID', '=', $HEMO_ID)
             ->get();
 
         return $result;
     }
     public function CountItems(int $HEMO_ID): int
     {
-        return (int) HemodialysisItems::where('HEMO_ID', $HEMO_ID)->count();
+        return (int) HemodialysisItems::where('HEMO_ID', '=', $HEMO_ID)->count();
     }
     public function ItemInventory(int $ID)
     {
@@ -1703,12 +1716,16 @@ class HemoServices
                 $LOCATION_ID,
                 $data->UNIT_ID
             );
+
             foreach ($dataTrigger as $list) {
+
                 $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails(
                     $list->ITEM_ID,
                     $list->UNIT_ID ?? 0
                 );
+
                 $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
+
                 $this->ItemStore(
                     $HEMO_ID,
                     $list->ITEM_ID,

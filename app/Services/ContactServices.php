@@ -21,22 +21,26 @@ class ContactServices
         if ($value == "" || $value == null) {
             return false;
         }
-
         if (strlen($value) == 12) {
-
             return false;
         }
-
 
         return true;
     }
     public function get(int $ID, int $TYPE)
     {
-        return contacts::where('ID', $ID)->where('TYPE', $TYPE)->first();
+        $result = contacts::where('ID', '=', $ID)
+            ->where('TYPE', '=', $TYPE)
+            ->first();
+
+        return $result;
     }
     public function pinLogin(string $PIN): int
     {
-        $data =  Contacts::where('PIN', $PIN)->where('TYPE', 2)->first();
+        $data =  Contacts::where('PIN', '=', $PIN)
+            ->where('TYPE', '=', 2)
+            ->first();
+
         if ($data) {
             return (int) $data->ID;
         }
@@ -59,7 +63,11 @@ class ContactServices
                 ->select([
                     'ID',
                     DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME")
-                ])->where('TYPE', $Type)->where('INACTIVE', '0')->orderBy('LAST_NAME', 'asc')->get();
+                ])
+                ->where('TYPE', '=', $Type)
+                ->where('INACTIVE', '=', '0')
+                ->orderBy('LAST_NAME', 'asc')
+                ->get();
         }
         return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();
     }
@@ -103,7 +111,7 @@ class ContactServices
         $result = DoctorLocation::query()
             ->select(['c.ID', 'c.NAME'])
             ->join('contact as c', 'c.ID', '=', 'doctor_location.DOCTOR_ID')
-            ->where('doctor_location.LOCATION_ID', $LOCATION_ID)
+            ->where('doctor_location.LOCATION_ID', '=', $LOCATION_ID)
             ->orderBy('c.NAME', 'asc')
             ->get();
 
@@ -120,8 +128,47 @@ class ContactServices
             return 0;
         }
     }
-    public function Store(int $TYPE, string $NAME, string $COMPANY_NAME, string $SALUTATION, string $FIRST_NAME, string $MIDDLE_NAME, string $LAST_NAME, string $PRINT_NAME_AS, string $POSTAL_ADDRESS, string $CONTACT_PERSON, string $TELEPHONE_NO, string $FAX_NO, string $MOBILE_NO, string $ALT_TELEPHONE_NO, string $ALT_CONTACT_PERSON, string $EMAIL, string $ACCOUNT_NO, bool $INACTIVE, int $GROUP_ID, int $PAYMENT_TERMS_ID, float $CREDIT_LIMIT, int $PREF_PAYMENT_METHOD_ID, string $CREDIT_CARD_NO, string $CREDIT_CARD_EXPIRY_DATE, int $SALES_REP_ID, int $PRICE_LEVEL_ID, string $TAXPAYER_ID, int $TAX_ID, int $EW_TAX_ID, string $SSS_NO, int $GENDER, string $DATE_OF_BIRTH, string $NICKNAME, string $HIRE_DATE, $CUSTOM_FIELD1 = null, $CUSTOM_FIELD2 = null, $CUSTOM_FIELD3 = null, $CUSTOM_FIELD4 = null, $CUSTOM_FIELD5 = null): int
-    {
+    public function Store(
+        int $TYPE,
+        string $NAME,
+        string $COMPANY_NAME,
+        string $SALUTATION,
+        string $FIRST_NAME,
+        string $MIDDLE_NAME,
+        string $LAST_NAME,
+        string $PRINT_NAME_AS,
+        string $POSTAL_ADDRESS,
+        string $CONTACT_PERSON,
+        string $TELEPHONE_NO,
+        string $FAX_NO,
+        string $MOBILE_NO,
+        string $ALT_TELEPHONE_NO,
+        string $ALT_CONTACT_PERSON,
+        string $EMAIL,
+        string $ACCOUNT_NO,
+        bool $INACTIVE,
+        int $GROUP_ID,
+        int $PAYMENT_TERMS_ID,
+        float $CREDIT_LIMIT,
+        int $PREF_PAYMENT_METHOD_ID,
+        string $CREDIT_CARD_NO,
+        string $CREDIT_CARD_EXPIRY_DATE,
+        int $SALES_REP_ID,
+        int $PRICE_LEVEL_ID,
+        string $TAXPAYER_ID,
+        int $TAX_ID,
+        int $EW_TAX_ID,
+        string $SSS_NO,
+        int $GENDER,
+        string $DATE_OF_BIRTH,
+        string $NICKNAME,
+        string $HIRE_DATE,
+        $CUSTOM_FIELD1 = null,
+        $CUSTOM_FIELD2 = null,
+        $CUSTOM_FIELD3 = null,
+        $CUSTOM_FIELD4 = null,
+        $CUSTOM_FIELD5 = null
+    ): int {
         $OBJECT_TYPE = 0;
         switch ($TYPE) {
             case 0:
@@ -197,8 +244,48 @@ class ContactServices
         return $ID;
     }
 
-    public function Update(int $ID, int $TYPE, string $NAME, string $COMPANY_NAME, string $SALUTATION, string $FIRST_NAME, string $MIDDLE_NAME, string $LAST_NAME, string $PRINT_NAME_AS, string $POSTAL_ADDRESS, string $CONTACT_PERSON, string $TELEPHONE_NO, string $FAX_NO, string $MOBILE_NO, string $ALT_TELEPHONE_NO, string $ALT_CONTACT_PERSON, string $EMAIL, string $ACCOUNT_NO, bool $INACTIVE, int $GROUP_ID, int $PAYMENT_TERMS_ID, float $CREDIT_LIMIT, int $PREF_PAYMENT_METHOD_ID, string $CREDIT_CARD_NO, string $CREDIT_CARD_EXPIRY_DATE, int $SALES_REP_ID, int $PRICE_LEVEL_ID, string $TAXPAYER_ID, int $TAX_ID, int $EW_TAX_ID, string $SSS_NO, int $GENDER, string $DATE_OF_BIRTH, string $NICKNAME, string $HIRE_DATE, $CUSTOM_FIELD1 = null, $CUSTOM_FIELD2 = null, $CUSTOM_FIELD3 = null, $CUSTOM_FIELD4 = null, $CUSTOM_FIELD5 = null): void
-    {
+    public function Update(
+        int $ID,
+        int $TYPE,
+        string $NAME,
+        string $COMPANY_NAME,
+        string $SALUTATION,
+        string $FIRST_NAME,
+        string $MIDDLE_NAME,
+        string $LAST_NAME,
+        string $PRINT_NAME_AS,
+        string $POSTAL_ADDRESS,
+        string $CONTACT_PERSON,
+        string $TELEPHONE_NO,
+        string $FAX_NO,
+        string $MOBILE_NO,
+        string $ALT_TELEPHONE_NO,
+        string $ALT_CONTACT_PERSON,
+        string $EMAIL,
+        string $ACCOUNT_NO,
+        bool $INACTIVE,
+        int $GROUP_ID,
+        int $PAYMENT_TERMS_ID,
+        float $CREDIT_LIMIT,
+        int $PREF_PAYMENT_METHOD_ID,
+        string $CREDIT_CARD_NO,
+        string $CREDIT_CARD_EXPIRY_DATE,
+        int $SALES_REP_ID,
+        int $PRICE_LEVEL_ID,
+        string $TAXPAYER_ID,
+        int $TAX_ID,
+        int $EW_TAX_ID,
+        string $SSS_NO,
+        int $GENDER,
+        string $DATE_OF_BIRTH,
+        string $NICKNAME,
+        string $HIRE_DATE,
+        $CUSTOM_FIELD1 = null,
+        $CUSTOM_FIELD2 = null,
+        $CUSTOM_FIELD3 = null,
+        $CUSTOM_FIELD4 = null,
+        $CUSTOM_FIELD5 = null
+    ): void {
         Contacts::where('ID', $ID)
             ->where('TYPE', $TYPE)
             ->update([
@@ -246,7 +333,7 @@ class ContactServices
 
     public function Delete(int $ID): void
     {
-        Contacts::where('ID', $ID)->delete();
+        Contacts::where('ID', '=', $ID)->delete();
     }
     public function UpdatePatientType(int $ID, int $TYPE)
     {
@@ -294,7 +381,7 @@ class ContactServices
                 });
             })
             ->when($locationId > 0, function ($query) use (&$locationId) {
-                $query->where('contact.LOCATION_ID', $locationId);
+                $query->where('contact.LOCATION_ID', '=', $locationId);
             })
             ->orderBy('contact.ID', 'desc')
             ->paginate($perPage);
@@ -357,7 +444,7 @@ class ContactServices
                 });
             })
             ->when($locationId > 0, function ($query) use (&$locationId) {
-                $query->where('contact.LOCATION_ID', $locationId);
+                $query->where('contact.LOCATION_ID', '=', $locationId);
             })
             ->orderBy($sortBy, $isDesc ? 'desc' : 'asc')
             ->paginate($perPage);
@@ -366,7 +453,7 @@ class ContactServices
     }
     public function UpdatePin(int $ID, string $PIN)
     {
-        Contacts::where('ID', $ID)->update(
+        Contacts::where('ID', '=', $ID)->update(
             [
                 'PIN' => $PIN
             ]
@@ -374,7 +461,7 @@ class ContactServices
     }
     public function UpdateIsCompleted(int $CONTACT_ID, bool $VALUE)
     {
-        Contacts::where('ID', $CONTACT_ID)
+        Contacts::where('ID', '=', $CONTACT_ID)
             ->update(
                 [
                     'IS_COMPLETE' => $VALUE
