@@ -25,7 +25,7 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-9">
+                                        <div class="col-md-7">
                                             <div class="mt-0">
                                                 <label class="text-xs">Search:</label>
                                                 <input type="text" wire:model.live.debounce.120ms='search'
@@ -45,6 +45,17 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="text-center mt-4 pt-2">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            wire:model.live="showOutofStock" />
+                                                       <span class="text-sm text-info font-weight-bold">OUT OF STOCKS</span> 
+                                                    </label>
+                                                </div>    
                                             </div>
                                         </div>
                                         <div class="col-md-1">

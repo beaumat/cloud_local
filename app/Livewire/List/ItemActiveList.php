@@ -27,6 +27,7 @@ class ItemActiveList extends Component
   public bool $isDesc = false;
   public string $sortby;
   public $dataList = [];
+  public $showOutofStock = false;
 
   public function OnClick(int $ID)
   {
@@ -54,7 +55,10 @@ class ItemActiveList extends Component
     $this->LOCATION_ID = $this->userServices->getLocationDefault();
     $this->refreshItem();
   }
-
+  public function updatedshowOutofStock()
+  {
+    $this->dataList = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc, $this->showOutofStock);
+  }
   public function sorting(string $column)
   {
     if ($this->sortby  == $column) {
@@ -76,11 +80,11 @@ class ItemActiveList extends Component
   }
   private function refreshItem()
   {
-    $this->dataList = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc);
+    $this->dataList = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc, $this->showOutofStock);
   }
   public function exportData()
   {
-    $newData = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc);
+    $newData = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc, $this->showOutofStock);
     return Excel::download(new InventoryListItemExport(
       $newData
     ), "Item-Inventory.xlsx");

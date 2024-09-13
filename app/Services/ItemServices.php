@@ -293,7 +293,7 @@ class ItemServices
 
         return 0;
     }
-    public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc)
+    public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc, bool $showOutofStock = false)
     {
 
 
@@ -334,6 +334,8 @@ class ItemServices
                         ->orWhere('s.DESCRIPTION', 'like', '%' . $search . '%')
                         ->orWhere('c.DESCRIPTION', 'like', '%' . $search . '%');
                 });
+            })->when($showOutofStock, function ($query) {
+                $query->having('QTY_ON_HAND', '<=', 0);
             })
             ->orderBy($sortby, $isDesc ? 'desc' : 'asc')
             ->get();
