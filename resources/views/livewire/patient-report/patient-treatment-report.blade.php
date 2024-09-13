@@ -93,7 +93,7 @@
                         <thead class='text-xs bg-sky'>
                             <tr>
                                 <th class="text-center ">No.</th>
-                                <th class="col-4">Patient Name</th>
+                                <th class="col-3">Patient Name</th>
                                 @foreach ($dailyList as $day)
                                     <th class="text-center">
                                         {{ date('d', strtotime($day)) }}<br />{{ date('D', strtotime($day)) }}</th>
