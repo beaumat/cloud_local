@@ -60,6 +60,7 @@
                                         <th class="col-2">Patients</th>
                                         <th class="text-center">Admitted</th>
                                         <th class="text-center">Discharges</th>
+                                        <th class="text-center">Untran. <br /> #Day.</th>
                                         <th class="text-center">#Trmt. </th>
                                         <th class='text-right'>FC Amt.</th>
                                         <th class="text-right">Paid Amt.</th>
@@ -99,6 +100,9 @@
                                                 {{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
                                             <td class="text-center">
                                                 {{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
+                                            <td class="text-center  @if($list->AR_DATE) text-success @else text-danger @endif" >
+                                                {{ Carbon::parse($list->DATE_ADMITTED)->diffInDays($list->AR_DATE ?? Carbon::now()) }}
+                                            </td>
                                             <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
                                             <td class="text-right"> {{ number_format($list->P1_TOTAL, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
@@ -107,10 +111,7 @@
                                                 {{ $list->STATUS }}
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
-
-
                                             <td class="text-center">
-
                                                 <a title="View Details"
                                                     href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
                                                     class="btn btn-xs btn-info">

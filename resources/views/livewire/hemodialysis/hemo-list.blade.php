@@ -117,13 +117,14 @@
                                         <th>Location</th>
                                         <th class="text-center">S</th>
                                         <th class="text-center"> SC</th>
-                                        <th class="text-center bg-success">
-                                            @can('patient.treatment.create')
+                                        <th class="text-center text-center">
+                                            Action
+                                            {{-- @can('patient.treatment.create')
                                                 <a href="{{ route('patientshemo_create') }}"
                                                     class="text-white btn btn-xs w-100">
                                                     <i class="fas fa-plus"></i> New
                                                 </a>
-                                            @endcan
+                                            @endcan --}}
                                         </th>
                                     </tr>
                                 </thead>

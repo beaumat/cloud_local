@@ -13,7 +13,9 @@ use Livewire\Component;
 
 #[Title('Patient Treatment Report')]
 class PatientTreatmentReport extends Component
-{
+{   
+
+    
     public int $YEAR;
     public int $MONTH;
     public $monthList = [];
