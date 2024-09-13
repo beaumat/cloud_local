@@ -8,10 +8,10 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class SalesPatientBalanceExport implements FromCollection, ShouldAutoSize
 {
-    public int $PATIENT_ID;
-    public int $LOCATION_ID;
-    public string $DATE_FROM;
-    public string $DATE_TO;
+    protected int $PATIENT_ID;
+    protected int $LOCATION_ID;
+    protected string $DATE_FROM;
+    protected string $DATE_TO;
 
     private $serviceChargeServices;
     public function __construct(ServiceChargeServices  $serviceChargeServices, int $PATIENT_ID, int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)

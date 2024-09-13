@@ -1,13 +1,15 @@
 <div>
     @if ($showModal)
-        <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+        <div class="modal show" id="modal-xl" tabindex="-1" role="dialog"
+            style="display: block; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden;">
+            <div class="modal-dialog modal-xl" role="document"
+                style="width: 90%; max-width: none; height: auto; margin: auto; top: 50%; transform: translateY(-50%);">
                 <div class="modal-content text-left">
                     <div class="modal-header">{{ $ITEM_NAME }} : Inventory Item</div>
                     <div class="modal-body">
-                        <div class="table-responsive" id="tableContainer" style="max-height: 400px; overflow-y: auto;">
+                        <div id="tableContainer" style="max-height: 80vh; overflow-y: auto;">
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class='bg-sky text-xs'>
+                                <thead class="text-xs bg-sky sticky-header">
                                     <tr>
                                         <th>Type</th>
                                         <th>Date</th>
@@ -40,19 +42,27 @@
                             </table>
                         </div>
                     </div>
-
-
-
                     <div class="modal-footer">
-                        <button type="button" wire:click='scrollDown()' class="btn btn-info btn-sm"><i
-                                class="fa fa-angle-double-down" aria-hidden="true"></i> Last Row</button>
-                        <button type="button" wire:click='closeModal()' class="btn btn-danger btn-sm">Close</button>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-6 text-left">
+                                    <button type="button" wire:click='exportData()' class="btn btn-success btn-sm">
+                                        <i class="fa fa-file-excel-o" aria-hidden="true"></i> Export
+                                    </button>
+                                </div>
+                                <div class='col-md-6 text-right'>
+                                    <button type="button" wire:click='scrollDown()' class="btn btn-info btn-sm"><i
+                                            class="fa fa-angle-double-down" aria-hidden="true"></i> Last Row</button>
+                                    <button type="button" wire:click='closeModal()'
+                                        class="btn btn-danger btn-sm">Close</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     @endif
-
 </div>
 @script
     <script>

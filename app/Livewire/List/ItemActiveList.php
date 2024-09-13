@@ -2,6 +2,7 @@
 
 namespace App\Livewire\List;
 
+use App\Exports\InventoryListItemExport;
 use App\Services\DateServices;
 use App\Services\ItemServices;
 use App\Services\LocationServices;
@@ -10,7 +11,7 @@ use App\Services\UserServices;
 
 use Livewire\Attributes\Title;
 use Livewire\Component;
-
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Item Inventory')]
 class ItemActiveList extends Component
@@ -77,7 +78,13 @@ class ItemActiveList extends Component
   {
     $this->dataList = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc);
   }
-
+  public function exportData()
+  {
+    $newData = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc);
+    return Excel::download(new InventoryListItemExport(
+      $newData
+    ), "Item-Inventory.xlsx");
+  }
   public function render()
   {
 

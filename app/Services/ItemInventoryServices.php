@@ -72,18 +72,39 @@ class ItemInventoryServices
             $ENDING_COST = $PREV_END_COST * $ENDING_QUANTITY;
             $data->update(['QUANTITY' => $QUANTITY, 'ENDING_QUANTITY' => $ENDING_QUANTITY, 'ENDING_COST' => $ENDING_COST]);
 
-            $nextData = $this->getNextEndingUpdate($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE, $ID);
+            $nextData = $this->getNextEndingUpdate(
+                $ITEM_ID,
+                $LOCATION_ID,
+                $SOURCE_REF_DATE,
+                $ID
+            );
 
             foreach ($nextData as $list) {
                 $ENDING_QUANTITY = $ENDING_QUANTITY + (float) $list->QUANTITY ?? 0;
                 $NEW_ENDING_COST = $ENDING_QUANTITY + (float) $list->ENDING_UNIT_COST ?? 0;
-                $this->getNextUpdate($list->ID, $ITEM_ID, $LOCATION_ID, $list->SOURCE_REF_TYPE, $list->SOURCE_REF_ID, $list->SOURCE_REF_DATE, $ENDING_QUANTITY, $NEW_ENDING_COST);
+                $this->getNextUpdate(
+                    $list->ID,
+                    $ITEM_ID,
+                    $LOCATION_ID,
+                    $list->SOURCE_REF_TYPE,
+                    $list->SOURCE_REF_ID,
+                    $list->SOURCE_REF_DATE,
+                    $ENDING_QUANTITY,
+                    $NEW_ENDING_COST
+                );
             }
         }
     }
     public function DeleteInv(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE)
     {
-        $this->Update($ITEM_ID, $LOCATION_ID, $SOURCE_REF_TYPE, $SOURCE_REF_ID, $SOURCE_REF_DATE, 0);
+        $this->Update(
+            $ITEM_ID,
+            $LOCATION_ID,
+            $SOURCE_REF_TYPE,
+            $SOURCE_REF_ID,
+            $SOURCE_REF_DATE,
+            0
+        );
     }
     private function getNextEndingUpdate(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $ID)
     {
@@ -150,8 +171,8 @@ class ItemInventoryServices
                     'ENDING_QUANTITY',
                     'ENDING_COST'
                 ])
-                ->where('ITEM_ID', $ITEM_ID)
-                ->where('LOCATION_ID', $LOCATION_ID)
+                ->where('ITEM_ID', '=', $ITEM_ID)
+                ->where('LOCATION_ID', '=', $LOCATION_ID)
                 ->where('SOURCE_REF_DATE', '<=', $SOURCE_REF_DATE)
                 ->where('ID', '<', $ID)
                 ->orderBy('SOURCE_REF_DATE', 'desc')
@@ -204,8 +225,8 @@ class ItemInventoryServices
                 'ENDING_UNIT_COST',
                 'ENDING_COST'
             ])
-            ->where('ITEM_ID', $ITEM_ID)
-            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->where('SOURCE_REF_DATE', '<=', $SOURCE_REF_DATE)
             ->orderBy('SOURCE_REF_DATE', 'desc')
             ->orderBy('ID', 'desc')
@@ -293,7 +314,14 @@ class ItemInventoryServices
             return;
         }
         // update 
-        $this->Update($ITEM_ID, $LOCATION_ID, $SOURCE_REF_TYPE, $SOURCE_REF_ID, $SOURCE_REF_DATE, $QTY);
+        $this->Update(
+            $ITEM_ID,
+            $LOCATION_ID,
+            $SOURCE_REF_TYPE,
+            $SOURCE_REF_ID,
+            $SOURCE_REF_DATE,
+            $QTY
+        );
     }
 
     public function InventoryExecute($data, int $LOCATION_ID, int $SOURCE_REF_TYPE, $SOURCE_REF_DATE, bool $Is_Added)
@@ -319,7 +347,16 @@ class ItemInventoryServices
                 $COST = (float) $this->itemServices->getCost($ITEM_ID);
             }
 
-            $this->InventoryModify($ITEM_ID, $LOCATION_ID, $SOURCE_REF_ID, $SOURCE_REF_TYPE, $SOURCE_REF_DATE, $BATCH_ID, $QTY, $COST);
+            $this->InventoryModify(
+                $ITEM_ID,
+                $LOCATION_ID,
+                $SOURCE_REF_ID,
+                $SOURCE_REF_TYPE,
+                $SOURCE_REF_DATE,
+                $BATCH_ID,
+                $QTY,
+                $COST
+            );
         }
     }
 
@@ -346,10 +383,23 @@ class ItemInventoryServices
                 $ending = $this->getEndingLastOutPut($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
                 $SEQUENCE_NO = (int) $ending['SEQUENCE_NO'];
                 $QTY = (float) $ENDING_QUANTITY - (float) $ending['ENDING_QUANTITY'];
-
                 $ENDING_UNIT_COST = (float) $COST;
                 $ENDING_COST = $ENDING_UNIT_COST * $ENDING_QUANTITY;
-                $this->Store($PREVIOUS_ID, $SEQUENCE_NO + 1, $ITEM_ID, $LOCATION_ID, $BATCH_ID, $SOURCE_REF_TYPE, $SOURCE_REF_ID, $SOURCE_REF_DATE, $QTY, $COST, $ENDING_QUANTITY, $ENDING_UNIT_COST, $ENDING_COST);
+                $this->Store(
+                    $PREVIOUS_ID,
+                    $SEQUENCE_NO + 1,
+                    $ITEM_ID,
+                    $LOCATION_ID,
+                    $BATCH_ID,
+                    $SOURCE_REF_TYPE,
+                    $SOURCE_REF_ID,
+                    $SOURCE_REF_DATE,
+                    $QTY,
+                    $COST,
+                    $ENDING_QUANTITY,
+                    $ENDING_UNIT_COST,
+                    $ENDING_COST
+                );
             }
         }
     }
@@ -374,6 +424,7 @@ class ItemInventoryServices
 		WHEN document_type_map.`ID` = 19 THEN  (SELECT build_assembly.`ID` FROM build_assembly  WHERE build_assembly.`ASSEMBLY_ITEM_ID` =  item_inventory.`SOURCE_REF_ID` AND build_assembly.`DATE` = item_inventory.`SOURCE_REF_DATE` AND build_assembly.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND build_assembly.`ASSEMBLY_ITEM_ID` = item_inventory.`ITEM_ID` )			
 		WHEN document_type_map.`ID` = 21 THEN  (SELECT `check`.`ID` FROM check_items  JOIN  `check` ON `check`.`ID` =  check_items.`CHECK_ID` WHERE check_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `check`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `check`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND check_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 		WHEN document_type_map.`ID` = 27 THEN  (SELECT hemodialysis.`ID` FROM `hemodialysis_items`  JOIN hemodialysis ON hemodialysis.`ID` =  hemodialysis_items.`HEMO_ID` WHERE hemodialysis_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND hemodialysis.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  hemodialysis.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND hemodialysis_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
+        WHEN document_type_map.`ID` = 29 THEN  (SELECT service_charges.`ID` FROM `service_charges_items`  JOIN service_charges ON service_charges.`ID` =  service_charges_items.`SERVICE_CHARGES_ID` WHERE service_charges_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND service_charges.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  service_charges.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND service_charges_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
 		WHEN document_type_map.`ID` = 31 THEN  (SELECT pull_out.`ID` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID`  WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 	END AS TX_ID
                 '),
@@ -394,7 +445,6 @@ class ItemInventoryServices
 		WHEN document_type_map.`ID` = 21 THEN  (SELECT `check`.`CODE` FROM check_items  JOIN  `check` ON `check`.`ID` =  check_items.`CHECK_ID` WHERE check_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `check`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `check`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND check_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 		WHEN document_type_map.`ID` = 27 THEN  (SELECT hemodialysis.`CODE` FROM `hemodialysis_items`  JOIN hemodialysis ON hemodialysis.`ID` =  hemodialysis_items.`HEMO_ID` WHERE hemodialysis_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND hemodialysis.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  hemodialysis.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND hemodialysis_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
 		WHEN document_type_map.`ID` = 29 THEN  (SELECT service_charges.`CODE` FROM `service_charges_items`  JOIN service_charges ON service_charges.`ID` =  service_charges_items.`SERVICE_CHARGES_ID` WHERE service_charges_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND service_charges.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  service_charges.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND service_charges_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
-
         WHEN document_type_map.`ID` = 31 THEN  (SELECT pull_out.`CODE` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID`  WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 	END AS TX_CODE
                 '),
@@ -415,7 +465,6 @@ class ItemInventoryServices
 		WHEN document_type_map.`ID` = 21 THEN  (SELECT contact.`PRINT_NAME_AS` FROM check_items  JOIN  `check` ON `check`.`ID` =  check_items.`CHECK_ID` JOIN contact ON contact.`ID` = `check`.`PAY_TO_ID` WHERE check_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `check`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `check`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND check_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 		WHEN document_type_map.`ID` = 27 THEN  (SELECT contact.`PRINT_NAME_AS` FROM `hemodialysis_items`  JOIN hemodialysis ON hemodialysis.`ID` =  hemodialysis_items.`HEMO_ID` JOIN contact ON contact.`ID` = hemodialysis.`CUSTOMER_ID` WHERE hemodialysis_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND hemodialysis.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  hemodialysis.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND hemodialysis_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
 		WHEN document_type_map.`ID` = 29 THEN  (SELECT contact.`PRINT_NAME_AS` FROM `service_charges_items`  JOIN service_charges ON service_charges.`ID` =  service_charges_items.`SERVICE_CHARGES_ID` JOIN contact ON contact.`ID` = service_charges.`PATIENT_ID` WHERE service_charges_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND service_charges.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  service_charges.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND service_charges_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
-		
         WHEN document_type_map.`ID` = 31 THEN  (SELECT contact.`PRINT_NAME_AS` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID` JOIN contact ON contact.`ID` = pull_out.`PREPARED_BY_ID` WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 	END AS CONTACT_NAME
                 '),
@@ -439,8 +488,8 @@ class ItemInventoryServices
                 ')
             ])
             ->join('document_type_map', 'document_type_map.ID', '=', 'item_inventory.SOURCE_REF_TYPE')
-            ->where('ITEM_ID', $ITEM_ID)
-            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->orderBy('item_inventory.SOURCE_REF_DATE', 'asc')
             ->orderBy('item_inventory.ID', 'asc')
             ->get();

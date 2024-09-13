@@ -2,10 +2,12 @@
 
 namespace App\Livewire\List;
 
+use App\Exports\InventoryReportExport;
 use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InventoryDetailsModal extends Component
 {
@@ -37,6 +39,15 @@ class InventoryDetailsModal extends Component
             $this->dispatch('active-scroll');
         }
     }
+    public function exportData()
+    {
+        $dataName = str_replace(' ', '', $this->ITEM_NAME);
+
+        $newData = $this->itemInventoryServices->getDetails($this->ITEM_ID, $this->LOCATION_ID);
+        return Excel::download(new InventoryReportExport(
+            $newData
+        ), "Inventory-Ending-$dataName.xlsx");
+    }
     public function openModal()
     {
         $this->showModal = true;
@@ -44,7 +55,7 @@ class InventoryDetailsModal extends Component
     #[On('active-scroll')]
     public function scrollDown()
     {
-        $this->dispatch('scrollToBottom'); // Emit an event to trigger scrolling
+        $this->dispatch('scrollToBottom');
     }
     public function render()
     {

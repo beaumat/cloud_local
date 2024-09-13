@@ -13,10 +13,10 @@ class PatientListExport implements FromCollection, ShouldAutoSize
      */
     private $contactServices;
     public int $doctorid;
-    public int $locationId;
-    public $search;
-    public string $sortBy;
-    public bool $isDesc;
+    protected int $locationId;
+    protected $search;
+    protected string $sortBy;
+    protected bool $isDesc;
     public function __construct(ContactServices $contactServices, int $doctorid, int $locationId, string $search, string $sortBy, bool $isDesc)
     {
         $this->contactServices = $contactServices;
