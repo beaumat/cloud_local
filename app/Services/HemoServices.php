@@ -290,6 +290,7 @@ class HemoServices
                 'hemodialysis.ID',
                 'hemodialysis.CODE',
                 'hemodialysis.DATE',
+                'hemodialysis.MACHINE_NO',
                 DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', c.MIDDLE_NAME, IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
                 'c.DATE_OF_BIRTH',
                 'c.PIN as PHIC_NO',
@@ -394,7 +395,8 @@ class HemoServices
                 'CVC_W_RESISTANCE_V',
                 'CVC_CLOTTED_A',
                 'CVC_CLOTTED_V',
-                'AT_LEFT'
+                'AT_LEFT',
+                'EMPLOYEE_ID'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->where('hemodialysis.ID', '=', $ID)
@@ -622,6 +624,7 @@ class HemoServices
         string $POST_DEPTH_NOTES,
         bool $POST_REGULAR,
         bool $POST_IRREGULAR,
+        int $MACHINE_NO
 
     ) {
         Hemodialysis::where('ID', $ID)
@@ -718,7 +721,8 @@ class HemoServices
                 'SC_SALINE_LINE_DOUBLE_CLAMP'   => $SC_SALINE_LINE_DOUBLE_CLAMP,
                 'SC_CONDUCTIVITY'               => $SC_CONDUCTIVITY,
                 'SC_DIALYSATE_TEMP'             => $SC_DIALYSATE_TEMP,
-                'SC_RESIDUAL_TEST_NEGATIVE'     => $SC_RESIDUAL_TEST_NEGATIVE
+                'SC_RESIDUAL_TEST_NEGATIVE'     => $SC_RESIDUAL_TEST_NEGATIVE,
+                'MACHINE_NO'                    => $MACHINE_NO
 
             ]);
     }

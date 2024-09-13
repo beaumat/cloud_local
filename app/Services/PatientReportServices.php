@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class PatientReportServices
 {
+    private $itemServices;
+    public function __construct(ItemServices $itemServices)
+    {
+        $this->itemServices = $itemServices;
+    }
+
     /**
      * @param array $patientData
      */
@@ -145,47 +151,17 @@ class PatientReportServices
 
     public function getMonthlyTreatment(int $year, int $month, array  $dayList = [], array $patient = [], int $LocationId)
     {
+        $PHIC_ITEM_ID = $this->itemServices->PHIC_ITEM_ID;
+        $PRIMING_ITEM_ID = $this->itemServices->PRIMING_ITEM_ID;
+
         foreach ($dayList as $day) {
             $coldate = date('d', strtotime($day));
-            $sql = "(select if( i.ITEM_ID  = 2 , 1, if(i.ITEM_ID = 176 , 2 ,0) ) from hemodialysis as d  join service_charges as s on (s.DATE = d.DATE and s.LOCATION_ID = d.LOCATION_ID and s.PATIENT_ID = d.CUSTOMER_ID)  inner join service_charges_items as i on i.SERVICE_CHARGES_ID = s.ID where d.LOCATION_ID ='$LocationId' and d.DATE = '$day' and d.CUSTOMER_ID = contact.ID and d.STATUS_ID = 2  and i.ITEM_ID in (2,176)  order by i.ITEM_ID asc limit 1 ) as '$coldate'";
+            $sql = "(select if( i.ITEM_ID  = $PHIC_ITEM_ID , 1, if(i.ITEM_ID = $PRIMING_ITEM_ID , 2 ,0) ) from hemodialysis as d  join service_charges as s on (s.DATE = d.DATE and s.LOCATION_ID = d.LOCATION_ID and s.PATIENT_ID = d.CUSTOMER_ID)  inner join service_charges_items as i on i.SERVICE_CHARGES_ID = s.ID where d.LOCATION_ID ='$LocationId' and d.DATE = '$day' and d.CUSTOMER_ID = contact.ID and d.STATUS_ID = 2  and i.ITEM_ID in ($PHIC_ITEM_ID,$PRIMING_ITEM_ID)  order by i.ITEM_ID asc limit 1 ) as '$coldate'";
             $selectArrayTR[] = DB::raw($sql);
         }
 
         $results = Contacts::query()
-            ->select(
-
-                $selectArrayTR,
-
-            )
-            ->addSelect([
-                DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ' .', LEFT(contact.MIDDLE_NAME, 1), IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as PATIENT_NAME")
-            ])
-            ->whereExists(function ($query) use (&$year, &$month, &$LocationId) {
-                $query->select(DB::raw(1))
-                    ->from('hemodialysis as h')
-                    ->whereColumn('h.CUSTOMER_ID', '=', 'contact.ID')
-                    ->where('h.STATUS_ID', '=', 2)
-                    ->where('h.LOCATION_ID', '=', $LocationId)
-                    ->whereMonth('h.DATE', '=', $month)
-                    ->whereYear('h.DATE', '=', $year);
-            })
-            ->orderBy('contact.LAST_NAME', 'asc')
-            ->get();
-
-
-        return  $results;
-    }
-    public function getMonthlyTreatmentPhic(int $year, int $month, array  $dayList = [], array $patient = [], int $LocationId)
-    {
-
-        foreach ($dayList as $day) {
-            $coldate = date('d', strtotime($day));
-            $sql =  "(select if(count(*) > 0 , true, false) from hemodialysis as d join service_charges as s on (s.DATE = d.DATE and s.LOCATION_ID = d.LOCATION_ID and s.PATIENT_ID = d.CUSTOMER_ID)  inner join service_charges_items as i on i.SERVICE_CHARGES_ID = s.ID where d.LOCATION_ID ='$LocationId' and d.DATE = '$day' and d.CUSTOMER_ID = contact.ID and d.STATUS_ID = 2 and i.ITEM_ID = 2 ) as '$coldate'-phic ";
-            $selectArrayTR[] = DB::raw($sql);
-        }
-
-        $results = Contacts::query()
-            ->select(  $selectArrayTR  )
+            ->select($selectArrayTR)
             ->addSelect([
                 DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ' .', LEFT(contact.MIDDLE_NAME, 1), IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as PATIENT_NAME")
             ])

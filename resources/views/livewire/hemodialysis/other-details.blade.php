@@ -55,16 +55,28 @@
                         <div class="col-md-12 pb-2">
                             <div class="row ">
                                 @can('full-treatment-sheet')
-                                    <div class="col-md-1 cold- text-left">
+                                    <div class="col-md-1 text-right">
                                         <label class='text-xs'>UF GOAL </label>
                                     </div>
-                                    <div class="col-md-11">
-                                        <input type='text' maxlength='80' class='w-75 text-xs' wire:model='UF_GOAL'
-                                            maxlength='80' @if ($Modify == false) disabled @endif />
+                                    <div class="col-md-6">
+                                        <input type='text' maxlength='80' class='w-100 text-xs' wire:model='UF_GOAL'
+                                            @if ($Modify == false) disabled @endif />
                                     </div>
 
+                                    <div class="col-md-2 text-right">
+                                        <label class='text-xs'>Machine No. </label>
+                                    </div>
+                                    <div class="col-md-2 text-left">
+                                        <input type='number' maxlength='3' class='w-100 text-xs' wire:model='MACHINE_NO'
+                                            @if ($Modify == false) disabled @endif />
+                                    </div>
                                     @endif
+
+
                                 </div>
+
+
+
                             </div>
                             <div class="col-md-4">
                                 <div class="card">

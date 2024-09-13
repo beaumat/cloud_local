@@ -40,7 +40,11 @@
                         </div>
                         <div class="col-3">NO. OF TREATMENT: <label
                                 class="text-primary font-weight-bold">{{ $NO_OF_TREATMENT }}</label></div>
-                        <div class="col-2">MACHINE NO. :</div>
+                        <div class="col-2">MACHINE NO. : <label class="text-primary font-weight-bold">
+                                @if ($MACHINE_NO > 0)
+                                    {{ $MACHINE_NO }}
+                                @endif
+                            </label></div>
                         <div class="col-2">DATE: <label
                                 class="text-primary font-weight-bold">{{ \Carbon\Carbon::parse($DATE)->format('m/d/Y') }}</label>
                         </div>
@@ -218,7 +222,8 @@
                             <div class="row">
                                 <div class="col-12 bottom-line">
                                     <p class="up-space down-space"> <b>UF GOAL :</b><span
-                                            class="text-sm font-weight-bold text-primary">&nbsp;{{ $UF_GOAL }}</span></p>
+                                            class="text-sm font-weight-bold text-primary">&nbsp;{{ $UF_GOAL }}</span>
+                                    </p>
                                 </div>
                                 <div class="col-4 ">
                                     <div class="row pb-2 font-weight-bold">
@@ -794,9 +799,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <div class="text-xs text-right"> SIGNATURE:
-                                        _______________________________________________</div>
+                                <div class="col-12 ">
+                                    <div class="text-xs row m-1">
+                                        <div class="col-6 text-right">
+                                            SIGNATURE:
+                                        </div>
+                                        <div class="col-6 text-left bottom-line2">
+                                            <span class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -948,9 +960,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <div class="text-xs text-right"> SIGNATURE:
-                                        _______________________________________________</div>
+                                <div class="col-12 ">
+                                    <div class="text-xs row m-1">
+                                        <div class="col-6 text-right">
+                                            SIGNATURE:
+                                        </div>
+                                        <div class="col-6 text-left bottom-line2">
+                                            <span class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1024,8 +1043,9 @@
                     <div class="row mt-2 px-2">
                         <div class="col-4">
                             <div class="row">
-                                <div class="col-5 text-sm text-left"><b>CANNULATED&nbsp;BY&nbsp;:</b></div>
-                                <div class="col-7 text-sm bottom-line2"></div>
+                                <div class="col-4 text-sm text-left"><b>CANNULATED&nbsp;BY&nbsp;:</b></div>
+                                <div class="col-8 text-sm bottom-line2"> <span
+                                        class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
                             </div>
                             <div class="row">
                                 <div class="col-4 text-sm text-left"> <b>NO&nbsp;OF&nbsp;ATTEMPT:</b> </div>
@@ -1065,15 +1085,18 @@
                         <div class="col-4">
                             <div class="row">
                                 <div class="col-4 text-sm text-left"><b>PRIMED&nbsp;BY&nbsp;:</b></div>
-                                <div class="col-8 text-sm bottom-line2"></div>
+                                <div class="col-8 text-sm bottom-line2"><span
+                                        class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
                             </div>
                             <div class="row">
                                 <div class="col-4 text-sm text-left"><b>INITIATED&nbsp;BY&nbsp;:</b></div>
-                                <div class="col-8 text-sm bottom-line2"></div>
+                                <div class="col-8 text-sm bottom-line2"><span
+                                        class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
                             </div>
                             <div class="row">
                                 <div class="col-4 text-sm text-left"><b>TERMINATED&nbsp;BY&nbsp;:</b></div>
-                                <div class="col-8 text-sm bottom-line2"></div>
+                                <div class="col-8 text-sm bottom-line2"><span
+                                        class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
                             </div>
                         </div>
                         <div class="col-4">
@@ -1094,7 +1117,7 @@
                                         <div class="col-4 text-sm text-left">
                                             <b>EPO&nbsp;GIVEN:</b>&nbsp;[&nbsp;&nbsp;]<b>NO</b>&nbsp;&nbsp;[&nbsp;&nbsp;]<b>YES</b>
                                         </div>
-                                        <div class="col-8 text-sm text-left bottom-line2"></div>
+                                        <div class="col-8 text-sm text-left bottom-line2">&nbsp;</div>
                                     </div>
 
                                 </div>
@@ -1103,7 +1126,9 @@
                                         <div class="col-4 text-sm text-right">
                                             <b>GIVEN&nbsp;BY: </b>
                                         </div>
-                                        <div class="col-8 text-sm text-left bottom-line2"></div>
+                                        <div class="col-8 text-sm text-left bottom-line2">
+                                            <span class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

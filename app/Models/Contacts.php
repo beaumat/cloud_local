@@ -112,6 +112,7 @@ class Contacts extends Model
         'PIN_DEPENDENT',
         'IS_DEPENDENT',
         'HEIGHT',
-        'IS_COMPLETE'
+        'IS_COMPLETE',
+        'EMPLOYEE_ID'
     ];
 }

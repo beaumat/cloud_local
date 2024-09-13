@@ -8,6 +8,9 @@ use Livewire\WithPagination;
 
 class ItemServices
 {
+    public int $PHIC_ITEM_ID = 2;
+    public int $PRIMING_ITEM_ID = 176;
+
     use WithPagination;
     private $object;
     public function __construct(ObjectServices $objectService)
@@ -389,5 +392,4 @@ class ItemServices
 
         return $result;
     }
-    
 }

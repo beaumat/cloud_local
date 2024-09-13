@@ -22,7 +22,8 @@ class PrintContent extends Component
     private $hemoServices;
     private $contactServices;
 
-
+    public int $MACHINE_NO;
+    public string $EMPLOYEE_NAME;
     public string $PRE_WEIGHT;
     public string $PRE_BLOOD_PRESSURE;
     public string $PRE_BLOOD_PRESSURE2;
@@ -51,7 +52,7 @@ class PrintContent extends Component
     public int $CUSTOMER_ID;
     public int $LOCATION_ID;
     public array $collection = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-    public int $r =0;
+    public int $r = 0;
     public int $e = 15;
     public string $NEPRHO_NAME;
     public string $DIAGNOSIS = " ";
@@ -189,7 +190,7 @@ class PrintContent extends Component
             $this->OLD_POST_HEART_RATE = $data->POST_HEART_RATE ?? "";
             $this->OLD_POST_O2_SATURATION = $data->POST_O2_SATURATION ?? "";
             $this->OLD_POST_TEMPERATURE = $data->POST_TEMPERATURE ?? "";
-            
+
             return;
         }
 
@@ -212,6 +213,16 @@ class PrintContent extends Component
 
         if ($data) {
 
+            $this->MACHINE_NO = $data->MACHINE_NO ?? 0;
+
+
+            if (auth()->user()->can('full-treatment-sheet')) {
+
+                $emp = $this->contactServices->get($data->EMPLOYEE_ID ?? 0, 2);
+                if ($emp) {
+                    $this->EMPLOYEE_NAME = $emp->PRINT_NAME_AS ?? '';
+                }
+            }
 
             $this->PRE_WEIGHT = $data->PRE_WEIGHT ?? '';
             $this->PRE_BLOOD_PRESSURE = $data->PRE_BLOOD_PRESSURE ?? '';
@@ -219,14 +230,14 @@ class PrintContent extends Component
             $this->PRE_HEART_RATE = $data->PRE_HEART_RATE ?? '';
             $this->PRE_O2_SATURATION = $data->PRE_O2_SATURATION ?? '';
             $this->PRE_TEMPERATURE = $data->PRE_TEMPERATURE ?? '';
-            
+
             $this->POST_WEIGHT = $data->POST_WEIGHT ?? '';
             $this->POST_BLOOD_PRESSURE = $data->POST_BLOOD_PRESSURE ?? '';
             $this->POST_BLOOD_PRESSURE2 = $data->POST_BLOOD_PRESSURE2 ?? '';
             $this->POST_HEART_RATE = $data->POST_HEART_RATE ?? '';
             $this->POST_O2_SATURATION = $data->POST_O2_SATURATION ?? '';
             $this->POST_TEMPERATURE = $data->POST_TEMPERATURE ?? '';
-    
+
 
 
             $this->UF_GOAL = $data->UF_GOAL ?? '';
@@ -328,7 +339,7 @@ class PrintContent extends Component
             $this->DURATION = $data->DURATION ?? 0;
             $this->DIALYZER = $data->DIALYZER ?? '';
             $this->HEPARIN = $data->HEPARIN ?? '';
-            $this->REUSE_NO = $data->REUSE_NO ??'';
+            $this->REUSE_NO = $data->REUSE_NO ?? '';
             $this->FLUSHING = $data->FLUSHING ?? '';
             $this->DIALSATE_N =  $data->DIALSATE_N ?? '';
             $this->DIALSATE_K = $data->DIALSATE_K ?? '';
@@ -340,6 +351,10 @@ class PrintContent extends Component
             $this->SO_PARTS = str_split($this->SO_DETAILS, 35);
             $this->getPreviousTreatment();
             $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
+
+
+
+
             $dataDoc = $this->patientDoctorServices->GetList($this->CUSTOMER_ID);
             foreach ($dataDoc as $doc) {
                 $this->NEPRHO_NAME = $doc->NAME ?? '';
@@ -350,12 +365,12 @@ class PrintContent extends Component
                 $this->DIAGNOSIS = $dataPatient->FINAL_DIAGNOSIS ?? '';
             }
 
-           $locData =  $this->locationServices->get($this->LOCATION_ID);
-           if($locData) {
-            $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
-           }
+            $locData =  $this->locationServices->get($this->LOCATION_ID);
+            if ($locData) {
+                $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+            }
 
-           $this->noteList = $this->hemoServices->ListNotes($this->HEMO_ID);
+            $this->noteList = $this->hemoServices->ListNotes($this->HEMO_ID);
         }
     }
 

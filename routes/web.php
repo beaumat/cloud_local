@@ -556,7 +556,6 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/expenses')->group(function () {});
         Route::prefix('/payables')->group(function () {});
         Route::prefix('/inventory')->group(function () {});
-
         Route::prefix('/documents')->group(function () {});
     });
 });

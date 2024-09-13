@@ -113,7 +113,7 @@ class OtherDetails extends Component
     public string $POST_DEPTH_NOTES;
     public bool $POST_REGULAR;
     public bool $POST_IRREGULAR;
-
+    public int $MACHINE_NO;
 
 
     private $hemoServices;
@@ -147,7 +147,7 @@ class OtherDetails extends Component
             $this->REUSE_NO = $data->REUSE_NO ?? '';
             $this->REUSE_NEXT = $data->REUSE_NEXT ?? '';
             $this->FLUSHING = $data->FLUSHING ?? '';
-            
+
             $this->UF_GOAL = $data->UF_GOAL ?? '';
             $this->DB_STANDARD_HCOA = $data->DB_STANDARD_HCOA ?? false;
             $this->DB_ACID = $data->DB_ACID ?? false;
@@ -230,8 +230,7 @@ class OtherDetails extends Component
             $this->POST_DEPTH_NOTES = $data->POST_DEPTH_NOTES ?? '';
             $this->POST_REGULAR = $data->POST_REGULAR ?? false;
             $this->POST_IRREGULAR = $data->POST_IRREGULAR ?? false;
-
-
+            $this->MACHINE_NO = $data->MACHINE_NO  ?? 0;
         }
     }
     #[On('save-other')]
@@ -331,7 +330,8 @@ class OtherDetails extends Component
             $this->POST_DEPTH,
             $this->POST_DEPTH_NOTES,
             $this->POST_REGULAR,
-            $this->POST_IRREGULAR
+            $this->POST_IRREGULAR,
+            $this->MACHINE_NO
 
         );
         //  session()->flash('message','Save change successfully'); 

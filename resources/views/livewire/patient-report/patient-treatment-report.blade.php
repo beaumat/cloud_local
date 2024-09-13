@@ -55,11 +55,8 @@
                                             class="btn btn-xs btn-primary w-100">Generate</button>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="col-md-4">
-
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
