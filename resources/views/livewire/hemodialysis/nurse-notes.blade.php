@@ -17,19 +17,19 @@
                         <div class="form-group">
                             <div class='row'>
                                 <div class="col-md-12">
-                                    <table class="table table-sm table-bordered table-hover">
+                                    <table class="table table-sm table-bordered table-hover w-100">
                                         <thead class="text-xs bg-sky">
                                             <tr>
                                                 <th class="col-1">TIME</th>
-                                                <th class="text-center col-3">BP</th>
-                                                <th class="text-center">HR</th>
-                                                <th class="text-center">BFR</th>
-                                                <th class="col-3 text-center">AP | VP</th>
-                                                <th class="text-center">TFR</th>
-                                                <th class="text-center">TMP</th>
-                                                <th class="text-center">HEPARIN</th>
-                                                <th class="text-center">FLUSHING</th>
-                                                <th class="col-4 text-center">NURSES NOTES</th>
+                                                <th class="text-center col-1">BP</th>
+                                                <th class="text-center col-1">HR</th>
+                                                <th class="text-center col-1">BFR</th>
+                                                <th class="text-center col-1">AP | VP</th>
+                                                <th class="text-center col-1">TFR</th>
+                                                <th class="text-center col-1">TMP</th>
+                                                <th class="text-center col-1">HEPARIN</th>
+                                                <th class="text-center col-1">FLUSHING</th>
+                                                <th class="text-center">NOTES</th>
                                                 @if ($STATUS_ID == 1)
                                                     <th class="col-2 text-center">ACTION</th>
                                                 @endif
@@ -172,49 +172,94 @@
                                                     @endif
                                                 </tr>
                                             @endforeach
-                                            {{-- INSERT --}}
-                                            @if ($STATUS_ID == 1)
-                                                <tr class="bg-light">
-                                                    <td><input type="time" name="TIME" class="text-xs w-100"
-                                                            wire:model='TIME' /></td>
-                                                    <td class="text-center">
-                                                        <input type="text" name="BP_1" class="text-xs w-50"
-                                                            wire:model='BP_1' /><input type="text" name="BP_2"
-                                                            class="text-xs w-50" wire:model='BP_2' />
-                                                    </td>
-                                                    <td><input type="text" name="HR" class="text-xs"
-                                                            wire:model='HR' /></td>
-                                                    <td><input type="text" name="BFR" class="text-xs"
-                                                            wire:model='BFR' /></td>
-                                                    <td>
-                                                        <input type="text" name="AP" class="text-xs w-50"
-                                                            wire:model='AP' /><input type="text" name="VP"
-                                                            class="text-xs w-50" wire:model='VP' />
-                                                    </td>
-                                                    <td><input type="text" name="TFP" class="text-xs"
-                                                            wire:model='TFP' /></td>
-                                                    <td><input type="text" name="TMP" class="text-xs"
-                                                            wire:model='TMP' /></td>
-                                                    <td><input type="text" name="HEPARIN" class="text-xs w-100"
-                                                            wire:model='HEPARIN' />
-                                                    </td>
-                                                    <td><input type="text" name="FLUSHING" class="text-xs w-100"
-                                                            wire:model='FLUSHING' />
-                                                    </td>
-                                                    <td><input type="text" name="NOTES" class="text-xs w-100"
-                                                            wire:model='NOTES' />
-                                                    </td>
-                                                    <td><button wire:loading.attr='disabled' type="button"
-                                                            class="btn btn-xs btn-success w-100"
-                                                            wire:click='save()'><i class="fa fa-plus"
-                                                                aria-hidden="true"></i></button>
-                                                    </td>
-                                                </tr>
-                                            @endif
+
 
                                         </tbody>
                                     </table>
 
+
+                                    {{-- INSERT --}}
+                                    @if ($STATUS_ID == 1)
+                                        <div class="row">
+                                            <div class="col-12 col-md-3">
+                                                <div class="row">
+                                                    <div class="col-12 mb-2">
+                                                        <input type="time" name="TIME"
+                                                            class="text-xs form-control form-control-sm"
+                                                            wire:model='TIME' placeholder="Time" />
+                                                    </div>
+                                                    <div class="col-12 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-6 col-6">
+                                                                <input type="text" name="BP_1"
+                                                                    class="text-xs form-control form-control-sm"
+                                                                    wire:model='BP_1' placeholder="BP[1]" />
+                                                            </div>
+                                                            <div class="col-md-6 col-6">
+                                                                <input type="text" name="BP_2"
+                                                                    class="text-xs form-control form-control-sm"
+                                                                    wire:model='BP_2' placeholder="BP[2]" />
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="col-12 mb-2"><input type="text" name="HR"
+                                                            class="text-xs form-control form-control-sm"
+                                                            wire:model='HR' placeholder="HR" /></div>
+                                                    <div class="col-12 mb-2">
+                                                        <input type="text" name="BFR"
+                                                            class="text-xs form-control form-control-sm"
+                                                            wire:model='BFR' placeholder="BFR" />
+                                                    </div>
+                                                    <div class="col-12 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-6 col-6">
+                                                                <input type="text" name="AP"
+                                                                    class="text-xs form-control form-control-sm"
+                                                                    placeholder="AP" wire:model='AP' />
+                                                            </div>
+                                                            <div class="col-md-6 col-6">
+                                                                <input type="text" name="VP"
+                                                                    class="text-xs form-control form-control-sm"
+                                                                    wire:model='VP' placeholder="VP" />
+                                                            </div>
+                                                        </div>
+
+
+
+                                                    </div>
+                                                    <div class="col-12 mb-2">
+                                                        <input type="text" name="TFP"
+                                                            class="text-xs form-control form-control-sm"
+                                                            wire:model='TFP' placeholder="TFR" />
+                                                    </div>
+                                                    <div class="col-12 mb-2"><input type="text" name="TMP"
+                                                            class="text-xs form-control form-control-sm"
+                                                            wire:model='TMP' placeholder="TMP" /></div>
+                                                    <div class="col-12 mb-2"><input type="text" name="HEPARIN"
+                                                            class="text-xs form-control form-control-sm"
+                                                            wire:model='HEPARIN' placeholder="Heparin" />
+                                                    </div>
+                                                    <div class="col-12 mb-2"><input type="text" name="FLUSHING"
+                                                            class="text-xs form-control form-control-sm"
+                                                            wire:model='FLUSHING' placeholder="Flushing" />
+                                                    </div>
+                                                    <div class="col-12 mb-2"><input type="text" name="NOTES"
+                                                            class="text-xs form-control form-control-sm"
+                                                            wire:model='NOTES' placeholder="Notes" />
+                                                    </div>
+                                                    <div class="col-12 mb-2">
+                                                        <button wire:loading.attr='disabled' type="button"
+                                                            class="btn btn-xs btn-success w-100"
+                                                            wire:click='save()'><i class="fa fa-plus"
+                                                                aria-hidden="true"></i> Add</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

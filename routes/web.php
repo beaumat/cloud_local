@@ -91,8 +91,10 @@ use App\Livewire\Patient\PatientList;
 use App\Livewire\PatientReport\DoctorProFeeReport;
 use App\Livewire\PatientReport\DoctorsFeeReportPrint;
 use App\Livewire\PatientReport\PatientBalanceReport;
+use App\Livewire\PatientReport\PatientMonthlyTreatmentReport;
 use App\Livewire\PatientReport\PatientSalesReport;
 use App\Livewire\PatientReport\PatientSalesReportPrint;
+use App\Livewire\PatientReport\PatientTreatmentReport;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
 use App\Livewire\PaymentMethod\PaymentMethodList;
 use App\Livewire\PaymentTerm\PaymentTermForm;
@@ -506,6 +508,9 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/sales')->group(function () {
                 Route::get('/', PatientSalesReport::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
                 Route::get('/{date_from}/{date_to}/{location_id}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
+            });
+            Route::prefix('/treatment')->group(function () {
+                Route::get('/', PatientTreatmentReport::class)->name('patient_treatment_report')->middleware(['permission:report.patient.sales']);
             });
             Route::prefix('/balance')->group(function () {
                 Route::get('/', PatientBalanceReport::class)->name('patient_balance_report')->middleware(['permission:report.patient.balance']);

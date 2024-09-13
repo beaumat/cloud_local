@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Contacts;
 use App\Models\Items;
 use Illuminate\Support\Facades\DB;
 
@@ -65,13 +66,8 @@ class PatientReportServices
 
         return $results;
     }
-    public function generatePrevCollection(
-        string $scFrom,
-        string $scTo,
-        int  $locatoinId,
-        array  $patientData = [],
-        array $itemData = []
-    ) {
+    public function generatePrevCollection(string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [])
+    {
 
         $results = DB::table('service_charges_items as sci')
             ->select([
@@ -145,5 +141,54 @@ class PatientReportServices
             ->get();
 
         return $result;
+    }
+
+    public function getMonthlyTreatment(int $year, int $month, array  $dayList = [], array $patient = [], int $LocationId)
+    {
+
+
+        foreach ($dayList as $day) {
+            $coldate = date('d', strtotime($day));
+            $selectArray[] = DB::raw("(select if(count(*) > 0 , true, false) from hemodialysis as d where d.LOCATION_ID ='$LocationId' and d.DATE = '$day' and d.CUSTOMER_ID = contact.ID and d.STATUS_ID = 2 ) as '$coldate'"); // Creates an alias for each day
+        }
+
+        $results = Contacts::query()
+            ->select($selectArray)
+            ->addSelect([
+                DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ' .', LEFT(contact.MIDDLE_NAME, 1), IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as PATIENT_NAME")
+            ])
+            ->whereExists(function ($query) use (&$year, &$month, &$LocationId) {
+                $query->select(DB::raw(1))
+                    ->from('hemodialysis as h')
+                    ->whereColumn('h.CUSTOMER_ID', '=', 'contact.ID')
+                    ->where('h.STATUS_ID', '=', 2)
+                    ->where('h.LOCATION_ID', '=', $LocationId)
+                    ->whereMonth('h.DATE', '=', $month)
+                    ->whereYear('h.DATE', '=', $year);
+            })
+            ->orderBy('contact.LAST_NAME', 'asc')
+            ->get();
+
+
+        // $results = DB::table('hemodialysis as h')
+        //     ->join('contact as c', 'c.ID', '=', 'h.CUSTOMER_ID')
+        //     ->select($selectArray)
+        //     ->addSelect([
+        //         'c.ID as PATIENT_ID',
+        //         DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as PATIENT_NAME"),
+        //         'h.DATE',
+        //         DB::raw('DAY(h.DATE) as Days'),
+        //         DB::raw('1 as Plus'),
+        //     ])
+
+        //     ->where('h.STATUS_ID', '=', 2)
+        //     ->where('h.LOCATION_ID', '=', $LocationId)
+        //     ->whereMonth('h.DATE', '=', $month)
+        //     ->whereYear('h.DATE', '=', $year)
+        //     ->orderBy('c.LAST_NAME', 'asc')
+        //     ->groupBy(['PATIENT_ID'])
+        //     ->get();
+
+        return  $results;
     }
 }

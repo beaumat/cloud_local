@@ -5,31 +5,40 @@
     </a>
     <ul class="nav nav-treeview">
         @if (Auth::user()->can('report.patient.sales'))
-        <li class="nav-item ">
-            <a href="{{ route('reportspatient_sales_report') }}"
-                class="nav-link {{ request()->is('reports/patients/sales*') ? 'text-warning font-weight-bold' : '' }}">
-                <i class="fa fa-print nav-icon"></i>
-                <p>Sales</p>
-            </a>
-        </li>
+            <li class="nav-item ">
+                <a href="{{ route('reportspatient_sales_report') }}"
+                    class="nav-link {{ request()->is('reports/patients/sales*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print nav-icon"></i>
+                    <p>Sales</p>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a href="{{ route('reportspatient_treatment_report') }}"
+                    class="nav-link {{ request()->is('reports/patients/treatment*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print nav-icon"></i>
+                    <p>Treatment</p>
+                </a>
+            </li>
         @endif
         @if (Auth::user()->can('report.patient.balance'))
-        <li class="nav-item ">
-            <a href="{{ route('reportspatient_balance_report') }}"
-                class="nav-link {{ request()->is('reports/patients/balance*') ? 'text-warning font-weight-bold' : '' }}">
-                <i class="fa fa-print nav-icon"></i>
-                <p>Balance</p>
-            </a>
-        </li>
+            <li class="nav-item ">
+                <a href="{{ route('reportspatient_balance_report') }}"
+                    class="nav-link {{ request()->is('reports/patients/balance*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print nav-icon"></i>
+                    <p>Balance</p>
+                </a>
+            </li>
         @endif
         @if (Auth::user()->can('report.patient.doctor-pf'))
-        <li class="nav-item ">
-            <a href="{{ route('reportspatient_doctor_fee_report') }}"
-                class="nav-link {{ request()->is('reports/patients/doctor-pro-fees*') ? 'text-warning font-weight-bold' : '' }}">
-                <i class="fa fa-print nav-icon"></i>
-                <p>Doctor PF</p>
-            </a>
-        </li>
+            <li class="nav-item ">
+                <a href="{{ route('reportspatient_doctor_fee_report') }}"
+                    class="nav-link {{ request()->is('reports/patients/doctor-pro-fees*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print nav-icon"></i>
+                    <p>Doctor PF</p>
+                </a>
+            </li>
         @endif
+
+
     </ul>
 </li>

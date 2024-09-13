@@ -178,7 +178,11 @@ class QuickCreate extends Component
                             $this->philHealthServices->DefaultEntry($ID);
 
                             if ($this->DATE_ADMITTED == $this->DATE_DISCHARGED && $this->PHIC_FORM_MODIFY == true) {
-                                $HEMO_ID = (int)  $this->hemoServices->GetHemoID($this->DATE_DISCHARGED, $patientID, $this->LOCATION_ID);
+                                $HEMO_ID = (int)  $this->hemoServices->GetHemoID(
+                                    $this->DATE_DISCHARGED,
+                                    $patientID,
+                                    $this->LOCATION_ID
+                                );
                                 $this->AutoDoctorOrder($HEMO_ID);
                             }
                         }
@@ -204,7 +208,10 @@ class QuickCreate extends Component
         }
         $data = $this->doctorOrderDefaultServices->getListByLocation($this->LOCATION_ID);
         foreach ($data as $item) {
-            $this->cf4DoctorOrderServices->Store($HEMO_ID, $item->DESCRIPTION);
+            $this->cf4DoctorOrderServices->Store(
+                $HEMO_ID,
+                $item->DESCRIPTION
+            );
         }
     }
 
@@ -218,7 +225,12 @@ class QuickCreate extends Component
 
     public function render()
     {
-        $this->dataList = $this->hemoServices->QuickFilterByDateRange($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, $this->search);
+        $this->dataList = $this->hemoServices->QuickFilterByDateRange(
+            $this->DATE_FROM,
+            $this->DATE_TO,
+            $this->LOCATION_ID,
+            $this->search
+        );
 
         return view('livewire.phil-health.quick-create');
     }

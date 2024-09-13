@@ -214,7 +214,12 @@ class HemoServices
     }
     public function HemoStatus()
     {
-        return  DB::table('hemo_status')->select(['ID', 'DESCRIPTION'])->whereNotIn('ID', ['4'])->get();
+        $result =  DB::table('hemo_status')
+            ->select(['ID', 'DESCRIPTION'])
+            ->whereNotIn('ID', ['4'])
+            ->get();
+
+        return $result;
     }
 
     public function getDateTimeByRange(int $CONTACT_ID, int $LOCATION_ID, string $DT_FROM, string $DT_TO)
@@ -227,20 +232,19 @@ class HemoServices
                     ->On('sc.PATIENT_ID', '=', 'hemodialysis.CUSTOMER_ID');
             })
             ->join('service_charges_items as  sci', 'sci.SERVICE_CHARGES_ID', '=', 'sc.ID')
-            ->where('sci.ITEM_ID', 2)
-            ->where('hemodialysis.CUSTOMER_ID', $CONTACT_ID)
-            ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
+            ->where('sci.ITEM_ID', '=', 2)
+            ->where('hemodialysis.CUSTOMER_ID', '=', $CONTACT_ID)
+            ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
             ->whereBetween('hemodialysis.DATE', [$DT_FROM, $DT_TO])
-            ->where('hemodialysis.STATUS_ID', 2)
-
+            ->where('hemodialysis.STATUS_ID', '=', 2)
             ->where(function ($query) use (&$CONTACT_ID, &$LOCATION_ID, &$DT_FROM, &$DT_TO) {
                 $query->select(DB::raw(1))
                     ->from('service_charges as sc')
                     ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 'sc.ID')
                     ->whereBetween('sc.DATE', [$DT_FROM, $DT_TO])
-                    ->where('sc.PATIENT_ID', $CONTACT_ID)
-                    ->where('sc.LOCATION_ID', $LOCATION_ID)
-                    ->where('sci.ITEM_ID', 2);
+                    ->where('sc.PATIENT_ID', '=', $CONTACT_ID)
+                    ->where('sc.LOCATION_ID', '=', $LOCATION_ID)
+                    ->where('sci.ITEM_ID', '=', 2);
             })
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
@@ -281,7 +285,7 @@ class HemoServices
 
     public function GetFirst(int $ID)
     {
-        return Hemodialysis::query()
+        $result = Hemodialysis::query()
             ->select([
                 'hemodialysis.ID',
                 'hemodialysis.CODE',
@@ -322,13 +326,11 @@ class HemoServices
                 'PRE_COHERENT',
                 'PRE_DISORIENTED',
                 'PRE_DROWSY',
-
                 'PRE_CLEAR',
                 'PRE_CRACKLES',
                 'PRE_RHONCHI',
                 'PRE_WHEEZES',
                 'PRE_RALES',
-
                 'PRE_DISTENDED_JUGULAR_VIEW',
                 'PRE_ASCITES',
                 'PRE_EDEMA',
@@ -336,10 +338,8 @@ class HemoServices
                 'PRE_LOCATION_NOTES',
                 'PRE_DEPTH',
                 'PRE_DEPTH_NOTES',
-
                 'PRE_REGULAR',
                 'PRE_IRREGULAR',
-
                 'POST_AMBULATORY',
                 'POST_AMBULATORY_W_ASSIT',
                 'POST_WHEEL_CHAIR',
@@ -347,13 +347,11 @@ class HemoServices
                 'POST_COHERENT',
                 'POST_DISORIENTED',
                 'POST_DROWSY',
-
                 'POST_CLEAR',
                 'POST_CRACKLES',
                 'POST_RHONCHI',
                 'POST_WHEEZES',
                 'POST_RALES',
-
                 'POST_DISTENDED_JUGULAR_VIEW',
                 'POST_ASCITES',
                 'POST_EDEMA',
@@ -361,10 +359,8 @@ class HemoServices
                 'POST_LOCATION_NOTES',
                 'POST_DEPTH',
                 'POST_DEPTH_NOTES',
-
                 'POST_REGULAR',
                 'POST_IRREGULAR',
-
                 'SC_MACHINE_TEST',
                 'SC_SECURED_CONNECTIONS',
                 'SC_SALINE_LINE_DOUBLE_CLAMP',
@@ -374,7 +370,6 @@ class HemoServices
                 'DB_STANDARD_HCOA',
                 'DB_ACID',
                 'UF_GOAL',
-
                 'AT_FISTULA',
                 'AT_GRAFT',
                 'AT_RIGHT',
@@ -387,7 +382,6 @@ class HemoServices
                 'H_PRESENT',
                 'H_ABSENT',
                 'H_OTHER_NOTES',
-
                 'CVC_SUBCATH',
                 'CVC_JUGCATH',
                 'CVC_FEMCATCH',
@@ -401,13 +395,12 @@ class HemoServices
                 'CVC_CLOTTED_A',
                 'CVC_CLOTTED_V',
                 'AT_LEFT'
-
-
-
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
-            ->where('hemodialysis.ID', $ID)
+            ->where('hemodialysis.ID', '=', $ID)
             ->first();
+
+        return $result;
     }
     public function PreSave(string $DATE, string $CODE, int $CUSTOMER_ID, int $LOCATION_ID)
     {
@@ -444,9 +437,9 @@ class HemoServices
     }
     private function GetPreviousTreatment(int $HEMO_ID, int $CUSTOMER_ID, string $DATE, int $LOCATION_ID)
     {
-        $result = Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)
+        $result = Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->where('DATE', '<', $DATE)
-            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->where('ID', '<>', $HEMO_ID)
             ->orderBy('DATE', 'desc')
             ->first();
@@ -482,12 +475,13 @@ class HemoServices
     }
     public function PreUpdate(int $ID, string $DATE, string $CODE, int $CUSTOMER_ID, int $LOCATION_ID)
     {
-        Hemodialysis::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DATE' => $DATE,
-            'CUSTOMER_ID' => $CUSTOMER_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-        ]);
+        Hemodialysis::where('ID', $ID)
+            ->update([
+                'CODE' => $CODE,
+                'DATE' => $DATE,
+                'CUSTOMER_ID' => $CUSTOMER_ID,
+                'LOCATION_ID' => $LOCATION_ID,
+            ]);
     }
     public function Update(
         int $ID,
@@ -1641,8 +1635,8 @@ class HemoServices
     public function IsRestrictedFromUnposted(string $DATE, int $LOCATION_ID): bool
     {
         return  Hemodialysis::where('DATE', '<', $DATE)
-            ->where('STATUS_ID', 4)
-            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('STATUS_ID', '=', 4)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->exists();
     }
 
@@ -1664,10 +1658,10 @@ class HemoServices
             ])
             ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
             ->join('item as i', 'i.ID', '=', 'hemodialysis_items.ITEM_ID')
-            ->where('h.CUSTOMER_ID', $PATIENT_ID)
-            ->where('h.LOCATION_ID', $LOCATION_ID)
-            ->where('h.DATE', $DATE)
-            ->where('IS_CASHIER', true)
+            ->where('h.CUSTOMER_ID', '=', $PATIENT_ID)
+            ->where('h.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('h.DATE', '=', $DATE)
+            ->where('IS_CASHIER', '=', true)
             ->orderBy('LINE_NO', 'asc')
             ->get();
 
@@ -1687,16 +1681,42 @@ class HemoServices
             $IS_CASHIER = (bool) $data->IS_CASHIER;
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
+            $SK_LINE_ID  =  $this->ItemStore(
+                $HEMO_ID,
+                $data->ITEM_ID,
+                $data->QUANTITY,
+                $data->UNIT_ID ?? 0,
+                $UNIT_BASE_QUANTITY,
+                true,
+                true,
+                $IS_CASHIER,
+                null,
+                null
+            );
 
-
-
-            $SK_LINE_ID  =  $this->ItemStore($HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, true, true, $IS_CASHIER, null, null);
-
-            $dataTrigger = $this->itemTreatmentServices->getItemTrigger($data->ITEM_ID, $LOCATION_ID, $data->UNIT_ID);
+            $dataTrigger = $this->itemTreatmentServices->getItemTrigger(
+                $data->ITEM_ID,
+                $LOCATION_ID,
+                $data->UNIT_ID
+            );
             foreach ($dataTrigger as $list) {
-                $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
+                $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails(
+                    $list->ITEM_ID,
+                    $list->UNIT_ID ?? 0
+                );
                 $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
-                $this->ItemStore($HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
+                $this->ItemStore(
+                    $HEMO_ID,
+                    $list->ITEM_ID,
+                    $list->QUANTITY,
+                    $list->UNIT_ID ?? 0,
+                    $TR_UNIT_BASE_QUANTITY,
+                    true,
+                    true,
+                    false,
+                    null,
+                    $SK_LINE_ID
+                );
             }
         }
     }
@@ -1773,8 +1793,8 @@ class HemoServices
         int $ID,
         int $HEMO_ID
     ) {
-        HemoNurseNotes::where('ID', $ID)
-            ->where('HEMO_ID', $HEMO_ID)
+        HemoNurseNotes::where('ID', '=', $ID)
+            ->where('HEMO_ID', '=', $HEMO_ID)
             ->delete();
     }
     public function ListNotes(int $HEMO_ID)
@@ -1795,7 +1815,7 @@ class HemoServices
                 'FLUSHING',
                 'NOTES'
             ])
-            ->where('HEMO_ID', $HEMO_ID)
+            ->where('HEMO_ID', '=', $HEMO_ID)
             ->orderBy('ID', 'asc')
             ->get();
 
@@ -1803,7 +1823,7 @@ class HemoServices
     }
     public function GetNotes(int $ID)
     {
-        $result =   HemoNurseNotes::where('ID', $ID)
+        $result =   HemoNurseNotes::where('ID', '=', $ID)
             ->first();
 
         if ($result) {
