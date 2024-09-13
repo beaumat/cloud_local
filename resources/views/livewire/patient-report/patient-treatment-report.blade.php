@@ -93,35 +93,81 @@
             </div>
             <div class="row">
                 {{-- header --}}
-
-                <table class="table table-sm table-bordered table-hover">
-                    <thead class='text-xs bg-sky'>
-                        <tr>
-                            <td>Patient</td>
-                            @foreach ($dailyList as $day)
-                                <td class="text-center">
-                                    {{ date('d', strtotime($day)) }}<br />{{ date('D', strtotime($day)) }}</td>
-                            @endforeach
-                            <td>Total</td>
-                        </tr>
-                    </thead>
-                    <tbody class="text-xs">
-
-
-
-                        @foreach ($dataList as $list)
+                <div class="col-md-12">
+                    <table class="table table-sm table-bordered table-hover">
+                        <thead class='text-xs bg-sky'>
                             <tr>
-                                <td>{{ $list->PATIENT_NAME }}</td>
+                                <td>Patient Name</td>
                                 @foreach ($dailyList as $day)
-                                    <td>{{ $list[date('d', strtotime($day))] }}</td>
+                                    <td class="text-center">
+                                        {{ date('d', strtotime($day)) }}<br />{{ date('D', strtotime($day)) }}</td>
                                 @endforeach
-
-                                <td>100</td>
+                                <td>Total</td>
                             </tr>
-                        @endforeach
+                        </thead>
+                        <tbody class="text-xs">
 
-                    </tbody>
-                </table>
+                            @php
+                                $patient = 0;
+                                $total = 0;
+
+                            @endphp
+
+                            @foreach ($dataList as $list)
+                                @php
+                                    $count = 0;
+                                    $index = 0;
+                                @endphp
+                                <tr>
+                                    <td>{{ $list->PATIENT_NAME }}
+                                        @php
+                                            $patient = $patient + 1;
+                                        @endphp
+                                    </td>
+                                    @foreach ($dailyList as $day)
+                                        <td class="text-center   @if ($list[date('d', strtotime($day))]) bg-success @endif">
+                                            @if ($list[date('d', strtotime($day))])
+                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                                @php
+                                                    $storeTotal[$index] = $storeTotal[$index] + 1;
+                                                    $count++;
+                                                @endphp
+                                            @endif
+                                        </td>
+
+                                        @php
+                                            $index++;
+                                        @endphp
+                                    @endforeach
+                                    <td class="text-center font-weight-bold">{{ $count }}</td>
+                                    @php
+
+                                        $total = $total + $count;
+                                    @endphp
+                                </tr>
+                            @endforeach
+
+                            <tr>
+                                @php
+                                    $index = 0;
+                                @endphp
+                                <td class="font-weight-bold"> Total Patient : <span
+                                        class="text-danger">{{ $patient }}</span></td>
+                                @foreach ($dailyList as $day)
+                                    <td class="text-center font-weight-bold text-danger ">
+                                        {{ $storeTotal[$index] }}
+                                        
+                                    </td>
+                                    @php
+                                        $index++;
+                                    @endphp
+                                @endforeach
+                                <td class="text-center font-weight-bold text-danger ">{{ $total }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
 
 
 
