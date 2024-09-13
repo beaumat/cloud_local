@@ -119,7 +119,7 @@
                                     <td class="text-center text-primary">{{ $patient }}</td>
                                     <td>{{ $list->PATIENT_NAME }} </td>
                                     @foreach ($dailyList as $day)
-                                        <td class="text-center   @if ($list[date('d', strtotime($day))]) bg-success @endif">
+                                        <td class="text-center   @if ($list[date('d', strtotime($day))] == 1) bg-success @elseif ($list[date('d', strtotime($day))] == 2) bg-orange @endif">
                                             @if ($list[date('d', strtotime($day))])
                                                 <i class="fa fa-check" aria-hidden="true"></i>
                                                 @php
@@ -141,16 +141,18 @@
                                 </tr>
                             @endforeach
 
-                            <tr>
+                            <tr class="bg-dark text-white">
                                 @php
                                     $index = 0;
                                 @endphp
-                                <td class="font-weight-bold text-center"> <span
-                                        class="text-info"></span>
-                                        </td>
-                                        <td></td>
+                                <td >
+
+                                </td>
+                                <td class="font-weight-bold text-center">
+                                    <span>No. of Treatment</span>
+                                </td>
                                 @foreach ($dailyList as $day)
-                                    <td class="text-center font-weight-bold text-danger ">
+                                    <td class="text-center font-weight-bold ">
                                         {{ $storeTotal[$index] }}
 
                                     </td>
@@ -158,7 +160,7 @@
                                         $index++;
                                     @endphp
                                 @endforeach
-                                <td class="text-center font-weight-bold text-danger ">{{ $total }}</td>
+                                <td class="text-center font-weight-bold text-sm ">{{ $total }}</td>
                             </tr>
                         </tbody>
                     </table>

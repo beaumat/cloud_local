@@ -145,15 +145,18 @@ class PatientReportServices
 
     public function getMonthlyTreatment(int $year, int $month, array  $dayList = [], array $patient = [], int $LocationId)
     {
-
-
         foreach ($dayList as $day) {
             $coldate = date('d', strtotime($day));
-            $selectArray[] = DB::raw("(select if(count(*) > 0 , true, false) from hemodialysis as d where d.LOCATION_ID ='$LocationId' and d.DATE = '$day' and d.CUSTOMER_ID = contact.ID and d.STATUS_ID = 2 ) as '$coldate'"); // Creates an alias for each day
+            $sql = "(select if( i.ITEM_ID  = 2 , 1, if(i.ITEM_ID = 176 , 2 ,0) ) from hemodialysis as d  join service_charges as s on (s.DATE = d.DATE and s.LOCATION_ID = d.LOCATION_ID and s.PATIENT_ID = d.CUSTOMER_ID)  inner join service_charges_items as i on i.SERVICE_CHARGES_ID = s.ID where d.LOCATION_ID ='$LocationId' and d.DATE = '$day' and d.CUSTOMER_ID = contact.ID and d.STATUS_ID = 2  and i.ITEM_ID in (2,176)  order by i.ITEM_ID asc limit 1 ) as '$coldate'";
+            $selectArrayTR[] = DB::raw($sql);
         }
 
         $results = Contacts::query()
-            ->select($selectArray)
+            ->select(
+
+                $selectArrayTR,
+
+            )
             ->addSelect([
                 DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ' .', LEFT(contact.MIDDLE_NAME, 1), IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as PATIENT_NAME")
             ])
@@ -170,24 +173,34 @@ class PatientReportServices
             ->get();
 
 
-        // $results = DB::table('hemodialysis as h')
-        //     ->join('contact as c', 'c.ID', '=', 'h.CUSTOMER_ID')
-        //     ->select($selectArray)
-        //     ->addSelect([
-        //         'c.ID as PATIENT_ID',
-        //         DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as PATIENT_NAME"),
-        //         'h.DATE',
-        //         DB::raw('DAY(h.DATE) as Days'),
-        //         DB::raw('1 as Plus'),
-        //     ])
+        return  $results;
+    }
+    public function getMonthlyTreatmentPhic(int $year, int $month, array  $dayList = [], array $patient = [], int $LocationId)
+    {
 
-        //     ->where('h.STATUS_ID', '=', 2)
-        //     ->where('h.LOCATION_ID', '=', $LocationId)
-        //     ->whereMonth('h.DATE', '=', $month)
-        //     ->whereYear('h.DATE', '=', $year)
-        //     ->orderBy('c.LAST_NAME', 'asc')
-        //     ->groupBy(['PATIENT_ID'])
-        //     ->get();
+        foreach ($dayList as $day) {
+            $coldate = date('d', strtotime($day));
+            $sql =  "(select if(count(*) > 0 , true, false) from hemodialysis as d join service_charges as s on (s.DATE = d.DATE and s.LOCATION_ID = d.LOCATION_ID and s.PATIENT_ID = d.CUSTOMER_ID)  inner join service_charges_items as i on i.SERVICE_CHARGES_ID = s.ID where d.LOCATION_ID ='$LocationId' and d.DATE = '$day' and d.CUSTOMER_ID = contact.ID and d.STATUS_ID = 2 and i.ITEM_ID = 2 ) as '$coldate'-phic ";
+            $selectArrayTR[] = DB::raw($sql);
+        }
+
+        $results = Contacts::query()
+            ->select(  $selectArrayTR  )
+            ->addSelect([
+                DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ' .', LEFT(contact.MIDDLE_NAME, 1), IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as PATIENT_NAME")
+            ])
+            ->whereExists(function ($query) use (&$year, &$month, &$LocationId) {
+                $query->select(DB::raw(1))
+                    ->from('hemodialysis as h')
+                    ->whereColumn('h.CUSTOMER_ID', '=', 'contact.ID')
+                    ->where('h.STATUS_ID', '=', 2)
+                    ->where('h.LOCATION_ID', '=', $LocationId)
+                    ->whereMonth('h.DATE', '=', $month)
+                    ->whereYear('h.DATE', '=', $year);
+            })
+            ->orderBy('contact.LAST_NAME', 'asc')
+            ->get();
+
 
         return  $results;
     }
