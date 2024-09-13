@@ -86,7 +86,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6 col-6">
+                                    <div class="col-md-9 col-9">
                                         @if ($Modify)
                                             @if ($STATUS == 4)
                                                 <button name="btnSavePosted" type="submit"
@@ -135,11 +135,11 @@
                                         @can('full-treatment-sheet')
                                             <button wire:click='showNotes()' name="btnNotes" type='button'
                                                 class="btn btn-sm btn-dark"> <i class="fa fa-list-ol"
-                                                    aria-hidden="true"></i> Nurse Notes</button>
+                                                    aria-hidden="true"></i> Notes</button>
                                         @endcan
 
                                     </div>
-                                    <div class="text-right col-6 col-md-6">
+                                    <div class="text-right col-3 col-md-3">
                                         @if ($ID > 0 && $STATUS > 1)
                                             @can('patient.treatment.create')
                                                 <a id="new" title="Create"
@@ -227,14 +227,16 @@
                                                                         <input type="number"
                                                                             @if (!$Modify) disabled @endif
                                                                             wire:model='PRE_WEIGHT'
-                                                                            class="text-xs w-100 text-right" />
+                                                                            class="text-xs w-100 text-right"
+                                                                            placeholder="Weight" />
 
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <input type="number"
                                                                             @if (!$Modify) disabled @endif
                                                                             wire:model='POST_WEIGHT'
-                                                                            class="text-xs w-100 text-right" />
+                                                                            class="text-xs w-100 text-right"
+                                                                            placeholder="Weight" />
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -262,7 +264,8 @@
                                                                                     @if (!$Modify) disabled @endif
                                                                                     wire:model='PRE_BLOOD_PRESSURE'
                                                                                     type="number"
-                                                                                    class="text-xs w-100 text-right" />
+                                                                                    class="text-xs w-100 text-right"
+                                                                                    placeholder="BP[1]" />
                                                                             </div>
 
                                                                             <div class="col-sm-6">
@@ -270,7 +273,8 @@
                                                                                     @if (!$Modify) disabled @endif
                                                                                     wire:model='PRE_BLOOD_PRESSURE2'
                                                                                     type="number"
-                                                                                    class="text-xs w-100 text-right" />
+                                                                                    class="text-xs w-100 text-right"
+                                                                                    placeholder="BP[2]" />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -281,14 +285,16 @@
                                                                                     @if (!$Modify) disabled @endif
                                                                                     wire:model='POST_BLOOD_PRESSURE'
                                                                                     type="number"
-                                                                                    class="text-xs w-100 text-right" />
+                                                                                    class="text-xs w-100 text-right"
+                                                                                    placeholder="BP[1]" />
                                                                             </div>
                                                                             <div class="col-sm-6">
                                                                                 <input
                                                                                     @if (!$Modify) disabled @endif
                                                                                     wire:model='POST_BLOOD_PRESSURE2'
                                                                                     type="number"
-                                                                                    class="text-xs w-100 text-right" />
+                                                                                    class="text-xs w-100 text-right"
+                                                                                    placeholder="BP[2]" />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -313,13 +319,13 @@
                                                                         <input type="number"
                                                                             @if (!$Modify) disabled @endif
                                                                             wire:model='PRE_HEART_RATE'
-                                                                            class="text-xs w-100 text-right" />
+                                                                            class="text-xs w-100 text-right" placeholder="HR" />
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <input type="number"
                                                                             @if (!$Modify) disabled @endif
                                                                             wire:model='POST_HEART_RATE'
-                                                                            class="text-xs w-100 text-right" />
+                                                                            class="text-xs w-100 text-right" placeholder="HR" />
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -342,13 +348,13 @@
                                                                         <input type="number"
                                                                             @if (!$Modify) disabled @endif
                                                                             wire:model='PRE_O2_SATURATION'
-                                                                            class="text-xs w-100 text-right" />
+                                                                            class="text-xs w-100 text-right" placeholder="02SAT" />
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <input type="number"
                                                                             @if (!$Modify) disabled @endif
                                                                             wire:model='POST_O2_SATURATION'
-                                                                            class="text-xs w-100 text-right" />
+                                                                            class="text-xs w-100 text-right" placeholder="02SAT" />
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -371,13 +377,13 @@
                                                                         <input type="number"
                                                                             @if (!$Modify) disabled @endif
                                                                             wire:model='PRE_TEMPERATURE'
-                                                                            class="text-xs w-100 text-right" />
+                                                                            class="text-xs w-100 text-right" placeholder="Temp" />
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <input type="number"
                                                                             @if (!$Modify) disabled @endif
                                                                             wire:model='POST_TEMPERATURE'
-                                                                            class="text-xs w-100 text-right" />
+                                                                            class="text-xs w-100 text-right" placeholder="Temp" />
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -389,11 +395,11 @@
                                             <div class="col-md-12">
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <div class="row form-group mt-1 text-right">
-                                                            <div class="col-md-6">
+                                                        <div class="row form-group mt-1 text-left">
+                                                            <div class="col-md-5">
                                                                 <label class="text-sm">TIME START :</label>
                                                             </div>
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-7">
                                                                 <input type="time"
                                                                     @if (!$Modify) disabled @endif
                                                                     wire:model='TIME_START'
@@ -403,11 +409,11 @@
 
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <div class="row form-group mt-1 text-right">
-                                                            <div class="col-md-6">
+                                                        <div class="row form-group mt-1 text-left">
+                                                            <div class="col-md-5">
                                                                 <label class="text-sm">TIME END :</label>
                                                             </div>
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-7">
                                                                 <input type="time"
                                                                     @if (!$Modify) disabled @endif
                                                                     wire:model='TIME_END'
