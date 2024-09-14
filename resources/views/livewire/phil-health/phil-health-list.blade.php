@@ -60,7 +60,7 @@
                                         <th class="col-2">Patients</th>
                                         <th class="text-center">Admitted</th>
                                         <th class="text-center">Discharges</th>
-                                        <th class="text-center">Untran. <br /> #Day.</th>
+                                        <th class="text-center">#Day<br/>Transmitted</th>
                                         <th class="text-center">#Trmt. </th>
                                         <th class='text-right'>FC Amt.</th>
                                         <th class="text-right">Paid Amt.</th>
@@ -106,8 +106,7 @@
                                             <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
                                             <td class="text-right"> {{ number_format($list->P1_TOTAL, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
-                                            <td
-                                                class="@if ($list->STATUS == 'Paid') text-success @else text-danger @endif ">
+                                            <td class="@if ($list->STATUS == 'Paid') text-success @else text-danger @endif ">
                                                 {{ $list->STATUS }}
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
