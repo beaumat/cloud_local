@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Contacts;
 use App\Models\Items;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class PatientReportServices
@@ -19,7 +18,7 @@ class PatientReportServices
      * @param array $patientData
      */
 
-    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = []): Collection
+    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [])
     {
         $results = DB::table('service_charges_items as sci')
             ->select([
@@ -73,7 +72,7 @@ class PatientReportServices
 
         return $results;
     }
-    public function generatePrevCollection(string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = []): Collection
+    public function generatePrevCollection(string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [])
     {
 
         $results = DB::table('service_charges_items as sci')
@@ -129,7 +128,7 @@ class PatientReportServices
 
         return $results;
     }
-    public function getItemListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO): array|Collection
+    public function getItemListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)
     {
 
         $result = Items::query()
