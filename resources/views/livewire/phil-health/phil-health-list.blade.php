@@ -101,7 +101,7 @@
                                             <td class="text-center">
                                                 {{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
                                             <td class="text-center  @if($list->AR_DATE) text-success @else text-danger @endif" >
-                                                {{ Carbon::parse($list->DATE_ADMITTED)->diffInDays($list->AR_DATE ?? Carbon::now()) }}
+                                                {{ Carbon::parse($list->DATE_ADMITTED)->diffInDays($list->AR_DATE ? $list->AR_DATE : Carbon::now()) }}
                                             </td>
                                             <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
                                             <td class="text-right"> {{ number_format($list->P1_TOTAL, 2) }}</td>
