@@ -20,8 +20,16 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
     protected int $locationId;
     protected array $patientData;
     protected array $itemData;
-    public function __construct(PatientReportServices $patientReportServices, string $scFrom, string $scTo, string $pFrom, string $pTo, int $locationId, array $patientData, array $itemData)
-    {
+    public function __construct(
+        PatientReportServices $patientReportServices,
+        string $scFrom,
+        string $scTo,
+        string $pFrom,
+        string $pTo,
+        int $locationId,
+        array $patientData,
+        array $itemData
+    ) {
         $this->patientReportServices = $patientReportServices;
         $this->scFrom = $scFrom;
         $this->scTo = $scTo;
@@ -44,7 +52,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
             $this->itemData
         )->toArray();
 
-        
+
         $headers = [
             'PN'        => 'PATIENT NAME',
             'IN'        => 'ITEM NAME',
@@ -96,7 +104,6 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
 
         // Loop through your data and format it for export
         foreach ($data as $list) {
-
             if ($sc_code == $list->SC_CODE) {
                 $is_sc = false;
             } else {
@@ -198,7 +205,6 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
         $rowData = ['PN' => 'No. of Patient: ' . $NO_OF_PATIENT, 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => 'No. of Treatment: ' . $NO_OF_TREATMENT, 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Cash Paid: ' . $CASH_AMOUNT, 'BAL' => '', 'DOCTOR' => 'TOTAL CHARGE :' . $TOTAL_CHARGE, 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
         // PAID TOTAL
-
         $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Previous Collection: ' . $PRE_COLLECTION, 'BAL' => '', 'DOCTOR' => 'TOTAL PAID :' . $TOTAL_PAID, 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
         // BALANCE TOTAL
@@ -219,8 +225,6 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize
 
         $rowData = ['PN' => '', 'IN' => '', 'SC_DATE' => '', 'SC_CODE' => '', 'SC_AMOUNT' => '', 'P_DATE' => '', 'P_CODE' => '', 'P_METHOD' => '', 'P_DEPOSIT' => '', 'P_PAID' => 'Other GL Paid: ' . $OTHER_GL_AMOUNT, 'BAL' => '', 'DOCTOR' => '', 'LOCATION' => '',];
         $finalData[] = array_values($rowData);
-
-
 
         return collect($finalData);
     }

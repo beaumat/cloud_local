@@ -56,7 +56,7 @@ class HemoList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function showNotes( int $ID,  string $NAME)
+    public function showNotes(int $ID,  string $NAME)
     {
 
         $data = ['HEMO_ID' => $ID, 'PATIENT_NAME' => $NAME];
@@ -64,7 +64,7 @@ class HemoList extends Component
     }
     public function mount()
     {
-        
+
 
         $this->DATE_FROM = $this->dateServices->NowDate();
         $this->DATE_TO = $this->dateServices->NowDate();
@@ -78,14 +78,15 @@ class HemoList extends Component
     }
     public function exportData()
     {
-        return Excel::download(new TreatmentListExport(
-            $this->hemoServices,
-            $this->locationid,
+        $dataList = $this->hemoServices->Search(
             $this->search,
-            $this->DATE_FROM,
-            $this->DATE_TO,
+            $this->locationid,
+            $this->perPage,
+            $this->DATE_FROM == '' ? $this->dateServices->NowDate() : $this->DATE_FROM,
+            $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO,
             $this->statusid
-        ), 'hemo-treatment-.xlsx');
+        );
+        return Excel::download(new TreatmentListExport($dataList), 'hemo-treatment-.xlsx');
     }
     #[On('refresh-list')]
     public function render()

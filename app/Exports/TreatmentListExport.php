@@ -9,21 +9,10 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class TreatmentListExport implements FromCollection, ShouldAutoSize
 {
 
-
-    private $LOCATION_ID;
-    private $search;
-    private $DateFrom;
-    private $DateTo;
-    private $hemoServices;
-    private $STATUS_ID;
-    public function __construct(HemoServices $hemoServices, $LOCATION_ID, $search, $DateFrom, $DateTo, $STATUS_ID)
+    private $data = [];
+    public function __construct($data)
     {
-        $this->LOCATION_ID = $LOCATION_ID;
-        $this->search = $search;
-        $this->DateFrom = $DateFrom;
-        $this->DateTo = $DateTo;
-        $this->hemoServices = $hemoServices;
-        $this->STATUS_ID = $STATUS_ID;
+        $this->data = $data;
     }
 
     /**
@@ -31,9 +20,10 @@ class TreatmentListExport implements FromCollection, ShouldAutoSize
      */
     public function collection()
     {
-        $dataList = $this->hemoServices->Search($this->search, $this->LOCATION_ID, 500, $this->DateFrom, $this->DateTo, $this->STATUS_ID);
+        $dataList = $this->data;
 
         $headers = [
+            '#' =>  '#',
             'NO'            => 'NO',
             'DATE'          => 'DATE',
             'PATIENT_NAME'  => 'PATIENT_NAME',
@@ -44,15 +34,19 @@ class TreatmentListExport implements FromCollection, ShouldAutoSize
             'TMP'           => 'TMP',
             'START'         => 'START',
             'END'           => 'END',
+            'IC'            => 'IC',
             'LOCATION'      => 'LOCATION',
             'STATUS'        => 'STATUS',
             'SC'            => 'SC',
+            'NURSE'         => 'NURSE ON DUTY'
         ];
-
+        $number = 0;
         $finalData = [];
         $finalData[] = array_values($headers); // Add headers as the first row
         foreach ($dataList as $list) {
+            $number++;
             $rowData = [
+                '#'             => $number,
                 'NO'            => $list->CODE,
                 'DATE'          => $list->DATE,
                 'PATIENT_NAME'  => $list->CONTACT_NAME,
@@ -63,9 +57,11 @@ class TreatmentListExport implements FromCollection, ShouldAutoSize
                 'TMP'           => $list->PRE_TEMPERATURE . '|' .  $list->POST_TEMPERATURE,
                 'START'         => $list->TIME_START ? \Carbon\Carbon::parse($list->TIME_START)->format('h:i A') : '',
                 'END'           => $list->TIME_END ? \Carbon\Carbon::parse($list->TIME_END)->format('h:i A') : '',
+                'IC'            => $list->IS_INCOMPLETE ? 'Yes' : ' ',
                 'LOCATION'      => $list->LOCATION_NAME,
                 'STATUS'        => $list->STATUS,
-                'SC'            => $list->IS_SC == true ? 'Yes' : 'No'
+                'SC'            => $list->IS_SC == true ? 'Yes' : 'No',
+                'NURSE_NAME'    => $list->NURSE_NAME
             ];
 
             $finalData[] = array_values($rowData);
