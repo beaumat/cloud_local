@@ -31,20 +31,20 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <livewire:text-input name="CODE" titleName="Code" wire:model='CODE'
-                                                isDisabled=true>
+                                                isDisabled="{{ false }}">
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:text-input name="DESCRIPTION" titleName="Description"
-                                                isDisabled=true wire:model='DESCRIPTION'>
+                                                isDisabled="{{ false }}" wire:model='DESCRIPTION'>
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:select-option name="CLASS_ID" :options="$itemClass" :zero="true"
-                                                isDisabled=true titleName="Item Class" wire:model='CLASS_ID'
+                                                isDisabled="{{ false }}" titleName="Item Class" wire:model='CLASS_ID'
                                                 :key="$itemClass->pluck('ID')->join('_')">
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:custom-check-box name="IN_HEMO" titleName="In Hemo"
-                                                isDisabled=true wire:model='IN_HEMO' />
+                                               isDisabled="{{ false }}" wire:model='IN_HEMO' />
                                         </div>
                                     </div>
                                 </div>
