@@ -110,10 +110,11 @@
                                                         :isDisabled=true wire:model='CODE' />
                                                 </div>
                                                 <div class="col-md-4"
+                                                
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                         :options="$locationList" :zero="false"
-                                                        isDisabled={{ !$Modify && $AMOUNT == 0 ? false : true }}
+                                                        isDisabled="{{ !$Modify && $AMOUNT == 0 ? false : true }}"
                                                         wire:model='LOCATION_ID' />
 
                                                 </div>
@@ -210,17 +211,11 @@
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0)
-                                            <button type="button" class="btn btn-dark btn-sm"
-                                                wire:click="openPayment()">
-                                                <i class="fa fa-money" aria-hidden="true"></i>
-                                                Assistance Record
-                                            </button>
-                                        @endif
+                            
                                         @can('patient.payment.create')
                                             @if ($ID > 0 && $STATUS > 0)
                                                 <a id="new" title="Create"
-                                                    href="{{ route('patientspayment_create') }}"
+                                                    href="{{ route('patientsphic_pay_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endif
                                         @endcan
