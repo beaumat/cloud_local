@@ -3,7 +3,6 @@
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-sm-6">
-                    {{ $ID == 0 ? 'Create' : '' }}
                     <h5 class="m-0"><a href="{{ route('maintenancefinancialcoa') }}"> Chart Of Accounts </a></h5>
                 </div>
                 <div class="col-sm-6">

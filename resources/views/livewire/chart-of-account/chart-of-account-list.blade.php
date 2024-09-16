@@ -38,7 +38,7 @@
                                         <th>Group of Account</th>
                                         <th>Back Account No.</th>
                                         <th class="col-1 text-center">Inactive</th>
-                                        <th class="text-center col-2">
+                                        <th class="col-2 text-center">
                                             <a href="{{ route('maintenancefinancialcoa_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i>
                                             </a>
