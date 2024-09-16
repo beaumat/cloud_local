@@ -6,32 +6,56 @@ use App\Models\PaymentMethods;
 
 class PaymentMethodServices
 {
+
     private $object;
     public function __construct(ObjectServices $objectService)
     {
         $this->object = $objectService;
     }
-
+    public array $CASH_N_GL = [1, 92, 93, 94, 96];
+    public int $PHIL_HEALTH_ID = 91;
     public function get($id)
     {
         return PaymentMethods::where('ID', $id)->first();
     }
-    public function getList()
+    public function getList(): object
     {
         $result = PaymentMethods::query()->select(['ID', 'DESCRIPTION'])->get();
 
         return $result;
     }
-
-    public function getListNotIncludeOneParam(int $ID)
+    public function getPaymentMethodViaPatientPayment(): object
     {
-        $result = PaymentMethods::query()->select(['ID', 'DESCRIPTION'])->where('ID', '<>', $ID)->get();
+        $result = PaymentMethods::query()
+            ->select(['ID', 'DESCRIPTION'])
+            ->whereIn('ID', $this->CASH_N_GL)
+            ->get();
 
         return $result;
     }
-    public function getListNonPatient()
+
+    public function getPaymentMethodViaPhilHealth(): object
     {
-        $result = PaymentMethods::query()->select(['ID', 'DESCRIPTION'])->where('PAYMENT_TYPE', '<=', '8')->get();
+        $result = PaymentMethods::query()
+            ->select(['ID', 'DESCRIPTION'])
+            ->where('ID', '=', $this->PHIL_HEALTH_ID)
+            ->get();
+
+        return $result;
+    }
+    public function getListNotIncludeOneParam(int $ID): object
+    {
+        $result = PaymentMethods::query()->select(['ID', 'DESCRIPTION'])
+            ->where('ID', '<>', $ID)
+            ->get();
+        return $result;
+    }
+    public function getListNonPatient(): object
+    {
+        $result = PaymentMethods::query()
+            ->select(['ID', 'DESCRIPTION'])
+            ->where('PAYMENT_TYPE', '<=', '8')
+            ->get();
 
         return $result;
     }
@@ -63,7 +87,7 @@ class PaymentMethodServices
     {
         PaymentMethods::where('ID', $ID)->delete();
     }
-    public function Search($search)
+    public function Search($search): object
     {
         return PaymentMethods::query()
             ->select([
@@ -83,5 +107,112 @@ class PaymentMethodServices
             })
             ->orderBy('payment_method.ID', 'desc')
             ->get();
+    }
+    public function PaymentMethodSwitch(int $PAYMENT_TYPE): array
+    {
+
+        switch ($PAYMENT_TYPE) {
+            case 0:
+                $data = [
+                    'showCardNo'            => false,
+                    'showCardDateExpire'    => false,
+                    'showReceiptNo'         => true,
+                    'showReceiptDate'       => false,
+                    'showFileName'          => false,
+                    'titleRef'              => "SL No.",
+                    'titleDate'             => '',
+                    'showTax'               => false
+                ];
+                return $data;
+
+            case 1:
+
+                $data = [
+                    'showCardNo'            => false,
+                    'showCardDateExpire'    => false,
+                    'showReceiptNo'         => true,
+                    'showReceiptDate'       => true,
+                    'showFileName'          => false,
+                    'titleRef'              => "Ref No.",
+                    'titleDate'             => 'Ref Date',
+                    'showTax'               => false
+                ];
+
+                return $data;
+
+            case 4:
+
+                $data = [
+                    'showCardNo'            => true,
+                    'showCardDateExpire'    => true,
+                    'showReceiptNo'         => true,
+                    'showReceiptDate'       => false,
+                    'showFileName'          => false,
+                    'titleRef'              => '',
+                    'titleDate'             => '',
+                    'showTax'               => false
+                ];
+
+                return $data;
+            case 5:
+
+                $data = [
+                    'showCardNo'            => true,
+                    'showCardDateExpire'    => true,
+                    'showReceiptNo'         => true,
+                    'showReceiptDate'       => false,
+                    'showFileName'          => false,
+                    'titleRef'              => "Ref No.",
+                    'titleDate'             => '',
+                    'showTax'               => false
+                ];
+
+                return $data;
+
+            case 8:
+                $data = [
+                    'showCardNo'            => false,
+                    'showCardDateExpire'    => false,
+                    'showReceiptNo'         => false,
+                    'showReceiptDate'       => false,
+                    'showFileName'          => false,
+                    'titleRef'              => "Ref No.",
+                    'titleDate'             => '',
+                    'showTax'               => false
+                ];
+
+                return $data;
+
+
+            case 9:
+
+                $data = [
+                    'showCardNo'            => false,
+                    'showCardDateExpire'    => false,
+                    'showReceiptNo'         => true,
+                    'showReceiptDate'       => true,
+                    'showFileName'          => false,
+                    'titleRef'              => "OR No.",
+                    'titleDate'             => "OR Date",
+                    'showTax'               => true
+                ];
+
+                return $data;
+
+            default:
+
+                $data = [
+                    'showCardNo'            => false,
+                    'showCardDateExpire'    => false,
+                    'showReceiptNo'         => true,
+                    'showReceiptDate'       => true,
+                    'showFileName'          => true,
+                    'titleRef'              => "GL No.",
+                    'titleDate'             => "GL Date",
+                    'showTax'               => false
+                ];
+
+                return $data;
+        }
     }
 }

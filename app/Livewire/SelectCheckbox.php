@@ -11,12 +11,14 @@ class SelectCheckbox extends Component
 
    
     public string $name;
+    #[Reactive]
     public string $titleName;
     #[Reactive]
     public $options = [];
     public bool $zero;
     public bool $vertical;
     public bool $withLabel;
+    #[Reactive]
     public bool $isDisabled;
     #[Modelable]
     public $selectedOptions = []; // Array to store selected options

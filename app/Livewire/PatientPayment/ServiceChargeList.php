@@ -3,6 +3,7 @@
 namespace App\Livewire\PatientPayment;
 
 use App\Services\PatientPaymentServices;
+use App\Services\PhilHealthServices;
 use App\Services\ServiceChargeServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -26,19 +27,36 @@ class ServiceChargeList extends Component
     public $paymentAmounts = [];
     private $serviceChargeServices;
     private $patientPaymentServices;
+    private $philHealthServices;
     public bool $isDisabled = false;
-    public function boot(ServiceChargeServices $serviceChargeServices, PatientPaymentServices $patientPaymentServices)
+
+    public $PHILHEALTH_ID = 0;
+    public string $DT_FROM;
+    public string $DT_TO;
+
+
+    public function boot(ServiceChargeServices $serviceChargeServices, PatientPaymentServices $patientPaymentServices, PhilHealthServices $philHealthServices)
     {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->patientPaymentServices = $patientPaymentServices;
+        $this->philHealthServices  = $philHealthServices;
     }
-    public function mount(int $PATIENT_ID, int $LOCATION_ID, int $PATIENT_PAYMENT_ID, float $AMOUNT, float $AMOUNT_APPLIED)
+    public function mount(int $PATIENT_ID, int $LOCATION_ID, int $PATIENT_PAYMENT_ID, float $AMOUNT, float $AMOUNT_APPLIED, int $PHILHEALTH_ID = 0)
     {
         $this->PATIENT_ID = $PATIENT_ID;
         $this->LOCATION_ID = $LOCATION_ID;
         $this->PATIENT_PAYMENT_ID = $PATIENT_PAYMENT_ID;
         $this->AMOUNT = $AMOUNT;
         $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
+        $this->PHILHEALTH_ID = $PHILHEALTH_ID;
+        if ($PHILHEALTH_ID > 0) {
+            $data = $this->philHealthServices->get($PHILHEALTH_ID);
+
+            if ($data) {
+                $this->DT_FROM = $data->DATE_ADMITTED;
+                $this->DT_TO = $data->DATE_DISCHARGED;
+            }
+        }
     }
     public function updatedSelectedCharges(bool $value, $id)
     {
@@ -162,7 +180,12 @@ class ServiceChargeList extends Component
     public function render()
     {
 
-        $this->dataList = $this->serviceChargeServices->getServiceChargeList_NotPhilhealth($this->PATIENT_PAYMENT_ID, $this->PATIENT_ID, $this->LOCATION_ID);
+        if ($this->PHILHEALTH_ID > 0) {
+     
+            $this->dataList = $this->serviceChargeServices->getServiceChargeList_PH_Date($this->PATIENT_PAYMENT_ID, $this->PATIENT_ID, $this->LOCATION_ID, $this->DT_FROM, $this->DT_TO);
+        } else {
+            $this->dataList = $this->serviceChargeServices->getServiceChargeList_NotPhilhealth($this->PATIENT_PAYMENT_ID, $this->PATIENT_ID, $this->LOCATION_ID);
+        }
 
         return view('livewire.patient-payment.service-charge-list');
     }

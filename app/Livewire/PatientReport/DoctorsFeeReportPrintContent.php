@@ -45,13 +45,9 @@ class DoctorsFeeReportPrintContent extends Component
             if ($conPHIC) {
                 $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
             }
-
             // $HCI_MANAGER_ID
-
             $conMgr = $this->contactServices->get($locDate->HCI_MANAGER_ID ?? 0, 2); // Employee
-
             if ($conMgr) {
-
                 $this->ADMINISTRATOR_NAME = strtoupper($conMgr->PRINT_NAME_AS) ?? '';
             }
         }

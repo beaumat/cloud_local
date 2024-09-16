@@ -9,7 +9,8 @@
 
             <div class="col-9">
                 <input type="date" autocomplete="off" wire:model='value' class="text-xs form-control form-control-sm"
-                    id="{{ $name }}"  @if ($withLabel) placeholder="Enter {{ Str::lower($titleName) }}" @endif
+                    id="{{ $name }}"
+                    @if ($withLabel) placeholder="Enter {{ Str::lower($titleName) }}" @endif
                     @if ($isDisabled) readonly @endif />
             </div>
         </div>
@@ -17,7 +18,7 @@
         @if ($withLabel)
             <label for="{{ $name }}" class="text-xs">{{ $titleName }}</label>
         @endif
-        
+
         <input type="date" autocomplete="off" wire:model='value' class="text-xs form-control form-control-sm"
             id="{{ $name }}"
             @if ($withLabel) placeholder="Enter {{ Str::lower($titleName) }}" @endif

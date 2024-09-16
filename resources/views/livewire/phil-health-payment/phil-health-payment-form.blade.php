@@ -15,7 +15,7 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     {{ $ID == 0 ? 'Create' : '' }}
-                                    <a class="text-white" href="{{ route('patientspayment') }}"> Patient: Cash/GL
+                                    <a class="text-white" href="{{ route('patientsphic_pay') }}"> Patient: Philhealth
                                         Payments </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
@@ -32,13 +32,27 @@
                                         <div class="col-md-6">
                                             <livewire:select-option name="PATIENT_ID" titleName="Patient"
                                                 :options="$contactList" :zero="true" isDisabled="{{ !$Modify }}"
-                                                wire:model='PATIENT_ID' />
+                                                wire:model.live='PATIENT_ID' />
+
+
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <livewire:number-input name="AMOUNT" titleName="Amount"
-                                                        isDisabled="{{ $Modify && $AMOUNT_APPLIED == 0 ? false : true }}"
-                                                        wire:model='AMOUNT' />
+                                                    <div class="row">
+                                                        <div class='col-md-6'>
+                                                            <livewire:number-input name="AMOUNT" titleName="Amount"
+                                                                isDisabled="{{ $Modify && $AMOUNT_APPLIED == 0 ? false : true }}"
+                                                                wire:model.live.lazy.150ms='AMOUNT' />
+                                                        </div>
+                                                        <div class='col-md-6'>
+                                                            @if ($showTax)
+                                                                <livewire:number-input name="WTAX_AMOUNT"
+                                                                    titleName="WTax (2%) Less: {{ number_format($LESS_AMOUNT, 2) }}"
+                                                                    isDisabled="{{ true }}"
+                                                                    wire:model='WTAX_AMOUNT' />
+                                                            @endif
+                                                        </div>
+                                                    </div>
 
                                                 </div>
                                                 <div class="col-md-6">
@@ -124,34 +138,20 @@
                                                         isDisabled="{{ !$Modify }}" wire:model='NOTES'
                                                         :vertical="false" />
                                                 </div>
+                                                <div class="col-md-12">
+                                                    @if ($reloadphcomboBoxList)
+                                                        <livewire:select-option name="PHILHEALTH_ID1"
+                                                            titleName="Philhealth" :options="$dataPhList" :zero="true"
+                                                            isDisabled="{{ !$Modify }}"
+                                                            wire:model.live='PHILHEALTH_ID' />
+                                                    @else
+                                                        <livewire:select-option name="PHILHEALTH_ID2"
+                                                            titleName="Philhealth" :options="$dataPhList" :zero="true"
+                                                            isDisabled="{{ !$Modify }}"
+                                                            wire:model.live='PHILHEALTH_ID' />
+                                                    @endif
+                                                </div>
 
-                                                @if ($showFileName && $Modify)
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
-                                                            <label for="fileUpload" class="text-xs">PDF document file
-                                                                @if ($PDF)
-                                                                    <i class="fa fa-check-circle text-success"
-                                                                        aria-hidden="true"></i>
-                                                                @endif
-                                                            </label>
-                                                            <div class="input-group input-group-sm">
-                                                                <div class="custom-file text-xs">
-                                                                    <input type="file"
-                                                                        class="custom-file-input text-xs"
-                                                                        id="fileUpload" wire:model='PDF'>
-                                                                    <label class="custom-file-label text-xs"
-                                                                        for="fileUpload">
-                                                                        @if ($PDF)
-                                                                            {{ $PDF->getClientOriginalName() }}
-                                                                        @else
-                                                                            Choose file
-                                                                        @endif
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -256,7 +256,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('PatientPayment.PatientPaymentCharges', ['PATIENT_PAYMENT_ID' => $ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED])
+                                            @livewire('PatientPayment.PatientPaymentCharges', ['PATIENT_PAYMENT_ID' => $ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'PHILHEALTH_ID' => $PHILHEALTH_ID])
                                         </div>
                                     </div>
                                 </div>

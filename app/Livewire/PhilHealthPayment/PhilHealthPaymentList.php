@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Livewire\PatientPayment;
+namespace App\Livewire\PhilHealthPayment;
 
 use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\PatientPaymentServices;
 use App\Services\PaymentMethodServices;
+use App\Services\PhilHealthServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
@@ -14,8 +15,8 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title('Patient: Cash/GL Payment')]
-class PatientPaymentList extends Component
+#[Title('Patient: Philhealth Payment Notes')]
+class PhilHealthPaymentList extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
@@ -24,25 +25,22 @@ class PatientPaymentList extends Component
     public int $perPage = 50;
     public string $sortby = 'patient_payment.ID';
     public int $locationid;
-    public bool $itemized = true;
     public $locationList = [];
-    public int $paymentMethodId = 0;
-    public $paymentMethodList = [];
     private $patientPaymentServices;
     private $locationServices;
     private $userServices;
     private $uploadServices;
     private $paymentMethodServices;
+    private $philHealthServices;
     private $dateServices;
-    public string $DATE_FROM;
-    public string $DATE_TO;
     public function boot(
         PatientPaymentServices $patientPaymentServices,
         LocationServices $locationServices,
         UserServices $userServices,
         UploadServices $uploadServices,
         PaymentMethodServices    $paymentMethodServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        PhilHealthServices $philHealthServices
     ) {
         $this->patientPaymentServices = $patientPaymentServices;
         $this->locationServices = $locationServices;
@@ -50,35 +48,33 @@ class PatientPaymentList extends Component
         $this->uploadServices = $uploadServices;
         $this->paymentMethodServices = $paymentMethodServices;
         $this->dateServices = $dateServices;
+        $this->philHealthServices = $philHealthServices;
     }
     public function mount()
     {
-        $this->itemized = false;
-        $this->paymentMethodId = 0;
-        $this->paymentMethodList = $this->paymentMethodServices->getPaymentMethodViaPatientPayment();
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
-
-        $this->DATE_FROM = $this->dateServices->NowDate();
-        $this->DATE_TO = $this->dateServices->NowDate();
     }
     public function delete($id)
     {
-
         if ($this->patientPaymentServices->ChargesAreAlreadyExists($id)) {
             session()->flash('error', 'This payment cannot be deleted because it has already been applied.');
             return;
         }
 
-
         try {
-            DB::beginTransaction();
             $data = $this->patientPaymentServices->get($id);
             if ($data) {
-                $this->uploadServices->RemoveIfExists($data->FILE_PATH);
+                DB::beginTransaction();
                 $this->patientPaymentServices->Delete($data->ID);
-                session()->flash('message', 'Successfully deleted.');
+                $TotalPaid = (float) $this->patientPaymentServices->getSumOnPhilHealth(
+                    $data->PATIENT_ID,
+                    $data->LOCATION_ID,
+                    $data->PHILHEALTH_ID
+                );
+                $this->philHealthServices->UpdatePayment($data->PHILHEALTH_ID, $TotalPaid);
                 DB::commit();
+                session()->flash('message', 'Successfully deleted.');
             }
         } catch (\Exception $e) {
             DB::rollBack();
@@ -120,20 +116,15 @@ class PatientPaymentList extends Component
     #[On('reload-list')]
     public function render()
     {
-        $dataList = $this->patientPaymentServices->Search(
+        $dataList = $this->patientPaymentServices->SearchPhilheatlh(
             $this->search,
             $this->locationid,
             $this->perPage,
             $this->sortby,
             $this->isDesc,
-            $this->paymentMethodId,
-            $this->itemized,
-            $this->DATE_FROM,
-            $this->DATE_TO
         );
 
 
-
-        return view('livewire.patient-payment.patient-payment-list', ['dataList' => $dataList]);
+        return view('livewire.phil-health-payment.phil-health-payment-list', ['dataList' => $dataList]);
     }
 }

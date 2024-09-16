@@ -40,13 +40,13 @@ class TreatmentListExport implements FromCollection, ShouldAutoSize
             'SC'            => 'SC',
             'NURSE'         => 'NURSE ON DUTY'
         ];
-        $number = 0;
+        $NUMBER = 0;
         $finalData = [];
         $finalData[] = array_values($headers); // Add headers as the first row
         foreach ($dataList as $list) {
-            $number++;
+            $NUMBER++;
             $rowData = [
-                '#'             => $number,
+                '#'             => $NUMBER,
                 'NO'            => $list->CODE,
                 'DATE'          => $list->DATE,
                 'PATIENT_NAME'  => $list->CONTACT_NAME,

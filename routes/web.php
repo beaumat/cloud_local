@@ -50,6 +50,7 @@ use App\Livewire\Payment\PaymentForm;
 use App\Livewire\Payment\PaymentList;
 use App\Livewire\PhilHealth\PhilHealthForm;
 use App\Livewire\PhilHealth\PhilHealthList;
+use App\Livewire\PhilHealthPayment\PhilHealthPaymentList;
 use App\Livewire\PhilhealthPrint\PrintOutCf2;
 use App\Livewire\Requirement\RequirementForm;
 use App\Livewire\Requirement\RequirementList;
@@ -102,6 +103,7 @@ use App\Livewire\PaymentTerm\PaymentTermList;
 use App\Livewire\PhilHealth\PhilHealthPrintFormTempOut;
 use App\Livewire\PhilHealth\PhilHealthPrintTemp;
 use App\Livewire\PhilHealth\PhilHealthPrintTempOut;
+use App\Livewire\PhilHealthPayment\PhilHealthPaymentForm;
 use App\Livewire\PhilhealthPrint\PrintOutCf4;
 use App\Livewire\PhilhealthPrint\PrintOutCf4Temp;
 use App\Livewire\PhilhealthPrint\PrintOutCsf;
@@ -188,9 +190,14 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('/phil-health')->group(function () {
-            Route::get('/', PhilHealthList::class)->name('phic')->middleware(['permission:patient.philhealth.view']);
-            Route::get('/create', PhilHealthForm::class)->name('phic_create')->middleware(['permission:patient.philhealth.create']);
-            Route::get('/{id}/edit', PhilHealthForm::class)->name('phic_edit')->middleware(['permission:patient.philhealth.view']);
+            Route::get('forms/', PhilHealthList::class)->name('phic')->middleware(['permission:patient.philhealth.view']);
+            Route::get('forms/create', PhilHealthForm::class)->name('phic_create')->middleware(['permission:patient.philhealth.create']);
+            Route::get('forms/{id}/edit', PhilHealthForm::class)->name('phic_edit')->middleware(['permission:patient.philhealth.view']);
+
+            Route::get('payments/', PhilHealthPaymentList::class)->name('phic_pay')->middleware(['permission:patient.philhealth.view']);
+            Route::get('payments/create', PhilHealthPaymentForm::class)->name('phic_pay_create')->middleware(['permission:patient.philhealth.create']);
+            Route::get('payments/{id}/edit', PhilHealthPaymentForm::class)->name('phic_pay_edit')->middleware(['permission:patient.philhealth.view']);
+
 
             // Print on Philhealth
             Route::get('/{id}/printout-soa', PrintOutSoa::class)->name('printout_soa')->middleware(['permission:patient.philhealth.print']);
@@ -295,7 +302,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', StockTransferForm::class)->name('stock_transfer_create')->middleware(['permission:company.stock-transfer.create']);
             Route::get('/{id}/edit', StockTransferForm::class)->name('stock_transfer_edit')->middleware(['permission:company.stock-transfer.view']);
         });
-
 
         Route::prefix('/pull-out')->group(function () {
             Route::get('/', PullOutList::class)->name('pull_out')->middleware(['permission:company.pull-out.view']);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\PatientPayment;
+namespace App\Livewire\PhilHealthPayment;
 
 use App\Services\AccountServices;
 use App\Services\ContactServices;
@@ -8,18 +8,21 @@ use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\PatientPaymentServices;
 use App\Services\PaymentMethodServices;
+use App\Services\PhilHealthServices;
 use App\Services\SystemSettingServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-#[Title('Patient: Cash/GL Payment')]
-class PatientPaymentForm extends Component
+#[Title('Patient: Philhealth Payment Notes')]
+class PhilHealthPaymentForm extends Component
 {
+
     use WithFileUploads;
     public string $FILE_NAME;
     public string $FILE_PATH;
@@ -47,11 +50,14 @@ class PatientPaymentForm extends Component
     public bool $DEPOSITED;
     public int $ACCOUNTS_RECEIVABLE_ID;
     public int $WTAX_ACCOUNT_ID;
-    public float $WTAX_AMOUNT;
-    public $showTax = false;
+    public float $WTAX_AMOUNT = 0;
+    public float $LESS_AMOUNT = 0;
+    public int $PHILHEALTH_ID = 0;
     public $locationList = [];
     public $contactList = [];
     public $paymentMethodList = [];
+    public $dataPhList = [];
+
     private $patientPaymentServices;
     private $locationServices;
     private $userServices;
@@ -66,7 +72,9 @@ class PatientPaymentForm extends Component
     public bool $showReceiptNo = false;
     public bool $showReceiptDate = false;
     public bool $showFileName = false;
+    public bool $showTax = false;
     private $uploadServices;
+    private  $philHealthServices;
     public string $TITLE_REF = "";
     public string $TITLE_DATE = "";
     public function boot(
@@ -79,7 +87,7 @@ class PatientPaymentForm extends Component
         PaymentMethodServices $paymentMethodServices,
         ContactServices $contactServices,
         UploadServices $uploadServices,
-
+        PhilHealthServices $philHealthServices
     ) {
         $this->patientPaymentServices = $patientPaymentServices;
         $this->locationServices = $locationServices;
@@ -90,6 +98,7 @@ class PatientPaymentForm extends Component
         $this->paymentMethodServices = $paymentMethodServices;
         $this->contactServices = $contactServices;
         $this->uploadServices = $uploadServices;
+        $this->philHealthServices = $philHealthServices;
     }
     public function getInfo($data)
     {
@@ -111,6 +120,7 @@ class PatientPaymentForm extends Component
         $this->ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
         $this->WTAX_ACCOUNT_ID =  $data->WTAX_ACCOUNT_ID ?? 0;
         $this->WTAX_AMOUNT =  $data->WTAX_AMOUNT  ?? 0;
+        $this->LESS_AMOUNT = $data->LESS_AMOUNT ?? 0;
         $this->STATUS = $data->STATUS ?? 0;
         $this->STATUS_DATE = $data->STATUS_DATE ?? null;
         $this->DEPOSITED = $data->DEPOSITED ?? null;
@@ -119,6 +129,8 @@ class PatientPaymentForm extends Component
         $this->IS_CONFIRM = $data->IS_CONFIRM ?? false;
         $this->DATE_CONFIRM = $data->DATE_CONFIRM ?? '';
 
+        $this->PHILHEALTH_ID = $data->PHILHEALTH_ID ?? 0;
+        $this->updatedPATIENTID();
         $this->updatedpaymentmethodid();
         $this->Modify = false;
         $this->PDF = null;
@@ -131,22 +143,33 @@ class PatientPaymentForm extends Component
     }
     private function LoadDropDown()
     {
-
         $this->locationList = $this->locationServices->getList();
         $this->contactList = $this->contactServices->getPatientList($this->LOCATION_ID);
-        $this->paymentMethodList = $this->paymentMethodServices->getPaymentMethodViaPatientPayment();
+        $this->paymentMethodList = $this->paymentMethodServices->getPaymentMethodViaPhilHealth();
+    }
+    public bool $reloadphcomboBoxList = false;
+    public function updatedPATIENTID()
+    {
+
+        $this->dataPhList = $this->philHealthServices->DropDownPhilHealth(
+            $this->PATIENT_ID,
+            $this->LOCATION_ID,
+            $this->ID == 0 ? 0 : $this->PHILHEALTH_ID
+        );
+
+        $this->reloadphcomboBoxList = $this->reloadphcomboBoxList ? false : true;
     }
     public function mount($id = null)
     {
         if (is_numeric($id)) {
-            $data = $this->patientPaymentServices->getPatientPayment($id);
+            $data = $this->patientPaymentServices->getPhilhealthPayment($id);
             if ($data) {
                 $this->getInfo($data);
                 $this->LoadDropDown();
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('patientspayment')->with('error', $errorMessage);
+            return Redirect::route('patientsphic_pay')->with('error', $errorMessage);
         }
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->LoadDropDown();
@@ -156,7 +179,7 @@ class PatientPaymentForm extends Component
         $this->PATIENT_ID = 0;
         $this->AMOUNT = 0;
         $this->AMOUNT_APPLIED = 0;
-        $this->PAYMENT_METHOD_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentMethodId');
+        $this->PAYMENT_METHOD_ID = 91; // Philhealth Default;
         $this->CARD_NO = '';
         $this->CARD_EXPIRY_DATE = null;
         $this->RECEIPT_REF_NO = '';
@@ -175,6 +198,8 @@ class PatientPaymentForm extends Component
         $this->DATE_CONFIRM = '';
         $this->WTAX_AMOUNT = 0;
         $this->WTAX_ACCOUNT_ID = 0;
+        $this->LESS_AMOUNT = 0;
+        $this->PHILHEALTH_ID = 0;
         $this->updatedpaymentmethodid();
     }
     public function updatedPdf()
@@ -188,55 +213,42 @@ class PatientPaymentForm extends Component
         $this->patientPaymentServices->ConfirmProccess($this->ID);
         return Redirect::route('patientspayment_edit', ['id' => $this->ID])->with('message', 'Successfully confirm');
     }
+    public function updatedAmount()
+    {
+        $this->WTAX_AMOUNT =  $this->AMOUNT * $this->philHealthServices->TAX;
+        $this->LESS_AMOUNT  =  $this->AMOUNT -  $this->WTAX_AMOUNT;
+    }
     public function save()
     {
 
-        $getType = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
-        $PAYMENT_TYPE = (int) $getType->PAYMENT_TYPE;
-        if ($PAYMENT_TYPE == 10 && $this->ID == 0) {
-            $this->validate(
-                [
-                    'PATIENT_ID' => 'required|not_in:0',
-                    'DATE' => 'required',
-                    // 'PDF' => 'required',
-                    'LOCATION_ID' => 'required',
-                    'AMOUNT' => 'required|not_in:0',
-                    'RECEIPT_REF_NO' => 'required',
-                    'RECEIPT_DATE' => 'required'
-                ],
-                [],
-                [
-                    'PATIENT_ID' => 'Patient',
-                    'DATE' => 'Date',
-                    // 'PDF' => 'Pdf document file',
-                    'LOCATION_ID' => 'Location',
-                    'AMOUNT' => 'Amount',
-                    'RECEIPT_REF_NO' => 'GL Reference No.',
-                    'RECEIPT_DATE' => 'GL Date'
-                ]
-            );
-        } else {
 
-            $this->validate(
-                [
-                    'PATIENT_ID' => 'required|not_in:0',
-                    'DATE' => 'required',
-                    'LOCATION_ID' => 'required',
-                    'AMOUNT' => 'required|not_in:0',
-                ],
-                [],
-                [
-                    'PATIENT_ID' => 'Patient',
-                    'DATE' => 'Date',
-                    'LOCATION_ID' => 'Location',
-                    'AMOUNT' => 'Amount',
-                ]
-            );
-        }
+        $this->validate(
+            [
+                'PATIENT_ID'        => 'required|not_in:0',
+                'DATE'              => 'required',
+                'LOCATION_ID'       => 'required',
+                'AMOUNT'            => 'required|not_in:0',
+                'RECEIPT_REF_NO'    => 'required',
+                'RECEIPT_DATE'      => 'required',
+                'PHILHEALTH_ID'     => 'required|not_in:0'
+            ],
+            [],
+            [
+                'PATIENT_ID'        => 'Patient',
+                'DATE'              => 'Date',
+                'LOCATION_ID'       => 'Location',
+                'AMOUNT'            => 'Amount',
+                'RECEIPT_REF_NO'    => 'OR No.',
+                'RECEIPT_DATE'      => 'OR Date',
+                'PHILHEALTH_ID'     => 'Philhealth'
+            ]
+        );
 
+        DB::beginTransaction();
         try {
 
             if ($this->ID == 0) {
+
                 $this->ID = $this->patientPaymentServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -252,19 +264,17 @@ class PatientPaymentForm extends Component
                     $this->NOTES,
                     $this->UNDEPOSITED_FUNDS_ACCOUNT_ID,
                     $this->OVERPAYMENT_ACCOUNT_ID,
-                    0,
+                    false,
                     $this->ACCOUNTS_RECEIVABLE_ID,
-                    0,
+                    $this->PHILHEALTH_ID,
                     $this->WTAX_AMOUNT,
-                    $this->WTAX_ACCOUNT_ID
+                    $this->WTAX_ACCOUNT_ID,
+                    $this->LESS_AMOUNT
                 );
 
-                if ($PAYMENT_TYPE == 10) {
-                    if ($this->PDF) {
-                        $this->getDocumentProccess();
-                    }
-                }
-                return Redirect::route('patientspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+                $this->PaidUpdate();
+                DB::commit();
+                return Redirect::route('patientsphic_pay_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
                 $this->patientPaymentServices->Update(
@@ -282,29 +292,27 @@ class PatientPaymentForm extends Component
                     $this->NOTES,
                     $this->UNDEPOSITED_FUNDS_ACCOUNT_ID,
                     $this->OVERPAYMENT_ACCOUNT_ID,
-                    0,
+                    false,
                     $this->ACCOUNTS_RECEIVABLE_ID,
                     $this->WTAX_AMOUNT,
-                    $this->WTAX_ACCOUNT_ID
+                    $this->WTAX_ACCOUNT_ID,
+                    $this->LESS_AMOUNT
                 );
-
-                if ($this->PDF) {
-                    if ($PAYMENT_TYPE == 10) {
-                        $this->uploadServices->RemoveIfExists($this->FILE_PATH);
-                        $this->getDocumentProccess();
-                        $data = $this->patientPaymentServices->get($this->ID);
-                        if ($data) {
-                            $this->getInfo($data);
-                        }
-                    }
-                }
+                $this->PaidUpdate();
+                DB::commit();
                 $this->Modify = false;
                 session()->flash('message', 'Successfully updated');
             }
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+    private function PaidUpdate()
+    {
+        $TotalPaid = (float) $this->patientPaymentServices->getSumOnPhilHealth($this->PATIENT_ID, $this->LOCATION_ID, $this->PHILHEALTH_ID);
+        $this->philHealthServices->UpdatePayment($this->PHILHEALTH_ID, $TotalPaid);
     }
     public function getDocumentProccess()
     {
@@ -331,7 +339,6 @@ class PatientPaymentForm extends Component
         $paymentMethod = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
 
         if ($paymentMethod) {
-
             $data =  $this->paymentMethodServices->PaymentMethodSwitch($paymentMethod->PAYMENT_TYPE);
             $this->showCardNo = (bool) $data['showCardNo'];
             $this->showCardDateExpire = (bool) $data['showCardDateExpire'];
@@ -352,6 +359,6 @@ class PatientPaymentForm extends Component
     }
     public function render()
     {
-        return view('livewire.patient-payment.patient-payment-form');
+        return view('livewire.phil-health-payment.phil-health-payment-form');
     }
 }

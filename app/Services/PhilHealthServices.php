@@ -12,7 +12,7 @@ use App\Models\PhilhealthItemAdjustment;
 
 class PhilHealthServices
 {
-
+    public float  $TAX = 0.02;
     public string $FIRST_CASE_RATE = "90935";
 
     public string $DEFAULT_DIAGNOSIS = "CHRONIC KIDNEY DISEASE STAGE 5 TO ";
@@ -659,7 +659,7 @@ class PhilHealthServices
     public function UpdatePayment(int $PHILHEALTH_ID, float $TOTAL_PAY)
     {
         $data = $this->get($PHILHEALTH_ID);
-
+        
         if ($data) {
 
             if ((float) $TOTAL_PAY >= (float) $data->P1_TOTAL) {
@@ -743,5 +743,25 @@ class PhilHealthServices
         $formatted = substr($input, 0, 4) . '-' . substr($input, 4, 7) . '-' . substr($input, 11, 1);
         return $formatted; // This will return: 1202-0500922-3
 
+    }
+
+    public function DropDownPhilHealth(int $PATIENT_ID, int $LOCATION_ID, int $PHILHEALTH_ID = 0): object
+    {
+        $result =  PhilHealth::query()
+            ->select([
+                'ID',
+                DB::raw("CONCAT(' SOA No.: ',CODE ,' /  Admitted:',DATE_ADMITTED ,'  /  Discharged:', DATE_DISCHARGED, '   / First Case Rate : ', format(P1_TOTAL,2) ) as NAME")
+            ])
+            ->where('CONTACT_ID', '=', $PATIENT_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->whereColumn('P1_TOTAL', '<>', 'PAYMENT_AMOUNT')
+            ->when($PHILHEALTH_ID > 0, function ($query) use (&$PHILHEALTH_ID) {
+                $query->orWhere('ID', '=', $PHILHEALTH_ID);
+            })
+            ->whereNotNull('AR_DATE')
+            ->whereNotNull('AR_NO')
+            ->get();
+
+        return $result;
     }
 }

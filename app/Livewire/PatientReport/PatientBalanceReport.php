@@ -22,7 +22,7 @@ class PatientBalanceReport extends Component
     public string $DATE_FROM;
     public string $DATE_TO;
     public float $BALANCE;
-    public $locationList = [];
+    public  $locationList = [];
     public $patientList = [];
     public $dataList = [];
 
@@ -31,8 +31,13 @@ class PatientBalanceReport extends Component
     private $userServices;
     private $locationServices;
     private $contactServices;
-    public function boot(ContactServices $contactServices, ServiceChargeServices $serviceChargeServices, DateServices $dateServices, UserServices $userServices, LocationServices $locationServices)
-    {
+    public function boot(
+        ContactServices $contactServices,
+        ServiceChargeServices $serviceChargeServices,
+        DateServices $dateServices,
+        UserServices $userServices,
+        LocationServices $locationServices
+    ) {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->locationServices = $locationServices;
         $this->dateServices = $dateServices;

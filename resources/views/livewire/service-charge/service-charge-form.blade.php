@@ -58,7 +58,6 @@
                                                         <livewire:text-input name="Code" titleName="Reference No."
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
-
                                                 </div>
                                                 <div class="col-md-4"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>

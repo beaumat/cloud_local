@@ -129,7 +129,7 @@
                                         <div class="col-md-4"
                                             @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <livewire:select-option name="LOCATION_ID" :options="$locationList"
-                                                :zero="false" titleName="Location" :vertical="true"
+                                                :zero="false" titleName="Location" :vertical="true" isDisabled=false
                                                 wire:model.live='LOCATION_ID' />
                                         </div>
                                         <div class="col-md-5 text-center mt-2">

@@ -18,8 +18,16 @@ class PatientReportServices
      * @param array $patientData
      */
 
-    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [])
-    {
+    public function generateSalesReportData(
+        string $ppFrom,
+        string $ppTo,
+        string $scFrom,
+        string $scTo,
+        int  $locatoinId,
+        array  $patientData = [],
+        array $itemData = []
+    ): object {
+
         $results = DB::table('service_charges_items as sci')
             ->select([
                 'sc.ID as SC_ID',
@@ -72,9 +80,13 @@ class PatientReportServices
 
         return $results;
     }
-    public function generatePrevCollection(string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [])
-    {
-
+    public function generatePrevCollection(
+        string $scFrom,
+        string $scTo,
+        int  $locatoinId,
+        array  $patientData = [],
+        array $itemData = []
+    ): object {
         $results = DB::table('service_charges_items as sci')
             ->select([
                 'sc.ID as SC_ID',
@@ -128,8 +140,11 @@ class PatientReportServices
 
         return $results;
     }
-    public function getItemListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)
-    {
+    public function getItemListViaReport(
+        int $LOCATION_ID,
+        string $DATE_FROM,
+        string $DATE_TO
+    ): object {
 
         $result = Items::query()
             ->select(['ID', 'DESCRIPTION'])
@@ -149,8 +164,13 @@ class PatientReportServices
         return $result;
     }
 
-    public function getMonthlyTreatment(int $year, int $month, array  $dayList = [], array $patient = [], int $LocationId)
-    {
+    public function getMonthlyTreatment(
+        int $year,
+        int $month,
+        array  $dayList = [],
+        array $patient = [],
+        int $LocationId
+    ): object {
         $PHIC_ITEM_ID = $this->itemServices->PHIC_ITEM_ID;
         $PRIMING_ITEM_ID = $this->itemServices->PRIMING_ITEM_ID;
 

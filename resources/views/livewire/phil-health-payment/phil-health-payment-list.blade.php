@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('patientspayment') }}">Patient Cash/GL Payments </a>
+                        <a href="{{ route('patientsphic_pay') }}"> Patient: Philhealth Payments </a>
                     </h5>
                 </div>
                 <div class="col-sm-6">
@@ -26,28 +26,13 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-9">
                                             <div class="mt-0">
                                                 <label class="text-sm">Search:</label>
                                                 <input type="text" wire:model.live.debounce.150ms='search'
                                                     class="w-100 form-control form-control-sm" placeholder="Search" />
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <div class="mt-0">
-                                                <label class="text-sm">Payment Method:</label>
-                                                <select name="location" wire:model.live='paymentMethodId'
-                                                    class="form-control form-control-sm">
-                                                    <option value="0"> All Payment Method</option>
-                                                    @foreach ($paymentMethodList as $item)
-                                                        <option value="{{ $item->ID }}">
-                                                            {{ $item->DESCRIPTION }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-
 
                                         <div class="col-md-2">
                                             <div class="mt-0">
@@ -67,7 +52,7 @@
 
                                         <div class="col-md-1">
                                             <div class="mt-0">
-                                               
+
                                                 <label class="text-sm"><br /></label>
                                                 <button class="btn btn-sm btn-secondary w-100"
                                                     wire:click='reloadList()'>
@@ -76,20 +61,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="row">
-                                                <div class ="col-md-6">
-                                                    <label class="text-sm"> 
-                                                    <span>itemized :</span>
-                                                <input type="checkbox" wire:model.live='itemized' /> Date From:</label>
-                                                    <input type="date" @if(!$itemized) disabled @endif class="form-control form-control-sm"
-                                                        wire:model.live='DATE_FROM' />
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="text-sm">Date To:</label>
-                                                    <input type="date" @if(!$itemized) disabled @endif class="form-control form-control-sm"
-                                                        wire:model.live='DATE_TO' />
-                                                </div>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -118,7 +90,7 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        <th >
+                                        <th>
                                             <span type='button' wire:click="sorting('c.LAST_NAME')">Lastname</span>
                                             @if ($sortby == 'c.LAST_NAME')
                                                 @if ($isDesc)
@@ -128,7 +100,7 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        <th >
+                                        <th>
                                             <span type='button' wire:click="sorting('c.FIRST_NAME')">Firstname</span>
                                             @if ($sortby == 'c.FIRST_NAME')
                                                 @if ($isDesc)
@@ -184,8 +156,7 @@
                                             @endif
                                         </th>
                                         <th>
-                                            <span type='button'
-                                                wire:click="sorting('patient_payment.RECEIPT_REF_NO')">
+                                            <span type='button' wire:click="sorting('patient_payment.RECEIPT_REF_NO')">
                                                 Ref No. </span>
 
                                             @if ($sortby == 'patient_payment.RECEIPT_REF_NO')
@@ -209,7 +180,7 @@
                                             @endif
 
                                         </th>
-                                        <th>
+                                        {{-- <th>
                                             <span type='button' wire:click="sorting('patient_payment.IS_CONFIRM')">
                                                 Confirm
                                             </span>
@@ -220,8 +191,8 @@
                                                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                 @endif
                                             @endif
-                                        </th>
-                                        <th >
+                                        </th> --}}
+                                        <th>
                                             <span type='button' wire:click="sorting('l.NAME')">
                                                 Location
                                             </span>
@@ -247,20 +218,10 @@
                                             @endif
                                         </th>
 
-                                        @if ($itemized)
-                                            <th class="bg-info">
-                                                Item Description
-                                            </th>
-                                            <th class="bg-info text-right">
-                                                Change
-                                            </th>
-                                            <th class="bg-warning text-right">
-                                                Paid
-                                            </th>
-                                        @endif
+
                                         @can('patient.payment.create')
                                             <th class="text-center bg-success">
-                                                <a href="{{ route('patientspayment_create') }}"
+                                                <a href="{{ route('patientsphic_pay_create') }}"
                                                     class="text-white btn btn-xs w-100">
                                                     <i class="fas fa-plus"></i> New
                                                 </a>
@@ -272,7 +233,7 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('patientspayment_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('patientsphic_pay_edit', ['id' => $list->ID]) }}"
                                                     class="text-primary"> {{ $list->CODE }} </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
@@ -295,27 +256,15 @@
                                             <td>{{ $list->RECEIPT_REF_NO }}</td>
                                             <td>{{ $list->RECEIPT_DATE ? date('m/d/Y', strtotime($list->RECEIPT_DATE)) : '' }}
                                             </td>
-                                            <td class="text-center">
+                                            {{-- <td class="text-center">
                                                 @if ($list->IS_CONFIRM)
                                                     <strong class="text-success">Yes</strong>
                                                 @else
                                                     <strong class="text-danger">No</strong>
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center"> {{ $list->STATUS }}</td>
-                                            @if ($itemized)
-                                                <td>
-                                                    {{ $list->ITEM_NAME }}
-                                                </td>
-                                                <td class="text-right">
-                                                    {{ number_format($list->ITEM_AMOUNT, 2) }}
-                                                </td>
-                                                <th class="text-right">
-                                                    {{ number_format($list->ITEM_PAID, 2) }}
-                                                    </td>
-                                            @endif
-
                                             @can('patient.payment.create')
                                                 <td class="text-center">
                                                     @can('patient.payment.print')
@@ -326,11 +275,11 @@
                                                             </a>
                                                         @endif
                                                     @endcan
-                                                    <a href="{{ route('patientspayment_edit', ['id' => $list->ID]) }}"
+                                                    <a href="{{ route('patientsphic_pay_edit', ['id' => $list->ID]) }}"
                                                         class="btn btn-xs btn-info">
                                                         <i class="fas fa-edit" aria-hidden="true"></i>
                                                     </a>
-                                                    @can('patient.payment.update')
+                                                    {{-- @can('patient.payment.update')
                                                         @if ($list->FILE_PATH)
                                                             <button wire:click='getConfirm({{ $list->ID }})'
                                                                 type="button"
@@ -339,7 +288,7 @@
                                                                 <i class="fa fa-check-square-o" aria-hidden="true"></i>
                                                             </button>
                                                         @endif
-                                                    @endcan
+                                                    @endcan --}}
 
                                                     @can('patient.payment.delete')
                                                         <button type="button" wire:click='delete({{ $list->ID }})'
@@ -357,34 +306,7 @@
                             </table>
                         </div>
                         <div class="card-footer">
-                            {{-- <div class="row">
-                                <div class="col-md-6">
 
-                                </div>
-                                <div class="col-md-6">
-                                    <div class ="row text-xs">
-                                        <div class="col-3 text-right">
-                                            <label>Total Deposit :</label>
-                                        </div>
-                                        <div class="col-9 text-left text-primary h6">
-                                            {{ number_format($TOTAL_DEPOSIT, 2) }}
-                                        </div>
-                                        <div class="col-3 text-right ">
-                                            <label>Total Applied :</label>
-                                        </div>
-                                        <div class="col-9 text-left text-success h6">
-                                            {{ number_format($TOTAL_APPLIED, 2) }}
-                                        </div>
-
-                                        <div class="col-3 text-right ">
-                                            <label>Total Balance :</label>
-                                        </div>
-                                        <div class="col-9 text-left text-danger h6">
-                                            {{ number_format($TOTAL_BALANCE, 2) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
                 </div>

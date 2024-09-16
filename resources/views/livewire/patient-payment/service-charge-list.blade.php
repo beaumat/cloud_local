@@ -60,7 +60,6 @@
                                         <th>
                                             {{ number_format($list->PAID_AMOUNT, 2) }}
                                         </th>
-
                                         <th>
                                             @php
                                                 $temp_max = $list->ITEM_AMOUNT - $list->PAID_AMOUNT;

@@ -212,6 +212,7 @@ class PhilHealthForm extends Component
             $this->Modify = false;
 
             return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+
         } else {
 
             $this->philHealthServices->preUpdate(
@@ -233,7 +234,6 @@ class PhilHealthForm extends Component
     
             $this->philHealthServices->DefaultEntry($this->ID);
             $this->Modify = false;
-
             return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully updated');
         }
     }

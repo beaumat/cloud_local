@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Attributes\Modelable;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class CheckboxInput extends Component
@@ -11,6 +12,7 @@ class CheckboxInput extends Component
     public $value = null;
     public string $name;
     public string $titleName;
+    #[Reactive]
     public bool $isDisabled;
     public function mount($name, $titleName,  $isDisabled = false)
     {

@@ -39,7 +39,8 @@
 
                                     <div class="col-md-12">
                                         <livewire:select-option name="CONTACT_ID" :options="$contactList" :zero="true"
-                                            titleName="Patient :" wire:model.live='CONTACT_ID' :key="$contactList->pluck('ID')->join('_')" />
+                                            isDisabled="{{ false }}" titleName="Patient :"
+                                            wire:model.live='CONTACT_ID' :key="$contactList->pluck('ID')->join('_')" />
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +67,7 @@
                             <div class="card-body">
 
                                 <div class="form-group">
-                                    <livewire:dropdown-option name="scheduleStatusId" :isDisabled=false
+                                    <livewire:dropdown-option name="scheduleStatusId" isDisabled="{{ false }}"
                                         titleName="Status" :options="$scheduleStatusList" :zero="false"
                                         wire:model.live='scheduleStatusId' />
                                 </div>
@@ -118,8 +119,8 @@
                                         <div class="col-md-4"
                                             @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <livewire:select-option name="LOCATION_ID" :options="$locationList"
-                                                :zero="false" titleName="Location" :vertical="true"
-                                                wire:model.live='LOCATION_ID' />
+                                                isDisabled="{{ false }}" :zero="false" titleName="Location"
+                                                :vertical="true" wire:model.live='LOCATION_ID' />
                                         </div>
                                         <div class="col-md-5 text-center mt-2">
                                             <h5>

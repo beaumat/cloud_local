@@ -22,7 +22,8 @@
                     <td>{{ $list->NAME }}</td>
                     <td class="text-right">
                         @if ($editExpensesId === $list->ID)
-                            <input type="number" class="form-control form-control-sm" wire:model='lineAmount' name="lineAmount" />
+                            <input type="number" class="form-control form-control-sm" wire:model='lineAmount'
+                                name="lineAmount" />
                         @else
                             {{ number_format($list->AMOUNT, 2) }}
                         @endif
@@ -96,15 +97,15 @@
                                 @if ($codeBase)
                                     <livewire:select-option name="ACCOUNT_ID1" titleName="Account Code"
                                         :options="$acctCodeList" :zero="true" wire:model.live='ACCOUNT_ID'
-                                        :vertical="false" :withLabel="false" />
+                                        isDisabled=false :vertical="false" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ACCOUNT_CODE }}</label>
                                 @endif
                             @else
                                 @if ($codeBase)
                                     <livewire:select-option name="ACCOUNT_ID2" titleName="Account Code"
-                                        :options="$acctCodeList" :zero="true" wire:model.live='ACCOUNT_ID'
-                                        :vertical="false" :withLabel="false" />
+                                        :options="$acctCodeList" :zero="true" wire:model.live='ACCOUNT_ID' 
+                                        isDisabled=false :vertical="false" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ACCOUNT_CODE }}</label>
                                 @endif
@@ -114,7 +115,7 @@
                             @if ($saveSuccess)
                                 @if (!$codeBase)
                                     <livewire:select-option name="ACCOUNT_ID3" titleName="Account Description"
-                                        :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID'
+                                        :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID' isDisabled=false
                                         :vertical="false" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ACCOUNT_DESCRIPTION }}</label>
@@ -122,7 +123,7 @@
                             @else
                                 @if (!$codeBase)
                                     <livewire:select-option name="ACCOUNT_ID4" titleName="Account Description"
-                                        :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID'
+                                        :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID' isDisabled=false
                                         :vertical="false" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ACCOUNT_DESCRIPTION }}</label>
@@ -130,8 +131,8 @@
                             @endif
                         </td>
                         <td>
-                            <input type="number" class="form-control form-control-sm mt-2 text-right"
-                                name="AMOUNT" wire:model='AMOUNT' />
+                            <input type="number" class="form-control form-control-sm mt-2 text-right" name="AMOUNT"
+                                wire:model='AMOUNT' />
                         </td>
                         <td class="text-center">
                             <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
@@ -145,13 +146,13 @@
                             @if ($saveSuccess)
                                 @if (!$codeBase)
                                     <livewire:select-option name="CLASS_ID1" titleName="" :options="$classList"
-                                        :zero="true" wire:model.live='CLASS_ID' :vertical="false"
+                                        :zero="true" wire:model.live='CLASS_ID' :vertical="false" isDisabled=false
                                         :withLabel="false" />
                                 @endif
                             @else
                                 @if (!$codeBase)
                                     <livewire:select-option name="CLASS_ID2" titleName="" :options="$classList"
-                                        :zero="true" wire:model.live='CLASS_ID' :vertical="false"
+                                        :zero="true" wire:model.live='CLASS_ID' :vertical="false" isDisabled=false
                                         :withLabel="false" />
                                 @endif
                             @endif

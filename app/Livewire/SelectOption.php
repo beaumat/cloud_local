@@ -11,13 +11,15 @@ class SelectOption extends Component
     #[Modelable]
     public $value = null;
     public string $name;
+    #[Reactive]
     public string $titleName;
     #[Reactive]
     public $options = [];
     public bool $zero;
     public bool $vertical;
     public bool $withLabel;
-    public bool $isDisabled;
+    #[Reactive]
+    public bool $isDisabled = false;
     public function mount($name, $options, $zero, $titleName, $vertical = false, $withLabel = true, $isDisabled = false)
     {
         $this->titleName = $titleName;

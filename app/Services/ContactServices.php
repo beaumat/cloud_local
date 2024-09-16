@@ -74,7 +74,7 @@ class ContactServices
     public function getPatientList(int $LOCATION_ID): object
     {
 
-        return Contacts::query()
+        $result = Contacts::query()
             ->select([
                 'ID',
                 DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME")
@@ -85,11 +85,13 @@ class ContactServices
             })
             ->orderBy('LAST_NAME', 'asc')
             ->get();
+
+        return $result;
     }
-    public function getPatientListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO): object
+    public function getPatientListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)
     {
 
-        return Contacts::query()
+        $result = Contacts::query()
             ->select(
                 [
                     'ID',
@@ -105,6 +107,8 @@ class ContactServices
             })
             ->orderBy('LAST_NAME', 'asc')
             ->get();
+
+        return $result;
     }
     public function getDoctorListByLocation(int $LOCATION_ID)
     {

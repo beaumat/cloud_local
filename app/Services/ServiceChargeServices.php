@@ -83,7 +83,7 @@ class ServiceChargeServices
 
         return $result;
     }
-    public function getServiceChargeList_PH(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID): object
+    public function getServiceChargeList_PH(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID, int $PHILHEALTH_ID = 0): object
     {
         $result = ServiceChargesItems::query()
             ->select([
@@ -710,7 +710,7 @@ class ServiceChargeServices
             ->where('service_charges.PATIENT_ID', $PATIENT_ID)
             ->get();
 
-  
+
         return $result->toArray();
     }
 }

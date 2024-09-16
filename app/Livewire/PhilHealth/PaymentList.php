@@ -54,15 +54,15 @@ class PaymentList extends Component
     {
         $this->validate(
             [
-                'RECEIPT_REF_NO' => 'required',
-                'RECEIPT_DATE' => 'required',
-                'AMOUNT' => 'required|not_in:0'
+                'RECEIPT_REF_NO'    => 'required',
+                'RECEIPT_DATE'      => 'required',
+                'AMOUNT'            => 'required|not_in:0'
             ],
             [],
             [
-                'RECEIPT_DATE' => 'O.R Date',
-                'RECEIPT_REF_NO' => 'OR No.',
-                'AMOUNT' => 'Amount'
+                'RECEIPT_DATE'      => 'O.R Date',
+                'RECEIPT_REF_NO'    => 'OR No.',
+                'AMOUNT'            => 'Amount'
             ]
         );
         DB::beginTransaction();
