@@ -91,41 +91,45 @@
                     <td>
                         @if ($saveSuccess)
                             <livewire:select-option name="Unit_LOCATION_ID1" titleName="Location" :options="$locationList"
-                                :zero="true" wire:model='LOCATION_ID' :vertical="false" :withLabel="false" />
+                                isDisabled="{{ false }}" :zero="true" wire:model='LOCATION_ID'
+                                :vertical="false" :withLabel="false" />
                         @else
                             <livewire:select-option name="Unit_LOCATION_ID2" titleName="Location" :options="$locationList"
-                                :zero="true" wire:model='LOCATION_ID' :vertical="false" :withLabel="false" />
+                                isDisabled="{{ false }}" :zero="true" wire:model='LOCATION_ID'
+                                :vertical="false" :withLabel="false" />
                         @endif
                     </td>
                     <td>
                         @if ($saveSuccess)
                             <livewire:select-option name="PURCHASES_UNIT_ID1" titleName="Purchases Unit"
-                                :options="$unitList" :zero="true" wire:model='PURCHASES_UNIT_ID' :vertical="false"
-                                :withLabel="false" />
+                                isDisabled="{{ false }}" :options="$unitList" :zero="true"
+                                wire:model='PURCHASES_UNIT_ID' :vertical="false" :withLabel="false" />
                         @else
                             <livewire:select-option name="PURCHASES_UNIT_ID2" titleName="Purchases Unit"
-                                :options="$unitList" :zero="true" wire:model='PURCHASES_UNIT_ID' :vertical="false"
-                                :withLabel="false" />
+                                isDisabled="{{ false }}" :options="$unitList" :zero="true"
+                                wire:model='PURCHASES_UNIT_ID' :vertical="false" :withLabel="false" />
                         @endif
                     </td>
                     <td>
                         @if ($saveSuccess)
                             <livewire:select-option name="SALES_UNIT_ID1" titleName="Sales Unit" :options="$unitList"
-                                :zero="true" wire:model='SALES_UNIT_ID' :vertical="false" :withLabel="false" />
+                                isDisabled="{{ false }}" :zero="true" wire:model='SALES_UNIT_ID'
+                                :vertical="false" :withLabel="false" />
                         @else
                             <livewire:select-option name="SALES_UNIT_ID2" titleName="Sales Unit" :options="$unitList"
-                                :zero="true" wire:model='SALES_UNIT_ID' :vertical="false" :withLabel="false" />
+                                isDisabled="{{ false }}" :zero="true" wire:model='SALES_UNIT_ID'
+                                :vertical="false" :withLabel="false" />
                         @endif
                     </td>
                     <td>
                         @if ($saveSuccess)
                             <livewire:select-option name="SHIPPING_UNIT_ID1" titleName="Shipping Unit"
-                                :options="$unitList" :zero="true" wire:model='SHIPPING_UNIT_ID' :vertical="false"
-                                :withLabel="false" />
+                                isDisabled="{{ false }}" :options="$unitList" :zero="true"
+                                wire:model='SHIPPING_UNIT_ID' :vertical="false" :withLabel="false" />
                         @else
                             <livewire:select-option name="SHIPPING_UNIT_ID2" titleName="Shipping Unit"
-                                :options="$unitList" :zero="true" wire:model='SHIPPING_UNIT_ID' :vertical="false"
-                                :withLabel="false" />
+                                isDisabled="{{ false }}" :options="$unitList" :zero="true"
+                                wire:model='SHIPPING_UNIT_ID' :vertical="false" :withLabel="false" />
                         @endif
                     </td>
                     <td>

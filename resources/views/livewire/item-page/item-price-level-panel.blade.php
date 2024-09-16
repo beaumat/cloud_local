@@ -55,17 +55,20 @@
                                 <td>
                                     @if ($saveSuccess)
                                         <livewire:select-option name="PRICE_LEVEL_ID" titleName="Price Level"
-                                            :options="$priceLevels" :zero="true" wire:model='PRICE_LEVEL_ID'
-                                            :vertical="false" :withLabel="false" />
+                                            isDisabled="{{ false }}" :options="$priceLevels" :zero="true"
+                                            wire:model='PRICE_LEVEL_ID' :vertical="false" :withLabel="false"
+                                             />
                                     @else
                                         <livewire:select-option name="PRICE_LEVEL_ID1" titleName="Price Level"
-                                            :options="$priceLevels" :zero="true" wire:model='PRICE_LEVEL_ID'
-                                            :vertical="false" :withLabel="false" />
+                                            isDisabled="{{ false }}" :options="$priceLevels" :zero="true"
+                                            wire:model='PRICE_LEVEL_ID' :vertical="false" :withLabel="false"
+                                     />
                                     @endif
                                 </td>
                                 <td>
                                     <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price"
-                                        wire:model='CUSTOM_PRICE' :vertical="false" :withLabel="false" />
+                                        isDisabled="{{ false }}" wire:model='CUSTOM_PRICE' :vertical="false"
+                                        :withLabel="false" />
                                 </td>
                                 <td>
                                     <div class="mt-2">

@@ -9,10 +9,12 @@
             <div class="col-md-3">
                 @if ($newRelated)
                     <livewire:select-option name="UnitRelatedId1" titleName="Related Unit" :options="$unitRelated"
-                        :zero="true" wire:model.live='UnitRelatedId' :vertical="false" />
+                        isDisabled="{{ false }}" :zero="true" wire:model.live='UnitRelatedId'
+                        :vertical="false" />
                 @else
                     <livewire:select-option name="UnitRelatedId2" titleName="Related Unit" :options="$unitRelated"
-                        :zero="true" wire:model.live='UnitRelatedId' :vertical="false" />
+                        isDisabled="{{ false }}" :zero="true" wire:model.live='UnitRelatedId'
+                        :vertical="false" />
                 @endif
             </div>
             <div class="col-md-4">
@@ -76,17 +78,19 @@
                         <td>
                             @if ($saveSuccess)
                                 <livewire:select-option name="Unit_PRICE_LEVEL_ID1" titleName="Price Level"
-                                    :options="$priceLevels" :zero="true" wire:model='PRICE_LEVEL_ID' :vertical="false" :withLabel="false" />
+                                    isDisabled="{{ false }}" :options="$priceLevels" :zero="true"
+                                    wire:model='PRICE_LEVEL_ID' :vertical="false" :withLabel="false" />
                             @else
                                 <livewire:select-option name="Unit_PRICE_LEVEL_ID2" titleName="Price Level"
-                                    :options="$priceLevels" :zero="true" wire:model='PRICE_LEVEL_ID'
-                                    :vertical="false" :withLabel="false" />
+                                    isDisabled="{{ false }}" :options="$priceLevels" :zero="true"
+                                    wire:model='PRICE_LEVEL_ID' :vertical="false" :withLabel="false" />
                             @endif
                         </td>
                         <td>
 
                             <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price"
-                                wire:model='CUSTOM_PRICE' :vertical="false" :withLabel="false"/>
+                                isDisabled="{{ false }}" wire:model='CUSTOM_PRICE' :vertical="false"
+                                :withLabel="false" />
                         </td>
                         <td>
                             <div class="mt-2">

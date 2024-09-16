@@ -73,10 +73,12 @@
                         <td>
                             @if ($saveSuccess)
                                 <livewire:select-option name="UNIT_ID1" titleName="Units" :options="$units"
-                                    :zero="true" wire:model.live='UNIT_ID' :vertical="false" :withLabel="false" />
+                                    isDisabled="{{ false }}" :zero="true" wire:model.live='UNIT_ID'
+                                    :vertical="false" :withLabel="false" />
                             @else
                                 <livewire:select-option name="UNIT_ID2" titleName="Units" :options="$units"
-                                    :zero="true" wire:model.live='UNIT_ID' :vertical="false" :withLabel="false" />
+                                    isDisabled="{{ false }}" :zero="true" wire:model.live='UNIT_ID'
+                                    :vertical="false" :withLabel="false" />
                             @endif
                         </td>
                         <td>
@@ -84,15 +86,15 @@
                         </td>
                         <td>
                             <livewire:number-input name="QUANTITY" titleName="Quantity" wire:model='QUANTITY'
-                                :vertical="false" :withLabel="false" />
+                                isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                         </td>
                         <td>
                             <livewire:number-input name="RATE" titleName="Rate" wire:model='RATE' :vertical="false"
-                                :withLabel="false" />
+                                isDisabled="{{ false }}" :withLabel="false" />
                         </td>
                         <td>
                             <livewire:text-input name="BARCODE" titleName="Barcode" wire:model='BARCODE'
-                                :vertical="false" :withLabel="false" />
+                                isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                         </td>
                         <td>
                             <div class="mt-2">

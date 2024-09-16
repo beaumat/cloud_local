@@ -103,40 +103,43 @@
                                 <td>
                                     @if ($saveSuccess)
                                         <livewire:select-option name="LOCATION_ID1" titleName="Location"
-                                            :options="$locationList" :zero="true" wire:model='LOCATION_ID'
-                                            :vertical="false" :withLabel="false" />
+                                            isDisabled="{{ false }}" :options="$locationList" :zero="true"
+                                            wire:model='LOCATION_ID' :vertical="false" :withLabel="false" />
                                     @else
                                         <livewire:select-option name="LOCATION_ID2" titleName="Location"
-                                            :options="$locationList" :zero="true" wire:model='LOCATION_ID'
-                                            :vertical="false" :withLabel="false" />
+                                            isDisabled="{{ false }}" :options="$locationList" :zero="true"
+                                            wire:model='LOCATION_ID' :vertical="false" :withLabel="false" />
                                     @endif
 
                                 </td>
                                 <td>
                                     <livewire:number-input name="ORDER_POINT" titleName="Order Point"
-                                        wire:model='ORDER_POINT' :vertical="false" :withLabel="false" />
+                                        isDisabled="{{ false }}" wire:model='ORDER_POINT' :vertical="false"
+                                        :withLabel="false" />
                                 </td>
                                 <td>
                                     <livewire:number-input name="ORDER_QTY" titleName="Order Qty" wire:model='ORDER_QTY'
-                                        :vertical="false" :withLabel="false" />
+                                        isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                                 </td>
                                 <td>
                                     <livewire:number-input name="ORDER_LEADTIME" titleName="Leadtime"
-                                        wire:model='ORDER_LEADTIME' :vertical="false" :withLabel="false" />
+                                        isDisabled="{{ false }}" wire:model='ORDER_LEADTIME' :vertical="false"
+                                        :withLabel="false" />
                                 </td>
                                 <td>
                                     <livewire:number-input name="ONHAND_MAX_LIMIT" titleName="Max-Limit"
-                                        wire:model='ONHAND_MAX_LIMIT' :vertical="false" :withLabel="false" />
+                                        isDisabled="{{ false }}" wire:model='ONHAND_MAX_LIMIT'
+                                        :vertical="false" :withLabel="false" />
                                 </td>
                                 <td>
                                     @if ($saveSuccess)
                                         <livewire:select-option name="STOCK_BIN_ID1" titleName="Stock Bin"
-                                            :options="$stockBinList" :zero="true" wire:model='STOCK_BIN_ID'
-                                            :vertical="false" :withLabel="false" />
+                                            isDisabled="{{ false }}" :options="$stockBinList" :zero="true"
+                                            wire:model='STOCK_BIN_ID' :vertical="false" :withLabel="false" />
                                     @else
                                         <livewire:select-option name="STOCK_BIN_ID2" titleName="Stock Bin"
-                                            :options="$stockBinList" :zero="true" wire:model='STOCK_BIN_ID'
-                                            :vertical="false" :withLabel="false" />
+                                            isDisabled="{{ false }}" :options="$stockBinList" :zero="true"
+                                            wire:model='STOCK_BIN_ID' :vertical="false" :withLabel="false" />
                                     @endif
                                 </td>
                                 <td>

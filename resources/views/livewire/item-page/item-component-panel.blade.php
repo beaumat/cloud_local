@@ -8,8 +8,8 @@
                 <div class="card-body ">
 
                     <div class="col-md-12 mb-2">
-                        <livewire:custom-check-box name="codeBase" titleName="Use item code"
-                            wire:model.live='codeBase' />
+                        <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase'
+                            isDisabled="{{ false }}" />
                     </div>
 
                     <table class="table table-sm table-bordered table-hover">
@@ -77,14 +77,14 @@
                                         @if ($saveSuccess)
                                             @if ($codeBase)
                                                 <livewire:select-option name="COMPONENT_ID1" titleName="Item Code"
-                                                    :options="$itemCodeList" :zero="true" wire:model='COMPONENT_ID'
-                                                    :vertical="false" :withLabel="false" />
+                                                    isDisabled="{{ false }}" :options="$itemCodeList" :zero="true"
+                                                    wire:model='COMPONENT_ID' :vertical="false" :withLabel="false" />
                                             @endif
                                         @else
                                             @if ($codeBase)
                                                 <livewire:select-option name="COMPONENT_ID2" titleName="Item Code"
-                                                    :options="$itemCodeList" :zero="true" wire:model='COMPONENT_ID2'
-                                                    :vertical="false" :withLabel="false" />
+                                                    isDisabled="{{ false }}" :options="$itemCodeList" :zero="true"
+                                                    wire:model='COMPONENT_ID2' :vertical="false" :withLabel="false" />
                                             @endif
                                         @endif
 
@@ -94,14 +94,16 @@
                                         @if ($saveSuccess)
                                             @if (!$codeBase)
                                                 <livewire:select-option name="COMPONENT_ID3"
-                                                    titleName="Item Description" :options="$itemDescList" :zero="true"
-                                                    wire:model='COMPONENT_ID' :vertical="false" :withLabel="false" />
+                                                    isDisabled="{{ false }}" titleName="Item Description"
+                                                    :options="$itemDescList" :zero="true" wire:model='COMPONENT_ID'
+                                                    :vertical="false" :withLabel="false" />
                                             @endif
                                         @else
                                             @if (!$codeBase)
                                                 <livewire:select-option name="COMPONENT_ID4"
-                                                    titleName="Item Description" :options="$itemDescList" :zero="true"
-                                                    wire:model='COMPONENT_ID' :vertical="false" :withLabel="false" />
+                                                    isDisabled="{{ false }}" titleName="Item Description"
+                                                    :options="$itemDescList" :zero="true" wire:model='COMPONENT_ID'
+                                                    :vertical="false" :withLabel="false" />
                                             @endif
                                         @endif
 
@@ -109,12 +111,13 @@
                                     <td>
 
                                         <livewire:number-input name="QUANTITY" titleName="Quantity"
-                                            wire:model='QUANTITY' :vertical="false" :withLabel="false" />
+                                            isDisabled="{{ false }}" wire:model='QUANTITY' :vertical="false"
+                                            :withLabel="false" />
                                     </td>
                                     <td>
 
                                         <livewire:number-input name="RATE" titleName="Rate" wire:model='RATE'
-                                            :vertical="false" :withLabel="false" />
+                                            isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
 
                                     </td>
                                     <td>

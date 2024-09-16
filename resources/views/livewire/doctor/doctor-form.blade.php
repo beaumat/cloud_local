@@ -28,22 +28,23 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' maxlength='50' />
+                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'
+                                                maxlength='50' isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:text-input name="ACCOUNT_NO" titleName="Doctor ID"
-                                                wire:model='ACCOUNT_NO' />
+                                                wire:model='ACCOUNT_NO' isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:text-input name="PIN" titleName="Accreditation No."
-                                                wire:model='PIN' />
+                                                wire:model='PIN' isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-2">
                                             <div class="row">
                                                 <div class="col-md-12"><br /></div>
                                                 <div class="col-md-12 text-right">
                                                     <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
-                                                        wire:model='INACTIVE' />
+                                                        wire:model='INACTIVE' isDisabled="{{ false }}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -109,19 +110,23 @@
                                                         </div>
                                                         <div class="col-md-4">
                                                             <livewire:text-input name="FIRST_NAME"
-                                                                titleName="First Name" wire:model='FIRST_NAME' />
+                                                                titleName="First Name" wire:model='FIRST_NAME'
+                                                                isDisabled="{{ false }}" />
                                                         </div>
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="MIDDLE_NAME" titleName="M.I"
-                                                                wire:model='MIDDLE_NAME' />
+                                                                wire:model='MIDDLE_NAME'
+                                                                isDisabled="{{ false }}" />
                                                         </div>
                                                         <div class="col-md-4">
                                                             <livewire:text-input name="LAST_NAME"
-                                                                titleName="Last Name" wire:model='LAST_NAME' />
+                                                                titleName="Last Name" wire:model='LAST_NAME'
+                                                                isDisabled="{{ false }}" />
                                                         </div>
                                                         <div class="col-md-12">
                                                             <livewire:text-input name="PRINT_NAME_AS"
-                                                                titleName="Print As" wire:model='PRINT_NAME_AS'  maxlength='50' />
+                                                                titleName="Print As" wire:model='PRINT_NAME_AS'
+                                                                maxlength='50' isDisabled="{{ false }}" />
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="row">
@@ -139,13 +144,14 @@
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="EMAIL"
-                                                                                titleName="Email"
-                                                                                wire:model='EMAIL' />
+                                                                                titleName="Email" wire:model='EMAIL'
+                                                                                isDisabled="{{ false }}" />
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="SSS"
                                                                                 titleName="SSS No."
-                                                                                wire:model='SSS_NO' />
+                                                                                wire:model='SSS_NO'
+                                                                                isDisabled="{{ false }}" />
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <div class="mt-2">
@@ -154,7 +160,8 @@
                                                                                 </label>
                                                                                 <input type="date"
                                                                                     class="form-control form-control-sm"
-                                                                                    wire:model='DATE_OF_BIRTH' />
+                                                                                    wire:model='DATE_OF_BIRTH'
+                                                                                    isDisabled="{{ false }}" />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -165,17 +172,20 @@
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="TELEPHONE_NO"
                                                                                 titleName="Telephone Number"
-                                                                                wire:model='TELEPHONE_NO' />
+                                                                                wire:model='TELEPHONE_NO'
+                                                                                isDisabled="{{ false }}" />
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="FAX_NO"
                                                                                 titleName="Fax Number"
-                                                                                wire:model='FAX_NO' />
+                                                                                wire:model='FAX_NO'
+                                                                                isDisabled="{{ false }}" />
 
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="MOBILE_NO"
                                                                                 titleName="Mobile Number"
+                                                                                isDisabled="{{ false }}"
                                                                                 wire:model='MOBILE_NO' />
                                                                         </div>
                                                                         <div class="col-md-6">
@@ -199,6 +209,7 @@
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="Nickname"
                                                                                 titleName="Nickname"
+                                                                                isDisabled="{{ false }}"
                                                                                 wire:model='NICKNAME' />
                                                                         </div>
                                                                     </div>
@@ -218,6 +229,7 @@
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="TAXPAYER_ID"
                                                                 titleName="Taxpayer ID No."
+                                                                isDisabled="{{ false }}"
                                                                 wire:model='TAXPAYER_ID' />
                                                         </div>
                                                         <div class="col-md-4">
@@ -260,7 +272,7 @@
                                         <div class="text-right col-6 col-md-6">
                                             @if ($ID > 0)
                                                 <a id="new" title="Create"
-                                                    href="{{ route('maintenancecontactdoctors') }}"
+                                                    href="{{ route('maintenancecontactdoctors_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i></a>
                                             @endif
                                         </div>

@@ -94,12 +94,14 @@
                                                                         <livewire:select-option name="TYPE"
                                                                             :options="$itemType" titleName="Type"
                                                                             :zero="false" wire:model.live='TYPE'
-                                                                            :vertical="true" />
+                                                                            :vertical="true"
+                                                                            isDisabled="{{ false }}" />
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <livewire:text-input name="CODE"
                                                                             titleName="Code" wire:model='CODE'
-                                                                            :vertical="true" :withLabel="true" />
+                                                                            :vertical="true" :withLabel="true"
+                                                                            isDisabled="{{ false }}" />
                                                                     </div>
 
                                                                 </div>
@@ -107,6 +109,7 @@
                                                                     <div class="col-md-6">
                                                                         <livewire:text-input name="DESCRIPTION"
                                                                             titleName="Description"
+                                                                            isDisabled="{{ false }}"
                                                                             wire:model='DESCRIPTION' :vertical="true"
                                                                             maxlength='50'>
                                                                     </div>
@@ -116,6 +119,7 @@
                                                                             <livewire:text-input
                                                                                 name="PURCHASE_DESCRIPTION"
                                                                                 titleName="Purchase Description"
+                                                                                isDisabled="{{ false }}"
                                                                                 wire:model='PURCHASE_DESCRIPTION'
                                                                                 :vertical="true" maxlength='50'>
                                                                         </div>
@@ -126,6 +130,7 @@
                                                                             <livewire:custom-check-box
                                                                                 name="PRINT_INDIVIDUAL_ITEMS"
                                                                                 titleName="Print Individual Items"
+                                                                                isDisabled="{{ false }}"
                                                                                 wire:model='PRINT_INDIVIDUAL_ITEMS' />
                                                                         </div>
                                                                     @endif
@@ -142,6 +147,7 @@
                                                                                                 name="COST"
                                                                                                 titleName="Cost"
                                                                                                 wire:model='COST'
+                                                                                                isDisabled="{{ false }}"
                                                                                                 :vertical="true" />
                                                                                         </div>
                                                                                     @endif
@@ -152,6 +158,7 @@
                                                                                             :zero="true"
                                                                                             titleName="Item Group"
                                                                                             wire:model='GROUP_ID'
+                                                                                            isDisabled="{{ false }}"
                                                                                             :vertical="true" />
                                                                                     </div>
 
@@ -161,6 +168,7 @@
                                                                                             :options="$stockType"
                                                                                             :zero="true"
                                                                                             titleName="Stock Type"
+                                                                                            isDisabled="{{ false }}"
                                                                                             wire:model='STOCK_TYPE'
                                                                                             :vertical="true" />
                                                                                     </div>
@@ -173,6 +181,7 @@
                                                                                                 :zero="true"
                                                                                                 titleName="Preferred Vendor"
                                                                                                 wire:model='PREFERRED_VENDOR_ID'
+                                                                                                isDisabled="{{ false }}"
                                                                                                 :vertical="true" />
                                                                                         </div>
                                                                                         <div class="col-md-12">
@@ -181,6 +190,7 @@
                                                                                                 :options="$manufacturers"
                                                                                                 :zero="true"
                                                                                                 wire:model='MANUFACTURER_ID'
+                                                                                                isDisabled="{{ false }}"
                                                                                                 titleName="Manufacturer"
                                                                                                 :vertical="true" />
                                                                                         </div>
@@ -192,6 +202,7 @@
                                                                                                 :options="$accounts"
                                                                                                 :zero="true"
                                                                                                 titleName="COGS Accounts"
+                                                                                                isDisabled="{{ false }}"
                                                                                                 wire:model='COGS_ACCOUNT_ID'
                                                                                                 :vertical="true" />
                                                                                         </div>
@@ -210,6 +221,7 @@
                                                                                             name="RATE"
                                                                                             titleName="Rate"
                                                                                             wire:model='RATE'
+                                                                                            isDisabled="{{ false }}"
                                                                                             :vertical="true" />
                                                                                     </div>
                                                                                 @endif
@@ -220,6 +232,7 @@
                                                                                             name="CLASS_ID"
                                                                                             titleName="Item Class"
                                                                                             :options="$itemClass"
+                                                                                            isDisabled="{{ false }}"
                                                                                             :zero="true"
                                                                                             wire:model.live='CLASS_ID'
                                                                                             :key="$itemClass
@@ -234,6 +247,7 @@
                                                                                                 name="SUB_CLASS_ID"
                                                                                                 titleName="Item Sub-class"
                                                                                                 :options="$itemSubClass"
+                                                                                                isDisabled="{{ false }}"
                                                                                                 :zero="true"
                                                                                                 wire:model='SUB_CLASS_ID'
                                                                                                 :key="$itemSubClass
@@ -246,6 +260,7 @@
                                                                                                 titleName="Item Sub-class"
                                                                                                 :options="[]"
                                                                                                 :zero="true"
+                                                                                                isDisabled="{{ false }}"
                                                                                                 wire:model='SUB_CLASS_ID'
                                                                                                 :vertical="true">
                                                                                         @endif
@@ -259,6 +274,7 @@
                                                                                                 name="GL_ACCOUNT_ID"
                                                                                                 :options="$accounts"
                                                                                                 :zero="true"
+                                                                                                isDisabled="{{ false }}"
                                                                                                 titleName="Income Accounts"
                                                                                                 wire:model='GL_ACCOUNT_ID'
                                                                                                 :vertical="true" />
@@ -268,6 +284,7 @@
                                                                                                 :options="$accounts"
                                                                                                 :zero="true"
                                                                                                 titleName="GL Accounts"
+                                                                                                isDisabled="{{ false }}"
                                                                                                 wire:model='GL_ACCOUNT_ID'
                                                                                                 :vertical="true" />
                                                                                         @endif
@@ -278,6 +295,7 @@
                                                                                         <livewire:custom-check-box
                                                                                             name="TAXABLE"
                                                                                             titleName="Taxable"
+                                                                                            isDisabled="{{ false }}"
                                                                                             wire:model='TAXABLE' />
                                                                                     </div>
                                                                                 @endif
@@ -291,6 +309,7 @@
                                                                                 :options="$rateType" :zero="false"
                                                                                 titleName="Rate Type"
                                                                                 wire:model='RATE_TYPE'
+                                                                                isDisabled="{{ false }}"
                                                                                 :vertical="true" />
                                                                         </div>
                                                                     @endif
@@ -303,6 +322,7 @@
                                                                                             name="ASSET_ACCOUNT_ID"
                                                                                             :options="$accounts"
                                                                                             :zero="true"
+                                                                                            isDisabled="{{ false }}"
                                                                                             titleName="Asset Accounts"
                                                                                             wire:model='ASSET_ACCOUNT_ID'
                                                                                             :vertical="true" />
@@ -313,24 +333,28 @@
                                                                                         titleName="Notes"
                                                                                         wire:model='NOTES'
                                                                                         :vertical="true"
+                                                                                        isDisabled="{{ false }}"
                                                                                         maxlength='100' />
                                                                                 </div>
                                                                                 <div class="col-md-12">
                                                                                     <livewire:custom-check-box
                                                                                         name="INACTIVE"
                                                                                         titleName="Inactive"
+                                                                                        isDisabled="{{ false }}"
                                                                                         wire:model='INACTIVE' />
                                                                                 </div>
                                                                                 <div class="col-md-12">
                                                                                     <livewire:custom-check-box
                                                                                         name="NON_HEMO"
                                                                                         titleName="Non-hemodialyisis"
+                                                                                        isDisabled="{{ false }}"
                                                                                         wire:model='NON_HEMO' />
                                                                                 </div>
                                                                                 <div class="col-md-12">
                                                                                     <livewire:custom-check-box
                                                                                         name="HEMO_NON_INVENTORY"
                                                                                         titleName="hemo non-inventory"
+                                                                                        isDisabled="{{ false }}"
                                                                                         wire:model='HEMO_NON_INVENTORY' />
                                                                                 </div>
                                                                             </div>
@@ -341,6 +365,7 @@
                                                                                 <livewire:custom-check-box
                                                                                     name="INACTIVE"
                                                                                     titleName="Inactive"
+                                                                                    isDisabled="{{ false }}"
                                                                                     wire:model='INACTIVE' />
                                                                             </div>
                                                                         </div>
@@ -354,6 +379,7 @@
                                                                                         name="BASE_UNIT_ID"
                                                                                         :options="$units"
                                                                                         :zero="true"
+                                                                                        isDisabled="{{ false }}"
                                                                                         titleName="Base Unit"
                                                                                         wire:model='BASE_UNIT_ID'
                                                                                         :vertical="true" />
@@ -363,6 +389,7 @@
                                                                                         name="PURCHASES_UNIT_ID"
                                                                                         :options="$units"
                                                                                         :zero="true"
+                                                                                        isDisabled="{{ false }}"
                                                                                         titleName="Purchases Unit"
                                                                                         wire:model='PURCHASES_UNIT_ID'
                                                                                         :vertical="true" />
@@ -372,6 +399,7 @@
                                                                                         name="SHIPPING_UNIT_ID"
                                                                                         :options="$units"
                                                                                         :zero="true"
+                                                                                        isDisabled="{{ false }}"
                                                                                         titleName="Shipping Unit"
                                                                                         wire:model='SHIPPING_UNIT_ID'
                                                                                         :vertical="true" />
@@ -381,6 +409,7 @@
                                                                                         name="SALES_UNIT_ID"
                                                                                         :options="$units"
                                                                                         :zero="true"
+                                                                                        isDisabled="{{ false }}"
                                                                                         titleName="Sales Unit"
                                                                                         wire:model='SALES_UNIT_ID'
                                                                                         :vertical="true" />
