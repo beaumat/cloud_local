@@ -58,15 +58,16 @@ class AccountServices
     public function Update(int $ID, string $NAME, int $GROUP_ACCOUNT_ID, int $TYPE, string $BANK_ACCOUNT_NO, bool $INACTIVE, string $TAG, int $LINE_NO): void
     {
 
-        Accounts::where('ID', $ID)->update([
-            'NAME' => $NAME,
-            'GROUP_ACCOUNT_ID' => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
-            'TYPE' => $TYPE,
-            'BANK_ACCOUNT_NO' => $BANK_ACCOUNT_NO,
-            'INACTIVE' => $INACTIVE,
-            'TAG' => $TAG,
-            'LINE_NO' => $LINE_NO
-        ]);
+        Accounts::where('ID', '=', $ID)
+            ->update([
+                'NAME'              => $NAME,
+                'GROUP_ACCOUNT_ID'  => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
+                'TYPE'              => $TYPE,
+                'BANK_ACCOUNT_NO'   => $BANK_ACCOUNT_NO,
+                'INACTIVE'          => $INACTIVE,
+                'TAG'               => $TAG,
+                'LINE_NO'           => $LINE_NO
+            ]);
     }
 
     public function Delete(int $ID): void

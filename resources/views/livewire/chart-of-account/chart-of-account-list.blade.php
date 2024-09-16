@@ -32,13 +32,13 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>Code</th>
+                                        <th class='col-1'>Code</th>
                                         <th>Name</th>
-                                        <th>TYPE</th>
+                                        <th class="col-1">TYPE</th>
                                         <th>Group of Account</th>
                                         <th>Back Account No.</th>
-                                        <th>Inactive</th>
-                                        <th class="text-center col-1">
+                                        <th class="col-1 text-center">Inactive</th>
+                                        <th class="text-center col-2">
                                             <a href="{{ route('maintenancefinancialcoa_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i>
                                             </a>
@@ -53,7 +53,7 @@
                                             <td> {{ $list->ACCOUNT_TYPE }} </td>
                                             <td> {{ $list->GROUP_ACCOUNT }} </td>
                                             <td> {{ $list->BANK_ACCOUNT_NO }} </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
                                                 @else
