@@ -722,6 +722,8 @@ class PatientPaymentServices
                 'RECEIPT_REF_NO',
                 'RECEIPT_DATE',
                 'AMOUNT',
+                'WTAX_AMOUNT',
+                'LESS_AMOUNT',
                 'AMOUNT_APPLIED',
                 'DEPOSITED',
                 'NOTES'

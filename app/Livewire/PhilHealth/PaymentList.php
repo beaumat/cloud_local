@@ -131,9 +131,10 @@ class PaymentList extends Component
     public function Delete(int $ID)
     {
 
-
         DB::beginTransaction();
         try {
+
+            
             $isDelete =  $this->patientPaymentServices->PH_Delete($ID, $this->PHILHEALTH_ID);
             if ($isDelete) {
                 $TotalPay = (float) $this->patientPaymentServices->getPH_TotalPay($this->PHILHEALTH_ID);

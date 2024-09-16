@@ -4,14 +4,16 @@
         <table class="table table-sm table-bordered table-hover">
             <thead class="text-xs text-left">
                 <tr class="bg-sky text-white">
-                    <th class="col-1">No.</th>
-                    <th class="col-1">Date.</th>
+                    <th class="col-1">Payment No.</th>
+                    <th class="col-1">Date Created</th>
                     <th class="col-1">O.R No.</th>
                     <th class="col-1">O.R Date</th>
-                    <th class="col-1">Amount</th>
+                    <th class="col-1">Gross Income</th>
+                    <th class="col-1">WTax</th>
+                    <th class="col-1">Less Amount</th>
                     <th class="col-1">Applied</th>
                     <th class="col-5">Notes</th>
-                    <th class="col-1 text-center">Action</th>
+
                 </tr>
             </thead>
             <tbody class="text-dark text-xs text-left">
@@ -22,7 +24,7 @@
                     <tr>
 
                         <td>
-                            <a target="_BLANK" href="{{ route('patientspayment_edit', ['id' => $list->ID]) }}"
+                            <a target="_BLANK" href="{{ route('patientsphic_pay_edit', ['id' => $list->ID]) }}"
                                 class="text-primary">
                                 {{ $list->CODE }}
                             </a>
@@ -52,6 +54,12 @@
                             @endif
                         </td>
                         <td class="text-right">
+                            {{ number_format($list->WTAX_AMOUNT, 2) }}
+                        </td>
+                        <td class="text-right">
+                            {{ number_format($list->LESS_AMOUNT, 2) }}
+                        </td>
+                        <td class="text-right">
                             {{ number_format($list->AMOUNT_APPLIED, 2) }}
                         </td>
                         <td class="text-left">
@@ -62,7 +70,7 @@
                             @endif
                         </td>
 
-                        <td class="text-center">
+                        {{-- <td class="text-center">
                             @if ($editId === $list->ID)
                                 <button type="button" title="Update" id="updatebtn" wire:click="Update()"
                                     class="text-success btn btn-xs btn-link">
@@ -93,10 +101,10 @@
                                 @endif
                             @endif
 
-                        </td>
+                        </td> --}}
                     </tr>
                 @endforeach
-                <form id="quickForm" wire:submit.prevent='Store'>
+                {{-- <form id="quickForm" wire:submit.prevent='Store'>
                     <tr class="text-xs">
                         <td></td>
                         <td></td>
@@ -140,12 +148,14 @@
                         </td>
 
                     </tr>
-                </form>
+                </form> --}}
             </tbody>
+
         </table>
     </div>
     <div class="col-md-6">
-        @livewire('PhilHealth.ServicesChargesModal', ['PHILHEALTH_ID' => $PHILHEALTH_ID])
+        <a class="btn btn-xs btn-success" target="_BLANK" href="{{ route('patientsphic_pay_create') }}">Create Payment</a>
+        {{-- @livewire('PhilHealth.ServicesChargesModal', ['PHILHEALTH_ID' => $PHILHEALTH_ID]) --}}
     </div>
     <div class="col-md-6">
         <div class="row">

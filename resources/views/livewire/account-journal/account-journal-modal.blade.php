@@ -21,7 +21,6 @@
                                 </tr>
                             </thead>
                             <tbody class="text-xs">
-
                                 @foreach ($dataList as $list)
                                     <tr>
                                         <td>{{ $list->ACCOUNT_CODE }}</td>

@@ -28,18 +28,19 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' />
+                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'
+                                                isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:text-input name="ACCOUNT_NO" titleName="Account No."
-                                                wire:model='ACCOUNT_NO' />
+                                                isDisabled="{{ false }}" wire:model='ACCOUNT_NO' />
                                         </div>
                                         <div class="col-nd-2">
                                             <div class="row">
                                                 <div class="col-md-12"><br /></div>
                                                 <div class="col-md-12 text-right">
                                                     <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
-                                                        wire:model='INACTIVE' />
+                                                        isDisabled="{{ false }}" wire:model='INACTIVE' />
                                                 </div>
                                             </div>
                                         </div>
@@ -87,6 +88,7 @@
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <livewire:text-input name="NAME" titleName="Company Name"
+                                                                isDisabled="{{ false }}"
                                                                 wire:model='COMPANY_NAME' />
                                                         </div>
                                                         <div class="col-md-2">
@@ -108,19 +110,23 @@
                                                         </div>
                                                         <div class="col-md-4">
                                                             <livewire:text-input name="FIRST_NAME"
+                                                                isDisabled="{{ false }}"
                                                                 titleName="First Name" wire:model='FIRST_NAME' />
                                                         </div>
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="MIDDLE_NAME" titleName="M.I"
+                                                                isDisabled="{{ false }}"
                                                                 wire:model='MIDDLE_NAME' />
                                                         </div>
                                                         <div class="col-md-4">
                                                             <livewire:text-input name="LAST_NAME"
-                                                                titleName="Last Name" wire:model='LAST_NAME' />
+                                                                isDisabled="{{ false }}" titleName="Last Name"
+                                                                wire:model='LAST_NAME' />
                                                         </div>
                                                         <div class="col-md-12">
                                                             <livewire:text-input name="PRINT_NAME_AS"
-                                                                titleName="Print As" wire:model='PRINT_NAME_AS' />
+                                                                isDisabled="{{ false }}" titleName="Print As"
+                                                                wire:model='PRINT_NAME_AS' />
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="row">
@@ -138,6 +144,7 @@
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="EMAIL"
+                                                                                isDisabled="{{ false }}"
                                                                                 titleName="Email"
                                                                                 wire:model='EMAIL' />
                                                                         </div>
@@ -147,22 +154,26 @@
                                                                     <div class="row">
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="CONTACT_PERSON"
+                                                                                isDisabled="{{ false }}"
                                                                                 titleName="Contact Person"
                                                                                 wire:model='CONTACT_PERSON' />
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="TELEPHONE_NO"
+                                                                                isDisabled="{{ false }}"
                                                                                 titleName="Telephone Number"
                                                                                 wire:model='TELEPHONE_NO' />
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="FAX_NO"
+                                                                                isDisabled="{{ false }}"
                                                                                 titleName="Fax Number"
                                                                                 wire:model='FAX_NO' />
 
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <livewire:text-input name="MOBILE_NO"
+                                                                                isDisabled="{{ false }}"
                                                                                 titleName="Mobile Number"
                                                                                 wire:model='MOBILE_NO' />
 
@@ -183,13 +194,15 @@
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="TAXPAYER_ID"
+                                                                isDisabled="{{ false }}"
                                                                 titleName="Taxpayer ID No."
                                                                 wire:model='TAXPAYER_ID' />
                                                         </div>
                                                         <div class="col-md-4">
                                                             <livewire:select-option name="TAX_ID" :options="$taxList"
-                                                                :zero="true" titleName="Output Tax"
-                                                                wire:model='TAX_ID' :key="$taxList->pluck('ID')->join('_')" />
+                                                                isDisabled="{{ false }}" :zero="true"
+                                                                titleName="Output Tax" wire:model='TAX_ID'
+                                                                :key="$taxList->pluck('ID')->join('_')" />
 
                                                         </div>
 
@@ -203,14 +216,14 @@
                                                     <div class="row">
                                                         <div class="col-md-4">
                                                             <livewire:select-option name="GROUP_ID" :options="$contactGroup"
-                                                                :zero="true" titleName="Group"
-                                                                wire:model='GROUP_ID' />
+                                                                isDisabled="{{ false }}" :zero="true"
+                                                                titleName="Group" wire:model='GROUP_ID' />
                                                         </div>
                                                         <div class="col-md-4">
                                                             <livewire:select-option name="SALES_REP_ID"
-                                                                :options="$salesMan" :zero="true"
-                                                                titleName="Salesman" wire:model='SALES_REP_ID'
-                                                                :key="$salesMan->pluck('ID')->join('_')" />
+                                                                isDisabled="{{ false }}" :options="$salesMan"
+                                                                :zero="true" titleName="Salesman"
+                                                                wire:model='SALES_REP_ID' :key="$salesMan->pluck('ID')->join('_')" />
                                                         </div>
 
 
@@ -219,12 +232,14 @@
                                                         <div class="col-md-4">
                                                             <livewire:select-option name="PAYMENT_TERMS_ID"
                                                                 :options="$paymentTermList" :zero="true"
+                                                                isDisabled="{{ false }}"
                                                                 titleName="Payment Terms"
                                                                 wire:model='PAYMENT_TERMS_ID' :key="$paymentTermList->pluck('ID')->join('_')" />
                                                         </div>
 
                                                         <div class="col-md-4">
                                                             <livewire:number-input name="CREDIT_LIMIT"
+                                                                isDisabled="{{ false }}"
                                                                 titleName="Credit Limit" wire:model='CREDIT_LIMIT' />
                                                         </div>
                                                     </div>
@@ -234,6 +249,7 @@
                                                             <livewire:select-option name="PREF_PAYMENT_METHOD_ID"
                                                                 :options="$paymentMethod" :zero="true"
                                                                 titleName="Payment Method"
+                                                                isDisabled="{{ false }}"
                                                                 wire:model='PREF_PAYMENT_METHOD_ID'
                                                                 :key="$paymentMethod->pluck('ID')->join('_')" />
                                                         </div>
@@ -241,6 +257,7 @@
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="CREDIT_CARD_NO"
                                                                 titleName="Credit Card No"
+                                                                isDisabled="{{ false }}"
                                                                 wire:model='CREDIT_CARD_NO' />
                                                         </div>
 
@@ -249,6 +266,7 @@
                                                                 <label for="ExpiryDate" class="text-sm">Expiry Date
                                                                 </label>
                                                                 <input type="date" name="ExpiryDate"
+                                                                    isDisabled="{{ false }}"
                                                                     class="form-control form-control-sm"
                                                                     wire:model='CREDIT_CARD_EXPIRY_DATE' />
                                                             </div>
@@ -259,6 +277,7 @@
                                                         <div class="col-md-4">
                                                             <livewire:select-option name="PRICE_LEVEL_ID"
                                                                 :options="$priceLevels" :zero="true"
+                                                                isDisabled="{{ false }}"
                                                                 titleName="Price Level" wire:model='PRICE_LEVEL_ID' />
                                                         </div>
                                                     </div>
