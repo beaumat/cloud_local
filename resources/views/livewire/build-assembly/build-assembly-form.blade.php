@@ -28,27 +28,16 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            @if ($Modify)
-                                                <livewire:select-option name="ASSEMBLY_ITEM_ID"
-                                                    titleName="Assembly Item" :options="$itemList" :zero="true"
-                                                    :isDisabled=false wire:model.live='ASSEMBLY_ITEM_ID' />
-                                            @else
-                                                <livewire:select-option name="ASSEMBLY_ITEM_ID"
-                                                    titleName="Assembly Item" :options="$itemList" :zero="true"
-                                                    :isDisabled=true wire:model.live='ASSEMBLY_ITEM_ID' />
-                                            @endif
+                                            <livewire:select-option name="ASSEMBLY_ITEM_ID" titleName="Assembly Item"
+                                                :options="$itemList" :zero="true" isDisabled="{{ !$Modify }}"
+                                                wire:model.live='ASSEMBLY_ITEM_ID' />
+
 
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:number-input name="QUANTITY"
-                                                            titleName="Quantity to Build" :isDisabled=false
-                                                            wire:model='QUANTITY' />
-                                                    @else
-                                                        <livewire:number-input name="QUANTITY"
-                                                            titleName="Quantity to Build" :isDisabled=true
-                                                            wire:model='QUANTITY' />
-                                                    @endif
+                                                    <livewire:number-input name="QUANTITY" titleName="Quantity to Build"
+                                                        isDisabled="{{ !$Modify }}" wire:model='QUANTITY' />
+
                                                 </div>
 
                                                 <div class="col-md-4">
@@ -84,34 +73,21 @@
                                                         wire:model='DATE' :isDisabled="true" />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="Code" titleName="Reference No."
-                                                            :isDisabled=false wire:model='CODE' />
-                                                    @else
-                                                        <livewire:text-input name="Code" titleName="Reference No."
-                                                            :isDisabled=true wire:model='CODE' />
-                                                    @endif
+                                                    <livewire:text-input name="Code" titleName="Reference No."
+                                                        isDisabled="{{ !$Modify }}" wire:model='CODE' />
                                                 </div>
                                                 <div class="col-md-4"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @if ($Modify && $AMOUNT == 0)
-                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                            :options="$locationList" :zero="false" :isDisabled=false
-                                                            wire:model='LOCATION_ID' />
-                                                    @else
-                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                            :options="$locationList" :zero="false" :isDisabled=true
-                                                            wire:model='LOCATION_ID' />
-                                                    @endif
+                                                    <livewire:select-option name="LOCATION_ID" titleName="Location"
+                                                        :options="$locationList" :zero="false"
+                                                        isDisabled="{{ !$Modify && $AMOUNT == 0 }}"
+                                                        wire:model='LOCATION_ID' />
                                                 </div>
                                                 <div class="col-md-12">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=false wire:model='NOTES' :vertical="false" />
-                                                    @else
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=true wire:model='NOTES' :vertical="false" />
-                                                    @endif
+                                                    <livewire:text-input name="NOTES" titleName="Notes"
+                                                        isDisabled="{{ !$Modify }}" wire:model='NOTES'
+                                                        :vertical="false" />
+
                                                 </div>
                                             </div>
                                         </div>
@@ -182,9 +158,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-
                                             @livewire('BuildAssembly.BuildAssemblyFormItems', ['BUILD_ASSEMBLY_ID' => $ID, 'ASSEMBLY_ITEM_ID' => $ASSEMBLY_ITEM_ID, 'LOCATION_ID' => $LOCATION_ID, 'IS_POSTED' => $STATUS === 0 ? false : true])
-
                                         </div>
                                     </div>
                                 </div>
@@ -202,7 +176,8 @@
                                         </div>
                                         <div class="col-md-4 text-right">
                                             <label class="text-sm">Total:</label>
-                                            <label class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
+                                            <label
+                                                class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
 
                                         </div>
                                     </div>

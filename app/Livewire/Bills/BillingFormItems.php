@@ -159,7 +159,10 @@ class BillingFormItems extends Component
             ]
         );
 
-        $recordExists = (bool) DB::table('bill_items')->where('BILL_ID', $this->BILL_ID,)->where('ITEM_ID', $this->ITEM_ID)->exists();
+        $recordExists = (bool) DB::table('bill_items')
+            ->where('BILL_ID', '=', $this->BILL_ID)
+            ->where('ITEM_ID', '=', $this->ITEM_ID)
+            ->exists();
 
         if ($recordExists) {
             session()->flash('error', 'Item already exists');
@@ -177,8 +180,23 @@ class BillingFormItems extends Component
             }
 
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID);
-
-            $this->billingServices->ItemStore($this->BILL_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID > 0 ? $this->UNIT_ID : 0, (float) $unitRelated['QUANTITY'], $this->RATE, $this->RATE_TYPE, $this->AMOUNT, $this->BATCH_ID, $this->ACCOUNT_ID, $this->PO_ITEM_ID, $this->TAXABLE, $this->TAXABLE_AMOUNT, $this->TAX_AMOUNT, $this->CLASS_ID);
+            $this->billingServices->ItemStore(
+                $this->BILL_ID,
+                $this->ITEM_ID,
+                $this->QUANTITY,
+                $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
+                (float) $unitRelated['QUANTITY'],
+                $this->RATE,
+                $this->RATE_TYPE,
+                $this->AMOUNT,
+                $this->BATCH_ID,
+                $this->ACCOUNT_ID,
+                $this->PO_ITEM_ID,
+                $this->TAXABLE,
+                $this->TAXABLE_AMOUNT,
+                $this->TAX_AMOUNT,
+                $this->CLASS_ID
+            );
             DB::commit();
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
             $this->dispatch('update-amount', result: $getResult);

@@ -33,11 +33,12 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE'>
+                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE'
+                                                isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-8">
                                             <livewire:text-input name="DESCRIPTION" titleName="Description"
-                                                wire:model='DESCRIPTION'>
+                                                wire:model='DESCRIPTION' isDisabled="{{ false }}" />
                                         </div>
                                     </div>
                                 </div>

@@ -27,38 +27,25 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            @if ($Modify && $ID == 0)
-                                                <livewire:select-option name="VENDOR_ID" titleName="Vendor"
-                                                    :options="$vendorList" :zero="true" :isDisabled=false
-                                                    wire:model='VENDOR_ID' />
-                                            @else
-                                                <livewire:select-option name="VENDOR_ID" titleName="Vendor"
-                                                    :options="$vendorList" :zero="true" :isDisabled=true
-                                                    wire:model='VENDOR_ID' />
-                                            @endif
+                                            <livewire:select-option name="VENDOR_ID" titleName="Vendor"
+                                                :options="$vendorList" :zero="true"
+                                                isDisabled="{{ !$Modify && $ID == 0 }}" wire:model='VENDOR_ID' />
+
 
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID"
-                                                            :isDisabled=false titleName="Payment Terms"
-                                                            :options="$paymentTermList" :zero="false"
-                                                            wire:model='PAYMENT_TERMS_ID' />
-                                                    @else
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID" :isDisabled=true
-                                                            titleName="Payment Terms" :options="$paymentTermList"
-                                                            :zero="false" wire:model='PAYMENT_TERMS_ID' />
-                                                    @endif
+                                                    <livewire:select-option name="PAYMENT_TERMS_ID"
+                                                        isDisabled="{{ !$Modify }}" titleName="Payment Terms"
+                                                        :options="$paymentTermList" :zero="false"
+                                                        wire:model='PAYMENT_TERMS_ID' />
+
 
                                                 </div>
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:date-input name="DUE_DATE" :isDisabled=false
-                                                            titleName="Dua Date" wire:model='DUE_DATE' />
-                                                    @else
-                                                        <livewire:date-input name="DUE_DATE" :isDisabled=true
-                                                            titleName="Due Date" wire:model='DUE_DATE' />
-                                                    @endif
+                                                    <livewire:date-input name="DUE_DATE"
+                                                        isDisabled="{{ !$Modify }}" titleName="Dua Date"
+                                                        wire:model='DUE_DATE' />
+
                                                 </div>
 
                                             </div>
@@ -70,49 +57,32 @@
                                                         wire:model='DATE' :isDisabled="true" />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="Code" titleName="Reference No."
-                                                            :isDisabled=false wire:model='CODE' />
-                                                    @else
-                                                        <livewire:text-input name="Code" titleName="Reference No."
-                                                            :isDisabled=true wire:model='CODE' />
-                                                    @endif
+                                                    <livewire:text-input name="Code" titleName="Reference No."
+                                                        isDisabled="{{ !$Modify }}" wire:model='CODE' />
+
 
                                                 </div>
                                                 <div class="col-md-4"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @if ($Modify && $ID == 0)
-                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                            :options="$locationList" :zero="false" :isDisabled=false
-                                                            wire:model='LOCATION_ID' />
-                                                    @else
-                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                            :options="$locationList" :zero="false" :isDisabled=true
-                                                            wire:model='LOCATION_ID' />
-                                                    @endif
+                                                    <livewire:select-option name="LOCATION_ID" titleName="Location"
+                                                        :options="$locationList" :zero="false"
+                                                        isDisabled="{{ !$Modify && $ID == 0 }}"
+                                                        wire:model='LOCATION_ID' />
+
                                                 </div>
 
 
                                                 <div class="col-md-4">
+                                                    <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
+                                                        :options="$taxList" :zero="false"
+                                                        isDisabled="{{ !$Modify }}" wire:model='INPUT_TAX_ID' />
 
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
-                                                            :options="$taxList" :zero="false" :isDisabled=false
-                                                            wire:model='INPUT_TAX_ID' />
-                                                    @else
-                                                        <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
-                                                            :options="$taxList" :zero="false" :isDisabled=true
-                                                            wire:model='INPUT_TAX_ID' />
-                                                    @endif
                                                 </div>
                                                 <div class="col-md-8">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=false wire:model='NOTES' :vertical="false" />
-                                                    @else
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=true wire:model='NOTES' :vertical="false" />
-                                                    @endif
+                                                    <livewire:text-input name="NOTES" titleName="Notes"
+                                                        isDisabled="{{ !$Modify }}" wire:model='NOTES'
+                                                        :vertical="false" />
+
                                                 </div>
                                             </div>
                                         </div>
@@ -160,8 +130,7 @@
                                                 class="btn btn-sm btn-warning">
                                                 <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                             </button>
-                                            <a id="new" title="Create"
-                                                href="{{ route('vendorsbills_create') }}"
+                                            <a id="new" title="Create" href="{{ route('vendorsbills_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
                                     </div>
@@ -251,7 +220,8 @@
                                         </div>
                                         <div class="col-md-4 text-right">
                                             <label class="text-sm">Total:</label>
-                                            <label class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
+                                            <label
+                                                class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
                                         </div>
                                         <div class="col-md-4 text-right">
                                             <label class="text-sm">Balance:</label>

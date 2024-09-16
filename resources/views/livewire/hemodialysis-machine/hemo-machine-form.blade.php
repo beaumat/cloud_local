@@ -23,27 +23,27 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <livewire:text-input name="CODE" titleName="Machine No."
-                                                        wire:model='CODE' />
+                                                        wire:model='CODE'  isDisabled="{{ false }}"  />
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <livewire:text-input name="DESCRIPTION" titleName="Description"
-                                                        wire:model='DESCRIPTION' />
+                                                        wire:model='DESCRIPTION'  isDisabled="{{ false }}"  />
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <livewire:dropdown-option name="TYPE" titleName="Type"
                                                         :options="$typeList" :zero="false" :isDisabled=false
-                                                        wire:model='TYPE' />
+                                                        wire:model='TYPE'  isDisabled="{{ false }}"  />
                                                 </div>
                                                 <div class="col-md-6">
                                                     <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                         :options="$locationList" :zero="false" :isDisabled=false
-                                                        wire:model='LOCATION_ID' />
+                                                        wire:model='LOCATION_ID'  isDisabled="{{ false }}"  />
                                                 </div>
                                                 <div class="col-md-6">
                                                     <livewire:number-input name="CAPACITY" titleName="Capacity"
-                                                    wire:model='CAPACITY' /> 
+                                                    wire:model='CAPACITY'  isDisabled="{{ false }}"  /> 
                                                 </div>
                                             </div>
                                         </div>

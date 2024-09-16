@@ -29,27 +29,31 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <livewire:text-input name="TAG" titleName="Code" wire:model='TAG' />
+                                            <livewire:text-input name="TAG" titleName="Code" wire:model='TAG'
+                                                isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' />
+                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'
+                                                isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:select-option name="TYPE" :options="$accountTypes" :zero="false"
-                                                titleName="Type" wire:model.live='TYPE' :key="$accountTypes->pluck('ID')->join('_')" />
+                                                isDisabled="{{ false }}" titleName="Type" wire:model.live='TYPE'
+                                                :key="$accountTypes->pluck('ID')->join('_')" />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:select-option name="GROUP_ACCOUNT_ID" :options="$accountGroups"
-                                                :zero="true" titleName="Group Account"
-                                                wire:model.live='GROUP_ACCOUNT_ID' :key="$accountGroups->pluck('ID')->join('_')" />
+                                                isDisabled="{{ false }}" :zero="true"
+                                                titleName="Group Account" wire:model.live='GROUP_ACCOUNT_ID'
+                                                :key="$accountGroups->pluck('ID')->join('_')" isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:text-input name="BANK_ACCOUNT_NO" titleName="Bank Account No."
-                                                wire:model='BANK_ACCOUNT_NO' />
+                                                isDisabled="{{ false }}" wire:model='BANK_ACCOUNT_NO' />
                                         </div>
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
-                                                wire:model='INACTIVE' />
+                                                isDisabled="{{ false }}" wire:model='INACTIVE' />
                                         </div>
                                     </div>
                                 </div>

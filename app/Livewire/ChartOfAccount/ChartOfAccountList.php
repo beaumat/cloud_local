@@ -18,10 +18,7 @@ class ChartOfAccountList extends Component
     {
         $this->accountServices = $accountServices;
     }
-    public function updatedsearch()
-    {
-        $this->accounts = $this->accountServices->Search($this->search);
-    }
+
     public function delete($id)
     {
         try {
@@ -46,6 +43,7 @@ class ChartOfAccountList extends Component
     }
     public function render()
     {
+        $this->accounts = $this->accountServices->Search($this->search);
         return view('livewire.chart-of-account.chart-of-account-list');
     }
 }

@@ -30,7 +30,7 @@
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-sm bg-sky">
+                                <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>Code</th>
                                         <th>Name</th>
@@ -45,7 +45,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm">
+                                <tbody class="text-xs">
                                     @foreach ($accounts as $list)
                                         <tr>
                                             <td> {{ $list->TAG }} </td>
@@ -62,13 +62,13 @@
                                             </td>
                                             <td class="text-center">
                                                 <a href="{{ route('maintenancefinancialcoa_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
                                                 <a href="#" wire:click='delete({{ $list->ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                                    class="btn btn-xs btn-danger">
+                                                    <i class="fas fa-trash" aria-hidden="true"></i>
                                                 </a>
                                             </td>
                                         </tr>

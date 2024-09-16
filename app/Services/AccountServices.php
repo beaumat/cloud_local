@@ -97,7 +97,7 @@ class AccountServices
                 $query->where('account.NAME', 'like', '%' . $search . '%')
                     ->orWhere('account.TAG', 'like', '%' . $search . '%');
             })
-            ->orderBy('account.ID', 'desc')
+            ->orderBy('account.TYPE', 'asc')
             ->get();
     }
 }

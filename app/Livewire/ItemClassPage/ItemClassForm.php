@@ -15,7 +15,6 @@ class ItemClassForm extends Component
     public int $ID;
     public string $CODE;
     public string $DESCRIPTION;
-
     public function mount($id = null)
     {
         if (is_numeric($id)) {

@@ -89,7 +89,8 @@
                                     class="text-info btn btn-sm btn-link">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
-                                <button title="Delete" id="deletebtn" wire:click='deleteItem({{ $list->ID }},{{ $list->ITEM_ID }})'
+                                <button title="Delete" id="deletebtn"
+                                    wire:click='deleteItem({{ $list->ID }},{{ $list->ITEM_ID }})'
                                     wire:confirm="Are you sure you want to delete this?"
                                     class="text-danger btn btn-sm btn-link">
                                     <i class="fas fa-times" aria-hidden="true"></i>
@@ -109,7 +110,7 @@
                                 @if ($codeBase)
                                     <livewire:select-option name="ITEM_ID1" titleName="Item Code" :options="$itemCodeList"
                                         :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
+                                        isDisabled="{{ false }}" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ITEM_CODE }}</label>
                                 @endif
@@ -117,7 +118,7 @@
                                 @if ($codeBase)
                                     <livewire:select-option name="ITEM_ID2" titleName="Item Code" :options="$itemCodeList"
                                         :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
+                                        isDisabled="{{ false }}" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ITEM_CODE }}</label>
                                 @endif
@@ -128,7 +129,7 @@
                                 @if (!$codeBase)
                                     <livewire:select-option name="ITEM_ID3" titleName="Item Description"
                                         :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
+                                        isDisabled="{{ false }}" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ITEM_DESCRIPTION }}</label>
                                 @endif
@@ -136,7 +137,7 @@
                                 @if (!$codeBase)
                                     <livewire:select-option name="ITEM_ID4" titleName="Item Description"
                                         :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID'
-                                        :vertical="false" :withLabel="false" />
+                                        isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ITEM_DESCRIPTION }}</label>
                                 @endif
@@ -192,6 +193,7 @@
 
     </table>
     @if ($STATUS == $openStatus)
-        <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase' />
+        <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase'
+            isDisabled="{{ false }}" />
     @endif
 </div>
