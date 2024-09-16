@@ -94,7 +94,7 @@
 
                                     <div class="col-md-1">
                                         <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
-                                            wire:model='INACTIVE' />
+                                            :isDisabled=false wire:model='INACTIVE' />
 
 
                                     </div>

@@ -33,20 +33,22 @@
 
                                         <div class="col-md-4">
                                             <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'
-                                                maxlength='50' />
+                                                isDisabled="{{ false }}" maxlength='50' />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:select-option name="PRICE_LEVEL_ID" :options="$priceLevels"
                                                 :zero="true" titleName="Price Level"
-                                                wire:model.live='PRICE_LEVEL_ID' :key="$priceLevels->pluck('ID')->join('_')" />
+                                                isDisabled="{{ false }}" wire:model.live='PRICE_LEVEL_ID'
+                                                :key="$priceLevels->pluck('ID')->join('_')" />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:select-option name="GROUP_ID" :options="$locationGroups" :zero="true"
-                                                titleName="Group" wire:model.live='GROUP_ID' :key="$locationGroups->pluck('ID')->join('_')" />
+                                                isDisabled="{{ false }}" titleName="Group"
+                                                wire:model.live='GROUP_ID' :key="$locationGroups->pluck('ID')->join('_')" />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
-                                                wire:model='INACTIVE' />
+                                                isDisabled="{{ false }}" wire:model='INACTIVE' />
                                         </div>
                                     </div>
                                 </div>
@@ -54,36 +56,39 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <livewire:text-input name="NAME_OF_BUSINESS"
-                                                titleName="Branch/Business Title:" wire:model='NAME_OF_BUSINESS'
-                                                maxlength='50' />
+                                                isDisabled="{{ false }}" titleName="Branch/Business Title:"
+                                                wire:model='NAME_OF_BUSINESS' maxlength='50' />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:text-input name="ACCREDITATION_NO" titleName="Accreditation No."
-                                                wire:model='ACCREDITATION_NO' maxlength='20' />
+                                                isDisabled="{{ false }}" wire:model='ACCREDITATION_NO'
+                                                maxlength='20' />
                                         </div>
                                         <div class="col-md-6"></div>
                                         <div class="col-md-3">
                                             <livewire:text-input name="BLDG_NAME_LOT_BLOCK"
                                                 titleName="Bldg No./Name/Lot/Block" wire:model='BLDG_NAME_LOT_BLOCK'
-                                                maxlength='50' />
+                                                isDisabled="{{ false }}" maxlength='50' />
                                         </div>
                                         <div class="col-md-3">
                                             <livewire:text-input name="STREET_SUB_VALL"
                                                 titleName="Street/Subdivision/Village" wire:model='STREET_SUB_VALL'
-                                                maxlength='50' />
+                                                isDisabled="{{ false }}" maxlength='50' />
                                         </div>
                                         <div class="col-md-3">
                                             <livewire:text-input name="BRGY_CITY_MUNI"
                                                 titleName="Barangay/City/Municipality" wire:model='BRGY_CITY_MUNI'
-                                                maxlength='50' />
+                                                isDisabled="{{ false }}" maxlength='50' />
                                         </div>
                                         <div class="col-md-3">
                                             <livewire:text-input name="PROVINCE" titleName="Province"
-                                                wire:model='PROVINCE' maxlength='50' />
+                                                isDisabled="{{ false }}" wire:model='PROVINCE'
+                                                maxlength='50' />
                                         </div>
                                         <div class="col-md-3">
                                             <livewire:text-input name="ZIP_CODE" titleName="Zip Code"
-                                                wire:model='ZIP_CODE' maxlength='10' />
+                                                isDisabled="{{ false }}" wire:model='ZIP_CODE'
+                                                maxlength='10' />
                                         </div>
                                     </div>
                                 </div>
@@ -91,13 +96,13 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <livewire:select-option name="HCI_MANAGER_ID" :options="$managerList"
-                                                :zero="true" titleName="HCI Manager"
-                                                wire:model.live='HCI_MANAGER_ID' />
+                                                isDisabled="{{ false }}" :zero="true"
+                                                titleName="HCI Manager" wire:model.live='HCI_MANAGER_ID' />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:select-option name="PHIC_INCHARGE_ID" :options="$inchargeList"
-                                                :zero="true" titleName="Phic In-charge"
-                                                wire:model.live='PHIC_INCHARGE_ID' />
+                                                isDisabled="{{ false }}" :zero="true"
+                                                titleName="Phic In-charge" wire:model.live='PHIC_INCHARGE_ID' />
                                         </div>
                                     </div>
                                 </div>
@@ -107,15 +112,18 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <livewire:text-input name="REPORT_HEADER_1" titleName="Header 1"
-                                                wire:model='REPORT_HEADER_1' maxlength='60' />
+                                                isDisabled="{{ false }}" wire:model='REPORT_HEADER_1'
+                                                maxlength='60' />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:text-input name="REPORT_HEADER_2" titleName="Header 2"
-                                                wire:model='REPORT_HEADER_2' maxlength='60' />
+                                                isDisabled="{{ false }}" wire:model='REPORT_HEADER_2'
+                                                maxlength='60' />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:text-input name="REPORT_HEADER_3" titleName="Header 3"
-                                                wire:model='REPORT_HEADER_3' maxlength='60' />
+                                                isDisabled="{{ false }}" wire:model='REPORT_HEADER_3'
+                                                maxlength='60' />
                                         </div>
                                     </div>
                                 </div>
@@ -125,11 +133,13 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <livewire:text-input name="PHIC_SOA_FORMAT" titleName="SOA FORMAT"
-                                                wire:model='PHIC_SOA_FORMAT' maxlength='10' />
+                                                isDisabled="{{ false }}" wire:model='PHIC_SOA_FORMAT'
+                                                maxlength='10' />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:custom-check-box name="PHIC_FORM_MODIFY"
-                                                titleName="Phic Form is Modify" wire:model='PHIC_FORM_MODIFY' />
+                                                isDisabled="{{ false }}" titleName="Phic Form is Modify"
+                                                wire:model='PHIC_FORM_MODIFY' />
                                         </div>
                                         <div class="col-md-4">
 

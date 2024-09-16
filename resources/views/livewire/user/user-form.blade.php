@@ -34,7 +34,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <livewire:text-input name="name" titleName="Username"
-                                                wire:model='name' />
+                                                isDisabled="{{ false }}" wire:model='name' />
                                         </div>
                                         <div class="col-md-12">
                                             <label for="pass" class="text-xs">
@@ -50,26 +50,28 @@
 
                                         <div class="col-md-12">
                                             <livewire:select-option name="contact_id" titleName="Empoyees"
-                                                :options="$employees" :zero="true" :isDisabled=false
-                                                wire:model='contact_id' />
+                                                isDisabled="{{ false }}" :options="$employees" :zero="true"
+                                                :isDisabled=false wire:model='contact_id' />
                                         </div>
                                         <div class="col-md-12">
                                             <livewire:select-option name="location_id" titleName="Location"
-                                                :options="$locationList" :zero="true" :isDisabled=false
-                                                wire:model='location_id' />
+                                                isDisabled="{{ false }}" :options="$locationList" :zero="true"
+                                                :isDisabled=false wire:model='location_id' />
                                         </div>
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="locked_location"
-                                                titleName="Locked Location" wire:model='locked_location' />
+                                                isDisabled="{{ false }}" titleName="Locked Location"
+                                                wire:model='locked_location' />
                                         </div>
 
                                         <div class="col-md-12">
                                             <livewire:date-input name="trans_date" titleName="Transaction Date"
-                                                wire:model='trans_date' :isDisabled="false" />
+                                                isDisabled="{{ false }}" wire:model='trans_date'
+                                                :isDisabled="false" />
                                         </div>
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="inactive" titleName="Inactive"
-                                                wire:model='inactive' />
+                                                isDisabled="{{ false }}" wire:model='inactive' />
                                         </div>
                                     </div>
                                 </div>
@@ -97,9 +99,8 @@
                 </div>
 
                 <div class="col-md-8">
-                @if($id > 0)
-                    @livewire('User.UserRoles', ['id' => $id])
-
+                    @if ($id > 0)
+                        @livewire('User.UserRoles', ['id' => $id])
                     @endif
                 </div>
                 <!--/.col (right) -->
