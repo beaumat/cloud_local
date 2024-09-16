@@ -30,7 +30,6 @@
                                     </div>
                                     <div class='col-md-6'>
                                     </div>
-
                                     <div class="col-md-6">
                                         <livewire:number-input name="DRUG_MED" titleName="Drugs & Medicine:"
                                             vertical=true :isDisabled=false wire:model='DRUG_MED' />
@@ -39,9 +38,6 @@
                                         <livewire:number-input name="DRUG_MED_PK" titleName="Drugs & Medicine (PK):"
                                             vertical=true :isDisabled=false wire:model='DRUG_MED_PK' />
                                     </div>
-
-
-
                                     <div class="col-md-6">
                                         <livewire:number-input name="LAB_DIAG" titleName="Laboratory & Diagnostics:"
                                             vertical=true :isDisabled=false wire:model='LAB_DIAG' />
@@ -51,9 +47,6 @@
                                             titleName="Laboratory & Diagnostics (PK):" vertical=true :isDisabled=false
                                             wire:model='LAB_DIAG_PK' />
                                     </div>
-
-
-
                                     <div class="col-md-6">
                                         <livewire:number-input name="OPERATING_ROOM_FEE" titleName="Operating Room Fee:"
                                             vertical=true :isDisabled=false wire:model='OPERATING_ROOM_FEE' />
@@ -63,10 +56,6 @@
                                             titleName="Operating Room Fee (PK)" vertical=true :isDisabled=false
                                             wire:model='OPERATING_ROOM_FEE_PK' />
                                     </div>
-
-
-
-
                                     <div class="col-md-6">
                                         <livewire:number-input name="SUPPLIES" titleName="Supplies" vertical=true
                                             :isDisabled=false wire:model='SUPPLIES' />
@@ -95,8 +84,6 @@
                                     <div class="col-md-1">
                                         <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
                                             :isDisabled=false wire:model='INACTIVE' />
-
-
                                     </div>
                                     <div class="col-md-12 text-left pt-4">
                                         <button class="btn btn-success btn-sm" type='submit'>
