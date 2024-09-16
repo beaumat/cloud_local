@@ -6,10 +6,11 @@
                 <th class="col-2 bg-info">Item Description</th>
                 <th class="col-1 bg-info">Qty </th>
                 <th class="col-1 bg-info">Item Amount</th>
-                <th class="col-1">Reference</th>
-                <th class="col-1">Date</th>
-                <th class="col-1">Applied</th>
-                <th class="col-1">Running Bal.</th>
+                <th class="bg-warning col-1">Payment Ref#</th>
+                <th class="bg-warning col-1">Method</th>
+                <th class="bg-warning">Date</th>
+                <th class="bg-warning col-1">Applied</th>
+                <th class="bg-danger col-1">Running Bal.</th>
                 <th class="col-1 text-center">GL Confirm</th>
                 <th class="text-center col-2">Action</th>
             </tr>
@@ -21,11 +22,20 @@
                     <td>{{ number_format($list->QUANTITY, 0) }}</td>
                     <td>{{ number_format($list->ITEM_AMOUNT, 2) }}</td>
                     <td>
-                        <a target="_blank"
-                            href="{{ route('patientspayment_edit', ['id' => $list->PATIENT_PAYMENT_ID]) }}">
-                            {{ $list->CODE }}
-                        </a>
+                        @if ($list->PAYMENT_METHOD_ID == 91)
+                            <a target="_blank"
+                                href="{{ route('patientsphic_pay_edit', ['id' => $list->PATIENT_PAYMENT_ID]) }}">
+                                {{ $list->CODE }}
+                            </a>
+                        @else
+                            <a target="_blank"
+                                href="{{ route('patientspayment_edit', ['id' => $list->PATIENT_PAYMENT_ID]) }}">
+                                {{ $list->CODE }}
+                            </a>
+                        @endif
+
                     </td>
+                    <td>{{ $list->PAYMENT_METHOD }}</td>
                     <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }} </td>
 
                     <td class="text-right">{{ number_format($list->AMOUNT_APPLIED, 2) }}</td>

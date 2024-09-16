@@ -112,8 +112,8 @@
                                         </th>
 
                                         <th>
-                                            <span type='button'
-                                                wire:click="sorting('patient_payment.AMOUNT')">Deposit</span>
+                                            <span type='button' wire:click="sorting('patient_payment.AMOUNT')">Gross
+                                                Income</span>
                                             @if ($sortby == 'patient_payment.AMOUNT')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -122,6 +122,8 @@
                                                 @endif
                                             @endif
                                         </th>
+                                        <th>WTax </th>
+                                        <th>Less Amount </th>
                                         <th>
                                             <span type='button'
                                                 wire:click="sorting('patient_payment.AMOUNT_APPLIED')">Applied</span>
@@ -144,6 +146,7 @@
                                                 @endif
                                             @endif
                                         </th>
+
                                         <th>
                                             <span type='button' wire:click="sorting('pm.DESCRIPTION')"> Method
                                             </span>
@@ -157,8 +160,7 @@
                                         </th>
                                         <th>
                                             <span type='button' wire:click="sorting('patient_payment.RECEIPT_REF_NO')">
-                                                Ref No. </span>
-
+                                                O.R No. </span>
                                             @if ($sortby == 'patient_payment.RECEIPT_REF_NO')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -169,7 +171,7 @@
                                         </th>
                                         <th>
                                             <span type='button' wire:click="sorting('patient_payment.RECEIPT_DATE')">
-                                                Ref Date
+                                                O.R Date
                                             </span>
                                             @if ($sortby == 'patient_payment.RECEIPT_DATE')
                                                 @if ($isDesc)
@@ -178,20 +180,7 @@
                                                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                 @endif
                                             @endif
-
                                         </th>
-                                        {{-- <th>
-                                            <span type='button' wire:click="sorting('patient_payment.IS_CONFIRM')">
-                                                Confirm
-                                            </span>
-                                            @if ($sortby == 'patient_payment.IS_CONFIRM')
-                                                @if ($isDesc)
-                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
-                                                @else
-                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                                @endif
-                                            @endif
-                                        </th> --}}
                                         <th>
                                             <span type='button' wire:click="sorting('l.NAME')">
                                                 Location
@@ -232,37 +221,20 @@
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td>
-                                                <a href="{{ route('patientsphic_pay_edit', ['id' => $list->ID]) }}"
-                                                    class="text-primary"> {{ $list->CODE }} </a>
-                                            </td>
+                                            <td> <a href="{{ route('patientsphic_pay_edit', ['id' => $list->ID]) }}"
+                                                    class="text-primary"> {{ $list->CODE }} </a> </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                            <td>
-                                                <label type="button"
-                                                    wire:click='openPayment({{ $list->PATIENT_ID }})'>
-                                                    {{ $list->LAST_NAME }}</label>
-                                            </td>
-                                            <td>
-                                                <label type="button"
-                                                    wire:click='openPayment({{ $list->PATIENT_ID }})'>
-                                                    {{ $list->FIRST_NAME }}</label>
-                                            </td>
+                                            <td> {{ $list->LAST_NAME }} </td>
+                                            <td> {{ $list->FIRST_NAME }} </td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
+                                            <td class="text-right"> {{ number_format($list->WTAX_AMOUNT, 2) }}</td>
+                                            <td class="text-right"> {{ number_format($list->LESS_AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
-                                            <td class="text-right">
-                                                {{ number_format($list->BALANCE, 2) }}
-                                            </td>
-                                            <td> {{ $list->PAYMENT_METHOD }}</td>
+                                            <td class="text-right"> {{ number_format($list->BALANCE, 2) }} </td>
+                                            <td>{{ $list->PAYMENT_METHOD }}</td>
                                             <td>{{ $list->RECEIPT_REF_NO }}</td>
                                             <td>{{ $list->RECEIPT_DATE ? date('m/d/Y', strtotime($list->RECEIPT_DATE)) : '' }}
                                             </td>
-                                            {{-- <td class="text-center">
-                                                @if ($list->IS_CONFIRM)
-                                                    <strong class="text-success">Yes</strong>
-                                                @else
-                                                    <strong class="text-danger">No</strong>
-                                                @endif
-                                            </td> --}}
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center"> {{ $list->STATUS }}</td>
                                             @can('patient.payment.create')
@@ -279,17 +251,6 @@
                                                         class="btn btn-xs btn-info">
                                                         <i class="fas fa-edit" aria-hidden="true"></i>
                                                     </a>
-                                                    {{-- @can('patient.payment.update')
-                                                        @if ($list->FILE_PATH)
-                                                            <button wire:click='getConfirm({{ $list->ID }})'
-                                                                type="button"
-                                                                wire:confirm="Are you sure this guaranteed letter is confirm?"
-                                                                class="btn btn btn-xs p-0  btn-success">
-                                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                            </button>
-                                                        @endif
-                                                    @endcan --}}
-
                                                     @can('patient.payment.delete')
                                                         <button type="button" wire:click='delete({{ $list->ID }})'
                                                             wire:confirm="Are you sure you want to delete this?"

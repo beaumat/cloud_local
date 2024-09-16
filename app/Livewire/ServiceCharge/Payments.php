@@ -39,7 +39,11 @@ class Payments extends Component
         DB::beginTransaction();
         try {
             //code...
-            $this->patientPaymentServices->PaymentChargesDelete($ID, $PATIENT_PAYMENT_ID, $SERVICE_CHARGES_ITEM_ID);
+            $this->patientPaymentServices->PaymentChargesDelete(
+                $ID,
+                $PATIENT_PAYMENT_ID,
+                $SERVICE_CHARGES_ITEM_ID
+            );
             DB::commit();
             $this->patientPaymentServices->UpdatePaymentChargesApplied($PATIENT_PAYMENT_ID);
             $this->serviceChargeServices->updateServiceChargesItemPaid($SERVICE_CHARGES_ITEM_ID);

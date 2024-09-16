@@ -28,10 +28,10 @@
                 <td>
                     @if ($saveSuccess)
                         <livewire:select-option name="DOCTOR_ID1" titleName="" :options="$contactList" :zero="true"
-                            wire:model.live='DOCTOR_ID' :vertical="false" :withLabel="false" />
+                            wire:model.live='DOCTOR_ID' :vertical="false" :withLabel="false" isDisabled="{{ false }}" />
                     @else
                         <livewire:select-option name="DOCTOR_ID2" titleName="" :options="$contactList" :zero="true"
-                            wire:model.live='DOCTOR_ID' :vertical="false" :withLabel="false" />
+                            wire:model.live='DOCTOR_ID' :vertical="false" :withLabel="false" isDisabled="{{ false }}" />
                     @endif
                 </td>
                 <td><button wire:click='save' type="button" class="btn btn-sm btn-success w-100 mt-2"> <i

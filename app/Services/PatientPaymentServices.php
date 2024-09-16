@@ -542,6 +542,7 @@ class PatientPaymentServices
                 'patient_payment.CODE',
                 'patient_payment.DATE',
                 'patient_payment.AMOUNT',
+                'patient_payment.PAYMENT_METHOD_ID',
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
                 'patient_payment_charges.AMOUNT_APPLIED',
                 'patient_payment.FILE_PATH',

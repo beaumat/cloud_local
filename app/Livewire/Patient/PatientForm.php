@@ -27,7 +27,7 @@ use Livewire\Component;
 class PatientForm extends Component
 {
 
-
+    public bool $modify = false;
     public int $ID;
     public int $TYPE = 3;
     public string $NAME;

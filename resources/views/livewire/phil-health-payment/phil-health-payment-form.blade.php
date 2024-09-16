@@ -40,16 +40,16 @@
                                                 <div class="col-md-6">
                                                     <div class="row">
                                                         <div class='col-md-6'>
-                                                            <livewire:number-input name="AMOUNT" titleName="Amount"
+                                                            <livewire:number-input name="AMOUNT" titleName="GROSS INCOME"
                                                                 isDisabled="{{ $Modify && $AMOUNT_APPLIED == 0 ? false : true }}"
                                                                 wire:model.live.lazy.150ms='AMOUNT' />
                                                         </div>
                                                         <div class='col-md-6'>
                                                             @if ($showTax)
                                                                 <livewire:number-input name="WTAX_AMOUNT"
-                                                                    titleName="WTax (2%) Less: {{ number_format($LESS_AMOUNT, 2) }}"
+                                                                    titleName="WTax (2%) Less: {{ number_format($WTAX_AMOUNT, 2) }}"
                                                                     isDisabled="{{ true }}"
-                                                                    wire:model='WTAX_AMOUNT' />
+                                                                    wire:model='LESS_AMOUNT' />
                                                             @endif
                                                         </div>
                                                     </div>

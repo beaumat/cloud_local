@@ -29,28 +29,28 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <livewire:text-input name="NAME" titleName="Patients Name"
+                                            <livewire:text-input name="NAME" titleName="Patients Name" isDisabled="{{ $modify }}"
                                                 wire:model='NAME' :isDisabled='true' maxlength='100' />
                                         </div>
-                                        <div class="col-md-2" >
-                                            <livewire:text-input name="ACCOUNT_NO" titleName="Profile No."
+                                        <div class="col-md-2">
+                                            <livewire:text-input name="ACCOUNT_NO" titleName="Profile No." isDisabled="{{ $modify }}"
                                                 wire:model='ACCOUNT_NO' isDisabled=true maxlength='20' />
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:date-input name="DATE_ADMISSION" titleName="Date Diagnosis"
+                                            <livewire:date-input name="DATE_ADMISSION" titleName="Date Diagnosis" isDisabled="{{ $modify }}"
                                                 wire:model='DATE_ADMISSION' />
                                         </div>
                                         <div class="col-md-2"
                                             @if (Auth::user()->locked_location) style="opacity:
                                             0.5;pointer-events: none;" @endif>
-                                            <livewire:select-option name="LOCATION_ID" :options="$locationList"
+                                            <livewire:select-option name="LOCATION_ID" :options="$locationList" isDisabled="{{ $modify }}"
                                                 :zero="false" titleName="Branch" wire:model='LOCATION_ID' />
                                         </div>
                                         <div class="col-md-1">
                                             <div class="row">
                                                 <div class="col-md-12"><br /></div>
                                                 <div class="col-md-12 text-left">
-                                                    <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
+                                                    <livewire:custom-check-box name="INACTIVE" titleName="Inactive" isDisabled="{{ $modify }}"
                                                         wire:model='INACTIVE' />
                                                 </div>
                                             </div>
@@ -58,7 +58,7 @@
                                         <div class="col-md-2">
                                             {{-- <livewire:select-option name="PATIENT_TYPE_ID" :options="$patientTypeList"
                                                 :zero="true" titleName="Type" wire:model='PATIENT_TYPE_ID' /> --}}
-                                            <livewire:text-input name="NICKNAME" titleName="Account No."
+                                            <livewire:text-input name="NICKNAME" titleName="Account No." isDisabled="{{ $modify }}"
                                                 wire:model='NICKNAME' maxlength='20' />
 
                                         </div>
@@ -159,27 +159,29 @@
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="FIRST_NAME"
                                                                 titleName="First Name" wire:model='FIRST_NAME'
-                                                                maxlength='50' />
+                                                                maxlength='50' isDisabled="{{ $modify }}" />
                                                         </div>
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="LAST_NAME"
                                                                 titleName="Last Name" wire:model='LAST_NAME'
-                                                                maxlength='50' />
+                                                                maxlength='50' isDisabled="{{ $modify }}" />
                                                         </div>
                                                         <div class="col-md-3">
                                                             <livewire:text-input name="MIDDLE_NAME"
                                                                 titleName="Middle Name" wire:model='MIDDLE_NAME'
-                                                                maxlength='50' />
+                                                                maxlength='50' isDisabled="{{ $modify }}" />
                                                         </div>
 
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="SALUTATION"
                                                                 titleName="Extension (ex. JR,SR,III)"
-                                                                wire:model='SALUTATION' maxlength='10' />
+                                                                wire:model='SALUTATION' maxlength='10'
+                                                                isDisabled="{{ $modify }}" />
                                                         </div>
                                                         <div class="col-md-1">
                                                             <livewire:number-input name="HEIGHT"
-                                                                titleName="Height (cm)" wire:model='HEIGHT' />
+                                                                titleName="Height (cm)" wire:model='HEIGHT'
+                                                                isDisabled="{{ $modify }}" />
                                                         </div>
                                                         <div class="col-md-1">
                                                             <div class="form-group mt-2">
@@ -205,7 +207,8 @@
                                                                 <div class="col-md-10">
                                                                     <livewire:date-input name="DATE_OF_BIRTH"
                                                                         titleName="Date of Birth"
-                                                                        wire:model.live='DATE_OF_BIRTH' />
+                                                                        wire:model.live='DATE_OF_BIRTH'
+                                                                        isDisabled="{{ $modify }}" />
                                                                 </div>
                                                                 <div class="col-2">
                                                                     <div class="form-group mt-2">
@@ -218,23 +221,24 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <livewire:text-input name="CONTACT_PERSON"
+                                                            <livewire:text-input name="CONTACT_PERSON" isDisabled="{{ $modify }}"
                                                                 titleName="Patients Representative Name"
                                                                 wire:model='CONTACT_PERSON' maxlength='50' />
                                                         </div>
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="EMAIL" titleName="Email"
-                                                                wire:model='EMAIL' maxlength='100' />
+                                                                wire:model='EMAIL' maxlength='100'
+                                                                isDisabled="{{ $modify }}" />
                                                         </div>
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="TELEPHONE_NO"
                                                                 titleName="Telephone No." wire:model='TELEPHONE_NO'
-                                                                maxlength='150' />
+                                                                isDisabled="{{ $modify }}" maxlength='150' />
                                                         </div>
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="MOBILE_NO"
                                                                 titleName="Mobile No." wire:model='MOBILE_NO'
-                                                                maxlength='20' />
+                                                                isDisabled="{{ $modify }}" maxlength='20' />
                                                         </div>
 
 
@@ -248,12 +252,14 @@
                                                                     <livewire:text-input name="ADDRESS_UNIT_ROOM_FLOOR"
                                                                         titleName="Unit/Room#/Floor"
                                                                         wire:model='ADDRESS_UNIT_ROOM_FLOOR'
+                                                                        isDisabled="{{ $modify }}"
                                                                         maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_BUILDING_NAME"
                                                                         titleName="Building Name"
                                                                         wire:model='ADDRESS_BUILDING_NAME'
+                                                                        isDisabled="{{ $modify }}"
                                                                         maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-3">
@@ -261,15 +267,18 @@
                                                                         name="ADDRESS_LOT_BLK_HOUSE_BLDG"
                                                                         titleName="Lot/Blk/House/Bldg No."
                                                                         wire:model='ADDRESS_LOT_BLK_HOUSE_BLDG'
+                                                                        isDisabled="{{ $modify }}"
                                                                         maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <livewire:text-input name="ADDRESS_STREET"
                                                                         titleName="Street" wire:model='ADDRESS_STREET'
+                                                                        isDisabled="{{ $modify }}"
                                                                         maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_SUB_VALL"
+                                                                        isDisabled="{{ $modify }}"
                                                                         titleName="Subdivision/Village"
                                                                         wire:model='ADDRESS_SUB_VALL'
                                                                         maxlength='60' />
@@ -277,11 +286,13 @@
                                                                 <div class="col-md-3">
                                                                     <livewire:text-input name="ADDRESS_BRGY"
                                                                         titleName="Barangay" wire:model='ADDRESS_BRGY'
+                                                                        isDisabled="{{ $modify }}"
                                                                         maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_CITY_MUNI"
                                                                         titleName="City/Municipality"
+                                                                        isDisabled="{{ $modify }}"
                                                                         wire:model='ADDRESS_CITY_MUNI'
                                                                         maxlength='60' />
                                                                 </div>
@@ -289,16 +300,19 @@
                                                                     <livewire:text-input name="ADDRESS_PROVINCE"
                                                                         titleName="Province"
                                                                         wire:model='ADDRESS_PROVINCE'
+                                                                        isDisabled="{{ $modify }}"
                                                                         maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_COUNTRY"
                                                                         titleName="Country"
+                                                                        isDisabled="{{ $modify }}"
                                                                         wire:model='ADDRESS_COUNTRY' maxlength='60' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="ADDRESS_ZIP_CODE"
                                                                         titleName="Zip Code"
+                                                                        isDisabled="{{ $modify }}"
                                                                         wire:model='ADDRESS_ZIP_CODE'
                                                                         maxlength='10' />
                                                                 </div>
@@ -315,21 +329,25 @@
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="PIN"
                                                                 titleName="PhilHealth Number of Member"
-                                                                wire:model='PIN' :isDisabled='false' maxlength='12' />
+                                                                isDisabled="{{ $modify }}" wire:model='PIN'
+                                                                :isDisabled='false' maxlength='12' />
                                                         </div>
                                                         <div class="col-md-5">
                                                             <livewire:text-input name="FIRST_CASE_RATE"
                                                                 titleName="First Case Rate"
+                                                                isDisabled="{{ $modify }}"
                                                                 wire:model='FIRST_CASE_RATE' maxlength='20' />
                                                         </div>
                                                         <div class="col-md-5">
                                                             <livewire:text-input name="SECOND_CASE_RATE"
                                                                 titleName="Second Case Rate"
+                                                                isDisabled="{{ $modify }}"
                                                                 wire:model='SECOND_CASE_RATE' maxlength='20' />
                                                         </div>
                                                         <div class="col-md-3">
                                                             <livewire:custom-check-box name="IS_PATIENT"
                                                                 titleName="Patient is the member?"
+                                                                isDisabled="{{ $modify }}"
                                                                 wire:model.live='IS_PATIENT' />
                                                         </div>
                                                         <div class="col-md-2"></div>
@@ -337,6 +355,7 @@
                                                             @if ($IS_PATIENT == false)
                                                                 <livewire:custom-check-box name="IS_DEPENDENT"
                                                                     titleName="Patient is dependent?"
+                                                                    isDisabled="{{ $modify }}"
                                                                     wire:model.live='IS_DEPENDENT' />
                                                             @endif
                                                         </div>
@@ -344,8 +363,10 @@
                                                         <div class="col-md-2">
                                                             @if ($IS_PATIENT == false && $IS_DEPENDENT == true)
                                                                 <livewire:text-input name="PIN_DEPENDENT"
+                                                                    isDisabled="{{ $modify }}"
                                                                     titleName="PhilHealth Identification Number (PIN) of Dependent"
-                                                                    wire:model='PIN_DEPENDENT' :isDisabled='false'
+                                                                    wire:model='PIN_DEPENDENT'
+                                                                    isDisabled="{{ $modify }}"
                                                                     maxlength='12' />
                                                             @endif
                                                         </div>
@@ -357,18 +378,21 @@
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_FIRST_NAME"
                                                                             titleName="First Name"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_FIRST_NAME'
                                                                             maxlength='50' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_LAST_NAME"
                                                                             titleName="Last Name"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_LAST_NAME'
                                                                             maxlength='50' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_MIDDLE_NAME"
                                                                             titleName="Middle Name"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_MIDDLE_NAME'
                                                                             maxlength='50' />
                                                                     </div>
@@ -377,6 +401,7 @@
                                                                         <livewire:text-input name="MEMBER_EXTENSION"
                                                                             titleName="Extension (ex. JR,SR,III)"
                                                                             wire:model='MEMBER_EXTENSION'
+                                                                            isDisabled="{{ $modify }}"
                                                                             maxlength='10' />
                                                                     </div>
 
@@ -387,6 +412,7 @@
                                                                                 <label class="form-check-label">
                                                                                     <input class="form-check-input"
                                                                                         type="radio"
+                                                                                        isDisabled="{{ $modify }}"
                                                                                         wire:model="MEMBER_GENDER"
                                                                                         value="0" />
                                                                                     Male
@@ -396,6 +422,7 @@
                                                                                 <label class="form-check-label">
                                                                                     <input class="form-check-input"
                                                                                         type="radio"
+                                                                                        isDisabled="{{ $modify }}"
                                                                                         wire:model="MEMBER_GENDER"
                                                                                         value="1" />
                                                                                     Female
@@ -409,6 +436,7 @@
                                                                                 <livewire:date-input
                                                                                     name="MEMBER_BIRTH_DATE"
                                                                                     titleName="Date of Birth"
+                                                                                    isDisabled="{{ $modify }}"
                                                                                     wire:model.live='MEMBER_BIRTH_DATE' />
                                                                             </div>
                                                                             <div class="col-md-6">
@@ -434,12 +462,14 @@
                                                                                 <livewire:custom-check-box
                                                                                     name="MEMBER_IS_CHILD"
                                                                                     titleName="Child"
+                                                                                    isDisabled="{{ $modify }}"
                                                                                     wire:model='MEMBER_IS_CHILD' />
                                                                             </div>
                                                                             <div class="col-md-2">
                                                                                 <livewire:custom-check-box
                                                                                     name="MEMBER_IS_PARENT"
                                                                                     titleName="Parent"
+                                                                                    isDisabled="{{ $modify }}"
                                                                                     wire:model='MEMBER_IS_PARENT' />
                                                                             </div>
                                                                             <div class="col-md-2">
@@ -447,6 +477,7 @@
                                                                                 <livewire:custom-check-box
                                                                                     name="MEMBER_IS_SPOUSE"
                                                                                     titleName="Spouse"
+                                                                                    isDisabled="{{ $modify }}"
                                                                                     wire:model='MEMBER_IS_SPOUSE' />
                                                                             </div>
                                                                         </div>
@@ -463,6 +494,7 @@
                                                                         <livewire:text-input
                                                                             name="MEMBER_UNIT_ROOM_FLOOR"
                                                                             titleName="Unit/Room#/Floor"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_UNIT_ROOM_FLOOR'
                                                                             maxlength='40' />
                                                                     </div>
@@ -470,6 +502,7 @@
                                                                         <livewire:text-input
                                                                             name="MEMBER_BUILDING_NAME"
                                                                             titleName="Building Name"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_BUILDING_NAME'
                                                                             maxlength='40' />
                                                                     </div>
@@ -477,35 +510,41 @@
                                                                         <livewire:text-input
                                                                             name="MEMBER_LOT_BLK_HOUSE_BLDG"
                                                                             titleName="Lot/Blk/House/Bldg No."
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_LOT_BLK_HOUSE_BLDG'
                                                                             maxlength='40' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_STREET"
                                                                             titleName="Street"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_STREET'
                                                                             maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <livewire:text-input name="MEMBER_SUB_VALL"
                                                                             titleName="Subdivision/Village"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_SUB_VALL'
                                                                             maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_BRGY"
                                                                             titleName="Barangay"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_BRGY' maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <livewire:text-input name="MEMBER_CITY_MUNI"
                                                                             titleName="City/Municipality"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_CITY_MUNI'
                                                                             maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <livewire:text-input name="MEMBER_PROVINCE"
                                                                             titleName="Province"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_PROVINCE'
                                                                             maxlength='60' />
                                                                     </div>
@@ -513,11 +552,13 @@
                                                                         <livewire:text-input name="MEMBER_COUNTRY"
                                                                             titleName="Country"
                                                                             wire:model='MEMBER_COUNTRY'
+                                                                            isDisabled="{{ $modify }}"
                                                                             maxlength='60' />
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <livewire:text-input name="MEMBER_ZIP_CODE"
                                                                             titleName="Zip Code"
+                                                                            isDisabled="{{ $modify }}"
                                                                             wire:model='MEMBER_ZIP_CODE'
                                                                             maxlength='10' />
                                                                     </div>
@@ -531,18 +572,21 @@
                                                                         <livewire:text-input name="MEMBER_TEL_NO"
                                                                             titleName="Tel No."
                                                                             wire:model='MEMBER_TEL_NO'
+                                                                            isDisabled="{{ $modify }}"
                                                                             maxlength='20' />
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <livewire:text-input name="MEMBER_MOBILE"
                                                                             titleName="Mobile No."
                                                                             wire:model='MEMBER_MOBILE'
+                                                                            isDisabled="{{ $modify }}"
                                                                             maxlength='20' />
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <livewire:text-input name="MEMBER_EMAIL"
                                                                             titleName="Email Address"
                                                                             wire:model='MEMBER_EMAIL'
+                                                                            isDisabled="{{ $modify }}"
                                                                             maxlength='20' />
                                                                     </div>
                                                                 </div>
@@ -554,6 +598,7 @@
 
                                                                 <livewire:custom-check-box name="IS_REPRESENTATIVE"
                                                                     titleName="Is Representative?"
+                                                                    isDisabled="{{ $modify }}"
                                                                     wire:model.live='IS_REPRESENTATIVE' />
                                                             </div>
                                                         @endif
@@ -567,17 +612,20 @@
                                                                     <livewire:text-input name="PEN"
                                                                         titleName="PhilHealth Employer Number (PEN):"
                                                                         wire:model='PEN' :isDisabled='false'
+                                                                        isDisabled="{{ $modify }}"
                                                                         maxlength='12' />
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <livewire:text-input name="PEN_CONTACT"
                                                                         titleName="Contact No."
+                                                                        isDisabled="{{ $modify }}"
                                                                         wire:model='PEN_CONTACT' maxlength='20' />
                                                                 </div>
 
                                                                 <div class="col-md-8">
                                                                     <livewire:text-input name="COMPANY_NAME"
                                                                         titleName="Business Name"
+                                                                        isDisabled="{{ $modify }}"
                                                                         wire:model='COMPANY_NAME' maxlength='100' />
                                                                 </div>
                                                             </div>
@@ -595,11 +643,13 @@
                                                         <div class="col-md-6">
                                                             <livewire:text-input name="FINAL_DIAGNOSIS"
                                                                 titleName="Final Diagnosis"
+                                                                isDisabled="{{ $modify }}"
                                                                 wire:model='FINAL_DIAGNOSIS' maxlength='60' />
                                                         </div>
                                                         <div class="col-md-6">
                                                             <livewire:text-input name="OTHER_DIAGNOSIS"
                                                                 titleName="Other Diagnosis"
+                                                                isDisabled="{{ $modify }}"
                                                                 wire:model='OTHER_DIAGNOSIS' maxlength='60' />
                                                         </div>
                                                     </div>
@@ -636,7 +686,7 @@
                                                 aria-labelledby="custom-content-below-assistance-info-tab">
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @livewire('Patient.AssistanceRecord', ['CONTACT_ID' => $ID,'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                    @livewire('Patient.AssistanceRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
 
                                                 </div>
                                             </div>
@@ -647,7 +697,7 @@
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
 
-                                                    @livewire('Patient.TreatmentRecord', ['CONTACT_ID' => $ID,'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                    @livewire('Patient.TreatmentRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade @if ($selectTab == 'philhealth') show active @endif"
@@ -655,7 +705,7 @@
                                                 aria-labelledby="custom-content-below-philhealth-info-tab">
                                                 <div class="container-fluid"
                                                     @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @livewire('Patient.PhilhealthRecord', ['CONTACT_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID,'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                    @livewire('Patient.PhilhealthRecord', ['CONTACT_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
                                                 </div>
                                             </div>
                                         </div>
