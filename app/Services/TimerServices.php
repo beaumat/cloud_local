@@ -151,7 +151,6 @@ class TimerServices
                 }
 
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 1); //PRESENT
-
                 if ($POST_WEIGHT == 0 || $POST_BLOOD_PRESSURE == 0 || $POST_BLOOD_PRESSURE2 == 0 || $POST_HEART_RATE == 0 || $POST_O2_SATURATION == 0 || empty($TIME_START) == true ||  empty($TIME_END) == true) {
                     if ($IS_INCOMPLETE == true || $IS_PF == true) {
                         $this->hemoServices->StatusUpdate($ID, 2); // POSTED

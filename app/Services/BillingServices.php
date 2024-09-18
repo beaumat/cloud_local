@@ -329,7 +329,10 @@ class BillingServices
     }
     public function ExpenseGet(int $ID, $BILL_ID)
     {
-        $data =  BillExpenses::where('ID', $ID)->where('BILL_ID', $BILL_ID)->first();
+        $data =  BillExpenses::where('ID', '=', $ID)
+            ->where('BILL_ID', '=', $BILL_ID)
+            ->first();
+            
         if ($data) {
             return $data;
         }
@@ -642,8 +645,6 @@ class BillingServices
             ->get();
 
         return $result;
-
-
     }
     public function getBillExpenseJournal(int $BILL_ID)
     {

@@ -57,8 +57,13 @@ class PhilHealthForm extends Component
         $this->AR_DATE = $ar['AR_DATE'];
         $this->AR_NO = $ar['AR_NO'];
     }
-    public function boot(PhilHealthServices $philHealthServices, HemoServices $hemoServices, ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices)
-    {
+    public function boot(
+        PhilHealthServices $philHealthServices,
+        HemoServices $hemoServices,
+        ContactServices $contactServices,
+        LocationServices $locationServices,
+        UserServices $userServices
+    ) {
         $this->philHealthServices = $philHealthServices;
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
@@ -170,23 +175,23 @@ class PhilHealthForm extends Component
 
         $this->validate(
             [
-                'CONTACT_ID' => 'required|not_in:0',
-                'DATE' => 'required',
-                'LOCATION_ID' => 'required',
-                'DATE_ADMITTED' => 'required',
-                'TIME_ADMITTED' => 'required',
-                'DATE_DISCHARGED' => 'required',
-                'TIME_DISCHARGED' => 'required'
+                'CONTACT_ID'        => 'required|not_in:0',
+                'DATE'              => 'required',
+                'LOCATION_ID'       => 'required',
+                'DATE_ADMITTED'     => 'required',
+                'TIME_ADMITTED'     => 'required',
+                'DATE_DISCHARGED'   => 'required',
+                'TIME_DISCHARGED'   => 'required'
             ],
             [],
             [
-                'CONTACT_ID' => 'Patient',
-                'DATE' => 'Date',
-                'LOCATION_ID' => 'Location',
-                'DATE_ADMITTED' => 'Date Admitted',
-                'TIME_ADMITTED' => 'Time Admiited',
-                'DATE_DISCHARGED' => 'Date Discharged',
-                'TIME_DISCHARGED' => 'Time Discharged'
+                'CONTACT_ID'        => 'Patient',
+                'DATE'              => 'Date',
+                'LOCATION_ID'       => 'Location',
+                'DATE_ADMITTED'     => 'Date Admitted',
+                'TIME_ADMITTED'     => 'Time Admiited',
+                'DATE_DISCHARGED'   => 'Date Discharged',
+                'TIME_DISCHARGED'   => 'Time Discharged'
             ]
         );
 
@@ -212,7 +217,6 @@ class PhilHealthForm extends Component
             $this->Modify = false;
 
             return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
         } else {
 
             $this->philHealthServices->preUpdate(
@@ -231,7 +235,7 @@ class PhilHealthForm extends Component
                 $this->SECOND_CASE_RATE
             );
 
-    
+
             $this->philHealthServices->DefaultEntry($this->ID);
             $this->Modify = false;
             return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully updated');

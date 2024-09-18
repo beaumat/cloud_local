@@ -47,7 +47,7 @@ class BillingForm extends Component
     public float $INPUT_TAX_AMOUNT;
     public float $AMOUNT;
     public float $BALANCE_DUE;
-    public bool $useAccount = false;
+    public bool $useAccount = true;
 
     public $vendorList = [];
     public $locationList = [];

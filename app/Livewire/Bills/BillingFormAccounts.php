@@ -234,9 +234,8 @@ class BillingFormAccounts extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function deleteExpenses(int $id)
+    public function deleteExpenses(int $Id)
     {
-
         DB::beginTransaction();
         try {
             if ($this->STATUS == 16) {
@@ -244,13 +243,32 @@ class BillingFormAccounts extends Component
                     $this->billingServices->object_type_map_bill_expenses,
                     $this->BILL_ID
                 );
+
                 if ($JOURNAL_NO  ==  0) {
                     session()->flash('message', 'journal not found');
                     return;
                 }
+
+                $billData = $this->billingServices->get($this->BILL_ID);
+                if ($billData) {
+                    $billDataExpenses = $this->billingServices->ExpenseGet($Id, $this->BILL_ID,);
+                    if ($billDataExpenses) {
+                        // ACCOUNT_ID
+                        $this->accountJournalServices->DeleteJournal(
+                            $billDataExpenses->ACCOUNT_ID,
+                            $billData->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $billDataExpenses->ITEM_ID,
+                            $Id,
+                            $this->billingServices->object_type_map_bill_expenses,
+                            $billData->DATE,
+                            $billDataExpenses->AMOUNT > 0 ? 0 : 1,
+                        );
+                    }
+                }
             }
 
-            $this->billingServices->ExpenseDelete($id, $this->BILL_ID);
+            $this->billingServices->ExpenseDelete($Id, $this->BILL_ID);
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
             DB::commit();
             $this->dispatch('update-amount', result: $getResult);
