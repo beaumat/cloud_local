@@ -6,6 +6,7 @@ use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
+use Hamcrest\Type\IsNumeric;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -21,7 +22,7 @@ class PrintContent extends Component
     public int $AGE = 0;
     private $hemoServices;
     private $contactServices;
-
+    public int $ADD_NO_TREATMENT = 0;
     public int $MACHINE_NO;
     public string $EMPLOYEE_NAME;
     public string $PRE_WEIGHT;
@@ -166,8 +167,12 @@ class PrintContent extends Component
 
     private $patientDoctorServices;
     private $locationServices;
-    public function boot(HemoServices $hemoServices, ContactServices $contactServices, PatientDoctorServices $patientDoctorServices, LocationServices $locationServices)
-    {
+    public function boot(
+        HemoServices $hemoServices,
+        ContactServices $contactServices,
+        PatientDoctorServices $patientDoctorServices,
+        LocationServices $locationServices
+    ) {
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
         $this->patientDoctorServices = $patientDoctorServices;
@@ -350,9 +355,6 @@ class PrintContent extends Component
             $this->SO_COUNT = 0;
             $this->SO_PARTS = str_split($this->SO_DETAILS, 35);
             $this->getPreviousTreatment();
-            $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
-
-
 
 
             $dataDoc = $this->patientDoctorServices->GetList($this->CUSTOMER_ID);
@@ -363,7 +365,11 @@ class PrintContent extends Component
             $dataPatient = $this->contactServices->get($this->CUSTOMER_ID, 3);
             if ($dataPatient) {
                 $this->DIAGNOSIS = $dataPatient->FINAL_DIAGNOSIS ?? '';
+                $this->ADD_NO_TREATMENT  = is_numeric($dataPatient->CUSTOM_FIELD2) ? $dataPatient->CUSTOM_FIELD2 : 0;
             }
+
+            $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE) +  $this->ADD_NO_TREATMENT;
+
 
             $locData =  $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {

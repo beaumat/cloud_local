@@ -224,7 +224,7 @@ class ContactServices
         }
 
         $ID = $this->objectService->ObjectNextIdByName('Contact');
-
+           
         Contacts::create([
             "ID"                        => $ID,
             "TYPE"                      => $TYPE,

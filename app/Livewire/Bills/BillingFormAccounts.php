@@ -251,6 +251,7 @@ class BillingFormAccounts extends Component
                 }
 
                 $billData = $this->billingServices->get($this->BILL_ID);
+             
                 if ($billData) {
                     $billDataExpenses = $this->billingServices->ExpenseGet($Id, $this->BILL_ID,);
                     if ($billDataExpenses) {
@@ -268,7 +269,6 @@ class BillingFormAccounts extends Component
                     }
                 }
             }
-
             $this->billingServices->ExpenseDelete($Id, $this->BILL_ID);
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
             DB::commit();

@@ -123,6 +123,7 @@ class PatientForm extends Component
     public string $PIN_DEPENDENT;
     public bool $IS_DEPENDENT;
     public float $HEIGHT;
+    public string $CUSTOM_FIELD2;
     public function updateddateofbirth()
     {
         $this->age = $this->contactServices->calculateUserAge($this->DATE_OF_BIRTH);
@@ -190,6 +191,7 @@ class PatientForm extends Component
         if (is_numeric($id)) {
             $contact = $this->contactServices->get($id, $this->TYPE);
             if ($contact) {
+
                 $this->ID = $contact->ID;
                 $this->NAME = $contact->NAME;
                 $this->COMPANY_NAME = $contact->COMPANY_NAME ? $contact->COMPANY_NAME : '';
@@ -224,7 +226,6 @@ class PatientForm extends Component
                 $this->DATE_OF_BIRTH = $contact->DATE_OF_BIRTH ? $contact->DATE_OF_BIRTH : '';
                 $this->NICKNAME = $contact->NICKNAME ? $contact->NICKNAME : '';
                 $this->HIRE_DATE = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
-
 
                 $this->LOCATION_ID = $contact->LOCATION_ID ?? 0;
                 $this->PATIENT_TYPE_ID = $contact->PATIENT_TYPE_ID ?? 0;
@@ -280,7 +281,7 @@ class PatientForm extends Component
 
                 $this->PIN_DEPENDENT = $contact->PIN_DEPENDENT ?? '';
                 $this->IS_DEPENDENT = $contact->IS_DEPENDENT ?? false;
-
+                $this->CUSTOM_FIELD2 = $contact->CUSTOM_FIELD2 ?? '';
                 $this->HEIGHT = $contact->HEIGHT ?? 0;
                 $this->updateddateofbirth();
                 $this->updatedMEMBERBIRTHDATE();
@@ -371,7 +372,7 @@ class PatientForm extends Component
         $this->MEMBER_IS_CHILD = false;
         $this->MEMBER_IS_PARENT = false;
         $this->MEMBER_IS_SPOUSE = false;
-
+        $this->CUSTOM_FIELD2 = '';
         $this->PEN_CONTACT = '';
         $this->FIRST_CASE_RATE = '90935';
         $this->SECOND_CASE_RATE = '';
@@ -559,7 +560,7 @@ class PatientForm extends Component
                     $this->NICKNAME,
                     $this->HIRE_DATE,
                     $this->LOCATION_ID,
-                    null
+                    $this->CUSTOM_FIELD2
                 );
 
                 $this->FollowUpUpdate();
@@ -603,7 +604,7 @@ class PatientForm extends Component
                     $this->NICKNAME,
                     $this->HIRE_DATE,
                     null,
-                    null
+                    $this->CUSTOM_FIELD2
                 );
 
                 $this->FollowUpUpdate();

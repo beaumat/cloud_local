@@ -650,12 +650,19 @@
                                                                 isDisabled="{{ $modify }}"
                                                                 wire:model='FINAL_DIAGNOSIS' maxlength='60' />
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <livewire:text-input name="OTHER_DIAGNOSIS"
                                                                 titleName="Other Diagnosis"
                                                                 isDisabled="{{ $modify }}"
                                                                 wire:model='OTHER_DIAGNOSIS' maxlength='60' />
                                                         </div>
+                                                        <div class="col-md-2">
+                                                        {{-- CUSTOM_FIELD2 --}}
+                                                          <livewire:number-input name="CUSTOM_FIELD2"
+                                                                titleName="Additional No. of Treatment"
+                                                                isDisabled="{{ $modify }}"
+                                                                wire:model='CUSTOM_FIELD2' />
+                                                        </div>  
                                                     </div>
                                                 </div>
 
