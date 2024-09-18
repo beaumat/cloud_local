@@ -35,6 +35,17 @@ class ContactServices
 
         return $result;
     }
+    public function IsNotPatient(int $ID): bool
+    {
+        $result = contacts::where('ID', '=', $ID)
+            ->where('TYPE', '=', 3)
+            ->first();
+        if ($result) {
+            return false;
+        }
+
+        return   true;
+    }
     public function pinLogin(string $PIN): int
     {
         $data =  Contacts::where('PIN', '=', $PIN)
@@ -70,6 +81,19 @@ class ContactServices
                 ->get();
         }
         return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();
+    }
+    public function getCustoPatientList(): object
+    {
+        $result = Contacts::query()
+            ->select([
+                'ID',
+                DB::raw("PRINT_NAME_AS as NAME")
+            ])->whereIn('TYPE', [1, 3])
+            ->where('INACTIVE', '=', '0')
+            ->orderBy('LAST_NAME', 'asc')
+            ->get();
+
+        return $result;
     }
     public function getPatientList(int $LOCATION_ID): object
     {

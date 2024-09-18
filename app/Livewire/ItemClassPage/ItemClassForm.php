@@ -18,20 +18,16 @@ class ItemClassForm extends Component
     public function mount($id = null)
     {
         if (is_numeric($id)) {
-
             $itemClass = ItemClass::where('ID', $id)->first();
-
             if ($itemClass) {
                 $this->ID = $itemClass->ID;
                 $this->CODE = $itemClass->CODE;
                 $this->DESCRIPTION = $itemClass->DESCRIPTION;
                 return;
             }
-
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('maintenanceinventoryitem_class')->with('error', $errorMessage);
         }
-
         $this->ID = 0;
         $this->CODE = '';
         $this->DESCRIPTION = '';

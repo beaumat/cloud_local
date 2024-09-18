@@ -27,6 +27,7 @@ class InvoiceForm extends Component
 {
 
     public int $ID;
+    public bool $UNPOSTED = true;
     public int $CUSTOMER_ID;
     public int $SALES_REP_ID;
     public string $DATE;
@@ -68,7 +69,6 @@ class InvoiceForm extends Component
     private $documentStatusServices;
     private $systemSettingServices;
     private $accountServices;
-    private $scheduleServices;
     private $invoiceServices;
     private $itemInventoryServices;
     private $documentTypeServices;
@@ -114,7 +114,7 @@ class InvoiceForm extends Component
     }
     public function LoadDropdown()
     {
-        $this->contactList = $this->contactServices->getList(1);
+        $this->contactList = $this->contactServices->getCustoPatientList();
         $this->locationList = $this->locationServices->getList();
         $this->shipViaList = $this->shipViaServices->getList();
         $this->paymentTermList = $this->paymentTermServices->getList();
@@ -204,7 +204,6 @@ class InvoiceForm extends Component
         $this->TAXABLE_AMOUNT = 0;
         $this->NONTAXABLE_AMOUNT = 0;
         $this->STATUS_DESCRIPTION = "";
-
         $this->PO_NUMBER = '';
         $this->DISCOUNT_DATE = null;
         $this->DISCOUNT_PCT = 0;
@@ -363,14 +362,27 @@ class InvoiceForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-
+    public function OpenJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+        }
+    }
     private function ItemInventory(): bool
     {
         try {
-            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Invoice');
+            $SOURCE_REF_TYPE = (int) $this->invoiceServices->document_type_id;
             $data = $this->invoiceServices->ItemInventory($this->ID);
             if ($data) {
-                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+                $this->itemInventoryServices->InventoryExecute(
+                    $data,
+                    $this->LOCATION_ID,
+                    $SOURCE_REF_TYPE,
+                    $this->DATE,
+                    false
+                );
             }
             return true;
         } catch (\Exception $e) {
@@ -383,21 +395,34 @@ class InvoiceForm extends Component
     {
         try {
 
-            $invoice = (int) $this->objectServices->ObjectTypeID('INVOICE');
-            $invoiceItems = (int) $this->objectServices->ObjectTypeID('INVOICE_ITEMS');
+            $invoice = (int) $this->invoiceServices->object_type_invoice;
+            $invoiceItems = (int) $this->invoiceServices->object_type_invoice_item;
 
-            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($invoice, $this->ID) + 1;
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $this->ID);
+            if ($JOURNAL_NO  ==  0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->invoiceServices->object_type_invoice, $this->ID) + 1;
+            }
+
             //Main
             $invoiceData = $this->invoiceServices->getInvoiceJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceData, $this->LOCATION_ID, $invoice, $this->DATE);
             //Tax
             $invoiceDataTax = $this->invoiceServices->getInvoiceTaxJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceDataTax, $this->LOCATION_ID, $invoice, $this->DATE);
-
-            //Item
+           
+            //Income
             $invoiceItemData = $this->invoiceServices->getInvoiceItemJournalIncome($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceItemData, $this->LOCATION_ID, $invoiceItems, $this->DATE);
 
+            //cogs
+            $invoiceItemCogs = $this->invoiceServices->getInvoiceItemJournalCogs($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceItemCogs, $this->LOCATION_ID, $invoiceItems, $this->DATE);
+
+            //Income
+            $invoiceItemAsset = $this->invoiceServices->getInvoiceItemJournalAsset($this->ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceItemAsset, $this->LOCATION_ID, $invoiceItems, $this->DATE);
+
+            //Checking if balance
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
             $debit_sum = (float) $data['DEBIT'];
@@ -423,10 +448,15 @@ class InvoiceForm extends Component
                 session()->flash('error', 'Item not found.');
                 return;
             }
+
+
             DB::beginTransaction();
-            if (!$this->ItemInventory()) {
-                DB::rollBack();
-                return;
+
+            if ($this->contactServices->IsNotPatient($this->CUSTOMER_ID)) {
+                if (!$this->ItemInventory()) {
+                    DB::rollBack();
+                    return;
+                }
             }
 
             if (!$this->AccountJournal()) {
@@ -436,16 +466,23 @@ class InvoiceForm extends Component
 
             $this->invoiceServices->StatusUpdate($this->ID, 15);
             DB::commit();
-            $data = $this->invoiceServices->get($this->ID);
-            if ($data) {
-                $this->getInfo($data);
-                $this->Modify = false;
-                return;
-            }
-            session()->flash('message', 'Successfully posted');
+            Redirect::route('customersinvoice_edit', $this->ID)->with('message', 'Successfully posted');
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function getUnposted()
+    {
+        try {
+            DB::beginTransaction();
+            $this->invoiceServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            Redirect::route('customersinvoice_edit', $this->ID)->with('message', 'Successfully posted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
     }

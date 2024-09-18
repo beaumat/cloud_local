@@ -28,59 +28,32 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            @if ($Modify)
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
-                                                    :options="$contactList" :zero="true" :isDisabled=false
-                                                    wire:model='CUSTOMER_ID' />
-                                            @else
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
-                                                    :options="$contactList" :zero="true" :isDisabled=true
-                                                    wire:model='CUSTOMER_ID' />
-                                            @endif
+                                            <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                :options="$contactList" :zero="true" isDisabled="{{ !$Modify }}"
+                                                wire:model='CUSTOMER_ID' />
                                             <div class="row">
                                                 <div class="col-md-6 class">
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID"
-                                                            :isDisabled=false titleName="Payment Terms"
-                                                            :options="$paymentTermList" :zero="false"
-                                                            wire:model.live='PAYMENT_TERMS_ID' />
-                                                    @else
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID" :isDisabled=true
-                                                            titleName="Payment Terms" :options="$paymentTermList"
-                                                            :zero="false" wire:model.live='PAYMENT_TERMS_ID' />
-                                                    @endif
+                                                    <livewire:select-option name="PAYMENT_TERMS_ID"
+                                                        isDisabled="{{ !$Modify }}" titleName="Payment Terms"
+                                                        :options="$paymentTermList" :zero="false"
+                                                        wire:model.live='PAYMENT_TERMS_ID' />
                                                 </div>
                                                 <div class="col-md-6">
-                                                    @if ($Modify)
-                                                        <livewire:date-input name="DUE_DATE" :isDisabled=false
-                                                            titleName="Due Date" wire:model='DUE_DATE' />
-                                                    @else
-                                                        <livewire:date-input name="DUE_DATE" :isDisabled=true
-                                                            titleName="Due Date" wire:model='DUE_DATE' />
-                                                    @endif
+                                                    <livewire:date-input name="DUE_DATE"
+                                                        isDisabled="{{ !$Modify }}" titleName="Due Date"
+                                                        wire:model='DUE_DATE' />
+
                                                 </div>
                                                 <div class="col-md-6">
-                                                    @if ($Modify)
-                                                        <livewire:date-input name="DISCOUNT_DATE" :isDisabled=false
-                                                            titleName="Discount Date" wire:model='DISCOUNT_DATE' />
-                                                    @else
-                                                        <livewire:date-input name="DISCOUNT_DATE" :isDisabled=true
-                                                            titleName="Discount Date" wire:model='DISCOUNT_DATE' />
-                                                    @endif
+                                                    <livewire:date-input name="DISCOUNT_DATE"
+                                                        isDisabled="{{ !$Modify }}" titleName="Discount Date"
+                                                        wire:model='DISCOUNT_DATE' />
                                                 </div>
-
                                                 <div class="col-md-6">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="PO_NUMBER" titleName="PO Number"
-                                                            :isDisabled=false wire:model='PO_NUMBER'
-                                                            :vertical="false" />
-                                                    @else
-                                                        <livewire:text-input name="PO_NUMBER" titleName="PO Number"
-                                                            :isDisabled=true wire:model='PO_NUMBER' :vertical="false" />
-                                                    @endif
+                                                    <livewire:text-input name="PO_NUMBER" titleName="PO Number"
+                                                        isDisabled="{{ !$Modify }}" wire:model='PO_NUMBER'
+                                                        :vertical="false" />
                                                 </div>
-
-
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -90,45 +63,26 @@
                                                         wire:model.live='DATE' :isDisabled="true" />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="Code" titleName="Reference No."
-                                                            :isDisabled=false wire:model='CODE' />
-                                                    @else
-                                                        <livewire:text-input name="Code" titleName="Reference No."
-                                                            :isDisabled=true wire:model='CODE' />
-                                                    @endif
-
+                                                    <livewire:text-input name="Code" titleName="Reference No."
+                                                        isDisabled="{{ !$Modify }}" wire:model='CODE' />
                                                 </div>
-                                                <div class="col-md-4" @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @if ($Modify && $AMOUNT == 0)
-                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                            :options="$locationList" :zero="false" :isDisabled=false
-                                                            wire:model.iive='LOCATION_ID' />
-                                                    @else
-                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                            :options="$locationList" :zero="false" :isDisabled=true
-                                                            wire:model.live='LOCATION_ID' />
-                                                    @endif
+                                                <div class="col-md-4"
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                    <livewire:select-option name="LOCATION_ID" titleName="Location"
+                                                        :options="$locationList" :zero="false"
+                                                        isDisabled="{{ !$Modify && $AMOUNT == 0 ? false : true }}"
+                                                        wire:model.iive='LOCATION_ID' />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="OUTPUT_TAX_ID" titleName="Tax"
-                                                            :options="$taxList" :zero="false" :isDisabled=false
-                                                            wire:model='OUTPUT_TAX_ID' />
-                                                    @else
-                                                        <livewire:select-option name="OUTPUT_TAX_ID" titleName="Tax"
-                                                            :options="$taxList" :zero="false" :isDisabled=true
-                                                            wire:model='OUTPUT_TAX_ID' />
-                                                    @endif
+                                                    <livewire:select-option name="OUTPUT_TAX_ID" titleName="Tax"
+                                                        :options="$taxList" :zero="false"
+                                                        isDisabled="{{ !$Modify }}" wire:model='OUTPUT_TAX_ID' />
                                                 </div>
                                                 <div class="col-md-8">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=false wire:model='NOTES' :vertical="false" />
-                                                    @else
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=true wire:model='NOTES' :vertical="false" />
-                                                    @endif
+                                                    <livewire:text-input name="NOTES" titleName="Notes"
+                                                        isDisabled="{{ !$Modify }}" wire:model='NOTES'
+                                                        :vertical="false" />
+
                                                 </div>
                                             </div>
                                         </div>
@@ -143,7 +97,6 @@
                                                 <button type="submit" class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
-
                                                 @if ($ID > 0)
                                                     <button type="button" wire:click='updateCancel'
                                                         class="btn btn-sm btn-danger"><i class="fa fa-ban"
@@ -162,9 +115,36 @@
                                                 </button>
                                             @endif
                                         @endif
+                                        @if ($STATUS == 15 && $UNPOSTED == true)
+                                            <button type="button" wire:click='getUnposted()'
+                                                class="btn btn-sm btn-secondary"
+                                                wire:confirm="Are you sure you want to unpost?">
+                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
+                                            </button>
+                                        @endif
+
+                                        @if ($STATUS == 16)
+                                            <button type="button" wire:click='getModify()'
+                                                class="btn btn-sm btn-info"
+                                                @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                            </button>
+                                            <button type="button" wire:click='getPosted()'
+                                                class="btn btn-sm btn-warning"
+                                                wire:confirm="Are you sure you want to post?">
+                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                            </button>
+                                        @endif
+
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0 && $STATUS > 0)
+                                        @if ($STATUS == 15)
+                                            <button type="button" wire:click='OpenJournal()'
+                                                class="btn btn-sm btn-warning">
+                                                <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                            </button>
+
+                                            </button>
                                             <a id="new" title="Create"
                                                 href="{{ route('customersinvoice_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
@@ -187,14 +167,12 @@
                         <div class="card card-primary card-outline card-outline-tabs">
                             <div class="card-header p-0 border-bottom-0">
                                 <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
-
                                     <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'item') active @endif"
                                             id="custom-tabs-four-item-tab" wire:click="SelectTab('item')"
                                             data-toggle="pill" href="#custom-tabs-four-item" role="tab"
                                             aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
                                     </li>
-
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -210,8 +188,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
                             <div class="card-footer">
@@ -219,14 +195,10 @@
                                     <div class="col-md-4 text-left">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                @livewire('Invoice.SalesOrderListPromp', ['CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'INVOICE_ID' => $ID])
                                             </div>
                                             <div class="col-md-4">
-                                                @livewire('Invoice.PaymentListPromp', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'AMOUNT' => $AMOUNT])
                                             </div>
                                         </div>
-
-
                                     </div>
                                     <div class="col-md-8">
                                         <div class="row">
@@ -244,7 +216,6 @@
                                                 <label class="text-sm">Payment:</label>
                                                 <label
                                                     class="text-success text-lg">{{ number_format($AMOUNT - $BALANCE_DUE, 2) }}</label>
-
                                             </div>
                                             <div class="col-md-3 text-right">
                                                 <label class="text-sm">Balance:</label>
@@ -261,4 +232,5 @@
             </div>
         </section>
     @endif
+    @livewire('AccountJournal.AccountJournalModal')
 </div>

@@ -10,7 +10,7 @@
                 <th class="col-1">Rate</th>
                 <th class="col-1">Amount</th>
                 <th class="text-center">Tax</th>
-                @if ($STATUS == $openStatus)
+                @if ($STATUS == $openStatus || $STATUS == 16)
                     <th class="text-center col-1">Action</th>
                 @endif
             </tr>
@@ -68,11 +68,11 @@
                             @endif
                         @endif
                     </td>
-                    @if ($STATUS == $openStatus)
+                    @if ($STATUS == $openStatus || $STATUS == 16)
                         <td class="text-center">
                             @if ($editItemId === $list->ID)
                                 <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
-                                    class="text-success btn btn-sm btn-link"> 
+                                    class="text-success btn btn-sm btn-link">
                                     <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>
                                 <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
@@ -82,13 +82,12 @@
                             @else
                                 <button title="Edit" id="editbtn"
                                     wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
-                                    class="text-info btn btn-sm btn-link">
+                                    class=" btn btn-xs btn-info">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
                                 <button title="Delete" id="deletebtn" wire:click='deleteItem({{ $list->ID }})'
-                                    wire:confirm="Are you sure you want to delete this?"
-                                    class="text-danger btn btn-sm btn-link"> <i class="fas fa-times"
-                                        aria-hidden="true"></i> </button>
+                                    wire:confirm="Are you sure you want to delete this?" class=" btn btn-xs btn-danger">
+                                    <i class="fas fa-trash" aria-hidden="true"></i> </button>
                             @endif
                         </td>
                     @endif
@@ -96,7 +95,7 @@
             @endforeach
 
             {{-- INSERT FORM --}}
-            @if ($STATUS == $openStatus)
+            @if ($STATUS == $openStatus || $STATUS == 16)
                 <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
                     <tr>
                         <td class="text-md">
@@ -104,7 +103,7 @@
                                 @if ($codeBase)
                                     <livewire:select-option name="ITEM_ID1" titleName="Item Code" :options="$itemCodeList"
                                         :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
+                                        isDisabled="{{ false }}" :withLabel="false" />
                                 @else
                                     <label class="mt-2 text-xs"> {{ $ITEM_CODE }}</label>
                                 @endif
@@ -112,7 +111,7 @@
                                 @if ($codeBase)
                                     <livewire:select-option name="ITEM_ID2" titleName="Item Code" :options="$itemCodeList"
                                         :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
+                                        isDisabled="{{ false }}" :withLabel="false" />
                                 @else
                                     <label class="mt-2 text-xs"> {{ $ITEM_CODE }}</label>
                                 @endif
@@ -123,7 +122,7 @@
                                 @if (!$codeBase)
                                     <livewire:select-option name="ITEM_ID3" titleName="Item Description"
                                         :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false"
-                                        :withLabel="false" />
+                                        isDisabled="{{ false }}" :withLabel="false" />
                                 @else
                                     <label class="mt-2 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
                                 @endif
@@ -131,15 +130,13 @@
                                 @if (!$codeBase)
                                     <livewire:select-option name="ITEM_ID4" titleName="Item Description"
                                         :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID'
-                                        :vertical="false" :withLabel="false" />
+                                        :vertical="false" :withLabel="false" isDisabled="{{ false }}" />
                                 @else
                                     <label class="mt-2 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
                                 @endif
                             @endif
                         </td>
-
                         <td>
-
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
                                 name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
                                 @if ($ITEM_ID == 0) readonly @endif />
@@ -154,7 +151,6 @@
                             </select>
                         </td>
                         <td>
-
                             <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
                                 name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                         </td>
@@ -186,7 +182,8 @@
         </tbody>
 
     </table>
-    @if ($STATUS == $openStatus)
-        <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase' />
+@if ($STATUS == $openStatus || $STATUS == 16)
+        <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase'
+            isDisabled="{{ false }}" />
     @endif
 </div>

@@ -28,6 +28,7 @@ class BillingForm extends Component
     public int $openStatus = 0;
     public int $ID;
     public int $VENDOR_ID;
+    public bool $UNPOSTED = true;
     public string $DATE;
     public string $CODE;
     public int $LOCATION_ID;
@@ -140,15 +141,12 @@ class BillingForm extends Component
 
     public function mount($id = null)
     {
-
-
         if (is_numeric($id)) {
             try {
                 $Bill = $this->billingServices->get($id);
                 if ($Bill) {
                     $this->LoadDropdown();
                     $this->getInfo($Bill);
-
                     $this->Modify = false;
                     return;
                 }
@@ -303,8 +301,6 @@ class BillingForm extends Component
             $this->BALANCE_DUE = $list['AMOUNT'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
         }
-
-
     }
     public function updateCancel()
     {
@@ -339,24 +335,28 @@ class BillingForm extends Component
     }
     public function OpenJournal()
     {
-
         $bills = (int) $this->objectServices->ObjectTypeID('BILL');
         $JOURNAL_NO = $this->accountJournalServices->getRecord($bills, $this->ID);
         if ($JOURNAL_NO > 0) {
             $data = ['JOURNAL_NO' => $JOURNAL_NO];
             $this->dispatch('open-journal', result: $data);
         }
-
     }
     private function AccountJournal(): bool
     {
         try {
 
-            $bills = (int) $this->objectServices->ObjectTypeID('BILL');
-            $billItems = (int) $this->objectServices->ObjectTypeID('BILL_ITEMS');
-            $billExpenses = (int) $this->objectServices->ObjectTypeID('BILL_EXPENSES');
+            $bills = (int) $this->billingServices->object_type_map_bill;
+            $billItems = (int) $this->billingServices->object_type_map_bill_item;
+            $billExpenses = (int) $this->billingServices->object_type_map_bill_expenses;
 
-            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($bills, $this->ID) + 1;
+
+
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
+            if ($JOURNAL_NO  ==  0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->billingServices->object_type_map_bill, $this->ID) + 1;
+            }
+
 
             //Item
             $billCreditItemData = $this->billingServices->getBillItemJournal($this->ID);
@@ -427,7 +427,19 @@ class BillingForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
+    public function getUnposted()
+    {
+        try {
+            DB::beginTransaction();
+            $this->billingServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            Redirect::route('vendorsbills_edit', $this->ID)->with('message', 'Successfully unposted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function render()
     {
         return view('livewire.bills.billing-form');

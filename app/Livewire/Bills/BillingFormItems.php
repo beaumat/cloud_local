@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Bills;
 
+use App\Services\AccountJournalServices;
 use App\Services\BillingServices;
 use App\Services\ComputeServices;
 use App\Services\DocumentTypeServices;
@@ -68,14 +69,24 @@ class BillingFormItems extends Component
     private $unitOfMeasureServices;
     private $taxServices;
     private $itemServices;
-
-    public function boot(BillingServices $billingServices, ComputeServices $computeServices, UnitOfMeasureServices $unitOfMeasureServices, TaxServices $taxServices, ItemServices $itemServices)
-    {
+    private $accountJournalServices;
+    private $itemInventoryServices;
+    public function boot(
+        BillingServices $billingServices,
+        ComputeServices $computeServices,
+        UnitOfMeasureServices $unitOfMeasureServices,
+        TaxServices $taxServices,
+        ItemServices $itemServices,
+        AccountJournalServices $accountJournalServices,
+        ItemInventoryServices $itemInventoryServices
+    ) {
         $this->billingServices = $billingServices;
         $this->computeServices = $computeServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->taxServices = $taxServices;
         $this->itemServices = $itemServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->itemInventoryServices = $itemInventoryServices;
     }
     public function updatedcodeBase()
     {
@@ -302,14 +313,55 @@ class BillingFormItems extends Component
     {
         $this->editItemId = null;
     }
-    public function deleteItem(int $Id, int $ItemId)
+
+
+    public function deleteItem(int $Id)
     {
 
         DB::beginTransaction();
         try {
             // delete first
-            $Qty = 0;
-            $Cost = 0;
+
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->BILL_ID);
+                if ($JOURNAL_NO  ==  0) {
+                    session()->flash('message', 'journal not found');
+                    return;
+                }
+                $billData = $this->billingServices->get($this->BILL_ID);
+                if ($billData) {
+                    $billDataItem = $this->billingServices->ItemGet($Id, $this->BILL_ID,);
+                    if ($billDataItem) {
+
+                        // Inventory
+                        $this->itemInventoryServices->InventoryModify(
+                            $billDataItem->ITEM_ID,
+                            $billData->LOCATION_ID,
+                            $Id,
+                            $this->billingServices->document_type_id,
+                            $billData->DATE,
+                            0,
+                            0,
+                            0
+                        );
+
+                        // ACCOUNT_ID
+                        $this->accountJournalServices->DeleteJournal(
+                            $billDataItem->ACCOUNT_ID,
+                            $billData->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $billDataItem->ITEM_ID,
+                            $Id,
+                            $this->billingServices->object_type_map_bill_item,
+                            $billData->DATE,
+                            0,
+                        );
+                    }
+                }
+            }
+
+
+
 
             $this->billingServices->ItemDelete($Id, $this->BILL_ID);
             DB::commit();

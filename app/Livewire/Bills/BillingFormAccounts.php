@@ -24,7 +24,7 @@ class BillingFormAccounts extends Component
     public int $LOCATION_ID;
     #[Reactive]
     public string $DATE;
-
+ 
     public int $ID;
     public int $LINE_NO;
     public int $ACCOUNT_ID;
@@ -34,6 +34,7 @@ class BillingFormAccounts extends Component
     public float $TAX_AMOUNT;
     public string $PARTICULARS;
     public int $CLASS_ID;
+    #[Reactive]
     public int $STATUS;
     public int $openStatus = 0;
 

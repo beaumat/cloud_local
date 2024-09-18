@@ -30,10 +30,20 @@ class AccountServices
     }
     public function getAccount(bool $isCode)
     {
+        $strDesc = 'NAME as DESCRIPTION';
         if ($isCode) {
-            return Accounts::query()->select(['ID', 'TAG as CODE'])->where('INACTIVE', '0')->get();
+            $strDesc = 'TAG as CODE';
         }
-        return Accounts::query()->select(['ID', 'NAME as DESCRIPTION'])->where('INACTIVE', '0')->get();
+
+        $result = Accounts::query()
+            ->select([
+                'ID',
+                $strDesc
+            ])
+            ->where('INACTIVE', '=', '0')
+            ->get();
+
+        return $result;
     }
 
     public function Store(string $NAME, int $GROUP_ACCOUNT_ID, int $TYPE, string $BANK_ACCOUNT_NO, bool $INACTIVE, string $TAG, int $LINE_NO): int

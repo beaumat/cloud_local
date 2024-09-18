@@ -12,6 +12,8 @@ class AccountJournalModal extends Component
     public bool $showModal = false;
     public $dataList = [];
     public int $JOURNAL_NO;
+    public  $TOTAL_DEBIT = 0;
+    public  $TOTAL_CREDIT = 0;
     private $accountJournalServices;
     public function boot(AccountJournalServices $accountJournalServices)
     {
@@ -19,13 +21,13 @@ class AccountJournalModal extends Component
     }
     #[On('open-journal')]
     public function openModal($result)
-    {
-
+    {   
+        $this->TOTAL_DEBIT = 0;
+        $this->TOTAL_CREDIT = 0;
         $this->JOURNAL_NO = $result['JOURNAL_NO'];
         $this->showModal = true;
 
         $this->dataList =  $this->accountJournalServices->getJournalList($this->JOURNAL_NO);
-
     }
     public function closeModal()
     {

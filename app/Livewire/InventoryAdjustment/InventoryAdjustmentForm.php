@@ -19,7 +19,9 @@ use Livewire\Component;
 
 #[Title('Inventory Adjustment')]
 class InventoryAdjustmentForm extends Component
-{
+{   
+
+
     public int $openStatus = 0;
     public int $ID;
     public string $DATE;
@@ -32,7 +34,7 @@ class InventoryAdjustmentForm extends Component
     public $adjustmentTypeList = [];
     public bool $Modify;
     public bool $transferReset = false;
-    private $inventoryAdjustmentServices;
+    private   $inventoryAdjustmentServices;
     private $locationServices;
     private $userServices;
     public int $STATUS;
@@ -295,6 +297,15 @@ class InventoryAdjustmentForm extends Component
             $this->getInfo($BA);
         }
         $this->Modify = false;
+    }
+
+    public function OpenJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->inventoryAdjustmentServices->object_type_map_inventory_adjustment, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+        }
     }
 
     #[On('clear-alert')]

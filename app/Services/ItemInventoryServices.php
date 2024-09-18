@@ -403,15 +403,8 @@ class ItemInventoryServices
             }
         }
     }
-
-    public function getDetails(int $ITEM_ID, int $LOCATION_ID)
-    {
-        $result = ItemInventory::query()
-            ->select([
-                'item_inventory.ID',
-                'item_inventory..SOURCE_REF_TYPE',
-                DB::raw('
-    CASE 
+    private string $TX_ID = '
+     CASE 
 		WHEN document_type_map.`ID` = 1 THEN  (SELECT bill.`ID` FROM bill_items  JOIN bill ON bill.`ID` =  bill_items.`BILL_ID` WHERE bill_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 		WHEN document_type_map.`ID` = 3 THEN  (SELECT bill_credit.`ID` FROM bill_credit_items  JOIN bill_credit ON bill_credit.`ID` =  bill_credit_items.`BILL_CREDIT_ID`  WHERE bill_credit_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill_credit.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill_credit.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_credit_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
 		WHEN document_type_map.`ID` = 6 THEN  (SELECT inventory_adjustment.`ID` FROM inventory_adjustment_items  JOIN inventory_adjustment ON inventory_adjustment.`ID` =  inventory_adjustment_items.`INVENTORY_ADJUSTMENT_ID` WHERE inventory_adjustment_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND inventory_adjustment.`DATE` = item_inventory.`SOURCE_REF_DATE` AND inventory_adjustment.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND inventory_adjustment_items.`ITEM_ID` = item_inventory.`ITEM_ID` )			
@@ -426,11 +419,9 @@ class ItemInventoryServices
 		WHEN document_type_map.`ID` = 27 THEN  (SELECT hemodialysis.`ID` FROM `hemodialysis_items`  JOIN hemodialysis ON hemodialysis.`ID` =  hemodialysis_items.`HEMO_ID` WHERE hemodialysis_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND hemodialysis.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  hemodialysis.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND hemodialysis_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
         WHEN document_type_map.`ID` = 29 THEN  (SELECT service_charges.`ID` FROM `service_charges_items`  JOIN service_charges ON service_charges.`ID` =  service_charges_items.`SERVICE_CHARGES_ID` WHERE service_charges_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND service_charges.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  service_charges.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND service_charges_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
 		WHEN document_type_map.`ID` = 31 THEN  (SELECT pull_out.`ID` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID`  WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
-	END AS TX_ID
-                '),
-                'document_type_map.DESCRIPTION as TYPE',
-                'item_inventory.SOURCE_REF_DATE',
-                DB::raw('
+	END AS TX_ID';
+
+    private string $TX_CODE = '
     CASE 
 		WHEN document_type_map.`ID` = 1 THEN  (SELECT bill.`CODE` FROM bill_items  JOIN bill ON bill.`ID` =  bill_items.`BILL_ID` WHERE bill_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 		WHEN document_type_map.`ID` = 3 THEN  (SELECT bill_credit.`CODE` FROM bill_credit_items  JOIN bill_credit ON bill_credit.`ID` =  bill_credit_items.`BILL_CREDIT_ID`  WHERE bill_credit_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill_credit.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill_credit.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_credit_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
@@ -447,10 +438,8 @@ class ItemInventoryServices
 		WHEN document_type_map.`ID` = 29 THEN  (SELECT service_charges.`CODE` FROM `service_charges_items`  JOIN service_charges ON service_charges.`ID` =  service_charges_items.`SERVICE_CHARGES_ID` WHERE service_charges_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND service_charges.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  service_charges.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND service_charges_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
         WHEN document_type_map.`ID` = 31 THEN  (SELECT pull_out.`CODE` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID`  WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 	END AS TX_CODE
-                '),
-                'item_inventory.QUANTITY',
-                'item_inventory.ENDING_QUANTITY',
-                DB::raw('
+                ';
+    private string $TX_CONTACT_NAME = '
     CASE 
 		WHEN document_type_map.`ID` = 1 THEN  (SELECT contact.`PRINT_NAME_AS` FROM bill_items  JOIN bill ON bill.`ID` =  bill_items.`BILL_ID` JOIN contact ON contact.`ID` = bill.`VENDOR_ID` WHERE bill_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 		WHEN document_type_map.`ID` = 3 THEN  (SELECT contact.`PRINT_NAME_AS` FROM bill_credit_items  JOIN bill_credit ON bill_credit.`ID` =  bill_credit_items.`BILL_CREDIT_ID` JOIN contact ON contact.`ID` = bill_credit.`VENDOR_ID` WHERE bill_credit_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill_credit.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill_credit.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_credit_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
@@ -466,9 +455,9 @@ class ItemInventoryServices
 		WHEN document_type_map.`ID` = 27 THEN  (SELECT contact.`PRINT_NAME_AS` FROM `hemodialysis_items`  JOIN hemodialysis ON hemodialysis.`ID` =  hemodialysis_items.`HEMO_ID` JOIN contact ON contact.`ID` = hemodialysis.`CUSTOMER_ID` WHERE hemodialysis_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND hemodialysis.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  hemodialysis.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND hemodialysis_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
 		WHEN document_type_map.`ID` = 29 THEN  (SELECT contact.`PRINT_NAME_AS` FROM `service_charges_items`  JOIN service_charges ON service_charges.`ID` =  service_charges_items.`SERVICE_CHARGES_ID` JOIN contact ON contact.`ID` = service_charges.`PATIENT_ID` WHERE service_charges_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND service_charges.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  service_charges.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND service_charges_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
         WHEN document_type_map.`ID` = 31 THEN  (SELECT contact.`PRINT_NAME_AS` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID` JOIN contact ON contact.`ID` = pull_out.`PREPARED_BY_ID` WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
-	END AS CONTACT_NAME
-                '),
-                DB::raw('
+	END AS CONTACT_NAME';
+
+    private string $TX_NOTES = '
     CASE 
 		WHEN document_type_map.`ID` = 1 THEN  (SELECT bill.`NOTES` FROM bill_items  JOIN bill ON bill.`ID` =  bill_items.`BILL_ID` WHERE bill_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 		WHEN document_type_map.`ID` = 3 THEN  (SELECT bill_credit.`NOTES` FROM bill_credit_items  JOIN bill_credit ON bill_credit.`ID` =  bill_credit_items.`BILL_CREDIT_ID`  WHERE bill_credit_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill_credit.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill_credit.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_credit_items.`ITEM_ID` = item_inventory.`ITEM_ID` )	
@@ -484,8 +473,22 @@ class ItemInventoryServices
 		WHEN document_type_map.`ID` = 27 THEN  (SELECT null as NOTES FROM `hemodialysis_items`  JOIN hemodialysis ON hemodialysis.`ID` =  hemodialysis_items.`HEMO_ID` WHERE hemodialysis_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND hemodialysis.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  hemodialysis.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND hemodialysis_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
 		WHEN document_type_map.`ID` = 29 THEN  (SELECT service_charges.`NOTES` FROM `service_charges_items`  JOIN service_charges ON service_charges.`ID` =  service_charges_items.`SERVICE_CHARGES_ID` WHERE service_charges_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND service_charges.`DATE` =  item_inventory.`SOURCE_REF_DATE` AND  service_charges.`LOCATION_ID` = item_inventory.`LOCATION_ID`  AND service_charges_items.`ITEM_ID` = item_inventory.`ITEM_ID`  )	
         WHEN document_type_map.`ID` = 31 THEN  (SELECT pull_out.`NOTES` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID`  WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
-	END AS TX_NOTES
-                ')
+	END AS TX_NOTES';
+
+    public function getDetails(int $ITEM_ID, int $LOCATION_ID)
+    {
+        $result = ItemInventory::query()
+            ->select([
+                'item_inventory.ID',
+                'item_inventory..SOURCE_REF_TYPE',
+                DB::raw($this->TX_ID),
+                'document_type_map.DESCRIPTION as TYPE',
+                'item_inventory.SOURCE_REF_DATE',
+                DB::raw($this->TX_CODE),
+                'item_inventory.QUANTITY',
+                'item_inventory.ENDING_QUANTITY',
+                DB::raw($this->TX_CONTACT_NAME),
+                DB::raw($this->TX_NOTES)
             ])
             ->join('document_type_map', 'document_type_map.ID', '=', 'item_inventory.SOURCE_REF_TYPE')
             ->where('ITEM_ID', '=', $ITEM_ID)

@@ -3,8 +3,10 @@
 namespace App\Livewire\Invoice;
 
 
+use App\Services\AccountJournalServices;
 use App\Services\ComputeServices;
 use App\Services\InvoiceServices;
+use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
 use App\Services\TaxServices;
@@ -72,14 +74,17 @@ class InvoiceFormItems extends Component
     private $taxServices;
     private $itemServices;
     private $itemSubClassServices;
-
+    private $accountJournalServices;
+    private $itemInventoryServices;
     public function boot(
         InvoiceServices $invoiceServices,
         ComputeServices $computeServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         TaxServices $taxServices,
         ItemServices $itemServices,
-        ItemSubClassServices $itemSubClassServices
+        ItemSubClassServices $itemSubClassServices,
+        AccountJournalServices $accountJournalServices,
+        ItemInventoryServices $itemInventoryServices
     ) {
         $this->invoiceServices = $invoiceServices;
         $this->computeServices = $computeServices;
@@ -87,6 +92,8 @@ class InvoiceFormItems extends Component
         $this->taxServices = $taxServices;
         $this->itemServices = $itemServices;
         $this->itemSubClassServices = $itemSubClassServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->itemInventoryServices = $itemInventoryServices;
     }
 
     public function updatedcodeBase()
@@ -193,7 +200,6 @@ class InvoiceFormItems extends Component
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
             $tax_result = $this->computeServices->ItemComputeTax($this->AMOUNT, $this->TAXABLE, $this->TAX_ID, $taxRate);
-
             if ($tax_result) {
                 $this->TAXABLE_AMOUNT = $tax_result['TAXABLE_AMOUNT'];
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
@@ -284,7 +290,7 @@ class InvoiceFormItems extends Component
     {
 
         $this->validate(
-            [    
+            [
                 'lineQty' => 'required|not_in:0',
             ],
             [],
@@ -293,7 +299,7 @@ class InvoiceFormItems extends Component
             ]
         );
 
-        
+
 
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
@@ -345,14 +351,81 @@ class InvoiceFormItems extends Component
         $this->editItemId = null;
     }
 
-    public function deleteItem($Id)
+    public function deleteItem(int $Id)
     {
-        try {
-            $this->invoiceServices->ItemDelete($Id, $this->INVOICE_ID);
 
+        DB::beginTransaction();
+        try {
+
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $this->INVOICE_ID);
+                if ($JOURNAL_NO  ==  0) {
+                    session()->flash('message', 'journal not found');
+                    return;
+                }
+                $invoiceDate = $this->invoiceServices->get($this->INVOICE_ID);
+                if ($invoiceDate) {
+                    $invoiceItemData = $this->invoiceServices->ItemGet($Id, $this->INVOICE_ID,);
+                    if ($invoiceItemData) {
+
+                        // Inventory
+                        $this->itemInventoryServices->InventoryModify(
+                            $invoiceItemData->ITEM_ID,
+                            $invoiceDate->LOCATION_ID,
+                            $Id,
+                            $this->invoiceServices->document_type_id,
+                            $invoiceDate->DATE,
+                            0,
+                            0,
+                            0
+                        );
+
+                        // INCOME_ACCOUNT_ID
+                        $this->accountJournalServices->DeleteJournal(
+                            $invoiceItemData->INCOME_ACCOUNT_ID,
+                            $invoiceDate->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $invoiceItemData->ITEM_ID,
+                            $Id,
+                            $this->invoiceServices->object_type_invoice_item,
+                            $invoiceDate->DATE,
+                            1,
+
+                        );
+                        // COGS_ACCOUNT_ID
+                        $this->accountJournalServices->DeleteJournal(
+                            $invoiceItemData->COGS_ACCOUNT_ID,
+                            $invoiceDate->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $invoiceItemData->ITEM_ID,
+                            $Id,
+                            $this->invoiceServices->object_type_invoice_item,
+                            $invoiceDate->DATE,
+                            0,
+
+                        );
+                        // ASSET_ACCOUNT_ID
+                        $this->accountJournalServices->DeleteJournal(
+                            $invoiceItemData->ASSET_ACCOUNT_ID,
+                            $invoiceDate->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $invoiceItemData->ITEM_ID,
+                            $Id,
+                            $this->invoiceServices->object_type_invoice_item,
+                            $invoiceDate->DATE,
+                            1,
+
+                        );
+                    }
+                }
+            }
+
+            $this->invoiceServices->ItemDelete($Id, $this->INVOICE_ID);
             $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
+            DB::commit();
             $this->dispatch('update-amount', result: $getResult);
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

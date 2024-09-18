@@ -28,8 +28,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <livewire:select-option name="VENDOR_ID" titleName="Vendor"
-                                                :options="$vendorList" :zero="true"
-                                                isDisabled="{{ !$Modify && $ID == 0 }}" wire:model='VENDOR_ID' />
+                                                :options="$vendorList" :zero="true" isDisabled="{{ !$Modify }}"
+                                                wire:model='VENDOR_ID' />
 
 
                                             <div class="row">
@@ -45,9 +45,7 @@
                                                     <livewire:date-input name="DUE_DATE"
                                                         isDisabled="{{ !$Modify }}" titleName="Dua Date"
                                                         wire:model='DUE_DATE' />
-
                                                 </div>
-
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -66,12 +64,9 @@
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                         :options="$locationList" :zero="false"
-                                                        isDisabled="{{ !$Modify && $ID == 0 }}"
+                                                        isDisabled="{{ !$Modify }}"
                                                         wire:model='LOCATION_ID' />
-
                                                 </div>
-
-
                                                 <div class="col-md-4">
                                                     <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
                                                         :options="$taxList" :zero="false"
@@ -122,15 +117,33 @@
                                                 <i class="fa fa-print" aria-hidden="true"></i> Print
                                             </a>
                                         @endif
-                                    </div>
-                                    <div class="text-right col-6 col-md-6">
 
-                                        @if ($ID > 0)
+                                        @if ($STATUS == 15 && $UNPOSTED == true)
+                                            <button type="button" wire:click='getUnposted()'
+                                                class="btn btn-sm btn-secondary"
+                                                wire:confirm="Are you sure you want to unpost?">
+                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
+                                            </button>
+                                        @endif
+                                        @if ($STATUS == 16)
+                                            <button type="button" wire:click='getPosted()'
+                                                class="btn btn-sm btn-warning"
+                                                wire:confirm="Are you sure you want to post?">
+                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                            </button>
+                                        @endif
+
+                                    </div>
+
+
+                                    <div class="text-right col-6 col-md-6">
+                                        @if ($STATUS == 15)
                                             <button type="button" wire:click='OpenJournal()'
                                                 class="btn btn-sm btn-warning">
                                                 <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                             </button>
-                                            <a id="new" title="Create" href="{{ route('vendorsbills_create') }}"
+                                            <a id="new" title="Create"
+                                                href="{{ route('vendorsbills_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endif
                                     </div>
@@ -206,7 +219,7 @@
                                             {{-- @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID]) --}}
                                         </div>
                                         <div class="col-md-2">
-                                            @livewire('AccountJournal.AccountJournalModal')
+
                                         </div>
                                     </div>
 
@@ -239,4 +252,5 @@
             </div>
         </div>
     </section>
+    @livewire('AccountJournal.AccountJournalModal')
 </div>

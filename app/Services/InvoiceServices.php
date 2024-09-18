@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\DB;
 class InvoiceServices
 {
 
+    public int  $object_type_invoice = 23;
+    public int  $object_type_invoice_item = 24;
+    public int  $document_type_id = 10;
+
     private $object;
     private $compute;
     private $systemSettingServices;
@@ -239,9 +243,15 @@ class InvoiceServices
         ]);
         return $ID;
     }
+    public function ItemGet(int $ID, int $INVOICE_ID)
+    {
+        return  InvoiceItems::where('ID', '=', $ID)
+            ->where('INVOICE_ID', '=', $INVOICE_ID)
+            ->first();
+    }
     public function ItemUpdate(int $ID, int $INVOICE_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, int $BATCH_ID, int $PRICE_LEVEL_ID,)
     {
-        $data = InvoiceItems::where('ID', $ID)->where('INVOICE_ID', $INVOICE_ID)->where('ITEM_ID', $ITEM_ID)->first();
+        $data =  $this->ItemGet($ID, $INVOICE_ID);
         if ($data) {
             $data->update([
                 'QUANTITY'              => $QUANTITY,
@@ -378,7 +388,7 @@ class InvoiceServices
 
         $PAY = (float) $PAYMENT + $CREDIT;
 
-        $data = Invoice::where('ID', $INVOICE_ID)->first();
+        $data = Invoice::where('ID', '=', $INVOICE_ID)->first();
         if ($data) {
             $AMOUNT = (float) $data->AMOUNT;
             $BALANCE = $AMOUNT - $PAY;
@@ -395,7 +405,7 @@ class InvoiceServices
                 $STATUS = 2;
             }
 
-            Invoice::where('ID', $INVOICE_ID)
+            Invoice::where('ID', '=', $INVOICE_ID)
                 ->update([
                     'BALANCE_DUE'       => $BALANCE,
                     'STATUS'            => $STATUS,
@@ -519,6 +529,44 @@ class InvoiceServices
             ->where('INVOICE_ID', $INVOICE_ID)
             ->orderBy('LINE_NO', 'asc')
             ->get();
+
+        return $result;
+    }
+
+    public function getInvoiceItemJournalAsset(int $INVOICE_ID)
+    {
+        $result = InvoiceItems::query()
+            ->select([
+                'invoice_items.ID',
+                'ASSET_ACCOUNT_ID as ACCOUNT_ID',
+                'ITEM_ID as SUBSIDIARY_ID',
+                DB::raw('(select  ifnull(sum(p.CUSTOM_COST),0) from price_level_lines as p inner join location as l on l.PRICE_LEVEL_ID = p.PRICE_LEVEL_ID where l.ID = invoice.LOCATION_ID  and p.ITEM_ID = invoice_items.ITEM_ID) as AMOUNT'),
+                DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->join('invoice', 'invoice.ID', '=', 'invoice_items.INVOICE_ID')
+            ->where('invoice_items.INVOICE_ID', $INVOICE_ID)
+            ->whereNotNull('ASSET_ACCOUNT_ID')
+            ->orderBy('invoice_items.LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
+    public function getInvoiceItemJournalCogs(int $INVOICE_ID)
+    {
+        $result = InvoiceItems::query()
+            ->select([
+                'invoice_items.ID',
+                'invoice_items.COGS_ACCOUNT_ID as ACCOUNT_ID',
+                'ITEM_ID as SUBSIDIARY_ID',
+                DB::raw('(select  ifnull(sum( p.CUSTOM_COST),0) from price_level_lines as p inner join location as l on l.PRICE_LEVEL_ID = p.PRICE_LEVEL_ID where l.ID = invoice.LOCATION_ID  and p.ITEM_ID = invoice_items.ITEM_ID) as AMOUNT'),
+                DB::raw('0 as ENTRY_TYPE')
+            ])
+            ->join('invoice', 'invoice.ID', '=', 'invoice_items.INVOICE_ID')
+            ->where('invoice_items.INVOICE_ID', $INVOICE_ID)
+            ->whereNotNull('invoice_items.COGS_ACCOUNT_ID')
+            ->orderBy('invoice_items.LINE_NO', 'asc')
+            ->get();
+
 
         return $result;
     }

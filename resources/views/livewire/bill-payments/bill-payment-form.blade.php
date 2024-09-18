@@ -121,8 +121,6 @@
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
-
-
                                                 <button type="button" wire:click='getPosted()'
                                                     class="btn btn-sm btn-warning"
                                                     wire:confirm="Are you sure you want to post?">
@@ -130,6 +128,23 @@
                                                 </button>
                                             @endif
                                         @endif
+
+                                        @if ($STATUS == 15 && $UNPOSTED == true)
+                                            <button type="button" wire:click='getUnposted()'
+                                                class="btn btn-sm btn-secondary"
+                                                wire:confirm="Are you sure you want to unpost?">
+                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
+                                            </button>
+                                        @endif
+                                        @if ($STATUS == 16)
+                                            <button type="button" wire:click='getPosted()'
+                                                class="btn btn-sm btn-warning"
+                                                wire:confirm="Are you sure you want to post?">
+                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                            </button>
+                                        @endif
+
+
 
                                     </div>
                                     <div class="text-right col-6 col-md-6">
@@ -202,4 +217,5 @@
             </div>
         </div>
     </section>
+    @livewire('AccountJournal.AccountJournalModal')
 </div>

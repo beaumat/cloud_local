@@ -12,6 +12,11 @@ class InventoryAdjustmentServices
     private $systemSettingServices;
     private $dateServices;
 
+
+    public int $object_type_map_inventory_adjustment = 19;
+    public int $object_type_map_inventory_adjustmentItems = 20;
+    public int $documentTypeMapId = 6;
+
     public function __construct(ObjectServices $objectService, SystemSettingServices $systemSettingServices, DateServices $dateServices)
     {
         $this->object = $objectService;

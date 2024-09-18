@@ -12,24 +12,28 @@ use Illuminate\Support\Facades\DB;
 
 class BillingServices
 {
+
+    public int $object_type_map_bill = 2;
+    public int $object_type_map_bill_item = 3;
+    public int $object_type_map_bill_expenses = 78;
+
+    public int $document_type_id = 1;
+
     private $object;
     private $compute;
     private $systemSettingServices;
     private $dateServices;
-    private $accountJournalServices;
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         SystemSettingServices $systemSettingServices,
-        DateServices $dateServices,
-        AccountJournalServices $accountJournalServices
+        DateServices $dateServices
 
     ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
-        $this->accountJournalServices = $accountJournalServices;
     }
     public function get(int $ID)
     {
@@ -236,6 +240,15 @@ class BillingServices
                 'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
                 'TAX_AMOUNT'            => $TAX_AMOUNT
             ]);
+    }
+
+    public function ItemGet(int $ID, int $BILL_ID)
+    {
+        $result =  BillItems::where('ID', '=', $ID)
+            ->where('BILL_ID', '=', $BILL_ID)
+            ->first();
+
+        return $result;
     }
     public function ItemDelete(int $ID, int $BILL_ID)
     {
@@ -629,6 +642,8 @@ class BillingServices
             ->get();
 
         return $result;
+
+
     }
     public function getBillExpenseJournal(int $BILL_ID)
     {
