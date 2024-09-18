@@ -30,11 +30,11 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-2">
-                                            <livewire:select-option name="LOCATION_ID" :options="$locationList"
+                                            <livewire:select-option name="LOCATION_ID" :options="$locationList" isDisabled="{{ false }}"
                                                 :zero="true" titleName="Location" wire:model='LOCATION_ID' />
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:select-option name="ITEM_ID" :options="$itemList" :zero="true"
+                                            <livewire:select-option name="ITEM_ID" :options="$itemList" :zero="true" isDisabled="{{ false }}"
                                                 titleName="Item Name" wire:model.live='ITEM_ID' />
                                         </div>
                                         <div class="col-md-2">
@@ -58,7 +58,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:number-input name="NO_OF_USED" titleName="No. of Used"
+                                            <livewire:number-input name="NO_OF_USED" titleName="No. of Used" isDisabled="{{ false }}"
                                                 wire:model='NO_OF_USED' />
                                         </div>
                                         <div class="col-md-2">
@@ -66,30 +66,30 @@
                                         </div>
 
                                         <div class="col-md-2">
-                                            <livewire:custom-check-box name="IS_REQUIRED" titleName="Is Required"
+                                            <livewire:custom-check-box name="IS_REQUIRED" titleName="Is Required" isDisabled="{{ false }}"
                                                 wire:model='IS_REQUIRED' />
-                                            <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
+                                            <livewire:custom-check-box name="INACTIVE" titleName="Inactive" isDisabled="{{ false }}"
                                                 wire:model='INACTIVE' />
                                         </div>
 
                                         <div class="col-md-2">
-                                            <livewire:number-input name="QUANTITY" titleName="Default Qty"
+                                            <livewire:number-input name="QUANTITY" titleName="Default Qty" isDisabled="{{ false }}"
                                                 wire:model='QUANTITY' />
-                                            <livewire:custom-check-box name="IS_AUTO" titleName="Auto Default"
+                                            <livewire:custom-check-box name="IS_AUTO" titleName="Auto Default" isDisabled="{{ false }}"
                                                 wire:model='IS_AUTO' />
-                                            <livewire:custom-check-box name="IS_AUTO_SC" titleName="Auto Charges"
+                                            <livewire:custom-check-box name="IS_AUTO_SC" titleName="Auto Charges" isDisabled="{{ false }}"
                                                 wire:model='IS_AUTO_SC' />
                                         </div>
 
 
 
                                         <div class="col-md-2">
-                                            <livewire:number-input name="NEW_TREATMENT_QTY"
+                                            <livewire:number-input name="NEW_TREATMENT_QTY" isDisabled="{{ false }}"
                                                 titleName="New Treatment Qty" wire:model='NEW_TREATMENT_QTY' />
                                             {{-- FIRST_TIME_AUTO_NEW --}}
-                                            <livewire:custom-check-box name="FIRST_TIME_AUTO_NEW"
+                                            <livewire:custom-check-box name="FIRST_TIME_AUTO_NEW" isDisabled="{{ false }}"
                                                 titleName="Auto on New" wire:model='FIRST_TIME_AUTO_NEW' />
-                                            <livewire:custom-check-box name="FT_AUTO_SC" titleName="Auto New Charges"
+                                            <livewire:custom-check-box name="FT_AUTO_SC" titleName="Auto New Charges" isDisabled="{{ false }}"
                                                 wire:model='FT_AUTO_SC' />
                                         </div>
 
