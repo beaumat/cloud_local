@@ -17,15 +17,15 @@
 
                             </div>
                             <div class="col-md-2">
-                                <livewire:date-input name="DATE_FROM" titleName="Date From"
+                                <livewire:date-input name="DATE_FROM" titleName="Date From" :isDisabled=false
                                     wire:model.live='DATE_FROM' />
                             </div>
                             <div class="col-md-2">
-                                <livewire:date-input name="DATE_TO" titleName="Date To" wire:model.live='DATE_TO' />
+                                <livewire:date-input name="DATE_TO" titleName="Date To" wire:model.live='DATE_TO' :isDisabled=false />
                             </div>
                             <div class="col-md-2"
                                 @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
-                                <livewire:dropdown-option name="LOCATION_ID" titleName="Location" :options="$locationList"
+                                <livewire:dropdown-option name="LOCATION_ID" titleName="Location" :options="$locationList" :isDisabled=false
                                     :zero="false" :isDisabled=false wire:model.live='LOCATION_ID' />
                             </div>
                         </div>
