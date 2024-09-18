@@ -264,6 +264,51 @@ class ItemServices
             ->orderBy('item.ID', 'desc')
             ->paginate($perPage);
     }
+    public function SearchPriceLocation($search, int $perPage)
+    {
+        return Items::query()
+            ->select([
+                'item.ID',
+                'item.CODE',
+                'item.DESCRIPTION',
+                'item.TAXABLE',
+                DB::raw('(CASE WHEN item.TYPE = 6 THEN (SELECT sum(c.RATE * c.QUANTITY) FROM item_components as c WHERE c.ITEM_ID = item.ID) ELSE item.RATE END) as RATE'),
+                'item.COST',
+                'item.INACTIVE',
+                'item.COST',
+                'item.INACTIVE',
+                'item_type_map.DESCRIPTION as ITEM_TYPE',
+                'item_sub_class.DESCRIPTION as SUB_CLASS',
+                'item_sub_class.CLASS_ID',
+                'item_class.DESCRIPTION as CLASS',
+                'item_group.DESCRIPTION as GROUP_NAME',
+                'stock_type_map.DESCRIPTION as STOCK_TYPE',
+                'unit_of_measure.NAME as UNIT_BASE',
+                'item.NON_HEMO',
+                'item.HEMO_NON_INVENTORY'
+            ])
+            ->join('item_type_map', 'item_type_map.ID', '=', 'item.TYPE')
+            ->leftJoin('item_sub_class', 'item_sub_class.ID', '=', 'item.SUB_CLASS_ID')
+            ->leftJoin('item_class', 'item_class.ID', '=', 'item_sub_class.CLASS_ID')
+            ->leftJoin('item_group', 'item_group.ID', '=', 'item.GROUP_ID')
+            ->leftJoin('stock_type_map', 'stock_type_map.ID', '=', 'item.STOCK_TYPE')
+            ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'item.BASE_UNIT_ID')
+            ->where('item.INACTIVE', '=', '0',)
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use (&$search) {
+                    $q->where('item.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('item_type_map.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('item_sub_class.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('item_class.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('item_group.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('stock_type_map.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('unit_of_measure.NAME', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy('item.ID', 'desc')
+            ->paginate($perPage);
+    }
     public function getOnhand(int $ITEM_ID, int $locationId): int
     {
 
