@@ -85,9 +85,9 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="modal-footer">
+                    {{-- <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">Close</button>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

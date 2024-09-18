@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Bills;
 
+use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\BillingServices;
 use App\Services\ClassServices;
@@ -24,7 +25,7 @@ class BillingFormAccounts extends Component
     public int $LOCATION_ID;
     #[Reactive]
     public string $DATE;
- 
+
     public int $ID;
     public int $LINE_NO;
     public int $ACCOUNT_ID;
@@ -58,20 +59,21 @@ class BillingFormAccounts extends Component
     private $classServices;
     private $taxServices;
     private $computeServices;
-
+    private $accountJournalServices;
     public function boot(
         BillingServices $billingServices,
         AccountServices $accountServices,
         ClassServices $classServices,
         TaxServices $taxServices,
         ComputeServices $computeServices,
-
+        AccountJournalServices   $accountJournalServices
     ) {
         $this->billingServices = $billingServices;
         $this->accountServices = $accountServices;
         $this->classServices = $classServices;
         $this->taxServices = $taxServices;
         $this->computeServices = $computeServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function updatedaccountid()
     {
@@ -123,7 +125,8 @@ class BillingFormAccounts extends Component
             ]
         );
 
-        $recordExists = (bool) DB::table('bill_expenses')->where('BILL_ID', $this->BILL_ID,)->where('ACCOUNT_ID', $this->ACCOUNT_ID)->exists();
+        $recordExists = (bool) DB::table('bill_expenses')
+            ->where('BILL_ID', $this->BILL_ID,)->where('ACCOUNT_ID', $this->ACCOUNT_ID)->exists();
 
         if ($recordExists) {
             session()->flash('error', 'Account already exists');
@@ -133,14 +136,28 @@ class BillingFormAccounts extends Component
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
 
-            $tax_result = $this->computeServices->ItemComputeTax($this->AMOUNT, $this->TAXABLE, $this->TAX_ID, $taxRate);
+            $tax_result = $this->computeServices->ItemComputeTax(
+                $this->AMOUNT,
+                $this->TAXABLE,
+                $this->TAX_ID,
+                $taxRate
+            );
 
             if ($tax_result) {
                 $this->TAXABLE_AMOUNT = $tax_result['TAXABLE_AMOUNT'];
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
 
-            $this->billingServices->ExpenseStore($this->BILL_ID, $this->ACCOUNT_ID, $this->AMOUNT, $this->TAXABLE, $this->TAXABLE_AMOUNT, $this->TAX_AMOUNT, $this->PARTICULARS, $this->CLASS_ID);
+            $this->billingServices->ExpenseStore(
+                $this->BILL_ID,
+                $this->ACCOUNT_ID,
+                $this->AMOUNT,
+                $this->TAXABLE,
+                $this->TAXABLE_AMOUNT,
+                $this->TAX_AMOUNT,
+                $this->PARTICULARS,
+                $this->CLASS_ID
+            );
             $this->resetAccountEntry();
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
             $this->dispatch('update-amount', result: $getResult);
@@ -187,7 +204,7 @@ class BillingFormAccounts extends Component
                 'lineAmount' => 'Amount'
             ]
         );
-
+        DB::beginTransaction();
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
             $tax_result = $this->computeServices->ItemComputeTax($this->lineAmount, $this->lineTaxable, $this->TAX_ID, $taxRate);
@@ -208,17 +225,40 @@ class BillingFormAccounts extends Component
             );
 
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
+            DB::commit();
             $this->dispatch('update-amount', result: $getResult);
             $this->cancelExpenses();
         } catch (\Throwable $th) {
-            //throw $th;
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
         }
     }
     public function deleteExpenses(int $id)
     {
-        $this->billingServices->ExpenseDelete($id, $this->BILL_ID);
-        $getResult = $this->billingServices->ReComputed($this->BILL_ID);
-        $this->dispatch('update-amount', result: $getResult);
+
+        DB::beginTransaction();
+        try {
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                    $this->billingServices->object_type_map_bill_expenses,
+                    $this->BILL_ID
+                );
+                if ($JOURNAL_NO  ==  0) {
+                    session()->flash('message', 'journal not found');
+                    return;
+                }
+            }
+
+            $this->billingServices->ExpenseDelete($id, $this->BILL_ID);
+            $getResult = $this->billingServices->ReComputed($this->BILL_ID);
+            DB::commit();
+            $this->dispatch('update-amount', result: $getResult);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
 
     #[On('clear-alert')]

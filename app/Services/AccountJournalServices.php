@@ -412,6 +412,7 @@ class AccountJournalServices
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->where('aj.AMOUNT', '>', 0)
             ->where('aj.JOURNAL_NO', $JOURNAL_NO)
+            ->orderBy('aj.ENTRY_TYPE', 'asc')
             ->get();
 
         return $result;
