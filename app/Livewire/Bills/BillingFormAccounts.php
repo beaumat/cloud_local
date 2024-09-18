@@ -117,12 +117,12 @@ class BillingFormAccounts extends Component
                     'required',
                     'not_in:0'
                 ],
-                'AMOUNT' => 'required|not_in:0'
+                'AMOUNT'        => 'required|not_in:0'
             ],
             [],
             [
-                'ACCOUNT_ID' => 'Account',
-                'AMOUNT' => 'Amount'
+                'ACCOUNT_ID'    => 'Account',
+                'AMOUNT'        => 'Amount'
             ]
         );
 

@@ -30,24 +30,17 @@
                                         <div class="col-md-6">
                                             <div class='row'>
                                                 <div class="col-md-12">
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="PREPARED_BY_ID"
-                                                            titleName="Prepared by" :options="$contactList" :zero="true"
-                                                            :isDisabled=false wire:model='PREPARED_BY_ID' />
-                                                    @else
-                                                        <livewire:select-option name="PREPARED_BY_ID"
-                                                            titleName="Prepared by" :options="$contactList" :zero="true"
-                                                            :isDisabled=true wire:model='PREPARED_BY_ID' />
-                                                    @endif
+                                                    <livewire:select-option name="PREPARED_BY_ID"
+                                                        isDisabled="{{ !$Modify }}" titleName="Prepared by"
+                                                        :options="$contactList" :zero="true"
+                                                        wire:model='PREPARED_BY_ID' />
+
                                                 </div>
                                                 <div class="col-md-12">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="NOTES"  titleName="Notes"
-                                                            :isDisabled=false wire:model='NOTES' :vertical="false" :maxlength='100' />
-                                                    @else
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=true wire:model='NOTES' :vertical="false" :maxlength='100' />
-                                                    @endif
+                                                    <livewire:text-input name="NOTES" titleName="Notes"
+                                                        isDisabled="{{ !$Modify }}" wire:model='NOTES'
+                                                        :vertical="false" :maxlength='100' />
+
                                                 </div>
 
                                             </div>
@@ -59,25 +52,17 @@
                                                         wire:model='DATE' :isDisabled="true" />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="Code" titleName="Reference No."
-                                                            :isDisabled=false wire:model='CODE' />
-                                                    @else
-                                                        <livewire:text-input name="Code" titleName="Reference No."
-                                                            :isDisabled=true wire:model='CODE' />
-                                                    @endif
+                                                    <livewire:text-input name="Code" titleName="Reference No."
+                                                        isDisabled="{{ !$Modify }}" wire:model='CODE' />
+
                                                 </div>
                                                 <div class="col-md-4"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                            :options="$locationList" :zero="false" :isDisabled=false
-                                                            wire:model.live='LOCATION_ID' />
-                                                    @else
-                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                            :options="$locationList" :zero="false" :isDisabled=true
-                                                            wire:model.live='LOCATION_ID' />
-                                                    @endif
+                                                    <livewire:select-option name="LOCATION_ID" titleName="Location"
+                                                        :options="$locationList" :zero="false"
+                                                        isDisabled="{{ !$Modify }}"
+                                                        wire:model.live='LOCATION_ID' />
+
                                                 </div>
                                                 <div class="col-md-12">
 
