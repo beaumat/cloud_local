@@ -66,7 +66,6 @@ class PriceLocationList extends Component
         $locData =  $this->locationServices->get($this->LOCATION_ID);
         if ($locData) {
             if ($locData->PRICE_LEVEL_ID > 0) {
-
                 $data = $this->itemServices->SearchPriceLocation("", 300);
                 foreach ($data as $list) {
                     $this->UpdateItem($locData->PRICE_LEVEL_ID, $list->ID, $this->LOCATION_ID, $list->RATE);
