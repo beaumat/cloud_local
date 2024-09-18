@@ -249,7 +249,6 @@ class ItemServices
             ->leftJoin('item_group', 'item_group.ID', '=', 'item.GROUP_ID')
             ->leftJoin('stock_type_map', 'stock_type_map.ID', '=', 'item.STOCK_TYPE')
             ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'item.BASE_UNIT_ID')
-            ->where('item.INACTIVE', 0)
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
                     $q->where('item.CODE', 'like', '%' . $search . '%')
