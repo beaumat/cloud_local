@@ -25,6 +25,8 @@ class BillingFormAccounts extends Component
     public int $LOCATION_ID;
     #[Reactive]
     public string $DATE;
+    #[Reactive]
+    public int $STATUS;
 
     public int $ID;
     public int $LINE_NO;
@@ -35,8 +37,7 @@ class BillingFormAccounts extends Component
     public float $TAX_AMOUNT;
     public string $PARTICULARS;
     public int $CLASS_ID;
-    #[Reactive]
-    public int $STATUS;
+
     public int $openStatus = 0;
 
     public $expenses = [];
@@ -240,12 +241,12 @@ class BillingFormAccounts extends Component
         try {
             if ($this->STATUS == 16) {
                 $JOURNAL_NO = $this->accountJournalServices->getRecord(
-                    $this->billingServices->object_type_map_bill_expenses,
+                    $this->billingServices->object_type_map_bill,
                     $this->BILL_ID
                 );
 
                 if ($JOURNAL_NO  ==  0) {
-                    session()->flash('message', 'journal not found');
+                    session()->flash('error', 'journal not found');
                     return;
                 }
 
@@ -258,7 +259,7 @@ class BillingFormAccounts extends Component
                             $billDataExpenses->ACCOUNT_ID,
                             $billData->LOCATION_ID,
                             $JOURNAL_NO,
-                            $billDataExpenses->ITEM_ID,
+                            $billDataExpenses->ACCOUNT_ID,
                             $Id,
                             $this->billingServices->object_type_map_bill_expenses,
                             $billData->DATE,

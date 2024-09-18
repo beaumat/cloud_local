@@ -110,18 +110,20 @@
                                                 </button>
                                             @endif
                                         @else
-                                            @can('vendor.bill.print')
-                                                <a type="button" target="_BLANK"
-                                                    href="{{ route('vendorsbills_print', ['id' => $ID]) }}"
-                                                    class="btn btn-sm btn-dark">
-                                                    <i class="fa fa-print" aria-hidden="true"></i> Print
-                                                </a>
+                                            @if ($STATUS != 16 && $ID > 0)
+                                                @can('vendor.bill.print')
+                                                    <a type="button" target="_BLANK"
+                                                        href="{{ route('vendorsbills_print', ['id' => $ID]) }}"
+                                                        class="btn btn-sm btn-dark">
+                                                        <i class="fa fa-print" aria-hidden="true"></i> Print
+                                                    </a>
 
-                                                <button type="button" wire:click='OpenJournal()'
-                                                    class="btn btn-sm btn-warning">
-                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
-                                                </button>
-                                            @endcan
+                                                    <button type="button" wire:click='OpenJournal()'
+                                                        class="btn btn-sm btn-warning">
+                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                                    </button>
+                                                @endcan
+                                            @endif
                                         @endif
 
                                         @if ($STATUS == 15)

@@ -10,7 +10,7 @@
                 <th class="col-1 text-center">Tax</th>
                 <th class="col-3">Particular</th>
                 <th class="col-2">Class</th>
-                @if ($STATUS == $openStatus)
+                @if ($STATUS == $openStatus || $STATUS == 16)
                     <th class="text-center col-1">Action</th>
                 @endif
             </tr>
@@ -59,27 +59,26 @@
                             {{ $list->CLASS_NAME }}
                         @endif
                     </td>
-                    @if ($STATUS == $openStatus)
+                    @if ($STATUS == $openStatus || $STATUS == 16)
                         <td class="text-center">
                             @if ($editExpensesId === $list->ID)
                                 <button title="Update" id="updatebtn" wire:click="updateExpenses({{ $list->ID }})"
-                                    class="text-success btn btn-sm btn-link">
+                                    class="btn btn-xs btn-success">
                                     <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>
                                 <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelExpenses()"
-                                    class="text-warning btn btn-sm btn-link">
+                                    class="btn btn-xs btn-warning">
                                     <i class="fas fa-ban" aria-hidden="true"></i>
                                 </button>
                             @else
                                 <button title="Edit" id="editbtn"
                                     wire:click="editExpenses( {{ $list->ID }}, {{ $list->AMOUNT }} ,{{ $list->TAXABLE }},'{{ $list->PARTICULARS }}',{{ $list->CLASS_ID > 0 ? $list->CLASS_ID : 0 }})"
-                                    class="text-info btn btn-sm btn-link">
+                                    class="btn btn-xs btn-info">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
                                 <button title="Delete" id="deletebtn" wire:click='deleteExpenses({{ $list->ID }})'
-                                    wire:confirm="Are you sure you want to delete this?"
-                                    class="text-danger btn btn-sm btn-link">
-                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                    wire:confirm="Are you sure you want to delete this?" class="btn btn-xs btn-danger">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                             @endif
                         </td>
@@ -88,7 +87,7 @@
             @endforeach
 
             {{-- INSERT FORM --}}
-            @if ($STATUS == $openStatus)
+            @if ($STATUS == $openStatus || $STATUS == 16)
                 <form wire:submit.prevent='saveExpenses' wire:loading.attr='disabled'>
                     <tr>
                         <td>
@@ -178,7 +177,7 @@
         </tbody>
 
     </table>
-    @if ($STATUS == $openStatus)
+    @if ($STATUS == $openStatus || $STATUS == 16)
         <livewire:custom-check-box name="codeBaseAcct" titleName="Use choose account code"
             isDisabled="{{ false }}" wire:model.live='codeBase' />
     @endif
