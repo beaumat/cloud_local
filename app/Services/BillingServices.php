@@ -613,7 +613,6 @@ class BillingServices
 
             ])
             ->where('ID', $BILL_ID)
-            ->where('INPUT_TAX_AMOUNT', '>', 0)
             ->get();
 
         return $result;

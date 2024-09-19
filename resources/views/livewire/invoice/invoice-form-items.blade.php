@@ -155,14 +155,14 @@
                                 name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                         </td>
                         <td class="text-right">
-                            <label class="mt-2 text-sm">{{ number_format($AMOUNT, 2) }}</label>
+                            <label class="mt-1 text-sm">{{ number_format($AMOUNT, 2) }}</label>
                         </td>
                         <td class="text-center">
-                            <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
+                            <input type="checkbox" class="text-lg mt-1" wire:model='TAXABLE' name="taxable"
                                 @if ($ITEM_ID == 0) disabled @endif />
                         </td>
                         <td>
-                            <div class="mt-2">
+                            <div class="mt-1">
                                 <button type="submit" wire:loading.attr='hidden'
                                     @if ($ITEM_ID == 0) disabled @endif
                                     class="text-white btn bg-sky btn-sm w-100">

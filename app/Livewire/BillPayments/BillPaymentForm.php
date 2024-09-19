@@ -109,7 +109,7 @@ class BillPaymentForm extends Component
         $this->DATE = $data->DATE;
         $this->LOCATION_ID = $data->LOCATION_ID;
         $this->AMOUNT = $data->AMOUNT;
-        $this->NOTES = $data->NOTE ?? '';
+        $this->NOTES = $data->NOTES ?? '';
         $this->BANK_ACCOUNT_ID = $data->BANK_ACCOUNT_ID;
         $this->PAY_TO_ID = $data->PAY_TO_ID;
         $this->STATUS = $data->STATUS;
@@ -163,24 +163,23 @@ class BillPaymentForm extends Component
             } else {
                 $this->validate(
                     [
-                        'PAY_TO_ID' => 'required|not_in:0',
-                        'BANK_ACCOUNT_ID' => 'required|not_in:0',
-                        'CODE' => 'required|max:20|unique:bill,code,' . $this->ID,
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'AMOUNT' => 'required|not_in:0'
+                        'PAY_TO_ID'             => 'required|not_in:0',
+                        'BANK_ACCOUNT_ID'       => 'required|not_in:0',
+                        'CODE'                  => 'required|max:20|unique:bill,code,' . $this->ID,
+                        'DATE'                  => 'required',
+                        'LOCATION_ID'           => 'required',
+                        'AMOUNT'                => 'required|not_in:0'
                     ],
                     [],
                     [
-                        'PAY_TO_ID' => 'Pay To',
-                        'BANK_ACCOUNT_ID' => 'Bank Account',
-                        'CODE' => 'Reference No.',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'AMOUNT' => 'Amount'
+                        'PAY_TO_ID'             => 'Pay To',
+                        'BANK_ACCOUNT_ID'       => 'Bank Account',
+                        'CODE'                  => 'Reference No.',
+                        'DATE'                  => 'Date',
+                        'LOCATION_ID'           => 'Location',
+                        'AMOUNT'                => 'Amount'
                     ]
                 );
-
                 $this->billPaymentServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -236,8 +235,6 @@ class BillPaymentForm extends Component
                 $this->DATE,
                 "BILL"
             );
-
-
 
 
             $checkData = $this->billPaymentServices->billPaymentJournal($this->ID);

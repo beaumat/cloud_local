@@ -220,19 +220,23 @@ class InvoiceForm extends Component
 
                 $this->validate(
                     [
-                        'CUSTOMER_ID' => 'required|not_in:0',
-                        'OUTPUT_TAX_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'PAYMENT_TERMS_ID' => 'required'
+                        'CUSTOMER_ID'               => 'required|not_in:0|exists:contact,id',
+                        'OUTPUT_TAX_ID'             => 'required|not_in:0',
+                        'DATE'                      => 'required|date_format:Y-m-d',
+                        'LOCATION_ID'               => 'required|not_in:0|exists:location,id',
+                        'PAYMENT_TERMS_ID'          => 'required|',
+                        'ACCOUNTS_RECEIVABLE_ID'    => 'required|exists:account,id',
+                        'OUTPUT_TAX_ACCOUNT_ID'     => 'required|exists:account,id'
                     ],
                     [],
                     [
-                        'CUSTOMER_ID' => 'Patient',
-                        'OUTPUT_TAX_ID' => 'Tax',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'PAYMENT_TERMS_ID' => 'Payment Terms'
+                        'CUSTOMER_ID'               => 'Customer',
+                        'OUTPUT_TAX_ID'             => 'Tax',
+                        'DATE'                      => 'Date',
+                        'LOCATION_ID'               => 'Location',
+                        'PAYMENT_TERMS_ID'          => 'Payment Terms',
+                        'ACCOUNTS_RECEIVABLE_ID'    => 'Accounts Receivable',
+                        'OUTPUT_TAX_ACCOUNT_ID'     => 'Output Tax Accounts'
                     ]
                 );
 
@@ -409,7 +413,7 @@ class InvoiceForm extends Component
             //Tax
             $invoiceDataTax = $this->invoiceServices->getInvoiceTaxJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceDataTax, $this->LOCATION_ID, $invoice, $this->DATE);
-           
+
             //Income
             $invoiceItemData = $this->invoiceServices->getInvoiceItemJournalIncome($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceItemData, $this->LOCATION_ID, $invoiceItems, $this->DATE);
@@ -428,7 +432,7 @@ class InvoiceForm extends Component
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
-            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+            if ($debit_sum == $credit_sum) {
                 return true;
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');

@@ -21,8 +21,12 @@ use Livewire\Component;
 #[Title('Stock Transfer')]
 class StockTransferForm extends Component
 {
+
+
+
     public int $openStatus = 0;
     public int $ID;
+    public bool $hasItem = false;
     public string $DATE;
     public string $CODE;
     public int $LOCATION_ID;
@@ -47,7 +51,7 @@ class StockTransferForm extends Component
     private $documentTypeServices;
     private $itemInventoryServices;
     private $accountJournalServices;
-    private $objectServices;
+
     public function boot(
         StockTransferServices $stockTransferServices,
         LocationServices $locationServices,
@@ -57,7 +61,7 @@ class StockTransferForm extends Component
         DocumentTypeServices $documentTypeServices,
         ItemInventoryServices $itemInventoryServices,
         AccountJournalServices $accountJournalServices,
-        ObjectServices $objectServices
+
     ) {
         $this->stockTransferServices = $stockTransferServices;
         $this->locationServices = $locationServices;
@@ -67,7 +71,6 @@ class StockTransferForm extends Component
         $this->documentTypeServices = $documentTypeServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->objectServices = $objectServices;
     }
     public function LoadDropdown()
     {
@@ -84,13 +87,13 @@ class StockTransferForm extends Component
     {
         $this->TRANSFER_TO_ID = 0;
         $this->transferReset = $this->transferReset ? false : true;
-
     }
 
     private function ItemInventory(): bool
     {
         try {
-            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Stock Transfer');
+            $SOURCE_REF_TYPE = (int) $this->stockTransferServices->document_type_id;
+
             $data = $this->stockTransferServices->ItemInventory($this->ID);
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
@@ -107,53 +110,80 @@ class StockTransferForm extends Component
     {
         try {
 
-            $stockTransfer = (int) $this->objectServices->ObjectTypeID('STOCK_TRANSFER');
-            $stockTransferItems = (int) $this->objectServices->ObjectTypeID('STOCK_TRANSFER_ITEMS');
+            $stockTransfer = (int) $this->stockTransferServices->object_type_stock_transfer;
+            $stockTransferItems = (int) $this->stockTransferServices->object_type_stock_transfer_items;
 
-            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($stockTransfer, $this->ID) + 1;
-           
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($stockTransfer, $this->ID);
+            if ($JOURNAL_NO == 0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($stockTransfer, $this->ID) + 1;
+            }
             //Main
             $sourceData = $this->stockTransferServices->getStockTransferJournal_Source($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $sourceData, $this->LOCATION_ID, $stockTransfer, $this->DATE,"FROM");
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $sourceData,
+                $this->LOCATION_ID,
+                $stockTransfer,
+                $this->DATE,
+                "FROM"
+            );
 
             $desData = $this->stockTransferServices->getStockTransferJournal_Des($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $desData, $this->TRANSFER_TO_ID, $stockTransfer, $this->DATE,"TO");
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $desData,
+                $this->TRANSFER_TO_ID,
+                $stockTransfer,
+                $this->DATE,
+                "TO"
+            );
 
 
             //Item
             $stItemCredit = $this->stockTransferServices->getStockTransferItemJournal_Credit($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $stItemCredit, $this->LOCATION_ID, $stockTransferItems, $this->DATE,"FROM");
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $stItemCredit,
+                $this->LOCATION_ID,
+                $stockTransferItems,
+                $this->DATE,
+                "FROM"
+            );
 
             $stItemDebit = $this->stockTransferServices->getStockTransferItemJournal_Debit($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $stItemDebit, $this->TRANSFER_TO_ID, $stockTransferItems, $this->DATE,"TO");
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $stItemDebit,
+                $this->TRANSFER_TO_ID,
+                $stockTransferItems,
+                $this->DATE,
+                "TO"
+            );
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
-            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+            if ($debit_sum == $credit_sum) {
                 return true;
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
             return false;
-
         }
-
     }
-    public function posted()
+    public function getPosted()
     {
         try {
             $count = (float) $this->stockTransferServices->CountItems($this->ID);
             if ($count == 0) {
                 Session()->flash('error', 'No item to transfer');
                 return;
-            }   
+            }
 
             DB::beginTransaction();
             if (!$this->ItemInventory()) {
@@ -168,15 +198,12 @@ class StockTransferForm extends Component
             $this->stockTransferServices->StatusUpdate($this->ID, 15);
             $this->STATUS = 15;
             DB::commit();
-
             Session()->flash('message', 'Successfully posted');
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-
-
     }
     private function getInfo($data)
     {
@@ -194,16 +221,16 @@ class StockTransferForm extends Component
         $this->ACCOUNT_ID = $data->ACCOUNT_ID ?? 0;
         $this->STATUS = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-
     }
     public function mount($id = null)
     {
-     
+
         if (is_numeric($id)) {
             $data = $this->stockTransferServices->Get($id);
             if ($data) {
                 $this->LoadDropdown();
                 $this->getInfo($data);
+
                 $this->Modify = false;
                 return;
             }
@@ -228,27 +255,40 @@ class StockTransferForm extends Component
     }
     public function getModify()
     {
+
+
         $this->Modify = true;
+        if ($this->STATUS == 0) {
+            $this->hasItem = $this->stockTransferServices->HasAlreadyItem($this->ID);
+            return;
+        }
+        $this->hasItem = true;
     }
     public function save()
     {
+        if ($this->TRANSFER_TO_ID == $this->LOCATION_ID) {
+            session()->flash('Invalid transfer location');
+            return;
+        }
+
         try {
             if ($this->ID == 0) {
 
                 $this->validate(
                     [
 
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'TRANSFER_TO_ID' => 'required|not_in:0'
-
+                        'DATE'                  => 'required',
+                        'LOCATION_ID'           => 'required|exists:location,id',
+                        'TRANSFER_TO_ID'        => 'required|not_in:0|exists:location,id',
+                        'ACCOUNT_ID'            => 'required|not_in:0|exists:account,id'
                     ],
                     [],
                     [
 
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'TRANSFER_TO_ID' => 'Transfer To'
+                        'DATE'                  => 'Date',
+                        'LOCATION_ID'           => 'Location',
+                        'TRANSFER_TO_ID'        => 'Transfer To',
+                        'ACCOUNT_ID'            => 'Account Transfer'
 
                     ]
                 );
@@ -267,24 +307,23 @@ class StockTransferForm extends Component
                 );
                 DB::commit();
                 return Redirect::route('companystock_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
 
                 $this->validate(
                     [
 
-                        'CODE' => 'required|max:20|unique:stock_transfer,code,' . $this->ID,
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'TRANSFER_TO_ID' => 'required|not_in:0'
+                        'CODE'                  => 'required|max:20|unique:stock_transfer,code,' . $this->ID,
+                        'DATE'                  => 'required',
+                        'LOCATION_ID'           => 'required',
+                        'TRANSFER_TO_ID'        => 'required|not_in:0'
 
                     ],
                     [],
                     [
-                        'CODE' => 'Reference No.',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'TRANSFER_TO_ID' => 'Transfer To'
+                        'CODE'                  => 'Reference No.',
+                        'DATE'                  => 'Date',
+                        'LOCATION_ID'           => 'Location',
+                        'TRANSFER_TO_ID'        => 'Transfer To'
                     ]
                 );
 
@@ -306,7 +345,19 @@ class StockTransferForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
+    public function getUnposted()
+    {
+        try {
+            DB::beginTransaction();
+            $this->stockTransferServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            Redirect::route('companystock_transfer_edit', $this->ID);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function updateCancel()
     {
         $BA = $this->stockTransferServices->get($this->ID);
@@ -329,6 +380,14 @@ class StockTransferForm extends Component
         $data = $this->stockTransferServices->GetSum($this->ID);
         $this->AMOUNT = $data['AMOUNT'];
         $this->RETAIL_VALUE = $data['RETAIL_VALUE'];
+    }
+    public function OpenJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->stockTransferServices->object_type_stock_transfer, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+        }
     }
 
     public function render()

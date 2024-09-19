@@ -182,7 +182,8 @@ class InvoiceServices
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
-                's.DESCRIPTION as STATUS'
+                's.DESCRIPTION as STATUS',
+                'invoice.STATUS as STATUS_ID'
             ])
             ->join('contact as c', 'c.ID', '=', 'invoice.CUSTOMER_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -496,7 +497,6 @@ class InvoiceServices
 
             ])
             ->where('ID', $INVOICE_ID)
-            ->where('OUTPUT_TAX_AMOUNT', '>', 0)
             ->get();
 
         return $result;
@@ -512,7 +512,8 @@ class InvoiceServices
                 DB::raw(' 0 as ENTRY_TYPE')
 
             ])
-            ->where('ID', $INVOICE_ID)->get();
+            ->where('ID', '=', $INVOICE_ID)
+            ->get();
 
         return $result;
     }
@@ -526,7 +527,7 @@ class InvoiceServices
                 DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
                 DB::raw('1 as ENTRY_TYPE')
             ])
-            ->where('INVOICE_ID', $INVOICE_ID)
+            ->where('INVOICE_ID', '=', $INVOICE_ID)
             ->orderBy('LINE_NO', 'asc')
             ->get();
 

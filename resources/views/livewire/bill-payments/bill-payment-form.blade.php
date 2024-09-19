@@ -29,7 +29,7 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    @if ($Modify)
+                                                    @if ($Modify && $AMOUNT_APPLIED == 0)
                                                         <livewire:select-option name="BANK_ACCOUNT_ID"
                                                             titleName="Bank Account" :options="$accountList" :zero="true"
                                                             :isDisabled=false wire:model='BANK_ACCOUNT_ID' />
@@ -40,7 +40,7 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-md-12">
-                                                    @if ($Modify)
+                                                    @if ($Modify && $AMOUNT_APPLIED == 0)
                                                         <livewire:select-option name="PAY_TO_ID" titleName="Pay To"
                                                             :options="$contactList" :zero="true" :isDisabled=false
                                                             wire:model='PAY_TO_ID' />
@@ -51,7 +51,7 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-md-4">
-                                                    @if ($Modify)
+                                                    @if ($Modify && $AMOUNT_APPLIED == 0)
                                                         <livewire:number-input name="AMOUNT" titleName="Amount"
                                                             :isDisabled=false wire:model='AMOUNT' />
                                                     @else
@@ -105,18 +105,18 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-6 col-6">
-                                        @if ($Modify)
-                                            <button type="submit" class="btn btn-sm btn-primary"> <i
-                                                    class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
+                                        @if ($STATUS == 0 || $STATUS == 16)
+                                            @if ($Modify)
+                                                <button type="submit" class="btn btn-sm btn-primary"> <i
+                                                        class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
-                                            @if ($ID > 0)
-                                                <button type="button" wire:click='updateCancel'
-                                                    class="btn btn-sm btn-danger"><i class="fa fa-ban"
-                                                        aria-hidden="true"></i> Cancel</button>
-                                            @endif
-                                        @else
-                                            @if ($STATUS == 0)
+                                                @if ($ID > 0)
+                                                    <button type="button" wire:click='updateCancel'
+                                                        class="btn btn-sm btn-danger"><i class="fa fa-ban"
+                                                            aria-hidden="true"></i> Cancel</button>
+                                                @endif
+                                            @else
                                                 <button type="button" wire:click='getModify()'
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
@@ -126,9 +126,9 @@
                                                     wire:confirm="Are you sure you want to post?">
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
+
                                             @endif
                                         @endif
-
                                         @if ($STATUS == 15)
                                             @can('vendor.bill-payment.update')
                                                 <button type="button" wire:click='getUnposted()'
@@ -138,16 +138,6 @@
                                                 </button>
                                             @endcan
                                         @endif
-
-
-                                        @if ($STATUS == 16)
-                                            <button type="button" wire:click='getPosted()'
-                                                class="btn btn-sm btn-warning"
-                                                wire:confirm="Are you sure you want to post?">
-                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
-                                            </button>
-                                        @endif
-
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS != 16)
@@ -157,7 +147,7 @@
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                                 </button>
 
-                                                @can('vendor.bill-payment.update')
+                                                @can('vendor.bill-payment.create')
                                                     <a id="new" title="Create"
                                                         href="{{ route('vendorsbill_payment_create') }}"
                                                         class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New

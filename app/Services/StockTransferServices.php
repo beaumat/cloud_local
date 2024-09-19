@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class StockTransferServices
 {
+    public int $object_type_stock_transfer = 38;
+    public int $object_type_stock_transfer_items = 39;
+    public int $document_type_id = 7;
+
     private $dateServices;
     private $systemSettingServices;
     private $object;
@@ -110,6 +114,10 @@ class StockTransferServices
     {
         return (int) StockTransferItems::where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)->count();
     }
+    public function HasAlreadyItem(int $STOCK_TRANSFER_ID): bool
+    {
+        return (bool) StockTransferItems::where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)->exists();
+    }
     private function getLine($STOCK_TRANSFER_ID): int
     {
         return (int) StockTransferItems::where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)->max('LINE_NO');
@@ -184,15 +192,25 @@ class StockTransferServices
 
         $this->UpdateTotal($STOCK_TRANSFER_ID);
     }
-    public function ItemDelete(
-        int $ID,
-        int $STOCK_TRANSFER_ID,
-    ) {
+    public function ItemDelete(int $ID, int $STOCK_TRANSFER_ID)
+    {
         StockTransferItems::where('ID', $ID)
             ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
             ->delete();
 
         $this->UpdateTotal($STOCK_TRANSFER_ID);
+    }
+
+    public function ItemGet(int $ID, int $STOCK_TRANSFER_ID)
+    {
+        $result =  StockTransferItems::where('ID', '=', $ID)
+            ->where('STOCK_TRANSFER_ID', '=', $STOCK_TRANSFER_ID)
+            ->first();
+
+        if ($result) {
+            return $result;
+        }
+        return [];
     }
     public function ItemView(int $STOCK_TRANSFER_ID)
     {
@@ -301,7 +319,7 @@ class StockTransferServices
                 'ACCOUNT_ID',
                 DB::raw(" 0 as SUBSIDIARY_ID"),
                 'AMOUNT',
-                DB::raw(" 1 as ENTRY_TYPE"),
+                DB::raw(" 0 as ENTRY_TYPE"),
                 DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS"),
                 DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
             ])
@@ -317,7 +335,7 @@ class StockTransferServices
                 'ACCOUNT_ID',
                 DB::raw(" 0 as SUBSIDIARY_ID"),
                 'AMOUNT',
-                DB::raw("0 as ENTRY_TYPE"),
+                DB::raw("1 as ENTRY_TYPE"),
                 DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS"),
                 DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
 

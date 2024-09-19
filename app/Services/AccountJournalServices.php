@@ -155,8 +155,8 @@ class AccountJournalServices
     {
         $result = AccountJournal::query()
             ->select([
-                DB::raw('SUM(IF(ENTRY_TYPE=0, AMOUNT, 0)) as DEBIT'),
-                DB::raw('SUM(IF(ENTRY_TYPE=1, AMOUNT, 0)) as CREDIT')
+                DB::raw('IFNULL(SUM(IF(ENTRY_TYPE=0, AMOUNT, 0)),0) as DEBIT'),
+                DB::raw('IFNULL(SUM(IF(ENTRY_TYPE=1, AMOUNT, 0)),0) as CREDIT')
             ])
             ->where('ACCOUNT_JOURNAL.JOURNAL_NO', $JOURNAL_NO)
             ->first();
@@ -165,8 +165,8 @@ class AccountJournalServices
         if ($result) {
 
             return [
-                'DEBIT' => $result->DEBIT,
-                'CREDIT' => $result->CREDIT
+                'DEBIT' => $result->DEBIT ?? 0,
+                'CREDIT' => $result->CREDIT ?? 0
             ];
         }
 
@@ -204,6 +204,10 @@ class AccountJournalServices
 
 
             if ($ACCOUNT_ID  ==  0) {
+                return;
+            }
+
+            if ($AMOUNT == 0) {
                 return;
             }
 
@@ -295,8 +299,8 @@ class AccountJournalServices
         WHEN o.`ID` = 20    THEN ( select inventory_adjustment.`CODE` from inventory_adjustment_items join inventory_adjustment on inventory_adjustment.ID = inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID where inventory_adjustment_items.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 23    THEN ( select invoice.`CODE` from invoice where invoice.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 24    THEN ( select invoice.`CODE` from invoice_items join invoice on invoice.ID = invoice_items.INVOICE_ID where invoice_items.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 38    THEN ( select stock_transfer.`CODE` from stock_transfer where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE  and ( stock_transfer.LOCATION_ID = aj.LOCATION_ID or stock_transfer.TRANSFER_TO_ID = aj.LOCATION_ID) )
-        WHEN o.`ID` = 39    THEN ( select stock_transfer.`CODE` from stock_transfer_items join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE  and ( stock_transfer.LOCATION_ID = aj.LOCATION_ID or stock_transfer.TRANSFER_TO_ID = aj.LOCATION_ID))
+        WHEN o.`ID` = 38    THEN ( select stock_transfer.`CODE` from stock_transfer where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE   )
+        WHEN o.`ID` = 39    THEN ( select stock_transfer.`CODE` from stock_transfer_items join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE )
         WHEN o.`ID` = 41    THEN ( select payment.`CODE` from payment where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 42    THEN ( select payment.`CODE` from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 52    THEN ( select sales_receipt.`CODE` from `sales_receipt`  where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
@@ -330,8 +334,8 @@ class AccountJournalServices
         WHEN o.`ID` = 20    THEN ( select inventory_adjustment.`NOTES` from inventory_adjustment_items join inventory_adjustment on inventory_adjustment.ID = inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID where inventory_adjustment_items.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 23    THEN ( select invoice.`NOTES` from invoice where invoice.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 24    THEN ( select invoice.`NOTES` from invoice_items join invoice on invoice.ID = invoice_items.INVOICE_ID where invoice_items.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 38    THEN ( select stock_transfer.`NOTES` from stock_transfer where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE  and ( stock_transfer.LOCATION_ID = aj.LOCATION_ID or stock_transfer.TRANSFER_TO_ID = aj.LOCATION_ID) )
-        WHEN o.`ID` = 39    THEN ( select stock_transfer.`NOTES` from stock_transfer_items join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE  and ( stock_transfer.LOCATION_ID = aj.LOCATION_ID or stock_transfer.TRANSFER_TO_ID = aj.LOCATION_ID))
+        WHEN o.`ID` = 38    THEN ( select stock_transfer.`NOTES` from stock_transfer where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE )
+        WHEN o.`ID` = 39    THEN ( select stock_transfer.`NOTES` from stock_transfer_items join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE  )
         WHEN o.`ID` = 41    THEN ( select payment.`NOTES` from payment where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 42    THEN ( select payment.`NOTES` from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 52    THEN ( select sales_receipt.`NOTES` from `sales_receipt`  where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
@@ -367,8 +371,8 @@ class AccountJournalServices
         WHEN o.`ID` = 20    THEN ( select inventory_adjustment_type.`DESCRIPTION` from inventory_adjustment_items join inventory_adjustment on inventory_adjustment.ID = inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID join inventory_adjustment_type on inventory_adjustment_type.ID = inventory_adjustment.ADJUSTMENT_TYPE_ID where inventory_adjustment_items.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 23    THEN ( select contact.PRINT_NAME_AS from invoice join contact on contact.ID = invoice.CUSTOMER_ID where invoice.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 24    THEN ( select contact.PRINT_NAME_AS from invoice_items join invoice on invoice.ID = invoice_items.INVOICE_ID join contact on contact.ID = invoice.CUSTOMER_ID where invoice_items.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 38    THEN ( select location.NAME from stock_transfer join location on (location.ID = stock_transfer.LOCATION_ID or location.ID = stock_transfer.TRANSFER_TO_ID ) where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE  and ( stock_transfer.LOCATION_ID = aj.LOCATION_ID or stock_transfer.TRANSFER_TO_ID = aj.LOCATION_ID) )
-        WHEN o.`ID` = 39    THEN ( select location.NAME from stock_transfer_items join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID join location on (location.ID = stock_transfer.LOCATION_ID or location.ID = stock_transfer.TRANSFER_TO_ID ) where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE  and ( stock_transfer.LOCATION_ID = aj.LOCATION_ID or stock_transfer.TRANSFER_TO_ID = aj.LOCATION_ID))
+        WHEN o.`ID` = 38    THEN ( null)
+        WHEN o.`ID` = 39    THEN ( null)
         WHEN o.`ID` = 41    THEN ( select contact.PRINT_NAME_AS from payment join contact on contact.ID = payment.CUSTOMER_ID where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 42    THEN ( select contact.PRINT_NAME_AS from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID join contact on contact.ID = payment.CUSTOMER_ID  where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 52    THEN ( select contact.PRINT_NAME_AS from `sales_receipt` join contact on contact.ID = sales_receipt.CUSTOMER_ID where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
@@ -413,7 +417,6 @@ class AccountJournalServices
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->where('aj.AMOUNT', '>', 0)
             ->where('aj.JOURNAL_NO', $JOURNAL_NO)
-            ->orderBy('aj.ENTRY_TYPE', 'asc')
             ->get();
 
         return $result;

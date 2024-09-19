@@ -86,7 +86,6 @@ class BillPaymentServices
             ->where('TYPE', 1)
             ->update([
                 'ID'                => $ID,
-                'RECORDED_ON'       => $this->dateServices->Now(),
                 'CODE'              => $CODE,
                 'BANK_ACCOUNT_ID'   => $BANK_ACCOUNT_ID,
                 'PAY_TO_ID'         => $PAY_TO_ID,

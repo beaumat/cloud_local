@@ -15,7 +15,6 @@ class BillList extends Component
     #[Reactive]
     public int $CHECK_ID;
     public $dataList = [];
-
     public int $openStatus;
     private $billPaymentServices;
     #[Reactive]
@@ -67,6 +66,7 @@ class BillList extends Component
             session()->flash('error', 'Invalid payment initial. the remaining bill payment to low.');
             return;
         }
+
         $totalPay = (float) $this->billPaymentServices->getTotalPay($this->editBill_Id, $this->CHECK_ID);
         $current_balance = (float) $this->orgAmount - $totalPay;
         if ($current_balance < $this->editAmountApplied) {
@@ -81,7 +81,6 @@ class BillList extends Component
     public function delete(int $ID, int $BILL_ID)
     {
         try {
-
             DB::beginTransaction();
             if ($this->STATUS == 16) {
                 $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $this->CHECK_ID);
@@ -109,7 +108,7 @@ class BillList extends Component
             }
 
             $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
-            
+
             $this->billingServices->UpdateBalance($BILL_ID);
             DB::commit();
             $this->dispatch('reset-payment');

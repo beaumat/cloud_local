@@ -95,10 +95,12 @@ class BillModal extends Component
             session()->flash('error', 'bill payment selected not found.');
             return;
         }
+
         if ($CollectAmount > $CurrentAmount) {
             session()->flash('error', 'Invalid amount');
             return;
         }
+        
         foreach ($this->selectedCharges as $chargeId => $isSelected) {
             if ($isSelected) {
                 try {

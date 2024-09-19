@@ -2,9 +2,14 @@
 
 namespace App\Livewire\StockTransfer;
 
+use App\Models\ItemInventory;
+use App\Services\AccountJournalServices;
+use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
+use App\Services\PriceLevelLineServices;
 use App\Services\StockTransferServices;
 use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -17,6 +22,8 @@ class StockTransferFormItems extends Component
     public int $STATUS;
     #[Reactive]
     public int $openStatus;
+    #[Reactive]
+    public int $LOCATION_ID;
 
     public int $ID;
     public int $ITEM_ID = 0;
@@ -50,14 +57,23 @@ class StockTransferFormItems extends Component
     private $stockTransferServices;
     private $unitOfMeasureServices;
     private $itemServices;
+    private $priceLevelLineServices;
+    private $itemInventoryServices;
+    private $accountJournalServices;
     public function boot(
         StockTransferServices $stockTransferServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         ItemServices $itemServices,
+        PriceLevelLineServices $priceLevelLineServices,
+        ItemInventoryServices $itemInventoryServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->stockTransferServices = $stockTransferServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemServices = $itemServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
+        $this->itemInventoryServices = $itemInventoryServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
 
     public function updatedcodeBase()
@@ -99,7 +115,6 @@ class StockTransferFormItems extends Component
         $this->QUANTITY = 1;
         $this->UNIT_COST = 0;
         $this->UNIT_PRICE = 0;
-
         $this->ITEM_CODE = '';
         $this->ITEM_DESCRIPTION = '';
         $this->BATCH_ID = 0;
@@ -113,13 +128,18 @@ class StockTransferFormItems extends Component
 
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
-
-                $this->UNIT_COST = $item->COST ?? 0;
-                $this->UNIT_PRICE = $item->RATE ?? 0;
                 $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
-
                 $this->getAmount();
+                $data =  $this->priceLevelLineServices->GetByLocation($this->LOCATION_ID, $this->ITEM_ID);
+
+                if ($data) {
+                    $this->UNIT_COST = (float) $data['COST'];
+                    $this->UNIT_PRICE = (float) $data['PRICE'];
+                    return;
+                }
+                $this->UNIT_COST = $item->COST ?? 0;
+                $this->UNIT_PRICE = $item->RATE ?? 0;
             }
         }
     }
@@ -225,7 +245,7 @@ class StockTransferFormItems extends Component
     public function updateItem()
     {
         $this->validate(
-            [    
+            [
                 'lineQty' => 'required|not_in:0',
             ],
             [],
@@ -236,7 +256,7 @@ class StockTransferFormItems extends Component
 
         try {
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
-            
+
             $this->stockTransferServices->ItemUpdate(
                 $this->editItemId,
                 $this->STOCK_TRANSFER_ID,
@@ -272,13 +292,84 @@ class StockTransferFormItems extends Component
 
     public function deleteItem($Id)
     {
+        DB::beginTransaction();
         try {
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                    $this->stockTransferServices->object_type_stock_transfer,
+                    $this->STOCK_TRANSFER_ID
+                );
+                if ($JOURNAL_NO  ==  0) {
+                    session()->flash('message', 'journal not found');
+                    return;
+                }
+                $stData = $this->stockTransferServices->get($this->STOCK_TRANSFER_ID);
+                if ($stData) {
+                    $stItem = $this->stockTransferServices->ItemGet($Id, $this->STOCK_TRANSFER_ID,);
+                    if ($stItem) {
+
+                        // Inventory
+                        $this->itemInventoryServices->InventoryModify(
+                            $stItem->ITEM_ID,
+                            $stData->LOCATION_ID,
+                            $Id,
+                            $this->stockTransferServices->document_type_id,
+                            $stData->DATE,
+                            0,
+                            0,
+                            0
+                        );
+
+
+                        // Inventory
+                        $this->itemInventoryServices->InventoryModify(
+                            $stItem->ITEM_ID,
+                            $stData->TRANSFER_TO_ID,
+                            $Id,
+                            $this->stockTransferServices->document_type_id,
+                            $stData->DATE,
+                            0,
+                            0,
+                            0
+                        );
+
+
+                        // ASSET_ACCOUNT_ID
+                        $this->accountJournalServices->DeleteJournal(
+                            $stItem->ASSET_ACCOUNT_ID,
+                            $stData->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $stItem->ITEM_ID,
+                            $Id,
+                            $this->stockTransferServices->object_type_stock_transfer_items,
+                            $stData->DATE,
+                            1,
+                        );
+
+                        $this->accountJournalServices->DeleteJournal(
+                            $stItem->ASSET_ACCOUNT_ID,
+                            $stData->TRANSFER_TO_ID,
+                            $JOURNAL_NO,
+                            $stItem->ITEM_ID,
+                            $Id,
+                            $this->stockTransferServices->object_type_stock_transfer_items,
+                            $stData->DATE,
+                            0,
+                        );
+                    }
+                }
+            }
+
+
             $this->stockTransferServices->ItemDelete(
                 $Id,
                 $this->STOCK_TRANSFER_ID
             );
+
+            DB::commit();
             $this->dispatch('update-amount');
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

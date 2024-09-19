@@ -6,7 +6,7 @@
             <tr>
                 <th class="col-1">Account Code</th>
                 <th class="col-3">Account Name</th>
-                <th class="col-1">Amount</th>
+                <th class="col-1 text-right">Amount</th>
                 <th class="col-1 text-center">Tax</th>
                 <th class="col-3">Particular</th>
                 <th class="col-2">Class</th>
@@ -30,7 +30,7 @@
                     </td>
                     <td class="text-center">
                         @if ($editExpensesId === $list->ID)
-                            <input type="checkbox" class="text-lg mt-2" wire:model='lineTaxable' name="lineTax" />
+                            <input type="checkbox" class="text-lg mt-1" wire:model='lineTaxable' name="lineTax" />
                         @else
                             @if ($list->TAXABLE)
                                 <i class="fa fa-check-square-o" aria-hidden="true"></i>

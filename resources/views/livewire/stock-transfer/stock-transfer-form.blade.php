@@ -28,8 +28,10 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class='row'>
-                                                <div class="col-md-8">
-                                                    @if ($Modify)
+                                                <div class="col-md-6">
+
+
+                                                    @if ($Modify && !$hasItem)
                                                         @if ($transferReset)
                                                             <livewire:select-option name="TRANSFER_TO_ID1"
                                                                 titleName="Transfer To" :options="$transferList"
@@ -87,7 +89,7 @@
                                                 </div>
                                                 <div class="col-md-4"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @if ($Modify)
+                                                    @if ($Modify && !$hasItem)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
                                                             wire:model.live='LOCATION_ID' />
@@ -108,39 +110,62 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer">
                                 <div class="row">
-                                    <div class="col-md-6 col-6"
-                                        @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        @if ($Modify)
-                                            <button type="submit" class="btn btn-sm btn-primary"> <i
-                                                    class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
-
-                                            @if ($ID > 0)
-                                                <button type="button" wire:click='updateCancel'
-                                                    class="btn btn-sm btn-danger"><i class="fa fa-ban"
-                                                        aria-hidden="true"></i> Cancel</button>
+                                    <div class="col-md-6 col-6">
+                                        @if ($STATUS == 0 || $STATUS == 16)
+                                            @if ($Modify)
+                                                <button type="submit" class="btn btn-sm btn-primary"> <i
+                                                        class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
+                                                @if ($ID > 0)
+                                                    <button type="button" wire:click='updateCancel'
+                                                        wire:confirm='Want to cancel?' class="btn btn-sm btn-danger"><i
+                                                            class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                                @endif
+                                            @else
+                                                <button type="button" wire:click='getModify()'
+                                                    class="btn btn-sm btn-info">
+                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                </button>
+                                                <button type="button" wire:click='getPosted()'
+                                                    class="btn btn-sm btn-warning"
+                                                    wire:confirm="Are you sure you want to post?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                </button>
                                             @endif
-                                        @else
-                                            <button type="button" wire:click='getModify()' class="btn btn-sm btn-info">
-                                                <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                            </button>
-                                            <button type="button" wire:click='posted()' class="btn btn-sm btn-warning">
-                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
-                                            </button>
                                         @endif
+
+                                        @if ($STATUS == 15)
+                                            @can('company.stock-transfer.update')
+                                                <button type="button" wire:click='getUnposted()'
+                                                    class="btn btn-sm btn-secondary"
+                                                    wire:confirm="Are you sure you want to unpost?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
+                                                </button>
+                                            @endcan
+                                        @endif
+
 
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0)
-                                            <a id="new" title="Create"
-                                                href="{{ route('companystock_transfer_create') }}"
-                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                        @if ($STATUS != 16)
+                                            @if ($ID > 0 && $STATUS > 0)
+                                                <button type="button" wire:click='OpenJournal()'
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                                </button>
+
+                                                @can('company.stock-transfer.new')
+                                                    <a id="new" title="Create"
+                                                        href="{{ route('companystock_transfer_create') }}"
+                                                        class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New
+                                                    </a>
+                                                @endcan
+                                            @endif
                                         @endif
                                     </div>
                                 </div>
@@ -151,46 +176,52 @@
             </div>
         </div>
     </section>
-    <section class="content">
-        <div class="container-fluid bg-light">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary card-outline card-outline-tabs">
-                        <div class="card-header p-0 border-bottom-0">
-                            <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
-                                        href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true">Transfer Items</a>
-                                </li>
-                            </ul>
-                        </div>
+    @if ($ID > 0)
+        <section class="content">
+            <div class="container-fluid bg-light">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-header p-0 border-bottom-0">
+                                <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
+                                            href="#custom-tabs-four-item" role="tab"
+                                            aria-controls="custom-tabs-four-item" aria-selected="true">Transfer
+                                            Items</a>
+                                    </li>
+                                </ul>
+                            </div>
 
-                        <div class="card-body">
-                            <div class="tab-content" id="custom-tabs-four-tabContent">
-                                <div class="tab-pane fade show active " id="custom-tabs-four-item" role="tabpanel"
-                                    aria-labelledby="custom-tabs-four-item-tab">
-                                    <div class="row"
-                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        <div class="col-md-12"
-                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('StockTransfer.StockTransferFormItems', ['STOCK_TRANSFER_ID' => $ID, 'STATUS' => $STATUS, 'openStatus' => $openStatus])
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade show active " id="custom-tabs-four-item"
+                                        role="tabpanel" aria-labelledby="custom-tabs-four-item-tab">
+
+                                        <div class="row">
+                                            <div class="col-md-12"
+                                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                @livewire('StockTransfer.StockTransferFormItems', ['STOCK_TRANSFER_ID' => $ID, 'STATUS' => $STATUS, 'openStatus' => $openStatus, 'LOCATION_ID' => $LOCATION_ID])
+
+                                            </div>
                                         </div>
+
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-8">
 
-                                </div>
-                                <div class="col-md-4 text-right">
-                                    <label>{{ number_format($RETAIL_VALUE, 2) }}</label>
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        <label>{{ number_format($RETAIL_VALUE, 2) }}</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
+    @livewire('AccountJournal.AccountJournalModal')
 </div>
