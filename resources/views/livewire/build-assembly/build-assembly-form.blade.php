@@ -31,17 +31,13 @@
                                             <livewire:select-option name="ASSEMBLY_ITEM_ID" titleName="Assembly Item"
                                                 :options="$itemList" :zero="true" isDisabled="{{ !$Modify }}"
                                                 wire:model.live='ASSEMBLY_ITEM_ID' />
-
-
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <livewire:number-input name="QUANTITY" titleName="Quantity to Build"
                                                         isDisabled="{{ !$Modify }}" wire:model='QUANTITY' />
-
                                                 </div>
-
                                                 <div class="col-md-4">
-                                                    <div class="row mt-2">
+                                                    <div class="row mt-1">
                                                         <div class="col-md-12">
                                                             <label for="UNIT_ID" class="text-xs ">
                                                                 Unit of Measure
@@ -50,7 +46,7 @@
                                                         <div class="col-md-12">
                                                             <select @if (!$Modify) disabled @endif
                                                                 wire:model='UNIT_ID' name="UNIT_ID" id='UNIT_ID'
-                                                                class="form-control form-control-sm ">
+                                                                class="form-control form-control-sm  text-xs">
                                                                 @foreach ($unitList as $list)
                                                                     @if ($list->ID != null)
                                                                         <option value="{{ $list->ID }}">
@@ -80,8 +76,7 @@
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                         :options="$locationList" :zero="false"
-                                                        isDisabled="{{ !$Modify && $AMOUNT == 0 }}"
-                                                        wire:model='LOCATION_ID' />
+                                                        isDisabled="{{ !$Modify }}" wire:model='LOCATION_ID' />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <livewire:text-input name="NOTES" titleName="Notes"
@@ -120,13 +115,57 @@
                                                 </button>
                                             @endif
                                         @endif
+
+                                        @if ($STATUS == 15)
+                                            @can('company.build-assembly.update')
+                                                <button type="button" wire:click='getUnposted()'
+                                                    class="btn btn-sm btn-secondary"
+                                                    wire:confirm="Are you sure you want to unpost?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
+                                                </button>
+                                            @endcan
+                                        @endif
+
+                                        @if ($STATUS == 16)
+                                            @if ($Modify)
+                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                    {{ 'Update' }}</button>
+                                                    
+                                                <button type="button" wire:click='updateCancel'
+                                                    class="btn btn-sm btn-danger"><i class="fa fa-ban"
+                                                        aria-hidden="true"></i> Cancel</button>
+                                            @else
+                                                <button type="button" wire:click='getModify()'
+                                                    class="btn btn-sm btn-info">
+                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                </button>
+                                                <button type="button" wire:click='posted()'
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                </button>
+                                            @endif
+
+                                        @endif
+
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0 && $STATUS > 0)
-                                            <a id="new" title="Create"
-                                                href="{{ route('companybuild_assembly_create') }}"
-                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                        @if ($STATUS != 16)
+                                            @if ($ID > 0 && $STATUS > 0)
+                                                <button type="button" wire:click='OpenJournal()'
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                                </button>
+                                                @can('company.build-assembly.create')
+                                                    <a id="new" title="Create"
+                                                        href="{{ route('companybuild_assembly_create') }}"
+                                                        class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New
+                                                    </a>
+                                                @endcan
+                                            @endif
                                         @endif
+
+
                                     </div>
                                 </div>
                             </div>
@@ -191,4 +230,5 @@
             </div>
         </div>
     </section>
+    @livewire('AccountJournal.AccountJournalModal')
 </div>

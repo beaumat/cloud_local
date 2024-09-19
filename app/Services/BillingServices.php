@@ -127,12 +127,14 @@ class BillingServices
                 'bill.CODE',
                 'bill.DATE',
                 'bill.AMOUNT',
+                'bill.BALANCE_DUE',
                 'bill.INPUT_TAX_RATE',
                 'bill.NOTES',
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
-                's.DESCRIPTION as STATUS'
+                's.DESCRIPTION as STATUS',
+                'bill.STATUS  as STATUS_ID'
             ])
             ->join('contact as c', 'c.ID', '=', 'bill.VENDOR_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
@@ -332,7 +334,7 @@ class BillingServices
         $data =  BillExpenses::where('ID', '=', $ID)
             ->where('BILL_ID', '=', $BILL_ID)
             ->first();
-            
+
         if ($data) {
             return $data;
         }

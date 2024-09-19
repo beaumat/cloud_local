@@ -50,7 +50,7 @@
                                                             wire:model='PAY_TO_ID' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-12">
+                                                <div class="col-md-4">
                                                     @if ($Modify)
                                                         <livewire:number-input name="AMOUNT" titleName="Amount"
                                                             :isDisabled=false wire:model='AMOUNT' />
@@ -129,13 +129,17 @@
                                             @endif
                                         @endif
 
-                                        @if ($STATUS == 15 && $UNPOSTED == true)
-                                            <button type="button" wire:click='getUnposted()'
-                                                class="btn btn-sm btn-secondary"
-                                                wire:confirm="Are you sure you want to unpost?">
-                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
-                                            </button>
+                                        @if ($STATUS == 15)
+                                            @can('vendor.bill-payment.update')
+                                                <button type="button" wire:click='getUnposted()'
+                                                    class="btn btn-sm btn-secondary"
+                                                    wire:confirm="Are you sure you want to unpost?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
+                                                </button>
+                                            @endcan
                                         @endif
+
+
                                         @if ($STATUS == 16)
                                             <button type="button" wire:click='getPosted()'
                                                 class="btn btn-sm btn-warning"
@@ -144,14 +148,22 @@
                                             </button>
                                         @endif
 
-
-
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0 && $STATUS > 0)
-                                            <a id="new" title="Create"
-                                                href="{{ route('vendorsbill_payment_create') }}"
-                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                        @if ($STATUS != 16)
+                                            @if ($ID > 0 && $STATUS > 0)
+                                                <button type="button" wire:click='OpenJournal()'
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                                </button>
+
+                                                @can('vendor.bill-payment.update')
+                                                    <a id="new" title="Create"
+                                                        href="{{ route('vendorsbill_payment_create') }}"
+                                                        class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New
+                                                    </a>
+                                                @endcan
+                                            @endif
                                         @endif
                                     </div>
                                 </div>
@@ -204,11 +216,9 @@
                                             <label class="text-primary text-lg">
                                                 {{ number_format($AMOUNT_APPLIED, 2) }}
                                             </label>
-
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>

@@ -90,7 +90,7 @@
                                                             <div class="form-group">
                                                                 <div class="row">
                                                                     <div class="col-md-6"
-                                                                        @if ($ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                                        @if ($ID > 0 && !$isAdmin) style="opacity: 0.5;pointer-events: none;" @endif>
                                                                         <livewire:select-option name="TYPE"
                                                                             :options="$itemType" titleName="Type"
                                                                             :zero="false" wire:model.live='TYPE'

@@ -24,7 +24,7 @@ class ItemsForm extends Component
 {
 
     public string $activeTab = 'gen';
-
+    public bool $isAdmin = true;
     public int $ID;
     public string $CODE;
     public string $DESCRIPTION;

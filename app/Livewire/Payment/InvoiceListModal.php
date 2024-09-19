@@ -108,20 +108,40 @@ class InvoiceListModal extends Component
                     $chargeAmount = 0;
                 }
                 if ($chargeAmount) {
-                    $ID = (int) $this->paymentServices->PaymentInvoiceExist($this->PAYMENT_ID, $chargeId);
+                    $ID = (int) $this->paymentServices->PaymentInvoiceExist(
+                        $this->PAYMENT_ID,
+                        $chargeId
+                    );
                     if ($ID > 0) {
-                        $this->paymentServices->PaymentInvoiceUpdate($ID, $this->PAYMENT_ID, $chargeId, 0, $chargeAmount);
+                        $this->paymentServices->PaymentInvoiceUpdate(
+                            $ID,
+                            $this->PAYMENT_ID,
+                            $chargeId,
+                            0,
+                            $chargeAmount
+                        );
                         $this->invoiceServices->updateInvoiceBalance($chargeId);
                     } else {
-                        $this->paymentServices->PaymentInvoiceStore($this->PAYMENT_ID, $chargeId, 0, $chargeAmount, 0, 0);
-                        $this->invoiceServices->updateInvoiceBalance($chargeId);
+                        $data = $this->invoiceServices->get($chargeId);
+                        if ($data) {
+                            $ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
+
+                            $this->paymentServices->PaymentInvoiceStore(
+                                $this->PAYMENT_ID,
+                                $chargeId,
+                                0,
+                                $chargeAmount,
+                                0,
+                                $ACCOUNTS_RECEIVABLE_ID
+                            );
+                            $this->invoiceServices->updateInvoiceBalance($chargeId);
+                        }
                     }
                     $this->dispatch('reset-payment');
                 }
-
             }
         }
-        
+
         $this->showModal = false;
         $this->selectedCharges = [];
         $this->paymentAmounts = [];
@@ -139,7 +159,7 @@ class InvoiceListModal extends Component
     public function render()
     {
         $this->invoiceList = $this->invoiceServices->getInvoiceListViaPayment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->PAYMENT_ID);
-        
+
         return view('livewire.payment.invoice-list-modal');
     }
 }

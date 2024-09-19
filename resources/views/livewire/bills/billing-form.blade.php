@@ -30,16 +30,12 @@
                                             <livewire:select-option name="VENDOR_ID" titleName="Vendor"
                                                 :options="$vendorList" :zero="true" isDisabled="{{ !$Modify }}"
                                                 wire:model='VENDOR_ID' />
-
-
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <livewire:select-option name="PAYMENT_TERMS_ID"
                                                         isDisabled="{{ !$Modify }}" titleName="Payment Terms"
                                                         :options="$paymentTermList" :zero="false"
                                                         wire:model='PAYMENT_TERMS_ID' />
-
-
                                                 </div>
                                                 <div class="col-md-4">
                                                     <livewire:date-input name="DUE_DATE"
@@ -86,30 +82,49 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-6 col-6">
-                                        @if ($STATUS == $openStatus)
+                                        @if ($STATUS == $openStatus || $STATUS == 16)
                                             @if ($Modify)
                                                 <button type="submit" class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
                                                 @if ($ID > 0)
-                                                    <button type="button" wire:click='updateCancel'
-                                                        class="btn btn-sm btn-danger"><i class="fa fa-ban"
-                                                            aria-hidden="true"></i> Cancel</button>
+                                                    <button type="button" wire:click='updateCancel()' name="cancelbtn"
+                                                        wire:confirm='Want to cancel?' class="btn btn-sm btn-danger"><i
+                                                            class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
                                                 @endif
                                             @else
                                                 <button type="button" wire:click='getModify()'
-                                                    class="btn btn-sm btn-info"
-                                                    @if ($STATUS > $openStatus) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                    class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
+
+
                                                 <button type="button" wire:click='getPosted()'
                                                     class="btn btn-sm btn-warning"
-                                                    wire:confirm="Are you sure you want to post?">
+                                                    wire:confirm='Are you sure you want to post?'>
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
+
                                             @endif
-                                        @else
+
+                                        @endif
+
+                                        @if ($STATUS == 15)
+                                            @can('vendor.bill.update')
+                                                <button type="button" wire:click='getUnposted()'
+                                                    class="btn btn-sm btn-secondary"
+                                                    wire:confirm="Are you sure you want to unpost?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
+                                                </button>
+                                            @endcan
+                                        @endif
+
+                                    </div>
+
+
+                                    <div class="text-right col-6 col-md-6">
+                                        @if ($STATUS > 0)
                                             @if ($STATUS != 16 && $ID > 0)
                                                 @can('vendor.bill.print')
                                                     <a type="button" target="_BLANK"
@@ -124,32 +139,8 @@
                                                     </button>
                                                 @endcan
                                             @endif
-                                        @endif
 
-                                        @if ($STATUS == 15)
-                                            @can('vendor.bill.update')
-                                                <button type="button" wire:click='getUnposted()'
-                                                    class="btn btn-sm btn-secondary"
-                                                    wire:confirm="Are you sure you want to unpost?">
-                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
-                                                </button>
-                                            @endcan
-                                        @endif
-
-                                        @if ($STATUS == 16)
-                                            <button type="button" wire:click='getPosted()'
-                                                class="btn btn-sm btn-warning"
-                                                wire:confirm="Are you sure you want to post?">
-                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
-                                            </button>
-                                        @endif
-
-                                    </div>
-
-
-                                    <div class="text-right col-6 col-md-6">
-                                        @if ($STATUS > 0)
-                                            @can('vendor.bill.update')
+                                            @can('vendor.bill.create')
                                                 <a id="new" title="Create"
                                                     href="{{ route('vendorsbills_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
@@ -185,7 +176,6 @@
                                             aria-controls="custom-tabs-four-account" aria-selected="true">Expenses</a>
                                     </li>
                                 @endif
-
                             </ul>
                         </div>
                         <div class="card-body">
@@ -196,9 +186,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-
                                             @livewire('Bills.BillingFormItems', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
-
                                         </div>
                                     </div>
                                 </div>

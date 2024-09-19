@@ -86,7 +86,14 @@ class BuildAssemblyForm extends Component
 
     public function updatedASSEMBLYITEMID()
     {
+
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ASSEMBLY_ITEM_ID);
+        $dataItem = $this->itemServices->get($this->ASSEMBLY_ITEM_ID);
+        if ($dataItem) {
+            $this->ASSET_ACCOUNT_ID = $dataItem->ASSET_ACCOUNT_ID ?? 0;
+            return;
+        }
+        $this->ASSET_ACCOUNT_ID = 0;
     }
 
     private function getInfo($data)
@@ -96,7 +103,7 @@ class BuildAssemblyForm extends Component
         $this->DATE = $data->DATE;
         $this->LOCATION_ID = $data->LOCATION_ID;
         $this->ASSEMBLY_ITEM_ID = $data->ASSEMBLY_ITEM_ID;
-        $this->ASSET_ACCOUNT_ID = $data->ASSET_ACCOUNT_ID ? $data->ASSET_ACCOUNT_ID : 0;
+        $this->ASSET_ACCOUNT_ID = $data->ASSET_ACCOUNT_ID ?? 0;
         $this->NOTES = $data->NOTES ?? '';
         $this->AMOUNT = $data->AMOUNT ?? 0;
         $this->BATCH_ID = $data->BATCH_ID ?? 0;
@@ -109,10 +116,10 @@ class BuildAssemblyForm extends Component
     {
 
         if (is_numeric($id)) {
-            $PO = $this->buildAssemblyServices->get($id);
-            if ($PO) {
+            $dataForm = $this->buildAssemblyServices->get($id);
+            if ($dataForm) {
                 $this->LoadDropdown();
-                $this->getInfo($PO);
+                $this->getInfo($dataForm);
                 $this->Modify = false;
                 return;
             }
@@ -148,17 +155,19 @@ class BuildAssemblyForm extends Component
 
                 $this->validate(
                     [
-                        'ASSEMBLY_ITEM_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'QUANTITY' => 'required|not_in:0',
+                        'ASSEMBLY_ITEM_ID'              => 'required|integer|exists:item,id',
+                        'DATE'                          => 'required|date_format:Y-m-d',
+                        'LOCATION_ID'                   => 'required|integer|exists:location,id',
+                        'QUANTITY'                      => 'required|not_in:0',
+                        'ASSET_ACCOUNT_ID'              => 'required|not_in:0|integer|exists:account,id'
                     ],
                     [],
                     [
-                        'ASSEMBLY_ITEM_ID' => 'Aseembly Item',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'QUANTITY' => 'Quantity'
+                        'ASSEMBLY_ITEM_ID'              => 'Aseembly Item',
+                        'DATE'                          => 'Date',
+                        'LOCATION_ID'                   => 'Location',
+                        'QUANTITY'                      => 'Quantity',
+                        'ASSET_ACCOUNT_ID'              => 'Asset Accounts'
                     ]
                 );
 
@@ -177,27 +186,25 @@ class BuildAssemblyForm extends Component
                     $this->NOTES,
                     $this->ASSET_ACCOUNT_ID
                 );
-
-
                 DB::commit();
                 return Redirect::route('companybuild_assembly_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
                 $this->validate(
                     [
-                        'ASSEMBLY_ITEM_ID' => 'required|not_in:0',
-                        'CODE' => 'required|max:20|unique:build_assembly,code,' . $this->ID,
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'QUANTITY' => 'required|not_in:0',
+                        'ASSEMBLY_ITEM_ID'  => 'required|integer|exists:item,id',
+                        'CODE'              => 'required|max:20|unique:build_assembly,code,' . $this->ID,
+                        'DATE'              => 'required|date_format:Y-m-d',
+                        'LOCATION_ID'       => 'required|integer|exists:location,id',
+                        'QUANTITY'          => 'required|not_in:0',
                     ],
                     [],
                     [
-                        'ASSEMBLY_ITEM_ID' => 'Aseembly Item',
-                        'CODE' => 'Reference No.',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'QUANTITY' => 'Quantity'
+                        'ASSEMBLY_ITEM_ID'      => 'Aseembly Item',
+                        'CODE'                  => 'Reference No.',
+                        'DATE'                  => 'Date',
+                        'LOCATION_ID'           => 'Location',
+                        'QUANTITY'              => 'Quantity'
                     ]
                 );
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ASSEMBLY_ITEM_ID, $this->UNIT_ID ?? 0);
@@ -210,7 +217,8 @@ class BuildAssemblyForm extends Component
                     $this->BATCH_ID,
                     $this->UNIT_ID,
                     (float) $unitRelated['QUANTITY'],
-                    $this->NOTES
+                    $this->NOTES,
+                    $this->LOCATION_ID
                 );
 
                 DB::commit();
@@ -245,16 +253,28 @@ class BuildAssemblyForm extends Component
     private function ItemInventory(): bool
     {
         try {
-            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Build Assembly');
+            $SOURCE_REF_TYPE = $this->buildAssemblyServices->document_type_id;
 
             $data = $this->buildAssemblyServices->AssemblyItemInventory($this->ID);
             if ($data) {
-                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, true);
+                $this->itemInventoryServices->InventoryExecute(
+                    $data,
+                    $this->LOCATION_ID,
+                    $SOURCE_REF_TYPE,
+                    $this->DATE,
+                    true
+                );
             }
 
             $dataItem = $this->buildAssemblyServices->ItemInventory($this->ID);
             if ($dataItem) {
-                $this->itemInventoryServices->InventoryExecute($dataItem, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+                $this->itemInventoryServices->InventoryExecute(
+                    $dataItem,
+                    $this->LOCATION_ID,
+                    $SOURCE_REF_TYPE,
+                    $this->DATE,
+                    false
+                );
             }
             return true;
         } catch (\Exception $e) {
@@ -267,29 +287,46 @@ class BuildAssemblyForm extends Component
     {
         try {
 
-            $buildAssembly = (int) $this->objectServices->ObjectTypeID('BUILD_ASSEMBLY');
+            $buildAssembly = (int) $this->buildAssemblyServices->object_type_build_assembly;
+            $buildAssemblyItems = (int) $this->buildAssemblyServices->object_type_build_assembly_items;
 
-            $buildAssemblyItems = (int) $this->objectServices->ObjectTypeID('BUILD_ASSEMBLY_ITEMS');
+            $JOURNAL_NO =  $this->accountJournalServices->getRecord($buildAssembly, $this->ID);
+            if ($JOURNAL_NO == 0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($buildAssembly, $this->ID) + 1;
+            }
 
-            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($buildAssembly, $this->ID) + 1;
             //Main
             $buildAssemblyData = $this->buildAssemblyServices->getBuildAssemblyJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyData, $this->LOCATION_ID, $buildAssembly, $this->DATE, "BUILD");
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $buildAssemblyData,
+                $this->LOCATION_ID,
+                $buildAssembly,
+                $this->DATE,
+                "BUILD"
+            );
 
             //Item
             $buildAssemblyItemData = $this->buildAssemblyServices->getBuildAssemblyItemsJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $buildAssemblyItemData, $this->LOCATION_ID, $buildAssemblyItems, $this->DATE, "COMPONENT");
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $buildAssemblyItemData,
+                $this->LOCATION_ID,
+                $buildAssemblyItems,
+                $this->DATE,
+                "COMPONENT"
+            );
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
-            if ($debit_sum == $credit_sum ) {
+            if ($debit_sum == $credit_sum) {
                 return true;
             }
 
-            
+
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
         } catch (\Exception $e) {
@@ -329,6 +366,28 @@ class BuildAssemblyForm extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function OpenJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->buildAssemblyServices->object_type_build_assembly, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+        }
+    }
+
+    public function getUnposted()
+    {
+        try {
+            DB::beginTransaction();
+            $this->buildAssemblyServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            Redirect::route('companybuild_assembly_edit', $this->ID);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
     }

@@ -540,7 +540,7 @@ class InvoiceServices
                 'invoice_items.ID',
                 'ASSET_ACCOUNT_ID as ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
-                DB::raw('(select  ifnull(sum(p.CUSTOM_COST),0) from price_level_lines as p inner join location as l on l.PRICE_LEVEL_ID = p.PRICE_LEVEL_ID where l.ID = invoice.LOCATION_ID  and p.ITEM_ID = invoice_items.ITEM_ID) as AMOUNT'),
+                DB::raw('(select  ifnull(sum(p.CUSTOM_COST),0) from price_level_lines as p inner join location as l on l.PRICE_LEVEL_ID = p.PRICE_LEVEL_ID where l.ID = invoice.LOCATION_ID  and p.ITEM_ID = invoice_items.ITEM_ID) * invoice_items.QUANTITY as AMOUNT'),
                 DB::raw('1 as ENTRY_TYPE')
             ])
             ->join('invoice', 'invoice.ID', '=', 'invoice_items.INVOICE_ID')
@@ -558,7 +558,7 @@ class InvoiceServices
                 'invoice_items.ID',
                 'invoice_items.COGS_ACCOUNT_ID as ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
-                DB::raw('(select  ifnull(sum( p.CUSTOM_COST),0) from price_level_lines as p inner join location as l on l.PRICE_LEVEL_ID = p.PRICE_LEVEL_ID where l.ID = invoice.LOCATION_ID  and p.ITEM_ID = invoice_items.ITEM_ID) as AMOUNT'),
+                DB::raw('(select  ifnull(sum( p.CUSTOM_COST),0) from price_level_lines as p inner join location as l on l.PRICE_LEVEL_ID = p.PRICE_LEVEL_ID where l.ID = invoice.LOCATION_ID  and p.ITEM_ID = invoice_items.ITEM_ID) * invoice_items.QUANTITY as AMOUNT'),
                 DB::raw('0 as ENTRY_TYPE')
             ])
             ->join('invoice', 'invoice.ID', '=', 'invoice_items.INVOICE_ID')

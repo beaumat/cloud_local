@@ -9,14 +9,25 @@ use Illuminate\Support\Facades\DB;
 
 class BuildAssemblyServices
 {
+
+    public int $object_type_build_assembly = 70;
+    public int $object_type_build_assembly_items = 71;
+    public int $document_type_id = 19;
     private $object;
     private $systemSettingServices;
     private $dateServices;
-    public function __construct(ObjectServices $objectService, SystemSettingServices $systemSettingServices, DateServices $dateServices)
-    {
+    private $locationServices;
+    public function __construct(
+        ObjectServices $objectService,
+        SystemSettingServices $systemSettingServices,
+        DateServices $dateServices,
+        LocationServices $locationServices,
+      
+    ) {
         $this->object = $objectService;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
+        $this->locationServices = $locationServices;
     }
     public function Get(int $ID)
     {
@@ -40,7 +51,7 @@ class BuildAssemblyServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         BuildAssembly::create([
-            'ID'                    > $ID,
+            'ID'                    => $ID,
             'RECORDED_ON'           => $this->dateServices->Now(),
             'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DATE'                  => $DATE,
@@ -56,32 +67,42 @@ class BuildAssemblyServices
             'STATUS'                => 0
         ]);
 
-        $newAmount = (float) $this->AutoCreateComponent($ASSEMBLY_ITEM_ID, $ID, $QUANTITY);
+        $newAmount = (float) $this->AutoCreateComponent(
+            $ASSEMBLY_ITEM_ID,
+            $ID,
+            $QUANTITY,
+            $LOCATION_ID
+        );
         BuildAssembly::where('ID', $ID)->update(['AMOUNT' => $newAmount]);
         return (int) $ID;
     }
 
-    public function Update(int $ID, string $CODE, int $ASSEMBLY_ITEM_ID, float $QUANTITY, int $BATCH_ID, int $UNIT_ID, int $UNIT_BASE_QUANTITY, string $NOTES): float
+    public function Update(int $ID, string $CODE, int $ASSEMBLY_ITEM_ID, float $QUANTITY, int $BATCH_ID, int $UNIT_ID, int $UNIT_BASE_QUANTITY, string $NOTES, int $LOCATION_ID): float
     {
         BuildAssembly::where('ID', $ID)
             ->where('ASSEMBLY_ITEM_ID', $ASSEMBLY_ITEM_ID)
             ->update([
-                'CODE' => $CODE,
-                'QUANTITY' => $QUANTITY,
-                'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
+                'CODE'                  => $CODE,
+                'QUANTITY'              => $QUANTITY,
+                'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
                 'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-                'NOTES' => $NOTES
+                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
+                'NOTES'                 => $NOTES
             ]);
 
-        $newAmount = (float) $this->AutoUpdateComponent($ASSEMBLY_ITEM_ID, $ID, $QUANTITY);
+        $newAmount = (float) $this->AutoUpdateComponent(
+            $ASSEMBLY_ITEM_ID,
+            $ID,
+            $QUANTITY,
+            $LOCATION_ID
+        );
         BuildAssembly::where('ID', $ID)->update(['AMOUNT' => $newAmount]);
         return $newAmount;
     }
     public function Delete(int $ID)
     {
-        BuildAssemblyItems::where('BUILD_ASSEMBLY_ID', $ID)->delete();
-        BuildAssembly::where('ID', $ID)->delete();
+        BuildAssemblyItems::where('BUILD_ASSEMBLY_ID', '=', $ID)->delete();
+        BuildAssembly::where('ID', '=', $ID)->delete();
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
@@ -121,15 +142,24 @@ class BuildAssemblyServices
 
         return $result;
     }
-    public function AutoCreateComponent(int $ASSEMBLY_ITEM_ID, int $BUILD_ASSEMBLY_ID, float $QUANTITY): float
+    public function AutoCreateComponent(int $ASSEMBLY_ITEM_ID, int $BUILD_ASSEMBLY_ID, float $QUANTITY, int $LOCATION_ID): float
     {
+        $PRICE_LEVEL_ID = 0;
+        $locData =  $this->locationServices->get($LOCATION_ID);
+        if ($locData) {
+            $PRICE_LEVEL_ID = $locData->PRICE_LEVEL_ID;
+        }
+
         $TOTAL = 0;
         $result = ItemComponents::query()
             ->select([
                 'item_components.COMPONENT_ID',
                 'item_components.QUANTITY',
-                'item_components.RATE',
-                'item.ASSET_ACCOUNT_ID'
+                'item.ASSET_ACCOUNT_ID',
+                DB::raw(" (if
+                (item_components.RATE > 0, item_components.RATE,
+                    (select  IFNULL(price_level_lines.CUSTOM_COST,0) from price_level_lines join price_level on price_level.ID = price_level_lines.PRICE_LEVEL_ID where price_level.ID = ' . $PRICE_LEVEL_ID . ' and price_level_lines.ITEM_ID = item_components.COMPONENT_ID )
+                )) as RATE")
             ])
             ->join('item', 'item.ID', '=', 'item_components.COMPONENT_ID')
             ->where('item_components.ITEM_ID', $ASSEMBLY_ITEM_ID)
@@ -146,15 +176,23 @@ class BuildAssemblyServices
 
         return $TOTAL;
     }
-    public function AutoUpdateComponent(int $ASSEMBLY_ITEM_ID, int $BUILD_ASSEMBLY_ID, float $QUANTITY): float
+    public function AutoUpdateComponent(int $ASSEMBLY_ITEM_ID, int $BUILD_ASSEMBLY_ID, float $QUANTITY, int $LOCATION_ID): float
     {
+        $PRICE_LEVEL_ID = 0;
+        $locData =  $this->locationServices->get($LOCATION_ID);
+        if ($locData) {
+            $PRICE_LEVEL_ID = $locData->PRICE_LEVEL_ID;
+        }
+
         $TOTAL = 0;
         $result = BuildAssemblyItems::query()
             ->select([
                 'build_assembly_items.ID',
                 'build_assembly_items.ITEM_ID',
                 DB::raw('(select QUANTITY from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ') as QUANTITY'),
-                DB::raw('(select RATE from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ') as RATE'),
+                DB::raw('(select if (RATE > 0, RATE,
+                (select  IFNull(price_level_lines.CUSTOM_COST,0) from price_level_lines join price_level on price_level.ID = price_level_lines.PRICE_LEVEL_ID where price_level.ID = ' . $PRICE_LEVEL_ID . ' and price_level_lines.ITEM_ID = build_assembly_items.ITEM_ID )
+                ) from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ') as RATE'),
             ])
             ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
             ->where('build_assembly_items.BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
@@ -165,7 +203,14 @@ class BuildAssemblyServices
             $QTY = (float) $item->QUANTITY * $QUANTITY;
             $AMOUNT = (float) ($item->RATE * $item->QUANTITY) * $QUANTITY;
             $TOTAL = $TOTAL + $AMOUNT;
-            $this->ComponentUpdate($item->ID, $BUILD_ASSEMBLY_ID, $item->ITEM_ID, $QTY, $AMOUNT);
+
+            $this->ComponentUpdate(
+                $item->ID,
+                $BUILD_ASSEMBLY_ID,
+                $item->ITEM_ID,
+                $QTY,
+                $AMOUNT
+            );
         }
 
         return $TOTAL;

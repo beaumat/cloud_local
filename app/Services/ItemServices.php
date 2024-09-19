@@ -17,9 +17,14 @@ class ItemServices
     {
         $this->object = $objectService;
     }
-    public function get($ID): object
+    public function get($ID): object|array
     {
-        return items::where('ID', $ID)->first();
+        $result = items::where('ID', $ID)->first();
+        if ($result) {
+            return $result;
+        }
+
+        return [];
     }
     public function getCost(int $ID): float
     {
@@ -425,7 +430,8 @@ class ItemServices
                 'item.DESCRIPTION',
                 'sc.DESCRIPTION as SUB_CLASS',
                 'c.DESCRIPTION as CLASS',
-                DB::raw(' (select IFNULL(pll.CUSTOM_PRICE,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as PRICE')
+                DB::raw(' (select IFNULL(pll.CUSTOM_PRICE,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as PRICE'),
+                DB::raw(' (select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as COST')
             ])
             ->leftJoin('item_sub_class as sc', 'sc.ID', '=', 'item.SUB_CLASS_ID')
             ->leftJoin('item_class as c', 'c.ID', '=', 'sc.CLASS_ID')

@@ -34,7 +34,9 @@
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
-                                                <select @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif name="location" wire:model.live='locationid'
+                                                <select
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                    name="location" wire:model.live='locationid'
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
@@ -43,7 +45,6 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -56,7 +57,7 @@
                                         <th class="col-2">Customer</th>
                                         <th class="col-1">Deposit</th>
                                         <th class="col-1">Applied</th>
-                                        <th class="col-1">Method</th>
+                                        <th class="col-1 text-center">Method</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1 text-center">Status</th>
                                         <th class="text-center col-2 bg-success">
@@ -80,19 +81,19 @@
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
-                                            <td> {{ $list->PAYMENT_METHOD }}</td>  
+                                            <td class="text-center"> {{ $list->PAYMENT_METHOD }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center"> {{ $list->STATUS }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('customerspayment_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
+                                                <button wire:click='delete({{ $list->ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+                                                    class="btn btn-xs btn-danger">
+                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach

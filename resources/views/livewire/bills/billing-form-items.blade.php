@@ -44,7 +44,7 @@
                     </td>
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
+                            <input type="number" step="0.01" class="form-control form-control-sm mt-1 text-right"
                                 name="lineRate" wire:model.live.debounce.1000ms='lineRate' wire:blur="getEditAmount" />
                         @else
                             {{ number_format($list->RATE, 2) }}
@@ -138,13 +138,13 @@
                             @endif
                         </td>
                         <td>
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
+                            <input type="number" step="0.01" class="form-control form-control-sm mt-1 text-right"
                                 name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
                                 @if ($ITEM_ID == 0) readonly @endif />
                         </td>
                         <td>
                             <select wire:model='UNIT_ID' name="UNIT_ID"
-                                class="text-sm form-control form-control-sm mt-2"
+                                class="text-sm form-control form-control-sm mt-1"
                                 @if ($ITEM_ID == 0) readonly @endif>
                                 @foreach ($unitList as $list)
                                     <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
@@ -152,18 +152,18 @@
                             </select>
                         </td>
                         <td>
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
+                            <input type="number" step="0.01" class="form-control form-control-sm mt-1 text-right"
                                 name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount"rca />
                         </td>
                         <td class="text-right">
                             <label class="mt-2">{{ number_format($AMOUNT, 2) }}</label>
                         </td>
                         <td class="text-center">
-                            <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
+                            <input type="checkbox" class="text-lg mt-1" wire:model='TAXABLE' name="taxable"
                                 @if ($ITEM_ID == 0) disabled @endif />
                         </td>
                         <td>
-                            <div class="mt-2">
+                            <div class="mt-1">
                                 <button type="submit" wire:loading.attr='hidden'
                                     @if ($ITEM_ID == 0) disabled @endif
                                     class="text-white btn bg-sky btn-sm w-100">

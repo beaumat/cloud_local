@@ -211,19 +211,19 @@ class BillingForm extends Component
 
                 $this->validate(
                     [
-                        'VENDOR_ID' => 'required|not_in:0',
-                        'INPUT_TAX_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'PAYMENT_TERMS_ID' => 'required'
+                        'VENDOR_ID'         => 'required|integer|exists:contact,id',
+                        'INPUT_TAX_ID'      => 'required|integer|not_in:0',
+                        'DATE'              => 'required|string|date_format:Y-m-d',
+                        'LOCATION_ID'       => 'required|integer|exists:location,id',
+                        'PAYMENT_TERMS_ID'  => 'required|integer|exists:payment_terms,id'
                     ],
                     [],
                     [
-                        'VENDOR_ID' => 'Vendor',
-                        'INPUT_TAX_ID' => 'Tax',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'PAYMENT_TERMS_ID' => 'Payment Terms'
+                        'VENDOR_ID'         => 'Vendor',
+                        'INPUT_TAX_ID'      => 'Tax',
+                        'DATE'              => 'Date',
+                        'LOCATION_ID'       => 'Location',
+                        'PAYMENT_TERMS_ID'  => 'Payment Terms'
                     ]
                 );
 
@@ -256,21 +256,21 @@ class BillingForm extends Component
 
                 $this->validate(
                     [
-                        'VENDOR_ID' => 'required|not_in:0',
-                        'CODE' => 'required|max:20|unique:bill,code,' . $this->ID,
-                        'INPUT_TAX_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'PAYMENT_TERMS_ID' => 'required'
+                        'VENDOR_ID'         => 'required|integer|exists:contact,id',
+                        'CODE'              => 'required|max:20|unique:bill,code,' . $this->ID,
+                        'INPUT_TAX_ID'      => 'required|not_in:0',
+                        'DATE'              => 'required|string|date_format:Y-m-d',
+                        'LOCATION_ID'       => 'required|integer|exists:location,id',
+                        'PAYMENT_TERMS_ID'  => 'required|integer|exists:payment_terms,id'
                     ],
                     [],
                     [
-                        'VENDOR_ID' => 'Vendor',
-                        'CODE' => 'Reference No.',
-                        'INPUT_TAX_ID' => 'Tax',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'PAYMENT_TERMS_ID' => 'Payment Terms'
+                        'VENDOR_ID'         => 'Vendor',
+                        'CODE'              => 'Reference No.',
+                        'INPUT_TAX_ID'      => 'Tax',
+                        'DATE'              => 'Date',
+                        'LOCATION_ID'       => 'Location',
+                        'PAYMENT_TERMS_ID'  => 'Payment Terms'
                     ]
                 );
 
@@ -361,9 +361,7 @@ class BillingForm extends Component
             $bills = (int) $this->billingServices->object_type_map_bill;
             $billItems = (int) $this->billingServices->object_type_map_bill_item;
             $billExpenses = (int) $this->billingServices->object_type_map_bill_expenses;
-
-
-
+            
             $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
             if ($JOURNAL_NO  ==  0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->billingServices->object_type_map_bill, $this->ID) + 1;

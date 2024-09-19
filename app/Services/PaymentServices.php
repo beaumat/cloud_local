@@ -11,6 +11,9 @@ use Livewire\WithPagination;
 class PaymentServices
 {
     use WithPagination;
+
+    public int $object_type_payment = 41;
+    public int $object_type_payment_invoices = 42;
     private $object;
     private $dateServices;
     private $systemSettingServices;
@@ -78,21 +81,21 @@ class PaymentServices
     {
         Payment::where('ID', $ID)
             ->update([
-                'CODE'              => $CODE,
-                'DATE'              => $DATE,
-                'CUSTOMER_ID'       => $CUSTOMER_ID,
-                'LOCATION_ID'       => $LOCATION_ID,
-                'AMOUNT'            => $AMOUNT,
-                'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-                'CARD_NO'           => $CARD_NO,
-                'CARD_EXPIRY_DATE'  => $CARD_EXPIRY_DATE ?? null,
-                'RECEIPT_REF_NO'        => $RECEIPT_REF_NO,
-                'RECEIPT_DATE'          => $RECEIPT_DATE ?? null,
-                'NOTES'                 => $NOTES,
-                'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
-                'OVERPAYMENT_ACCOUNT_ID'    => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-                'DEPOSITED'                 => $DEPOSITED,
-                'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID
+                'CODE'                          => $CODE,
+                'DATE'                          => $DATE,
+                'CUSTOMER_ID'                   => $CUSTOMER_ID,
+                'LOCATION_ID'                   => $LOCATION_ID,
+                'AMOUNT'                        => $AMOUNT,
+                'PAYMENT_METHOD_ID'             => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+                'CARD_NO'                       => $CARD_NO,
+                'CARD_EXPIRY_DATE'              => $CARD_EXPIRY_DATE ?? null,
+                'RECEIPT_REF_NO'                => $RECEIPT_REF_NO,
+                'RECEIPT_DATE'                  => $RECEIPT_DATE ?? null,
+                'NOTES'                         => $NOTES,
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID'  => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
+                'OVERPAYMENT_ACCOUNT_ID'        => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
+                'DEPOSITED'                     => $DEPOSITED,
+                'ACCOUNTS_RECEIVABLE_ID'        => $ACCOUNTS_RECEIVABLE_ID
             ]);
     }
     public function StatusUpdate(int $ID, int $STATUS)
@@ -144,46 +147,57 @@ class PaymentServices
 
         return $result;
     }
-    public function PaymentInvoiceStore(
-        int $PAYMENT_ID,
-        int $INVOICE_ID,
-        float $DISCOUNT,
-        float $AMOUNT_APPLIED,
-        int $DISCOUNT_ACCOUNT_ID,
-        int $ACCOUNTS_RECEIVABLE_ID
-    ): int {
+    public function PaymentInvoiceGet(int $ID, int $PAYMENT_ID, int $INVOICE_ID)
+    {
+        $result = PaymentInvoices::where('ID', '=', $ID)
+            ->where('PAYMENT_ID', '=', $PAYMENT_ID)
+            ->where('INVOICE_ID', '=', $INVOICE_ID)
+            ->first();
+
+        return $result;
+    }
+    public function PaymentInvoiceStore(int $PAYMENT_ID, int $INVOICE_ID, float $DISCOUNT, float $AMOUNT_APPLIED, int $DISCOUNT_ACCOUNT_ID, int $ACCOUNTS_RECEIVABLE_ID): int
+    {
         $ID = $this->object->ObjectNextID('PAYMENT_INVOICES');
         PaymentInvoices::create([
-            'ID' => $ID,
-            'PAYMENT_ID' => $PAYMENT_ID,
-            'INVOICE_ID' => $INVOICE_ID,
-            'DISCOUNT' => $DISCOUNT > 0 ? $DISCOUNT : null,
-            'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
-            'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
-            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
+            'ID'                        => $ID,
+            'PAYMENT_ID'                => $PAYMENT_ID,
+            'INVOICE_ID'                => $INVOICE_ID,
+            'DISCOUNT'                  => $DISCOUNT > 0 ? $DISCOUNT : null,
+            'AMOUNT_APPLIED'            => $AMOUNT_APPLIED,
+            'DISCOUNT_ACCOUNT_ID'       => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
+            'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
         ]);
 
         return $ID;
     }
     public function PaymentInvoiceExist(int $PAYMENT_ID, int $INVOICE_ID): int
     {
-        $data = PaymentInvoices::where('PAYMENT_ID', $PAYMENT_ID)->where('INVOICE_ID', $INVOICE_ID)->first();
+        $data = PaymentInvoices::where('PAYMENT_ID', '=', $PAYMENT_ID)
+            ->where('INVOICE_ID', '=', $INVOICE_ID)
+            ->first();
+
         if ($data) {
             return (int) $data->ID ?? 0;
         }
         return 0;
     }
-
     public function PaymentInvoiceUpdate(int $ID, int $PAYMENT_ID, int $INVOICE_ID, float $DISCOUNT, float $AMOUNT_APPLIED)
     {
-        PaymentInvoices::where('ID', $ID)->where('PAYMENT_ID', $PAYMENT_ID)->where('INVOICE_ID', $INVOICE_ID)->update([
-            'DISCOUNT' => $DISCOUNT,
-            'AMOUNT_APPLIED' => $AMOUNT_APPLIED
-        ]);
+        PaymentInvoices::where('ID', $ID)
+            ->where('PAYMENT_ID', $PAYMENT_ID)
+            ->where('INVOICE_ID', $INVOICE_ID)
+            ->update([
+                'DISCOUNT'          => $DISCOUNT,
+                'AMOUNT_APPLIED'    => $AMOUNT_APPLIED
+            ]);
     }
     public function PaymentInvoiceDelete(int $ID, int $PAYMENT_ID, int $INVOICE_ID)
     {
-        PaymentInvoices::where('ID', $ID)->where('PAYMENT_ID', $PAYMENT_ID)->where('INVOICE_ID', $INVOICE_ID)->delete();
+        PaymentInvoices::where('ID', '=', $ID)
+            ->where('PAYMENT_ID', '=', $PAYMENT_ID)
+            ->where('INVOICE_ID', '=', $INVOICE_ID)
+            ->delete();
     }
     public function PaymentInvoiceList(int $PAYMENT_ID)
     {
@@ -256,7 +270,6 @@ class PaymentServices
         $result = Payment::where('ID', $PAYMENT_ID)->first();
         return (float) $result->AMOUNT - (float) $result->AMOUNT_APPLIED;
     }
-
     public function HaveRemainingPaymentBalance(int $CUSTOMER_ID, int $LOCATION_ID): bool
     {
         $total = (float) Payment::query()
@@ -271,5 +284,50 @@ class PaymentServices
         }
 
         return false;
+    }
+    public function PaymentJournal(int $PAYMENT_ID)
+    {
+        $result = Payment::query()
+            ->select([
+                'ID',
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID as ACCOUNT_ID',
+                'CUSTOMER_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                DB::raw('0 as ENTRY_TYPE')
+            ])
+            ->where('ID', '=', $PAYMENT_ID)
+            ->get();
+
+        return $result;
+    }
+    public function PaymentJournalRemaining(int $PAYMENT_ID)
+    {
+        $result = Payment::query()
+            ->select([
+                'payment.ID',
+                'payment.ACCOUNTS_RECEIVABLE_ID as ACCOUNT_ID',
+                'payment.CUSTOMER_ID as SUBSIDIARY_ID',
+                DB::raw("(payment.AMOUNT - (select IFNULL(sum(payment_invoices.AMOUNT_APPLIED),0)  from payment_invoices where payment_invoices.PAYMENT_ID = payment.ID limit 1)) as AMOUNT"),
+                DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->where('payment.ID', '=', $PAYMENT_ID)
+            ->get();
+
+        return $result;
+    }
+    public function PaymentInvoicejournal(int $PAYMENT_ID)
+    {
+        $result = PaymentInvoices::query()
+            ->select([
+                'payment_invoices.ID',
+                'payment_invoices.ACCOUNTS_RECEIVABLE_ID as ACCOUNT_ID',
+                'payment.CUSTOMER_ID as SUBSIDIARY_ID',
+                'payment.AMOUNT_APPLIED as AMOUNT',
+                DB::raw('1 as ENTRY_TYPE')
+            ])->join('payment', 'payment.ID', '=', 'payment_invoices.PAYMENT_ID')
+            ->where('payment_invoices.PAYMENT_ID', '=', $PAYMENT_ID)
+            ->get();
+
+        return $result;
     }
 }

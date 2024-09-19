@@ -8,12 +8,20 @@ use Illuminate\Support\Facades\DB;
 
 class BillPaymentServices
 {
+
+    public int $object_type_check = 57;
+    public int $object_type_check_bills  = 58;
+
     private $object;
     private $compute;
     private $systemSettingServices;
     private $dateServices;
-    public function __construct(ObjectServices $objectService, ComputeServices $computeServices, DateServices $dateServices, SystemSettingServices $systemSettingServices)
-    {
+    public function __construct(
+        ObjectServices $objectService,
+        ComputeServices $computeServices,
+        DateServices $dateServices,
+        SystemSettingServices $systemSettingServices
+    ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
         $this->dateServices = $dateServices;
@@ -182,7 +190,17 @@ class BillPaymentServices
     }
     public function billPaymentBills_Delete(int $ID, int $CHECK_ID, int $BILL_ID)
     {
-        CheckBills::where('ID', $ID)->where('CHECK_ID', $CHECK_ID)->where('BILL_ID', $BILL_ID)->delete();
+        CheckBills::where('ID', $ID)
+            ->where('CHECK_ID', $CHECK_ID)
+            ->where('BILL_ID', $BILL_ID)
+            ->delete();
+    }
+    public function billPaymentBills_Get(int $ID, int $CHECK_ID, int $BILL_ID): object
+    {
+        return  CheckBills::where('ID', $ID)
+            ->where('CHECK_ID', $CHECK_ID)
+            ->where('BILL_ID', $BILL_ID)
+            ->first();
     }
     public function billPaymentBills_Store(
         int $CHECK_ID,
@@ -245,6 +263,22 @@ class BillPaymentServices
 
         return $result;
     }
+    public function billPaymentJournalRemaining(int $CHECK_ID)
+    {
+        $result = Check::query()
+            ->select([
+                'check.ID',
+                'check.BANK_ACCOUNT_ID as ACCOUNT_ID',
+                'check.PAY_TO_ID as SUBSIDIARY_ID',
+                DB::raw("(check.AMOUNT - (select IFNULL(sum(check_bills.AMOUNT_PAID),0)  from check_bills where check_bills.CHECK_ID = check.ID limit 1)) as AMOUNT"),
+                DB::raw(' 0 as ENTRY_TYPE')
+            ])
+            ->where('check.ID', $CHECK_ID)
+            ->where('check.TYPE', 1)
+            ->get();
+
+        return $result;
+    }
     public function billPaymentBillsjournal(int $CHECK_ID)
     {
         $result = CheckBills::query()
@@ -255,7 +289,7 @@ class BillPaymentServices
                 'CHECK_BILLS.AMOUNT_PAID as AMOUNT',
                 DB::raw(' 0 as ENTRY_TYPE')
             ])->join('CHECK', 'CHECK.ID', '=', 'CHECK_BILLS.CHECK_ID')
-            ->where('CHECK_BILLS.CHECK_ID', $CHECK_ID)
+            ->where('CHECK_BILLS.CHECK_ID', '=', $CHECK_ID)
             ->get();
 
         return $result;

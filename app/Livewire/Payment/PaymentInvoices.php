@@ -13,6 +13,7 @@ class PaymentInvoices extends Component
     #[Reactive]
     public int $PAYMENT_ID;
     public $dataList = [];
+    #[Reactive]
     public int $STATUS;
     public int $openStatus;
     private $paymentServices;
@@ -61,7 +62,10 @@ class PaymentInvoices extends Component
             return;
         }
 
-        $totalPay = (float) $this->paymentServices->getTotalPay($this->editInvoiceId, $this->PAYMENT_ID);
+        $totalPay = (float) $this->paymentServices->getTotalPay(
+            $this->editInvoiceId,
+            $this->PAYMENT_ID
+        );
         $current_balance = (float) $this->orgAmount - $totalPay;
         if ($current_balance < $this->editAmountApplied) {
             session()->flash('error', 'Invalid payment initial is to high from invoice balance. please enter exactly initial amount');
@@ -85,12 +89,11 @@ class PaymentInvoices extends Component
         $this->LOCATION_ID = $LOCATION_ID;
         $this->AMOUNT = $AMOUNT;
         $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
-
     }
     #[On('reload_payment_invoice')]
     public function render()
     {
         $this->dataList = $this->paymentServices->PaymentInvoiceList($this->PAYMENT_ID);
-        return view('livewire.payment.payment-invoices', );
+        return view('livewire.payment.payment-invoices',);
     }
 }

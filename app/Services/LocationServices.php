@@ -53,7 +53,12 @@ class LocationServices
     }
     public function get(int $ID)
     {
-        return Locations::where('ID', $ID)->first();
+        $result = Locations::where('ID','=', $ID)->first();
+        if($result) {
+            return $result;
+        }
+
+        return [];
     }
     public function Store(
         string $NAME,

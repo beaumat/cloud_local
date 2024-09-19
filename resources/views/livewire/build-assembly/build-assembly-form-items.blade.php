@@ -7,7 +7,7 @@
                 <th class="col-4">Description</th>
                 <th class="col-1">Unit Base</th>
                 <th class="col-1">Qty</th>
-                {{-- <th class="col-1">Amount</th> --}}
+                <th class="col-1">Amount</th>
                 @if (!$IS_POSTED)
                     <th class ="col-1">On-Hand</th>
                 @endif
@@ -20,7 +20,10 @@
                     <td>{{ $list->DESCRIPTION }}</td>
                     <td>{{ $list->UNIT_BASE }}</td>
                     <td class="text-right">
-                        {{ number_format($list->QUANTITY, 2) }}
+                        {{ number_format($list->QUANTITY, 1) }}
+                    </td>
+                    <td class="text-right">
+                        {{ number_format($list->AMOUNT, 2) }}
                     </td>
                     @if (!$IS_POSTED)
                         <td class="text-right">

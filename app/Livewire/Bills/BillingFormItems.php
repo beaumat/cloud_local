@@ -9,6 +9,8 @@ use App\Services\DocumentTypeServices;
 use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use App\Services\ObjectServices;
+use App\Services\PriceLevelLineServices;
+use App\Services\PriceLevelServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
 use Illuminate\Support\Facades\DB;
@@ -71,6 +73,7 @@ class BillingFormItems extends Component
     private $itemServices;
     private $accountJournalServices;
     private $itemInventoryServices;
+    private $priceLevelLineServices;
     public function boot(
         BillingServices $billingServices,
         ComputeServices $computeServices,
@@ -78,7 +81,8 @@ class BillingFormItems extends Component
         TaxServices $taxServices,
         ItemServices $itemServices,
         AccountJournalServices $accountJournalServices,
-        ItemInventoryServices $itemInventoryServices
+        ItemInventoryServices $itemInventoryServices,
+        PriceLevelLineServices $priceLevelLineServices
     ) {
         $this->billingServices = $billingServices;
         $this->computeServices = $computeServices;
@@ -87,6 +91,7 @@ class BillingFormItems extends Component
         $this->itemServices = $itemServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->itemInventoryServices = $itemInventoryServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
     }
     public function updatedcodeBase()
     {
@@ -134,7 +139,8 @@ class BillingFormItems extends Component
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
-                $this->RATE = $item->COST ?? 0;
+
+                $this->RATE =   $this->priceLevelLineServices->GetCostByLocation($this->LOCATION_ID, $this->ITEM_ID);
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->PURCHASE_DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
@@ -208,8 +214,10 @@ class BillingFormItems extends Component
                 $this->TAX_AMOUNT,
                 $this->CLASS_ID
             );
-            DB::commit();
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
+            $this->priceLevelLineServices->SetCostByLocation($this->LOCATION_ID, $this->ITEM_ID, $this->RATE);
+            DB::commit();
+
             $this->dispatch('update-amount', result: $getResult);
             $this->resetItem();
             $this->updatedcodeBase();
@@ -271,7 +279,6 @@ class BillingFormItems extends Component
     }
     public function updateItem(int $Id)
     {
-
         $this->validate(
             [
                 'lineQty' => 'required|numeric|not_in:0',
@@ -292,8 +299,8 @@ class BillingFormItems extends Component
             }
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId);
             $this->billingServices->ItemUpdate($Id, $this->BILL_ID, $this->lineItemId, $this->lineQty, $this->lineUnitId > 0 ? $this->lineUnitId : 0, (float) $unitRelated['QUANTITY'], $this->lineRate, $this->lineAmount, $this->lineTax, $this->lineTaxable, $this->lineTaxAmount);
-            DB::commit();
             $getResult = $this->billingServices->ReComputed($this->BILL_ID);
+            DB::commit();
             $this->dispatch('update-amount', result: $getResult);
             $this->itemList = $this->billingServices->ItemView($this->BILL_ID);
             $this->editItemId = null;

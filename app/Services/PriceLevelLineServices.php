@@ -7,9 +7,11 @@ use App\Models\PriceLevelLines;
 class PriceLevelLineServices
 {
     private $object;
-    public function __construct(ObjectServices $objectService)
+    private $locationServices;
+    public function __construct(ObjectServices $objectService, LocationServices $locationServices)
     {
         $this->object = $objectService;
+        $this->locationServices = $locationServices;
     }
 
     public function Store(int $PRICE_LEVEL_ID, int  $ITEM_ID, float $CUSTOM_PRICE, float $CUSTOM_COST = 0): int
@@ -25,21 +27,81 @@ class PriceLevelLineServices
 
         return $ID;
     }
-    public function Update(int $ID, float $CUSTOM_PRICE): void
+    public function Update(int $ID, float $CUSTOM_PRICE, float $CUSTOM_COST = 0): void
     {
-        PriceLevelLines::where('ID', $ID)->update([
-            'CUSTOM_PRICE' => $CUSTOM_PRICE,
-        ]);
+        PriceLevelLines::where('ID', '=', $ID)
+            ->update([
+                'CUSTOM_PRICE' => $CUSTOM_PRICE,
+                'CUSTOM_COST' => $CUSTOM_COST,
+            ]);
     }
-    public function UpdateCost(int $ID, float $CUSTOM_COST): void
+
+    public function UpdateCostByItem(int $ID, int $ITEM_ID, float $CUSTOM_COST = 0): void
     {
-        PriceLevelLines::where('ID', $ID)->update([
-            'CUSTOM_COST' => $CUSTOM_COST,
-        ]);
+        PriceLevelLines::where('ID', '=', $ID)
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->update([
+                'CUSTOM_COST' => $CUSTOM_COST,
+            ]);
+    }
+    public function GetCostByLocation(int $LOCTION_ID, int $ITEM_ID): float
+    {
+        $locDate =    $this->locationServices->get($LOCTION_ID);
+        if ($locDate) {
+            $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
+            $result =  PriceLevelLines::select(['CUSTOM_COST'])->where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)->where('ITEM_ID', $ITEM_ID)->first();
+            if ($result) {
+                return (float) $result->CUSTOM_COST ?? 0;
+            }
+        }
+
+        return 0;
+    }
+    public function SetCostByLocation(int $LOCTION_ID, int $ITEM_ID, float $COST)
+    {
+        $locDate =  $this->locationServices->get($LOCTION_ID);
+        if ($locDate) {
+            $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
+            PriceLevelLines::where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
+                ->where('ITEM_ID', '=', $ITEM_ID)
+                ->update(['CUSTOM_COST' => $COST]);
+        }
+    }
+    public function GetPriceByLocation($LOCTION_ID, int $ITEM_ID): float
+    {
+        $locDate =  $this->locationServices->get($LOCTION_ID);
+        if ($locDate) {
+            $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
+            $result =  PriceLevelLines::select(['CUSTOM_PRICE'])->where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)->where('ITEM_ID', $ITEM_ID)->first();
+            if ($result) {
+                return (float) $result->CUSTOM_PRICE ?? 0;
+            }
+        }
+
+        return 0;
+    }
+
+    public function SetPriceByLocation(int $LOCTION_ID, int $ITEM_ID, float $PRICE)
+    {
+        $locDate =  $this->locationServices->get($LOCTION_ID);
+        if ($locDate) {
+            $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
+            PriceLevelLines::where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
+                ->where('ITEM_ID', '=', $ITEM_ID)
+                ->update(['CUSTOM_PRICE' => $PRICE]);
+        }
+    }
+    public function UpdatePrice(int $ID, float $CUSTOM_PRICE = 0): void
+    {
+        PriceLevelLines::where('ID', '=', $ID)
+            ->update([
+                'CUSTOM_PRICE' => $CUSTOM_PRICE,
+            ]);
     }
     public function Delete(int $ID): void
     {
-        PriceLevelLines::where('ID', $ID)->delete();
+        PriceLevelLines::where('ID', $ID)
+            ->delete();
     }
     public function Search($search, int $PRICE_LEVEL_ID)
     {
@@ -97,8 +159,8 @@ class PriceLevelLineServices
             ->select('price_level_lines.ID')
             ->join('price_level', 'price_level.ID', '=', 'price_level_lines.PRICE_LEVEL_ID')
             ->join('LOCATION as l', 'l.PRICE_LEVEL_ID', '=', 'price_level.ID')
-            ->where('price_level_lines.ITEM_ID', $ITEM_ID)
-            ->where('l.ID', $LOCATION_ID)
+            ->where('price_level_lines.ITEM_ID', '=', $ITEM_ID)
+            ->where('l.ID', '=', $LOCATION_ID)
             ->first();
 
         if ($data) {
@@ -107,21 +169,33 @@ class PriceLevelLineServices
 
         return 0;
     }
-    public function PriceExists(int $ITEM_ID, int $LOCATION_ID): float
+    public function PriceExists(int $ITEM_ID, int $LOCATION_ID): array
     {
 
         $data =  PriceLevelLines::query()
-            ->select('price_level_lines.CUSTOM_PRICE')
+            ->select([
+                'price_level_lines.CUSTOM_PRICE',
+                'price_level_lines.CUSTOM_COST'
+            ])
             ->join('price_level', 'price_level.ID', '=', 'price_level_lines.PRICE_LEVEL_ID')
             ->join('LOCATION as l', 'l.PRICE_LEVEL_ID', '=', 'price_level.ID')
-            ->where('price_level_lines.ITEM_ID', $ITEM_ID)
-            ->where('l.ID', $LOCATION_ID)
+            ->where('price_level_lines.ITEM_ID', '=', $ITEM_ID)
+            ->where('l.ID', '=', $LOCATION_ID)
             ->first();
 
+
+
         if ($data) {
-            return (float) $data->CUSTOM_PRICE ?? 0;
+
+            return [
+                'PRICE' => $data->CUSTOM_PRICE ?? 0,
+                'COST' => $data->CUSTOM_COST ?? 0
+            ];
         }
 
-        return 0;
+        return [
+            'PRICE' => 0,
+            'COST' => 0
+        ];
     }
 }

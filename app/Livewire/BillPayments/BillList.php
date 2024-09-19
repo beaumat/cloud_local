@@ -2,6 +2,7 @@
 
 namespace App\Livewire\BillPayments;
 
+use App\Services\AccountJournalServices;
 use App\Services\BillingServices;
 use App\Services\BillPaymentServices;
 use Illuminate\Support\Facades\DB;
@@ -34,12 +35,15 @@ class BillList extends Component
     public float $editAmountApplied;
 
     private $billingServices;
+    private $accountJournalServices;
     public function boot(
         BillPaymentServices $billPaymentServices,
-        BillingServices $billingServices
+        BillingServices $billingServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->billPaymentServices = $billPaymentServices;
         $this->billingServices = $billingServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function edit(int $ID, int $BILL_ID, float $Applied)
     {
@@ -77,8 +81,35 @@ class BillList extends Component
     public function delete(int $ID, int $BILL_ID)
     {
         try {
+
             DB::beginTransaction();
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $this->CHECK_ID);
+                if ($JOURNAL_NO  ==  0) {
+                    session()->flash('message', 'journal not found');
+                    return;
+                }
+                $checkData = $this->billPaymentServices->get($this->CHECK_ID);
+                if ($checkData) {
+
+                    $billCheckBills = $this->billPaymentServices->billPaymentBills_Get($ID, $this->CHECK_ID, $BILL_ID);
+                    if ($billCheckBills) {
+                        $this->accountJournalServices->DeleteJournal(
+                            $billCheckBills->ACCOUNTS_PAYABLE_ID,
+                            $checkData->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $checkData->PAY_TO_ID,
+                            $ID,
+                            $this->billPaymentServices->object_type_check_bills,
+                            $checkData->DATE,
+                            0
+                        );
+                    }
+                }
+            }
+
             $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
+            
             $this->billingServices->UpdateBalance($BILL_ID);
             DB::commit();
             $this->dispatch('reset-payment');
@@ -86,7 +117,6 @@ class BillList extends Component
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
-
         }
     }
     public function mount(int $CHECK_ID, int $VENDOR_ID, int $LOCATION_ID, float $AMOUNT, float $AMOUNT_APPLIED)

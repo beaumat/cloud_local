@@ -14,7 +14,7 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                        {{ $ID == 0 ? 'Create' : '' }}
+                                    {{ $ID == 0 ? 'Create' : '' }}
                                     <a class="text-white" href="{{ route('customerspayment') }}"> Receive Payments </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
@@ -41,7 +41,7 @@
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    @if ($Modify)
+                                                    @if ($Modify && $AMOUNT_APPLIED == 0)
                                                         <livewire:number-input name="AMOUNT" titleName="Amount"
                                                             :isDisabled=false wire:model='AMOUNT' />
                                                     @else
@@ -106,7 +106,8 @@
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-4" @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="col-md-4"
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($Modify && $AMOUNT == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
@@ -155,37 +156,6 @@
                                                             :isDisabled=true wire:model='NOTES' :vertical="false" />
                                                     @endif
                                                 </div>
-
-
-                                                @if ($showFileName && $Modify)
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
-                                                            <label for="fileUpload" class="text-xs">PDF document file
-                                                                @if ($PDF)
-                                                                    <i class="fa fa-check-circle text-success"
-                                                                        aria-hidden="true"></i>
-                                                                @endif
-                                                            </label>
-                                                            <div class="input-group input-group-sm">
-                                                                <div class="custom-file text-xs">
-                                                                    <input type="file"
-                                                                        class="custom-file-input text-xs"
-                                                                        id="fileUpload" wire:model='PDF'>
-                                                                    <label class="custom-file-label text-xs"
-                                                                        for="fileUpload">
-                                                                        @if ($PDF)
-                                                                            {{ $PDF->getClientOriginalName() }}
-                                                                        @else
-                                                                            Choose file
-                                                                        @endif
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -205,45 +175,58 @@
                                                         aria-hidden="true"></i> Cancel</button>
                                             @endif
                                         @else
-                                            @if ($AMOUNT_APPLIED == 0)
+                                            @if ($STATUS == 0)
                                                 <button type="button" wire:click='getModify()'
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
-                                            @endif
-
-                                            @if ($showFileName)
-                                                <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
-                                                    class="btn btn-sm btn-warning">
-                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Preview
-                                                </a>
-                                            @endif
-                                            @if ($showFileName)
-                                                @if (!$IS_CONFIRM)
-                                                    <button type="button" wire:click='getConfirm()'
-                                                        wire:confirm="Are you sure this guaranteed letter is confirm?"
-                                                        class="btn btn-sm btn-info">
-                                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                        Confirm
-                                                    </button>
-                                                @else
-                                                    <label class="text-xs text-primary px-3">
-                                                        <i>
-                                                            Guarantee Letter Confirm on
-                                                            <b class="text-info">{{ \Carbon\Carbon::parse($DATE_CONFIRM)->format('m/d/Y') }}
-                                                            </b>
-                                                        </i>
-                                                    </label>
-                                                @endif
+                                                <button type="button" wire:click='getPosted()'
+                                                    class="btn btn-sm btn-warning"
+                                                    wire:confirm="Are you sure you want to post?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                </button>
                                             @endif
                                         @endif
 
+                                        @if ($STATUS == 15 && $UNPOSTED == true)
+                                            @can('customer.received-payment.update')
+                                                <button type="button" wire:click='getUnposted()'
+                                                    class="btn btn-sm btn-secondary"
+                                                    wire:confirm="Are you sure you want to unpost?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
+                                                </button>
+                                            @endcan
+                                        @endif
+                                        @if ($STATUS == 16)
+                                            <button type="button" wire:click='getModify()'
+                                                class="btn btn-sm btn-info">
+                                                <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                            </button>
+
+                                            <button type="button" wire:click='getPosted()'
+                                                class="btn btn-sm btn-warning"
+                                                wire:confirm="Are you sure you want to post?">
+                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                            </button>
+                                        @endif
+
+
+
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0 && $STATUS > 0)
-                                            <a id="new" title="Create"
-                                                href="{{ route('customerspayment_create') }}"
-                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                        @if ($STATUS != 16)
+                                            @if ($ID > 0 && $STATUS > 0)
+                                                <button type="button" wire:click='OpenJournal()'
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                                </button>
+                                                @can('customer.received-payment.create')
+                                                    <a id="new" title="Create"
+                                                        href="{{ route('customerspayment_create') }}"
+                                                        class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New
+                                                    </a>
+                                                @endcan
+                                            @endif
                                         @endif
                                     </div>
                                 </div>
@@ -265,7 +248,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
                                         href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true"> <div class="text-xs"> Invoice List </div></a>
+                                        aria-controls="custom-tabs-four-item" aria-selected="true">
+                                        <div class="text-xs"> Invoice List </div>
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -294,11 +279,9 @@
                                             <label class="text-sm">Payment Applied:</label>
                                             <label
                                                 class="text-primary text-lg">{{ number_format($AMOUNT_APPLIED, 2) }}</label>
-
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -307,4 +290,5 @@
             </div>
         </div>
     </section>
+    @livewire('AccountJournal.AccountJournalModal')
 </div>

@@ -34,7 +34,9 @@
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
-                                                <select @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif name="location" wire:model.live='locationid'
+                                                <select
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                    name="location" wire:model.live='locationid'
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
@@ -43,7 +45,6 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -60,10 +61,12 @@
                                         <th class="col-1">Tax</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center col-1 bg-success">
-                                            <a href="{{ route('customersinvoice_create') }}"
-                                                class="text-white btn btn-xs w-100">
-                                                <i class="fas fa-plus"></i> New
-                                            </a>
+                                            @can('customer.invoice.delete')
+                                                <a href="{{ route('customersinvoice_create') }}"
+                                                    class="text-white btn btn-xs w-100">
+                                                    <i class="fas fa-plus"></i> New
+                                                </a>
+                                            @endcan
                                         </th>
                                     </tr>
                                 </thead>
@@ -85,19 +88,19 @@
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('customersinvoice_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @if ($list->AMOUNT == $list->BALANCE_DUE)
-                                                    <a href="#" wire:click='delete({{ $list->ID }})'
+                                                @if (Auth::user()->can('customer.invoice.delete') && $list->AMOUNT == $list->BALANCE_DUE)
+                                                    <button wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
-                                                        class="btn-sm text-danger">
-                                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                                    </a>
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
                                                 @else
-                                                    <a href="#" class="btn-sm text-secondary">
-                                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                                    </a>
+                                                    <button class="btn btn-xs btn-secondary">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
                                                 @endif
                                             </td>
                                         </tr>

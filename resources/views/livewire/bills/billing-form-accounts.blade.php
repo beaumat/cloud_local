@@ -97,7 +97,7 @@
                                         :options="$acctCodeList" :zero="true" wire:model.live='ACCOUNT_ID'
                                         isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                                 @else
-                                    <label class="mt-2"> {{ $ACCOUNT_CODE }}</label>
+                                    <label class="mt-1"> {{ $ACCOUNT_CODE }}</label>
                                 @endif
                             @else
                                 @if ($codeBase)
@@ -105,7 +105,7 @@
                                         :options="$acctCodeList" :zero="true" wire:model.live='ACCOUNT_ID'
                                         isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                                 @else
-                                    <label class="mt-2"> {{ $ACCOUNT_CODE }}</label>
+                                    <label class="mt-1"> {{ $ACCOUNT_CODE }}</label>
                                 @endif
                             @endif
                         </td>
@@ -116,7 +116,7 @@
                                         isDisabled="{{ false }}" :options="$acctDescList" :zero="true"
                                         wire:model.live='ACCOUNT_ID' :vertical="false" :withLabel="false" />
                                 @else
-                                    <label class="mt-2"> {{ $ACCOUNT_DESCRIPTION }}</label>
+                                    <label class="mt-1"> {{ $ACCOUNT_DESCRIPTION }}</label>
                                 @endif
                             @else
                                 @if (!$codeBase)
@@ -124,20 +124,20 @@
                                         :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID'
                                         isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                                 @else
-                                    <label class="mt-2"> {{ $ACCOUNT_DESCRIPTION }}</label>
+                                    <label class="mt-1"> {{ $ACCOUNT_DESCRIPTION }}</label>
                                 @endif
                             @endif
                         </td>
                         <td>
-                            <input type="number" class="form-control form-control-sm mt-2 text-right" name="AMOUNT"
+                            <input type="number" class="form-control form-control-sm mt-1 text-right" name="AMOUNT"
                                 wire:model='AMOUNT' />
                         </td>
                         <td class="text-center">
-                            <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
+                            <input type="checkbox" class="text-lg mt-1" wire:model='TAXABLE' name="taxable"
                                 @if ($ACCOUNT_ID == 0) disabled @endif />
                         </td>
                         <td class="text-left">
-                            <input type="text" class="form-control form-control-sm mt-2" wire:model='PARTICULARS'
+                            <input type="text" class="form-control form-control-sm mt-1" wire:model='PARTICULARS'
                                 name="PARTICULARS" />
                         </td>
                         <td>
@@ -157,7 +157,7 @@
 
                         </td>
                         <td>
-                            <div class="mt-2">
+                            <div class="mt-1">
                                 <button type="submit" wire:loading.attr='hidden'
                                     @if ($ACCOUNT_ID == 0) disabled @endif
                                     class="text-white btn bg-sky btn-sm w-100">

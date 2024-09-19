@@ -92,20 +92,19 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-6 col-6">
-                                        @if ($STATUS == 0)
+                                        @if ($STATUS == 0 || $STATUS == 16)
                                             @if ($Modify)
                                                 <button type="submit" class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
                                                 @if ($ID > 0)
                                                     <button type="button" wire:click='updateCancel'
+                                                     wire:confirm='Want to cancel?'
                                                         class="btn btn-sm btn-danger"><i class="fa fa-ban"
                                                             aria-hidden="true"></i> Cancel</button>
                                                 @endif
                                             @else
-                                                <button type="button" wire:click='getModify()'
-                                                    class="btn btn-sm btn-info"
-                                                    @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <button type="button" wire:click='getModify()' class="btn btn-sm btn-info" >
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
                                                 <button type="button" wire:click='getPosted()'
@@ -115,39 +114,36 @@
                                                 </button>
                                             @endif
                                         @endif
-                                        @if ($STATUS == 15 && $UNPOSTED == true)
-                                            <button type="button" wire:click='getUnposted()'
-                                                class="btn btn-sm btn-secondary"
-                                                wire:confirm="Are you sure you want to unpost?">
-                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
-                                            </button>
+                                        @if ($STATUS == 15)
+                                            @can('customer.invoice.update')
+                                                <button type="button" wire:click='getUnposted()'
+                                                    class="btn btn-sm btn-secondary"
+                                                    wire:confirm="Are you sure you want to unpost?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
+                                                </button>
+                                            @endcan
                                         @endif
 
-                                        @if ($STATUS == 16)
-                                            <button type="button" wire:click='getModify()'
-                                                class="btn btn-sm btn-info"
-                                                @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                            </button>
-                                            <button type="button" wire:click='getPosted()'
-                                                class="btn btn-sm btn-warning"
-                                                wire:confirm="Are you sure you want to post?">
-                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
-                                            </button>
-                                        @endif
+                                       
 
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($STATUS == 15)
-                                            <button type="button" wire:click='OpenJournal()'
-                                                class="btn btn-sm btn-warning">
-                                                <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
-                                            </button>
+                                        @if ($STATUS != 16)
+                                            @if ($ID > 0 && $STATUS > 0)
+                                                <button type="button" wire:click='OpenJournal()'
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                                </button>
 
-                                            </button>
-                                            <a id="new" title="Create"
-                                                href="{{ route('customersinvoice_create') }}"
-                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                                </button>
+                                                @can('customer.invoice.create')
+                                                    <a id="new" title="Create"
+                                                        href="{{ route('customersinvoice_create') }}"
+                                                        class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New
+                                                    </a>
+                                                @endcan
+                                            @endif
+
                                         @endif
                                     </div>
                                 </div>
@@ -184,7 +180,7 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('Invoice.InvoiceFormItems', ['INVOICE_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID])
+                                                @livewire('Invoice.InvoiceFormItems', ['INVOICE_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID])
                                             </div>
                                         </div>
                                     </div>

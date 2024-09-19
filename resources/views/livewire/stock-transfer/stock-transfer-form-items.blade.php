@@ -97,7 +97,7 @@
                             @if ($saveSuccess)
                                 @if ($codeBase)
                                     <livewire:select-option name="ITEM_ID1" titleName="Item Code" :options="$itemCodeList"
-                                        :zero="true" wire:model.live='ITEM_ID' :vertical="false"
+                                        :zero="true" wire:model.live='ITEM_ID' :vertical="false" :isDisabled=false
                                         :withLabel="false" />
                                 @else
                                     <label class="mt-2 text-xs"> {{ $ITEM_CODE }}</label>
@@ -105,7 +105,7 @@
                             @else
                                 @if ($codeBase)
                                     <livewire:select-option name="ITEM_ID2" titleName="Item Code" :options="$itemCodeList"
-                                        :zero="true" wire:model.live='ITEM_ID' :vertical="false"
+                                        :zero="true" wire:model.live='ITEM_ID' :vertical="false" :isDisabled=false
                                         :withLabel="false" />
                                 @else
                                     <label class="mt-2 text-xs"> {{ $ITEM_CODE }}</label>
@@ -116,7 +116,7 @@
                             @if ($saveSuccess)
                                 @if (!$codeBase)
                                     <livewire:select-option name="ITEM_ID3" titleName="Item Description"
-                                        :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false"
+                                        :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false" :isDisabled=false
                                         :withLabel="false" />
                                 @else
                                     <label class="mt-2 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
@@ -124,7 +124,7 @@
                             @else
                                 @if (!$codeBase)
                                     <livewire:select-option name="ITEM_ID4" titleName="Item Description"
-                                        :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID'
+                                        :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :isDisabled=false
                                         :vertical="false" :withLabel="false" />
                                 @else
                                     <label class="mt-2 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
@@ -177,6 +177,6 @@
 
     </table>
     @if ($STATUS == $openStatus)
-        <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase' />
+        <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase' :isDisabled=false />
     @endif
 </div>

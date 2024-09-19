@@ -20,8 +20,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' =>
-                session('message'), 'error' => session('error')])
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
@@ -42,9 +41,9 @@
                                                     class="form-control form-control-sm">
                                                     <option value="0"></option>
                                                     @foreach ($subList as $item)
-                                                    <option value="{{ $item->ID }}">
-                                                        {{ $item->DESCRIPTION }}
-                                                    </option>
+                                                        <option value="{{ $item->ID }}">
+                                                            {{ $item->DESCRIPTION }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -52,17 +51,16 @@
                                         <div class="col-md-2">
                                             <div class="mt-0">
                                                 <label class="text-sm" wire:click='autoUpdate()'
-                                                   wire:confirm="Are you sure you want to update price?"
-                                                
-                                                >Location:</label>
-                                                <select @if (Auth::user()->locked_location) style="opacity:
+                                                    wire:confirm="Are you sure you want to update price?">Location:</label>
+                                                <select
+                                                    @if (Auth::user()->locked_location) style="opacity:
                                                     0.5;pointer-events: none;" @endif
                                                     name="location" wire:model.live='LOCATION_ID'
                                                     class="form-control form-control-sm">
                                                     @foreach ($locationList as $item)
-                                                    <option value="{{ $item->ID }}">
-                                                        {{ $item->NAME }}
-                                                    </option>
+                                                        <option value="{{ $item->ID }}">
+                                                            {{ $item->NAME }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -78,44 +76,51 @@
                                         <th>Category</th>
                                         <th>Sub Category</th>
                                         <th class="col-1 text-right">Custom Price</th>
+                                        <th class="col-1 text-right">Custom Cost</th>
                                         <th class="col-1 text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
-                                    @foreach ($dataList as $list )
-                                    <tr>
-                                        <td>{{ $list->CODE }}</td>
-                                        <td>{{ $list->DESCRIPTION }}</td>
-                                        <td>{{ $list->CLASS }}</td>
-                                        <td>{{ $list->SUB_CLASS }}</td>
-                                        <td class="text-right">
-                                            @if($list->ID == $editId)
-                                            <input class="text-xs border border-secondary" wire:model='editPrice' />
-                                            @else
-                                            {{ number_format($list->PRICE,2) }}
-                                            @endif
+                                    @foreach ($dataList as $list)
+                                        <tr>
+                                            <td>{{ $list->CODE }}</td>
+                                            <td>{{ $list->DESCRIPTION }}</td>
+                                            <td>{{ $list->CLASS }}</td>
+                                            <td>{{ $list->SUB_CLASS }}</td>
+                                            <td class="text-right">
+                                                @if ($list->ID == $editId)
+                                                    <input class="text-xs border border-secondary"
+                                                        wire:model='editPrice' />
+                                                @else
+                                                    {{ number_format($list->PRICE, 2) }}
+                                                @endif
+                                            </td>
 
+                                                 <td class="text-right">
+                                                @if ($list->ID == $editId)
+                                                    <input class="text-xs border border-secondary"
+                                                        wire:model='editCost' />
+                                                @else
+                                                    {{ number_format($list->COST, 2) }}
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($list->ID == $editId)
+                                                    <button class="btn btn-xs btn-success " wire:click='save()'>
+                                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                    </button>
 
-                                        </td>
-                                        <td class="text-center">
-                                            @if($list->ID == $editId)
-
-                                            <button class="btn btn-xs btn-success " wire:click='save()'>
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                            </button>
-
-                                            <button class="btn btn-xs btn-warning" wire:click='cancel()'>
-                                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                            </button>
-                                            @else
-                                            <button class="btn btn-xs btn-info" wire:click='edit({{ $list->ID }})'>
-                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                            </button>
-                                            @endif
-
-
-                                        </td>
-                                    </tr>
+                                                    <button class="btn btn-xs btn-warning" wire:click='cancel()'>
+                                                        <i class="fa fa-ban" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button class="btn btn-xs btn-info"
+                                                        wire:click='edit({{ $list->ID }})'>
+                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                    </button>
+                                                @endif
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>

@@ -21,6 +21,7 @@ class BillPaymentForm extends Component
 {
     public int $ID;
     public string $CODE;
+    public bool $UNPOSTED = true;
     public $DATE;
     public int $PAY_TO_ID;
     public int $LOCATION_ID;
@@ -132,20 +133,20 @@ class BillPaymentForm extends Component
             if ($this->ID == 0) {
                 $this->validate(
                     [
-                        'BANK_ACCOUNT_ID' => 'required|not_in:0',
-                        'PAY_TO_ID' => 'required|not_in:0',
-                        'AMOUNT' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required'
+                        'BANK_ACCOUNT_ID'   => 'required|not_in:0',
+                        'PAY_TO_ID'         => 'required|not_in:0',
+                        'AMOUNT'            => 'required|not_in:0',
+                        'DATE'              => 'required',
+                        'LOCATION_ID'       => 'required'
 
                     ],
                     [],
                     [
-                        'PAY_TO_ID' => 'Pay To',
-                        'BANK_ACCOUNT_ID' => 'Bank Account',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'AMOUNT' => 'Amount'
+                        'PAY_TO_ID'         => 'Pay To',
+                        'BANK_ACCOUNT_ID'   => 'Bank Account',
+                        'DATE'              => 'Date',
+                        'LOCATION_ID'       => 'Location',
+                        'AMOUNT'            => 'Amount'
                     ]
                 );
                 $this->ID = $this->billPaymentServices->Store(
@@ -209,22 +210,48 @@ class BillPaymentForm extends Component
     public function getPosted()
     {
         try {
-
             DB::beginTransaction();
-
-            $check = (int) $this->objectServices->ObjectTypeID('CHECK');
-            $checkbills = (int) $this->objectServices->ObjectTypeID('CHECK_BILLS');
-
-            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($check, $this->ID) + 1;
+            $check = $this->billPaymentServices->object_type_check;
+            $checkbills = $this->billPaymentServices->object_type_check_bills;
+            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($check, $this->ID);
+            if ($JOURNAL_NO  == 0) {
+                $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($check, $this->ID) + 1;
+            }
 
             $checkDataBills = $this->billPaymentServices->billPaymentBillsJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkDataBills, $this->LOCATION_ID, $checkbills, $this->DATE,"AP");
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $checkDataBills,
+                $this->LOCATION_ID,
+                $checkbills,
+                $this->DATE,
+                "AP"
+            );
+            $checkData = $this->billPaymentServices->billPaymentJournalRemaining($this->ID);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $checkData,
+                $this->LOCATION_ID,
+                $check,
+                $this->DATE,
+                "BILL"
+            );
+
+
+
 
             $checkData = $this->billPaymentServices->billPaymentJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkData, $this->LOCATION_ID, $check, $this->DATE,"BILL");
+            
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $checkData,
+                $this->LOCATION_ID,
+                $check,
+                $this->DATE,
+                "BILL"
+            );
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
@@ -245,6 +272,28 @@ class BillPaymentForm extends Component
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
+        }
+    }
+    public function getUnposted()
+    {
+        try {
+            DB::beginTransaction();
+            $this->billPaymentServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            Redirect::route('vendorsbill_payment_edit', $this->ID)->with('message', 'Successfully unposted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function OpenJournal()
+    {
+
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
         }
     }
     public function render()

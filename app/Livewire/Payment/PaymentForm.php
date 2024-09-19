@@ -2,12 +2,15 @@
 
 namespace App\Livewire\Payment;
 
+use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
+use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\PaymentMethodServices;
 use App\Services\PaymentServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -37,6 +40,7 @@ class PaymentForm extends Component
     public string $STATUS_DESCRIPTION;
     public bool $DEPOSITED;
     public int $ACCOUNTS_RECEIVABLE_ID;
+    public bool $UNPOSTED  = true;
     public $locationList = [];
     public $contactList = [];
     public $paymentMethodList = [];
@@ -53,7 +57,8 @@ class PaymentForm extends Component
     public bool $showReceiptDate = false;
     public bool $showFileName = false;
 
-
+    private $accountJournalServices;
+    private $documentStatusServices;
     public function boot(
         PaymentServices $paymentServices,
         LocationServices $locationServices,
@@ -61,7 +66,8 @@ class PaymentForm extends Component
         AccountServices $accountServices,
         PaymentMethodServices $paymentMethodServices,
         ContactServices $contactServices,
-
+        AccountJournalServices $accountJournalServices,
+        DocumentStatusServices $documentStatusServices
     ) {
         $this->paymentServices = $paymentServices;
         $this->locationServices = $locationServices;
@@ -69,6 +75,8 @@ class PaymentForm extends Component
         $this->accountServices = $accountServices;
         $this->paymentMethodServices = $paymentMethodServices;
         $this->contactServices = $contactServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->documentStatusServices = $documentStatusServices;
     }
     public function getInfo($data)
     {
@@ -89,6 +97,7 @@ class PaymentForm extends Component
         $this->OVERPAYMENT_ACCOUNT_ID = $data->OVERPAYMENT_ACCOUNT_ID ?? 0;
         $this->ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
         $this->STATUS = $data->STATUS ?? 0;
+        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
         $this->STATUS_DATE = $data->STATUS_DATE ?? null;
         $this->DEPOSITED = $data->DEPOSITED ?? null;
         $this->updatedpaymentmethodid();
@@ -102,7 +111,7 @@ class PaymentForm extends Component
     }
     private  function LoadDropDown()
     {
-        $this->contactList = $this->contactServices->getList(1);
+        $this->contactList = $this->contactServices->getCustoPatientList();
         $this->locationList = $this->locationServices->getList();
         $this->paymentMethodList = $this->paymentMethodServices->getListNonPatient();
     }
@@ -133,38 +142,38 @@ class PaymentForm extends Component
         $this->RECEIPT_REF_NO = '';
         $this->RECEIPT_DATE = null;
         $this->NOTES = '';
-        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
+        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $this->accountServices->getByName('Undeposited Funds');;
         $this->OVERPAYMENT_ACCOUNT_ID = 0;
         $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
         $this->STATUS = 0;
+        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
         $this->DEPOSITED = 0;
         $this->Modify = true;
         $this->updatedpaymentmethodid();
     }
-    public function updatedPdf()
-    {
-        $this->validate([
-            'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
-        ]);
-    }
+
     public function save()
     {
 
         $this->validate(
             [
-                'CUSTOMER_ID' => 'required|not_in:0',
-                'PAYMENT_METHOD_ID' => 'required|not_in:0',
-                'DATE' => 'required',
-                'LOCATION_ID' => 'required',
-                'AMOUNT' => 'required|not_in:0',
+                'CUSTOMER_ID'                       => 'required|integer|exists:contact,id',
+                'PAYMENT_METHOD_ID'                 => 'required|integer|exists:payment_method,id',
+                'DATE'                              => 'required|string|date_format:Y-m-d',
+                'LOCATION_ID'                       => 'required|integer|exists:location,id',
+                'AMOUNT'                            => 'required|not_in:0',
+                'ACCOUNTS_RECEIVABLE_ID'            => 'required|integer|exists:account,id',
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => 'required|integer|exists:account,id',
             ],
             [],
             [
-                'CUSTOMER_ID' => 'Customer',
-                'PAYMENT_METHOD_ID' => 'Payment Method',
-                'DATE' => 'Date',
-                'LOCATION_ID' => 'Location',
-                'AMOUNT' => 'Amount',
+                'CUSTOMER_ID'                       => 'Customer',
+                'PAYMENT_METHOD_ID'                 => 'Payment Method',
+                'DATE'                              => 'Date',
+                'LOCATION_ID'                       => 'Location',
+                'AMOUNT'                            => 'Amount',
+                'ACCOUNTS_RECEIVABLE_ID'            => 'Accounts Receivable',
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => 'Undeposited funds Accounts'
             ]
         );
 
@@ -234,64 +243,125 @@ class PaymentForm extends Component
         $paymentMethod = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
 
         if ($paymentMethod) {
+            $data = $this->paymentMethodServices->PaymentMethodSwitch($paymentMethod->PAYMENT_TYPE);
+            $this->showCardNo = (bool) $data['showCardNo'];
+            $this->showCardDateExpire = (bool) $data['showCardDateExpire'];
+            $this->showReceiptNo = (bool) $data['showReceiptNo'];
+            $this->showReceiptDate = (bool) $data['showReceiptDate'];
+            $this->showFileName = (bool) $data['showFileName'];
+            // $this->TITLE_REF = (string) $data['titleRef'];
+            // $this->TITLE_DATE = (string) $data['titleDate'];
+            // $this->showTax = (bool) $data['showTax'];
 
-            switch ($paymentMethod->PAYMENT_TYPE) {
-                case 0:
-                    $this->showCardNo = false;
-                    $this->showCardDateExpire = false;
-                    $this->showReceiptNo = false;
-                    $this->showReceiptDate = false;
-                    $this->showFileName = false;
-                    break;
-                case 1:
-                    $this->showCardNo = false;
-                    $this->showCardDateExpire = false;
-                    $this->showReceiptNo = true;
-                    $this->showReceiptDate = true;
-                    $this->showFileName = false;
-                    break;
-                case 4:
-                    $this->showCardNo = true;
-                    $this->showCardDateExpire = true;
-                    $this->showReceiptNo = true;
-                    $this->showReceiptDate = false;
-                    $this->showFileName = false;
-                    break;
+            return;
+        }
+
+        $this->showCardNo = false;
+        $this->showCardDateExpire = false;
+        $this->showReceiptNo = false;
+        $this->showReceiptDate = false;
+        $this->showFileName = false;
+    }
 
 
-                case 5:
-                    $this->showCardNo = true;
-                    $this->showCardDateExpire = true;
-                    $this->showReceiptNo = true;
-                    $this->showReceiptDate = false;
-                    $this->showFileName = false;
-                    break;
+    public function getPosted()
+    {
+        try {
 
-                case 8:
-                    $this->showCardNo = false;
-                    $this->showCardDateExpire = false;
-                    $this->showReceiptNo = false;
-                    $this->showReceiptDate = false;
-                    $this->showFileName = false;
-                    break;
-                case 9:
-                    $this->showCardNo = false;
-                    $this->showCardDateExpire = false;
-                    $this->showReceiptNo = false;
-                    $this->showReceiptDate = false;
-                    $this->showFileName = false;
-                    break;
-                default:
-                    # code...
-                    $this->showCardNo = false;
-                    $this->showCardDateExpire = false;
-                    $this->showReceiptNo = true;
-                    $this->showReceiptDate = true;
-                    $this->showFileName = true;
-                    break;
+            DB::beginTransaction();
+
+            $payment = $this->paymentServices->object_type_payment;
+            $paymentInvoices = $this->paymentServices->object_type_payment_invoices;
+
+            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($payment, $this->ID);
+            if ($JOURNAL_NO  == 0) {
+                $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($payment, $this->ID) + 1;
             }
+
+            $paymentData = $this->paymentServices->PaymentJournal($this->ID);
+
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $paymentData,
+                $this->LOCATION_ID,
+                $payment,
+                $this->DATE,
+                "UF"
+            );
+
+
+            $paymentDataR = $this->paymentServices->PaymentJournalRemaining($this->ID);
+
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $paymentDataR,
+                $this->LOCATION_ID,
+                $payment,
+                $this->DATE,
+                "A/R"
+            );
+
+
+            $paymentInvoiceData = $this->paymentServices->PaymentInvoicejournal($this->ID);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $paymentInvoiceData,
+                $this->LOCATION_ID,
+                $paymentInvoices,
+                $this->DATE,
+                "A/R"
+            );
+
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum) {
+                $this->paymentServices->StatusUpdate($this->ID, 15);
+                DB::commit();
+                $data = $this->paymentServices->get($this->ID);
+                if ($data) {
+                    $this->getInfo($data);
+                    $this->Modify = false;
+                    return;
+                }
+                session()->flash('message', 'Successfully posted');
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            DB::rollBack();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
         }
     }
+    public function getUnposted()
+    {
+        try {
+            DB::beginTransaction();
+            $this->paymentServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            Redirect::route('customerspayment_edit', $this->ID)->with('message', 'Successfully unposted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function getModify()
+    {
+        $this->Modify = true;
+    }
+    public function OpenJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->paymentServices->object_type_payment, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+        }
+    }
+
     public function render()
     {
         return view('livewire.payment.payment-form');

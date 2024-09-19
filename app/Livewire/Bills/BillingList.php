@@ -66,6 +66,7 @@ class BillingList extends Component
     public function render()
     {
         $dataList = $this->billingServices->Search($this->search, $this->locationid, $this->perPage);
+        
         return view('livewire.bills.billing-list', ['dataList' => $dataList]);
     }
 }

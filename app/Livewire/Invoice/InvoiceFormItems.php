@@ -9,6 +9,7 @@ use App\Services\InvoiceServices;
 use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
+use App\Services\PriceLevelLineServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,10 @@ class InvoiceFormItems extends Component
     public int $STATUS;
     #[Reactive]
     public int $TAX_ID;
+
+    #[Reactive]
+    public int $LOCATION_ID;
+
     public int $openStatus = 0;
     public int $ID;
     public int $LINE_NO;
@@ -76,6 +81,7 @@ class InvoiceFormItems extends Component
     private $itemSubClassServices;
     private $accountJournalServices;
     private $itemInventoryServices;
+    private $priceLevelLineServices;
     public function boot(
         InvoiceServices $invoiceServices,
         ComputeServices $computeServices,
@@ -84,7 +90,8 @@ class InvoiceFormItems extends Component
         ItemServices $itemServices,
         ItemSubClassServices $itemSubClassServices,
         AccountJournalServices $accountJournalServices,
-        ItemInventoryServices $itemInventoryServices
+        ItemInventoryServices $itemInventoryServices,
+        PriceLevelLineServices   $priceLevelLineServices
     ) {
         $this->invoiceServices = $invoiceServices;
         $this->computeServices = $computeServices;
@@ -94,6 +101,7 @@ class InvoiceFormItems extends Component
         $this->itemSubClassServices = $itemSubClassServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->itemInventoryServices = $itemInventoryServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
     }
 
     public function updatedcodeBase()
@@ -130,7 +138,6 @@ class InvoiceFormItems extends Component
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
-
         $this->QUANTITY = 1;
         $this->RATE = 0;
         $this->ITEM_CODE = '';
@@ -143,7 +150,7 @@ class InvoiceFormItems extends Component
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
-                $this->RATE = $item->TYPE == 6 ? $this->getGroupPrice($item->ID) : $item->RATE ?? 0;
+                $this->RATE = $this->priceLevelLineServices->GetPriceByLocation($this->LOCATION_ID, $this->ITEM_ID);
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
@@ -196,7 +203,7 @@ class InvoiceFormItems extends Component
                 'RATE' => 'Price'
             ]
         );
-
+        DB::beginTransaction();
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
             $tax_result = $this->computeServices->ItemComputeTax($this->AMOUNT, $this->TAXABLE, $this->TAX_ID, $taxRate);
@@ -231,6 +238,7 @@ class InvoiceFormItems extends Component
             );
 
             $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
+            DB::commit();
             $this->dispatch('update-amount', result: $getResult);
 
             $this->ITEM_ID = 0;
@@ -248,6 +256,7 @@ class InvoiceFormItems extends Component
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
