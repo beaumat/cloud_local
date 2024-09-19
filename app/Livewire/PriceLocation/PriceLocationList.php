@@ -15,6 +15,7 @@ use Livewire\Component;
 class PriceLocationList extends Component
 {
 
+    public bool $showCost  = false;
     public $editId = null;
     public $editPrice = 0;
     public $editCost = 0;

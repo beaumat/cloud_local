@@ -14,8 +14,16 @@ class AccountJournalServices
     {
         $this->object = $objectService;
     }
-    public function DeleteJournal(int $ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, $ENTRY_TYPE)
-    {
+    public function DeleteJournal(
+        int $ACCOUNT_ID,
+        int $LOCATION_ID,
+        int $JOURNAL_NO,
+        int $SUBSIDIARY_ID,
+        int $OBJECT_ID,
+        int $OBJECT_TYPE,
+        string $OBJECT_DATE,
+        $ENTRY_TYPE
+    ) {
         $this->JournalModify(
             $ACCOUNT_ID,
             $LOCATION_ID,
@@ -31,8 +39,18 @@ class AccountJournalServices
         );
     }
 
-    private function Update(int $ACCOUNT_ID, int $LOCATION_ID, int $SUBSIDIARY_ID, int $SEQUENCE_GROUP, int $OBJECT_TYPE, int $OBJECT_ID, string $OBJECT_DATE, int $ENTRY_TYPE, float $AMOUNT, $EXTENDED_OPTIONS = null)
-    {
+    private function Update(
+        int $ACCOUNT_ID,
+        int $LOCATION_ID,
+        int $SUBSIDIARY_ID,
+        int $SEQUENCE_GROUP,
+        int $OBJECT_TYPE,
+        int $OBJECT_ID,
+        string $OBJECT_DATE,
+        int $ENTRY_TYPE,
+        float $AMOUNT,
+        $EXTENDED_OPTIONS = null
+    ) {
 
         if ($ACCOUNT_ID > 0) {
 
@@ -59,8 +77,22 @@ class AccountJournalServices
                 ]);
         }
     }
-    private function Store(int $PREVIOUS_ID, int $SEQUENCE_NO, int $JOURNAL_NO, int $ACCOUNT_ID, int $LOCATION_ID, int $SUBSIDIARY_ID, int $SEQUENCE_GROUP, int $OBJECT_TYPE, int $OBJECT_ID, string $OBJECT_DATE, int $ENTRY_TYPE, float $AMOUNT, float $ENDING_BALANCE, $EXTENDED_OPTIONS = null)
-    {
+    private function Store(
+        int $PREVIOUS_ID,
+        int $SEQUENCE_NO,
+        int $JOURNAL_NO,
+        int $ACCOUNT_ID,
+        int $LOCATION_ID,
+        int $SUBSIDIARY_ID,
+        int $SEQUENCE_GROUP,
+        int $OBJECT_TYPE,
+        int $OBJECT_ID,
+        string $OBJECT_DATE,
+        int $ENTRY_TYPE,
+        float $AMOUNT,
+        float $ENDING_BALANCE,
+        $EXTENDED_OPTIONS = null
+    ) {
 
         $ID = (int) $this->object->ObjectNextID('ACCOUNT_JOURNAL');
         AccountJournal::create([

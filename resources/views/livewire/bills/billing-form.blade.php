@@ -105,11 +105,8 @@
                                                     wire:confirm='Are you sure you want to post?'>
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
-
                                             @endif
-
                                         @endif
-
                                         @if ($STATUS == 15)
                                             @can('vendor.bill.update')
                                                 <button type="button" wire:click='getUnposted()'
@@ -119,9 +116,7 @@
                                                 </button>
                                             @endcan
                                         @endif
-
                                     </div>
-
 
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS > 0)

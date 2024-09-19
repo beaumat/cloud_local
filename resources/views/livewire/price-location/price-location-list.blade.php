@@ -27,11 +27,17 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-7">
                                             <div class="mt-0">
                                                 <label class="text-sm">Search:</label>
                                                 <input type="text" wire:model.live.debounce.120ms='search'
                                                     class="w-100 form-control form-control-sm" placeholder="Search" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="text-right mt-4">
+                                                <input class="text-xs" type="checkbox" wire:model.live='showCost'
+                                                    name="showcheckbox" />
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -51,7 +57,9 @@
                                         <div class="col-md-2">
                                             <div class="mt-0">
                                                 <label class="text-sm" wire:click='autoUpdate()'
-                                                    wire:confirm="Are you sure you want to update price?">Location:</label>
+                                                    wire:confirm="Are you sure you want to update price?">Location:
+                                                </label>
+
                                                 <select
                                                     @if (Auth::user()->locked_location) style="opacity:
                                                     0.5;pointer-events: none;" @endif
@@ -76,7 +84,9 @@
                                         <th>Category</th>
                                         <th>Sub Category</th>
                                         <th class="col-1 text-right">Custom Price</th>
-                                        <th class="col-1 text-right">Custom Cost</th>
+                                        @if ($showCost)
+                                            <th class="col-1 text-right">Custom Cost</th>
+                                        @endif
                                         <th class="col-1 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -95,15 +105,16 @@
                                                     {{ number_format($list->PRICE, 2) }}
                                                 @endif
                                             </td>
-
-                                                 <td class="text-right">
-                                                @if ($list->ID == $editId)
-                                                    <input class="text-xs border border-secondary"
-                                                        wire:model='editCost' />
-                                                @else
-                                                    {{ number_format($list->COST, 2) }}
-                                                @endif
-                                            </td>
+                                            @if ($showCost)
+                                                <td class="text-right">
+                                                    @if ($list->ID == $editId)
+                                                        <input class="text-xs border border-secondary"
+                                                            wire:model='editCost' />
+                                                    @else
+                                                        {{ number_format($list->COST, 2) }}
+                                                    @endif
+                                                </td>
+                                            @endif
                                             <td class="text-center">
                                                 @if ($list->ID == $editId)
                                                     <button class="btn btn-xs btn-success " wire:click='save()'>
