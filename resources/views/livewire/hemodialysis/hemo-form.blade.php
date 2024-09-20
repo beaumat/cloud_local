@@ -11,7 +11,7 @@
                     <div class="card">
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-8 col-sm-6">
                                     <a class="text-white" href="{{ route('patientshemo') }}">
                                         @if ($ID == 0)
                                             Create
@@ -19,7 +19,7 @@
                                         Hemodialysis Treatment
                                     </a>
                                 </div>
-                                <div class="col-sm-6 text-right">
+                                <div class="col-4 col-sm-6 text-right">
                                     @if ($ID > 0)
                                         <i> {{ $STATUS_DESCRIPTION }}</i>
                                     @endif

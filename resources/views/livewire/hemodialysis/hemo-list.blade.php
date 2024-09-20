@@ -46,30 +46,30 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-12 col-md-4">
                                             <div class="mt-0">
-                                                <label class="text-sm">
+                                                <label class="text-xs">
                                                     <a href="#" wire:click='refreshList()'>Search:</a>
                                                 </label>
                                                 <input type="text" wire:model.live.debounce.150ms='search'
-                                                    class="w-100 form-control form-control-sm" placeholder="Search" />
+                                                    class="form-control form-control-sm text-xs" placeholder="Search" />
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <label class="text-sm">Date From:</label>
-                                            <input type="date" class="form-control form-control-sm"
+                                        <div class="col-6 col-md-2">
+                                            <label class="text-xs">Date From:</label>
+                                            <input type="date" class="form-control form-control-sm text-xs"
                                                 wire:model.live='DATE_FROM' />
                                         </div>
-                                        <div class="col-md-2">
-                                            <label class="text-sm">Date To:</label>
-                                            <input type="date" class="form-control form-control-sm"
+                                        <div class="col-6 col-md-2">
+                                            <label class="text-xs">Date To:</label>
+                                            <input type="date" class="form-control form-control-sm text-xs"
                                                 wire:model.live='DATE_TO' />
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-4 col-md-2">
                                             <div class="mt-0">
-                                                <label class="text-sm">Status:</label>
+                                                <label class="text-xs">Status:</label>
                                                 <select name="location" wire:model.live='statusid'
-                                                    class="form-control form-control-sm">
+                                                    class="form-control form-control-sm text-xs">
                                                     <option value="0"> All Status</option>
                                                     @foreach ($statusList as $item)
                                                         <option value="{{ $item->ID }}"> {{ $item->DESCRIPTION }}
@@ -78,14 +78,14 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-8 col-md-2">
                                             <div class="mt-0">
-                                                <label class="text-sm">Location:</label>
+                                                <label class="text-xs">Location:</label>
                                                 <select
                                                     @if (Auth::user()->locked_location) style="opacity:
                                                     0.5;pointer-events: none;" @endif
                                                     name="location" wire:model.live='locationid'
-                                                    class="form-control form-control-sm">
+                                                    class="form-control form-control-sm text-xs">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
                                                         <option value="{{ $item->ID }}"> {{ $item->NAME }}
@@ -98,7 +98,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="max-height: 80vh; overflow-y: auto;">
+                            <div style="max-height: 73vh; overflow-y: auto;" class="border">
                                 <div style="width:1550px;max-width:1900px;">
                                     <table class="table table-sm table-bordered table-hover">
                                         <thead class="text-xs bg-sky sticky-header">
