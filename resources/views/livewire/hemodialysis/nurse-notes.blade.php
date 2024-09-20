@@ -18,7 +18,7 @@
                         <div style="width:1550px;max-width:1600px;">
                             <div class='row'>
                                 <div class="col-md-12">
-                                    <table class="table table-sm table-bordered table-hover w-100">
+                                    <table class="table table-sm table-bordered table-hover">
                                         <thead class="text-xs bg-sky sticky-header">
                                             <tr>
                                                 <th class="col-1">TIME</th>
@@ -177,8 +177,6 @@
 
                                         </tbody>
                                     </table>
-
-
                                     {{-- INSERT --}}
                                     @if ($STATUS_ID == 1)
                                         <div class='col-md-3 col-3'>
@@ -195,13 +193,13 @@
                                                                 <div class="col-12 mb-2">
                                                                     <div class="row">
                                                                         <div class="col-md-6 col-6">
-                                                                            <input type="text" name="BP_1"
+                                                                            <input type="number" name="BP_1"
                                                                                 class="text-xs form-control form-control-sm"
                                                                                 wire:model='BP_1'
                                                                                 placeholder="BP[1]" />
                                                                         </div>
                                                                         <div class="col-md-6 col-6">
-                                                                            <input type="text" name="BP_2"
+                                                                            <input type="number" name="BP_2"
                                                                                 class="text-xs form-control form-control-sm"
                                                                                 wire:model='BP_2'
                                                                                 placeholder="BP[2]" />
