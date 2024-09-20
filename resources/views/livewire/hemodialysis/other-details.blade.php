@@ -501,7 +501,8 @@
                                                     <div class="card-header text-xs">
                                                         <strong> PRE-HEMODIALYSIS ASSESSMENT </strong>
                                                     </div>
-                                                    <div class="card-body"  style="overflow-y: auto;">
+                                                    <div class="card-body" style="overflow-y: auto;">
+                                                                  <div style="width:600px;">
                                                         <table class="w-100">
                                                             <thead class="text-xs">
                                                                 <tr>
@@ -671,7 +672,7 @@
                                                                 </tr>
                                                             </tbody>
                                                         </table>
-
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -680,177 +681,183 @@
                                                     <div class="card-header text-xs">
                                                         <strong> POST-HEMODIALYSIS ASSESSMENT</strong>
                                                     </div>
-                                                    <div class="card-body"  style="overflow-y: auto;">
-                                                        <table class="w-100">
-                                                            <thead class="text-xs">
-                                                                <tr>
-                                                                    <th>MOBILIZATION </th>
-                                                                    <th>LUNGS</th>
-                                                                    <th>FLUID STATUS</th>
-                                                                    <th>HEART</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="text-xs">
-                                                                <tr>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_AMBULATORY'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        AMBULATORY
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_CLEAR'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        CLEAR
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox'
-                                                                            wire:model='POST_DISTENDED_JUGULAR_VIEW'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        DISTENDED JUGULAR VIEW
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_REGULAR'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        REGULAR
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input type='checkbox'
-                                                                            wire:model='POST_AMBULATORY_W_ASSIT'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        AMBULATORY W/ ASSIT
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_CRACKLES'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        CRACKLES
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_ASCITES'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        ASCITES
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_IRREGULAR'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        IRREGULAR
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_WHEEL_CHAIR'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        WHEEL CHAIR
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_RHONCHI'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        RHONCHI
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_EDEMA'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        EDEMA
-                                                                    </td>
-                                                                    <td>
-
-                                                                    </td>
-                                                                </tr>
-
-                                                                <tr>
-                                                                    <td class="text-center">
-
-                                                                        L.O.C
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_WHEEZES'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        WHEEZES
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_LOCATION'
-                                                                            @if ($Modify == false) disabled @endif />
-                                                                        LOCATION <input type='text' maxlength='30'
-                                                                            wire:model='POST_LOCATION_NOTES'
-                                                                            @if ($Modify == false) disabled @endif />
-                                                                    </td>
-                                                                    <td>
-
-                                                                    </td>
-                                                                </tr>
-
-                                                                <tr>
-                                                                    <td>
-
-                                                                        <input type='checkbox' wire:model='POST_CONSCIOUS'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        CONSCIOUS
+                                                    <div class="card-body" style="overflow-y: auto;">
+                                                        <div style="width:600px;">
 
 
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_RALES'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        RALES
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_DEPTH'
-                                                                            @if ($Modify == false) disabled @endif />
-                                                                        DEPTH <input type='text' maxlength='30'
-                                                                            wire:model='POST_DEPTH_NOTES'
-                                                                            @if ($Modify == false) disabled @endif />
+                                                            <table class="w-100">
+                                                                <thead class="text-xs">
+                                                                    <tr>
+                                                                        <th>MOBILIZATION </th>
+                                                                        <th>LUNGS</th>
+                                                                        <th>FLUID STATUS</th>
+                                                                        <th>HEART</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="text-xs">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input type='checkbox'
+                                                                                wire:model='POST_AMBULATORY'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            AMBULATORY
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_CLEAR'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            CLEAR
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox'
+                                                                                wire:model='POST_DISTENDED_JUGULAR_VIEW'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            DISTENDED JUGULAR VIEW
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_REGULAR'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            REGULAR
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input type='checkbox'
+                                                                                wire:model='POST_AMBULATORY_W_ASSIT'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            AMBULATORY W/ ASSIT
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_CRACKLES'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            CRACKLES
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_ASCITES'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            ASCITES
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_IRREGULAR'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            IRREGULAR
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input type='checkbox'
+                                                                                wire:model='POST_WHEEL_CHAIR'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            WHEEL CHAIR
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_RHONCHI'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            RHONCHI
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_EDEMA'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            EDEMA
+                                                                        </td>
+                                                                        <td>
 
-                                                                    </td>
-                                                                    <td>
+                                                                        </td>
+                                                                    </tr>
 
-                                                                    </td>
-                                                                </tr>
+                                                                    <tr>
+                                                                        <td class="text-center">
 
-                                                                <tr>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_COHERENT'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        COHERENT
+                                                                            L.O.C
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_WHEEZES'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            WHEEZES
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_LOCATION'
+                                                                                @if ($Modify == false) disabled @endif />
+                                                                            LOCATION <input type='text' maxlength='30'
+                                                                                wire:model='POST_LOCATION_NOTES'
+                                                                                @if ($Modify == false) disabled @endif />
+                                                                        </td>
+                                                                        <td>
 
-                                                                    </td>
-                                                                    <td>
+                                                                        </td>
+                                                                    </tr>
 
-                                                                    </td>
-                                                                    <td>
+                                                                    <tr>
+                                                                        <td>
 
-                                                                    </td>
-                                                                    <td>
+                                                                            <input type='checkbox' wire:model='POST_CONSCIOUS'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            CONSCIOUS
 
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_DISORIENTED'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        DISORIENTED
 
-                                                                    </td>
-                                                                    <td>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_RALES'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            RALES
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_DEPTH'
+                                                                                @if ($Modify == false) disabled @endif />
+                                                                            DEPTH <input type='text' maxlength='30'
+                                                                                wire:model='POST_DEPTH_NOTES'
+                                                                                @if ($Modify == false) disabled @endif />
 
-                                                                    </td>
-                                                                    <td>
+                                                                        </td>
+                                                                        <td>
 
-                                                                    </td>
-                                                                    <td>
+                                                                        </td>
+                                                                    </tr>
 
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input type='checkbox' wire:model='POST_DROWSY'
-                                                                            @if ($Modify == false) disabled @endif />&nbsp;
-                                                                        DROWSY
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_COHERENT'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            COHERENT
 
+                                                                        </td>
+                                                                        <td>
+
+                                                                        </td>
+                                                                        <td>
+
+                                                                        </td>
+                                                                        <td>
+
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input type='checkbox'
+                                                                                wire:model='POST_DISORIENTED'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            DISORIENTED
+
+                                                                        </td>
+                                                                        <td>
+
+                                                                        </td>
+                                                                        <td>
+
+                                                                        </td>
+                                                                        <td>
+
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input type='checkbox' wire:model='POST_DROWSY'
+                                                                                @if ($Modify == false) disabled @endif />&nbsp;
+                                                                            DROWSY
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
