@@ -271,7 +271,7 @@ class PaymentForm extends Component
             DB::beginTransaction();
 
             $payment = $this->paymentServices->object_type_payment;
-            $paymentInvoices = $this->paymentServices->object_type_payment_invoices;
+            $paymentInvoicesId = $this->paymentServices->object_type_payment_invoices;
 
             $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($payment, $this->ID);
             if ($JOURNAL_NO  == 0) {
@@ -307,7 +307,7 @@ class PaymentForm extends Component
                 $JOURNAL_NO,
                 $paymentInvoiceData,
                 $this->LOCATION_ID,
-                $paymentInvoices,
+                $paymentInvoicesId,
                 $this->DATE,
                 "A/R"
             );

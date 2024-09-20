@@ -82,9 +82,6 @@ class PrintCf4 extends Component
     public string $CF4_HPI;
     public string $CF4_PPMH;
 
-
-
-
     private $philHealthServices;
     private $contactServices;
     private $locationServices;

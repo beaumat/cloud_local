@@ -85,11 +85,11 @@ class PrintCsf extends Component
 
                     switch ($row) {
                         case '1':
-                            $this->HCP_1_AN = $list->PIN;
+                            $this->HCP_1_AN = str_replace('-', '', $list->PIN);
                             $this->HCP_1_NAME = strtoupper($list->NAME);
                             break;
                         case '2':
-                            $this->HCP_2_AN = $list->PIN;
+                            $this->HCP_2_AN = str_replace($list->PIN, '-', '');
                             $this->HCP_2_NAME = strtoupper($list->NAME);
                             break;
                         case '3':

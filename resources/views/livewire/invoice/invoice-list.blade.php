@@ -61,7 +61,7 @@
                                         <th class="col-1">Tax</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center col-1 bg-success">
-                                            @can('customer.invoice.delete')
+                                            @can('customer.invoice.create')
                                                 <a href="{{ route('customersinvoice_create') }}"
                                                     class="text-white btn btn-xs w-100">
                                                     <i class="fas fa-plus"></i> New

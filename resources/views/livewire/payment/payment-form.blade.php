@@ -164,22 +164,24 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-6 col-6">
-                                        @if ($Modify)
-                                            <button type="submit" class="btn btn-sm btn-primary"> <i
-                                                    class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
+                                        @if ($STATUS == 0 || $STATUS == 16)
+                                            @if ($Modify)
+                                                <button type="submit" class="btn btn-sm btn-primary"> <i
+                                                        class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
-                                            @if ($ID > 0)
-                                                <button type="button" wire:click='updateCancel'
-                                                    class="btn btn-sm btn-danger"><i class="fa fa-ban"
-                                                        aria-hidden="true"></i> Cancel</button>
-                                            @endif
-                                        @else
-                                            @if ($STATUS == 0)
+                                                @if ($ID > 0)
+                                                    <button type="button" wire:click='updateCancel'
+                                                        wire:confirm='Want to cancel?'
+                                                        class="btn btn-sm btn-danger"><i class="fa fa-ban"
+                                                            aria-hidden="true"></i> Cancel</button>
+                                                @endif
+                                            @else
                                                 <button type="button" wire:click='getModify()'
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
+
                                                 <button type="button" wire:click='getPosted()'
                                                     class="btn btn-sm btn-warning"
                                                     wire:confirm="Are you sure you want to post?">
@@ -187,8 +189,7 @@
                                                 </button>
                                             @endif
                                         @endif
-
-                                        @if ($STATUS == 15 && $UNPOSTED == true)
+                                        @if ($STATUS == 15)
                                             @can('customer.received-payment.update')
                                                 <button type="button" wire:click='getUnposted()'
                                                     class="btn btn-sm btn-secondary"
@@ -196,18 +197,6 @@
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
                                                 </button>
                                             @endcan
-                                        @endif
-                                        @if ($STATUS == 16)
-                                            <button type="button" wire:click='getModify()'
-                                                class="btn btn-sm btn-info">
-                                                <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                            </button>
-
-                                            <button type="button" wire:click='getPosted()'
-                                                class="btn btn-sm btn-warning"
-                                                wire:confirm="Are you sure you want to post?">
-                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
-                                            </button>
                                         @endif
 
 

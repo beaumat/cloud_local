@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Payment;
 
+use App\Services\AccountJournalServices;
 use App\Services\InvoiceServices;
 use App\Services\PaymentServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -31,12 +33,15 @@ class PaymentInvoices extends Component
     public int $editInvoiceId;
     public float $editAmountApplied;
     private $invoiceServices;
+    private $accountJournalServices;
     public function boot(
         PaymentServices $paymentServices,
-        InvoiceServices $invoiceServices
+        InvoiceServices $invoiceServices,
+        AccountJournalServices   $accountJournalServices
     ) {
         $this->paymentServices = $paymentServices;
         $this->invoiceServices = $invoiceServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function edit(int $ID, int $INVOICE_ID, float $Applied)
     {
@@ -78,9 +83,51 @@ class PaymentInvoices extends Component
     }
     public function delete(int $ID, int $INVOICE_ID)
     {
-        $this->paymentServices->PaymentInvoiceDelete($ID, $this->PAYMENT_ID, $INVOICE_ID);
-        $this->invoiceServices->updateInvoiceBalance($INVOICE_ID);
-        $this->dispatch('reset-payment');
+
+        DB::beginTransaction();
+        try {
+
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                    $this->paymentServices->object_type_payment,
+                    $this->PAYMENT_ID
+                );
+
+                if ($JOURNAL_NO  ==  0) {
+                    session()->flash('error', 'journal not found');
+                    return;
+                }
+
+                $payData = $this->paymentServices->get($this->PAYMENT_ID);
+
+                if ($payData) {
+                    $payInvoices = $this->paymentServices->PaymentInvoiceGet($ID, $this->PAYMENT_ID, $INVOICE_ID);
+                    if ($payInvoices) {
+                        // ACCOUNT_ID
+                        $this->accountJournalServices->DeleteJournal(
+                            $payInvoices->ACCOUNTS_RECEIVABLE_ID,
+                            $payData->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $INVOICE_ID,
+                            $ID,
+                            $this->paymentServices->object_type_payment_invoices,
+                            $payData->DATE,
+                            1
+                        );
+                    }
+                }
+            }
+
+
+            $this->paymentServices->PaymentInvoiceDelete($ID, $this->PAYMENT_ID, $INVOICE_ID);
+            $this->invoiceServices->updateInvoiceBalance($INVOICE_ID);
+            $this->dispatch('reset-payment');
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function mount(int $PAYMENT_ID, int $CUSTOMER_ID, int $LOCATION_ID, float $AMOUNT, float $AMOUNT_APPLIED)
     {

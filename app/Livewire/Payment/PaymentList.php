@@ -6,6 +6,7 @@ use App\Services\LocationServices;
 use App\Services\PaymentServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -40,18 +41,20 @@ class PaymentList extends Component
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
-    public function delete($id)
+    public function delete(int $id)
     {
+
         try {
             $data = $this->paymentServices->get($id);
             if ($data) {
-
+                DB::beginTransaction();
                 $this->uploadServices->RemoveIfExists($data->FILE_PATH);
                 $this->paymentServices->Delete($data->ID);
                 session()->flash('message', 'Successfully deleted.');
+                DB::commit();
             }
-
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
