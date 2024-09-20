@@ -1,6 +1,6 @@
 <div>
     @if ($showModal)
-        <div class="modal show" id="modal-xl" tabindex="-1" role="dialog"
+        <div class="modal show" id="modal-md" tabindex="-1" role="dialog"
             style="display: block; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden;">
             <div class="modal-dialog modal-xl" role="document"
                 style="width: 90%; max-width: none; height: auto; margin: auto; top: 50%; transform: translateY(-50%);">
@@ -12,13 +12,14 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="max-height: 73vh; overflow-y: auto;">
                         @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-                        <div class="form-group">
+
+                        <div style="width:1550px;max-width:1600px;">
                             <div class='row'>
                                 <div class="col-md-12">
                                     <table class="table table-sm table-bordered table-hover w-100">
-                                        <thead class="text-xs bg-sky">
+                                        <thead class="text-xs bg-sky sticky-header">
                                             <tr>
                                                 <th class="col-1">TIME</th>
                                                 <th class="text-center col-1">BP</th>
@@ -180,87 +181,104 @@
 
                                     {{-- INSERT --}}
                                     @if ($STATUS_ID == 1)
-                                        <div class="row">
-                                            <div class="col-12 col-md-3">
-                                                <div class="row">
-                                                    <div class="col-12 mb-2">
-                                                        <input type="time" name="TIME"
-                                                            class="text-xs form-control form-control-sm"
-                                                            wire:model='TIME' placeholder="Time" />
-                                                    </div>
-                                                    <div class="col-12 mb-2">
-                                                        <div class="row">
-                                                            <div class="col-md-6 col-6">
-                                                                <input type="text" name="BP_1"
-                                                                    class="text-xs form-control form-control-sm"
-                                                                    wire:model='BP_1' placeholder="BP[1]" />
-                                                            </div>
-                                                            <div class="col-md-6 col-6">
-                                                                <input type="text" name="BP_2"
-                                                                    class="text-xs form-control form-control-sm"
-                                                                    wire:model='BP_2' placeholder="BP[2]" />
+                                        <div class='col-md-3 col-3'>
+                                            <div class="card card-sm m-1 ">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-12  mb-2">
+                                                                    <input type="time" name="TIME"
+                                                                        class="text-xs form-control form-control-sm"
+                                                                        wire:model='TIME' placeholder="Time" />
+                                                                </div>
+                                                                <div class="col-12 mb-2">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 col-6">
+                                                                            <input type="text" name="BP_1"
+                                                                                class="text-xs form-control form-control-sm"
+                                                                                wire:model='BP_1'
+                                                                                placeholder="BP[1]" />
+                                                                        </div>
+                                                                        <div class="col-md-6 col-6">
+                                                                            <input type="text" name="BP_2"
+                                                                                class="text-xs form-control form-control-sm"
+                                                                                wire:model='BP_2'
+                                                                                placeholder="BP[2]" />
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                                <div class="col-6 mb-2"><input type="text"
+                                                                        name="HR"
+                                                                        class="text-xs form-control form-control-sm"
+                                                                        wire:model='HR' placeholder="HR" /></div>
+                                                                <div class="col-6 mb-2">
+                                                                    <input type="text" name="BFR"
+                                                                        class="text-xs form-control form-control-sm"
+                                                                        wire:model='BFR' placeholder="BFR" />
+                                                                </div>
+                                                                <div class="col-12 mb-2">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 col-6">
+                                                                            <input type="text" name="AP"
+                                                                                class="text-xs form-control form-control-sm"
+                                                                                placeholder="AP" wire:model='AP' />
+                                                                        </div>
+                                                                        <div class="col-md-6 col-6">
+                                                                            <input type="text" name="VP"
+                                                                                class="text-xs form-control form-control-sm"
+                                                                                wire:model='VP' placeholder="VP" />
+                                                                        </div>
+                                                                    </div>
+
+
+
+                                                                </div>
+                                                                <div class="col-6 mb-2">
+                                                                    <input type="text" name="TFP"
+                                                                        class="text-xs form-control form-control-sm"
+                                                                        wire:model='TFP' placeholder="TFR" />
+                                                                </div>
+                                                                <div class="col-6 mb-2">
+                                                                    <input type="text" name="TMP"
+                                                                        class="text-xs form-control form-control-sm"
+                                                                        wire:model='TMP' placeholder="TMP" />
+                                                                </div>
+                                                     
+                                                                <div class="col-6 mb-2"><input type="text"
+                                                                        name="HEPARIN"
+                                                                        class="text-xs form-control form-control-sm"
+                                                                        wire:model='HEPARIN' placeholder="Heparin" />
+                                                                </div>
+                                                                <div class="col-6 mb-2"><input type="text"
+                                                                        name="FLUSHING"
+                                                                        class="text-xs form-control form-control-sm"
+                                                                        wire:model='FLUSHING'
+                                                                        placeholder="Flushing" />
+                                                                </div>
+                                                                <div class="col-12 mb-2"><input type="text"
+                                                                        name="NOTES"
+                                                                        class="text-xs form-control form-control-sm"
+                                                                        wire:model='NOTES' placeholder="Notes" />
+                                                                </div>
+                                                                <div class="col-12 mb-2">
+                                                                    <button wire:loading.attr='disabled'
+                                                                        type="button"
+                                                                        class="btn btn-sm btn-success w-100"
+                                                                        wire:click='save()'><i class="fa fa-plus"
+                                                                            aria-hidden="true"></i> Add</button>
+                                                                </div>
                                                             </div>
                                                         </div>
-
-
-                                                    </div>
-                                                    <div class="col-12 mb-2"><input type="text" name="HR"
-                                                            class="text-xs form-control form-control-sm"
-                                                            wire:model='HR' placeholder="HR" /></div>
-                                                    <div class="col-12 mb-2">
-                                                        <input type="text" name="BFR"
-                                                            class="text-xs form-control form-control-sm"
-                                                            wire:model='BFR' placeholder="BFR" />
-                                                    </div>
-                                                    <div class="col-12 mb-2">
-                                                        <div class="row">
-                                                            <div class="col-md-6 col-6">
-                                                                <input type="text" name="AP"
-                                                                    class="text-xs form-control form-control-sm"
-                                                                    placeholder="AP" wire:model='AP' />
-                                                            </div>
-                                                            <div class="col-md-6 col-6">
-                                                                <input type="text" name="VP"
-                                                                    class="text-xs form-control form-control-sm"
-                                                                    wire:model='VP' placeholder="VP" />
-                                                            </div>
-                                                        </div>
-
-
-
-                                                    </div>
-                                                    <div class="col-12 mb-2">
-                                                        <input type="text" name="TFP"
-                                                            class="text-xs form-control form-control-sm"
-                                                            wire:model='TFP' placeholder="TFR" />
-                                                    </div>
-                                                    <div class="col-12 mb-2"><input type="text" name="TMP"
-                                                            class="text-xs form-control form-control-sm"
-                                                            wire:model='TMP' placeholder="TMP" /></div>
-                                                    <div class="col-12 mb-2"><input type="text" name="HEPARIN"
-                                                            class="text-xs form-control form-control-sm"
-                                                            wire:model='HEPARIN' placeholder="Heparin" />
-                                                    </div>
-                                                    <div class="col-12 mb-2"><input type="text" name="FLUSHING"
-                                                            class="text-xs form-control form-control-sm"
-                                                            wire:model='FLUSHING' placeholder="Flushing" />
-                                                    </div>
-                                                    <div class="col-12 mb-2"><input type="text" name="NOTES"
-                                                            class="text-xs form-control form-control-sm"
-                                                            wire:model='NOTES' placeholder="Notes" />
-                                                    </div>
-                                                    <div class="col-12 mb-2">
-                                                        <button wire:loading.attr='disabled' type="button"
-                                                            class="btn btn-xs btn-success w-100"
-                                                            wire:click='save()'><i class="fa fa-plus"
-                                                                aria-hidden="true"></i> Add</button>
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     @endif
                                 </div>
+
                             </div>
                         </div>
                     </div>
