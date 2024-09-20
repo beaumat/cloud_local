@@ -375,7 +375,7 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-6 col-md-4">
                                                         <div class="row form-group mt-1 text-left">
                                                             <div class="col-md-5">
                                                                 <label class="text-sm">TIME START :</label>
@@ -389,7 +389,7 @@
                                                         </div>
 
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-6 col-md-4">
                                                         <div class="row form-group mt-1 text-left">
                                                             <div class="col-md-5">
                                                                 <label class="text-sm">TIME END :</label>
@@ -403,7 +403,7 @@
                                                         </div>
 
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-12 col-md-4">
                                                         <div class="form-group mt-1 text-center">
                                                             <input @if (!$Modify) disabled @endif
                                                                 type="checkbox" wire:model='IS_INCOMPLETE' />
@@ -477,8 +477,6 @@
                             </div>
                         @endif
                     </div>
-
-
                 </div>
             </div>
         </section>
