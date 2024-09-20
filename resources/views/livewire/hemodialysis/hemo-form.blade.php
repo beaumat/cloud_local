@@ -239,9 +239,9 @@
                                                             </td>
                                                             <td>
                                                                 <div class="row" id="TODAY">
-                                                                    <div class="col-6 col-md-6">
+                                                                    <div class="col-12 col-md-6">
                                                                         <div class="row">
-                                                                            <div class="col-12 col-sm-6">
+                                                                            <div class="col-6 col-sm-6">
                                                                                 <input
                                                                                     @if (!$Modify) disabled @endif
                                                                                     wire:model='PRE_BLOOD_PRESSURE'
@@ -260,9 +260,9 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-6 col-md-6">
+                                                                    <div class="col-12 col-md-6">
                                                                         <div class="row">
-                                                                            <div class="col-12 col-sm-6">
+                                                                            <div class="col-6 col-sm-6">
                                                                                 <input
                                                                                     @if (!$Modify) disabled @endif
                                                                                     wire:model='POST_BLOOD_PRESSURE'
@@ -270,7 +270,7 @@
                                                                                     class="text-xs w-100 text-right"
                                                                                     />
                                                                             </div>
-                                                                            <div class="col-12 col-sm-6">
+                                                                            <div class="col-6 col-sm-6">
                                                                                 <input
                                                                                     @if (!$Modify) disabled @endif
                                                                                     wire:model='POST_BLOOD_PRESSURE2'
