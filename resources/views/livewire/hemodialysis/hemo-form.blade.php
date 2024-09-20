@@ -226,11 +226,11 @@
                                                                 <div class="row" id="LAST">
                                                                     <div
                                                                         class="col-6 col-md-6 text-center right-line2">
-                                                                        {{ $OLD_PRE_BLOOD_PRESSURE }}|
+                                                                        {{ $OLD_PRE_BLOOD_PRESSURE }}/
                                                                         {{ $OLD_PRE_BLOOD_PRESSURE2 }}
                                                                     </div>
                                                                     <div class="col-6 col-md-6 text-center">
-                                                                        {{ $OLD_POST_BLOOD_PRESSURE }}|
+                                                                        {{ $OLD_POST_BLOOD_PRESSURE }}/
                                                                         {{ $OLD_POST_BLOOD_PRESSURE2 }}
                                                                     </div>
                                                                 </div>
