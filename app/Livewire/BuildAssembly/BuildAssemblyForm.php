@@ -343,6 +343,21 @@ class BuildAssemblyForm extends Component
                 session()->flash('error', 'Item not found.');
                 return;
             }
+
+            
+            $checkItem = $this->buildAssemblyServices->ComponentList($this->ID, $this->LOCATION_ID);
+
+            foreach($checkItem as $list) {
+                if($list->OTY_OHAND < $list->QUANTITY) {
+                    session()->flash('error',"Invalid. The total quantity for each item must be clearly indicated." );
+                    return;
+
+                }
+            }   
+
+
+
+
             DB::beginTransaction();
             if (!$this->ItemInventory()) {
                 DB::rollBack();

@@ -122,7 +122,7 @@
                                     :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false"
                                     isDisabled="{{ false }}" />
                             @else
-                                <label class="mt-2 text-xs"> {{ $ITEM_CODE }}</label>
+                                <label class="mt-1 text-xs"> {{ $ITEM_CODE }}</label>
                             @endif
                         @else
                             @if ($codeBase)
@@ -130,7 +130,7 @@
                                     :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false"
                                     isDisabled="{{ false }}" />
                             @else
-                                <label class="mt-2 text-xs"> {{ $ITEM_CODE }}</label>
+                                <label class="mt-1 text-xs"> {{ $ITEM_CODE }}</label>
                             @endif
                         @endif
                     </td>
@@ -138,31 +138,31 @@
                         @if ($saveSuccess)
                             @if (!$codeBase)
                                 <livewire:select-option name="ITEM_ID3" titleName="Item Description" :options="$itemDescList"
-                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false"
+                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false" 
                                     isDisabled="{{ false }}" />
                             @else
-                                <label class="mt-2 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
+                                <label class="mt-1 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
                             @endif
                         @else
                             @if (!$codeBase)
-                                <livewire:select-option name="ITEM_ID4" titleName="Item Description"
+                                <livewire:select-option name="ITEM_ID4" titleName="Item Description" 
                                     :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false"
                                     :withLabel="false" isDisabled="{{ false }}" />
                             @else
-                                <label class="mt-2 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
+                                <label class="mt-1 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
                             @endif
                         @endif
                     </td>
-                    <td> <label class="mt-2 text-xs"> {{ $CLASS_DESCRIPTION }}</label></td>
+                    <td> <label class="mt-1 text-xs"> {{ $CLASS_DESCRIPTION }}</label></td>
                     <td>
                         <input type="number" step="0.01"
-                            class="form-control form-control-sm text-xs mt-2 text-right" name="Qty"
+                            class="form-control form-control-sm text-xs mt-1 text-right" name="Qty"
                             wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
                             @if ($ITEM_ID == 0) readonly @endif />
                     </td>
                     <td>
                         <select wire:model='UNIT_ID' name="UNIT_ID" @if ($ITEM_ID == 0) readonly @endif
-                            class="text-xs text-center form-control form-control-sm mt-2">
+                            class="text-xs text-center form-control form-control-sm mt-1">
                             @foreach ($unitList as $list)
                                 <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
                             @endforeach
@@ -170,19 +170,19 @@
                     </td>
                     <td>
                         <input type="number" step="0.01"
-                            class="form-control form-control-sm mt-2 text-xs text-right"
+                            class="form-control form-control-sm mt-1 text-xs text-right"
                             @if ($editPrice == false) readonly @endif name="rate"
                             wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                     </td>
                     <td class="text-right">
-                        <label class="mt-2 text-xs">{{ number_format($AMOUNT, 2) }}</label>
+                        <label class="mt-1 text-xs">{{ number_format($AMOUNT, 2) }}</label>
                     </td>
                     <td class="text-center">
-                        <input @if ($ITEM_ID == 0) disabled @endif type="checkbox" class="text-lg mt-2"
+                        <input @if ($ITEM_ID == 0) disabled @endif type="checkbox" class="text-lg mt-1"
                             wire:model='TAXABLE' name="taxable" />
                     </td>
                     <td>
-                        <div class="mt-2">
+                        <div class="mt-1">
                             <button type="submit" wire:loading.attr='hidden'
                                 @if ($ITEM_ID == 0) disabled @endif
                                 class="btn btn-success btn-xs w-100">

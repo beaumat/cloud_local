@@ -181,7 +181,7 @@ class ServiceChargeFormItems extends Component
             if ($item) {
 
                 if ($this->PRICE_LEVEL_ID > 0) {
-                    $this->RATE = $this->priceLevelLineServices->PriceExists($this->ITEM_ID, $this->LOCATION_ID);
+                    $this->RATE = $this->priceLevelLineServices->GetPriceByLocation($this->LOCATION_ID, $this->ITEM_ID);
                 } else {
                     $this->RATE =  $item->RATE;
                 }

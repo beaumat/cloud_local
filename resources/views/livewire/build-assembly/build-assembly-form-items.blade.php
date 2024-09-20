@@ -6,10 +6,10 @@
                 <th class="col-1">Code</th>
                 <th class="col-4">Description</th>
                 <th class="col-1">Unit Base</th>
-                <th class="col-1">Qty</th>
-                <th class="col-1">Amount</th>
+                <th class="col-1 text-right">Quantity Required</th>
+                <th class="col-1 text-right">Cost Amt.</th>
                 @if (!$IS_POSTED)
-                    <th class ="col-1">On-Hand</th>
+                    <th class ="col-1 text-right">On-Hand</th>
                 @endif
             </tr>
         </thead>
@@ -26,7 +26,7 @@
                         {{ number_format($list->AMOUNT, 2) }}
                     </td>
                     @if (!$IS_POSTED)
-                        <td class="text-right">
+                        <td class="text-right font-weight-bold @if ($list->OTY_OHAND <= 0) text-danger @else text-success @endif">
                             {{ number_format($list->OTY_OHAND, 2) }}
                         </td>
                     @endif
