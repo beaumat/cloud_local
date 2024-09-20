@@ -30,7 +30,7 @@
                             <div class="card-body bg-light">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-12 col-md-6">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <livewire:select-option name="CUSTOMER_ID" titleName="Patient"
@@ -48,17 +48,17 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-12 col-md-6">
                                             <div class="row">
-                                                <div class="col-md-4">
-                                                    <livewire:date-input name="DATE" titleName="Date"
+                                                <div class="col-4 col-md-4">
+                                                    <livewire:date-input name="DATE" titleName="Date Treatment"
                                                         wire:model='DATE' :isDisabled="true" />
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-4 col-md-4">
                                                     <livewire:text-input name="Code" titleName="Reference No."
                                                         :isDisabled=true wire:model='CODE' />
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-4 col-md-4">
                                                     <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                         :options="$locationList" :zero="false" :isDisabled=true
                                                         wire:model='LOCATION_ID' />
