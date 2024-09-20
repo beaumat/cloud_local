@@ -250,7 +250,7 @@
                                                                                      />
                                                                             </div>
 
-                                                                            <div class="col-12 col-sm-6">
+                                                                            <div class="col-6 col-sm-6">
                                                                                 <input
                                                                                     @if (!$Modify) disabled @endif
                                                                                     wire:model='PRE_BLOOD_PRESSURE2'
