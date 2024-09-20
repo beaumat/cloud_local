@@ -83,9 +83,9 @@
                                         <th>Description</th>
                                         <th>Category</th>
                                         <th>Sub Category</th>
-                                        <th class="col-1 text-right">Custom Price</th>
+                                        <th class="col-1 text-right">Price</th>
                                         @if ($showCost)
-                                            <th class="col-1 text-right">Custom Cost</th>
+                                            <th class="col-1 text-right">Cost</th>
                                         @endif
                                         <th class="col-1 text-center">Action</th>
                                     </tr>
