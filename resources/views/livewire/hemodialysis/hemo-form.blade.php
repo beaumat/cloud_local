@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-9 col-9">
+                                    <div class="col-md-7 col-7">
                                         @if ($Modify)
                                             @if ($STATUS == 4)
                                                 <button name="btnSavePosted" type="submit"
@@ -122,7 +122,7 @@
                                         @endcan
 
                                     </div>
-                                    <div class="text-right col-3 col-md-3">
+                                    <div class="text-right col-5 col-md-5">
                                         @if ($ID > 0 && $STATUS > 1)
                                             @can('patient.treatment.create')
                                                 <a id="new" title="Create" href="{{ route('patientshemo_create') }}"
