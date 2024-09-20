@@ -61,8 +61,8 @@ class PriceLocationList extends Component
         );
         if ($data) {
             $this->editId = $id;
-            $this->editPrice = $data['PRICE'];
-            $this->editCost = $data['COST'];
+            $this->editPrice = number_format($data['PRICE'] ?? 0, 2);
+            $this->editCost = number_format($data['COST'] ?? 0, 2);
         }
     }
     public function cancel()
