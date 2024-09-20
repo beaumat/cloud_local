@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-7 col-7">
+                                    <div class="col-md-7 col-8">
                                         @if ($Modify)
                                             @if ($STATUS == 4)
                                                 <button name="btnSavePosted" type="submit"
@@ -116,21 +116,26 @@
                                         @endif
 
                                         @can('full-treatment-sheet')
-                                            <button wire:click='showNotes()' name="btnNotes" type='button'
-                                                class="btn btn-sm btn-dark"> <i class="fa fa-list-ol"
-                                                    aria-hidden="true"></i> Notes</button>
+                                            @if (!$Modify)
+                                                <button wire:click='showNotes()' name="btnNotes" type='button'
+                                                    class="btn btn-sm btn-dark"> <i class="fa fa-list-ol"
+                                                        aria-hidden="true"></i> Notes</button>
+                                            @endif
                                         @endcan
 
                                     </div>
-                                    <div class="text-right col-5 col-md-5">
+                                    <div class="text-right col-4 col-md-5">
                                         @if ($ID > 0 && $STATUS > 1)
                                             @can('patient.treatment.create')
                                                 <a id="new" title="Create" href="{{ route('patientshemo_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endcan
                                         @endif
-                                        <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
-                                            class="btn btn-sm btn-success">Print</a>
+
+                                        @if (!$Modify)
+                                            <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
+                                                class="btn btn-sm btn-success">Print</a>
+                                        @endif
 
                                     </div>
                                 </div>
@@ -157,7 +162,7 @@
                                                     <thead class="text-xs bg-primary">
                                                         <tr>
                                                             <th class="">Title</th>
-                                                            <th class="text-center">
+                                                            <th class="text-center col-4">
                                                                 Last Treatment
                                                             </th>
                                                             <th class="text-center col-6">
@@ -173,7 +178,7 @@
                                                                     <div class="col-6 col-md-6 text-center">
                                                                         PRE
                                                                     </div>
-                                                                    <div class=" col-6 col-md-6 text-center">
+                                                                    <div class="col-6 col-md-6 text-center">
                                                                         POST
                                                                     </div>
                                                                 </div>
