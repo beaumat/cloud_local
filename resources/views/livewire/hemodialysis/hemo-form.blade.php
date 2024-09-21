@@ -135,12 +135,14 @@
                                                         aria-hidden="true"></i> Notes</button>
                                             @endif
                                         @endcan
- @if (!$Modify)
-                                            <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
-                                                class="btn btn-sm btn-success">Print</a>
-                                        @endif
+                                        @can('patient.treatment.print')
+                                            @if (!$Modify)
+                                                <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
+                                                    class="btn btn-sm btn-success">Print</a>
+                                            @endif
+                                        @endcan
                                     </div>
-                                
+
                                 </div>
                             </div>
                         </form>
