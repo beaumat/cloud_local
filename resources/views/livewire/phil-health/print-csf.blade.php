@@ -866,18 +866,26 @@
                                     <div class="row">
                                         <div class="col-5 text-sm text-center">
                                             <b class="h5 text-primary courier-new font-weight-bold "> &nbsp;
-                                                {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
-                                                    {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
-                                                    @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
-                                                        {{ $MEMBER_EXTENSION . '.' }}
+                                                @if ($PEN)
+                                                    {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
+                                                        {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
+                                                        @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
+                                                            {{ $MEMBER_EXTENSION . '.' }}
+                                                        @endif
+
                                                     @endif
                                             </b>
                                             <div class="top-line2"></div>
                                             Signature Over Printed Name of Employer/Authorized Representative
                                         </div>
                                         <div class="col-3 text-xs text-center">
-                                            <b style="width:300px;" class="h5 text-primary courier-new font-weight-bold ">
-                                              &nbsp;<span class="text-md">{{ $MEMBER_POSITION }}</span></b>
+                                            <b style="width:300px;"
+                                                class="h5 text-primary courier-new font-weight-bold ">
+                                                &nbsp;<span class="text-md">
+                                                    @if ($PEN)
+                                                        {{ $MEMBER_POSITION }}
+                                                    @endif
+                                                </span></b>
                                             <div class="top-line2"></div>
                                             Official Capacity/Designation
                                         </div>
