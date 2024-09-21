@@ -55867,15 +55867,17 @@ a.text-muted:hover {
 }
 
 .bg-blue-sky {
-/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#4d4548+1,000000+3 */
-background: linear-gradient(to right,  #4d4548 1%,#000000 3%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#4d4548+1,000000+3 */
+    background: linear-gradient(to right, #4d4548 1%, #000000 3%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 
 
 }
 
 .bg-blue-dark {
-/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#45484d+0,000000+100;Black+3D+%231 */
-background: linear-gradient(to bottom,  #45484d 0%,#000000 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#45484d+0,000000+100;Black+3D+%231 */
+    background: linear-gradient(to bottom, #45484d 0%, #000000 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 
 }
 
@@ -56199,5 +56201,3 @@ background: linear-gradient(to bottom,  #45484d 0%,#000000 100%); /* W3C, IE10+,
         /* Or use inline / flex depending on your layout */
     }
 }
-
-
