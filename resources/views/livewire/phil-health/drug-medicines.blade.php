@@ -12,13 +12,13 @@
                 <tr>
                     <th class="col-2">GENERIC NAME</th>
                     <th>QTY</th>
-                    <th>DOSSAGE</th>
+                    <th>DOSAGE</th>
                     <th>ROUTE</th>
                     <th>FREQUENCY</th>
                     <th class="text-right">TOTAL</th>
                     <th class="bg-secondary col-2">GENERIC NAME</th>
                     <th class="bg-secondary">QTY</th>
-                    <th class="bg-secondary">DOSSAGE</th>
+                    <th class="bg-secondary">DOSAGE</th>
                     <th class="bg-secondary">ROUTE</th>
                     <th class="bg-secondary">FREQUENCY</th>
                     <th class="bg-secondary text-right">TOTAL</th>
