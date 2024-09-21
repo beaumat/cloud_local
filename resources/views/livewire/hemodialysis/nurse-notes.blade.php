@@ -208,24 +208,24 @@
 
 
                                                                 </div>
-                                                                <div class="col-6 mb-2"><input type="text"
+                                                                <div class="col-6 mb-2"><input type="number"
                                                                         name="HR"
                                                                         class="text-xs form-control form-control-sm"
                                                                         wire:model='HR' placeholder="HR" /></div>
                                                                 <div class="col-6 mb-2">
-                                                                    <input type="text" name="BFR"
+                                                                    <input type="number" name="BFR"
                                                                         class="text-xs form-control form-control-sm"
                                                                         wire:model='BFR' placeholder="BFR" />
                                                                 </div>
                                                                 <div class="col-12 mb-2">
                                                                     <div class="row">
                                                                         <div class="col-md-6 col-6">
-                                                                            <input type="text" name="AP"
+                                                                            <input type="number" name="AP"
                                                                                 class="text-xs form-control form-control-sm"
                                                                                 placeholder="AP" wire:model='AP' />
                                                                         </div>
                                                                         <div class="col-md-6 col-6">
-                                                                            <input type="text" name="VP"
+                                                                            <input type="number" name="VP"
                                                                                 class="text-xs form-control form-control-sm"
                                                                                 wire:model='VP' placeholder="VP" />
                                                                         </div>
@@ -240,11 +240,11 @@
                                                                         wire:model='TFP' placeholder="TFR" />
                                                                 </div>
                                                                 <div class="col-6 mb-2">
-                                                                    <input type="text" name="TMP"
+                                                                    <input type="number" name="TMP"
                                                                         class="text-xs form-control form-control-sm"
                                                                         wire:model='TMP' placeholder="TMP" />
                                                                 </div>
-                                                     
+
                                                                 <div class="col-6 mb-2"><input type="text"
                                                                         name="HEPARIN"
                                                                         class="text-xs form-control form-control-sm"
