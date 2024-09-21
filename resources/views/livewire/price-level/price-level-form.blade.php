@@ -30,19 +30,19 @@
                                     <div class="row">
 
                                         <div class="col-md-2">
-                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE'>
+                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE' :isDisabled="false" />
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:text-input name="DESCRIPTION" titleName="Description"
+                                            <livewire:text-input name="DESCRIPTION" titleName="Description" :isDisabled="false"
                                                 wire:model='DESCRIPTION'>
                                         </div>
                                         <div class="col-md-4"
                                             @if ($ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <livewire:select-option name="TYPE" :options="$priceLevelType" :zero="false"
+                                            <livewire:select-option name="TYPE" :options="$priceLevelType" :zero="false" :isDisabled="false"
                                                 titleName="Type" wire:model.live='TYPE' :key="$priceLevelType->pluck('ID')->join('_')">
                                         </div>
                                         <div class="col-md-12">
-                                            <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
+                                            <livewire:custom-check-box name="INACTIVE" titleName="Inactive" :isDisabled="false"
                                                 wire:model='INACTIVE'>
                                         </div>
 
@@ -54,11 +54,11 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <livewire:number-input name="RATE" titleName="Rate"
+                                                    <livewire:number-input name="RATE" titleName="Rate" :isDisabled="false"
                                                         wire:model='RATE'>
                                                 </div>
                                                 <div class="col-md-8">
-                                                    <livewire:select-option name="ITEM_GROUP_ID" :options="$itemGroup"
+                                                    <livewire:select-option name="ITEM_GROUP_ID" :options="$itemGroup" :isDisabled="false"
                                                         :zero="true" titleName="Item Group"
                                                         wire:model='ITEM_GROUP_ID' :key="$itemGroup->pluck('ID')->join('_')">
 
@@ -97,14 +97,14 @@
                                     <form wire:submit.prevent='saveItem'>
                                         <div class="row">
                                             <div class="col-md-8">
-                                                <livewire:select-option name="ITEM_ID" :options="$itemList"
+                                                <livewire:select-option name="ITEM_ID" :options="$itemList" :isDisabled="false"
                                                     :zero="true" titleName="Item" wire:model='ITEM_ID'
                                                     :key="$itemList->pluck('ID')->join('_')">
 
                                             </div>
                                             <div class="col-md-2">
 
-                                                <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price"
+                                                <livewire:number-input name="CUSTOM_PRICE" titleName="Custom Price" :isDisabled="false"
                                                     wire:model='CUSTOM_PRICE'>
 
 
