@@ -632,6 +632,13 @@
                                                                         isDisabled="{{ $modify }}"
                                                                         wire:model='COMPANY_NAME' maxlength='100' />
                                                                 </div>
+                                                                <div class="col-md-4">
+
+                                                                    <livewire:text-input name="CUSTOM_FIELD3"
+                                                                        titleName="Official Capacitiy /Designation"
+                                                                        isDisabled="{{ $modify }}"
+                                                                        wire:model='CUSTOM_FIELD3' maxlength='50' />
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -657,12 +664,12 @@
                                                                 wire:model='OTHER_DIAGNOSIS' maxlength='60' />
                                                         </div>
                                                         <div class="col-md-2">
-                                                        {{-- CUSTOM_FIELD2 --}}
-                                                          <livewire:number-input name="CUSTOM_FIELD2"
+                                                            {{-- CUSTOM_FIELD2 --}}
+                                                            <livewire:number-input name="CUSTOM_FIELD2"
                                                                 titleName="Additional No. of Treatment"
                                                                 isDisabled="{{ $modify }}"
                                                                 wire:model='CUSTOM_FIELD2' />
-                                                        </div>  
+                                                        </div>
                                                     </div>
                                                 </div>
 

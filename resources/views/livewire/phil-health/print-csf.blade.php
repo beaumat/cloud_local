@@ -40,7 +40,8 @@
             <p style="font-size:14.4px; line-height: 1.3; " class="float-left mt-2">
                 <b class="font-weight-bold">IMPORTANT REMINDERS:</b>
                 <br />
-                PLEASE WRITE IN CAPITAL <b class="font-weight-bold">LETTERS</b> AND <b class="font-weight-bold">CHECK</b>
+                PLEASE WRITE IN CAPITAL <b class="font-weight-bold">LETTERS</b> AND <b
+                    class="font-weight-bold">CHECK</b>
                 THE APPROPRIATE BOXES.<br />
                 All information required in this form are necessary. Claim forms with incomplete information
                 shall not be processed.<br />
@@ -186,7 +187,7 @@
                                     <b
                                         class="text-primary courier-new font-weight-bold h6">{{ $MEMBER_EXTENSION }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
-                                    Name Extension <br/>
+                                    Name Extension <br />
                                     (JR/SR/III)
 
                                 </div>
@@ -864,12 +865,19 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-5 text-sm text-center">
-                                            <b class="h5 text-primary courier-new font-weight-bold "> &nbsp;</b>
+                                            <b class="h5 text-primary courier-new font-weight-bold "> &nbsp;
+                                                {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
+                                                    {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
+                                                    @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
+                                                        {{ $MEMBER_EXTENSION . '.' }}
+                                                    @endif
+                                            </b>
                                             <div class="top-line2"></div>
                                             Signature Over Printed Name of Employer/Authorized Representative
                                         </div>
-                                        <div class="col-3 text-sm text-center">
-                                            <b class="h5 text-primary courier-new font-weight-bold "> &nbsp;</b>
+                                        <div class="col-3 text-xs text-center">
+                                            <b style="width:300px;" class="h5 text-primary courier-new font-weight-bold ">
+                                              &nbsp;<span class="text-md">{{ $MEMBER_POSITION }}</span></b>
                                             <div class="top-line2"></div>
                                             Official Capacity/Designation
                                         </div>

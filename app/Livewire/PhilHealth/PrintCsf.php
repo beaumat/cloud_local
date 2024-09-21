@@ -51,6 +51,7 @@ class PrintCsf extends Component
     public string $MEMBER_EXTENSION;
     public string $MEMBER_BIRTH_DATE;
     public int $MEMBER_GENDER;
+    public string $MEMBER_POSITION;
     public bool $PRE_SIGN_DATA =  false;
     public bool $OUTPUT_SIGN = false;
     private $philHealthServices;
@@ -129,6 +130,7 @@ class PrintCsf extends Component
                         $this->MEMBER_BIRTH_DATE = $contact->MEMBER_BIRTH_DATE;
                         $this->MEMBER_GENDER = $contact->MEMBER_GENDER;
                     }
+                    $this->MEMBER_POSITION = $contact->CUSTOM_FIELD3 ?? '';
                     $this->IS_DEPENDENT = $contact->IS_DEPENDENT;
                     $this->PIN = $contact->PIN ?? '';
                     if ($this->IS_DEPENDENT) {
@@ -192,6 +194,7 @@ class PrintCsf extends Component
                     $this->MEMBER_BIRTH_DATE = $contact->MEMBER_BIRTH_DATE;
                     $this->MEMBER_GENDER = $contact->MEMBER_GENDER;
                 }
+                $this->MEMBER_POSITION = $contact->CUSTOM_FIELD3 ?? '';
                 $this->IS_DEPENDENT = $contact->IS_DEPENDENT;
                 $this->PIN = $contact->PIN ?? '';
                 if ($this->IS_DEPENDENT) {
