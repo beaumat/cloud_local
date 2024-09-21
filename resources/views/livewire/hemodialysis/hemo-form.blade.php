@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-10 col-10">
+                                    <div class="col-md-12 col-12">
                                         @if ($Modify)
                                             @if ($STATUS == 4)
                                                 <button name="btnSavePosted" type="submit"
@@ -135,16 +135,12 @@
                                                         aria-hidden="true"></i> Notes</button>
                                             @endif
                                         @endcan
-
-                                    </div>
-                                    <div class="text-right col-2 col-md-2">
-
-                                        @if (!$Modify)
+ @if (!$Modify)
                                             <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
                                                 class="btn btn-sm btn-success">Print</a>
                                         @endif
-
                                     </div>
+                                
                                 </div>
                             </div>
                         </form>
