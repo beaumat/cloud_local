@@ -7,6 +7,7 @@ use App\Services\ItemSubClassServices;
 use App\Services\LocationServices;
 use App\Services\PriceLevelLineServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -90,6 +91,10 @@ class PriceLocationList extends Component
     }
     public function save()
     {
+
+
+
+
         $locData =  $this->locationServices->get($this->LOCATION_ID);
         if ($locData) {
             if ($locData->PRICE_LEVEL_ID > 0) {
@@ -100,6 +105,7 @@ class PriceLocationList extends Component
                     (float)$this->editPrice,
                     (float)$this->editCost
                 );
+                DB::commit();
                 $this->cancel();
             }
         }
@@ -107,20 +113,28 @@ class PriceLocationList extends Component
 
     private function UpdateItem(int $PRICE_LEVEL_ID, int $ITEM_ID, int $LOCATION_ID, float $PRICE, float $COST)
     {
-        $isExistsID =  $this->priceLevelLineServices->DataExists($ITEM_ID, $LOCATION_ID);
-        if ($isExistsID > 0) {
-            $this->priceLevelLineServices->Update(
-                $isExistsID,
-                $PRICE,
-                $COST
-            );
-        } else {
-            $this->priceLevelLineServices->Store(
-                $PRICE_LEVEL_ID,
-                $ITEM_ID,
-                $PRICE,
-                $COST
-            );
+        DB::beginTransaction();
+        try {
+            $isExistsID =  $this->priceLevelLineServices->DataExists($ITEM_ID, $LOCATION_ID);
+            if ($isExistsID > 0) {
+                $this->priceLevelLineServices->Update(
+                    $isExistsID,
+                    $PRICE,
+                    $COST
+                );
+            } else {
+                $this->priceLevelLineServices->Store(
+                    $PRICE_LEVEL_ID,
+                    $ITEM_ID,
+                    $PRICE,
+                    $COST
+                );
+            }
+        } catch (\Throwable $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            DB::rollBack();
+            //throw $th;
         }
     }
     public function render()

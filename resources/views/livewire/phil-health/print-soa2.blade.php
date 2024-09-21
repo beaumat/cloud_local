@@ -19,33 +19,37 @@
                                 <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
                                     Patient`s Name : </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $PATIENT_NAME }}</div>
+                                    class="col-8 bottom-line"> &nbsp; {{ $PATIENT_NAME }}</div>
                                 <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
                                     Philhealth No. : </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $PIN }}</div>
+                                    class="col-8 bottom-line"> &nbsp; {{ $PIN }}</div>
                                 <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
                                     Birth Date : </div>
                                 <div class="col-8 bottom-line"
                                     @if ($HEADER) style="opacity: 0.0" @endif>
                                     <div class="row">
-                                        <div class="col-6 text-xs"> &nbsp;
+                                        <div class="col-6"> &nbsp;
                                             {{ date('m/d/Y', strtotime($DATE_OF_BIRTH)) }}</div>
-                                        <div class="col-6 text-center text-xs">Age: {{ $AGE }}</div>
+                                        <div class="col-6 text-center ">Age: {{ $AGE }}</div>
                                     </div>
                                 </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
                                     Address : </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS1 }}</div>
+                                    class="col-8 bottom-line text-sm"> &nbsp; {{ $ADDRESS1 }}</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
                                     &nbsp;</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS2 }}</div>
+                                    class="col-8 bottom-line text-sm">
+                                    <div class="width:800px; position:absolute;">
+                                        &nbsp; {{ $ADDRESS2 }}
+                                    </div>
+                                </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
                                     Diagnosis : </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
+                                    class="col-8 bottom-line text-sm"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
 
 
                             </div>

@@ -117,15 +117,15 @@
                                             @endif
                                             <td class="text-center">
                                                 @if ($list->ID == $editId)
-                                                    <button class="btn btn-xs btn-success " wire:click='save()'>
+                                                    <button name="btn_Save" class="btn btn-xs btn-success " wire:click='save()'>
                                                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     </button>
 
-                                                    <button class="btn btn-xs btn-warning" wire:click='cancel()'>
+                                                    <button  name="btn_cancel" class="btn btn-xs btn-warning" wire:click='cancel()'>
                                                         <i class="fa fa-ban" aria-hidden="true"></i>
                                                     </button>
                                                 @else
-                                                    <button class="btn btn-xs btn-info"
+                                                    <button name="btn_edit" class="btn btn-xs btn-info"
                                                         wire:click='edit({{ $list->ID }})'>
                                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                     </button>
