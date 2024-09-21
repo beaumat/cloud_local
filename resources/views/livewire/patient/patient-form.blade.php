@@ -626,18 +626,18 @@
                                                                         wire:model='PEN_CONTACT' maxlength='20' />
                                                                 </div>
 
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-6">
                                                                     <livewire:text-input name="COMPANY_NAME"
                                                                         titleName="Business Name"
                                                                         isDisabled="{{ $modify }}"
                                                                         wire:model='COMPANY_NAME' maxlength='100' />
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-2">
 
                                                                     <livewire:text-input name="CUSTOM_FIELD3"
                                                                         titleName="Official Capacitiy /Designation"
                                                                         isDisabled="{{ $modify }}"
-                                                                        wire:model='CUSTOM_FIELD3' maxlength='50' />
+                                                                        wire:model='CUSTOM_FIELD3' maxlength='22' />
                                                                 </div>
                                                             </div>
                                                         </div>
