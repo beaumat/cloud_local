@@ -96,6 +96,7 @@ class PriceLocationList extends Component
 
 
         $locData =  $this->locationServices->get($this->LOCATION_ID);
+
         if ($locData) {
             if ($locData->PRICE_LEVEL_ID > 0) {
                 $this->UpdateItem(
@@ -107,7 +108,9 @@ class PriceLocationList extends Component
                 );
                 DB::commit();
                 $this->cancel();
+                return;
             }
+            session()->flash('error', 'price level not modify');
         }
     }
 

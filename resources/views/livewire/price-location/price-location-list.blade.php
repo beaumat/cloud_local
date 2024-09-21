@@ -117,15 +117,25 @@
                                             @endif
                                             <td class="text-center">
                                                 @if ($list->ID == $editId)
-                                                    <button name="btn_Save" class="btn btn-xs btn-success " wire:click='save()'>
-                                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                    </button>
-
-                                                    <button  name="btn_cancel" class="btn btn-xs btn-warning" wire:click='cancel()'>
-                                                        <i class="fa fa-ban" aria-hidden="true"></i>
-                                                    </button>
+                                                    <div class="row">
+                                                        <div class="col-6 col-md-6">
+                                                            <button name="btnsave_{{ $list->ID }}"
+                                                                class="btn btn-xs btn-success w-100"
+                                                                wire:click='save()'>
+                                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-6 col-md-6">
+                                                            <button name="btncancel_{{ $list->ID }}"
+                                                                class="btn btn-xs btn-warning w-100"
+                                                                wire:click='cancel()'>
+                                                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 @else
-                                                    <button name="btn_edit" class="btn btn-xs btn-info"
+                                                    <button name="btnedit_{{ $list->ID }}"
+                                                        class="btn btn-xs btn-info w-100"
                                                         wire:click='edit({{ $list->ID }})'>
                                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                     </button>
