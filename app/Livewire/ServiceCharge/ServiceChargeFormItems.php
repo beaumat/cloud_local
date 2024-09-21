@@ -158,8 +158,8 @@ class ServiceChargeFormItems extends Component
     public function cashPayment(int $ID, float $AMOUNT)
     {
         $itemdata = [
-            'SERVICE_CHARGES_ITEM_ID' => $ID,
-            'SERVICE_CHARGES_ITEM_AMOUNT' => $AMOUNT
+            'SERVICE_CHARGES_ITEM_ID'       => $ID,
+            'SERVICE_CHARGES_ITEM_AMOUNT'   => $AMOUNT
         ];
         $this->getRefershItem($ID);
         $this->dispatch('cash-payment-prompt', itemdata: $itemdata);

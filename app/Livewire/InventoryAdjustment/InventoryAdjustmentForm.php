@@ -19,7 +19,7 @@ use Livewire\Component;
 
 #[Title('Inventory Adjustment')]
 class InventoryAdjustmentForm extends Component
-{   
+{
 
 
     public int $openStatus = 0;
@@ -208,23 +208,22 @@ class InventoryAdjustmentForm extends Component
                 $this->validate(
                     [
 
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'ADJUSTMENT_TYPE_ID' => 'required|not_in:0'
+                        'DATE'                  => 'required',
+                        'LOCATION_ID'           => 'required',
+                        'ADJUSTMENT_TYPE_ID'    => 'required|not_in:0'
 
                     ],
                     [],
                     [
 
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'ADJUSTMENT_TYPE_ID' => 'Adjustment Type'
+                        'DATE'                  => 'Date',
+                        'LOCATION_ID'           => 'Location',
+                        'ADJUSTMENT_TYPE_ID'    => 'Adjustment Type'
 
                     ]
                 );
 
                 $this->ACCOUNT_ID = $this->inventoryAdjustmentTypeServices->getAccountId($this->ADJUSTMENT_TYPE_ID);
-
                 if ($this->ACCOUNT_ID == 0) {
                     session()->flash('error', 'Adjustment type account not found.');
                     return;
@@ -240,6 +239,8 @@ class InventoryAdjustmentForm extends Component
                     $this->ACCOUNT_ID,
                     $this->NOTES
                 );
+
+
 
                 DB::commit();
                 return Redirect::route('companyinventory_adjustment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -301,7 +302,11 @@ class InventoryAdjustmentForm extends Component
 
     public function OpenJournal()
     {
-        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->inventoryAdjustmentServices->object_type_map_inventory_adjustment, $this->ID);
+        $JOURNAL_NO = $this->accountJournalServices->getRecord(
+            $this->inventoryAdjustmentServices->object_type_map_inventory_adjustment,
+            $this->ID
+        );
+
         if ($JOURNAL_NO > 0) {
             $data = ['JOURNAL_NO' => $JOURNAL_NO];
             $this->dispatch('open-journal', result: $data);

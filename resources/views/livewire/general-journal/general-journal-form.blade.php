@@ -41,7 +41,8 @@
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-4" @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="col-md-4"
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($Modify)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
@@ -83,34 +84,55 @@
                             </div>
                             <div class="card-footer">
                                 <div class="row">
-                                    <div class="col-md-6 col-6"
-                                        @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                    <div class="col-md-6 col-6">
+                                        @if ($STATUS != 15 || $STATUS == 16)
+                                            @if ($Modify)
+                                                <button type="submit" class="btn btn-sm btn-primary"> <i
+                                                        class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
-                                        @if ($Modify)
-                                            <button type="submit" class="btn btn-sm btn-primary"> <i
-                                                    class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
-
-                                            @if ($ID > 0)
-                                                <button type="button" wire:click='updateCancel'
-                                                    class="btn btn-sm btn-danger"><i class="fa fa-ban"
-                                                        aria-hidden="true"></i> Cancel</button>
+                                                @if ($ID > 0)
+                                                    <button type="button" wire:click='updateCancel'
+                                                        class="btn btn-sm btn-danger"><i class="fa fa-ban"
+                                                            aria-hidden="true"></i> Cancel</button>
+                                                @endif
+                                            @else
+                                                <button type="button" wire:click='getModify()'
+                                                    class="btn btn-sm btn-info">
+                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                </button>
+                                                <button type="button" wire:click='posted()'
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                </button>
                                             @endif
-                                        @else
-                                            <button type="button" wire:click='getModify()' class="btn btn-sm btn-info">
-                                                <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                            </button>
-                                            <button type="button" wire:click='posted()' class="btn btn-sm btn-warning">
-                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
-                                            </button>
+                                        @endif
+
+                                        @if ($STATUS == 15)
+                                            @can('company.general-journal.update')
+                                                <button type="button" wire:click='getUnposted()'
+                                                    class="btn btn-sm btn-secondary"
+                                                    wire:confirm="Are you sure you want to unpost?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
+                                                </button>
+                                            @endcan
                                         @endif
 
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($ID > 0)
-                                            <a id="new" title="Create"
-                                                href="{{ route('companygeneral_journal_create') }}"
-                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+
+                                        @if ($STATUS == 15)
+                                            @can('company.general-journal.print')
+                                                <button type="button" wire:click='OpenJournal()'
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                                </button>
+                                            @endcan
+                                            @can('company.general-journal.create')
+                                                <a id="new" title="Create"
+                                                    href="{{ route('companygeneral_journal_create') }}"
+                                                    class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                            @endcan
                                         @endif
                                     </div>
                                 </div>
@@ -155,4 +177,5 @@
             </div>
         </div>
     </section>
+    @livewire('AccountJournal.AccountJournalModal')
 </div>

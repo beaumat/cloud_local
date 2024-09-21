@@ -50,7 +50,6 @@ class GeneralJournalForm extends Component
         $this->documentStatusServices = $documentStatusServices;
         $this->objectServices = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
-
     }
     public function LoadDropdown()
     {
@@ -62,12 +61,23 @@ class GeneralJournalForm extends Component
 
         try {
 
-            $generaljournal = (int) $this->objectServices->ObjectTypeID('GENERAL_JOURNAL');
+            $generaljournal = $this->generalJournalServices->object_type_general_journal_details_id;
+            $getFirstId = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);
+            if ($JOURNAL_NO  == 0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($generaljournal, $getFirstId) + 1;
+            }
 
-            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($generaljournal, $this->ID) + 1;
             //Main
             $generalJournalData = $this->generalJournalServices->getGeneralJournalEntries($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $generalJournalData, $this->LOCATION_ID, $generaljournal, $this->DATE);
+
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $generalJournalData,
+                $this->LOCATION_ID,
+                $generaljournal,
+                $this->DATE
+            );
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
@@ -79,67 +89,13 @@ class GeneralJournalForm extends Component
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
-
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
             return false;
-
         }
     }
-    public function posted()
-    {
-        try {
 
-
-            $total_result = $this->generalJournalServices->GetTotal($this->ID);
-
-            $total_debit = (float) $total_result['TOTAL_DEBIT'];
-
-            $total_credit = (float) $total_result['TOTAL_CREDIT'];
-
-            if ($total_debit == 0) {
-                Session()->flash('error', 'No debit entry');
-                return;
-            }
-            if ($total_credit == 0) {
-                Session()->flash('error', 'No credit entry');
-                return;
-            }
-
-            if ($total_debit == $total_credit) {
-
-                DB::beginTransaction();
-
-
-                if (!$this->AccountJournal()) {
-                    DB::rollBack();
-                    return;
-                }
-
-
-                $this->generalJournalServices->StatusUpdate($this->ID, 15);
-                DB::commit();
-
-                $data = $this->generalJournalServices->get($this->ID);
-                if ($data) {
-                    $this->getInfo($data);
-                    $this->Modify = false;
-                }
-
-                Session()->flash('message', 'Successfully posted');
-                return;
-            }
-
-            Session()->flash('error', 'Invalid disbalanced.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-        }
-
-    }
     private function getInfo($data)
     {
         $this->ID = $data->ID;
@@ -214,7 +170,6 @@ class GeneralJournalForm extends Component
                 );
 
                 return Redirect::route('companygeneral_journal_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-
             } else {
 
                 $this->validate(
@@ -265,6 +220,90 @@ class GeneralJournalForm extends Component
         $this->resetErrorBag();
         session()->forget('message');
         session()->forget('error');
+    }
+
+    public function OpenJournal()
+    {
+        $FirstID = $this->generalJournalServices->getFirstDetailsID($this->ID);
+
+        $JOURNAL_NO = $this->accountJournalServices->getRecord(
+            $this->generalJournalServices->object_type_general_journal_details_id,
+            $FirstID
+        );
+
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+            return;
+        }
+
+        session()->flash('error', 'Journal entry not created');
+    }
+
+    public function posted()
+    {
+        try {
+
+
+            $total_result = $this->generalJournalServices->GetTotal($this->ID);
+
+            $total_debit = (float) $total_result['TOTAL_DEBIT'];
+
+            $total_credit = (float) $total_result['TOTAL_CREDIT'];
+
+            if ($total_debit == 0) {
+                Session()->flash('error', 'No debit entry');
+                return;
+            }
+            if ($total_credit == 0) {
+                Session()->flash('error', 'No credit entry');
+                return;
+            }
+
+            if ($total_debit == $total_credit) {
+
+                DB::beginTransaction();
+
+
+                if (!$this->AccountJournal()) {
+                    DB::rollBack();
+                    return;
+                }
+
+
+                $this->generalJournalServices->StatusUpdate($this->ID, 15);
+                DB::commit();
+
+                $data = $this->generalJournalServices->get($this->ID);
+                if ($data) {
+                    $this->getInfo($data);
+                    $this->Modify = false;
+                }
+
+                Session()->flash('message', 'Successfully posted');
+                return;
+            }
+
+            Session()->flash('error', 'Invalid disbalanced.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function getUnposted()
+    {
+
+        try {
+            DB::beginTransaction();
+            $this->generalJournalServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            Redirect::route('companygeneral_journal_edit', $this->ID);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function render()
     {

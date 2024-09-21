@@ -55854,3 +55854,16 @@ a.text-muted:hover {
 .tp-bg {
   background-color: transparent; /* Fully transparent */
 }
+
+@media (max-width: 575.98px) {
+  .hide-on-small {
+    display: none;
+  }
+}
+
+/* Show the element only on small screens (less than 576px) */
+@media (max-width: 575.98px) {
+  .show-on-small {
+    display: block; /* Or use inline / flex depending on your layout */
+  }
+}

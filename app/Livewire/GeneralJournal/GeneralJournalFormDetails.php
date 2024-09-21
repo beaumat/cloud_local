@@ -2,6 +2,7 @@
 
 namespace App\Livewire\GeneralJournal;
 
+use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\ClassServices;
 use App\Services\GeneralJournalServices;
@@ -47,12 +48,17 @@ class GeneralJournalFormDetails extends Component
     public string $ACCOUNT_CODE;
     public string $ACCOUNT_DESCRIPTION;
 
-
-    public function boot(GeneralJournalServices $generalJournalServices, AccountServices $accountServices, ClassServices $classServices)
-    {
+    private $accountJournalServices;
+    public function boot(
+        GeneralJournalServices $generalJournalServices,
+        AccountServices $accountServices,
+        ClassServices $classServices,
+        AccountJournalServices $accountJournalServices
+    ) {
         $this->generalJournalServices = $generalJournalServices;
         $this->accountServices = $accountServices;
         $this->classServices = $classServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     private function clearData()
     {
@@ -125,9 +131,15 @@ class GeneralJournalFormDetails extends Component
         }
         try {
             DB::beginTransaction();
-            $this->generalJournalServices->StoreDetails($this->GENERAL_JOURNAL_ID, $this->ACCOUNT_ID, $debitAmount, $creditAmount, $this->NOTES, $this->CLASS_ID);
+            $this->generalJournalServices->StoreDetails(
+                $this->GENERAL_JOURNAL_ID,
+                $this->ACCOUNT_ID,
+                $debitAmount,
+                $creditAmount,
+                $this->NOTES,
+                $this->CLASS_ID
+            );
             $this->clearData();
-
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -160,7 +172,15 @@ class GeneralJournalFormDetails extends Component
         }
 
         try {
-            $this->generalJournalServices->UpdateDetails($this->editId, $this->GENERAL_JOURNAL_ID, $this->editAccountId, $this->editDebit, $this->editCredit, $this->editNotes, $this->editClassId);
+            $this->generalJournalServices->UpdateDetails(
+                $this->editId,
+                $this->GENERAL_JOURNAL_ID,
+                $this->editAccountId,
+                $this->editDebit,
+                $this->editCredit,
+                $this->editNotes,
+                $this->editClassId
+            );
             $this->editId = null;
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage() . '' . $e->getTraceAsString());
@@ -172,7 +192,46 @@ class GeneralJournalFormDetails extends Component
     }
     public function delete(int $id)
     {
-        $this->generalJournalServices->DeleteDetails($id);
+
+        DB::beginTransaction();
+        try {
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                    $this->generalJournalServices->object_type_general_journal_details_id,
+                    $id
+                );
+
+                if ($JOURNAL_NO  >  0) {
+                    $gData = $this->generalJournalServices->get($this->GENERAL_JOURNAL_ID);
+                    if ($gData) {
+                        $gDetails = $this->generalJournalServices->getDetails($id);
+                        if ($gDetails) {
+                            // ACCOUNT_ID
+                            $this->accountJournalServices->DeleteJournal(
+                                $gDetails->ACCOUNT_ID,
+                                $gData->LOCATION_ID,
+                                $JOURNAL_NO,
+                                0,
+                                $id,
+                                $this->generalJournalServices->object_type_general_journal_details_id,
+                                $gData->DATE,
+                                $gDetails->ENTRY_TYPE
+                            );
+                        }
+                    }
+                }
+            }
+
+
+
+            $this->generalJournalServices->DeleteDetails($id);
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
 
     public function render()

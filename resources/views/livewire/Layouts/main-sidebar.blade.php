@@ -61,7 +61,7 @@
                         <i class="nav-icon fa fa-line-chart"></i>
                         <p> Reports <i class="right fas fa-angle-left"></i> </p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    <ul class="nav nav-treeview bg-blue-dark">
                         @if (Auth::user()->can('report.patient.sales') ||
                         Auth::user()->can('report.patient.balance') ||
                         Auth::user()->can('report.patient.doctor-pf'))
@@ -119,7 +119,7 @@
                         <i class="nav-icon fa fa-cog"></i>
                         <p> Maintenance <i class="right fas fa-angle-left"></i> </p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    <ul class="nav nav-treeview bg-blue-dark">
                         @if (Auth::user()->can('contact.customer.view') ||
                         Auth::user()->can('contact.vendor.view') ||
                         Auth::user()->can('contact.employee.view') ||

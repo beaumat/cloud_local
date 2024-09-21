@@ -4,7 +4,7 @@
         <p> Patients <i class="fas fa-angle-left right"></i> </p>
     </a>
 
-    <ul class="nav nav-treeview">
+    <ul class="nav nav-treeview bg-blue-dark">
         @can('patient.schedule.view')
             <li class="nav-item">
                 <a href="{{ route('patientsschedules') }}"

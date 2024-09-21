@@ -5,7 +5,7 @@
                             <p> Customers <i class="fas fa-angle-left right"></i> </p>
                         </a>
 
-                        <ul class="nav nav-treeview">
+                        <ul class="nav nav-treeview bg-blue-dark">
                             @can('customer.sales-order.view')
                                 <li class="nav-item">
                                     <a href="{{ route('customerssales_order') }}"

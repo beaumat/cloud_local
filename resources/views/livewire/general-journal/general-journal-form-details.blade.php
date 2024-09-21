@@ -10,11 +10,11 @@
             <tr>
                 <th class="col-1">Account Code</th>
                 <th class="col-3">Account Name</th>
-                <th class="col-1">Debit</th>
-                <th class="col-1">Credit</th>
+                <th class="col-1 text-right">Debit</th>
+                <th class="col-1 text-right">Credit</th>
                 <th class="col-3">Particular</th>
                 <th class="col-2">Class</th>
-                @if ($STATUS == 0)
+                @if ($STATUS == 0 || $STATUS == 16)
                     <th class="text-center col-1">Action</th>
                 @endif
 
@@ -64,15 +64,15 @@
                             {{ $list->CLASS_NAME }}
                         @endif
                     </td>
-                    @if ($STATUS == 0)
+                    @if ($STATUS == 0 || $STATUS == 16)
                         <td class="text-center">
                             @if ($editId === $list->ID)
                                 <button title="Update" id="updatebtn" wire:click="update({{ $list->ID }})"
                                     class="btn btn-xs btn-success">
                                     <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>
-                                <button title="Cancel" id="cancelbtn" href="#" wire:click="cancal()"
-                                    class="btn btn-warning btn-sxs">
+                                <button title="Cancel" id="cancelbtn" wire:click="editCancel()"
+                                    class="btn btn-warning btn-xs">
                                     <i class="fas fa-ban" aria-hidden="true"></i>
                                 </button>
                             @else
@@ -91,7 +91,7 @@
             @endforeach
 
             {{-- INSERT FORM --}}
-            @if ($STATUS == 0)
+            @if ($STATUS == 0 || $STATUS == 16)
                 <form wire:submit.prevent='save' wire:loading.attr='disabled'>
                     <tr>
                         <td>
@@ -174,27 +174,30 @@
                         </td>
                     </tr>
                 </form>
-                <tr>
-                    <td></td>
-                    <td class='text-right'>
-                        <label class=' text-primary text-sm'>Total:</label>
-                    </td>
-                    <td class='text-right'>
-                        <label class='text-primary text-sm'>{{ number_format($TOTAL_DEBIT, 2) }}</label>
-                    </td>
-                    <td class='text-right'>
-                        <label class='text-primary text-sm'>{{ number_format($TOTAL_CREDIT, 2) }}</label>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
             @endif
+            <tr>
+                <td></td>
+                <td class='text-right'>
+                 
+                </td>
+                <td class='text-right'>
+                    <label class='text-primary text-xs'>{{ number_format($TOTAL_DEBIT, 2) }}</label>
+                </td>
+                <td class='text-right'>
+                    <label class='text-primary text-xs'>{{ number_format($TOTAL_CREDIT, 2) }}</label>
+                </td>
+                <td></td>
+                <td></td>
+                @if ($STATUS == 0 || $STATUS == 16)
+                    <td></td>
+                @endif
+            </tr>
+
 
         </tbody>
 
     </table>
-    @if ($STATUS == 0)
+    @if ($STATUS == 0 || $STATUS == 16)
         <livewire:custom-check-box name="codeBaseAcct" titleName="Use choose account code" :isDisabled=false
             wire:model.live='codeBase' />
     @endif

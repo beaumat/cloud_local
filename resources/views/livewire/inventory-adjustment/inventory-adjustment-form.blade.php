@@ -11,12 +11,12 @@
                     <div class="card">
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-8 col-sm-6">
                                     <a class="text-white" href="{{ route('companyinventory_adjustment') }}"> Inventory
                                         Adjustment
                                     </a>
                                 </div>
-                                <div class="col-sm-6 text-right">
+                                <div class="col-4 col-sm-6 text-right">
                                     @if ($ID > 0)
                                         <i> {{ $STATUS_DESCRIPTION }}</i>
                                     @endif
@@ -27,7 +27,7 @@
                             <div class="card-body bg-light">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-12 col-md-6">
                                             <div class='row'>
                                                 <div class="col-md-12">
                                                     <livewire:select-option name="ADJUSTMENT_TYPE_ID0"
@@ -39,20 +39,20 @@
 
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-12 col-md-6">
                                             <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-6 col-md-4">
 
                                                     <livewire:date-input name="DATE" titleName="Date"
                                                         isDisabled="{{ $ID > 0 ? true : false }}" wire:model='DATE'
                                                         :isDisabled="true" />
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-6 col-md-4">
                                                     <livewire:text-input name="Code" titleName="Reference No."
                                                         isDisabled="{{ !$Modify }}" wire:model='CODE' />
 
                                                 </div>
-                                                <div class="col-md-4"
+                                                <div class="col-6 col-md-4"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                         :options="$locationList" :zero="false"

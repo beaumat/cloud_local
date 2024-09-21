@@ -3,7 +3,7 @@
         <i class="nav-icon fas fa-user-tie"></i>
         <p> Vendors <i class="right fas fa-angle-left"></i> </p>
     </a>
-    <ul class="nav nav-treeview">
+    <ul class="nav nav-treeview bg-blue-dark">
         @can('vendor.purchase-order.view')
             <li class="nav-item">
                 <a href="{{ route('vendorspurchase_order') }}"

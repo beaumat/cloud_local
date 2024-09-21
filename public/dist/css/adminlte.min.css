@@ -6848,6 +6848,7 @@ a.disabled.mailbox-attachment-close {
     .modal-xl {
         max-width: 1440px
     }
+
     /* got change */
 }
 
@@ -55866,18 +55867,16 @@ a.text-muted:hover {
 }
 
 .bg-blue-sky {
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7abcff+0,60abf8+44,4096ee+100;Blue+3D+%2314 */
-    background: linear-gradient(to bottom, rgba(122, 188, 255, 1) 0%, rgba(96, 171, 248, 1) 44%, rgba(64, 150, 238, 1) 100%);
-    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    color: white;
+/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#4d4548+1,000000+3 */
+background: linear-gradient(to right,  #4d4548 1%,#000000 3%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
 
 }
 
 .bg-blue-dark {
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#a7cfdf+0,23538a+100;Blue+3d+%238 */
-    background: linear-gradient(to bottom, rgba(167, 207, 223, 1) 0%, rgba(35, 83, 138, 1) 100%);
-    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    color: white;
+/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#45484d+0,000000+100;Black+3D+%231 */
+background: linear-gradient(to bottom,  #45484d 0%,#000000 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
 }
 
 .bg-blue-sea {
@@ -55965,9 +55964,11 @@ a.text-muted:hover {
 .top-line {
     border-top: 2px solid black;
 }
-.top-line2{
+
+.top-line2 {
     border-top: 1px solid black;
 }
+
 .right-line {
     border-right: 2px solid black;
 }
@@ -55979,15 +55980,19 @@ a.text-muted:hover {
 .left-line {
     border-left: 2px solid black;
 }
+
 .left-line2 {
     border-left: 1px solid black;
 }
+
 .bottom-line {
     border-bottom: 2px solid black;
 }
+
 .bottom-line2 {
     border-bottom: 1px solid black;
 }
+
 .bottom-line-hide {
     border-bottom: 2px solid white;
 }
@@ -55999,6 +56004,7 @@ a.text-muted:hover {
 .up-space {
     margin-top: 10px;
 }
+
 .right-space {
     margin-right: 2px;
 }
@@ -56020,18 +56026,21 @@ a.text-muted:hover {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
-     .bgRed {
+
+    .bgRed {
         background-color: red;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
+
     .bgYellow {
         background-color: var(--yellow);
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
+
     .bgOrange {
-        background-color:var(--orange);
+        background-color: var(--orange);
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
@@ -56052,13 +56061,15 @@ a.text-muted:hover {
     text-align: center;
 
 }
+
 .print-logo2 {
     width: 1050px;
     text-align: center;
-    position:absolute;
+    position: absolute;
     left: 0;
 
 }
+
 .print-address {
     position: absolute;
     top: 40px;
@@ -56067,8 +56078,8 @@ a.text-muted:hover {
 }
 
 .print-address1 {
-    position:relative;
-    top:-45px;
+    position: relative;
+    top: -45px;
     text-align: center;
     font-size: 15px;
 }
@@ -56078,22 +56089,27 @@ a.text-muted:hover {
     height: 500px;
     overflow: auto;
 }
+
 .times-new-roman {
     font-family: 'Times New Roman', Times, serif;
 }
+
 .courier-new {
-    font-family: 'Courier New',Times, serif;
+    font-family: 'Courier New', Times, serif;
 }
+
 .arial {
-    font-family: 'Arial',Times, serif;
+    font-family: 'Arial', Times, serif;
 }
-.ubunto-bold{
+
+.ubunto-bold {
     font-family: "Ubuntu", sans-serif;
     font-weight: 700;
     font-style: normal;
 }
+
 .segoe {
- 
+
     font-family: "Segoe UI", sans-serif;
     font-weight: 700;
     font-style: normal;
@@ -56105,45 +56121,83 @@ a.text-muted:hover {
     font-weight: 700;
     font-style: normal;
 }
+
 .box {
-    display: inline-block; /* Display boxes in a horizontal line */
-    width: 22px; /* Automatically adjust the width according to content */
-    height: 25px; /* Set height of the boxes */
-    padding: 0px; /* Add some padding inside the boxes */
-    margin-right:-4px; /* Add some spacing between the boxes */
-    margin-left:0px;
+    display: inline-block;
+    /* Display boxes in a horizontal line */
+    width: 22px;
+    /* Automatically adjust the width according to content */
+    height: 25px;
+    /* Set height of the boxes */
+    padding: 0px;
+    /* Add some padding inside the boxes */
+    margin-right: -4px;
+    /* Add some spacing between the boxes */
+    margin-left: 0px;
     padding-top: 2px;
-    background-color:white; /* Set background color of the boxes */
-    border: 1px solid darkgreen; /* Add a border around the boxes */
-    text-align: center; /* Center the text inside the boxes */
-    margin-top:4px;
+    background-color: white;
+    /* Set background color of the boxes */
+    border: 1px solid darkgreen;
+    /* Add a border around the boxes */
+    text-align: center;
+    /* Center the text inside the boxes */
+    margin-top: 4px;
 }
 
 .box2 {
-    display: inline-block; /* Display boxes in a horizontal line */
-    width: 29px; /* Automatically adjust the width according to content */
-    height: 25px; /* Set height of the boxes */
-    padding: 0px; /* Add some padding inside the boxes */
-    margin-right:-4px; /* Add some spacing between the boxes */
-    margin-left:0px;
-    background-color:white; /* Set background color of the boxes */
-    border: 1px solid darkgreen; /* Add a border around the boxes */
-    text-align: center; /* Center the text inside the boxes */
-    margin-top:4px;
+    display: inline-block;
+    /* Display boxes in a horizontal line */
+    width: 29px;
+    /* Automatically adjust the width according to content */
+    height: 25px;
+    /* Set height of the boxes */
+    padding: 0px;
+    /* Add some padding inside the boxes */
+    margin-right: -4px;
+    /* Add some spacing between the boxes */
+    margin-left: 0px;
+    background-color: white;
+    /* Set background color of the boxes */
+    border: 1px solid darkgreen;
+    /* Add a border around the boxes */
+    text-align: center;
+    /* Center the text inside the boxes */
+    margin-top: 4px;
 }
 
 
 .noto {
     font-family: "Noto Sans HK", sans-serif;
 }
+
 .soa-text {
     font-size: 30px;
 }
 
 .sticky-header {
     position: sticky;
-    top: 0; /* Distance from the top */
-    z-index: 100; /* Ensure it stays above other content */
-    background-color: white; /* Background color for better visibility */
+    top: 0;
+    /* Distance from the top */
+    z-index: 100;
+    /* Ensure it stays above other content */
+    background-color: white;
+    /* Background color for better visibility */
 }
+
+
+@media (max-width: 575.98px) {
+    .hide-on-small {
+        display: none;
+    }
+
+}
+
+/* Show the element only on small screens (less than 576px) */
+@media (min-width: 575.98px) {
+    .show-on-small {
+        display: block;
+        /* Or use inline / flex depending on your layout */
+    }
+}
+
 

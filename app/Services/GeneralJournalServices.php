@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class GeneralJournalServices
 {
+
+
+    public int $object_type_general_journal_details_id = 84;
     private $dateServices;
     private $systemSettingServices;
     private $object;
@@ -203,6 +206,16 @@ class GeneralJournalServices
     public function getDetails(int $Id)
     {
         return GeneralJournalDetails::where('ID', $Id)->first();
+    }
+    public function getFirstDetailsID($GENERAL_JOURNAL_ID): int
+    {
+        $data = GeneralJournalDetails::where('GENERAL_JOURNAL_ID', $GENERAL_JOURNAL_ID)->first();
+
+        if ($data) {
+            return (int) $data->ID ?? 0;
+        }
+
+        return 0;
     }
     public function getGeneralJournalEntries(int $ID)
     {

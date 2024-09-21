@@ -5,7 +5,7 @@
                     <i class="nav-icon fa fa-university"></i>
                     <p> Banking <i class="fas fa-angle-left right"></i> </p>
                 </a>
-                <ul class="nav nav-treeview">
+                <ul class="nav nav-treeview bg-blue-dark">
                     @can('banking.deposit.view')
                         <li class="nav-item">
                             <a href="{{ route('bankingdeposit') }}"

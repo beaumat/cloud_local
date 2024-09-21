@@ -3,7 +3,7 @@
         <i class="nav-icon fa fa-building"></i>
         <p> Company <i class="fas fa-angle-left right"></i> </p>
     </a>
-    <ul class="nav nav-treeview">
+    <ul class="nav nav-treeview bg-blue-dark">
         @can('company.stock-transfer.view')
             <li class="nav-item">
                 <a href="{{ route('companystock_transfer') }}"

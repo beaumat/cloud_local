@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                             <div style="max-height: 73vh; overflow-y: auto;" class="border">
-                                <div style="width:1550px;max-width:1900px;">
+                                <div style="width:1500px;max-width:1900px;">
                                     <table class="table table-sm table-bordered table-hover">
                                         <thead class="text-xs bg-sky sticky-header">
                                             <tr>
