@@ -33,7 +33,7 @@
                                         <div class="col-12 col-md-6">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <livewire:select-option name="CUSTOMER_ID" titleName="Patient"
+                                                    <livewire:select-option name="CUSTOMER_ID" titleName="Patient Name"
                                                         :options="$patientList" :zero="true" :isDisabled=true
                                                         wire:model='CUSTOMER_ID' />
                                                 </div>
@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-9 col-9">
+                                    <div class="col-md-10 col-10">
                                         @if ($Modify)
                                             @if ($STATUS == 4)
                                                 <button name="btnSavePosted" type="submit"
@@ -77,7 +77,7 @@
                                                         aria-hidden="true"></i> Save &
                                                     Posted</button>
                                                 <button name="btnCanceled" type='button' wire:click='updateCancel'
-                                                    class="btn btn-sm btn-danger"><i class="fa fa-ban"
+                                                    class="btn btn-sm btn-secondary"><i class="fa fa-ban"
                                                         aria-hidden="true"></i> Cancel</button>
                                             @else
                                                 <button name="btnSave" type="submit" class="btn btn-sm btn-primary">
@@ -85,7 +85,7 @@
                                                     {{ $ID === 0 ? 'Pre-save' : 'Save' }}</button>
 
                                                 <button name="btnCanceled" type='button' wire:click='updateCancel'
-                                                    class="btn btn-sm btn-danger"><i class="fa fa-ban"
+                                                    class="btn btn-sm btn-secondary"><i class="fa fa-ban"
                                                         aria-hidden="true"></i> Cancel</button>
                                             @endif
                                         @else
@@ -104,15 +104,27 @@
                                                     @endif
                                                 @endif
                                             @else
-                                                @can('patient.treatment.update')
-                                                    <button name="btnUnposted" type='button'
-                                                        class="btn btn-sm btn-secondary"
-                                                        wire:confirm="Are you sure you want to un-posted?"
-                                                        wire:click='getUnposted()'>
-                                                        Unposted
-                                                    </button>
-                                                @endcan
+                                                @if ($STATUS == 15)
+                                                    @can('patient.treatment.update')
+                                                        <button name="btnUnposted" type='button'
+                                                            class="btn btn-sm btn-secondary"
+                                                            wire:confirm="Are you sure you want to un-posted?"
+                                                            wire:click='getUnposted()'>
+                                                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                                            Unposted
+                                                        </button>
+                                                    @endcan
+                                                @endif
                                             @endif
+
+
+                                            @can('patient.treatment.delete')
+                                                <button name="btnCanceled" type='button' class="btn btn-sm btn-danger"
+                                                    wire:confirm="Are you sure you want to void?"
+                                                    wire:click='getCanceled()'>
+                                                    <i class="fa fa-times" aria-hidden="true"></i> Void
+                                                </button>
+                                            @endcan
                                         @endif
 
                                         @can('full-treatment-sheet')
@@ -124,7 +136,7 @@
                                         @endcan
 
                                     </div>
-                                    <div class="text-right col-3 col-md-3">
+                                    <div class="text-right col-2 col-md-2">
 
                                         @if (!$Modify)
                                             <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
@@ -422,7 +434,6 @@
                             <div class="col-md-12"
                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
                                 @livewire('Hemodialysis.InventoryTreatment', ['HEMO_ID' => $ID, 'STATUS' => $STATUS, 'LOCATION_ID' => $LOCATION_ID, 'ActiveRequired' => $ActiveRequired])
-
                             </div>
                             <div class="col-md-12">
                                 @if ($IsDocmentUploaded)

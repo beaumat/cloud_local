@@ -763,10 +763,11 @@ class HemoServices
     public function StatusUpdate(int $ID, int $STATUS)
     {
         // Check if already done
-        Hemodialysis::where('ID', $ID)->update([
-            'STATUS_ID' => $STATUS,
-            'STATUS_DATE' =>  $this->dateServices->Now(),
-        ]);
+        Hemodialysis::where('ID', $ID)
+            ->update([
+                'STATUS_ID' => $STATUS,
+                'STATUS_DATE' =>  $this->dateServices->Now(),
+            ]);
     }
     public function Delete(int $id)
     {

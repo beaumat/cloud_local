@@ -467,7 +467,13 @@ class HemoForm extends Component
 
             $data = $this->hemoServices->ItemInventory($this->ID);
             if ($data) {
-                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
+                $this->itemInventoryServices->InventoryExecute(
+                    $data,
+                    $this->LOCATION_ID,
+                    $SOURCE_REF_TYPE,
+                    $this->DATE,
+                    false
+                );
             }
             return true;
         } catch (\Exception $e) {
@@ -476,10 +482,22 @@ class HemoForm extends Component
             return false;
         }
     }
+    public function getCanceled()
+    {
+        $this->hemoServices->StatusUpdate($this->ID, 3);
+
+        $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 3);
+        return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully void');
+    }
     public function getUnposted()
     {
         $this->hemoServices->StatusUpdate($this->ID, 4);
-        $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 0);
+        $this->scheduleServices->StatusUpdate(
+            $this->CUSTOMER_ID,
+            $this->DATE,
+            $this->LOCATION_ID,
+            0
+        );
         return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully unposted');
     }
     public function getPosted()
