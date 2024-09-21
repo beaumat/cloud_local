@@ -117,14 +117,15 @@
                                                 @endif
                                             @endif
 
-
-                                            @can('patient.treatment.delete')
-                                                <button name="btnCanceled" type='button' class="btn btn-sm btn-danger"
-                                                    wire:confirm="Are you sure you want to void?"
-                                                    wire:click='getCanceled()'>
-                                                    <i class="fa fa-times" aria-hidden="true"></i> Void
-                                                </button>
-                                            @endcan
+                                            @if ($STATUS != 3)
+                                                @can('patient.treatment.delete')
+                                                    <button name="btnCanceled" type='button' class="btn btn-sm btn-danger"
+                                                        wire:confirm="Are you sure you want to void?"
+                                                        wire:click='getCanceled()'>
+                                                        <i class="fa fa-times" aria-hidden="true"></i> Void
+                                                    </button>
+                                                @endcan
+                                            @endif
                                         @endif
 
                                         @can('full-treatment-sheet')
