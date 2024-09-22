@@ -44,7 +44,6 @@
                                     {{ number_format($list->QUANTITY, 0) }}
                                 @endif
                             </td>
-
                             <td class="text-right">
                                 @if ($editItemId == $list->ID)
                                     <input type="number" step="0.01"
@@ -55,8 +54,9 @@
                                     {{ number_format($list->UNIT_COST, 2) }}
                                 @endif
                             </td>
+
                             <td class="text-right">
-                                {{ number_format($list->QTY_DIFFERENCE, 0) }}
+                                {{ number_format($list->QTY_DIFF, 0) }}
                             </td>
 
                             <td class="text-right">

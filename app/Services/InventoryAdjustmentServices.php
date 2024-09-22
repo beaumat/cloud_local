@@ -202,8 +202,10 @@ class InventoryAdjustmentServices
                 'item.CODE',
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
-                'u.SYMBOL'
+                'u.SYMBOL',
+                DB::raw("(select QUANTITY from item_inventory as n where n.ITEM_ID =  inventory_adjustment_items.ITEM_ID and n.SOURCE_REF_ID = inventory_adjustment_items.ID and n.SOURCE_REF_DATE = inventory_adjustment.DATE and n.SOURCE_REF_TYPE = '6' and n.LOCATION_ID = inventory_adjustment.LOCATION_ID  ) as QTY_DIFF ")
             ])
+            ->join('inventory_adjustment', 'inventory_adjustment.ID', '=', 'inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID')
             ->leftJoin('item', 'item.ID', '=', 'inventory_adjustment_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'inventory_adjustment_items.UNIT_ID')
             ->where('inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID', $INVENTORY_ADJUSTMENT_ID)
@@ -221,10 +223,9 @@ class InventoryAdjustmentServices
                 'inventory_adjustment_items.ITEM_ID',
                 'inventory_adjustment_items.QUANTITY',
                 'inventory_adjustment_items.UNIT_BASE_QUANTITY',
-                'item.COST'
+                DB::raw(" (if (inventory_adjustment_items.UNIT_COST > 0 , UNIT_COST , (select price_level_lines.CUSTOM_COST from price_level_lines where price_level_lines.ITEM_ID = inventory_adjustment_items.ITEM_ID and price_level_lines.PRICE_LEVEL_ID = (select location.ID from location where location.ID = n.LOCATION_ID ) ) )) as COST ")
             ])
-            ->join('item', 'item.ID', '=', 'inventory_adjustment_items.ITEM_ID')
-            ->whereIn('item.TYPE', ['0', '1'])
+            ->join('inventory_adjustment as n', 'n.ID', '=', 'inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID')
             ->where('inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID', $INVENTORY_ADJUSTMENT_ID)
             ->get();
 

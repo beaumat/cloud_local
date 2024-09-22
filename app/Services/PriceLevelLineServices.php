@@ -86,9 +86,29 @@ class PriceLevelLineServices
         $locDate =  $this->locationServices->get($LOCTION_ID);
         if ($locDate) {
             $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
-            PriceLevelLines::where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
-                ->where('ITEM_ID', '=', $ITEM_ID)
-                ->update(['CUSTOM_COST' => $COST]);
+            if ($PRICE_LEVEL_ID > 0) {
+
+                // Check first
+
+                $exist =  (bool)  PriceLevelLines::where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
+                    ->where('ITEM_ID', '=', $ITEM_ID)
+                    ->exists();
+
+
+                if ($exist) {
+                    PriceLevelLines::where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
+                        ->where('ITEM_ID', '=', $ITEM_ID)
+                        ->update(['CUSTOM_COST' => $COST]);
+                    return;
+                }
+
+                $this->Store(
+                    $PRICE_LEVEL_ID,
+                    $ITEM_ID,
+                    0,
+                    $COST
+                );
+            }
         }
     }
     public function GetPriceByLocation($LOCTION_ID, int $ITEM_ID): float
@@ -96,7 +116,17 @@ class PriceLevelLineServices
         $locDate =  $this->locationServices->get($LOCTION_ID);
         if ($locDate) {
             $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
-            $result =  PriceLevelLines::select(['CUSTOM_PRICE'])->where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)->where('ITEM_ID', $ITEM_ID)->first();
+
+            if ($PRICE_LEVEL_ID > 0) {
+                $exist =  (bool)  PriceLevelLines::where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
+                    ->where('ITEM_ID', '=', $ITEM_ID)
+                    ->exists();
+            } else {
+            }
+
+            $result =  PriceLevelLines::select(['CUSTOM_PRICE'])
+                ->where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
+                ->where('ITEM_ID', $ITEM_ID)->first();
             if ($result) {
                 return (float) $result->CUSTOM_PRICE ?? 0;
             }
@@ -110,9 +140,26 @@ class PriceLevelLineServices
         $locDate =  $this->locationServices->get($LOCTION_ID);
         if ($locDate) {
             $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
-            PriceLevelLines::where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
-                ->where('ITEM_ID', '=', $ITEM_ID)
-                ->update(['CUSTOM_PRICE' => $PRICE]);
+
+            if ($PRICE_LEVEL_ID > 0) {
+                $exist =  (bool)  PriceLevelLines::where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
+                    ->where('ITEM_ID', '=', $ITEM_ID)
+                    ->exists();
+
+                if ($exist) {
+                    PriceLevelLines::where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
+                        ->where('ITEM_ID', '=', $ITEM_ID)
+                        ->update(['CUSTOM_PRICE' => $PRICE]);
+                    return;
+                }
+
+                $this->Store(
+                    $PRICE_LEVEL_ID,
+                    $ITEM_ID,
+                    $PRICE,
+                    0
+                );
+            }
         }
     }
     public function UpdatePrice(int $ID, float $CUSTOM_PRICE = 0): void

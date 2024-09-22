@@ -4,6 +4,7 @@ namespace App\Livewire\InventoryAdjustment;
 
 use App\Services\InventoryAdjustmentServices;
 use App\Services\ItemServices;
+use App\Services\PriceLevelLineServices;
 use App\Services\UnitOfMeasureServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -49,14 +50,17 @@ class InventoryAdjustmentFormItems extends Component
     private $inventoryAdjustmentServices;
     private $unitOfMeasureServices;
     private $itemServices;
+    private $priceLevelLineServices;
     public function boot(
         InventoryAdjustmentServices $inventoryAdjustmentServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         ItemServices $itemServices,
+        PriceLevelLineServices $priceLevelLineServices
     ) {
         $this->inventoryAdjustmentServices = $inventoryAdjustmentServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemServices = $itemServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
     }
 
     public function updatedcodeBase()
@@ -85,7 +89,8 @@ class InventoryAdjustmentFormItems extends Component
             if ($item) {
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
-                $this->UNIT_COST = $item->COST ?? 0;
+                $COST = $this->priceLevelLineServices->GetCostByLocation($this->LOCATION_ID, $this->ITEM_ID);
+                $this->UNIT_COST =  $COST > 0 ? $COST  : $item->COST ?? 0;
                 $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
             }
@@ -119,7 +124,6 @@ class InventoryAdjustmentFormItems extends Component
                 return;
             }
 
-
             if ($this->inventoryAdjustmentServices->haveExists($this->INVENTORY_ADJUSTMENT_ID, $this->ITEM_ID)) {
                 session()->flash('error', 'Item already added.');
                 return;
@@ -137,6 +141,13 @@ class InventoryAdjustmentFormItems extends Component
                 $this->UNIT_ID,
                 (float) $unitRelated['QUANTITY']
             );
+            if ($this->UNIT_COST > 0) {
+                $this->priceLevelLineServices->SetCostByLocation(
+                    $this->LOCATION_ID,
+                    $this->ITEM_ID,
+                    $this->UNIT_COST
+                );
+            }
 
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
@@ -163,7 +174,10 @@ class InventoryAdjustmentFormItems extends Component
     public function getEditAmount() {}
     public function editItem(int $ID)
     {
-        $data = $this->inventoryAdjustmentServices->GetItem($ID, $this->INVENTORY_ADJUSTMENT_ID);
+        $data = $this->inventoryAdjustmentServices->GetItem(
+            $ID,
+            $this->INVENTORY_ADJUSTMENT_ID
+        );
 
         if ($data) {
             $this->editItemId =     $data->ID;

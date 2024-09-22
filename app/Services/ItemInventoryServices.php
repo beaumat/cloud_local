@@ -9,10 +9,12 @@ class ItemInventoryServices
 {
     private $object;
     private $itemServices;
-    public function __construct(ObjectServices $objectService, ItemServices $itemServices)
+    private $priceLevelLineServices;
+    public function __construct(ObjectServices $objectService, ItemServices $itemServices, PriceLevelLineServices $priceLevelLineServices)
     {
         $this->object = $objectService;
         $this->itemServices = $itemServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
     }
 
     private function Store(int $PREVIOUS_ID, int $SEQUENCE_NO, int $ITEM_ID, int $LOCATION_ID, int $BATCH_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $QUANTITY, float $COST = 0, float $ENDING_QUANTITY = 0, float $ENDING_UNIT_COST = 0, float $ENDING_COST = 0)
@@ -341,8 +343,10 @@ class ItemInventoryServices
 
             if (isset($list->COST)) {
                 $COST = (float) $list->COST ?? 0;
-            } else {
-                $COST = (float) $this->itemServices->getCost($ITEM_ID);
+            }
+
+            if ($COST  == 0) {
+                $COST = (float) $this->priceLevelLineServices->GetCostByLocation($LOCATION_ID, $ITEM_ID);
             }
 
             $this->InventoryModify(
