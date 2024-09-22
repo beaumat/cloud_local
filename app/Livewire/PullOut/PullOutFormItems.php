@@ -2,9 +2,13 @@
 
 namespace App\Livewire\PullOut;
 
+use App\Services\AccountJournalServices;
+use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
+use App\Services\PriceLevelLineServices;
 use App\Services\PullOutServices;
 use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -17,7 +21,8 @@ class PullOutFormItems extends Component
     public int $STATUS;
     #[Reactive]
     public int $openStatus;
-
+    #[Reactive]
+    public int $LOCATION_ID;
     public int $ID;
     public int $ITEM_ID = 0;
     public string $ITEM_CODE;
@@ -46,14 +51,23 @@ class PullOutFormItems extends Component
     private $pullOutServices;
     private $unitOfMeasureServices;
     private $itemServices;
+    private $priceLevelLineServices;
+    private $accountJournalServices;
+    private $itemInventoryServices;
     public function boot(
         PullOutServices $pullOutServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         ItemServices $itemServices,
+        PriceLevelLineServices $priceLevelLineServices,
+        AccountJournalServices $accountJournalServices,
+        ItemInventoryServices  $itemInventoryServices
     ) {
         $this->pullOutServices = $pullOutServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemServices = $itemServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->itemInventoryServices = $itemInventoryServices;
     }
 
     public function updatedcodeBase()
@@ -102,14 +116,11 @@ class PullOutFormItems extends Component
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
-
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
-
-                $this->RATE = $item->RATE ?? 0;
+                $this->RATE = $this->priceLevelLineServices->GetCostByLocation($this->LOCATION_ID, $this->ITEM_ID);
                 $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
-
                 $this->getAmount();
             }
         }
@@ -118,7 +129,6 @@ class PullOutFormItems extends Component
     {
         $this->QUANTITY = 0;
         $this->RATE = 0;
-
         $this->AMOUNT = 0;
         $this->updatedcodeBase();
     }
@@ -148,7 +158,7 @@ class PullOutFormItems extends Component
                 $this->QUANTITY,
                 $this->UNIT_ID,
                 (float) $unitRelated['QUANTITY'],
-                0,
+                $this->RATE ?? 0,
                 0,
                 $this->ASSET_ACCOUNT_ID
             );
@@ -250,13 +260,56 @@ class PullOutFormItems extends Component
 
     public function deleteItem($Id)
     {
+        DB::beginTransaction();
         try {
+
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                    $this->pullOutServices->object_type_map_pull_out,
+                    $this->PULL_OUT_ID
+                );
+                if ($JOURNAL_NO  >  0) {
+                    $pullOutData = $this->pullOutServices->get($this->PULL_OUT_ID);
+                    if ($pullOutData) {
+                        $pullOutDataItem = $this->pullOutServices->GetItem($Id, $this->PULL_OUT_ID);
+                        if ($pullOutDataItem) {
+                            // Inventory
+                            $this->itemInventoryServices->InventoryModify(
+                                $pullOutDataItem->ITEM_ID,
+                                $pullOutData->LOCATION_ID,
+                                $Id,
+                                $this->pullOutServices->document_type_id,
+                                $pullOutData->DATE,
+                                0,
+                                0,
+                                0
+                            );
+
+                            // ACCOUNT_ID
+                            $this->accountJournalServices->DeleteJournal(
+                                $pullOutDataItem->ASSET_ACCOUNT_ID,
+                                $pullOutData->LOCATION_ID,
+                                $JOURNAL_NO,
+                                $pullOutDataItem->ITEM_ID,
+                                $Id,
+                                $this->pullOutServices->object_type_map_pull_out_items,
+                                $pullOutData->DATE,
+                                1,
+                            );
+                        }
+                    }
+                }
+            }
+
             $this->pullOutServices->ItemDelete(
                 $Id,
                 $this->PULL_OUT_ID
             );
+
+            DB::commit();
             $this->dispatch('update-amount');
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

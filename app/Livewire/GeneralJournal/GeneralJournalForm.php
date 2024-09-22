@@ -221,25 +221,6 @@ class GeneralJournalForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-
-    public function OpenJournal()
-    {
-        $FirstID = $this->generalJournalServices->getFirstDetailsID($this->ID);
-
-        $JOURNAL_NO = $this->accountJournalServices->getRecord(
-            $this->generalJournalServices->object_type_general_journal_details_id,
-            $FirstID
-        );
-
-        if ($JOURNAL_NO > 0) {
-            $data = ['JOURNAL_NO' => $JOURNAL_NO];
-            $this->dispatch('open-journal', result: $data);
-            return;
-        }
-
-        session()->flash('error', 'Journal entry not created');
-    }
-
     public function posted()
     {
         try {
@@ -261,16 +242,11 @@ class GeneralJournalForm extends Component
             }
 
             if ($total_debit == $total_credit) {
-
                 DB::beginTransaction();
-
-
                 if (!$this->AccountJournal()) {
                     DB::rollBack();
                     return;
                 }
-
-
                 $this->generalJournalServices->StatusUpdate($this->ID, 15);
                 DB::commit();
 
@@ -291,9 +267,26 @@ class GeneralJournalForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public function OpenJournal()
+    {
+        $FirstID = $this->generalJournalServices->getFirstDetailsID($this->ID);
+
+        $JOURNAL_NO = $this->accountJournalServices->getRecord(
+            $this->generalJournalServices->object_type_general_journal_details_id,
+            $FirstID
+        );
+
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+            return;
+        }
+
+        session()->flash('error', 'Journal entry not created');
+    }
+
     public function getUnposted()
     {
-
         try {
             DB::beginTransaction();
             $this->generalJournalServices->StatusUpdate($this->ID, 16);

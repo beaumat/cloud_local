@@ -15,6 +15,10 @@ class AccountServices
     {
         return Accounts::whereIn('TYPE', ['0', '6'])->get();
     }
+    public function getExpenses()
+    {
+        return Accounts::whereIn('TYPE', ['12', '14'])->get();
+    }
     public function get(int $ID)
     {
         return Accounts::where('ID', $ID)->first();

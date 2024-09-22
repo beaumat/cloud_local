@@ -34,7 +34,9 @@
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
-                                                <select @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif name="location" wire:model.live='locationid'
+                                                <select
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                    name="location" wire:model.live='locationid'
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
@@ -50,13 +52,17 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-2">Ref No.</th>
-                                        <th class="col-2">Date</th>   
-                                        <th class="col-3">Location</th>
-                                          <th class="col-2">Status</th>
-                                        <th class="text-center bg-success col-2">
-                                            <a href="{{ route('companygeneral_journal_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+                                        <th class="col-1">Ref No.</th>
+                                        <th class="col-1">Date</th>
+                                        <th class="col-1">Location</th>
+                                        <th class="col-6">Notes</th>
+                                        <th class="col-1 text-center">Adjustment Entry</th>
+                                        <th class="col-1">Status</th>
+                                        <th class="text-center bg-success col-1">
+                                            @can('company.general-journal.create')
+                                                <a href="{{ route('companygeneral_journal_create') }}" class="text-white">
+                                                    <i class="fas fa-plus"></i></a>
+                                            @endcan
                                         </th>
                                     </tr>
                                 </thead>
@@ -64,25 +70,40 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('companygeneral_journal_edit', ['id' => $list->ID]) }}">
+                                                <a
+                                                    href="{{ route('companygeneral_journal_edit', ['id' => $list->ID]) }}">
                                                     {{ $list->CODE }}
                                                 </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                             
                                             <td> {{ $list->LOCATION_NAME }}</td>
-            
+                                            <td> {{ $list->NOTES }}</td>
+                                            <td class="text-center">
+                                                @if ($list->ADJUSTING_ENTRY)
+                                                    Yes
+                                                @endif
+                                            </td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('companygeneral_journal_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+
+                                                <a title="View"
+                                                    href="{{ route('companygeneral_journal_edit', ['id' => $list->ID]) }}"
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+
+                                                @if (auth()->user()->can('company.general-journal.delete') && $list->STATUS_ID == 0)
+                                                    <button title="delete" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn btn-danger btn-xs">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button title="delete" class="btn btn-secondary btn-xs"> <i
+                                                            class="fas fa-trash" aria-hidden="true"></i> </button>
+                                                @endif
+
+
                                             </td>
                                         </tr>
                                     @endforeach

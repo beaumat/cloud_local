@@ -43,7 +43,7 @@ class BillPaymentForm extends Component
     private $userServices;
     private $accountServices;
     private $documentStatusServices;
-    private $objectServices;
+
     private $accountJournalServices;
     public function boot(
         BillPaymentServices $billPaymentServices,
@@ -52,7 +52,6 @@ class BillPaymentForm extends Component
         UserServices $userServices,
         AccountServices $accountServices,
         DocumentStatusServices $documentStatusServices,
-        ObjectServices $objectServices,
         AccountJournalServices $accountJournalServices
     ) {
         $this->billPaymentServices = $billPaymentServices;
@@ -61,7 +60,6 @@ class BillPaymentForm extends Component
         $this->userServices = $userServices;
         $this->accountServices = $accountServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->objectServices = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
     }
 

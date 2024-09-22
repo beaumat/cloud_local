@@ -221,7 +221,44 @@ class AccountJournalServices
 
         return $result;
     }
+    public function AccountSwitch(
+        int $NEW_ACCOUNT_ID,
+        int $OLD_ACCOUNT_ID,
+        int $LOCATION_ID,
+        int $JOURNAL_NO,
+        int $SUBSIDIARY_ID,
+        int $OBJECT_ID,
+        int $OBJECT_TYPE,
+        string $OBJECT_DATE,
+        int $ENTRY_TYPE,
+    ) {
 
+
+        if ($this->JournalExists(
+            $OLD_ACCOUNT_ID,
+            $ENTRY_TYPE,
+            $OBJECT_ID,
+            $OBJECT_TYPE,
+            $OBJECT_DATE,
+            $LOCATION_ID,
+            $SUBSIDIARY_ID,
+        )) {
+
+
+
+            AccountJournal::where('LOCATION_ID', $LOCATION_ID)
+                ->where('JOURNAL_NO', $JOURNAL_NO)
+                ->where('ACCOUNT_ID', $OLD_ACCOUNT_ID)
+                ->where('ENTRY_TYPE', $ENTRY_TYPE)
+                ->where('OBJECT_TYPE', $OBJECT_TYPE)
+                ->where('OBJECT_ID', $OBJECT_ID)
+                ->where('OBJECT_DATE', $OBJECT_DATE)
+                ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
+                ->update([
+                    'ACCOUNT_ID' => $NEW_ACCOUNT_ID
+                ]);
+        }
+    }
     public function JournalModify(int $ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE, float $AMOUNT, int  $SEQUENCE_GROUP, string $EXTENDED_OPTIONS)
     {
         if (!$this->JournalExists(
@@ -236,10 +273,6 @@ class AccountJournalServices
 
 
             if ($ACCOUNT_ID  ==  0) {
-                return;
-            }
-
-            if ($AMOUNT == 0) {
                 return;
             }
 
@@ -351,6 +384,10 @@ class AccountJournalServices
         WHEN o.`ID` = 70    THEN ( select build_assembly.`CODE` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71    THEN ( select build_assembly.`CODE` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         
+        WHEN o.`ID` = 113    THEN ( select pull_out.`CODE` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
+        WHEN o.`ID` = 114    THEN ( select pull_out.`CODE` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
+
+
     END as TX_CODE';
 
     private string $TX_NOTES = '
@@ -385,6 +422,9 @@ class AccountJournalServices
         WHEN o.`ID` = 70    THEN ( select build_assembly.`NOTES` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71    THEN ( select build_assembly.`NOTES` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         
+        WHEN o.`ID` = 113    THEN ( select pull_out.`NOTES` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
+        WHEN o.`ID` = 114    THEN ( select pull_out.`NOTES` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
+
     END as TX_NOTES';
 
 
@@ -421,6 +461,10 @@ class AccountJournalServices
         WHEN o.`ID` = 70    THEN ( select item.DESCRIPTION from build_assembly join item on item.ID = build_assembly.ASSEMBLY_ITEM_ID  where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71    THEN ( select item.DESCRIPTION from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  join  item on item.ID = build_assembly_items.ITEM_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         
+        WHEN o.`ID` = 113    THEN ( select contact.`PRINT_NAME_AS` from pull_out  left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
+        WHEN o.`ID` = 114    THEN ( select contact.`PRINT_NAME_AS` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
+
+
     END as TX_NAME';
 
 
@@ -444,7 +488,6 @@ class AccountJournalServices
             ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
-            ->where('aj.AMOUNT', '>', 0)
             ->where('aj.JOURNAL_NO', $JOURNAL_NO)
             ->get();
 

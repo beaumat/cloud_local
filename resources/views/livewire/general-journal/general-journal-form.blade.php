@@ -66,7 +66,7 @@
                                                             :isDisabled=true wire:model='NOTES' :vertical="false" />
                                                     @endif
                                                 </div>
-                                                <div class="colmd-3">
+                                                <div class="col-md-3">
                                                     @if ($Modify)
                                                         <livewire:checkbox-input name="ADJUSTING_ENTRY"
                                                             titleName="Adjusting Entry" :isDisabled=false
@@ -120,7 +120,6 @@
 
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-
                                         @if ($STATUS == 15)
                                             @can('company.general-journal.print')
                                                 <button type="button" wire:click='OpenJournal()'
@@ -143,30 +142,31 @@
             </div>
         </div>
     </section>
-    <section class="content">
-        <div class="container-fluid bg-light">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary card-outline card-outline-tabs">
-                        <div class="card-header p-0 border-bottom-0">
-                            <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
-                                        href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true">Journal Entries</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="tab-content" id="custom-tabs-four-tabContent">
-                                <div class="tab-pane fade show active " id="custom-tabs-four-item" role="tabpanel"
-                                    aria-labelledby="custom-tabs-four-item-tab">
-                                    <div class="row"
-                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        <div class="col-md-12"
-                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('GeneralJournal.GeneralJournalFormDetails', ['GENERAL_JOURNAL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS])
+    @if ($ID > 0)
+        <section class="content">
+            <div class="container-fluid bg-light">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-header p-0 border-bottom-0">
+                                <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
+                                            href="#custom-tabs-four-item" role="tab"
+                                            aria-controls="custom-tabs-four-item" aria-selected="true">Journal
+                                            Entries</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade show active " id="custom-tabs-four-item"
+                                        role="tabpanel" aria-labelledby="custom-tabs-four-item-tab">
+                                        <div class="row">
+                                            <div class="col-md-12"
+                                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                @livewire('GeneralJournal.GeneralJournalFormDetails', ['GENERAL_JOURNAL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS])
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -175,7 +175,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
     @livewire('AccountJournal.AccountJournalModal')
 </div>

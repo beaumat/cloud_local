@@ -77,8 +77,10 @@ class GeneralJournalServices
                 'general_journal.CODE',
                 'general_journal.DATE',
                 'general_journal.NOTES',
+                'general_journal.ADJUSTING_ENTRY',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
+                'general_journal.STATUS as STATUS_ID'
 
             ])
             ->join('location as l', function ($join) use (&$locationId) {

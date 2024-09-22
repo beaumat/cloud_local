@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\DB;
 class PullOutServices
 {
 
+    public int $object_type_map_pull_out = 113;
+    public int $object_type_map_pull_out_items = 114;
+    public int $document_type_id = 31;
+
     private $object;
     private $dateServices;
     private $systemSettingServices;
@@ -46,13 +50,14 @@ class PullOutServices
 
         return $ID;
     }
-    public function Update(int $ID, string $CODE, string $NOTES, int $PREPARED_BY_ID)
+    public function Update(int $ID, string $CODE, string $NOTES, int $PREPARED_BY_ID, int $ACCOUNT_ID)
     {
         PullOut::where('ID', $ID)
             ->update([
-                'CODE'  => $CODE,
-                'NOTES' => $NOTES,
-                'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
+                'CODE'              => $CODE,
+                'NOTES'             => $NOTES,
+                'PREPARED_BY_ID'    => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
+                'ACCOUNT_ID'        => $ACCOUNT_ID
             ]);
     }
     public function StatusUpdate(int $ID, int $STATUS)
@@ -127,23 +132,21 @@ class PullOutServices
     }
     public function ItemStore(int $PULL_OUT_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $BATCH_ID, int $ASSET_ACCOUNT_ID)
     {
-
         $ID = $this->object->ObjectNextID('PULL_OUT');
-
         $LINE_NO = $this->getLine($PULL_OUT_ID) + 1;
         PullOutItems::create([
-            'ID'            => $ID,
-            'PULL_OUT_ID'   => $PULL_OUT_ID,
-            'LINE_NO'       => $LINE_NO,
-            'ITEM_ID'       => $ITEM_ID,
-            'DESCRIPTION'   => null,
-            'QUANTITY'      => $QUANTITY,
-            'UNIT_ID'       => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'RATE'          => $RATE,
-            'AMOUNT'        => $RATE * $QUANTITY,
-            'BATCH_ID'      => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null
+            'ID'                    => $ID,
+            'PULL_OUT_ID'           => $PULL_OUT_ID,
+            'LINE_NO'               => $LINE_NO,
+            'ITEM_ID'               => $ITEM_ID,
+            'DESCRIPTION'           => null,
+            'QUANTITY'              => $QUANTITY,
+            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
+            'RATE'                  => $RATE,
+            'AMOUNT'                => $RATE * $QUANTITY,
+            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'ASSET_ACCOUNT_ID'      => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null
         ]);
 
         $this->UpdateTotal($PULL_OUT_ID);
