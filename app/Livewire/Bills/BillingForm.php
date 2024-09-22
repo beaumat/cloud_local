@@ -54,6 +54,7 @@ class BillingForm extends Component
     public $taxList = [];
     public bool $Modify;
     private $billingServices;
+    public $accountList = [];
     private $locationServices;
     private $contactServices;
     private $paymentTermServices;
@@ -104,6 +105,7 @@ class BillingForm extends Component
     }
     public function LoadDropdown()
     {
+        $this->accountList = $this->accountServices->getPayable();
         $this->vendorList = $this->contactServices->getList(0);
         $this->locationList = $this->locationServices->getList();
         $this->paymentTermList = $this->paymentTermServices->getList();
@@ -118,7 +120,10 @@ class BillingForm extends Component
             $this->INPUT_TAX_ACCOUNT_ID = (int) $tax->TAX_ACCOUNT_ID;
         }
     }
-
+    public function updatedPAYMENTTERMSID()
+    {
+        $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID);
+    }
     private function getInfo($data)
     {
         $this->ID = $data->ID;
@@ -185,6 +190,7 @@ class BillingForm extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->VENDOR_ID = 0; //$this->contactServices->getFirstFromListByID(0);
         $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
+        $this->updatedPAYMENTTERMSID();
         $this->NOTES = '';
         $this->AMOUNT = 0;
         $this->BALANCE_DUE = 0;
@@ -215,7 +221,9 @@ class BillingForm extends Component
                         'INPUT_TAX_ID'      => 'required|integer|not_in:0',
                         'DATE'              => 'required|string|date_format:Y-m-d',
                         'LOCATION_ID'       => 'required|integer|exists:location,id',
-                        'PAYMENT_TERMS_ID'  => 'required|integer|exists:payment_terms,id'
+                        'PAYMENT_TERMS_ID'  => 'required|integer|exists:payment_terms,id',
+                        'ACCOUNTS_PAYABLE_ID'   => 'required|integer|exists:account,id',
+                        'INPUT_TAX_ACCOUNT_ID'  => 'required|integer|exists:account,id'
                     ],
                     [],
                     [
@@ -223,7 +231,9 @@ class BillingForm extends Component
                         'INPUT_TAX_ID'      => 'Tax',
                         'DATE'              => 'Date',
                         'LOCATION_ID'       => 'Location',
-                        'PAYMENT_TERMS_ID'  => 'Payment Terms'
+                        'PAYMENT_TERMS_ID'  => 'Payment Terms',
+                        'ACCOUNTS_PAYABLE_ID'   => 'Account Payables',
+                        'INPUT_TAX_ACCOUNT_ID'  => 'Account Tax'
                     ]
                 );
 
@@ -256,26 +266,64 @@ class BillingForm extends Component
 
                 $this->validate(
                     [
-                        'VENDOR_ID'         => 'required|integer|exists:contact,id',
-                        'CODE'              => 'required|max:20|unique:bill,code,' . $this->ID,
-                        'INPUT_TAX_ID'      => 'required|not_in:0',
-                        'DATE'              => 'required|string|date_format:Y-m-d',
-                        'LOCATION_ID'       => 'required|integer|exists:location,id',
-                        'PAYMENT_TERMS_ID'  => 'required|integer|exists:payment_terms,id'
+                        'VENDOR_ID'             => 'required|integer|exists:contact,id',
+                        'CODE'                  => 'required|max:20|unique:bill,code,' . $this->ID,
+                        'INPUT_TAX_ID'          => 'required|not_in:0',
+                        'DATE'                  => 'required|string|date_format:Y-m-d',
+                        'LOCATION_ID'           => 'required|integer|exists:location,id',
+                        'PAYMENT_TERMS_ID'      => 'required|integer|exists:payment_terms,id',
+                        'ACCOUNTS_PAYABLE_ID'   => 'required|integer|exists:account,id',
+                        'INPUT_TAX_ACCOUNT_ID'  => 'required|integer|exists:account,id'
                     ],
                     [],
                     [
-                        'VENDOR_ID'         => 'Vendor',
-                        'CODE'              => 'Reference No.',
-                        'INPUT_TAX_ID'      => 'Tax',
-                        'DATE'              => 'Date',
-                        'LOCATION_ID'       => 'Location',
-                        'PAYMENT_TERMS_ID'  => 'Payment Terms'
+                        'VENDOR_ID'             => 'Vendor',
+                        'CODE'                  => 'Reference No.',
+                        'INPUT_TAX_ID'          => 'Tax',
+                        'DATE'                  => 'Date',
+                        'LOCATION_ID'           => 'Location',
+                        'PAYMENT_TERMS_ID'      => 'Payment Terms',
+                        'ACCOUNTS_PAYABLE_ID'   => 'Account Payables',
+                        'INPUT_TAX_ACCOUNT_ID'  => 'Account Tax'
                     ]
                 );
 
                 DB::beginTransaction();
 
+             
+                $data =  $this->billingServices->Get($this->ID);
+                if ($data) {
+                    if ($this->STATUS == 16) {
+                        $JNO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
+                        if ($JNO > 0) {
+                            // ACCOUNTS_PAYABLE_ID
+                            $this->accountJournalServices->AccountSwitch(
+                                $this->ACCOUNTS_PAYABLE_ID,
+                                $data->ACCOUNTS_PAYABLE_ID,
+                                $this->LOCATION_ID,
+                                $JNO,
+                                $data->VENDOR_ID,
+                                $this->ID,
+                                $this->billingServices->object_type_map_bill,
+                                $this->DATE,
+                                1
+                            );
+                            // INPUT_TAX_ACCOUNT_ID
+
+                            $this->accountJournalServices->AccountSwitch(
+                                $this->INPUT_TAX_ACCOUNT_ID,
+                                $data->INPUT_TAX_ACCOUNT_ID,
+                                $this->LOCATION_ID,
+                                $JNO,
+                                $data->VENDOR_ID,
+                                $this->ID,
+                                $this->billingServices->object_type_map_bill,
+                                $this->DATE,
+                                0
+                            );
+                        }
+                    }
+                }
                 $this->getTax();
                 $this->billingServices->Update(
                     $this->ID,
@@ -361,12 +409,11 @@ class BillingForm extends Component
             $bills = (int) $this->billingServices->object_type_map_bill;
             $billItems = (int) $this->billingServices->object_type_map_bill_item;
             $billExpenses = (int) $this->billingServices->object_type_map_bill_expenses;
-            
+
             $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
             if ($JOURNAL_NO  ==  0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->billingServices->object_type_map_bill, $this->ID) + 1;
             }
-
 
             //Item
             $billCreditItemData = $this->billingServices->getBillItemJournal($this->ID);

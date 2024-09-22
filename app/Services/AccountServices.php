@@ -19,6 +19,18 @@ class AccountServices
     {
         return Accounts::whereIn('TYPE', ['12', '14'])->get();
     }
+    public function getPayable()
+    {
+        return Accounts::whereIn('TYPE', ['5', '6', '7', '8'])->get();
+    }
+    public function getReceivable()
+    {
+        return Accounts::whereIn('TYPE', ['0', '1', '2', '3', '4'])->get();
+    }
+    public function getPay()
+    {
+        return Accounts::whereIn('TYPE', ['0', '1', '2'])->get();
+    }
     public function get(int $ID)
     {
         return Accounts::where('ID', $ID)->first();

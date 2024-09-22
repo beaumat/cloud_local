@@ -38,12 +38,14 @@ class PaymentForm extends Component
     public int $STATUS;
     public string $STATUS_DATE;
     public string $STATUS_DESCRIPTION;
+    public bool $BANK_MODE = true;
     public bool $DEPOSITED;
     public int $ACCOUNTS_RECEIVABLE_ID;
     public bool $UNPOSTED  = true;
     public $locationList = [];
     public $contactList = [];
     public $paymentMethodList = [];
+    public $accountList = [];
     private $paymentServices;
     private $locationServices;
     private $userServices;
@@ -56,6 +58,8 @@ class PaymentForm extends Component
     public bool $showReceiptNo = false;
     public bool $showReceiptDate = false;
     public bool $showFileName = false;
+    public string $TITLE_REF;
+    public string $TITLE_DATE;
 
     private $accountJournalServices;
     private $documentStatusServices;
@@ -111,6 +115,10 @@ class PaymentForm extends Component
     }
     private  function LoadDropDown()
     {
+        if ($this->BANK_MODE) {
+            $this->accountList = $this->accountServices->getBankAccount();
+        }
+
         $this->contactList = $this->contactServices->getCustoPatientList();
         $this->locationList = $this->locationServices->getList();
         $this->paymentMethodList = $this->paymentMethodServices->getListNonPatient();
@@ -142,12 +150,12 @@ class PaymentForm extends Component
         $this->RECEIPT_REF_NO = '';
         $this->RECEIPT_DATE = null;
         $this->NOTES = '';
-        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $this->accountServices->getByName('Undeposited Funds');;
+        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $this->BANK_MODE ? 0 : $this->accountServices->getByName('Undeposited Funds');
         $this->OVERPAYMENT_ACCOUNT_ID = 0;
         $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-        $this->DEPOSITED = 0;
+        $this->DEPOSITED = $this->BANK_MODE ? true : false;
         $this->Modify = true;
         $this->updatedpaymentmethodid();
     }
@@ -173,10 +181,10 @@ class PaymentForm extends Component
                 'LOCATION_ID'                       => 'Location',
                 'AMOUNT'                            => 'Amount',
                 'ACCOUNTS_RECEIVABLE_ID'            => 'Accounts Receivable',
-                'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => 'Undeposited funds Accounts'
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => 'Deposit to Bank Account'
             ]
         );
-
+        DB::beginTransaction();
         try {
 
             if ($this->ID == 0) {
@@ -196,36 +204,64 @@ class PaymentForm extends Component
                     $this->NOTES,
                     $this->UNDEPOSITED_FUNDS_ACCOUNT_ID,
                     $this->OVERPAYMENT_ACCOUNT_ID,
-                    0,
+                    $this->DEPOSITED,
                     $this->ACCOUNTS_RECEIVABLE_ID
                 );
 
+                DB::commit();
 
                 return Redirect::route('customerspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
-                $this->paymentServices->Update(
-                    $this->ID,
-                    $this->CODE,
-                    $this->DATE,
-                    $this->CUSTOMER_ID,
-                    $this->LOCATION_ID,
-                    $this->AMOUNT,
-                    $this->PAYMENT_METHOD_ID,
-                    $this->CARD_NO,
-                    $this->CARD_EXPIRY_DATE,
-                    $this->RECEIPT_REF_NO,
-                    $this->RECEIPT_DATE,
-                    $this->NOTES,
-                    $this->UNDEPOSITED_FUNDS_ACCOUNT_ID,
-                    $this->OVERPAYMENT_ACCOUNT_ID,
-                    0,
-                    $this->ACCOUNTS_RECEIVABLE_ID
-                );
+
+                $data =  $this->paymentServices->Get($this->ID);
+                if ($data) {
+                    if ($this->STATUS == 16) {
+                        $JNO = $this->accountJournalServices->getRecord($this->paymentServices->object_type_payment, $this->ID);
+                        if ($JNO > 0) {
+                            // UNDEPOSITED_FUNDS_ACCOUNT_ID on CREDIT 
+                            $this->accountJournalServices->AccountSwitch(
+                                $this->UNDEPOSITED_FUNDS_ACCOUNT_ID,
+                                $data->UNDEPOSITED_FUNDS_ACCOUNT_ID,
+                                $this->LOCATION_ID,
+                                $JNO,
+                                $data->CUSTOMER_ID,
+                                $this->ID,
+                                $this->paymentServices->object_type_payment,
+                                $this->DATE,
+                                0
+                            );
+                        }
+                    }
+
+                    $this->paymentServices->Update(
+                        $this->ID,
+                        $this->CODE,
+                        $this->DATE,
+                        $this->CUSTOMER_ID,
+                        $this->LOCATION_ID,
+                        $this->AMOUNT,
+                        $this->PAYMENT_METHOD_ID,
+                        $this->CARD_NO,
+                        $this->CARD_EXPIRY_DATE,
+                        $this->RECEIPT_REF_NO,
+                        $this->RECEIPT_DATE,
+                        $this->NOTES,
+                        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID,
+                        $this->OVERPAYMENT_ACCOUNT_ID,
+                        $this->DEPOSITED,
+                        $this->ACCOUNTS_RECEIVABLE_ID
+                    );
+
+                    DB::commit();
+                }
+
+
                 $this->Modify = false;
                 session()->flash('message', 'Successfully updated');
             }
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -249,8 +285,8 @@ class PaymentForm extends Component
             $this->showReceiptNo = (bool) $data['showReceiptNo'];
             $this->showReceiptDate = (bool) $data['showReceiptDate'];
             $this->showFileName = (bool) $data['showFileName'];
-            // $this->TITLE_REF = (string) $data['titleRef'];
-            // $this->TITLE_DATE = (string) $data['titleDate'];
+            $this->TITLE_REF = (string) $data['titleRef'];
+            $this->TITLE_DATE = (string) $data['titleDate'];
             // $this->showTax = (bool) $data['showTax'];
 
             return;

@@ -44,7 +44,6 @@ class PullOutForm extends Component
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
     private $contactServices;
-    private $documentTypeServices;
     private $itemInventoryServices;
     private $accountJournalServices;
 
@@ -53,17 +52,15 @@ class PullOutForm extends Component
         PullOutServices $pullOutServices,
         AccountServices $accountServices,
         LocationServices $locationServices,
-        DocumentTypeServices $documentTypeServices,
         DocumentStatusServices $documentStatusServices,
         ItemInventoryServices $itemInventoryServices,
         ContactServices $contactServices,
-        UserServices     $userServices,
+        UserServices  $userServices,
         AccountJournalServices $accountJournalServices,
 
     ) {
         $this->pullOutServices = $pullOutServices;
         $this->locationServices = $locationServices;
-        $this->documentTypeServices = $documentTypeServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->contactServices = $contactServices;
@@ -102,7 +99,6 @@ class PullOutForm extends Component
     private function AccountJournal(): bool
     {
         try {
-
             $pullOut = $this->pullOutServices->object_type_map_pull_out;
             $pullOutItems = $this->pullOutServices->object_type_map_pull_out_items;
             $JOURNAL_NO = $this->accountJournalServices->getRecord($pullOut, $this->ID);
@@ -119,8 +115,6 @@ class PullOutForm extends Component
                 $pullOut,
                 $this->DATE
             );
-
-
             //Item
             $itemData = $this->pullOutServices->getPullOutItemsJournal($this->ID);
             $this->accountJournalServices->JournalExecute(
@@ -274,10 +268,7 @@ class PullOutForm extends Component
                 return Redirect::route('companypull_out_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
-
-
                 $data =  $this->pullOutServices->Get($this->ID);
-
                 if ($data) {
                     if ($this->STATUS == 16) {
                         $JNO = $this->accountJournalServices->getRecord($this->pullOutServices->object_type_map_pull_out, $this->ID);

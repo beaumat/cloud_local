@@ -29,7 +29,7 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    @if ($Modify && $AMOUNT_APPLIED == 0)
+                                                    @if ($Modify)
                                                         <livewire:select-option name="BANK_ACCOUNT_ID"
                                                             titleName="Bank Account" :options="$accountList" :zero="true"
                                                             :isDisabled=false wire:model='BANK_ACCOUNT_ID' />
@@ -141,7 +141,7 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS != 16)
-                                            @if ($ID > 0 && $STATUS > 0)
+                                            @if ($ID > 0)
                                                 <button type="button" wire:click='OpenJournal()'
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal

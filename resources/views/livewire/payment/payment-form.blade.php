@@ -40,7 +40,7 @@
                                             @endif
 
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div class="col-md-3">
                                                     @if ($Modify && $AMOUNT_APPLIED == 0)
                                                         <livewire:number-input name="AMOUNT" titleName="Amount"
                                                             :isDisabled=false wire:model='AMOUNT' />
@@ -49,7 +49,7 @@
                                                             :isDisabled=true wire:model='AMOUNT' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-3">
                                                     @if ($Modify)
                                                         <livewire:dropdown-option name="PAYMENT_METHOD_ID"
                                                             :isDisabled=false titleName="Payment Method"
@@ -62,6 +62,22 @@
                                                             wire:model.live='PAYMENT_METHOD_ID' />
                                                     @endif
                                                 </div>
+
+                                                <div class="col-md-6">
+                                                    @if ($BANK_MODE)
+                                                        @if ($Modify)
+                                                            <livewire:select-option name="UNDEPOSITED_FUNDS_ACCOUNT_ID"
+                                                                titleName="Deposit to Bank Account" :options="$accountList"
+                                                                :zero="true" :isDisabled=false
+                                                                wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID' />
+                                                        @else
+                                                            <livewire:select-option name="UNDEPOSITED_FUNDS_ACCOUNT_ID"
+                                                                titleName="Deposit to Bank Account" :options="$accountList"
+                                                                :zero="true" :isDisabled=true
+                                                                wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID' />
+                                                        @endif
+                                                    @endif
+                                                </div>
                                             </div>
 
                                             <div class="row">
@@ -69,11 +85,11 @@
                                                     <div class="col-md-6">
                                                         @if ($Modify)
                                                             <livewire:text-input name="RECEIPT_REF_NO"
-                                                                titleName="GL Ref#" :isDisabled=false
+                                                                titleName="{{ $TITLE_REF }}" :isDisabled=false
                                                                 wire:model='RECEIPT_REF_NO' />
                                                         @else
                                                             <livewire:text-input name="RECEIPT_REF_NO"
-                                                                titleName="GL Ref#" :isDisabled=true
+                                                                titleName="{{ $TITLE_REF }}" :isDisabled=true
                                                                 wire:model='RECEIPT_REF_NO' />
                                                         @endif
                                                     </div>
@@ -81,10 +97,12 @@
                                                 @if ($showReceiptDate)
                                                     <div class="col-md-6">
                                                         @if ($Modify)
-                                                            <livewire:date-input name="RECEIPT_DATE" titleName="GL Date"
+                                                            <livewire:date-input name="RECEIPT_DATE"
+                                                                titleName="{{ $TITLE_DATE }}"
                                                                 wire:model='RECEIPT_DATE' :isDisabled="false" />
                                                         @else
-                                                            <livewire:date-input name="RECEIPT_DATE" titleName="GL Date"
+                                                            <livewire:date-input name="RECEIPT_DATE"
+                                                                titleName="{{ $TITLE_DATE }}"
                                                                 wire:model='RECEIPT_DATE' :isDisabled="true" />
                                                         @endif
                                                     </div>
@@ -146,6 +164,8 @@
                                                         @endif
                                                     </div>
                                                 @endif
+
+
 
                                                 <div class="col-md-12">
                                                     @if ($Modify)

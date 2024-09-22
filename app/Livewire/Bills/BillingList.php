@@ -21,7 +21,6 @@ class BillingList extends Component
     use WithPagination;
     public int $perPage = 15;
     protected $paginationTheme = 'bootstrap';
-
     public $search = '';
     public int $locationid;
     public $locationList = [];
@@ -32,8 +31,15 @@ class BillingList extends Component
     private $objectServices;
     private $itemInventoryServices;
     private $documentTypeServices;
-    public function boot(BillingServices $billingServices, LocationServices $locationServices, UserServices $userServices, AccountJournalServices $accountJournalServices, ObjectServices $objectServices, ItemInventoryServices $itemInventoryServices, DocumentTypeServices $documentTypeServices)
-    {
+    public function boot(
+        BillingServices $billingServices,
+        LocationServices $locationServices,
+        UserServices $userServices,
+        AccountJournalServices $accountJournalServices,
+        ObjectServices $objectServices,
+        ItemInventoryServices $itemInventoryServices,
+        DocumentTypeServices $documentTypeServices
+    ) {
         $this->billingServices = $billingServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -66,7 +72,7 @@ class BillingList extends Component
     public function render()
     {
         $dataList = $this->billingServices->Search($this->search, $this->locationid, $this->perPage);
-        
+
         return view('livewire.bills.billing-list', ['dataList' => $dataList]);
     }
 }

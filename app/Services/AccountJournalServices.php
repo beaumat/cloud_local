@@ -464,10 +464,7 @@ class AccountJournalServices
         WHEN o.`ID` = 113    THEN ( select contact.`PRINT_NAME_AS` from pull_out  left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114    THEN ( select contact.`PRINT_NAME_AS` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
 
-
     END as TX_NAME';
-
-
     public function getJournalList(int $JOURNAL_NO): object
     {
 
@@ -488,6 +485,7 @@ class AccountJournalServices
             ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('aj.AMOUNT', '>', '0')
             ->where('aj.JOURNAL_NO', $JOURNAL_NO)
             ->get();
 

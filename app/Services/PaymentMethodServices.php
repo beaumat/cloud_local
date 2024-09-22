@@ -119,7 +119,7 @@ class PaymentMethodServices
                     'showReceiptNo'         => true,
                     'showReceiptDate'       => false,
                     'showFileName'          => false,
-                    'titleRef'              => "SL No.",
+                    'titleRef'              => "SL/OR No.",
                     'titleDate'             => '',
                     'showTax'               => false
                 ];

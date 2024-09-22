@@ -14,7 +14,7 @@ class PaymentTermServices
         $this->object = $objectService;
         $this->dateServices = $dateServices;
     }
-    public function getDueDate(int $ID)
+    public function getDueDate(int $ID): string
     {
         $currentDate = $this->dateServices->Now();
 

@@ -127,12 +127,14 @@ class BillPaymentForm extends Component
     }
     public function save()
     {
+
+
         try {
             if ($this->ID == 0) {
                 $this->validate(
                     [
-                        'BANK_ACCOUNT_ID'   => 'required|not_in:0',
-                        'PAY_TO_ID'         => 'required|not_in:0',
+                        'BANK_ACCOUNT_ID'   => 'required|not_in:0|exists:account,id',
+                        'PAY_TO_ID'         => 'required|not_in:0|exists:contact,id',
                         'AMOUNT'            => 'required|not_in:0',
                         'DATE'              => 'required',
                         'LOCATION_ID'       => 'required'
@@ -147,6 +149,8 @@ class BillPaymentForm extends Component
                         'AMOUNT'            => 'Amount'
                     ]
                 );
+
+                DB::beginTransaction();
                 $this->ID = $this->billPaymentServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -157,12 +161,13 @@ class BillPaymentForm extends Component
                     $this->NOTES,
                     $this->ACCOUNTS_PAYABLE_ID
                 );
+                DB::commit();
                 return Redirect::route('vendorsbill_payment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 $this->validate(
                     [
-                        'PAY_TO_ID'             => 'required|not_in:0',
-                        'BANK_ACCOUNT_ID'       => 'required|not_in:0',
+                        'PAY_TO_ID'             => 'required|not_in:0|exists:contact,id',
+                        'BANK_ACCOUNT_ID'       => 'required|not_in:0|exists:account,id',
                         'CODE'                  => 'required|max:20|unique:bill,code,' . $this->ID,
                         'DATE'                  => 'required',
                         'LOCATION_ID'           => 'required',
@@ -178,20 +183,58 @@ class BillPaymentForm extends Component
                         'AMOUNT'                => 'Amount'
                     ]
                 );
-                $this->billPaymentServices->Update(
-                    $this->ID,
-                    $this->CODE,
-                    $this->BANK_ACCOUNT_ID,
-                    $this->PAY_TO_ID,
-                    $this->LOCATION_ID,
-                    $this->AMOUNT,
-                    $this->NOTES
+                DB::beginTransaction();
+                $data =  $this->billPaymentServices->Get($this->ID);
+                if ($data) {
+                    if ($this->STATUS == 16) {
+                        $JNO = $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $this->ID);
+                        if ($JNO > 0) {
+                            // BANK_ACCOUNT_ID on CREDIT 
+                            $this->accountJournalServices->AccountSwitch(
+                                $this->BANK_ACCOUNT_ID,
+                                $data->BANK_ACCOUNT_ID,
+                                $this->LOCATION_ID,
+                                $JNO,
+                                $data->PAY_TO_ID,
+                                $this->ID,
+                                $this->billPaymentServices->object_type_check,
+                                $this->DATE,
+                                1
+                            );
+                            // BANK_ACCOUNT_ID on DEBIT 
+                            $this->accountJournalServices->AccountSwitch(
+                                $this->BANK_ACCOUNT_ID,
+                                $data->BANK_ACCOUNT_ID,
+                                $this->LOCATION_ID,
+                                $JNO,
+                                $data->PAY_TO_ID,
+                                $this->ID,
+                                $this->billPaymentServices->object_type_check,
+                                $this->DATE,
+                                0
+                            );
+                        }
+                    }
 
-                );
-                session()->flash('message', 'Successfully updated');
+                    $this->billPaymentServices->Update(
+                        $this->ID,
+                        $this->CODE,
+                        $this->BANK_ACCOUNT_ID,
+                        $this->PAY_TO_ID,
+                        $this->LOCATION_ID,
+                        $this->AMOUNT,
+                        $this->NOTES
+
+                    );
+
+                    DB::commit();
+
+                    session()->flash('message', 'Successfully updated');
+                }
             }
             $this->Modify = false;
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -236,7 +279,7 @@ class BillPaymentForm extends Component
 
 
             $checkData = $this->billPaymentServices->billPaymentJournal($this->ID);
-            
+
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
                 $checkData,

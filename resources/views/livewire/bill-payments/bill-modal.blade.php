@@ -6,7 +6,7 @@
 
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h6 class="modal-title">Billing List</h6>
@@ -39,7 +39,8 @@
                                         <td>{{ $list->CODE }}</td>
                                         <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                                         <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
-                                        <th><input type="number" wire:model="paymentAmounts.{{ $list->ID }}"
+                                        <th>
+                                        <input type="number" wire:model="paymentAmounts.{{ $list->ID }}"
                                                 class="form-control form-control-sm text-xs w-100" /></th>
                                     </tr>
                                 @endforeach

@@ -59,6 +59,7 @@ class InvoiceForm extends Component
     public $shipViaList = [];
     public $paymentTermList = [];
     public $taxList = [];
+    public $accountList = [];
     public bool $Modify;
     private $locationServices;
     private $contactServices;
@@ -71,8 +72,6 @@ class InvoiceForm extends Component
     private $accountServices;
     private $invoiceServices;
     private $itemInventoryServices;
-    private $documentTypeServices;
-    private $objectServices;
     private $accountJournalServices;
 
     public string $tab = "item";
@@ -93,8 +92,6 @@ class InvoiceForm extends Component
         SystemSettingServices $systemSettingServices,
         AccountServices $accountServices,
         ItemInventoryServices $itemInventoryServices,
-        DocumentTypeServices $documentTypeServices,
-        ObjectServices $objectServices,
         AccountJournalServices $accountJournalServices
     ) {
         $this->invoiceServices = $invoiceServices;
@@ -108,8 +105,6 @@ class InvoiceForm extends Component
         $this->systemSettingServices = $systemSettingServices;
         $this->accountServices = $accountServices;
         $this->itemInventoryServices = $itemInventoryServices;
-        $this->documentTypeServices = $documentTypeServices;
-        $this->objectServices = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
     }
     public function LoadDropdown()
@@ -119,6 +114,7 @@ class InvoiceForm extends Component
         $this->shipViaList = $this->shipViaServices->getList();
         $this->paymentTermList = $this->paymentTermServices->getList();
         $this->taxList = $this->taxServices->getList();
+        $this->accountList = $this->accountServices->getReceivable();
     }
     public function getTax()
     {
@@ -239,7 +235,7 @@ class InvoiceForm extends Component
                         'OUTPUT_TAX_ACCOUNT_ID'     => 'Output Tax Accounts'
                     ]
                 );
-
+                DB::beginTransaction();
                 $this->getTax();
                 $this->ID = (int) $this->invoiceServices->Store(
                     $this->CODE,
@@ -264,6 +260,7 @@ class InvoiceForm extends Component
                     $this->OUTPUT_TAX_VAT_METHOD,
                     $this->OUTPUT_TAX_ACCOUNT_ID
                 );
+                DB::commit();
                 return Redirect::route('customersinvoice_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
@@ -274,7 +271,9 @@ class InvoiceForm extends Component
                         'OUTPUT_TAX_ID'         => 'required|not_in:0',
                         'DATE'                  => 'required',
                         'LOCATION_ID'           => 'required',
-                        'PAYMENT_TERMS_ID'      => 'required'
+                        'PAYMENT_TERMS_ID'      => 'required',
+                        'ACCOUNTS_RECEIVABLE_ID'    => 'required|exists:account,id',
+                        'OUTPUT_TAX_ACCOUNT_ID'     => 'required|exists:account,id'
                     ],
                     [],
                     [
@@ -283,9 +282,49 @@ class InvoiceForm extends Component
                         'OUTPUT_TAX_ID'     => 'Tax',
                         'DATE'              => 'Date',
                         'LOCATION_ID'       => 'Location',
-                        'PAYMENT_TERMS_ID'  => 'Payment Terms'
+                        'PAYMENT_TERMS_ID'  => 'Payment Terms',
+                        'ACCOUNTS_RECEIVABLE_ID'    => 'Accounts Receivable',
+                        'OUTPUT_TAX_ACCOUNT_ID'     => 'Output Tax Accounts'
                     ]
                 );
+
+                DB::beginTransaction();
+
+                $data =  $this->invoiceServices->Get($this->ID);
+                if ($data) {
+                    if ($this->STATUS == 16) {
+                        $JNO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $this->ID);
+                        if ($JNO > 0) {
+                            // ACCOUNTS_RECEIVABLE_ID
+                            $this->accountJournalServices->AccountSwitch(
+                                $this->ACCOUNTS_RECEIVABLE_ID,
+                                $data->ACCOUNTS_RECEIVABLE_ID,
+                                $this->LOCATION_ID,
+                                $JNO,
+                                $data->CUSTOMER_ID,
+                                $this->ID,
+                                $this->invoiceServices->object_type_invoice,
+                                $this->DATE,
+                                0
+                            );
+                            // OUTPUT_TAX_ACCOUNT_ID
+
+                            $this->accountJournalServices->AccountSwitch(
+                                $this->OUTPUT_TAX_ACCOUNT_ID,
+                                $data->OUTPUT_TAX_ACCOUNT_ID,
+                                $this->LOCATION_ID,
+                                $JNO,
+                                $data->CUSTOMER_ID,
+                                $this->ID,
+                                $this->invoiceServices->object_type_invoice,
+                                $this->DATE,
+                                1
+                            );
+                        }
+                    }
+                }
+
+
 
                 $this->getTax();
                 $this->invoiceServices->Update(
@@ -315,6 +354,7 @@ class InvoiceForm extends Component
 
                 $this->invoiceServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
                 $getResult = $this->invoiceServices->ReComputed($this->ID);
+                DB::commit();
                 $this->getUpdateAmount($getResult);
                 session()->flash('message', 'Successfully updated');
             }
@@ -327,6 +367,7 @@ class InvoiceForm extends Component
 
             $this->Modify = false;
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

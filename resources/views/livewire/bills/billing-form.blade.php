@@ -31,16 +31,35 @@
                                                 :options="$vendorList" :zero="true" isDisabled="{{ !$Modify }}"
                                                 wire:model='VENDOR_ID' />
                                             <div class="row">
-                                                <div class="col-md-4">
-                                                    <livewire:select-option name="PAYMENT_TERMS_ID"
-                                                        isDisabled="{{ !$Modify }}" titleName="Payment Terms"
-                                                        :options="$paymentTermList" :zero="false"
-                                                        wire:model='PAYMENT_TERMS_ID' />
+                                                <div class="col-md-3">
+
+                                                    @if ($Modify)
+                                                        <livewire:select-option name="PAYMENT_TERMS_ID"
+                                                            :isDisabled="false" titleName="Payment Terms"
+                                                            :options="$paymentTermList" :zero="false"
+                                                            wire:model.live='PAYMENT_TERMS_ID' />
+                                                    @else
+                                                        <livewire:select-option name="PAYMENT_TERMS_ID"
+                                                            :isDisabled="true" titleName="Payment Terms"
+                                                            :options="$paymentTermList" :zero="false"
+                                                            wire:model.live='PAYMENT_TERMS_ID' />
+                                                    @endif
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <livewire:date-input name="DUE_DATE"
                                                         isDisabled="{{ !$Modify }}" titleName="Dua Date"
                                                         wire:model='DUE_DATE' />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    @if ($Modify)
+                                                        <livewire:select-option name="ACCOUNT_ID1" titleName="Account"
+                                                            :options="$accountList" :zero="true" :isDisabled="false"
+                                                            wire:model='ACCOUNTS_PAYABLE_ID' />
+                                                    @else
+                                                        <livewire:select-option name="ACCOUNT_ID2" titleName="Account"
+                                                            :options="$accountList" :zero="true" :isDisabled="true"
+                                                            wire:model='ACCOUNTS_PAYABLE_ID' />
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -63,9 +82,17 @@
                                                         isDisabled="{{ !$Modify }}" wire:model='LOCATION_ID' />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
-                                                        :options="$taxList" :zero="false"
-                                                        isDisabled="{{ !$Modify }}" wire:model='INPUT_TAX_ID' />
+
+                                                    @if ($Modify)
+                                                        <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
+                                                            :options="$taxList" :zero="false" :isDisabled="false"
+                                                            wire:model='INPUT_TAX_ID' />
+                                                    @else
+                                                        <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
+                                                            :options="$taxList" :zero="false" :isDisabled="true"
+                                                            wire:model='INPUT_TAX_ID' />
+                                                    @endif
+
 
                                                 </div>
                                                 <div class="col-md-8">
@@ -150,99 +177,100 @@
             </div>
         </div>
     </section>
-    <section class="content">
-        <div class="container-fluid bg-light">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary card-outline card-outline-tabs">
-                        <div class="card-header p-0 border-bottom-0">
-                            <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link @if ($tab == 'item') active @endif"
-                                        id="custom-tabs-four-item-tab" wire:click="SelectTab('item')"
-                                        data-toggle="pill" href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
-                                </li>
-                                @if ($useAccount)
+    @if ($ID > 0)
+        <section class="content">
+            <div class="container-fluid bg-light">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-header p-0 border-bottom-0">
+                                <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link @if ($tab == 'account') active @endif"
-                                            id="custom-tabs-four-account-tab" wire:click="SelectTab('account')"
-                                            data-toggle="pill" href="#custom-tabs-four-account" role="tab"
-                                            aria-controls="custom-tabs-four-account" aria-selected="true">Expenses</a>
+                                        <a class="nav-link @if ($tab == 'item') active @endif"
+                                            id="custom-tabs-four-item-tab" wire:click="SelectTab('item')"
+                                            data-toggle="pill" href="#custom-tabs-four-item" role="tab"
+                                            aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
                                     </li>
-                                @endif
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tab-content" id="custom-tabs-four-tabContent">
-                                <div class="tab-pane fade @if ($tab == 'item') show active @endif "
-                                    id="custom-tabs-four-item" role="tabpanel">
-                                    <div class="row"
-                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        <div class="col-md-12"
-                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('Bills.BillingFormItems', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
-                                        </div>
-                                    </div>
-                                </div>
-                                @if ($useAccount)
-                                    <div class="tab-pane fade @if ($tab == 'account') show active @endif "
-                                        id="custom-tabs-four-account" role="tabpanel">
-                                        <div class="row"
-                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                    @if ($useAccount)
+                                        <li class="nav-item">
+                                            <a class="nav-link @if ($tab == 'account') active @endif"
+                                                id="custom-tabs-four-account-tab" wire:click="SelectTab('account')"
+                                                data-toggle="pill" href="#custom-tabs-four-account" role="tab"
+                                                aria-controls="custom-tabs-four-account"
+                                                aria-selected="true">Expenses</a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade @if ($tab == 'item') show active @endif "
+                                        id="custom-tabs-four-item" role="tabpanel">
+                                        <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('Bills.BillingFormAccounts', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
+                                                @livewire('Bills.BillingFormItems', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
                                             </div>
                                         </div>
                                     </div>
-                                @endif
+                                    @if ($useAccount)
+                                        <div class="tab-pane fade @if ($tab == 'account') show active @endif "
+                                            id="custom-tabs-four-account" role="tabpanel">
+                                            <div class="row">
+                                                <div class="col-md-12"
+                                                    @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                    @livewire('Bills.BillingFormAccounts', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-md-6 text-left">
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            {{-- @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID]) --}}
-                                        </div>
-                                        <div class="col-md-2">
-                                            {{-- @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID]) --}}
-                                        </div>
-                                        <div class="col-md-2">
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-md-6 text-left">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                {{-- @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID]) --}}
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{-- @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID]) --}}
+                                            </div>
+                                            <div class="col-md-2">
 
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4 text-right">
+                                                <label class="text-sm">Input Tax:</label>
+                                                <label
+                                                    class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label>
+                                            </div>
+                                            <div class="col-md-4 text-right">
+                                                <label class="text-sm">Total:</label>
+                                                <label
+                                                    class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
+                                            </div>
+                                            <div class="col-md-4 text-right">
+                                                <label class="text-sm">Balance:</label>
+                                                <label
+                                                    class="text-primary text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
+                                            </div>
                                         </div>
                                     </div>
 
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-4 text-right">
-                                            <label class="text-sm">Input Tax:</label>
-                                            <label
-                                                class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label>
-                                        </div>
-                                        <div class="col-md-4 text-right">
-                                            <label class="text-sm">Total:</label>
-                                            <label
-                                                class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
-                                        </div>
-                                        <div class="col-md-4 text-right">
-                                            <label class="text-sm">Balance:</label>
-                                            <label
-                                                class="text-primary text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
     @livewire('AccountJournal.AccountJournalModal')
 </div>
