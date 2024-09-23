@@ -5,11 +5,13 @@
             <tr>
                 <th class="col-1">Code</th>
                 <th class="col-3">Description</th>
+
                 <th class="col-2">Category</th>
+                <th class="col-2"> Account</th>
                 <th class="text-right">Qty</th>
                 <th class="col-1 text-center">Unit</th>
-                <th class="col-1 text-right">Rate</th>
-                <th class="col-1 text-right">Amount</th>
+                <th class="text-right">Rate</th>
+                <th class="text-right">Amount</th>
                 <th class="text-center">Tax</th>
                 <th class="text-center col-2">Action</th>
             </tr>
@@ -20,6 +22,7 @@
                     <td>{{ $list->CODE }}</td>
                     <td>{{ $list->DESCRIPTION }}</td>
                     <td> {{ $list->CLASS_DESCRIPTION }}</td>
+                    <td> Account</td>
                     <td class="text-right">
                         @if ($editItemId == $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm text-right"
@@ -138,14 +141,14 @@
                         @if ($saveSuccess)
                             @if (!$codeBase)
                                 <livewire:select-option name="ITEM_ID3" titleName="Item Description" :options="$itemDescList"
-                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false" 
+                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false"
                                     isDisabled="{{ false }}" />
                             @else
                                 <label class="mt-1 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
                             @endif
                         @else
                             @if (!$codeBase)
-                                <livewire:select-option name="ITEM_ID4" titleName="Item Description" 
+                                <livewire:select-option name="ITEM_ID4" titleName="Item Description"
                                     :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false"
                                     :withLabel="false" isDisabled="{{ false }}" />
                             @else

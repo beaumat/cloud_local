@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-6">
                             <b class="bottom-line"
-                                @if ($HEADER) style="opacity: 0.0" @endif>PHILHEALTH ACCREDITED:</b>
+                                @if ($HEADER) style="opacity: 0.0" @endif>PHILHEALTH ACCREDITED: <strong class="text-primary">{{  $CENTER_ACCREDITED_NO }}</strong></b>
                             <div class="row mt-4">
                                 <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
                                     Patient`s Name : </div>

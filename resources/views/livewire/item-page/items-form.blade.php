@@ -73,6 +73,15 @@
                                                     aria-controls="custom-tabs-three-pricelevel"
                                                     aria-selected="false">Price Levels</a>
                                             </li>
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('acct')"
+                                                    class="nav-link @if ($activeTab == 'acct') active @endif"
+                                                    id="custom-tabs-three-pricelevel-tab" data-toggle="pill"
+                                                    href="#custom-tabs-three-pricelevel" role="tab"
+                                                    aria-controls="custom-tabs-three-pricelevel"
+                                                    aria-selected="false">Income Acct.</a>
+
+                                            </li>
                                         @endif
                                     </ul>
                                 </div>
@@ -486,6 +495,11 @@
                                                 id="custom-tabs-three-pricelevel" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-pricelevel-tab">
                                                 @livewire('ItemPage.ItemPriceLevelPanel', ['itemId' => $ID])
+                                            </div>
+                                            <div class="tab-pane fade @if ($activeTab == 'acct') show active @endif"
+                                                id="custom-tabs-three-acct" role="tabpanel"
+                                                aria-labelledby="custom-tabs-three-acct-tab">
+                                                @livewire('ItemPage.ItemAccounts', ['ITEM_ID' => $ID])
                                             </div>
                                         @endif
                                     </div>

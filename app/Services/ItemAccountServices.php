@@ -39,35 +39,45 @@ class ItemAccountServices
         return $result;
     }
 
-    public function AccountAvailable(int $ITEM_ID)
+    public function AccountAvailable($search, int $ITEM_ID)
     {
 
-        $result = accounts::select(['account.ID', 'account.NAME'])
+        $result = accounts::select(['account.ID', 'account.NAME', 'account_type_map.DESCRIPTION as TYPE'])
+            ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
             ->where('account.INACTIVE', '=', false)
             ->whereNotExists(function ($query) use (&$ITEM_ID) {
                 $query->select(DB::raw(1))
                     ->from('item_accounts as a')
                     ->whereRaw('a.ACCOUNT_ID = account.ID')
-                    ->where('a.LOCATION_ID', $ITEM_ID);
+                    ->where('a.ITEM_ID', $ITEM_ID);
             })
+            ->when($search, function ($query) use (&$search) {
+
+                $query->where('account.NAME', 'like', '%' . $search . '%');
+            })
+
             ->get();
 
         return $result;
     }
 
-    public function AccountSelected(int $ITEM_ID) {
+    public function AccountSelected($search, int $ITEM_ID)
+    {
 
-        $result = accounts::select(['account.ID', 'account.NAME'])
-        ->where('account.INACTIVE', '=', false)
-        ->whereExists(function ($query) use (&$ITEM_ID) {
-            $query->select(DB::raw(1))
-                ->from('item_accounts as a')
-                ->whereRaw('a.ACCOUNT_ID = account.ID')
-                ->where('a.LOCATION_ID', $ITEM_ID);
-        })
-        ->get();
-        
-    return $result;
+        $result = accounts::select(['account.ID', 'account.NAME', 'account_type_map.DESCRIPTION as TYPE'])
+            ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
+            ->where('account.INACTIVE', '=', false)
+            ->whereExists(function ($query) use (&$ITEM_ID) {
+                $query->select(DB::raw(1))
+                    ->from('item_accounts as a')
+                    ->whereRaw('a.ACCOUNT_ID = account.ID')
+                    ->where('a.ITEM_ID', $ITEM_ID);
+            })
+            ->when($search, function ($query) use (&$search) {
+                $query->where('account.NAME', 'like', '%' . $search . '%');
+            })
+            ->get();
 
+        return $result;
     }
 }

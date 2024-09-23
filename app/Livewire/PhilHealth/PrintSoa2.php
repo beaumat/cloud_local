@@ -15,6 +15,7 @@ use Livewire\Component;
 class PrintSoa2 extends Component
 {
 
+    public string $CENTER_ACCREDITED_NO;
     public int $PRINT_ID;
     public int $LOCATION_ID;
     public int $CONTACT_ID;
@@ -158,7 +159,7 @@ class PrintSoa2 extends Component
                 $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                 $this->ADDRESS1 = $this->GetAddress1($contact);
                 $this->ADDRESS2 = $this->GetAddress2($contact);
-                $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
+                $this->PATIENT_CONTACT = $contact->MOBILE_NO ." ". $contact->TELEPHONE_NO;
                 $this->FINAL_DIAGNOSIS = $this->philHealthServices->DEFAULT_DIAGNOSIS2 . $contact->FINAL_DIAGNOSIS ?? '';
                 $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                 $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
@@ -172,6 +173,7 @@ class PrintSoa2 extends Component
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                 $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                $this->CENTER_ACCREDITED_NO = $locData->ACCREDITATION_NO ?? '';
                 $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                 if ($conUser) {
                     $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
@@ -284,7 +286,7 @@ class PrintSoa2 extends Component
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS1 = $this->GetAddress1($contact);
                     $this->ADDRESS2 = $this->GetAddress2($contact);
-                    $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
+                    $this->PATIENT_CONTACT = $contact->MOBILE_NO ." ". $contact->TELEPHONE_NO;
                     $this->FINAL_DIAGNOSIS = $this->philHealthServices->DEFAULT_DIAGNOSIS2 . $contact->FINAL_DIAGNOSIS ?? '';
                     $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                     $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
@@ -297,6 +299,7 @@ class PrintSoa2 extends Component
                     $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                     $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                     $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                    $this->CENTER_ACCREDITED_NO = $locData->ACCREDITATION_NO ?? '';
                     $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                     if ($conUser) {
                         $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
