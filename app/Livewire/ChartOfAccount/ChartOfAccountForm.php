@@ -46,7 +46,7 @@ class ChartOfAccountForm extends Component
                 $this->BANK_ACCOUNT_NO = $account->BANK_ACCOUNT_NO ? $account->BANK_ACCOUNT_NO : '';
                 $this->INACTIVE = $account->INACTIVE;
                 $this->TAG = $account->TAG ? $account->TAG : '';
-                $this->LINE_NO = $account->LINE_NO;
+                $this->LINE_NO = $account->LINE_NO ?? 0;
                 return;
             }
 
