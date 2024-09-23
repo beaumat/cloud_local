@@ -37,7 +37,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:select-option name="TYPE" :options="$accountTypes" :zero="false"
-                                                isDisabled="{{ false }}" titleName="Type" wire:model.live='TYPE'
+                                                isDisabled="{{ false }}" titleName="Type" wire:model.live='TYPE' :zero="true"
                                                 :key="$accountTypes->pluck('ID')->join('_')" />
                                         </div>
                                         <div class="col-md-4">
