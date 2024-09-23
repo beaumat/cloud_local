@@ -10,10 +10,10 @@
                 <th class="col-2"> Account</th>
                 <th class="col-1 text-right">Qty</th>
                 <th class="col-1 text-center">Unit</th>
-                <th class="text-right">Rate</th>
-                <th class="text-right">Amount</th>
+                <th class="text-right col-1">Rate</th>
+                <th class="text-right col-1">Amount</th>
                 <th class="text-center">Tax</th>
-                <th class="text-center">Action</th>
+                <th class="text-center col-2">Action</th>
             </tr>
         </thead>
         <tbody class="text-xs">

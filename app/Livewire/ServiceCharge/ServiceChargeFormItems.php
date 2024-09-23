@@ -486,7 +486,7 @@ class ServiceChargeFormItems extends Component
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             DB::commit();
             $this->dispatch('update-amount', result: $getResult);
-            // $this->itemList = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID);
+       
             $this->editItemId = null;
             $this->lineQty = 0;
             $this->lineUnitId = 0;
