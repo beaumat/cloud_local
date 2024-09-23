@@ -24,7 +24,7 @@ class PatientDoctorServices
             'DOCTOR_ID'     => $DOCTOR_ID
         ]);
     }
-    public function GetList(int $id)
+    public function GetList(int $PATIENT_ID)
     {
         return PatientDoctor::query()
             ->select([
@@ -33,7 +33,7 @@ class PatientDoctorServices
                 'c.NAME'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'patient_doctor.DOCTOR_ID')
-            ->where('patient_doctor.PATIENT_ID', $id)
+            ->where('patient_doctor.PATIENT_ID', $PATIENT_ID)
             ->get();
     }
     public function GetbyTemp(int $id)

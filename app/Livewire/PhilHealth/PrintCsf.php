@@ -4,6 +4,7 @@ namespace App\Livewire\PhilHealth;
 
 use App\Services\ContactServices;
 use App\Services\LocationServices;
+use App\Services\PatientDoctorServices;
 use App\Services\PhilHealthServices;
 use Livewire\Component;
 
@@ -57,14 +58,17 @@ class PrintCsf extends Component
     private $philHealthServices;
     private $contactServices;
     private $locationServices;
+    private $patientDoctorServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
-        LocationServices $locationServices
+        LocationServices $locationServices,
+        PatientDoctorServices $patientDoctorServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
+        $this->patientDoctorServices = $patientDoctorServices;
     }
     public function mount(int $id = 0, int  $PATIENT_ID = 0, bool $OUTPUT = true)
     {
@@ -227,6 +231,34 @@ class PrintCsf extends Component
                     $this->HCI_NAME = strtoupper($locData->MANAGER_NAME)  ?? '';
                     $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION)  ?? '';
                 }
+
+
+                $fee = $this->patientDoctorServices->GetList($PATIENT_ID);
+                $row = 1;
+                foreach ($fee as $list) {
+
+                    switch ($row) {
+                        case '1':
+                            $this->HCP_1_AN = str_replace('-', '', $list->PIN);
+                            $this->HCP_1_NAME = strtoupper($list->NAME);
+                            break;
+                        case '2':
+                            $this->HCP_2_AN = str_replace($list->PIN, '-', '');
+                            $this->HCP_2_NAME = strtoupper($list->NAME);
+                            break;
+                        case '3':
+                            $this->HCP_3_AN = $list->PIN;
+                            $this->HCP_3_NAME = strtoupper($list->NAME);
+                            break;
+                        default:
+                            # code...
+                            break;
+                    }
+
+                    $row++;
+                }
+
+
             }
         }
     }
