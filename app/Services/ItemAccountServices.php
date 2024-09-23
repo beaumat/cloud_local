@@ -39,8 +39,7 @@ class ItemAccountServices
         ])
             ->join('account as a', 'a.ID', '=', 'item_accounts.ACCOUNT_ID')
             ->where('a.INACTIVE', '=', false)
-            ->where('item_accounts.ITEM_ID', '=', $ITEM_ID)
-            ;
+            ->where('item_accounts.ITEM_ID', '=', $ITEM_ID);
 
 
         if ($result->exists()) {
@@ -50,10 +49,8 @@ class ItemAccountServices
 
         return $this->accountServices->getIncome();
     }
-
     public function AccountAvailable($search, int $ITEM_ID)
     {
-
         $result = accounts::select(['account.ID', 'account.NAME', 'account_type_map.DESCRIPTION as TYPE'])
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
             ->where('account.INACTIVE', '=', false)

@@ -55,7 +55,7 @@ class ChartOfAccountForm extends Component
             return Redirect::route('maintenancesettingslocation_group')->with('error', $errorMessage);
         }
 
-        $this->ID = 0;
+        $this->ID = -1;
         $this->NAME = '';
         $this->GROUP_ACCOUNT_ID = 0;
         $this->TYPE = 0;

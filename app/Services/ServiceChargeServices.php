@@ -231,26 +231,40 @@ class ServiceChargeServices
 
     public function StatusUpdate(int $ID, int $STATUS)
     {
-        ServiceCharges::where('ID', $ID)->update([
-            'STATUS' => $STATUS,
-            'STATUS_DATE' => $this->dateServices->NowDate()
-        ]);
+        ServiceCharges::where('ID', '=', $ID)
+            ->update([
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
+            ]);
     }
-    public function Update(int $ID, string $CODE, string $DATE, int $PATIENT_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_RECEIVABLE_ID, int $STATUS, int $OUTPUT_TAX_ID, float $OUTPUT_TAX_RATE, int $OUTPUT_TAX_VAT_METHOD, int $OUTPUT_TAX_ACCOUNT_ID): void
-    {
+    public function Update(
+        int $ID,
+        string $CODE,
+        string $DATE,
+        int $PATIENT_ID,
+        int $LOCATION_ID,
+        string $NOTES,
+        int $ACCOUNTS_RECEIVABLE_ID,
+        int $STATUS,
+        int $OUTPUT_TAX_ID,
+        float $OUTPUT_TAX_RATE,
+        int $OUTPUT_TAX_VAT_METHOD,
+        int $OUTPUT_TAX_ACCOUNT_ID
+    ): void {
 
-        ServiceCharges::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DATE' => $DATE,
-            'PATIENT_ID' => $PATIENT_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'NOTES' => $NOTES ?? null,
-            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID,
-            'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
-            'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
-            'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
-            'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
-        ]);
+        ServiceCharges::where('ID', $ID)
+            ->update([
+                'CODE'  => $CODE,
+                'DATE' => $DATE,
+                'PATIENT_ID' => $PATIENT_ID,
+                'LOCATION_ID' => $LOCATION_ID,
+                'NOTES' => $NOTES ?? null,
+                'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID,
+                'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
+                'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
+                'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
+                'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
+            ]);
     }
 
     public function Delete(int $ID): void
@@ -447,7 +461,7 @@ class ServiceChargeServices
             ->where('service_charges_items.ITEM_ID', $ITEM_ID)
             ->count();
 
-        
+
 
 
         return $count;

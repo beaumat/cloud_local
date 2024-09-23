@@ -5,7 +5,6 @@
             <tr>
                 <th>Code</th>
                 <th class="col-2">Description</th>
-
                 <th class="col-2">Category</th>
                 <th class="col-2"> Account</th>
                 <th class="col-1 text-right">Qty</th>
@@ -110,7 +109,6 @@
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                             @endif
-                            {{-- Other Buttons --}}
                             <button class="btn btn-xs btn-primary" title="Cash Payment"
                                 wire:click="cashPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
                                     class="fa fa-money" aria-hidden="true"></i> </button>
