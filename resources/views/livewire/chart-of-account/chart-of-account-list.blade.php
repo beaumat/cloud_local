@@ -34,7 +34,7 @@
                                     <tr>
                                         <th class='col-1'>Code</th>
                                         <th>Name</th>
-                                        <th class="col-1">TYPE</th>
+                                        <th class="col-1">Type</th>
                                         <th>Group of Account</th>
                                         <th>Back Account No.</th>
                                         <th class="col-1 text-center">Inactive</th>
@@ -65,11 +65,11 @@
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
+                                                <button wire:click='delete({{ $list->ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
                                                     class="btn btn-xs btn-danger">
                                                     <i class="fas fa-trash" aria-hidden="true"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach

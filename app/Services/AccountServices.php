@@ -27,7 +27,8 @@ class AccountServices
     {
         return Accounts::whereIn('TYPE', ['0', '1', '2', '3', '4'])->get();
     }
-    public function getIncome() {
+    public function getIncome()
+    {
         return Accounts::whereIn('TYPE', ['10', '13'])->get();
     }
     public function getPay()
@@ -125,6 +126,7 @@ class AccountServices
             ->leftJoin('account as g', 'g.ID', '=', 'account.GROUP_ACCOUNT_ID')
             ->when($search, function ($query) use (&$search) {
                 $query->where('account.NAME', 'like', '%' . $search . '%')
+                    ->orwhere('account_type_map.DESCRIPTION', 'like', '%' . $search . '%')
                     ->orWhere('account.TAG', 'like', '%' . $search . '%');
             })
             ->orderBy('account.TYPE', 'asc')
