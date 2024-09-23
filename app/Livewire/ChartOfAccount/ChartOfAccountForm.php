@@ -55,10 +55,10 @@ class ChartOfAccountForm extends Component
             return Redirect::route('maintenancesettingslocation_group')->with('error', $errorMessage);
         }
 
-        $this->ID = -1;
+        $this->ID = 0;
         $this->NAME = '';
         $this->GROUP_ACCOUNT_ID = 0;
-        $this->TYPE = 0;
+        $this->TYPE = -1;
         $this->BANK_ACCOUNT_NO = '';
         $this->INACTIVE = false;
         $this->TAG = '';
