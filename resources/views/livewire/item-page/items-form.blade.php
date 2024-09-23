@@ -460,6 +460,7 @@
                                             <div class="tab-pane fade @if ($activeTab == 'other') show active @endif"
                                                 id="custom-tabs-three-other" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-other-tab">
+                                                          @if($ID > 0)
                                                 <div class="row">
                                                     @if ($TYPE === 1)
                                                         @livewire('ItemPage.ItemComponentPanel', ['itemId' => $ID, 'itemTypeName' => 'Component List'])
@@ -467,6 +468,7 @@
                                                         @livewire('ItemPage.ItemComponentPanel', ['itemId' => $ID, 'itemTypeName' => 'Group List'])
                                                     @endif
                                                 </div>
+                                                @endif
                                             </div>
                                         @endif
 
@@ -476,7 +478,9 @@
                                                 aria-labelledby="custom-tabs-three-inventory-tab">
                                                 <div class="row">
                                                     <div class="col-md-12 mt-2">
-                                                        @livewire('ItemPage.ItemInventoryPanel', ['itemId' => $ID])
+                                                        @if ($ID > 0)
+                                                            @livewire('ItemPage.ItemInventoryPanel', ['itemId' => $ID])
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -485,7 +489,9 @@
                                                 aria-labelledby="custom-tabs-three-unit-tab">
                                                 <div class="row">
                                                     <div class="col-md-12 mt-2 mb-2">
-                                                        @livewire('ItemPage.ItemUnitPanel', ['itemId' => $ID])
+                                                        @if ($ID > 0)
+                                                            @livewire('ItemPage.ItemUnitPanel', ['itemId' => $ID])
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -494,12 +500,16 @@
                                             <div class="tab-pane fade @if ($activeTab == 'plv') show active @endif"
                                                 id="custom-tabs-three-pricelevel" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-pricelevel-tab">
-                                                @livewire('ItemPage.ItemPriceLevelPanel', ['itemId' => $ID])
+                                                @if ($ID > 0)
+                                                    @livewire('ItemPage.ItemPriceLevelPanel', ['itemId' => $ID])
+                                                @endif
                                             </div>
                                             <div class="tab-pane fade @if ($activeTab == 'acct') show active @endif"
                                                 id="custom-tabs-three-acct" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-acct-tab">
-                                                @livewire('ItemPage.ItemAccounts', ['ITEM_ID' => $ID])
+                                                @if ($ID > 0)
+                                                    @livewire('ItemPage.ItemAccounts', ['ITEM_ID' => $ID])
+                                                @endif
                                             </div>
                                         @endif
                                     </div>
