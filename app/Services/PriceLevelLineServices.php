@@ -111,24 +111,22 @@ class PriceLevelLineServices
             }
         }
     }
-    public function GetPriceByLocation($LOCTION_ID, int $ITEM_ID): float
+    public function GetPriceByLocation(int $LOCTION_ID, int $ITEM_ID): float
     {
         $locDate =  $this->locationServices->get($LOCTION_ID);
         if ($locDate) {
             $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
 
             if ($PRICE_LEVEL_ID > 0) {
-                $exist =  (bool)  PriceLevelLines::where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
+                $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
+                $result =  PriceLevelLines::select(['CUSTOM_PRICE'])
+                    ->where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
                     ->where('ITEM_ID', '=', $ITEM_ID)
-                    ->exists();
-            } else {
-            }
-
-            $result =  PriceLevelLines::select(['CUSTOM_PRICE'])
-                ->where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
-                ->where('ITEM_ID', $ITEM_ID)->first();
-            if ($result) {
-                return (float) $result->CUSTOM_PRICE ?? 0;
+                    ->first();
+                    
+                if ($result) {
+                    return (float) $result->CUSTOM_PRICE ?? 0;
+                }
             }
         }
 

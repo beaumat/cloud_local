@@ -77,7 +77,11 @@ class OtherChargesModal extends Component
 
         if ($dataHemo && $dataItem) {
             $this->LOCATION_ID  = $dataHemo->LOCATION_ID;
-            $this->ITEM_TREATMENT_ID =  $this->itemTreatmentServices->getItemTreatmentID($this->ITEM_ID, $this->LOCATION_ID, $dataItem->BASE_UNIT_ID ?? 0);
+            $this->ITEM_TREATMENT_ID =  $this->itemTreatmentServices->getItemTreatmentID(
+                $this->ITEM_ID,
+                $this->LOCATION_ID,
+                $dataItem->BASE_UNIT_ID ?? 0
+            );
             $this->dataList = $this->itemTreatmentServices->listItemTrigger($this->ITEM_TREATMENT_ID);
             foreach ($this->dataList as $list) {
                 $this->J_QTY = $list->QUANTITY;
@@ -97,7 +101,7 @@ class OtherChargesModal extends Component
 
         $this->validate(
             [
-                'QUANTITY' => 'required|integer|min:1',
+                'QUANTITY' => 'required|int|min:1',
                 'JUSTIFY_NOTES' => $this->IS_JUSTIFY ? 'required|string|min:4' : 'nullable',
             ],
             [],
@@ -135,7 +139,7 @@ class OtherChargesModal extends Component
                         if ($dataLoc->PRICE_LEVEL_ID > 0) {
                             $PRICE_LEVEL_ID = $dataLoc->PRICE_LEVEL_ID ?? 0;
                             if ($PRICE_LEVEL_ID > 0) {
-                                $RATE = $this->priceLevelLineServices->PriceExists($this->ITEM_ID, $hemoData->LOCATION_ID);
+                                $RATE = $this->priceLevelLineServices->GetPriceByLocation($hemoData->LOCATION_ID, $this->ITEM_ID);
                             }
                         }
                     }
