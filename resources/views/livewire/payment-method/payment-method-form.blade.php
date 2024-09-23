@@ -28,23 +28,21 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE'/>
+                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE' :isDisabled="false"/>
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:text-input name="DESCRIPTION" titleName="Description" wire:model='DESCRIPTION'/>
+                                            <livewire:text-input name="DESCRIPTION" titleName="Description" wire:model='DESCRIPTION' :isDisabled="false"/>
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:select-option name="PAYMENT_TYPE" :options="$paymentTypes"
+                                            <livewire:select-option name="PAYMENT_TYPE" :options="$paymentTypes" :isDisabled="false"
                                                 :zero="false" titleName="Type"
                                                 wire:model.live='PAYMENT_TYPE' :key="$paymentTypes->pluck('ID')->join('_')"/>
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:select-option name="GL_ACCOUNT_ID" :options="$accountList"
+                                            <livewire:select-option name="GL_ACCOUNT_ID" :options="$accountList" :isDisabled="false"
                                                 :zero="true" titleName="GL Account"
                                                 wire:model.live='GL_ACCOUNT_ID' :key="$accountList->pluck('ID')->join('_')"/>
                                         </div>
-                                     
-                                   
                                     </div>
                                 </div>
                             </div>
