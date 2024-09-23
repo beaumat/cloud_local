@@ -6,9 +6,15 @@ use App\Models\Accounts;
 use App\Models\ItemAccounts;
 use Illuminate\Support\Facades\DB;
 
+use function PHPUnit\Framework\isEmpty;
+
 class ItemAccountServices
 {
-
+    private $accountServices;
+    public function __construct(AccountServices $accountServices)
+    {
+        $this->accountServices = $accountServices;
+    }
 
     public function Store(int $ITEM_ID, int $ACCOUNT_ID)
     {
@@ -34,9 +40,15 @@ class ItemAccountServices
             ->join('account as a', 'a.ID', '=', 'item_accounts.ACCOUNT_ID')
             ->where('a.INACTIVE', '=', false)
             ->where('item_accounts.ITEM_ID', '=', $ITEM_ID)
-            ->get();
+            ;
 
-        return $result;
+
+        if ($result->exists()) {
+           
+            return $result->get();
+        }
+
+        return $this->accountServices->getIncome();
     }
 
     public function AccountAvailable($search, int $ITEM_ID)
@@ -61,7 +73,7 @@ class ItemAccountServices
         return $result;
     }
 
-    public function AccountSelected($search, int $ITEM_ID)
+    public function AccountSelected($search, int $ITEM_ID):object
     {
 
         $result = accounts::select(['account.ID', 'account.NAME', 'account_type_map.DESCRIPTION as TYPE'])

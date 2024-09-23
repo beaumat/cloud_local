@@ -3,17 +3,17 @@
     <table class="table table-sm table-bordered table-hover">
         <thead class="text-xs bg-sky">
             <tr>
-                <th class="col-1">Code</th>
-                <th class="col-3">Description</th>
+                <th>Code</th>
+                <th class="col-2">Description</th>
 
                 <th class="col-2">Category</th>
                 <th class="col-2"> Account</th>
-                <th class="text-right">Qty</th>
+                <th class="col-1 text-right">Qty</th>
                 <th class="col-1 text-center">Unit</th>
                 <th class="text-right">Rate</th>
                 <th class="text-right">Amount</th>
                 <th class="text-center">Tax</th>
-                <th class="text-center col-2">Action</th>
+                <th class="text-center">Action</th>
             </tr>
         </thead>
         <tbody class="text-xs">
@@ -22,7 +22,16 @@
                     <td>{{ $list->CODE }}</td>
                     <td>{{ $list->DESCRIPTION }}</td>
                     <td> {{ $list->CLASS_DESCRIPTION }}</td>
-                    <td> Account</td>
+                    <td>
+                        @if ($editItemId == $list->ID)
+                            <livewire:select-option name="lineINCOME_ACCOUNT_ID" titleName="" :options="$editAccountList"
+                                :zero="true" wire:model.live='lineINCOME_ACCOUNT_ID' :vertical="false"
+                                :withLabel="false" isDisabled="{{ false }}" />
+                        @else
+                            {{ $list->ACCOUNT_NAME }}
+                        @endif
+
+                    </td>
                     <td class="text-right">
                         @if ($editItemId == $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm text-right"
@@ -140,9 +149,9 @@
                     <td>
                         @if ($saveSuccess)
                             @if (!$codeBase)
-                                <livewire:select-option name="ITEM_ID3" titleName="Item Description" :options="$itemDescList"
-                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false"
-                                    isDisabled="{{ false }}" />
+                                <livewire:select-option name="ITEM_ID3" titleName="Item Description"
+                                    :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false"
+                                    :withLabel="false" isDisabled="{{ false }}" />
                             @else
                                 <label class="mt-1 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
                             @endif
@@ -157,6 +166,18 @@
                         @endif
                     </td>
                     <td> <label class="mt-1 text-xs"> {{ $CLASS_DESCRIPTION }}</label></td>
+
+                    <td>
+                        @if ($reloadAccount)
+                            <livewire:select-option name="INCOME_ACCOUNT_ID" titleName="" :options="$accountList"
+                                :zero="true" wire:model.live='INCOME_ACCOUNT_ID' :vertical="false"
+                                :withLabel="false" isDisabled="{{ false }}" />
+                        @else
+                            <livewire:select-option name="INCOME_ACCOUNT_ID1" titleName="" :options="$accountList"
+                                :zero="true" wire:model.live='INCOME_ACCOUNT_ID' :vertical="false"
+                                :withLabel="false" isDisabled="{{ false }}" />
+                        @endif
+                    </td>
                     <td>
                         <input type="number" step="0.01"
                             class="form-control form-control-sm text-xs mt-1 text-right" name="Qty"

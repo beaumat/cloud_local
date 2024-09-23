@@ -5,6 +5,7 @@ namespace App\Livewire\ServiceCharge;
 use App\Services\ComputeServices;
 use App\Services\DateServices;
 use App\Services\HemoServices;
+use App\Services\ItemAccountServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
 use App\Services\LocationServices;
@@ -75,6 +76,9 @@ class ServiceChargeFormItems extends Component
     public int $lineBatchId;
     public int $linePriceLevelId;
     public $editUnitList = [];
+    public $accountList = [];
+    public $editAccountList   = [];
+    public int $lineINCOME_ACCOUNT_ID = 0;
     public int $lineItemId = 0;
     private $serviceChargeServices;
     private $computeServices;
@@ -90,6 +94,7 @@ class ServiceChargeFormItems extends Component
     private $philHealthServices;
     private $locationServices;
     private $priceLevelLineServices;
+    private $itemAccountServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         ServiceChargeServices $serviceChargeServices,
@@ -101,7 +106,8 @@ class ServiceChargeFormItems extends Component
         HemoServices $hemoServices,
         DateServices $dateServices,
         LocationServices $locationServices,
-        PriceLevelLineServices $priceLevelLineServices
+        PriceLevelLineServices $priceLevelLineServices,
+        ItemAccountServices $itemAccountServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->serviceChargeServices = $serviceChargeServices;
@@ -114,10 +120,12 @@ class ServiceChargeFormItems extends Component
         $this->dateServices = $dateServices;
         $this->locationServices = $locationServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
+        $this->itemAccountServices = $itemAccountServices;
     }
     public function updatedcodeBase()
     {
 
+        $this->AccountLoad();
         if ($this->codeBase) {
             $this->itemCodeList = $this->itemServices->getByCustomer(true);
             return;
@@ -164,8 +172,18 @@ class ServiceChargeFormItems extends Component
         $this->getRefershItem($ID);
         $this->dispatch('cash-payment-prompt', itemdata: $itemdata);
     }
+    public bool $reloadAccount = false;
+    private function AccountLoad()
+    {
+        $this->accountList = $this->itemAccountServices->AccountList($this->ITEM_ID);
+
+
+        $this->reloadAccount = $this->reloadAccount ? false : true;
+    }
     public function updateditemid()
     {
+        $this->accountList = [];
+        $this->INCOME_ACCOUNT_ID = 0;
         $this->UNIT_ID = 0;
         $this->QUANTITY = 1;
         $this->RATE = 0;
@@ -186,11 +204,11 @@ class ServiceChargeFormItems extends Component
                     $this->RATE =  $item->RATE;
                 }
 
-
+                $this->AccountLoad();
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
                 $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
-                $this->INCOME_ACCOUNT_ID = $item->GL_ACCOUNT_ID ?? 0;
+                $this->INCOME_ACCOUNT_ID = 0;
                 $this->COGS_ACCOUNT_ID = $item->COGS_ACCOUNT_ID ?? 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
                 $this->GROUP_LINE_ID = false;
@@ -312,6 +330,8 @@ class ServiceChargeFormItems extends Component
             $this->ITEM_DESCRIPTION = '';
             $this->CLASS_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
+
+            $this->AccountLoad();
             $this->updatedcodeBase();
 
             if ($this->philHealthServices->PHIL_HEALTH_ITEM_ID == $prime_item_id) {
@@ -374,7 +394,8 @@ class ServiceChargeFormItems extends Component
 
         $data =  $this->serviceChargeServices->getItem($lineId);
         if ($data) {
-
+            $this->editAccountList = $this->itemAccountServices->AccountList($itemId);
+            $this->lineINCOME_ACCOUNT_ID = $data->INCOME_ACCOUNT_ID ?? 0;
             if ($this->hemoServices->IsExist_SC_ITEM($lineId)) {
                 $this->canBeQtyEdit = false;
             } else {
@@ -441,7 +462,8 @@ class ServiceChargeFormItems extends Component
                 $this->lineTax,
                 $this->lineTaxable,
                 $this->lineTaxAmount,
-                $this->linePriceLevelId
+                $this->linePriceLevelId,
+                $this->lineINCOME_ACCOUNT_ID
             );
             if ($this->canBeQtyEdit) {
                 $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
@@ -460,7 +482,7 @@ class ServiceChargeFormItems extends Component
                 }
             }
 
-  
+
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             DB::commit();
             $this->dispatch('update-amount', result: $getResult);

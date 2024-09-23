@@ -27,6 +27,9 @@ class AccountServices
     {
         return Accounts::whereIn('TYPE', ['0', '1', '2', '3', '4'])->get();
     }
+    public function getIncome() {
+        return Accounts::whereIn('TYPE', ['10', '13'])->get();
+    }
     public function getPay()
     {
         return Accounts::whereIn('TYPE', ['0', '1', '2'])->get();

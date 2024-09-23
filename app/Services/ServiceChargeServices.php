@@ -354,8 +354,25 @@ class ServiceChargeServices
     {
         return (int) ServiceChargesItems::where('SERVICE_CHARGES_ID', $Id)->max('LINE_NO');
     }
-    public function ItemStore(int $SERVICE_CHARGES_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, int $COGS_ACCOUNT_ID, int $ASSET_ACCOUNT_ID, int $INCOME_ACCOUNT_ID, int $GROUP_LINE_ID, bool $PRINT_IN_FORMS, int $PRICE_LEVEL_ID): int
-    {
+    public function ItemStore(
+        int $SERVICE_CHARGES_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        float $UNIT_BASE_QUANTITY,
+        float $RATE,
+        int $RATE_TYPE,
+        float $AMOUNT,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT,
+        int $COGS_ACCOUNT_ID,
+        int $ASSET_ACCOUNT_ID,
+        int $INCOME_ACCOUNT_ID,
+        int $GROUP_LINE_ID,
+        bool $PRINT_IN_FORMS,
+        int $PRICE_LEVEL_ID
+    ): int {
 
         $LINE_NO = (int) $this->getLine($SERVICE_CHARGES_ID) + 1;
         $ID = (int) $this->object->ObjectNextID('SERVICE_CHARGES_ITEMS');
@@ -384,8 +401,22 @@ class ServiceChargeServices
 
         return $ID;
     }
-    public function ItemUpdate(int $ID, int $SERVICE_CHARGES_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, int $PRICE_LEVEL_ID,)
-    {
+    public function ItemUpdate(
+        int $ID,
+        int $SERVICE_CHARGES_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        float $UNIT_BASE_QUANTITY,
+        float $RATE,
+        int $RATE_TYPE,
+        float $AMOUNT,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT,
+        int $PRICE_LEVEL_ID,
+        int $INCOME_ACCOUNT_ID = 0
+    ) {
         ServiceChargesItems::where('ID', $ID)
             ->where('SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)
             ->where('ITEM_ID', $ITEM_ID)
@@ -398,7 +429,8 @@ class ServiceChargeServices
                 'TAXABLE'               => $TAXABLE,
                 'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
                 'TAX_AMOUNT'            => $TAX_AMOUNT,
-                'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
+                'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+                'INCOME_ACCOUNT_ID'     => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null
             ]);
     }
     public function ItemDelete(int $ID, int $SERVICE_CHARGES_ID)
@@ -414,6 +446,9 @@ class ServiceChargeServices
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
             ->where('service_charges_items.ITEM_ID', $ITEM_ID)
             ->count();
+
+        
+
 
         return $count;
     }
@@ -437,12 +472,16 @@ class ServiceChargeServices
                 'c.DESCRIPTION as CLASS_DESCRIPTION',
                 DB::raw('(select count(*) from patient_payment_charges where SERVICE_CHARGES_ITEM_ID = service_charges_items.ID) as count_pay'),
                 'service_charges_items.DATE_LOG',
-                DB::raw('(select if(count(*) > 0, true, false)  from hemodialysis_items where hemodialysis_items.SC_ITEM_ID = service_charges_items.ID and hemodialysis_items.IS_CASHIER = 1) as other_charge ')
+                DB::raw('(select if(count(*) > 0, true, false)  from hemodialysis_items where hemodialysis_items.SC_ITEM_ID = service_charges_items.ID and hemodialysis_items.IS_CASHIER = 1) as other_charge '),
+                'service_charges_items.INCOME_ACCOUNT_ID',
+                'a.NAME as ACCOUNT_NAME'
+
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'service_charges_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'service_charges_items.UNIT_ID')
             ->leftJoin('item_sub_class as sl', 'sl.ID', '=', 'i.SUB_CLASS_ID')
             ->leftJoin('item_class as c', 'c.ID', '=', 'sl.CLASS_ID')
+            ->leftJoin('account as a', 'a.ID', '=', 'service_charges_items.INCOME_ACCOUNT_ID')
             ->where('service_charges_items.SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)
             ->orderBy('service_charges_items.LINE_NO', 'asc')
             ->get();
