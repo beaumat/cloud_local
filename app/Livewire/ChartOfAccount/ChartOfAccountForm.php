@@ -70,11 +70,13 @@ class ChartOfAccountForm extends Component
             [
                 'TAG' => 'required|max:10|unique:account,tag,' . $this->ID,
                 'NAME' => 'required|max:50|unique:account,name,' . $this->ID,
+                'TYPE' => 'required|integer|exists:account_type_map,id'
             ],
             [],
             [
-                'TAG' => 'Code',
-                'NAME' => 'Name'
+                'TAG'   => 'Code',
+                'NAME'  => 'Name',
+                'TYPE'  => 'Account Type'
             ]
         );
 
