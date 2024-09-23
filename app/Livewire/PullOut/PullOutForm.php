@@ -207,7 +207,7 @@ class PullOutForm extends Component
         $this->AMOUNT = 0;
         $this->PREPARED_BY_ID = 0;
         $this->NOTES = '';
-        $this->ACCOUNT_ID = 72; // office supply expenses
+        $this->ACCOUNT_ID = 284; // office supply expenses
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = '';
     }
