@@ -21,16 +21,15 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <livewire:text-input name="NAME" titleName="Name"
+                                                    <livewire:text-input name="NAME" titleName="Name" :isDisabled="false"
                                                         wire:model='NAME'>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <livewire:text-input name="SYMBOL" titleName="Symbol"
+                                                    <livewire:text-input name="SYMBOL" titleName="Symbol" :isDisabled="false"
                                                         wire:model='SYMBOL'>
-
                                                 </div>
                                                 <div class="col-md-12">
-                                                    <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
+                                                    <livewire:custom-check-box name="INACTIVE" titleName="Inactive" :isDisabled="false"
                                                         wire:model='INACTIVE'/>
                                                 </div>
                                             </div>
