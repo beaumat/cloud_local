@@ -1,17 +1,18 @@
 <div class="content-wrapper">
-    <div class="content-header">
+   <div class="content-header">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                </div><!-- /.col -->
+                    <h5 class="m-0">  <a href="{{ route('maintenanceinventoryitem') }}"> Item Master List </a></h5>
+                </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
                         </li>
                     </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
     <!-- Main content -->
     <section class="content">
@@ -29,7 +30,7 @@
                                 </div>
                                 <div class="col-md-8 text-right">
                                     <h5 class="m-0">
-                                        <a href="{{ route('maintenanceinventoryitem') }}"> Items </a>
+                                      
                                     </h5>
                                 </div>
                             </div>
