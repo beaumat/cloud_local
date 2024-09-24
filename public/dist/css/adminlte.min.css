@@ -56199,3 +56199,19 @@ a.text-muted:hover {
         /* Or use inline / flex depending on your layout */
     }
 }
+
+
+.table th, 
+.table td {
+  padding: 0.10rem; /* Adjust the padding to make it smaller */
+  font-size: 12px;   /* Adjust the font size */
+}
+
+.table th {
+  font-weight: bold;
+}
+
+.table {
+  border-spacing: 0px;   /* Remove cell spacing */
+  border-collapse: collapse; /* Collapse borders to remove gaps */
+}

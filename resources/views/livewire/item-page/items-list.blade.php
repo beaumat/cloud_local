@@ -34,7 +34,7 @@
                                     </h5>
                                 </div>
                             </div>
-                            <table class="table table-sm table-bordered table-hover">
+                            <table class="table table-sm table-bordered table-hover custom-table">
                                 <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>Code</th>

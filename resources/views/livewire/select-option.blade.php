@@ -1,4 +1,4 @@
-<div wire:ignore class="mt-1 text-sm">
+<div wire:ignore  class="text-md">
     @if ($vertical)
         <div class="row">
             <div class="col-3">
@@ -6,7 +6,7 @@
                     <label for="{{ $name }}" class="text-xs"> {{ $titleName }}</label>
                 @endif
             </div>
-            <div class="col-9">
+            <div class="col-9 ">
                 <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm "
                     @if ($isDisabled) disabled @endif>
                     @if ($zero)
