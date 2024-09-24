@@ -8,7 +8,7 @@
         <div class="form-group">
             <label class="text-xs">Chief Complaint :</label>
             <input type="text" class="text-xs w-100" wire:model='CF4_COMPLAINT' title="Chief Complaint"
-                placeholder="Please enter Chief Complaint" maxlength="50" />
+                placeholder="Please enter Chief Complaint" maxlength="100" />
             <i class='text-xs'> if empty by default:
                 <b class="text-primary">({{ $CHIEF_OF_COMPLAINT_DEFAULT }})</b></i>
         </div>
