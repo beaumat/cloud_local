@@ -56203,7 +56203,7 @@ a.text-muted:hover {
 
 .table th, 
 .table td {
-  padding: 0.10rem; /* Adjust the padding to make it smaller */
+  padding: 0.10rem 0.25rem; /* Adjust the padding to make it smaller */
   font-size: 12px;   /* Adjust the font size */
 }
 
