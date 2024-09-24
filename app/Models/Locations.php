@@ -32,6 +32,8 @@ class Locations extends Model
         'REPORT_HEADER_2',
         'REPORT_HEADER_3',
         'PHIC_SOA_FORMAT',
-        'PHIC_FORM_MODIFY'
+        'PHIC_FORM_MODIFY',
+        'IS_DAILY',
+        'LOGO_FILE'
     ];
 }

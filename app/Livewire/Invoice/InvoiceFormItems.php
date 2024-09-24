@@ -159,8 +159,6 @@ class InvoiceFormItems extends Component
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
                 $this->RATE = $this->priceLevelLineServices->GetPriceByLocation($this->LOCATION_ID, $this->ITEM_ID);
-
-
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;

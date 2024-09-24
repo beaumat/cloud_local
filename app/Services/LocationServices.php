@@ -78,7 +78,10 @@ class LocationServices
         string $REPORT_HEADER_2,
         string $REPORT_HEADER_3,
         string $PHIC_SOA_FORMAT = 'PrintSoa',
-        bool $PHIC_FORM_MODIFY = false
+        bool $PHIC_FORM_MODIFY = false,
+        bool $IS_DAILY = false,
+        string $LOGO_FILE 
+
     ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
         Locations::create([
@@ -100,8 +103,9 @@ class LocationServices
             'REPORT_HEADER_2'       => $REPORT_HEADER_2,
             'REPORT_HEADER_3'       => $REPORT_HEADER_3,
             'PHIC_SOA_FORMAT'       => $PHIC_SOA_FORMAT,
-            'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY
-
+            'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY,
+            'IS_DAILY'              => $IS_DAILY,
+            'LOGO_FILE'             => $LOGO_FILE
         ]);
 
         return $ID;
@@ -126,7 +130,9 @@ class LocationServices
         string $REPORT_HEADER_2,
         string $REPORT_HEADER_3,
         string $PHIC_SOA_FORMAT,
-        bool $PHIC_FORM_MODIFY
+        bool $PHIC_FORM_MODIFY = false,
+        bool $IS_DAILY = false,
+        string $LOGO_FILE 
     ): void {
 
         Locations::where('ID', $ID)
@@ -148,7 +154,9 @@ class LocationServices
                 'REPORT_HEADER_2'       => $REPORT_HEADER_2,
                 'REPORT_HEADER_3'       => $REPORT_HEADER_3,
                 'PHIC_SOA_FORMAT'       => $PHIC_SOA_FORMAT,
-                'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY
+                'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY,
+                'IS_DAILY'              => $IS_DAILY,
+                'LOGO_FILE'             => $LOGO_FILE
 
             ]);
     }

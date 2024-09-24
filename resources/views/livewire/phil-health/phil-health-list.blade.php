@@ -9,7 +9,7 @@
                     <h5 class="m-0"><a href="{{ route('patientsphic') }}"> PhilHealth </a></h5>
                 </div>
                 <div class="col-sm-6 text-right">
-                    @livewire('PhilHealth.QuickCreate')
+                    @livewire('PhilHealth.QuickCreate', ['LOCATION_ID' => $locationid])
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
                                         <th class="col-2">Patients</th>
                                         <th class="text-center">Admitted</th>
                                         <th class="text-center">Discharges</th>
-                                        <th class="text-center">#Day<br/>Transmitted</th>
+                                        <th class="text-center">#Day<br />Transmitted</th>
                                         <th class="text-center">#Trmt. </th>
                                         <th class='text-right'>FC Amt.</th>
                                         <th class="text-right">Paid Amt.</th>
@@ -100,13 +100,15 @@
                                                 {{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
                                             <td class="text-center">
                                                 {{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
-                                            <td class="text-center  @if($list->AR_DATE) text-success @else text-danger @endif" >
+                                            <td
+                                                class="text-center  @if ($list->AR_DATE) text-success @else text-danger @endif">
                                                 {{ Carbon::parse($list->DATE_ADMITTED)->diffInDays($list->AR_DATE ? $list->AR_DATE : Carbon::now()) }}
                                             </td>
                                             <td class="text-center"> {{ $list->HEMO_TOTAL }}</td>
                                             <td class="text-right"> {{ number_format($list->P1_TOTAL, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
-                                            <td class="@if ($list->STATUS == 'Paid') text-success @else text-danger @endif ">
+                                            <td
+                                                class="@if ($list->STATUS == 'Paid') text-success @else text-danger @endif ">
                                                 {{ $list->STATUS }}
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }}</td>

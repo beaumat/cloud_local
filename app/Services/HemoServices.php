@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class HemoServices
 {
-
+    public $dialyMode  = false;
     private $object;
     private $user;
     private $systemSettingServices;
@@ -1015,7 +1015,7 @@ class HemoServices
             ->orderBy('hemodialysis.ID', 'desc')
             ->paginate($perPage);
     }
-    public function QuickFilterByDateRange(string $DATE_FORM, string $DATE_TO, $LOCATION_ID, $search)
+    public function QuickFilterByDaily(string $DATE, int $LOCATION_ID, $search): object
     {
         $result = Contacts::query()
             ->select([
@@ -1037,7 +1037,50 @@ class HemoServices
             ->where('sci.ITEM_ID', 2)
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.STATUS_ID', 2)
+            ->where('h.DATE',  $DATE)
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('philhealth as l')
+                    ->whereColumn('l.CONTACT_ID', '=', 'h.CUSTOMER_ID')
+                    ->whereColumn('l.LOCATION_ID', '=', 'h.LOCATION_ID')
+                    ->whereColumn('l.DATE_ADMITTED', '=', 'h.DATE')
+                    ->whereColumn('l.DATE_DISCHARGED', '=', 'h.DATE');
+            })
+            ->when($search, function ($query) use (&$search) {
+                $query->where('contact.NAME', 'like', '%' . $search . '%');
+            })
+            ->groupBy(['contact.ID', 'contact.NAME', 'contact.PIN', 'contact.LAST_NAME', 'contact.FIRST_NAME', 'contact.MIDDLE_NAME', 'contact.SALUTATION'])
+            ->orderBy('contact.LAST_NAME')
+            ->get();
+
+
+        return $result;
+    }
+    public function QuickFilterByDateRange(string $DATE_FORM, string $DATE_TO, $LOCATION_ID, $search): object
+    {
+        $result = Contacts::query()
+            ->select([
+                'contact.ID',
+                DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ' .', LEFT(contact.MIDDLE_NAME, 1), IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as PATIENT"),
+                'contact.PIN',
+                DB::raw('count(h.ID) as TOTAL_HEMO'),
+                DB::raw('min(h.DATE) as FIRST_DATE'),
+                DB::raw('max(h.DATE) as LAST_DATE')
+
+            ])
+            ->join('hemodialysis as h', 'h.CUSTOMER_ID', '=', 'contact.ID')
+            ->join('service_charges as s', function ($join) {
+                $join->on('s.PATIENT_ID', '=', 'h.CUSTOMER_ID');
+                $join->on('s.LOCATION_ID', '=', 'h.LOCATION_ID');
+                $join->on('s.DATE', '=', 'h.DATE');
+            })
+            ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
+            ->where('sci.ITEM_ID', 2)
+            ->where('h.LOCATION_ID', $LOCATION_ID)
+            ->where('h.STATUS_ID', 2)
+
             ->whereBetween('h.DATE', [$DATE_FORM, $DATE_TO])
+
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('philhealth as l')

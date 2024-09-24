@@ -140,9 +140,15 @@
                                             <livewire:custom-check-box name="PHIC_FORM_MODIFY"
                                                 isDisabled="{{ false }}" titleName="Phic Form is Modify"
                                                 wire:model='PHIC_FORM_MODIFY' />
+
+                                            <livewire:custom-check-box name="IS_DAILY"
+                                                isDisabled="{{ false }}" titleName="Daily Transmittal"
+                                                wire:model='IS_DAILY' />
                                         </div>
                                         <div class="col-md-4">
-
+                                            <livewire:text-input name="LOGO_FILE" titleName="Logo File"
+                                                isDisabled="{{ false }}" wire:model='LOGO_FILE'
+                                                maxlength='50' />
                                         </div>
                                     </div>
                                 </div>

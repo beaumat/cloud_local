@@ -12,19 +12,22 @@ use App\Services\PhilHealthServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-use function PHPUnit\Framework\isEmpty;
 
 class QuickCreate extends Component
 {
+    #[Reactive]
+    public int $LOCATION_ID;
     public $patientSelected = [];
     public bool $SelectAll = false;
+    public bool $isDaily = false;
     public $locationList = [];
-    public int $LOCATION_ID;
+
     public bool $showModal = false;
     private $locationServices;
-    private $userServices;
+
     public $DATE_FROM;
     public $DATE_TO;
     public $search;
@@ -35,9 +38,10 @@ class QuickCreate extends Component
     private $dateServices;
     private $cf4DoctorOrderServices;
     private $doctorOrderDefaultServices;
+    public object $dataLoc;
+
     public function boot(
         LocationServices $locationServices,
-        UserServices $userServices,
         HemoServices $hemoServices,
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
@@ -46,7 +50,6 @@ class QuickCreate extends Component
         DoctorOrderDefaultServices $doctorOrderDefaultServices
     ) {
         $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
         $this->hemoServices = $hemoServices;
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
@@ -69,17 +72,9 @@ class QuickCreate extends Component
     }
     public function updatedLocationId()
     {
-
         $this->ResetValue();
     }
-
-    public function mount()
-    {
-        $this->locationList = $this->locationServices->getList();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->DATE_FROM = $this->dateServices->NowDate();
-        $this->DATE_TO = $this->dateServices->NowDate();
-    }
+    public function mount() {}
     public function updatedSelectAll($value)
     {
         if ($value) {
@@ -93,7 +88,13 @@ class QuickCreate extends Component
 
     public function openModal()
     {
-        $this->showModal = true;
+        $this->dataLoc =  $this->locationServices->get($this->LOCATION_ID);
+        if ($this->dataLoc) {
+            $this->isDaily = (bool) $this->dataLoc->IS_DAILY ?? false;
+            $this->DATE_FROM = $this->dateServices->NowDate();
+            $this->DATE_TO = $this->dateServices->NowDate();
+            $this->showModal = true;
+        }
     }
     public function closeModal()
     {
@@ -124,7 +125,7 @@ class QuickCreate extends Component
     }
     private function resetMethod()
     {
-        $this->dispatch('reload-list',);
+        $this->dispatch('reload-list');
         $this->ResetValue();
         $this->showModal = false;
     }
@@ -142,10 +143,10 @@ class QuickCreate extends Component
     public function create()
     {
 
-        $dataLoc =  $this->locationServices->get($this->LOCATION_ID);
+
         $this->PHIC_FORM_MODIFY = false;
-        if ($dataLoc) {
-            $this->PHIC_FORM_MODIFY =  $dataLoc->PHIC_FORM_MODIFY ?? false;
+        if ($this->dataLoc) {
+            $this->PHIC_FORM_MODIFY =  $this->dataLoc->PHIC_FORM_MODIFY ?? false;
         }
 
 
@@ -225,12 +226,21 @@ class QuickCreate extends Component
 
     public function render()
     {
-        $this->dataList = $this->hemoServices->QuickFilterByDateRange(
-            $this->DATE_FROM,
-            $this->DATE_TO,
-            $this->LOCATION_ID,
-            $this->search
-        );
+        if ($this->showModal)
+            if ($this->isDaily) {
+                $this->dataList = $this->hemoServices->QuickFilterByDaily(
+                    $this->DATE_FROM,
+                    $this->LOCATION_ID,
+                    $this->search
+                );
+            } else {
+                $this->dataList = $this->hemoServices->QuickFilterByDateRange(
+                    $this->DATE_FROM,
+                    $this->DATE_TO,
+                    $this->LOCATION_ID,
+                    $this->search
+                );
+            }
 
         return view('livewire.phil-health.quick-create');
     }

@@ -17,16 +17,24 @@
 
                             </div>
                             <div class="col-md-2">
-                                <livewire:date-input name="DATE_FROM" titleName="Date From" :isDisabled=false
-                                    wire:model.live='DATE_FROM' />
+                                @if ($isDaily)
+                                    <livewire:date-input name="DATE_FROM" titleName="Date Treatment" :isDisabled=false
+                                        wire:model.live='DATE_FROM' />
+                                @else
+                                    <livewire:date-input name="DATE_FROM" titleName="Date From" :isDisabled=false
+                                        wire:model.live='DATE_FROM' />
+                                @endif
+
                             </div>
                             <div class="col-md-2">
-                                <livewire:date-input name="DATE_TO" titleName="Date To" wire:model.live='DATE_TO' :isDisabled=false />
+                                @if (!$isDaily)
+                                    <livewire:date-input name="DATE_TO" titleName="Date To" wire:model.live='DATE_TO'
+                                        :isDisabled=false />
+                                @endif
+
                             </div>
-                            <div class="col-md-2"
-                                @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
-                                <livewire:dropdown-option name="LOCATION_ID" titleName="Location" :options="$locationList" :isDisabled=false
-                                    :zero="false" :isDisabled=false wire:model.live='LOCATION_ID' />
+                            <div class="col-md-2">
+
                             </div>
                         </div>
                         <table class="table table-sm table-bordered table-hover mt-2">
