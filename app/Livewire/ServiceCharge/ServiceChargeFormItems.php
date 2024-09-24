@@ -389,8 +389,15 @@ class ServiceChargeFormItems extends Component
         } catch (\Throwable $th) {
         }
     }
-    public function editItem(int $lineId, float $lineQty, int $lineUnitId, float $lineRate, float $lineAmount, bool $lineTax, int $itemId)
-    {
+    public function editItem(
+        int $lineId,
+        float $lineQty,
+        int $lineUnitId,
+        float $lineRate,
+        float $lineAmount,
+        bool $lineTax,
+        int $itemId
+    ) {
 
         $data =  $this->serviceChargeServices->getItem($lineId);
         if ($data) {
@@ -486,7 +493,7 @@ class ServiceChargeFormItems extends Component
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             DB::commit();
             $this->dispatch('update-amount', result: $getResult);
-       
+
             $this->editItemId = null;
             $this->lineQty = 0;
             $this->lineUnitId = 0;

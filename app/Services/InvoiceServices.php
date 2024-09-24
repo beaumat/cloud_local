@@ -250,9 +250,25 @@ class InvoiceServices
             ->where('INVOICE_ID', '=', $INVOICE_ID)
             ->first();
     }
-    public function ItemUpdate(int $ID, int $INVOICE_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, int $BATCH_ID, int $PRICE_LEVEL_ID,)
-    {
+    public function ItemUpdate(
+        int $ID,
+        int $INVOICE_ID,
+        int $ITEM_ID,
+        float $QUANTITY,
+        int $UNIT_ID,
+        float $UNIT_BASE_QUANTITY,
+        float $RATE,
+        int $RATE_TYPE,
+        float $AMOUNT,
+        bool $TAXABLE,
+        float $TAXABLE_AMOUNT,
+        float $TAX_AMOUNT,
+        int $BATCH_ID,
+        int $PRICE_LEVEL_ID,
+        int $INCOME_ACCOUNT_ID
+    ) {
         $data =  $this->ItemGet($ID, $INVOICE_ID);
+
         if ($data) {
             $data->update([
                 'QUANTITY'              => $QUANTITY,
@@ -264,7 +280,8 @@ class InvoiceServices
                 'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
                 'TAX_AMOUNT'            => $TAX_AMOUNT,
                 'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
-                'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
+                'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+                'INCOME_ACCOUNT_ID'     => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null
             ]);
 
             if ($data->REF_LINE_ID) {
@@ -296,12 +313,15 @@ class InvoiceServices
                 'i.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
                 'u.SYMBOL',
-                'c.DESCRIPTION as CLASS_DESCRIPTION'
+                'c.DESCRIPTION as CLASS_DESCRIPTION',
+                'invoice_items.INCOME_ACCOUNT_ID',
+                'a.NAME as ACCOUNT_NAME'
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'invoice_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'invoice_items.UNIT_ID')
             ->leftJoin('item_sub_class as sl', 'sl.ID', '=', 'i.SUB_CLASS_ID')
             ->leftJoin('item_class as c', 'c.ID', '=', 'sl.CLASS_ID')
+            ->leftJoin('account as a', 'a.ID', '=', 'invoice_items.INCOME_ACCOUNT_ID')
             ->where('invoice_items.INVOICE_ID', $INVOICE_ID)
             ->orderBy('invoice_items.LINE_NO', 'asc')
             ->get();

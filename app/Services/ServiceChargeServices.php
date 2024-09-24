@@ -382,7 +382,7 @@ class ServiceChargeServices
         float $TAX_AMOUNT,
         int $COGS_ACCOUNT_ID,
         int $ASSET_ACCOUNT_ID,
-        int $INCOME_ACCOUNT_ID,
+        int $INCOME_ACCOUNT_ID = 0,
         int $GROUP_LINE_ID,
         bool $PRINT_IN_FORMS,
         int $PRICE_LEVEL_ID

@@ -31,7 +31,11 @@ class ItemAccountServices
             ->delete();
     }
     public function AccountList(int $ITEM_ID)
-    {
+    {   
+        if($ITEM_ID  == 0 ) {
+
+            return;
+        }
 
         $result = ItemAccounts::select([
             'a.ID',

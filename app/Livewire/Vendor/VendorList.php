@@ -6,11 +6,13 @@ use App\Services\ContactServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('Vendor List')]
 class VendorList extends Component
 {
-
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search = '';
     private $contactServices;
     public function boot(ContactServices $contactServices)
@@ -37,7 +39,7 @@ class VendorList extends Component
     }
     public function render()
     {
-        $contacts = $this->contactServices->Search($this->search, 0, 15, 0);
+        $contacts = $this->contactServices->Search($this->search, 0, 20, 0);
         return view('livewire.vendor.vendor-list', ['dataList' => $contacts]);
     }
 }

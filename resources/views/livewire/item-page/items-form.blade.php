@@ -431,7 +431,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-md-6">
@@ -460,14 +459,14 @@
                                             <div class="tab-pane fade @if ($activeTab == 'other') show active @endif"
                                                 id="custom-tabs-three-other" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-other-tab">
-                                                          @if($ID > 0)
-                                                <div class="row">
-                                                    @if ($TYPE === 1)
-                                                        @livewire('ItemPage.ItemComponentPanel', ['itemId' => $ID, 'itemTypeName' => 'Component List'])
-                                                    @elseif ($TYPE === 6)
-                                                        @livewire('ItemPage.ItemComponentPanel', ['itemId' => $ID, 'itemTypeName' => 'Group List'])
-                                                    @endif
-                                                </div>
+                                                @if ($ID > 0)
+                                                    <div class="row">
+                                                        @if ($TYPE === 1)
+                                                            @livewire('ItemPage.ItemComponentPanel', ['itemId' => $ID, 'itemTypeName' => 'Component List'])
+                                                        @elseif ($TYPE === 6)
+                                                            @livewire('ItemPage.ItemComponentPanel', ['itemId' => $ID, 'itemTypeName' => 'Group List'])
+                                                        @endif
+                                                    </div>
                                                 @endif
                                             </div>
                                         @endif

@@ -6,6 +6,7 @@ namespace App\Livewire\Invoice;
 use App\Services\AccountJournalServices;
 use App\Services\ComputeServices;
 use App\Services\InvoiceServices;
+use App\Services\ItemAccountServices;
 use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
@@ -25,9 +26,11 @@ class InvoiceFormItems extends Component
     public int $STATUS;
     #[Reactive]
     public int $TAX_ID;
-
     #[Reactive]
     public int $LOCATION_ID;
+    public $accountList = [];
+    public $editAccountList   = [];
+    public int $lineINCOME_ACCOUNT_ID = 0;
 
     public int $openStatus = 0;
     public int $ID;
@@ -82,6 +85,7 @@ class InvoiceFormItems extends Component
     private $accountJournalServices;
     private $itemInventoryServices;
     private $priceLevelLineServices;
+    private $itemAccountServices;
     public function boot(
         InvoiceServices $invoiceServices,
         ComputeServices $computeServices,
@@ -91,7 +95,8 @@ class InvoiceFormItems extends Component
         ItemSubClassServices $itemSubClassServices,
         AccountJournalServices $accountJournalServices,
         ItemInventoryServices $itemInventoryServices,
-        PriceLevelLineServices   $priceLevelLineServices
+        PriceLevelLineServices $priceLevelLineServices,
+        ItemAccountServices $itemAccountServices
     ) {
         $this->invoiceServices = $invoiceServices;
         $this->computeServices = $computeServices;
@@ -102,10 +107,13 @@ class InvoiceFormItems extends Component
         $this->accountJournalServices = $accountJournalServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
+        $this->itemAccountServices = $itemAccountServices;
     }
 
     public function updatedcodeBase()
     {
+
+        $this->AccountLoad();
         if ($this->codeBase) {
             $this->itemCodeList = $this->itemServices->getByCustomer(true);
             return;
@@ -151,6 +159,8 @@ class InvoiceFormItems extends Component
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
                 $this->RATE = $this->priceLevelLineServices->GetPriceByLocation($this->LOCATION_ID, $this->ITEM_ID);
+
+
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
@@ -164,6 +174,7 @@ class InvoiceFormItems extends Component
                 $this->PRICE_LEVEL_ID = 0;
                 $this->REF_LINE_ID = 0;
                 $this->getAmount();
+                $this->AccountLoad();
                 $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);
             }
         }
@@ -183,10 +194,21 @@ class InvoiceFormItems extends Component
     }
     public function mount()
     {
+
+
         $this->QUANTITY = 0;
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
+    }
+
+    public bool $reloadAccount = false;
+    private function AccountLoad()
+    {
+
+
+        $this->accountList = $this->itemAccountServices->AccountList($this->ITEM_ID);
+        $this->reloadAccount = $this->reloadAccount ? false : true;
     }
     public function saveItem()
     {
@@ -254,6 +276,8 @@ class InvoiceFormItems extends Component
             $this->ITEM_DESCRIPTION = '';
             $this->CLASS_DESCRIPTION = '';
             $this->saveSuccess = $this->saveSuccess ? false : true;
+
+            $this->accountList =  [];
             $this->updatedcodeBase();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -284,6 +308,13 @@ class InvoiceFormItems extends Component
     }
     public function editItem(int $lineId, float $lineQty, int $lineUnitId, float $lineRate, float $lineAmount, bool $lineTax, int $itemId)
     {
+        $data =  $this->invoiceServices->ItemGet($lineId, $this->INVOICE_ID);
+        if ($data) {
+            $this->editAccountList = $this->itemAccountServices->AccountList($itemId);
+            $this->lineINCOME_ACCOUNT_ID = $data->INCOME_ACCOUNT_ID ?? 0;
+        }
+
+
         $this->editItemId = $lineId;
         $this->lineQty = $lineQty;
         $this->lineUnitId = $lineUnitId;
@@ -309,7 +340,7 @@ class InvoiceFormItems extends Component
         );
 
 
-
+        DB::beginTransaction();
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
 
@@ -319,6 +350,29 @@ class InvoiceFormItems extends Component
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
 
+            if ($this->STATUS == 16) {
+                $dataItem =  $this->invoiceServices->ItemGet($Id, $this->INVOICE_ID);
+                if ($dataItem) {
+                    $data = $this->invoiceServices->get($this->INVOICE_ID);
+                    if ($data) {
+                        $JNO =  $this->accountJournalServices->getRecord(
+                            $this->invoiceServices->object_type_invoice,
+                            $this->INVOICE_ID
+                        );
+                        $this->accountJournalServices->AccountSwitch(
+                            $this->lineINCOME_ACCOUNT_ID,
+                            $dataItem->INCOME_ACCOUNT_ID,
+                            $this->LOCATION_ID,
+                            $JNO,
+                            $dataItem->ITEM_ID,
+                            $Id,
+                            $this->invoiceServices->object_type_invoice_item,
+                            $data->DATE,
+                            1
+                        );
+                    }
+                }
+            }
 
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
 
@@ -336,10 +390,14 @@ class InvoiceFormItems extends Component
                 $this->lineTaxable,
                 $this->lineTaxAmount,
                 $this->lineBatchId,
-                $this->linePriceLevelId
+                $this->linePriceLevelId,
+                $this->lineINCOME_ACCOUNT_ID
             );
 
+
             $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
+
+            DB::commit();
             $this->dispatch('update-amount', result: $getResult);
             $this->itemList = $this->invoiceServices->ItemView($this->INVOICE_ID);
             $this->editItemId = null;
@@ -350,7 +408,7 @@ class InvoiceFormItems extends Component
             $this->lineTax = false;
             $this->lineItemId = 0;
         } catch (\Exception $e) {
-
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }

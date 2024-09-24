@@ -16,6 +16,7 @@ use Livewire\Component;
 
 class OtherChargesModal extends Component
 {
+    public bool $INCOME_ACCOUNT_IS_LOCK = false;
 
     public int $ITEM_TREATMENT_ID;
     public int $LOCATION_ID;
@@ -132,7 +133,11 @@ class OtherChargesModal extends Component
 
             DB::beginTransaction();
             try {
-                $scData =  $this->serviceChargeServices->ServicesChargesGetFirst($hemoData->DATE, $hemoData->CUSTOMER_ID, $hemoData->LOCATION_ID);
+                $scData =  $this->serviceChargeServices->ServicesChargesGetFirst(
+                    $hemoData->DATE,
+                    $hemoData->CUSTOMER_ID,
+                    $hemoData->LOCATION_ID
+                );
                 if ($scData) {
                     $dataLoc = $this->locationServices->get($hemoData->LOCATION_ID);
                     if ($dataLoc) {
@@ -143,11 +148,48 @@ class OtherChargesModal extends Component
                             }
                         }
                     }
-                    $SC_ITEM_ID =   $this->serviceChargeServices->ItemStore($scData->ID, $this->ITEM_ID, $this->QUANTITY, $UNIT_ID, $QTY_BASED, $RATE, 0, $this->QUANTITY * $RATE, $TAX, 0, 0, $data->COGS_ACCOUNT_ID ?? 0, $data->ASSET_ACCOUNT_ID ?? 0, $data->GL_ACCOUNT_ID ?? 0, 0, false, $PRICE_LEVEL_ID);
-                    $SK_LINE_ID =  $this->hemoServices->ItemStore($this->HEMO_ID, $this->ITEM_ID, $this->QUANTITY, $UNIT_ID, $QTY_BASED, true, false, true, $SC_ITEM_ID);
+                    $SC_ITEM_ID =   $this->serviceChargeServices->ItemStore(
+                        $scData->ID,
+                        $this->ITEM_ID,
+                        $this->QUANTITY,
+                        $UNIT_ID,
+                        $QTY_BASED,
+                        $RATE,
+                        0,
+                        $this->QUANTITY * $RATE,
+                        $TAX,
+                        0,
+                        0,
+                        $data->COGS_ACCOUNT_ID ?? 0,
+                        $data->ASSET_ACCOUNT_ID ?? 0,
+                        0,
+                        0,
+                        false,
+                        $PRICE_LEVEL_ID
+                    );
+                    $SK_LINE_ID =  $this->hemoServices->ItemStore(
+                        $this->HEMO_ID,
+                        $this->ITEM_ID,
+                        $this->QUANTITY,
+                        $UNIT_ID,
+                        $QTY_BASED,
+                        true,
+                        false,
+                        true,
+                        $SC_ITEM_ID
+                    );
                     $this->serviceChargeServices->ReComputed($scData->ID); // recompute balance
                 } else {
-                    $SK_LINE_ID = $this->hemoServices->ItemStore($this->HEMO_ID, $this->ITEM_ID, $this->QUANTITY, $UNIT_ID, $QTY_BASED, true, false, true);
+                    $SK_LINE_ID = $this->hemoServices->ItemStore(
+                        $this->HEMO_ID,
+                        $this->ITEM_ID,
+                        $this->QUANTITY,
+                        $UNIT_ID,
+                        $QTY_BASED,
+                        true,
+                        false,
+                        true
+                    );
                 }
 
 
@@ -158,15 +200,43 @@ class OtherChargesModal extends Component
                         $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
                         $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
                         $R_QTY = $list->QUANTITY + 1 * $this->QUANTITY;
-                        $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $R_QTY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID, true, $this->JUSTIFY_NOTES);
+                        $this->hemoServices->ItemStore(
+                            $this->HEMO_ID,
+                            $list->ITEM_ID,
+                            $R_QTY,
+                            $list->UNIT_ID ?? 0,
+                            $TR_UNIT_BASE_QUANTITY,
+                            true,
+                            true,
+                            false,
+                            null,
+                            $SK_LINE_ID,
+                            true,
+                            $this->JUSTIFY_NOTES
+                        );
                     }
                 } else {
-                    $dataTrigger = $this->itemTreatmentServices->getItemTrigger($this->ITEM_ID, $hemoData->LOCATION_ID, $UNIT_ID);
+                    $dataTrigger = $this->itemTreatmentServices->getItemTrigger(
+                        $this->ITEM_ID,
+                        $hemoData->LOCATION_ID,
+                        $UNIT_ID
+                    );
                     foreach ($dataTrigger  as $list) {
                         $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
                         $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
                         $R_QTY = $list->QUANTITY * $this->QUANTITY;
-                        $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $R_QTY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true, false, null, $SK_LINE_ID);
+                        $this->hemoServices->ItemStore(
+                            $this->HEMO_ID,
+                            $list->ITEM_ID,
+                            $R_QTY,
+                            $list->UNIT_ID ?? 0,
+                            $TR_UNIT_BASE_QUANTITY,
+                            true,
+                            true,
+                            false,
+                            null,
+                            $SK_LINE_ID
+                        );
                     }
                 }
 

@@ -280,7 +280,7 @@ class ServiceChargeForm extends Component
                 foreach ($dataItem as $list) {
                     $RATE = 0;
                     if ($PRICE_LEVEL_ID > 0) {
-                        $RATE = (float) $this->priceLevelLineServices->PriceExists($list->ITEM_ID, $this->LOCATION_ID);
+                        $RATE = (float) $this->priceLevelLineServices->GetPriceByLocation($this->LOCATION_ID, $list->ITEM_ID);
                     } else {
                         $RATE = (float) $list->RATE ?? 0;
                     }
@@ -301,7 +301,7 @@ class ServiceChargeForm extends Component
                         0,
                         $list->COGS_ACCOUNT_ID ?? 0,
                         $list->ASSET_ACCOUNT_ID ?? 0,
-                        $list->GL_ACCOUNT_ID ?? 0,
+                        0,
                         0,
                         false,
                         $PRICE_LEVEL_ID
@@ -309,7 +309,9 @@ class ServiceChargeForm extends Component
                     $this->hemoServices->ItemUpdateSC_ITEM_ID($list->ID, $list->HEMO_ID, $list->ITEM_ID, $SC_ITEM_ID);
                 }
                 $this->serviceChargeServices->ReComputed($this->ID);
+
                 DB::commit();
+
                 return Redirect::route('patientsservice_charges_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
