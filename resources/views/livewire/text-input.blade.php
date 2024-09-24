@@ -1,4 +1,4 @@
-<div class="mt-1">
+<div class="mt-0">
     @if ($vertical)
         <div class="row">
             <div class="col-3">

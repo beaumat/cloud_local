@@ -342,10 +342,59 @@ class ItemServices
 
         return 0;
     }
+    public function getNotIncludeItem($search, int $locationId)
+    {
+        $items = DB::table('item')
+            ->select(
+                [
+                    'item.ID',
+                    'item.CODE',
+                    'item.DESCRIPTION',
+                    'item.RATE',
+                    'item.COST',
+                    't.DESCRIPTION as TYPE',
+                    'g.DESCRIPTION as GROUP_NAME',
+                    'c.DESCRIPTION as CLASS_NAME',
+                    's.DESCRIPTION as SUB_NAME',
+                    'u.SYMBOL'
+                ]
+            )
+            ->selectSub(function ($query) use (&$locationId) {
+                $query->from('item_inventory')->select('item_inventory.ENDING_QUANTITY')
+                    ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
+                    ->where('item_inventory.LOCATION_ID', $locationId)
+                    ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
+                    ->orderBy('item_inventory.ID', 'DESC')->limit(1);
+            }, 'QTY_ON_HAND')
+            ->leftJoin('item_type_map as t', 't.ID', '=', 'item.TYPE')
+            ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')
+            ->leftJoin('item_sub_class as s', 's.ID', '=', 'item.SUB_CLASS_ID')
+            ->leftJoin('item_class as c', 'c.ID', '=', 's.CLASS_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', 'item.BASE_UNIT_ID')
+            ->where('item.TYPE', '<', 2)
+            ->where('item.INACTIVE', false)
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use (&$search) {
+                    $q->where('item.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('item.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('t.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('s.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('c.DESCRIPTION', 'like', '%' . $search . '%');
+                });
+            })
+            ->whereNotExists(function ($query) use (&$locationId) {
+                $query->select(DB::raw(1))
+                    ->from('price_level_lines as l')
+                    ->whereColumn('l.ITEM_ID', '=', 'item.ID')
+                    ->whereRaw('l.PRICE_LEVEL_ID = (select location.PRICE_LEVEL_ID from location where location.ID = ' . $locationId . ')');
+            })
+            ->orderBy('item.DESCRIPTION')
+            ->get();
+
+        return $items;
+    }
     public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc, bool $showOutofStock = false)
     {
-
-
         $items = DB::table('item')
             ->select(
                 [
@@ -385,6 +434,12 @@ class ItemServices
                 });
             })->when($showOutofStock, function ($query) {
                 $query->having('QTY_ON_HAND', '<=', 0);
+            })
+            ->whereExists(function ($query) use (&$locationId) {
+                $query->select(DB::raw(1))
+                    ->from('price_level_lines as l')
+                    ->whereColumn('l.ITEM_ID', '=', 'item.ID')
+                    ->whereRaw('l.PRICE_LEVEL_ID = (select location.PRICE_LEVEL_ID from location where location.ID = ' . $locationId . ')');
             })
             ->orderBy($sortby, $isDesc ? 'desc' : 'asc')
             ->get();

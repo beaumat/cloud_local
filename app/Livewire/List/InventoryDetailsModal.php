@@ -24,7 +24,8 @@ class InventoryDetailsModal extends Component
         $this->itemServices = $itemServices;
     }
     public function closeModal()
-    {
+    {   
+        
         $this->showModal = false;
     }
     #[On("open-modal")]

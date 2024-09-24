@@ -6,9 +6,9 @@ use App\Exports\InventoryListItemExport;
 use App\Services\DateServices;
 use App\Services\ItemServices;
 use App\Services\LocationServices;
+use App\Services\PriceLevelLineServices;
 use App\Services\UserServices;
-
-
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,11 +16,15 @@ use Maatwebsite\Excel\Facades\Excel;
 #[Title('Item Inventory')]
 class ItemActiveList extends Component
 {
+
+  public bool $isControl = false;
+
   public $search = '';
   private $userServices;
   private $dateServices;
   private $locationServices;
   public int $LOCATION_ID;
+  public int $PRICE_LEVEL_ID;
   public $locationList = [];
   public $DATE;
   private $itemServices;
@@ -28,6 +32,7 @@ class ItemActiveList extends Component
   public string $sortby;
   public $dataList = [];
   public $showOutofStock = false;
+  private $priceLevelLineServices;
 
   public function OnClick(int $ID)
   {
@@ -39,12 +44,26 @@ class ItemActiveList extends Component
 
     $this->dispatch('open-modal', result: $data);
   }
-  public function boot(UserServices $userServices, DateServices $dateServices, LocationServices $locationServices, ItemServices $itemServices)
+  public function showNotInclude()
   {
+    $data =  [
+      'PRICE_LEVEL_ID' => $this->PRICE_LEVEL_ID,
+      'LOCATION_ID'   => $this->LOCATION_ID
+    ];
+    $this->dispatch('not-include-show', result: $data);
+  }
+  public function boot(
+    UserServices $userServices,
+    DateServices $dateServices,
+    LocationServices $locationServices,
+    ItemServices $itemServices,
+    PriceLevelLineServices $priceLevelLineServices
+  ) {
     $this->userServices = $userServices;
     $this->dateServices = $dateServices;
     $this->locationServices = $locationServices;
     $this->itemServices = $itemServices;
+    $this->priceLevelLineServices = $priceLevelLineServices;
   }
   public function mount()
   {
@@ -53,11 +72,25 @@ class ItemActiveList extends Component
     $this->DATE = $this->dateServices->NowDate();
     $this->locationList = $this->locationServices->getList();
     $this->LOCATION_ID = $this->userServices->getLocationDefault();
+    $this->getPriceLevel();
     $this->refreshItem();
   }
   public function updatedshowOutofStock()
   {
-    $this->dataList = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc, $this->showOutofStock);
+    $this->dataList = $this->itemServices->getActiveItems(
+      $this->search,
+      $this->LOCATION_ID,
+      $this->sortby,
+      $this->isDesc,
+      $this->showOutofStock
+    );
+  }
+  public function getPriceLevel()
+  {
+    $data =  $this->locationServices->get($this->LOCATION_ID);
+    if ($data) {
+      $this->PRICE_LEVEL_ID = $data->PRICE_LEVEL_ID;
+    }
   }
   public function sorting(string $column)
   {
@@ -76,18 +109,44 @@ class ItemActiveList extends Component
   }
   public function updatedLocationId()
   {
+    $this->getPriceLevel();
+    $this->refreshItem();
+  }
+  #[On('refresh-active-list')]
+  public function onset()
+  {
     $this->refreshItem();
   }
   private function refreshItem()
   {
-    $this->dataList = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc, $this->showOutofStock);
+    $this->dataList = $this->itemServices->getActiveItems(
+      $this->search,
+      $this->LOCATION_ID,
+      $this->sortby,
+      $this->isDesc,
+      $this->showOutofStock
+    );
   }
   public function exportData()
   {
-    $newData = $this->itemServices->getActiveItems($this->search, $this->LOCATION_ID, $this->sortby, $this->isDesc, $this->showOutofStock);
+    $newData = $this->itemServices->getActiveItems(
+      $this->search,
+      $this->LOCATION_ID,
+      $this->sortby,
+      $this->isDesc,
+      $this->showOutofStock
+    );
     return Excel::download(new InventoryListItemExport(
       $newData
     ), "Item-Inventory.xlsx");
+  }
+
+  public function itemNotInclude(int $ITEM_ID)
+  {
+    if ($this->PRICE_LEVEL_ID > 0) {
+      $this->priceLevelLineServices->Remove($ITEM_ID, $this->PRICE_LEVEL_ID);
+      $this->refreshItem();
+    }
   }
   public function render()
   {

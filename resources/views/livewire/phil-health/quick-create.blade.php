@@ -24,7 +24,6 @@
                                     <livewire:date-input name="DATE_FROM" titleName="Date From" :isDisabled=false
                                         wire:model.live='DATE_FROM' />
                                 @endif
-
                             </div>
                             <div class="col-md-2">
                                 @if (!$isDaily)

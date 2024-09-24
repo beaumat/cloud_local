@@ -123,7 +123,7 @@ class PriceLevelLineServices
                     ->where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
                     ->where('ITEM_ID', '=', $ITEM_ID)
                     ->first();
-                    
+
                 if ($result) {
                     return (float) $result->CUSTOM_PRICE ?? 0;
                 }
@@ -170,6 +170,12 @@ class PriceLevelLineServices
     public function Delete(int $ID): void
     {
         PriceLevelLines::where('ID', $ID)
+            ->delete();
+    }
+    public function Remove(int $ITEM_ID, int $PRICE_LEVEL_ID)
+    {
+        PriceLevelLines::where('ITEM_ID', '=', $ITEM_ID)
+            ->where('PRICE_LEVEL_ID', '=', $PRICE_LEVEL_ID)
             ->delete();
     }
     public function Search($search, int $PRICE_LEVEL_ID)
