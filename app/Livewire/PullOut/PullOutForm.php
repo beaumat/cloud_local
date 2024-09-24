@@ -2,15 +2,13 @@
 
 namespace App\Livewire\PullOut;
 
-use App\Models\ItemInventory;
+
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
-use App\Services\DocumentTypeServices;
 use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
-use App\Services\ObjectServices;
 use App\Services\PullOutServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
@@ -80,6 +78,7 @@ class PullOutForm extends Component
         try {
             $SOURCE_REF_TYPE = (int) $this->pullOutServices->document_type_id;
             $data = $this->pullOutServices->ItemInventory($this->ID);
+
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute(
                     $data,
@@ -89,6 +88,7 @@ class PullOutForm extends Component
                     false
                 );
             }
+
             return true;
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -97,7 +97,9 @@ class PullOutForm extends Component
         }
     }
     private function AccountJournal(): bool
-    {
+    {   
+
+ 
         try {
             $pullOut = $this->pullOutServices->object_type_map_pull_out;
             $pullOutItems = $this->pullOutServices->object_type_map_pull_out_items;

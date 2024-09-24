@@ -328,7 +328,7 @@ class ItemInventoryServices
     {
 
         foreach ($data as $list) {
-
+            $COST =  0;
             $SOURCE_REF_ID  = (int) $list->ID;
             $ITEM_ID        = (int) $list->ITEM_ID;
             $QUANTITY       = (float) $list->QUANTITY ?? 1;

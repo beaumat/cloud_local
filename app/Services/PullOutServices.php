@@ -246,10 +246,9 @@ class PullOutServices
                 'pull_out_items.ITEM_ID',
                 'pull_out_items.QUANTITY',
                 'pull_out_items.UNIT_BASE_QUANTITY',
-                'item.COST'
+                DB::raw(" (select IFNULL(price_level_lines.CUSTOM_COST,0) from price_level_lines where price_level_lines.ITEM_ID = pull_out_items.ITEM_ID and price_level_lines.PRICE_LEVEL_ID = (select location.ID from location where location.ID = p.LOCATION_ID ) ) as COST ")
             ])
-            ->join('item', 'item.ID', '=', 'pull_out_items.ITEM_ID')
-            ->whereIn('item.TYPE', ['0', '1'])
+            ->join('pull_out as p', 'p.ID', '=', 'pull_out_items.PULL_OUT_ID')
             ->where('pull_out_items.PULL_OUT_ID', $PULL_OUT_ID)
             ->get();
 
