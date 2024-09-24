@@ -31,8 +31,8 @@ class ItemAccountServices
             ->delete();
     }
     public function AccountList(int $ITEM_ID)
-    {   
-        if($ITEM_ID  == 0 ) {
+    {
+        if ($ITEM_ID  == 0) {
 
             return;
         }
@@ -47,7 +47,7 @@ class ItemAccountServices
 
 
         if ($result->exists()) {
-           
+
             return $result->get();
         }
 
@@ -58,6 +58,7 @@ class ItemAccountServices
         $result = accounts::select(['account.ID', 'account.NAME', 'account_type_map.DESCRIPTION as TYPE'])
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
             ->where('account.INACTIVE', '=', false)
+            ->whereIn('account.TYPE', ['10', '13'])
             ->whereNotExists(function ($query) use (&$ITEM_ID) {
                 $query->select(DB::raw(1))
                     ->from('item_accounts as a')
@@ -74,12 +75,13 @@ class ItemAccountServices
         return $result;
     }
 
-    public function AccountSelected($search, int $ITEM_ID):object
+    public function AccountSelected($search, int $ITEM_ID): object
     {
 
         $result = accounts::select(['account.ID', 'account.NAME', 'account_type_map.DESCRIPTION as TYPE'])
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
             ->where('account.INACTIVE', '=', false)
+            ->whereIn('account.TYPE', ['10', '13'])
             ->whereExists(function ($query) use (&$ITEM_ID) {
                 $query->select(DB::raw(1))
                     ->from('item_accounts as a')
