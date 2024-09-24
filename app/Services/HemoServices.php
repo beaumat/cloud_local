@@ -224,6 +224,10 @@ class HemoServices
 
     public function getDateTimeByRange(int $CONTACT_ID, int $LOCATION_ID, string $DT_FROM, string $DT_TO)
     {
+
+
+
+
         $dates = Hemodialysis::query()
             ->select(DB::raw('MIN(hemodialysis.DATE) AS first_date, MAX(hemodialysis.DATE) AS last_date'))
             ->join('service_charges as sc', function ($join) {
@@ -279,6 +283,67 @@ class HemoServices
             'FIRST_TIME' => '',
             'LAST_DATE' => '',
             'LAST_TIME' => ''
+        ];
+    }
+    public function getDateTimeByDaily(int $CONTACT_ID, int $LOCATION_ID, string $DT_FROM)
+    {
+
+        $dates = Hemodialysis::query()
+            ->select(DB::raw('MIN(hemodialysis.DATE) AS first_date, MAX(hemodialysis.DATE) AS last_date'))
+            ->join('service_charges as sc', function ($join) {
+                $join->On('sc.DATE', '=', 'hemodialysis.DATE')
+                    ->On('sc.LOCATION_ID', '=', 'hemodialysis.LOCATION_ID')
+                    ->On('sc.PATIENT_ID', '=', 'hemodialysis.CUSTOMER_ID');
+            })
+            ->join('service_charges_items as  sci', 'sci.SERVICE_CHARGES_ID', '=', 'sc.ID')
+            ->where('sci.ITEM_ID', '=', 2)
+            ->where('hemodialysis.CUSTOMER_ID', '=', $CONTACT_ID)
+            ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('hemodialysis.DATE', '=', $DT_FROM)
+            ->where('hemodialysis.STATUS_ID', '=', 2)
+            ->where(function ($query) use (&$CONTACT_ID, &$LOCATION_ID, &$DT_FROM) {
+                $query->select(DB::raw(1))
+                    ->from('service_charges as sc')
+                    ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 'sc.ID')
+                    ->where('sc.DATE', $DT_FROM)
+                    ->where('sc.PATIENT_ID', '=', $CONTACT_ID)
+                    ->where('sc.LOCATION_ID', '=', $LOCATION_ID)
+                    ->where('sci.ITEM_ID', '=', 2);
+            })
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('philhealth as l')
+                    ->whereColumn('l.CONTACT_ID', 'hemodialysis.CUSTOMER_ID')
+                    ->whereColumn('l.LOCATION_ID', 'hemodialysis.LOCATION_ID')
+                    ->whereColumn('l.DATE_ADMITTED', '=', 'hemodialysis.DATE')
+                    ->whereColumn('l.DATE_DISCHARGED', '=', 'hemodialysis.DATE');
+            })
+            ->first();
+
+
+        if ($dates) {
+            $firstDate = $dates->first_date ?? null;
+            $lastDate = $dates->last_date ?? null;
+
+            if ($firstDate != null && $lastDate != null) {
+                $firstTime = $this->getTime(true, $firstDate, $CONTACT_ID, $LOCATION_ID);
+                $lastTime = $this->getTime(false, $lastDate, $CONTACT_ID, $LOCATION_ID);
+
+                return [
+                    'FIRST_DATE'    => $firstDate,
+                    'FIRST_TIME'    => $firstTime,
+                    'LAST_DATE'     => $lastDate,
+                    'LAST_TIME'     => $lastTime
+                ];
+            }
+        }
+
+
+        return [
+            'FIRST_DATE'    => '',
+            'FIRST_TIME'    => '',
+            'LAST_DATE'     => '',
+            'LAST_TIME'     => ''
         ];
     }
 

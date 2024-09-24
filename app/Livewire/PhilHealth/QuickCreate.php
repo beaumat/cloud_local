@@ -39,7 +39,15 @@ class QuickCreate extends Component
     private $cf4DoctorOrderServices;
     private $doctorOrderDefaultServices;
     public object $dataLoc;
-
+    private $DATE_ADMITTED = '';
+    private $TIME_ADMITTED = '';
+    private $DATE_DISCHARGED = '';
+    private $TIME_DISCHARGED = '';
+    private string $FINAL_DIAGNOSIS = '';
+    private string $OTHER_DIAGNOSIS = '';
+    private string $FIRST_CASE_RATE = '';
+    private string $SECOND_CASE_RATE = '';
+    public bool $PHIC_FORM_MODIFY = false;
     public function boot(
         LocationServices $locationServices,
         HemoServices $hemoServices,
@@ -100,26 +108,33 @@ class QuickCreate extends Component
     {
         $this->showModal = false;
     }
-    private $DATE_ADMITTED = '';
-    private $TIME_ADMITTED = '';
-    private $DATE_DISCHARGED = '';
-    private $TIME_DISCHARGED = '';
-    private string $FINAL_DIAGNOSIS = '';
-    private string $OTHER_DIAGNOSIS = '';
-    private string $FIRST_CASE_RATE = '';
-    private string $SECOND_CASE_RATE = '';
-    public bool $PHIC_FORM_MODIFY = false;
+
     private function generateDateTime($CONTACT_ID): bool
     {
 
-        $data = $this->hemoServices->getDateTimeByRange($CONTACT_ID, $this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
-        if ($data) {
-            $this->DATE_ADMITTED = $data['FIRST_DATE'];
-            $this->TIME_ADMITTED = $data['FIRST_TIME'];
-            $this->DATE_DISCHARGED = $data['LAST_DATE'];
-            $this->TIME_DISCHARGED = $data['LAST_TIME'];
-            return true;
+        if ($this->isDaily) {
+            $data = $this->hemoServices->getDateTimeByDaily($CONTACT_ID, $this->LOCATION_ID, $this->DATE_FROM);
+            if ($data) {
+             
+                $this->DATE_ADMITTED = $data['FIRST_DATE'];
+                $this->TIME_ADMITTED = $data['FIRST_TIME'];
+                $this->DATE_DISCHARGED = $data['LAST_DATE'];
+                $this->TIME_DISCHARGED = $data['LAST_TIME'];
+                return true;
+            }
+        } else {
+            $data = $this->hemoServices->getDateTimeByRange($CONTACT_ID, $this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
+
+            if ($data) {
+                $this->DATE_ADMITTED = $data['FIRST_DATE'];
+                $this->TIME_ADMITTED = $data['FIRST_TIME'];
+                $this->DATE_DISCHARGED = $data['LAST_DATE'];
+                $this->TIME_DISCHARGED = $data['LAST_TIME'];
+                return true;
+            }
         }
+
+
 
         return false;
     }
