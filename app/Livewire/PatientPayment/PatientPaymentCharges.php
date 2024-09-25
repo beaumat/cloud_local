@@ -24,6 +24,9 @@ class PatientPaymentCharges extends Component
     public float $AMOUNT;
     #[Reactive]
     public float $AMOUNT_APPLIED;
+    #[Reactive]
+    public int $REF_ID;
+
     public $editPaymentChargeId = null;
     public int $editServiceChargeItemId;
 
@@ -35,8 +38,10 @@ class PatientPaymentCharges extends Component
     public int $PHILHEALTH_ID = 0;
     public float $editAmountInit;
     private $serviceChargeServices;
-    public function boot(PatientPaymentServices $patientPaymentServices, ServiceChargeServices $serviceChargeServices)
-    {
+    public function boot(
+        PatientPaymentServices $patientPaymentServices,
+        ServiceChargeServices $serviceChargeServices
+    ) {
         $this->patientPaymentServices = $patientPaymentServices;
         $this->serviceChargeServices = $serviceChargeServices;
     }

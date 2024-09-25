@@ -40,6 +40,8 @@ class PatientPayments extends Model
         'PHILHEALTH_ID',
         'WTAX_AMOUNT',
         'WTAX_ACCOUNT_ID',
-        'LESS_AMOUNT'
+        'LESS_AMOUNT',
+        'IS_INVOICE',
+        'REF_ID'
     ];
 }

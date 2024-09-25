@@ -1,9 +1,9 @@
-<div class="@if (!$IS_MODAL) content-wrapper @endif ">
+<div class="@if (!$IS_MODAL) content-wrapper @endif">
     <div class="content-header">
         <div class="container-fluid">
         </div>
     </div>
-    <section class="content">
+    <section class="@if (!$IS_MODAL) content @endif">
         <div class="container-fluid">
             <div class="row">
                 @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
@@ -28,15 +28,19 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            @if ($Modify && $STATUS == 0)
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
-                                                    :options="$contactList" :zero="true" :isDisabled="false"
-                                                    wire:model='CUSTOMER_ID' />
-                                            @else
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
-                                                    :options="$contactList" :zero="true" :isDisabled="true"
-                                                    wire:model='CUSTOMER_ID' />
-                                            @endif
+                                            <div class='form-group'
+                                                @if ($PATIENT_PAYMENT_ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                @if ($Modify && $STATUS == 0)
+                                                    <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                        :options="$contactList" :zero="true" :isDisabled="false"
+                                                        wire:model='CUSTOMER_ID' />
+                                                @else
+                                                    <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                        :options="$contactList" :zero="true" :isDisabled="true"
+                                                        wire:model='CUSTOMER_ID' />
+                                                @endif
+                                            </div>
+
 
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -135,7 +139,7 @@
                                             @if ($Modify)
                                                 <button type="submit" class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
+                                                    {{ $ID === 0 ? ($PATIENT_PAYMENT_ID > 0 ? 'Save & Post' : 'Pre-save') : 'Update' }}</button>
                                                 @if ($ID > 0)
                                                     <button type="button" wire:click='updateCancel'
                                                         wire:confirm='Want to cancel?' class="btn btn-sm btn-danger"><i

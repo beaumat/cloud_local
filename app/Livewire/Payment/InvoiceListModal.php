@@ -158,7 +158,11 @@ class InvoiceListModal extends Component
 
     public function render()
     {
-        $this->invoiceList = $this->invoiceServices->getInvoiceListViaPayment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->PAYMENT_ID);
+        $this->invoiceList = $this->invoiceServices->getInvoiceListViaPayment(
+            $this->CUSTOMER_ID,
+            $this->LOCATION_ID,
+            $this->PAYMENT_ID
+        );
 
         return view('livewire.payment.invoice-list-modal');
     }

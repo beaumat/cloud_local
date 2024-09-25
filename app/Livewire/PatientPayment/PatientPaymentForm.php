@@ -22,6 +22,8 @@ use Livewire\WithFileUploads;
 class PatientPaymentForm extends Component
 {
     use WithFileUploads;
+    public bool $IS_INVOICE = false;
+    public int $REF_ID  = 0;
     public string $FILE_NAME;
     public string $FILE_PATH;
     public bool $IS_CONFIRM;
@@ -123,7 +125,8 @@ class PatientPaymentForm extends Component
         $this->FILE_PATH = $data->FILE_PATH ?? '';
         $this->IS_CONFIRM = $data->IS_CONFIRM ?? false;
         $this->DATE_CONFIRM = $data->DATE_CONFIRM ?? '';
-
+        $this->IS_INVOICE = $data->IS_INVOICE;
+        $this->REF_ID = $data->REF_ID ?? 0;
         $this->updatedpaymentmethodid();
         $this->Modify = false;
         $this->PDF = null;
@@ -365,7 +368,16 @@ class PatientPaymentForm extends Component
         $this->dispatch('open-assistance', result: $data);
     }
 
-   
+    public function makeSalesReceipt()
+    {
+
+        $data = [
+            'PAYMENT_METHOD_ID' => $this->PAYMENT_METHOD_ID,
+            'PATIENT_PAYMENT_ID' => $this->ID
+        ];
+
+        $this->dispatch('make-sales-receipt-show', result: $data);
+    }
     public function render()
     {
         return view('livewire.patient-payment.patient-payment-form');

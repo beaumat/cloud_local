@@ -202,11 +202,21 @@ class SalesReceiptForm extends Component
             return Redirect::route('customerssales_receipt')->with('error', $errorMessage);
         }
 
+        if ($this->PATIENT_PAYMENT_ID > 0) {
+            $pay = $this->patientPaymentServices->get($this->PATIENT_PAYMENT_ID);
+            if ($pay) {
+                $this->CUSTOMER_ID = $pay->PATIENT_ID;
+                $this->DATE = $pay->DATE;
+                $this->LOCATION_ID = $pay->LOCATION_ID;
+                $this->PAYMENT_REF_NO = $pay->RECEIPT_REF_NO ?? '';
+            }
+        } else {
+            $this->CUSTOMER_ID = 0;
+            $this->DATE = $this->userServices->getTransactionDateDefault();
+            $this->LOCATION_ID = $this->userServices->getLocationDefault();
+            $this->PAYMENT_REF_NO = '';
+        }
 
-
-        $this->CUSTOMER_ID = 0;
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
 
         $this->LoadDropdown();
         $this->Modify = true;
@@ -228,31 +238,45 @@ class SalesReceiptForm extends Component
         $this->TAXABLE_AMOUNT = 0;
         $this->NONTAXABLE_AMOUNT = 0;
         $this->STATUS_DESCRIPTION = "";
-        $this->PAYMENT_REF_NO = '';
+
         $this->updatedpaymentmethodid();
         $this->getTax();
     }
 
-    public function makeInvoiceOnPatient()
-    {
-        if ($this->PATIENT_PAYMENT_ID > 0) {
 
-            // search invoice if 
-            $pdata = $this->patientPaymentServices->get($this->PATIENT_PAYMENT_ID);
-            if ($pdata) {
-                $this->CUSTOMER_ID = $pdata->PATIENT_ID;
-                $this->LOCATION_ID = $pdata->LOCATION_ID;
-                $this->DATE = $pdata->DATE;
-
-                $itemlist = $this->patientPaymentServices->PaymentChargesList($this->PATIENT_PAYMENT_ID, 0);
-                foreach ($itemlist as $list) {
-                }
-            }
-        }
-    }
     public function getModify()
     {
         $this->Modify = true;
+    }
+
+    private function getPatientItemAutoSave()
+    {
+        if ($this->PATIENT_PAYMENT_ID > 0) {
+            $dataList = $this->patientPaymentServices->PaymentChargesList($this->PATIENT_PAYMENT_ID, 0);
+            foreach ($dataList as $list) {
+                $this->salesReceiptServices->ItemStore(
+                    $this->ID,
+                    $list->ITEM_ID,
+                    $list->QUANTITY,
+                    $list->UNIT_ID ?? null,
+                    $list->UNIT_BASE_QUANTITY ?? 1,
+                    $list->RATE,
+                    $list->RATE_TYPE,
+                    $list->ITEM_AMOUNT,
+                    $list->TAXABLE,
+                    $list->TAXABLE_AMOUNT,
+                    $list->TAX_AMOUNT,
+                    $list->COGS_ACCOUNT_ID ?? 0,
+                    $list->ASSET_ACCOUNT_ID ?? 0,
+                    $list->INCOME_ACCOUNT_ID ?? 0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                );
+            }
+        }
     }
     public function save()
     {
@@ -305,11 +329,22 @@ class SalesReceiptForm extends Component
                     $this->OUTPUT_TAX_ACCOUNT_ID,
                     $this->STATUS
                 );
+
+                if ($this->PATIENT_PAYMENT_ID > 0) {
+                    $this->getPatientItemAutoSave();
+                    $this->patientPaymentServices->CustomerRef($this->PATIENT_PAYMENT_ID, false, $this->ID);
+                    $this->salesReceiptServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
+                    $getResult = $this->salesReceiptServices->ReComputed($this->ID);
+                    $this->getPosted();
+                }
+
+
                 DB::commit();
+
+
                 if ($this->IS_MODAL) {
                     $data = $this->salesReceiptServices->get($this->ID);
                     if ($data) {
-
                         $this->getInfo($data);
                     }
 

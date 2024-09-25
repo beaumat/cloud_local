@@ -57,11 +57,13 @@ class PatientPaymentServices
             ->where('PAYMENT_METHOD_ID', '=', $this->paymentMethodServices->PHIL_HEALTH_ID)
             ->first();
     }
-    public function getPatientPayment($ID)
+    public function getPatientPayment($ID): object
     {
-        return PatientPayments::where('ID', '=', $ID)
+        $result = PatientPayments::where('ID', '=', $ID)
             ->whereIn('PAYMENT_METHOD_ID', $this->paymentMethodServices->CASH_N_GL)
             ->first();
+
+        return $result;
     }
     public function PaymentHaveAvailable(int $PATIENT_ID)
     {
@@ -458,6 +460,15 @@ class PatientPaymentServices
             'FILE_PATH' => $FILE_PATH
         ]);
     }
+    public function CustomerRef(int $PATIENT_PAY_ID, bool $IS_INVOICE, int $REF_ID)
+    {
+
+        PatientPayments::where('ID', '=', $PATIENT_PAY_ID)
+            ->update([
+                'IS_INVOICE' => $IS_INVOICE,
+                'REF_ID'    => $REF_ID
+            ]);
+    }
     public function PaymentChargesExist(int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID): int
     {
         $data = PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)
@@ -502,21 +513,36 @@ class PatientPaymentServices
                 'sc.AMOUNT',
                 'sc.BALANCE_DUE',
                 'i.DESCRIPTION as ITEM_NAME',
+                'sci.ITEM_ID',
                 'sci.QUANTITY',
-                'unit_of_measure.SYMBOL',
+                'sci.UNIT_BASE_QUANTITY',
+                'sci.RATE',
+                'sci.RATE_TYPE',
                 'sci.AMOUNT as ITEM_AMOUNT',
+                'sci.UNIT_ID',
+                'sci.TAXABLE',
+                'sci.TAXABLE_AMOUNT',
+                'sci.TAX_AMOUNT',
+                'sci.INCOME_ACCOUNT_ID',
+                'sci.COGS_ACCOUNT_ID',
+                'sci.ASSET_ACCOUNT_ID',
+                'a.NAME as ACCOUNT_NAME',
+                'unit_of_measure.SYMBOL',
                 'patient_payment_charges.AMOUNT_APPLIED',
-
             ])
             ->leftJoin('service_charges_items as sci', 'sci.ID', '=', 'patient_payment_charges.SERVICE_CHARGES_ITEM_ID')
+            ->leftJoin('account as a', 'a.ID', '=', 'sci.INCOME_ACCOUNT_ID')
             ->join('item as i', 'i.ID', '=', 'sci.ITEM_ID')
             ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'sci.UNIT_ID')
             ->join('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')
+
             ->where('patient_payment_charges.PATIENT_PAYMENT_ID', '=', $PATIENT_PAYMENT_ID)
             ->when($PHILHEALTH_ID > 0, function ($query) use (&$PH_ITEM_ID) {
                 $query->where('sci.ITEM_ID', '=', $PH_ITEM_ID);
             })
             ->get();
+
+
         return $result;
     }
 
