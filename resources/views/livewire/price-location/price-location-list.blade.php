@@ -10,6 +10,14 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
+                            <input class="form-check-input" type="checkbox" wire:model.live="isControl" />
+                            @if ($isControl)
+                                <label class="text-sm "><br /></label>
+                                <button type="button" wire:click='showNotInclude()' class="btn btn-danger btn-xs">
+                                    <i class="fa fa-download" aria-hidden="true"></i> Not Include
+                                    List
+                                </button>
+                            @endif
                         </li>
                     </ol>
                 </div><!-- /.col -->
@@ -87,7 +95,7 @@
                                         @if ($showCost)
                                             <th class="col-1 text-right">Cost</th>
                                         @endif
-                                        <th class="col-1 text-center">Action</th>
+                                        <th class="col-2 text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -117,28 +125,29 @@
                                             @endif
                                             <td class="text-center">
                                                 @if ($list->ID == $editId)
-                                                    <div class="row">
-                                                        <div class="col-6 col-md-6">
-                                                            <button name="btnsave_{{ $list->ID }}"
-                                                                class="btn btn-xs btn-success w-100"
-                                                                wire:click='save()'>
-                                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                            </button>
-                                                        </div>
-                                                        <div class="col-6 col-md-6">
-                                                            <button name="btncancel_{{ $list->ID }}"
-                                                                class="btn btn-xs btn-warning w-100"
-                                                                wire:click='cancel()'>
-                                                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                                    <button name="btnsave_{{ $list->ID }}"
+                                                        class="btn btn-xs btn-success" wire:click='save()'>
+                                                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+                                                    </button>
+                                                    <button name="btncancel_{{ $list->ID }}"
+                                                        class="btn btn-xs btn-warning" wire:click='cancel()'>
+                                                        <i class="fa fa-ban" aria-hidden="true"></i> Cancel
+                                                    </button>
                                                 @else
                                                     <button name="btnedit_{{ $list->ID }}"
-                                                        class="btn btn-xs btn-info w-100"
+                                                        class="btn btn-xs btn-info"
                                                         wire:click='edit({{ $list->ID }})'>
-                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
                                                     </button>
+                                                    @if ($isControl)
+                                                        <button type="button" class="btn btn-xs btn-danger"
+                                                            title="Not Include in your list"
+                                                            wire:click='itemNotInclude({{ $list->ID }})'
+                                                            title="Not Include">
+                                                            <i class="fas fa-times" aria-hidden="true"></i> Not
+                                                            Include
+                                                        </button>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>
@@ -154,6 +163,6 @@
     </section>
 
 
-
+    @livewire('PriceLocation.NotIncludeList')
 
 </div>

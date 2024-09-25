@@ -278,7 +278,7 @@ class ItemServices
     }
     public function SearchPriceLocation($search, int $perPage)
     {
-        return Items::query()
+        $result = Items::query()
             ->select([
                 'item.ID',
                 'item.CODE',
@@ -320,6 +320,8 @@ class ItemServices
             })
             ->orderBy('item.ID', 'desc')
             ->paginate($perPage);
+
+            return $result;
     }
     public function getOnhand(int $ITEM_ID, int $locationId): int
     {
@@ -400,7 +402,7 @@ class ItemServices
 
         return $items;
     }
-    public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc, bool $showOutofStock = false)
+    public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc, bool $showOutofStock = false):object
     {
         $items = DB::table('item')
             ->select(
@@ -491,9 +493,7 @@ class ItemServices
                 'item.CODE',
                 'item.DESCRIPTION',
                 'sc.DESCRIPTION as SUB_CLASS',
-                'c.DESCRIPTION as CLASS',
-                DB::raw(' (select IFNULL(pll.CUSTOM_PRICE,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as PRICE'),
-                DB::raw(' (select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as COST')
+                'c.DESCRIPTION as CLASS'
             ])
             ->leftJoin('item_sub_class as sc', 'sc.ID', '=', 'item.SUB_CLASS_ID')
             ->leftJoin('item_class as c', 'c.ID', '=', 'sc.CLASS_ID')

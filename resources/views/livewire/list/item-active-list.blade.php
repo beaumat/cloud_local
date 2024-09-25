@@ -8,6 +8,14 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
+                            <input class="form-check-input" type="checkbox" wire:model.live="isControl" />
+                            @if ($isControl)
+                                <label class="text-sm "><br /></label>
+                                <button type="button" wire:click='showNotInclude()' class="btn btn-danger btn-xs">
+                                    <i class="fa fa-download" aria-hidden="true"></i> Not Include
+                                    List
+                                </button>
+                            @endif
                         </li>
                     </ol>
                 </div><!-- /.col -->
@@ -61,27 +69,26 @@
                                         </div>
                                         <div class="col-md-1">
                                             <div class="text-center mt-4 pt-2">
-                                                <div class="form-check">
+                                                {{-- <div class="form-check">
                                                     <label class="form-check-label">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            wire:model.live="isControl" />
+                                                      
                                                         <span
                                                             class="text-xs text-primary font-weight-bold">CONTROL</span>
                                                     </label>
 
-                                                </div>
+                                                </div> --}}
                                             </div>
                                         </div>
                                         <div class="col-md-1">
                                             <div class="mt-4 pt-1">
-                                                @if ($isControl)
+                                                {{-- @if ($isControl)
                                                     <label class="text-sm "><br /></label>
                                                     <button type="button" wire:click='showNotInclude()'
                                                         class="btn btn-danger btn-xs">
                                                         <i class="fa fa-download" aria-hidden="true"></i> Not Include
                                                         List
                                                     </button>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                         </div>
                                         <div class="col-md-1">
@@ -188,8 +195,6 @@
                                                         wire:click='OnClick({{ $list->ID }})'>
                                                         {{ number_format($list->QTY_ON_HAND ?? 0, 2) }}
                                                     </span>
-
-
                                                 </td>
                                                 <td class="text-center">
                                                     <button name="qtyDetails{{ $list->ID }}" title="Qty Details"
@@ -197,9 +202,6 @@
                                                         wire:click='OnClick({{ $list->ID }})'>
                                                         <i class="fas fa-eye" aria-hidden="true"></i> history
                                                     </button>
-
-
-
                                                     @if ($isControl)
                                                         <button type="button" class="btn btn-xs btn-danger"
                                                             title="Not Include in your list"
