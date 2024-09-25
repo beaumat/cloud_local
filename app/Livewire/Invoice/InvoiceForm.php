@@ -149,7 +149,7 @@ class InvoiceForm extends Component
         $this->NOTES = $Data->NOTES ?? '';
         $this->AMOUNT = $Data->AMOUNT;
         $this->BALANCE_DUE = $Data->BALANCE_DUE;
-        $this->ACCOUNTS_RECEIVABLE_ID = $Data->UNDEPOSITED_FUNDS_ACCOUNT_ID;
+        $this->ACCOUNTS_RECEIVABLE_ID = $Data->ACCOUNTS_RECEIVABLE_ID;
         $this->STATUS = $Data->STATUS;
         $this->OUTPUT_TAX_ID = $Data->OUTPUT_TAX_ID ? $Data->OUTPUT_TAX_ID : 0;
         $this->OUTPUT_TAX_RATE = $Data->OUTPUT_TAX_RATE ? $Data->OUTPUT_TAX_RATE : 0;

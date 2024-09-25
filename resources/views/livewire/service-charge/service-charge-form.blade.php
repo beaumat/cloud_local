@@ -200,9 +200,6 @@
                                                 View Treatment </a>
                                         @endif
 
-                                        <button class="btn btn-success btn-sm">
-                                            <i class="fa fa-sticky-note-o" aria-hidden="true"></i> Make Invoice
-                                        </button>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="row">
