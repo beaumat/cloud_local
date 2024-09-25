@@ -867,11 +867,18 @@
                                         <div class="col-5 text-sm text-center">
                                             <b class="h5 text-primary courier-new font-weight-bold "> &nbsp;
                                                 @if ($PEN)
-                                                    {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
-                                                        {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
-                                                        @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
-                                                            {{ $MEMBER_EXTENSION . '.' }}
+
+                                                    @if (!empty($AUTORIZE_REP_NAME2))
+                                                        {{ $AUTORIZE_REP_NAME2 }}
+                                                    @else
+                                                        {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
+                                                            {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
+                                                            @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
+                                                                {{ $MEMBER_EXTENSION . '.' }}
+                                                            @endif
+
                                                         @endif
+
 
                                                     @endif
                                             </b>
@@ -1004,13 +1011,18 @@
                         <div class="col-1"></div>
                         <div class="col-6 text-center text-sm">
                             <b class="h5 text-primary courier-new font-weight-bold ">
-
+                                @if(!empty($AUTORIZE_REP_NAME1))
+                                    {{ $AUTORIZE_REP_NAME1 }} &nbsp;
+                                @else
+ 
                                 {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
                                     {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
                                     @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
                                         {{ $MEMBER_EXTENSION . '.' }}
                                     @endif
                                     &nbsp;
+
+                                @endif
                             </b>
                             <div class="top-line2">
                             </div>

@@ -16,6 +16,8 @@ class PrintCsf extends Component
     public string $PIN;
     public string $PEN;
     public string $PIN_DEPENDENT;
+    public string $AUTORIZE_REP_NAME1;
+    public string $AUTORIZE_REP_NAME2;
     public bool $MEMBER_RELATIONSHIP_CHILD = false;
     public bool $MEMBER_RELATIONSHIP_PARENT = false;
     public bool $MEMBER_RELATIONSHIP_SPOUSE = false;
@@ -111,7 +113,8 @@ class PrintCsf extends Component
 
                 $contact = $this->contactServices->get($data->CONTACT_ID, 3);
                 if ($contact) {
-
+                    $this->AUTORIZE_REP_NAME1 = $contact->CUSTOM_FIELD5 ?? '';
+                    $this->AUTORIZE_REP_NAME2 = $contact->CUSTOM_FIELD4 ?? '';
                     $this->PATIENT_LASTNAME = strtoupper($contact->LAST_NAME);
                     $this->PATIENT_FIRSTNAME = strtoupper($contact->FIRST_NAME);
                     $this->PATIENT_MIDDLENAME = strtoupper($contact->MIDDLE_NAME);
@@ -175,7 +178,9 @@ class PrintCsf extends Component
             $this->PRE_SIGN_DATA = true;
             $contact = $this->contactServices->get($PATIENT_ID, 3);
             if ($contact) {
-
+                $this->AUTORIZE_REP_NAME1 = $contact->CUSTOM_FIELD5 ?? '';
+                $this->AUTORIZE_REP_NAME2 = $contact->CUSTOM_FIELD4 ?? '';
+                
                 $this->PATIENT_LASTNAME = strtoupper($contact->LAST_NAME);
                 $this->PATIENT_FIRSTNAME = strtoupper($contact->FIRST_NAME);
                 $this->PATIENT_MIDDLENAME = strtoupper($contact->MIDDLE_NAME);

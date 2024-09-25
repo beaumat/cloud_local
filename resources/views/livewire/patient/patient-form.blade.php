@@ -336,17 +336,23 @@
                                                                 isDisabled="{{ $modify }}" wire:model='PIN'
                                                                 :isDisabled='false' maxlength='12' />
                                                         </div>
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-2">
                                                             <livewire:text-input name="FIRST_CASE_RATE"
                                                                 titleName="First Case Rate"
                                                                 isDisabled="{{ $modify }}"
                                                                 wire:model='FIRST_CASE_RATE' maxlength='20' />
                                                         </div>
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-2">
                                                             <livewire:text-input name="SECOND_CASE_RATE"
                                                                 titleName="Second Case Rate"
                                                                 isDisabled="{{ $modify }}"
                                                                 wire:model='SECOND_CASE_RATE' maxlength='20' />
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <livewire:text-input name="CUSTOM_FIELD5"
+                                                                titleName="Authorized Representative"
+                                                                isDisabled="{{ $modify }}"
+                                                                wire:model='CUSTOM_FIELD5' maxlength='100' />
                                                         </div>
                                                         <div class="col-md-3">
                                                             <livewire:custom-check-box name="IS_PATIENT"
@@ -638,6 +644,12 @@
                                                                         titleName="Official Capacitiy /Designation"
                                                                         isDisabled="{{ $modify }}"
                                                                         wire:model='CUSTOM_FIELD3' maxlength='22' />
+                                                                </div>
+                                                                <div class="col-md-5 mt-2">
+                                                                    <livewire:text-input name="CUSTOM_FIELD4"
+                                                                        titleName="Authorized Representative"
+                                                                        isDisabled="{{ $modify }}"
+                                                                        wire:model='CUSTOM_FIELD4' maxlength='20' />
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -45,6 +45,7 @@ class ItemServices
     {
         return items::where('TYPE', 1)
             ->where('INACTIVE', 0)
+            ->orderBy('DESCRIPTION', 'asc')
             ->get();
     }
     public function getInventoryItem(bool $isCode)
@@ -55,6 +56,7 @@ class ItemServices
                 ->select(['ID', 'CODE'])
                 ->where('INACTIVE', '0')
                 ->whereIn('TYPE', ['0', '1'])
+                ->orderBy('CODE', 'asc')
                 ->get();
         }
         // Descripton
@@ -62,6 +64,7 @@ class ItemServices
             ->select(['ID', 'DESCRIPTION'])
             ->where('INACTIVE', '0')
             ->whereIn('TYPE', ['0', '1'])
+            ->orderBy('DESCRIPTION', 'asc')
             ->get();
     }
     public function getByVendor(bool $isCode)
@@ -71,6 +74,7 @@ class ItemServices
                 ->select(['ID', 'CODE'])
                 ->where('INACTIVE', '0')
                 ->whereIn('TYPE', [0, 1])
+                ->orderBy('CODE', 'asc')
                 ->get();
         }
         return Items::query()
@@ -81,6 +85,7 @@ class ItemServices
                 ]
             )->where('INACTIVE', '0')
             ->whereIn('TYPE', [0, 1])
+            ->orderBy('DESCRIPTION', 'asc')
             ->get();
     }
     public function getByCustomer(bool $isCode)
@@ -89,11 +94,13 @@ class ItemServices
             return Items::query()->select(['ID', 'CODE'])
                 ->where('INACTIVE', '0')
                 ->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])
+                ->orderBy('CODE', 'asc')
                 ->get();
         }
         return Items::query()->select(['ID', 'DESCRIPTION'])
             ->where('INACTIVE', '0')
             ->whereIn('TYPE', [0, 1, 2, 3, 4, 5, 6, 7])
+            ->orderBy('DESCRIPTION', 'asc')
             ->get();
     }
     public function Store(
@@ -493,6 +500,45 @@ class ItemServices
             ->where('item.INACTIVE', 0)
             ->when($SUB_CLASS_ID > 0, function ($query) use (&$SUB_CLASS_ID) {
                 $query->where('item.SUB_CLASS_ID', $SUB_CLASS_ID);
+            })
+            ->whereExists(function ($query) use (&$LOCATION_ID) {
+                $query->select(DB::raw(1))
+                    ->from('price_level_lines as plx')
+                    ->join('location as l', 'l.PRICE_LEVEL_ID', '=', 'plx.PRICE_LEVEL_ID')
+                    ->whereColumn('plx.ITEM_ID', '=', 'item.ID')
+                    ->where('l.ID', '=', $LOCATION_ID);
+            })
+            ->where('item.DESCRIPTION', 'like', '%' . $search . '%')
+            ->get();
+
+        return $result;
+    }
+
+    public function PriceLevelItemListNotInclude($search, int $SUB_CLASS_ID, int $LOCATION_ID): object
+    {
+
+        $result = Items::query()
+            ->select([
+                'item.ID',
+                'item.CODE',
+                'item.DESCRIPTION',
+                'sc.DESCRIPTION as SUB_CLASS',
+                'c.DESCRIPTION as CLASS',
+                DB::raw(' (select IFNULL(pll.CUSTOM_PRICE,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as PRICE'),
+                DB::raw(' (select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as COST')
+            ])
+            ->leftJoin('item_sub_class as sc', 'sc.ID', '=', 'item.SUB_CLASS_ID')
+            ->leftJoin('item_class as c', 'c.ID', '=', 'sc.CLASS_ID')
+            ->where('item.INACTIVE', 0)
+            ->when($SUB_CLASS_ID > 0, function ($query) use (&$SUB_CLASS_ID) {
+                $query->where('item.SUB_CLASS_ID', $SUB_CLASS_ID);
+            })
+            ->whereNotExists(function ($query) use (&$LOCATION_ID) {
+                $query->select(DB::raw(1))
+                    ->from('price_level_lines as plx')
+                    ->join('location as l', 'l.PRICE_LEVEL_ID', '=', 'plx.PRICE_LEVEL_ID')
+                    ->whereColumn('plx.ITEM_ID', '=', 'item.ID')
+                    ->where('l.ID', '=', $LOCATION_ID);
             })
             ->where('item.DESCRIPTION', 'like', '%' . $search . '%')
             ->get();

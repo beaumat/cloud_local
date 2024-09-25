@@ -13,27 +13,30 @@ class AccountServices
     }
     public function getBankAccount()
     {
-        return Accounts::whereIn('TYPE', ['0', '6'])->get();
+        return Accounts::whereIn('TYPE', ['0', '6'])->orderBy('NAME','asc')->get();
     }
     public function getExpenses()
     {
-        return Accounts::whereIn('TYPE', ['12', '14'])->get();
+        return Accounts::whereIn('TYPE', ['12', '14'])->orderBy('NAME','asc')->get();
     }
     public function getPayable()
     {
-        return Accounts::whereIn('TYPE', ['5', '6', '7', '8'])->get();
+        return Accounts::whereIn('TYPE', ['5', '6', '7', '8'])->orderBy('NAME','asc')->get();
     }
     public function getReceivable()
     {
-        return Accounts::whereIn('TYPE', ['0', '1', '2', '3', '4'])->get();
+        $result = Accounts::whereIn('TYPE', ['0', '1', '2', '3', '4'])->orderBy('NAME','asc')->get();
+
+
+        return $result;
     }
     public function getIncome()
     {
-        return Accounts::whereIn('TYPE', ['10', '13'])->get();
+        return Accounts::whereIn('TYPE', ['10', '13'])->orderBy('NAME','asc')->get();
     }
     public function getPay()
     {
-        return Accounts::whereIn('TYPE', ['0', '1', '2'])->get();
+        return Accounts::whereIn('TYPE', ['0', '1', '2'])->orderBy('NAME','asc')->get();
     }
     public function get(int $ID)
     {
@@ -50,17 +53,22 @@ class AccountServices
     }
     public function getAccount(bool $isCode)
     {
-        $strDesc = 'NAME as DESCRIPTION';
+
         if ($isCode) {
-            $strDesc = 'TAG as CODE';
+
+            $result = Accounts::query()
+                ->select(['ID', 'TAG as CODE'])
+                ->where('INACTIVE', '=', '0')
+                ->orderBy('TAG','asc')
+                ->get();
+
+            return $result;
         }
 
         $result = Accounts::query()
-            ->select([
-                'ID',
-                $strDesc
-            ])
+            ->select(['ID', 'NAME as DESCRIPTION'])
             ->where('INACTIVE', '=', '0')
+            ->orderBy('NAME','asc')
             ->get();
 
         return $result;
@@ -119,7 +127,6 @@ class AccountServices
                     'account.LINE_NO',
                     'account_type_map.DESCRIPTION as ACCOUNT_TYPE',
                     'g.NAME as GROUP_ACCOUNT'
-
                 ]
             )
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')

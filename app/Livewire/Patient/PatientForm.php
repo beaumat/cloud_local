@@ -125,6 +125,8 @@ class PatientForm extends Component
     public float $HEIGHT;
     public string $CUSTOM_FIELD2;
     public string $CUSTOM_FIELD3;
+    public string $CUSTOM_FIELD4;
+    public string $CUSTOM_FIELD5;
     public function updateddateofbirth()
     {
         $this->age = $this->contactServices->calculateUserAge($this->DATE_OF_BIRTH);
@@ -284,6 +286,9 @@ class PatientForm extends Component
                 $this->IS_DEPENDENT = $contact->IS_DEPENDENT ?? false;
                 $this->CUSTOM_FIELD2 = $contact->CUSTOM_FIELD2 ?? '';
                 $this->CUSTOM_FIELD3 = $contact->CUSTOM_FIELD3 ?? '';
+                $this->CUSTOM_FIELD4 = $contact->CUSTOM_FIELD4 ?? '';
+                $this->CUSTOM_FIELD5 = $contact->CUSTOM_FIELD5 ?? '';
+     
                 $this->HEIGHT = $contact->HEIGHT ?? 0;
                 $this->updateddateofbirth();
                 $this->updatedMEMBERBIRTHDATE();
@@ -385,6 +390,8 @@ class PatientForm extends Component
         $this->IS_DEPENDENT = false;
         $this->HEIGHT = 0;
         $this->CUSTOM_FIELD3 = '';
+        $this->CUSTOM_FIELD4 = '';
+        $this->CUSTOM_FIELD5 = '';
     }
     public function updatedISPATIENT()
     {
@@ -564,7 +571,9 @@ class PatientForm extends Component
                     $this->HIRE_DATE,
                     $this->LOCATION_ID,
                     $this->CUSTOM_FIELD2,
-                    $this->CUSTOM_FIELD3
+                    $this->CUSTOM_FIELD3,
+                    $this->CUSTOM_FIELD4,
+                    $this->CUSTOM_FIELD5
                 );
 
                 $this->FollowUpUpdate();
@@ -609,7 +618,9 @@ class PatientForm extends Component
                     $this->HIRE_DATE,
                     null,
                     $this->CUSTOM_FIELD2,
-                    $this->CUSTOM_FIELD3
+                    $this->CUSTOM_FIELD3,
+                    $this->CUSTOM_FIELD4,
+                    $this->CUSTOM_FIELD5
                 );
 
                 $this->FollowUpUpdate();
