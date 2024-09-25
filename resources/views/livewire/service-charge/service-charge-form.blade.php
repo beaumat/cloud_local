@@ -126,7 +126,7 @@
                                                     href="{{ route('patientsservice_charges_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endif
-                                        @else
+
                                         @endcan
 
                                         @if ($ID == 0)
@@ -141,7 +141,7 @@
             </div>
         </div>
     </section>
-    @if ($ID > 0)
+    @if ($ID > 0 && !$Modify)
         <section class="content">
             <div class="container-fluid bg-light">
                 <div class="row">
@@ -169,8 +169,7 @@
                                     <div class="tab-pane fade @if ($tab == 'item') show active @endif"
                                         id="custom-tabs-four-item" role="tabpanel"
                                         aria-labelledby="custom-tabs-four-item-tab">
-                                        <div class="row"
-                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                        <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
                                                 @livewire('ServiceCharge.ServiceChargeFormItems', ['SERVICE_CHARGES_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID])
@@ -196,10 +195,14 @@
                                         @if ($HEMO_ID > 0)
                                             <a target="_BLANK"
                                                 href="{{ route('patientshemo_edit', ['id' => $HEMO_ID]) }}"
-                                                class="btn btn-warning btn-xs">
+                                                class="btn btn-warning btn-sm">
                                                 <i class="fa fa-eye" aria-hidden="true"></i>
                                                 View Treatment </a>
                                         @endif
+
+                                        <button class="btn btn-success btn-sm">
+                                            <i class="fa fa-sticky-note-o" aria-hidden="true"></i> Make Invoice
+                                        </button>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="row">

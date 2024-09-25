@@ -12,8 +12,8 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <a class="text-white" href="{{ route('customersinvoice') }}">
-                                        Invoice
+                                    <a class="text-white" href="{{ route('customerssales_receipt') }}">
+                                        Sales Receipt
                                     </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
@@ -28,7 +28,6 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-
                                             @if ($Modify && $STATUS == 0)
                                                 <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
                                                     :options="$contactList" :zero="true" :isDisabled="false"
@@ -42,33 +41,31 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     @if ($Modify)
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID"
-                                                            :isDisabled="false" titleName="Payment Terms"
-                                                            :options="$paymentTermList" :zero="false"
-                                                            wire:model.live='PAYMENT_TERMS_ID' />
+                                                        <livewire:select-option name="PAYMENT_METHOD_ID"
+                                                            :isDisabled="false" titleName="Payment Method"
+                                                            :options="$paymentMethodList" :zero="false"
+                                                            wire:model.live='PAYMENT_METHOD_ID' />
                                                     @else
-                                                        <livewire:select-option name="PAYMENT_TERMS_ID"
-                                                            :isDisabled="true" titleName="Payment Terms"
-                                                            :options="$paymentTermList" :zero="false"
-                                                            wire:model.live='PAYMENT_TERMS_ID' />
+                                                        <livewire:select-option name="PAYMENT_METHOD_ID"
+                                                            :isDisabled="true" titleName="Payment Method"
+                                                            :options="$paymentMethodList" :zero="false"
+                                                            wire:model.live='PAYMENT_METHOD_ID' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-3">
-                                                    <livewire:date-input name="DUE_DATE"
-                                                        isDisabled="{{ !$Modify }}" titleName="Due Date"
-                                                        wire:model='DUE_DATE' />
 
-                                                </div>
                                                 <div class="col-md-3">
-                                                    <livewire:date-input name="DISCOUNT_DATE"
-                                                        isDisabled="{{ !$Modify }}" titleName="Discount Date"
-                                                        wire:model='DISCOUNT_DATE' />
+                                                    <livewire:text-input name="PAYMENT_REF_NO"
+                                                        titleName="{{ $TITLE_REF }}" isDisabled="{{ !$Modify }}"
+                                                        wire:model='PAYMENT_REF_NO' :vertical="false" />
                                                 </div>
-                                                <div class="col-md-2">
-                                                    <livewire:text-input name="PO_NUMBER" titleName="PO Number"
-                                                        isDisabled="{{ !$Modify }}" wire:model='PO_NUMBER'
-                                                        :vertical="false" />
+                                                <div class="col-md-4">
+                                                    @if ($showCardNo)
+                                                        <livewire:text-input name="CARD_NO" titleName="Card No."
+                                                            isDisabled="{{ !$Modify }}" wire:model='CARD_NO'
+                                                            :vertical="false" />
+                                                    @endif
                                                 </div>
+
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -95,13 +92,15 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify)
-                                                        <livewire:select-option name="ACCOUNT_ID1" titleName="Account"
-                                                            :options="$accountList" :zero="true" :isDisabled="false"
-                                                            wire:model='ACCOUNTS_RECEIVABLE_ID' />
+                                                        <livewire:select-option name="ACCOUNT_ID1"
+                                                            titleName="Deposit to Bank Account" :options="$accountList"
+                                                            :zero="true" :isDisabled="false"
+                                                            wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID' />
                                                     @else
-                                                        <livewire:select-option name="ACCOUNT_ID2" titleName="Account"
-                                                            :options="$accountList" :zero="true" :isDisabled="true"
-                                                            wire:model='ACCOUNTS_RECEIVABLE_ID' />
+                                                        <livewire:select-option name="ACCOUNT_ID2"
+                                                            titleName="Deposit to Bank Account" :options="$accountList"
+                                                            :zero="true" :isDisabled="true"
+                                                            wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID' />
                                                     @endif
                                                 </div>
                                                 <div class="col-md-3">
@@ -221,7 +220,7 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('Invoice.InvoiceFormItems', ['INVOICE_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                @livewire('SalesReceipt.SalesReceiptFormItems', ['SALES_RECEIPT_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID])
                                             </div>
                                         </div>
                                     </div>
@@ -239,7 +238,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <div class="row">
-                                            <div class="col-md-3 text-right">
+                                            <div class="col-md-9 text-right">
                                                 <label class="text-sm">Tax:</label>
                                                 <label
                                                     class="text-info text-lg">{{ number_format($OUTPUT_TAX_AMOUNT, 2) }}</label>
@@ -249,16 +248,7 @@
                                                 <label
                                                     class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
                                             </div>
-                                            <div class="col-md-3 text-right">
-                                                <label class="text-sm">Payment:</label>
-                                                <label
-                                                    class="text-success text-lg">{{ number_format($AMOUNT - $BALANCE_DUE, 2) }}</label>
-                                            </div>
-                                            <div class="col-md-3 text-right">
-                                                <label class="text-sm">Balance:</label>
-                                                <label
-                                                    class="text-danger text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

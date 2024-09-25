@@ -133,7 +133,7 @@ class PaymentMethodServices
                     'showReceiptNo'         => true,
                     'showReceiptDate'       => true,
                     'showFileName'          => false,
-                    'titleRef'              => "Ref No.",
+                    'titleRef'              => "Check No.",
                     'titleDate'             => 'Ref Date',
                     'showTax'               => false
                 ];
@@ -148,7 +148,7 @@ class PaymentMethodServices
                     'showReceiptNo'         => true,
                     'showReceiptDate'       => false,
                     'showFileName'          => false,
-                    'titleRef'              => '',
+                    'titleRef'              => 'Approved No.',
                     'titleDate'             => '',
                     'showTax'               => false
                 ];
@@ -162,7 +162,7 @@ class PaymentMethodServices
                     'showReceiptNo'         => true,
                     'showReceiptDate'       => false,
                     'showFileName'          => false,
-                    'titleRef'              => "Ref No.",
+                    'titleRef'              => "Approved No.",
                     'titleDate'             => '',
                     'showTax'               => false
                 ];

@@ -528,7 +528,8 @@ class PatientPaymentServices
             ->first()
             ->pay;
 
-        PatientPayments::where('ID', $PATIENT_PAYMENT_ID)->update(['AMOUNT_APPLIED' => $pay]);
+        PatientPayments::where('ID', $PATIENT_PAYMENT_ID)
+            ->update(['AMOUNT_APPLIED' => $pay]);
 
         return $pay;
     }

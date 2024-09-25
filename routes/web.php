@@ -127,6 +127,8 @@ use App\Livewire\PurchaseOrder\PurchaseOrderForm;
 use App\Livewire\PurchaseOrder\PurchaseOrderList;
 use App\Livewire\RolePermissionPage\RolePermissionConfig;
 use App\Livewire\RolePermissionPage\RolePermissionList;
+use App\Livewire\SalesReceipt\SalesReceiptForm;
+use App\Livewire\SalesReceipt\SalesReceiptList;
 use App\Livewire\ShipViaPage\ShipViaForm;
 use App\Livewire\ShipViaPage\ShipViaList;
 use App\Livewire\StockBinPage\StockBinForm;
@@ -231,6 +233,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', InvoiceForm::class)->name('invoice_create')->middleware(['permission:customer.invoice.create']);
             Route::get('/{id}/edit', InvoiceForm::class)->name('invoice_edit')->middleware(['permission:customer.invoice.view']);
         });
+
+        Route::prefix('/sales-receipt')->group(function () {
+            Route::get('/', SalesReceiptList::class)->name('sales_receipt')->middleware(['permission:customer.invoice.view']);
+            Route::get('/create', SalesReceiptForm::class)->name('sales_receipt_create')->middleware(['permission:customer.invoice.create']);
+            Route::get('/{id}/edit', SalesReceiptForm::class)->name('sales_receipt_edit')->middleware(['permission:customer.invoice.view']);
+        });
+
+
         Route::prefix('/payment')->group(function () {
             Route::get('/', PaymentList::class)->name('payment')->middleware(['permission:customer.received-payment.view']);
             Route::get('/create', PaymentForm::class)->name('payment_create')->middleware(['permission:customer.received-payment.create']);

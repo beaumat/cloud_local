@@ -177,7 +177,14 @@
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
                                             @endif
-
+                                            @if ($ID > 0)
+                                                <button type="button" class="btn btn-success btn-sm"
+                                                    wire:click='makeInvoice()'
+                                                    wire:confirm='Are you sure to make invoice?'>
+                                                    <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                                                    Make Invoice
+                                                </button>
+                                            @endif
                                             @if ($showFileName)
                                                 @can('patient.payment.print')
                                                     <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
@@ -285,5 +292,6 @@
             </div>
         </div>
     </section>
+    @livewire('Invoice.MakeInvoice')
     @livewire('PatientPayment.PaymentRecordModal')
 </div>

@@ -5,6 +5,7 @@ namespace App\Livewire\PatientPayment;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
+use App\Services\InvoiceServices;
 use App\Services\LocationServices;
 use App\Services\PatientPaymentServices;
 use App\Services\PaymentMethodServices;
@@ -69,6 +70,8 @@ class PatientPaymentForm extends Component
     private $uploadServices;
     public string $TITLE_REF = "";
     public string $TITLE_DATE = "";
+
+    private $invoiceServices;
     public function boot(
         PatientPaymentServices $patientPaymentServices,
         LocationServices $locationServices,
@@ -79,6 +82,7 @@ class PatientPaymentForm extends Component
         PaymentMethodServices $paymentMethodServices,
         ContactServices $contactServices,
         UploadServices $uploadServices,
+        InvoiceServices $invoiceServices
 
     ) {
         $this->patientPaymentServices = $patientPaymentServices;
@@ -90,6 +94,7 @@ class PatientPaymentForm extends Component
         $this->paymentMethodServices = $paymentMethodServices;
         $this->contactServices = $contactServices;
         $this->uploadServices = $uploadServices;
+        $this->invoiceServices = $invoiceServices;
     }
     public function getInfo($data)
     {
@@ -182,6 +187,15 @@ class PatientPaymentForm extends Component
         $this->validate([
             'PDF' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
         ]);
+    }
+    public function makeInvoice()
+    {
+        $data = [
+            'PAYMENT_METHOD_ID' => $this->PAYMENT_METHOD_ID,
+            'PATIENT_PAYMENT_ID' => $this->ID
+        ];
+
+        $this->dispatch('make-invoice-show', result: $data);
     }
     public function getConfirm()
     {
@@ -350,6 +364,8 @@ class PatientPaymentForm extends Component
         ];
         $this->dispatch('open-assistance', result: $data);
     }
+
+   
     public function render()
     {
         return view('livewire.patient-payment.patient-payment-form');

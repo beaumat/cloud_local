@@ -1,41 +1,36 @@
 <?php
 
-namespace App\Livewire\ServiceCharge;
+namespace App\Livewire\SalesReceipt;
 
+use App\Services\AccountJournalServices;
 use App\Services\ComputeServices;
-use App\Services\DateServices;
-use App\Services\HemoServices;
 use App\Services\ItemAccountServices;
+use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
-use App\Services\LocationServices;
-use App\Services\PhilHealthServices;
 use App\Services\PriceLevelLineServices;
-use App\Services\ServiceChargeServices;
+use App\Services\SalesReceiptServices;
 use App\Services\TaxServices;
 use App\Services\UnitOfMeasureServices;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-class ServiceChargeFormItems extends Component
+class SalesReceiptFormItems extends Component
 {
     #[Reactive]
-    public int $SERVICE_CHARGES_ID;
-    #[Reactive]
+    public int $SALES_RECEIPT_ID;
+    #[Reactive()]
     public int $STATUS;
     #[Reactive]
     public int $TAX_ID;
-
     #[Reactive]
-    public $LOCATION_ID;
+    public int $LOCATION_ID;
+    public $accountList = [];
+    public $editAccountList   = [];
+    public int $lineINCOME_ACCOUNT_ID = 0;
 
-    #[Reactive]
-    public $PATIENT_ID;
-
-    public bool $isAdmin = false;
     public int $openStatus = 0;
     public int $ID;
     public int $LINE_NO;
@@ -44,6 +39,7 @@ class ServiceChargeFormItems extends Component
     public string $ITEM_DESCRIPTION;
     public float $QUANTITY;
     public int $UNIT_ID;
+    public int $BASE_UNIT_ID;
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -53,19 +49,19 @@ class ServiceChargeFormItems extends Component
     public int $COGS_ACCOUNT_ID;
     public int $ASSET_ACCOUNT_ID;
     public int $INCOME_ACCOUNT_ID;
-    public int $REF_LINE_ID;
+
     public int $BATCH_ID;
     public int $GROUP_LINE_ID;
     public bool $PRINT_IN_FORMS;
     public int $PRICE_LEVEL_ID;
     public $itemList = [];
     public $editItemId = null;
-    public bool $canBeQtyEdit = false;
     public bool $codeBase = false;
     public $itemDescList = [];
     public $itemCodeList = [];
     public $unitList = [];
     public $saveSuccess;
+
     public float $lineQty;
     public int $lineUnitId;
     public float $lineRate;
@@ -76,52 +72,43 @@ class ServiceChargeFormItems extends Component
     public int $lineBatchId;
     public int $linePriceLevelId;
     public $editUnitList = [];
-    public $accountList = [];
-    public $editAccountList   = [];
-    public int $lineINCOME_ACCOUNT_ID = 0;
     public int $lineItemId = 0;
-    private $serviceChargeServices;
+    public $CLASS_DESCRIPTION;
+
+    private $salesReceiptServices;
     private $computeServices;
     private $unitOfMeasureServices;
     private $taxServices;
     private $itemServices;
     private $itemSubClassServices;
-    public $CLASS_DESCRIPTION;
-    public bool $editPrice = true;
-    public string $DATE_NOW;
-    private $hemoServices;
-    private $dateServices;
-    private $philHealthServices;
-    private $locationServices;
+    private $accountJournalServices;
+    private $itemInventoryServices;
     private $priceLevelLineServices;
     private $itemAccountServices;
     public function boot(
-        PhilHealthServices $philHealthServices,
-        ServiceChargeServices $serviceChargeServices,
+        SalesReceiptServices $salesReceiptServices,
         ComputeServices $computeServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         TaxServices $taxServices,
         ItemServices $itemServices,
         ItemSubClassServices $itemSubClassServices,
-        HemoServices $hemoServices,
-        DateServices $dateServices,
-        LocationServices $locationServices,
+        AccountJournalServices $accountJournalServices,
+        ItemInventoryServices $itemInventoryServices,
         PriceLevelLineServices $priceLevelLineServices,
         ItemAccountServices $itemAccountServices
     ) {
-        $this->philHealthServices = $philHealthServices;
-        $this->serviceChargeServices = $serviceChargeServices;
+        $this->salesReceiptServices = $salesReceiptServices;
         $this->computeServices = $computeServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->taxServices = $taxServices;
         $this->itemServices = $itemServices;
         $this->itemSubClassServices = $itemSubClassServices;
-        $this->hemoServices = $hemoServices;
-        $this->dateServices = $dateServices;
-        $this->locationServices = $locationServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->itemInventoryServices = $itemInventoryServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
         $this->itemAccountServices = $itemAccountServices;
     }
+
     public function updatedcodeBase()
     {
 
@@ -146,6 +133,7 @@ class ServiceChargeFormItems extends Component
             //throw $th;
         }
     }
+
     public function updatedquantity()
     {
         $this->getAmount();
@@ -154,36 +142,8 @@ class ServiceChargeFormItems extends Component
     {
         $this->getAmount();
     }
-    public function openPayment(int $ID, float $AMOUNT)
-    {
-        $itemdata = [
-            'SERVICE_CHARGES_ITEM_ID' => $ID,
-            'SERVICE_CHARGES_ITEM_AMOUNT' => $AMOUNT
-        ];
-        $this->getRefershItem($ID);
-        $this->dispatch('payment-avaliable-prompt', itemdata: $itemdata);
-    }
-    public function cashPayment(int $ID, float $AMOUNT)
-    {
-        $itemdata = [
-            'SERVICE_CHARGES_ITEM_ID'       => $ID,
-            'SERVICE_CHARGES_ITEM_AMOUNT'   => $AMOUNT
-        ];
-        $this->getRefershItem($ID);
-        $this->dispatch('cash-payment-prompt', itemdata: $itemdata);
-    }
-    public bool $reloadAccount = false;
-    private function AccountLoad()
-    {
-        $this->accountList = $this->itemAccountServices->AccountList($this->ITEM_ID);
-
-
-        $this->reloadAccount = $this->reloadAccount ? false : true;
-    }
     public function updateditemid()
     {
-        $this->accountList = [];
-        $this->INCOME_ACCOUNT_ID = 0;
         $this->UNIT_ID = 0;
         $this->QUANTITY = 1;
         $this->RATE = 0;
@@ -197,23 +157,20 @@ class ServiceChargeFormItems extends Component
         if ($this->ITEM_ID > 0) {
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
-
-                if ($this->PRICE_LEVEL_ID > 0) {
-                    $this->RATE = $this->priceLevelLineServices->GetPriceByLocation($this->LOCATION_ID, $this->ITEM_ID);
-                } else {
-                    $this->RATE =  $item->RATE;
-                }
-
-                $this->AccountLoad();
+                $this->RATE = $this->priceLevelLineServices->GetPriceByLocation($this->LOCATION_ID, $this->ITEM_ID);
+                $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
-                $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
-                $this->INCOME_ACCOUNT_ID = 0;
+                $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
+                $this->INCOME_ACCOUNT_ID = $item->GL_ACCOUNT_ID ?? 0;
                 $this->COGS_ACCOUNT_ID = $item->COGS_ACCOUNT_ID ?? 0;
                 $this->ASSET_ACCOUNT_ID = $item->ASSET_ACCOUNT_ID ?? 0;
+                $this->BATCH_ID = $item->BATCH_ID ?? 0;
                 $this->GROUP_LINE_ID = false;
                 $this->PRINT_IN_FORMS = false;
+                $this->PRICE_LEVEL_ID = 0;
                 $this->getAmount();
+                $this->AccountLoad();
                 $this->CLASS_DESCRIPTION = $this->itemSubClassServices->GetClassDesc($item->SUB_CLASS_ID);
             }
         }
@@ -234,50 +191,47 @@ class ServiceChargeFormItems extends Component
     public function mount()
     {
 
-        $dataLoc = $this->locationServices->get($this->LOCATION_ID);
-        if ($dataLoc) {
-            if ($dataLoc->PRICE_LEVEL_ID > 0) {
-                $this->PRICE_LEVEL_ID = $dataLoc->PRICE_LEVEL_ID ?? 0;
-            }
-        }
 
         $this->QUANTITY = 0;
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
-        if (Auth::user()->name == 'admin') {
-            $this->isAdmin  =  true;
-            $this->canBeQtyEdit = true;
-        }
+    }
+
+    public bool $reloadAccount = false;
+    private function AccountLoad()
+    {
+        $this->accountList = $this->itemAccountServices->AccountList($this->ITEM_ID);
+        $this->reloadAccount = $this->reloadAccount ? false : true;
     }
     public function saveItem()
     {
         $this->validate(
             [
-                'ITEM_ID'   => 'required|not_in:0',
-                'QUANTITY'  => 'required|numeric|not_in:0',
-                'RATE'      => 'required|numeric'
+                'ITEM_ID' => 'required|not_in:0',
+                'QUANTITY' => 'required|not_in:0',
+                'RATE' => 'required'
             ],
             [],
             [
                 'ITEM_ID'   => 'Item',
                 'QUANTITY'  => 'Quantity',
-                'RATE'      => 'Rate'
+                'RATE'      => 'Price'
             ]
         );
         DB::beginTransaction();
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
             $tax_result = $this->computeServices->ItemComputeTax($this->AMOUNT, $this->TAXABLE, $this->TAX_ID, $taxRate);
-
             if ($tax_result) {
                 $this->TAXABLE_AMOUNT = $tax_result['TAXABLE_AMOUNT'];
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
+
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
 
-            $SK_ID =  $this->serviceChargeServices->ItemStore(
-                $this->SERVICE_CHARGES_ID,
+            $this->salesReceiptServices->ItemStore(
+                $this->SALES_RECEIPT_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
                 $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
@@ -291,31 +245,16 @@ class ServiceChargeFormItems extends Component
                 $this->COGS_ACCOUNT_ID,
                 $this->ASSET_ACCOUNT_ID,
                 $this->INCOME_ACCOUNT_ID,
+                $this->BATCH_ID,
                 $this->GROUP_LINE_ID,
                 $this->PRINT_IN_FORMS,
+                false,
                 $this->PRICE_LEVEL_ID
             );
 
-
-            $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
-            if ($dataSC) {
-                $this->hemoServices->ItemQuery(
-                    $dataSC->PATIENT_ID,
-                    $dataSC->DATE,
-                    $dataSC->LOCATION_ID,
-                    $this->ITEM_ID,
-                    $this->QUANTITY,
-                    false,
-                    $this->UNIT_ID > 0 ? $this->UNIT_ID : 0,
-                    $SK_ID
-                );
-            }
+            $getResult = $this->salesReceiptServices->ReComputed($this->SALES_RECEIPT_ID);
             DB::commit();
-
-            $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
-            // Philhealth Purpose
-            $prime_item_id =  $this->ITEM_ID;
 
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
@@ -329,42 +268,15 @@ class ServiceChargeFormItems extends Component
             $this->ITEM_CODE = '';
             $this->ITEM_DESCRIPTION = '';
             $this->CLASS_DESCRIPTION = '';
-            $this->accountList = [];
             $this->saveSuccess = $this->saveSuccess ? false : true;
+
+            $this->accountList =  [];
             $this->updatedcodeBase();
-            if ($this->philHealthServices->PHIL_HEALTH_ITEM_ID == $prime_item_id) {
-                $count = $this->serviceChargeServices->GetCountByYear(
-                    $prime_item_id,
-                    $this->dateServices->NowYear(),
-                    $this->PATIENT_ID,
-                    $this->LOCATION_ID
-                );
-                $countAdjust = $this->philHealthServices->ItemAdjustGet(
-                    $this->PATIENT_ID,
-                    $this->LOCATION_ID,
-                    $this->dateServices->NowYear()
-                );
-                $totalCount = $count + $countAdjust;
-                $resultcount = ['count' => $totalCount];
-                $this->dispatch('phic-message', result: $resultcount);
-            }
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-    }
-    #[On('phic-message')]
-    public function philhealth_Item($result)
-    {
-        $total = $result['count'];
-
-        if ($total <= 156) {
-            session()->flash('message', 'PHIC 156 Treatment. The number of Used is ' . $result['count']);
-            return;
-        }
-
-        session()->flash('error', 'PHIC 156 Treatment: The number of uses is ' . $result['count']);
     }
     public function updatedlineqty()
     {
@@ -387,63 +299,41 @@ class ServiceChargeFormItems extends Component
         } catch (\Throwable $th) {
         }
     }
-    public function editItem(
-        int $lineId,
-        float $lineQty,
-        int $lineUnitId,
-        float $lineRate,
-        float $lineAmount,
-        bool $lineTax,
-        int $itemId
-    ) {
-
-        $data =  $this->serviceChargeServices->getItem($lineId);
+    public function editItem(int $lineId, float $lineQty, int $lineUnitId, float $lineRate, float $lineAmount, bool $lineTax, int $itemId)
+    {
+        $data =  $this->salesReceiptServices->ItemGet($lineId, $this->SALES_RECEIPT_ID);
         if ($data) {
             $this->editAccountList = $this->itemAccountServices->AccountList($itemId);
             $this->lineINCOME_ACCOUNT_ID = $data->INCOME_ACCOUNT_ID ?? 0;
-            if ($this->hemoServices->IsExist_SC_ITEM($lineId)) {
-                $this->canBeQtyEdit = false;
-            } else {
-
-                if ($this->DATE_NOW <> $data->DATE_LOG) {
-                    $this->canBeQtyEdit = false;
-                } else {
-                    $this->canBeQtyEdit = true;
-                }
-            }
-
-            if ($this->isAdmin) {
-                $this->canBeQtyEdit = true;
-            }
-
-            $this->editItemId = $lineId;
-            $this->lineQty = $lineQty;
-            $this->lineUnitId = $lineUnitId;
-            $this->lineRate = $lineRate;
-            $this->lineAmount = $lineAmount;
-            $this->lineTax = $lineTax;
-            $this->lineItemId = $itemId;
-            $this->lineBatchId = 0;
-            $this->linePriceLevelId = 0;
         }
+
+
+        $this->editItemId = $lineId;
+        $this->lineQty = $lineQty;
+        $this->lineUnitId = $lineUnitId;
+        $this->lineRate = $lineRate;
+        $this->lineAmount = $lineAmount;
+        $this->lineTax = $lineTax;
+        $this->lineItemId = $itemId;
+        $this->lineBatchId = 0;
+        $this->linePriceLevelId = 0;
     }
+
     public function updateItem(int $Id)
     {
 
         $this->validate(
             [
-                'lineQty'   => 'required|numeric|not_in:0',
-                'lineRate'  => 'required|numeric'
+                'lineQty' => 'required|not_in:0',
             ],
             [],
             [
-                'lineQty'   => 'Quantity',
-                'lineRate'  => 'Rate'
+                'lineQty' => 'Quantity',
             ]
         );
 
-        DB::beginTransaction();
 
+        DB::beginTransaction();
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
 
@@ -453,45 +343,56 @@ class ServiceChargeFormItems extends Component
                 $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
             }
 
+            if ($this->STATUS == 16) {
+                $dataItem =  $this->salesReceiptServices->ItemGet($Id, $this->SALES_RECEIPT_ID);
+                if ($dataItem) {
+                    $data = $this->salesReceiptServices->get($this->SALES_RECEIPT_ID);
+                    if ($data) {
+                        $JNO =  $this->accountJournalServices->getRecord(
+                            $this->salesReceiptServices->object_type_sales_receipt,
+                            $this->SALES_RECEIPT_ID
+                        );
+                        $this->accountJournalServices->AccountSwitch(
+                            $this->lineINCOME_ACCOUNT_ID,
+                            $dataItem->INCOME_ACCOUNT_ID,
+                            $this->LOCATION_ID,
+                            $JNO,
+                            $dataItem->ITEM_ID,
+                            $Id,
+                            $this->salesReceiptServices->object_type_sales_receipt_items,
+                            $data->DATE,
+                            1
+                        );
+                    }
+                }
+            }
+
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
-            $this->serviceChargeServices->ItemUpdate(
+
+            $this->salesReceiptServices->ItemUpdate(
                 $Id,
-                $this->SERVICE_CHARGES_ID,
+                $this->SALES_RECEIPT_ID,
                 $this->lineItemId,
                 $this->lineQty,
                 $this->lineUnitId > 0 ? $this->lineUnitId : 0,
-                (float) $unitRelated['QUANTITY'],
+                (float)  $unitRelated['QUANTITY'],
                 $this->lineRate,
                 0,
                 $this->lineAmount,
                 $this->lineTax,
                 $this->lineTaxable,
                 $this->lineTaxAmount,
+                $this->lineBatchId,
                 $this->linePriceLevelId,
                 $this->lineINCOME_ACCOUNT_ID
             );
-            if ($this->canBeQtyEdit) {
-                $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
-                if ($dataSC) {
-                    $this->hemoServices->ItemQuery(
-                        $dataSC->PATIENT_ID,
-                        $dataSC->DATE,
-                        $dataSC->LOCATION_ID,
-                        $this->lineItemId,
-                        $this->lineQty,
-                        false,
-                        $this->lineUnitId > 0 ? $this->lineUnitId : 0,
-                        $Id,
-                        $this->canBeQtyEdit
-                    );
-                }
-            }
 
 
-            $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
+            $getResult = $this->salesReceiptServices->ReComputed($this->SALES_RECEIPT_ID);
+
             DB::commit();
             $this->dispatch('update-amount', result: $getResult);
-
+            $this->itemList = $this->salesReceiptServices->ItemView($this->SALES_RECEIPT_ID);
             $this->editItemId = null;
             $this->lineQty = 0;
             $this->lineUnitId = 0;
@@ -509,30 +410,79 @@ class ServiceChargeFormItems extends Component
     {
         $this->editItemId = null;
     }
-    private function getRefershItem(int $Id)
-    {
-        $this->serviceChargeServices->updateServiceChargesItemPaid($Id);
-    }
+
     public function deleteItem(int $Id)
     {
-        // checking if homo created
-        if ($this->hemoServices->IsExist_SC_ITEM($Id)) {
-            session()->flash('error', 'Delete action invalid. Only items from the treatment page can be deleted.');
-            return;
-        }
 
         DB::beginTransaction();
         try {
-            $getItemInfo = $this->serviceChargeServices->getItemDetails($Id);
-            if ($getItemInfo) {
-                $this->serviceChargeServices->ItemDelete($Id, $this->SERVICE_CHARGES_ID); // Delete Transaction
-                $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
-                if ($dataSC) {
-                    $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $getItemInfo->ITEM_ID, 0, true, $getItemInfo->UNIT_ID ?? 0, $Id);
+
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->salesReceiptServices->object_type_sales_receipt, $this->SALES_RECEIPT_ID);
+                if ($JOURNAL_NO  ==  0) {
+                    session()->flash('message', 'journal not found');
+                    return;
+                }
+                $invoiceDate = $this->salesReceiptServices->get($this->SALES_RECEIPT_ID);
+                if ($invoiceDate) {
+                    $invoiceItemData = $this->salesReceiptServices->ItemGet($Id, $this->SALES_RECEIPT_ID,);
+                    if ($invoiceItemData) {
+
+                        // Inventory
+                        $this->itemInventoryServices->InventoryModify(
+                            $invoiceItemData->ITEM_ID,
+                            $invoiceDate->LOCATION_ID,
+                            $Id,
+                            $this->salesReceiptServices->document_type_id,
+                            $invoiceDate->DATE,
+                            0,
+                            0,
+                            0
+                        );
+
+                        // INCOME_ACCOUNT_ID
+                        $this->accountJournalServices->DeleteJournal(
+                            $invoiceItemData->INCOME_ACCOUNT_ID,
+                            $invoiceDate->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $invoiceItemData->ITEM_ID,
+                            $Id,
+                            $this->salesReceiptServices->object_type_sales_receipt_items,
+                            $invoiceDate->DATE,
+                            1,
+
+                        );
+                        // COGS_ACCOUNT_ID
+                        $this->accountJournalServices->DeleteJournal(
+                            $invoiceItemData->COGS_ACCOUNT_ID,
+                            $invoiceDate->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $invoiceItemData->ITEM_ID,
+                            $Id,
+                            $this->salesReceiptServices->object_type_sales_receipt_items,
+                            $invoiceDate->DATE,
+                            0,
+
+                        );
+                        // ASSET_ACCOUNT_ID
+                        $this->accountJournalServices->DeleteJournal(
+                            $invoiceItemData->ASSET_ACCOUNT_ID,
+                            $invoiceDate->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $invoiceItemData->ITEM_ID,
+                            $Id,
+                            $this->salesReceiptServices->object_type_sales_receipt_items,
+                            $invoiceDate->DATE,
+                            1,
+
+                        );
+                    }
                 }
             }
+
+            $this->salesReceiptServices->ItemDelete($Id, $this->SALES_RECEIPT_ID);
+            $getResult = $this->salesReceiptServices->ReComputed($this->SALES_RECEIPT_ID);
             DB::commit();
-            $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -549,15 +499,16 @@ class ServiceChargeFormItems extends Component
     }
     public function getReload()
     {
-        $this->DATE_NOW = $this->dateServices->NowDate();
-        $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
+        if ($this->editItemId) {
+            $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
+        }
+
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
-        $this->itemList = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID);
+        $this->itemList = $this->salesReceiptServices->ItemView($this->SALES_RECEIPT_ID);
     }
     public function render()
     {
-
         $this->getReload();
-        return view('livewire.service-charge.service-charge-form-items');
+        return view('livewire.sales-receipt.sales-receipt-form-items');
     }
 }

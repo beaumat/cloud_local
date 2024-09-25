@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Invoice extends Model
+class SalesReceipt extends Model
 {
     use HasFactory;
 
-    protected $table = 'invoice';
+
+    protected $table = 'sales_receipt';
     protected $primaryKey = 'ID';
     public $timestamps = false;
     protected $fillable = [
@@ -17,25 +18,20 @@ class Invoice extends Model
         'RECORDED_ON',
         'CODE',
         'DATE',
+        'POS_TIMESTAMP',
         'CUSTOMER_ID',
         'LOCATION_ID',
         'CLASS_ID',
         'SALES_REP_ID',
-        'PO_NUMBER',
-        'SHIP_TO',
-        'SHIP_VIA_ID',
-        'SHIP_DATE',
-        'PAYMENT_TERMS_ID',
-        'DUE_DATE',
-        'DISCOUNT_DATE',
-        'DISCOUNT_PCT',
         'AMOUNT',
-        'BALANCE_DUE',
+        'PAYMENT_AMOUNT',
+        'PAYMENT_METHOD_ID',
+        'PAYMENT_REF_NO',
+        'CARD_NO',
+        'CASHIER_ID',
+        'CASH_COUNT_ID',
         'NOTES',
-        'LAST_FC_DATE',
-        'IS_FC',
-        'REF_TYPE',
-        'ACCOUNTS_RECEIVABLE_ID',
+        'UNDEPOSITED_FUNDS_ACCOUNT_ID',
         'OUTPUT_TAX_ID',
         'OUTPUT_TAX_RATE',
         'OUTPUT_TAX_AMOUNT',
@@ -44,14 +40,18 @@ class Invoice extends Model
         'TAXABLE_AMOUNT',
         'NONTAXABLE_AMOUNT',
         'STATUS',
+        'POS_POSTED',
+        'POS_LOG_ID',
+        'POS_MACHINE_ID',
+        'SO_MACHINE_ID',
         'STATUS_DATE',
+        'DEPOSITED',
         'CUSTOM_FIELD1',
         'CUSTOM_FIELD2',
         'CUSTOM_FIELD3',
         'CUSTOM_FIELD4',
         'CUSTOM_FIELD5',
-        'TRANSACTION_REF_ID'
+        'OR_REFERENCE_NO',
+        'SO_REFERENCE_NO'
     ];
-
-
 }
