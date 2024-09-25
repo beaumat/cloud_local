@@ -25,7 +25,7 @@
                         </div>
                         <form id="quickForm" wire:submit.prevent='save'>
                             <div class="card-body bg-light">
-                                {{-- TOP INPUT --}}
+                                {{-- Top Details --}}
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-3">
@@ -159,7 +159,7 @@
                                                 aria-labelledby="custom-content-below-general-info-tab">
                                                 <div class="container-fluid text-xs">
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-3 mb-2">
                                                             <livewire:text-input name="FIRST_NAME"
                                                                 titleName="First Name" wire:model='FIRST_NAME'
                                                                 maxlength='50' isDisabled="{{ $modify }}" />
@@ -248,11 +248,11 @@
 
                                                         <div class="col-md-12 border pt-2 pb-2">
                                                             <div class="row">
-                                                                <div class="col-md-12">
+                                                                <div class="col-md-12 ">
                                                                     <label class="text-info text-xs">Patient
                                                                         Address:</label>
                                                                 </div>
-                                                                <div class="col-md-2">
+                                                                <div class="col-md-2 pb-2">
                                                                     <livewire:text-input name="ADDRESS_UNIT_ROOM_FLOOR"
                                                                         titleName="Unit/Room#/Floor"
                                                                         wire:model='ADDRESS_UNIT_ROOM_FLOOR'
@@ -287,7 +287,7 @@
                                                                         wire:model='ADDRESS_SUB_VALL'
                                                                         maxlength='60' />
                                                                 </div>
-                                                                <div class="col-md-3">
+                                                                <div class="col-md-3 ">
                                                                     <livewire:text-input name="ADDRESS_BRGY"
                                                                         titleName="Barangay" wire:model='ADDRESS_BRGY'
                                                                         isDisabled="{{ $modify }}"
