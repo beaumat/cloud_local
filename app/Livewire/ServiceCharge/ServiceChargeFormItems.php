@@ -329,9 +329,10 @@ class ServiceChargeFormItems extends Component
             $this->ITEM_CODE = '';
             $this->ITEM_DESCRIPTION = '';
             $this->CLASS_DESCRIPTION = '';
+            $this->accountList = [];
             $this->saveSuccess = $this->saveSuccess ? false : true;
 
-            $this->AccountLoad();
+   
             $this->updatedcodeBase();
 
             if ($this->philHealthServices->PHIL_HEALTH_ITEM_ID == $prime_item_id) {
