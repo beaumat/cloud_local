@@ -180,34 +180,35 @@
 
                                             @if ($ID > 0)
 
-                                                @if ($PAYMENT_METHOD_ID == 1)
 
-                                                    @if ($AMOUNT == $AMOUNT_APPLIED)
-
-                                                        @if ($REF_ID > 0)
-                                                            <a href="{{ route('customerssales_receipt_edit', ['id' => $REF_ID]) }}"
-                                                                target="_BLANK" class="btn btn-success btn-sm "> <i
-                                                                    class="fa fa-sticky-note-o"
-                                                                    aria-hidden="true"></i> View
-                                                                Receipt</a>
-                                                        @else
-                                                            <button type="button" class="btn btn-success btn-sm"
-                                                                wire:click='makeSalesReceipt()'
-                                                                wire:confirm='Are you sure to make Sales Receipt?'>
-                                                                <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
-                                                                Make Sales Receipt
-                                                            </button>
+                                                @if (auth()->user()->can('customer.invoice.view') && auth()->user()->can('customer.invoice.create'))
+                                                    @if ($PAYMENT_METHOD_ID == 1)
+                                                        @if ($AMOUNT == $AMOUNT_APPLIED)
+                                                            @if ($REF_ID > 0)
+                                                                <a href="{{ route('customerssales_receipt_edit', ['id' => $REF_ID]) }}"
+                                                                    target="_BLANK" class="btn btn-success btn-sm ">
+                                                                    <i class="fa fa-sticky-note-o"
+                                                                        aria-hidden="true"></i> View
+                                                                    Receipt</a>
+                                                            @else
+                                                                <button type="button" class="btn btn-success btn-sm"
+                                                                    wire:click='makeSalesReceipt()'
+                                                                    wire:confirm='Are you sure to make Sales Receipt?'>
+                                                                    <i class="fa fa-sticky-note-o"
+                                                                        aria-hidden="true"></i>
+                                                                    Make Sales Receipt
+                                                                </button>
+                                                            @endif
                                                         @endif
+                                                    @else
+                                                        <button type="button" class="btn btn-success btn-sm"
+                                                            wire:click='makeInvoice()'
+                                                            wire:confirm='Are you sure to make invoice?'>
+                                                            <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                                                            Make Invoice
+                                                        </button>
                                                     @endif
-                                                @else
-                                                    <button type="button" class="btn btn-success btn-sm"
-                                                        wire:click='makeInvoice()'
-                                                        wire:confirm='Are you sure to make invoice?'>
-                                                        <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
-                                                        Make Invoice
-                                                    </button>
                                                 @endif
-
                                             @endif
 
                                             @if ($showFileName)
@@ -288,7 +289,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('PatientPayment.PatientPaymentCharges', ['PATIENT_PAYMENT_ID' => $ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED , 'REF_ID' => $REF_ID])
+                                            @livewire('PatientPayment.PatientPaymentCharges', ['PATIENT_PAYMENT_ID' => $ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'REF_ID' => $REF_ID])
                                         </div>
                                     </div>
                                 </div>
