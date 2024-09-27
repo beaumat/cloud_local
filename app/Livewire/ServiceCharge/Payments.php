@@ -36,6 +36,7 @@ class Payments extends Component
     }
     public function delete(int $ID, int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID)
     {
+        
         DB::beginTransaction();
         try {
             //code...

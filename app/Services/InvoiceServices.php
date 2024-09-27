@@ -6,6 +6,7 @@ use App\Models\CreditMemoInvoices;
 use App\Models\Invoice;
 use App\Models\InvoiceItems;
 use App\Models\PaymentInvoices;
+use App\Models\PhilHealth;
 use App\Models\SalesOrderItems;
 use App\Models\Tax;
 use Illuminate\Support\Facades\DB;
@@ -403,7 +404,7 @@ class InvoiceServices
             foreach ($data as $list) {
                 $originalAmount = (float) $list['AMOUNT'];
                 $balance = (float) $originalAmount - $totalPay;
-                Invoice::where('ID','=', $ID)
+                Invoice::where('ID', '=', $ID)
                     ->update([
                         'AMOUNT'            => $originalAmount,
                         'BALANCE_DUE'       => $balance,
@@ -477,6 +478,14 @@ class InvoiceServices
                     'STATUS'            => $STATUS,
                     'STATUS_DATE'       => $this->dateServices->NowDate()
                 ]);
+        }
+
+        $phData = PhilHealth::where('INVOICE_ID', $INVOICE_ID);
+        if ($phData->exists()) {
+            $phData->update([
+                'PAYMENT_AMOUNT' => $PAY,
+                'STATUS_ID' => $BALANCE > 0 ? 1 : 11
+            ]);
         }
     }
 

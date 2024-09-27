@@ -160,7 +160,11 @@ class HemoServices
                 'hemodialysis.ID',
                 'hemodialysis.CODE',
                 'hemodialysis.DATE',
-                'hemodialysis.DOCTOR_ORDER'
+                'hemodialysis.DOCTOR_ORDER',
+                'sci.ID as SCI_ID',
+                'sci.ITEM_ID',
+                'sci.AMOUNT',
+                'sci.SERVICE_CHARGES_ID'
             ])
             ->join('service_charges as s', function ($join) {
                 $join->on('s.PATIENT_ID', '=', 'hemodialysis.CUSTOMER_ID');
@@ -168,7 +172,7 @@ class HemoServices
                 $join->on('s.DATE', '=', 'hemodialysis.DATE');
             })
             ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
-            ->where('sci.ITEM_ID', 2)
+            ->where('sci.ITEM_ID', '=', 2)
             ->where('hemodialysis.CUSTOMER_ID', $CONTACT_ID)
             ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
             ->where('hemodialysis.STATUS_ID', '2')

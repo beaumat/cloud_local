@@ -23,10 +23,11 @@
                     <td>{{ number_format($list->ITEM_AMOUNT, 2) }}</td>
                     <td>
                         @if ($list->PAYMENT_METHOD_ID == 91)
-                            <a target="_blank"
+                            {{-- <a target="_blank"
                                 href="{{ route('patientsphic_pay_edit', ['id' => $list->PATIENT_PAYMENT_ID]) }}">
-                                {{ $list->CODE }}
-                            </a>
+                             
+                            </a> --}}
+                               {{ $list->CODE }}
                         @else
                             <a target="_blank"
                                 href="{{ route('patientspayment_edit', ['id' => $list->PATIENT_PAYMENT_ID]) }}">
@@ -69,7 +70,6 @@
                             <i class="fas fa-trash" aria-hidden="true"></i>
                         </button>
                     </td>
-
                 </tr>
             @endforeach
         </tbody>

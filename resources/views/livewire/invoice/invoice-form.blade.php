@@ -25,11 +25,12 @@
                         </div>
                         <form id="quickForm" wire:submit.prevent='save'>
                             <div class="card-body bg-light">
-                                <div class="form-group">
+                                <div class="form-group"
+                                   >
                                     <div class="row">
-                                        <div class="col-md-6">
-
-                                            @if ($Modify && $STATUS == 0)
+                                        <div class="col-md-6"  >
+                                            <div class="form-group" @if ($PATIENT_PAYMENT_ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                           @if ($Modify && $STATUS == 0)
                                                 <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
                                                     :options="$contactList" :zero="true" :isDisabled="false"
                                                     wire:model='CUSTOMER_ID' />
@@ -38,9 +39,11 @@
                                                     :options="$contactList" :zero="true" :isDisabled="true"
                                                     wire:model='CUSTOMER_ID' />
                                             @endif
+                                            </div>
+                             
 
                                             <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     @if ($Modify)
                                                         <livewire:select-option name="PAYMENT_TERMS_ID"
                                                             :isDisabled="false" titleName="Payment Terms"
@@ -64,7 +67,7 @@
                                                         isDisabled="{{ !$Modify }}" titleName="Discount Date"
                                                         wire:model='DISCOUNT_DATE' />
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-3">
                                                     <livewire:text-input name="PO_NUMBER" titleName="PO Number"
                                                         isDisabled="{{ !$Modify }}" wire:model='PO_NUMBER'
                                                         :vertical="false" />
@@ -114,11 +117,8 @@
                                                             :options="$taxList" :zero="false" :isDisabled="true"
                                                             wire:model='OUTPUT_TAX_ID' />
                                                     @endif
-
                                                 </div>
                                                 <div class="col-md-5">
-
-
                                                     <livewire:text-input name="NOTES" titleName="Notes"
                                                         isDisabled="{{ !$Modify }}" wire:model='NOTES'
                                                         :vertical="false" />
@@ -164,9 +164,6 @@
                                                 </button>
                                             @endcan
                                         @endif
-
-
-
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS != 16)
@@ -175,7 +172,6 @@
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                                 </button>
-
                                                 </button>
                                                 @can('customer.invoice.create')
                                                     <a id="new" title="Create"

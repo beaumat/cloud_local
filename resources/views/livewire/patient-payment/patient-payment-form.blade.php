@@ -55,14 +55,16 @@
                                                     @if ($showReceiptNo)
                                                         <div class="col-md-6">
                                                             <livewire:text-input name="RECEIPT_REF_NO"
-                                                                titleName=$TITLE_REF isDisabled="{{ !$Modify }}"
+                                                                titleName="{{ $TITLE_REF }}"
+                                                                isDisabled="{{ !$Modify }}"
                                                                 wire:model='RECEIPT_REF_NO' />
                                                         </div>
                                                     @endif
                                                     @if ($showReceiptDate)
                                                         <div class="col-md-6">
                                                             <livewire:date-input name="RECEIPT_DATE"
-                                                                :titleName=$TITLE_DATE wire:model='RECEIPT_DATE'
+                                                                titleName="{{ $TITLE_DATE }}"
+                                                                wire:model='RECEIPT_DATE'
                                                                 isDisabled="{{ !$Modify }}" />
                                                         </div>
                                                     @endif
@@ -70,7 +72,8 @@
                                                     @if ($showReceiptNo)
                                                         <div class="col-md-6">
                                                             <livewire:text-input name="RECEIPT_REF_NO"
-                                                                :titleName=$TITLE_REF isDisabled="{{ !$Modify }}"
+                                                                titleName="{{ $TITLE_REF }}"
+                                                                isDisabled="{{ !$Modify }}"
                                                                 wire:model='RECEIPT_REF_NO' />
                                                         </div>
                                                     @endif
@@ -78,11 +81,28 @@
                                                     @if ($showReceiptDate)
                                                         <div class="col-md-6">
                                                             <livewire:date-input name="RECEIPT_DATE"
-                                                                :titleName=$TITLE_DATE wire:model='RECEIPT_DATE'
+                                                                titleName="{{ $TITLE_DATE }}"
+                                                                wire:model='RECEIPT_DATE'
                                                                 isDisabled="{{ !$Modify }}" />
                                                         </div>
                                                     @endif
                                                 @endif
+
+                                                <div class="col-md-6">
+                                                    @if ($PAYMENT_METHOD_ID != 1)
+                                                        @if ($Modify)
+                                                            <livewire:select-option name="UNDEPOSITED_FUNDS_ACCOUNT_ID"
+                                                                titleName="GL Accounts" :options="$accountList"
+                                                                :zero="true" :isDisabled=false
+                                                                wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID' />
+                                                        @else
+                                                            <livewire:select-option name="UNDEPOSITED_FUNDS_ACCOUNT_ID"
+                                                                titleName="GL Accounts" :options="$accountList"
+                                                                :zero="true" :isDisabled=true
+                                                                wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID' />
+                                                        @endif
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -97,12 +117,23 @@
                                                 </div>
                                                 <div class="col-md-4"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    <livewire:select-option name="LOCATION_ID" titleName="Location"
-                                                        :options="$locationList" :zero="false"
-                                                        isDisabled={{ !$Modify && $AMOUNT == 0 ? false : true }}
-                                                        wire:model='LOCATION_ID' />
+
+                                                    @if ($Modify)
+                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
+                                                            :options="$locationList" :zero="false" :isDisabled="false"
+                                                            wire:model='LOCATION_ID' />
+                                                    @else
+                                                        <livewire:select-option name="LOCATION_ID" titleName="Location"
+                                                            :options="$locationList" :zero="false" :isDisabled="true"
+                                                            wire:model='LOCATION_ID' />
+                                                    @endif
+
 
                                                 </div>
+
+
+
+
                                                 @if ($showCardNo)
                                                     <div class="col-md-6">
                                                         <livewire:text-input name="CARD_NO" titleName="Card No."
@@ -177,10 +208,7 @@
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
                                             @endif
-
                                             @if ($ID > 0)
-
-
                                                 @if (auth()->user()->can('customer.invoice.view') && auth()->user()->can('customer.invoice.create'))
                                                     @if ($PAYMENT_METHOD_ID == 1)
                                                         @if ($AMOUNT == $AMOUNT_APPLIED)
@@ -188,8 +216,9 @@
                                                                 <a href="{{ route('customerssales_receipt_edit', ['id' => $REF_ID]) }}"
                                                                     target="_BLANK" class="btn btn-success btn-sm ">
                                                                     <i class="fa fa-sticky-note-o"
-                                                                        aria-hidden="true"></i> View
-                                                                    Receipt</a>
+                                                                        aria-hidden="true"></i>
+                                                                    View Sales Receipt
+                                                                </a>
                                                             @else
                                                                 <button type="button" class="btn btn-success btn-sm"
                                                                     wire:click='makeSalesReceipt()'
@@ -201,12 +230,21 @@
                                                             @endif
                                                         @endif
                                                     @else
-                                                        <button type="button" class="btn btn-success btn-sm"
-                                                            wire:click='makeInvoice()'
-                                                            wire:confirm='Are you sure to make invoice?'>
-                                                            <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
-                                                            Make Invoice
-                                                        </button>
+                                                        @if ($REF_ID > 0)
+                                                            <a href="{{ route('customersinvoice_edit', ['id' => $REF_ID]) }}"
+                                                                target="_BLANK" class="btn btn-success btn-sm ">
+                                                                <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                                                                View Invoice
+                                                            </a>
+                                                        @else
+                                                            <button type="button" class="btn btn-success btn-sm"
+                                                                wire:click='makeInvoice()'
+                                                                wire:confirm='Are you sure to make invoice?'>
+                                                                <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                                                                Make Invoice
+                                                            </button>
+                                                        @endif
+
                                                     @endif
                                                 @endif
                                             @endif
@@ -257,7 +295,6 @@
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endif
                                         @endcan
-
                                     </div>
                                 </div>
                             </div>

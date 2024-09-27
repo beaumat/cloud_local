@@ -192,13 +192,9 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('/phil-health')->group(function () {
-            Route::get('forms/', PhilHealthList::class)->name('phic')->middleware(['permission:patient.philhealth.view']);
-            Route::get('forms/create', PhilHealthForm::class)->name('phic_create')->middleware(['permission:patient.philhealth.create']);
-            Route::get('forms/{id}/edit', PhilHealthForm::class)->name('phic_edit')->middleware(['permission:patient.philhealth.view']);
-
-            Route::get('payments/', PhilHealthPaymentList::class)->name('phic_pay')->middleware(['permission:patient.philhealth.view']);
-            Route::get('payments/create', PhilHealthPaymentForm::class)->name('phic_pay_create')->middleware(['permission:patient.philhealth.create']);
-            Route::get('payments/{id}/edit', PhilHealthPaymentForm::class)->name('phic_pay_edit')->middleware(['permission:patient.philhealth.view']);
+            Route::get('/', PhilHealthList::class)->name('phic')->middleware(['permission:patient.philhealth.view']);
+            Route::get('/create', PhilHealthForm::class)->name('phic_create')->middleware(['permission:patient.philhealth.create']);
+            Route::get('/{id}/edit', PhilHealthForm::class)->name('phic_edit')->middleware(['permission:patient.philhealth.view']);
 
 
             // Print on Philhealth

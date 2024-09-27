@@ -43,36 +43,14 @@
 
 
         @can('patient.philhealth.view')
-            <li id="patients" class="nav-item {{ request()->is('patients/phil-health*') ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ request()->is('patients/phil-health*') ? 'active' : '' }}"> <i
-                        class="nav-icon fas fa-wheelchair "></i>
-                    <p> Philhealth <i class="fas fa-angle-left right"></i> </p>
+            <li class="nav-item {{ request()->is('patients/phil-health*') ? 'menu-open' : '' }}">
+                <a href="{{ route('patientsphic') }}"
+                    class="nav-link {{ request()->is('patients/phil-health*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fas fa-wheelchair nav-icon"></i>
+                    <p>PhilHealth</p>
                 </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item {{ request()->is('patients/phil-health/forms*') ? 'menu-open' : '' }}">
-                        <a href="{{ route('patientsphic') }}"
-                            class="nav-link {{ request()->is('patients/phil-health/forms*') ? 'text-warning font-weight-bold' : '' }}">
-                            <i class="fas fa-hospital-o nav-icon"></i>
-                            <p>Soa/Forms</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item {{ request()->is('patients/phil-health/payments*') ? 'menu-open' : '' }}">
-                        <a href="{{ route('patientsphic_pay') }}"
-                            class="nav-link {{ request()->is('patients/phil-health/payments*') ? 'text-warning font-weight-bold' : '' }}">
-                            <i class="fa fa-get-pocket nav-icon"></i>
-                            <p>Payment Notes</p>
-                        </a>
-                    </li>
-                </ul>
             </li>
         @endcan
-        {{-- <li class="nav-item">
-                            <a href="{{ route('patientssoa') }}"
-                                class="nav-link {{ request()->is('patients/statement-of-account*') ? 'active' : '' }}">
-                                <i class="fas fa-newspaper nav-icon"></i>
-                                <p>GL Statement</p>
-                            </a>
-                        </li> --}}
+
     </ul>
 </li>

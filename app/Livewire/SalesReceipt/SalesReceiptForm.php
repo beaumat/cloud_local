@@ -209,12 +209,14 @@ class SalesReceiptForm extends Component
                 $this->DATE = $pay->DATE;
                 $this->LOCATION_ID = $pay->LOCATION_ID;
                 $this->PAYMENT_REF_NO = $pay->RECEIPT_REF_NO ?? '';
+                $this->NOTES = $pay->NOTES ?? '';
             }
         } else {
             $this->CUSTOMER_ID = 0;
             $this->DATE = $this->userServices->getTransactionDateDefault();
             $this->LOCATION_ID = $this->userServices->getLocationDefault();
             $this->PAYMENT_REF_NO = '';
+            $this->NOTES = '';
         }
 
 
@@ -226,7 +228,6 @@ class SalesReceiptForm extends Component
         $this->CARD_NO = "";
         $this->CLASS_ID = 0;
         $this->PAYMENT_METHOD_ID = 1;
-        $this->NOTES = '';
         $this->AMOUNT = 0;
         $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $this->BANK_MODE ? 0 : $this->accountServices->getByName('Undeposited Funds');
         $this->STATUS = 0;
@@ -238,17 +239,12 @@ class SalesReceiptForm extends Component
         $this->TAXABLE_AMOUNT = 0;
         $this->NONTAXABLE_AMOUNT = 0;
         $this->STATUS_DESCRIPTION = "";
-
         $this->updatedpaymentmethodid();
         $this->getTax();
-    }
-
-
-    public function getModify()
+    }    public function getModify()
     {
         $this->Modify = true;
     }
-
     private function getPatientItemAutoSave()
     {
         if ($this->PATIENT_PAYMENT_ID > 0) {

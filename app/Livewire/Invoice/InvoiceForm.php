@@ -7,12 +7,17 @@ use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
 use App\Services\DocumentTypeServices;
+use App\Services\HemoServices;
 use App\Services\InvoiceServices;
 use App\Services\ItemInventoryServices;
+use App\Services\ItemServices;
 use App\Services\LocationServices;
 use App\Services\ObjectServices;
 use App\Services\PatientPaymentServices;
 use App\Services\PaymentTermServices;
+use App\Services\PhilHealthServices;
+use App\Services\PriceLevelLineServices;
+use App\Services\PriceLevelServices;
 use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
@@ -76,7 +81,8 @@ class InvoiceForm extends Component
     private $itemInventoryServices;
     private $accountJournalServices;
     private $patientPaymentServices;
-
+    private $philHealthServices;
+    private $priceLevelLineServices;
     public string $tab = "item";
     public function SelectTab(string $select)
     {
@@ -96,7 +102,9 @@ class InvoiceForm extends Component
         AccountServices $accountServices,
         ItemInventoryServices $itemInventoryServices,
         AccountJournalServices $accountJournalServices,
-        PatientPaymentServices $patientPaymentServices
+        PatientPaymentServices $patientPaymentServices,
+        PhilHealthServices $philHealthServices,
+        PriceLevelLineServices $priceLevelLineServices
     ) {
         $this->invoiceServices = $invoiceServices;
         $this->locationServices = $locationServices;
@@ -111,6 +119,8 @@ class InvoiceForm extends Component
         $this->itemInventoryServices = $itemInventoryServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->patientPaymentServices = $patientPaymentServices;
+        $this->philHealthServices = $philHealthServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
     }
     public function LoadDropdown()
     {
@@ -183,10 +193,24 @@ class InvoiceForm extends Component
         }
 
 
+        if ($this->PATIENT_PAYMENT_ID > 0) {
+            $dataPay = $this->patientPaymentServices->get($this->PATIENT_PAYMENT_ID);
+            if ($dataPay) {
+                $this->CUSTOMER_ID = $dataPay->PATIENT_ID ?? 0;
+                $this->DATE = $dataPay->DATE ?? '';
+                $this->LOCATION_ID = $dataPay->LOCATION_ID ?? '';
+                $this->NOTES = $dataPay->NOTES ?? '';
+                $this->PO_NUMBER = $dataPay->RECEIPT_REF_NO ?? '';
+            }
+        } else {
 
-        $this->CUSTOMER_ID = 0;
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+            $this->CUSTOMER_ID = 0;
+            $this->DATE = $this->userServices->getTransactionDateDefault();
+            $this->LOCATION_ID = $this->userServices->getLocationDefault();
+            $this->NOTES = '';
+            $this->PO_NUMBER = '';
+        }
+
 
         $this->LoadDropdown();
         $this->Modify = true;
@@ -197,7 +221,6 @@ class InvoiceForm extends Component
         $this->CLASS_ID = 0;
         $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
         $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID);
-        $this->NOTES = '';
         $this->AMOUNT = 0;
         $this->BALANCE_DUE = 0;
         $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
@@ -210,33 +233,12 @@ class InvoiceForm extends Component
         $this->TAXABLE_AMOUNT = 0;
         $this->NONTAXABLE_AMOUNT = 0;
         $this->STATUS_DESCRIPTION = "";
-        $this->PO_NUMBER = '';
         $this->DISCOUNT_DATE = null;
         $this->DISCOUNT_PCT = 0;
         $this->getTax();
     }
 
-    public function makeInvoiceOnPatient()
-    {
-        if ($this->PATIENT_PAYMENT_ID > 0) {
 
-            // search invoice if 
-
-
-            $pdata = $this->patientPaymentServices->get($this->PATIENT_PAYMENT_ID);
-            if ($pdata) {
-                $this->CUSTOMER_ID = $pdata->PATIENT_ID;
-                $this->LOCATION_ID = $pdata->LOCATION_ID;
-                $this->DATE = $pdata->DATE;
-
-                $itemlist = $this->patientPaymentServices->PaymentChargesList($this->PATIENT_PAYMENT_ID, 0);
-                foreach ($itemlist as $list) {
-                    
-                    
-                }
-            }
-        }
-    }
     public function getModify()
     {
         $this->Modify = true;
@@ -292,6 +294,15 @@ class InvoiceForm extends Component
                     $this->OUTPUT_TAX_VAT_METHOD,
                     $this->OUTPUT_TAX_ACCOUNT_ID
                 );
+
+
+                if ($this->PATIENT_PAYMENT_ID > 0) {
+                    $this->getPatientItemAutoSave();
+                    $this->patientPaymentServices->CustomerRef($this->PATIENT_PAYMENT_ID, true, $this->ID);
+                    $this->invoiceServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
+                    $getResult = $this->invoiceServices->ReComputed($this->ID);
+                    $this->getPosted();
+                }
                 DB::commit();
                 if ($this->IS_MODAL) {
                     $data = $this->invoiceServices->get($this->ID);
@@ -366,8 +377,6 @@ class InvoiceForm extends Component
                     }
                 }
 
-
-
                 $this->getTax();
                 $this->invoiceServices->Update(
                     $this->ID,
@@ -414,6 +423,85 @@ class InvoiceForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+
+    public function getPatientItemAutoSave()
+    {
+        if ($this->PATIENT_PAYMENT_ID > 0) {
+            $dataPay = $this->patientPaymentServices->get($this->PATIENT_PAYMENT_ID);
+            if ($dataPay) {
+                if ($this->patientPaymentServices->PHILHEALTH_METHOD_ID  == $dataPay->PAYMENT_METHOD_ID) {
+
+                    $PHILHEALTH_ID = $this->philHealthServices->getPhilHealthIdbyPatientPayment($this->PATIENT_PAYMENT_ID);
+                    $this->philHealthServices->setUpdateTwoId($PHILHEALTH_ID, $this->PATIENT_PAYMENT_ID, $this->ID);
+
+                    $PhData = $this->philHealthServices->get($PHILHEALTH_ID);
+
+                    if ($PhData) {
+                        $NO_TREATMENT = $this->philHealthServices->getNumberOfTreatment(
+                            $this->CUSTOMER_ID,
+                            $this->LOCATION_ID,
+                            $PhData->DATE_ADMITTED,
+                            $PhData->DATE_DISCHARGED
+                        );
+
+                        $RATE = $this->priceLevelLineServices->GetPriceByLocation(
+                            $this->LOCATION_ID,
+                            $this->philHealthServices->PHIL_HEALTH_ITEM_ID
+                        );
+
+                        //philheatlh
+                        $this->invoiceServices->ItemStore(
+                            $this->ID,
+                            $this->patientPaymentServices->PHILHEALTH_ITEM,
+                            $NO_TREATMENT,
+                            0,
+                            1,
+                            $RATE,
+                            0,
+                            $NO_TREATMENT * $RATE,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            $dataPay->UNDEPOSITED_FUNDS_ACCOUNT_ID,
+                            0,
+                            0,
+                            0,
+                            false,
+                            false,
+                            0
+                        );
+                    }
+                } else {
+                    // GL ENTRY
+                    $this->invoiceServices->ItemStore(
+                        $this->ID,
+                        $this->patientPaymentServices->GL_ITEM,
+                        1,
+                        0,
+                        1,
+                        $dataPay->AMOUNT,
+                        0,
+                        $dataPay->AMOUNT,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        $dataPay->UNDEPOSITED_FUNDS_ACCOUNT_ID,
+                        0,
+                        0,
+                        0,
+                        false,
+                        false,
+                        0
+                    );
+                }
+            }
+        }
+    }
+
     #[On('update-amount')]
     public function getUpdateAmount($result)
     {

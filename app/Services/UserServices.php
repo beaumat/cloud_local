@@ -19,6 +19,7 @@ class UserServices
     public function getTransactionDateDefault(): string
     {
         if (Auth::user()->trans_date == null) {
+            
             return  $this->dateServices->NowDate();
         }
 

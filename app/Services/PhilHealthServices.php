@@ -14,10 +14,8 @@ class PhilHealthServices
 {
     public float  $TAX = 0.02;
     public string $FIRST_CASE_RATE = "90935";
-
     public string $DEFAULT_DIAGNOSIS = "CHRONIC KIDNEY DISEASE STAGE 5 TO ";
     public string $DEFAULT_DIAGNOSIS2 = "CKD Stage 5 Sec to ";
-
     public string $CHIEF_OF_COMPLAINT_DEFAULT = 'HEMODIALYSIS';
     public string $ADMITTING_DIAGNOSIS_DEFAULT = 'CHRONIC KIDNEY DISEASE';
     public string $FINAL_DIAGNOSIS_DEFAULT;
@@ -228,9 +226,18 @@ class PhilHealthServices
 
         if ($data) {
 
-            $this->CustomSoa($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_DISCHARGED);
+            $this->CustomSoa(
+                $data->CONTACT_ID,
+                $data->LOCATION_ID,
+                $data->DATE_DISCHARGED
+            );
 
-            $NO_OF_TREATMENT = $this->getNumberOfTreatment($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
+            $NO_OF_TREATMENT = $this->getNumberOfTreatment(
+                $data->CONTACT_ID,
+                $data->LOCATION_ID,
+                $data->DATE_ADMITTED,
+                $data->DATE_DISCHARGED
+            );
 
             $LAB_N_DIAGNOS  = $this->LAB_N_DIAGNOSTICS_AMOUNT  *  $NO_OF_TREATMENT;
             $DRUG_MED = (float) $this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT;
@@ -659,7 +666,7 @@ class PhilHealthServices
     public function UpdatePayment(int $PHILHEALTH_ID, float $TOTAL_PAY)
     {
         $data = $this->get($PHILHEALTH_ID);
-        
+
         if ($data) {
 
             if ((float) $TOTAL_PAY >= (float) $data->P1_TOTAL) {
@@ -763,5 +770,44 @@ class PhilHealthServices
             ->get();
 
         return $result;
+    }
+
+    public function setUpdateTwoId(int $PHILHEALTH_ID, int $PATIENT_PAYMENT_ID, int $INVOICE_ID)
+    {
+        PhilHealth::where('ID', '=', $PHILHEALTH_ID)
+            ->update([
+                'PATIENT_PAYMENT_ID' => $PATIENT_PAYMENT_ID,
+                'INVOICE_ID'        => $INVOICE_ID
+            ]);
+    }
+    public function getPhilHealthIdbyPatientPayment(int $PATIENT_PAYMENT_ID): int
+    {
+
+        $data =  PhilHealth::where('PATIENT_PAYMENT_ID', '=', $PATIENT_PAYMENT_ID)->first();
+        if ($data) {
+
+            return (int) $data->ID;
+        }
+
+        return 0;
+    }
+    public function getTwoId(int $PHILHEALTH_ID): array
+    {
+
+        $data  = PhilHealth::select([
+            'PATIENT_PAYMENT_ID',
+            'INVOICE_ID'
+        ])
+            ->where('ID', '=', $PHILHEALTH_ID)
+            ->first();
+
+        if ($data) {
+            return [
+                'PATIENT_PAYMENT_ID'    => $data->PATIENT_PAYMENT_ID ?? 0,
+                'INVOICE_ID'            => $data->INVOICE_ID ?? 0
+            ];
+        }
+
+        return [];
     }
 }

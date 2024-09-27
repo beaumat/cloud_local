@@ -63,8 +63,6 @@
                                                             :isDisabled="true" />
                                                     @endif
                                                 </div>
-
-
                                             </div>
                                         </div>
                                         <div class="col-md-8">
@@ -81,7 +79,6 @@
                                                         <livewire:text-input name="Code" titleName="SOA No."
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
-
                                                 </div>
                                                 <div class="col-md-3"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
@@ -128,7 +125,6 @@
                                                     <livewire:date-input name="AR_DATE" titleName="AR Date"
                                                         wire:model='AR_DATE' :isDisabled="true" />
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -226,14 +222,10 @@
                                         <a class="nav-link @if ($tab == 'payment') active @endif"
                                             id="custom-tabs-four-payment-tab" wire:click="SelectTab('payment')"
                                             data-toggle="pill" href="#custom-tabs-four-payment" role="tab"
-                                            aria-controls="custom-tabs-four-payment" aria-selected="true">Payments</a>
+                                            aria-controls="custom-tabs-four-payment" aria-selected="true">Transmittal
+                                            Records</a>
                                     </li>
-                                    {{-- <li class="nav-item">
-                                        <a class="nav-link @if ($tab == 'other') active @endif"
-                                            id="custom-tabs-four-other-tab" wire:click="SelectTab('other')"
-                                            data-toggle="pill" href="#custom-tabs-four-other" role="tab"
-                                            aria-controls="custom-tabs-four-other" aria-selected="true">Others</a>
-                                    </li> --}}
+
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -277,7 +269,8 @@
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-                                                @livewire('PhilHealth.PaymentList', ['PHILHEALTH_ID' => $ID, 'PATIENT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                {{-- @livewire('PhilHealth.PaymentList', ['PHILHEALTH_ID' => $ID, 'PATIENT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID]) --}}
+                                                @livewire('PhilHealth.Transmittal', ['PHILHEALTH_ID' => $ID])
                                             </div>
                                         </div>
                                     </div>

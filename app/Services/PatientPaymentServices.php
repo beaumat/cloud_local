@@ -12,6 +12,11 @@ class PatientPaymentServices
 {
 
     use WithPagination;
+
+
+    public int $GL_ITEM = 242;
+    public int $PHILHEALTH_ITEM = 2;
+    public int $PHILHEALTH_METHOD_ID = 91;
     private $object;
     private $dateServices;
     private $systemSettingServices;
@@ -119,7 +124,7 @@ class PatientPaymentServices
             'STATUS'                    => 2,
             'STATUS_DATE'               => $this->dateServices->NowDate(),
             'DEPOSITED'                 => $DEPOSITED,
-            'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID,
+            'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID > 0  ? $ACCOUNTS_RECEIVABLE_ID : null,
             'PHILHEALTH_ID'             => $PHILHEALTH_ID,
             'WTAX_AMOUNT'               => $WTAX_AMOUNT  > 0 ? $WTAX_AMOUNT : null,
             'WTAX_ACCOUNT_ID'           => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
@@ -166,7 +171,7 @@ class PatientPaymentServices
                 'UNDEPOSITED_FUNDS_ACCOUNT_ID'  => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
                 'OVERPAYMENT_ACCOUNT_ID'        => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
                 'DEPOSITED'                     => $DEPOSITED,
-                'ACCOUNTS_RECEIVABLE_ID'        => $ACCOUNTS_RECEIVABLE_ID,
+                'ACCOUNTS_RECEIVABLE_ID'        => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
                 'WTAX_AMOUNT'                   => $WTAX_AMOUNT  > 0 ? $WTAX_AMOUNT : null,
                 'WTAX_ACCOUNT_ID'               => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
                 'LESS_AMOUNT'                   => $LESS_AMOUNT

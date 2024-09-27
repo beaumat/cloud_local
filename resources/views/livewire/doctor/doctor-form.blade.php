@@ -92,8 +92,6 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-md-2">
-
-                                                            <div class="mt-2">
                                                                 <label for="title" class="text-sm">Title</label>
                                                                 <select wire:model='SALUTATION'
                                                                     class="form-control form-control-sm"
@@ -105,8 +103,6 @@
                                                                     <option value="Mr.">Ms.</option>
                                                                     <option value="Mr.">Prof</option>
                                                                 </select>
-                                                            </div>
-
                                                         </div>
                                                         <div class="col-md-4">
                                                             <livewire:text-input name="FIRST_NAME"

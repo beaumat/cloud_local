@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PhilHealth;
 
+use App\Services\InvoiceServices;
 use App\Services\PatientPaymentServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Facades\DB;
@@ -29,10 +30,15 @@ class PaymentList extends Component
     public float $BALANCE = 0;
     private $patientPaymentServices;
     private $philHealthServices;
-    public function boot(PatientPaymentServices $patientPaymentServices, PhilHealthServices $philHealthServices)
-    {
+    private $invoiceServices;
+    public function boot(
+        PatientPaymentServices $patientPaymentServices,
+        PhilHealthServices $philHealthServices,
+        InvoiceServices $invoiceServices
+    ) {
         $this->patientPaymentServices = $patientPaymentServices;
         $this->philHealthServices = $philHealthServices;
+        $this->invoiceServices = $invoiceServices;
     }
     public function mount()
     {
@@ -117,7 +123,14 @@ class PaymentList extends Component
         DB::beginTransaction();
         try {
             //code...
-            $this->patientPaymentServices->PH_Update($this->editId, $this->PHILHEALTH_ID, $this->editAmount, $this->editReceiptRefNo, $this->editReceiptDate, $this->editNotes);
+            $this->patientPaymentServices->PH_Update(
+                $this->editId,
+                $this->PHILHEALTH_ID,
+                $this->editAmount,
+                $this->editReceiptRefNo,
+                $this->editReceiptDate,
+                $this->editNotes
+            );
             $TotalPay = (float) $this->patientPaymentServices->getPH_TotalPay($this->PHILHEALTH_ID);
             $this->philHealthServices->UpdatePayment($this->PHILHEALTH_ID, $TotalPay);
             $this->Cancel();
@@ -130,11 +143,8 @@ class PaymentList extends Component
     }
     public function Delete(int $ID)
     {
-
         DB::beginTransaction();
         try {
-
-            
             $isDelete =  $this->patientPaymentServices->PH_Delete($ID, $this->PHILHEALTH_ID);
             if ($isDelete) {
                 $TotalPay = (float) $this->patientPaymentServices->getPH_TotalPay($this->PHILHEALTH_ID);

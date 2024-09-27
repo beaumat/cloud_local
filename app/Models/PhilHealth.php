@@ -107,7 +107,9 @@ class PhilHealth extends Model
         'CF4_COMPLAINT',
         'CF4_HPI',
         'CF4_PPMH',
-        'CF4_AD_NOTES'
+        'CF4_AD_NOTES',
+        'PATIENT_PAYMENT_ID',
+        'INVOICE_ID'
     ];
 
 }

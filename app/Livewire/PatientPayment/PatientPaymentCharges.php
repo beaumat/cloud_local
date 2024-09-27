@@ -34,7 +34,6 @@ class PatientPaymentCharges extends Component
     public float $editItemAmount;
     public float $editItemPaid;
 
-
     public int $PHILHEALTH_ID = 0;
     public float $editAmountInit;
     private $serviceChargeServices;
@@ -77,8 +76,6 @@ class PatientPaymentCharges extends Component
             session()->flash('error', 'invalid payment initial. please enter exactly initial amount');
             return;
         }
-
-
         $this->patientPaymentServices->PaymentChargesUpdate($this->editPaymentChargeId, $this->PATIENT_PAYMENT_ID, $this->editServiceChargeItemId, 0, $this->editAmountApplied);
         $this->serviceChargeServices->updateServiceChargesItemPaid($this->editServiceChargeItemId);
         $this->editPaymentChargeId = null;
