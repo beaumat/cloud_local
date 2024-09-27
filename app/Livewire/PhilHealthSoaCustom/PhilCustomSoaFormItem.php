@@ -30,7 +30,7 @@ class PhilCustomSoaFormItem extends Component
     {
 
         $this->validate(
-            ['ITEM_ID' => 'required|not_in:0'],
+            ['ITEM_ID' => 'required|not_in:0|exists:item,id'],
             [],
             ['ITEM_ID' => 'Item']
         );

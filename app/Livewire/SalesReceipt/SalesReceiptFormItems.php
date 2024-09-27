@@ -418,7 +418,10 @@ class SalesReceiptFormItems extends Component
         try {
 
             if ($this->STATUS == 16) {
-                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->salesReceiptServices->object_type_sales_receipt, $this->SALES_RECEIPT_ID);
+                $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                    $this->salesReceiptServices->object_type_sales_receipt,
+                    $this->SALES_RECEIPT_ID
+                );
                 if ($JOURNAL_NO  ==  0) {
                     session()->flash('message', 'journal not found');
                     return;

@@ -84,9 +84,15 @@ class InvoiceServices
 
         return $result;
     }
-    public function get(int $ID): object
+    public function get(int $ID)
     {
-        return Invoice::where('ID', $ID)->first();
+        $data = Invoice::where('ID', '=', $ID)->first();
+
+        if ($data) {
+            return $data;
+        }
+
+        return null;
     }
     public function Store(
         string $CODE,

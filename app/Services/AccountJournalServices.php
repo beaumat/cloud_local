@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AccountJournal;
+use App\Models\Accounts;
 use Illuminate\Support\Facades\DB;
 
 use function Laravel\Prompts\table;
@@ -521,10 +522,56 @@ class AccountJournalServices
                 $query->where('aj.ACCOUNT_ID', '=', $accountId);
             })
             ->where('aj.LOCATION_ID', '=', $LOCATION_ID)
-            ->orderBy('aj.OBJECT_DATE', 'asc')
             ->orderBy('a.TAG', 'asc')
+            ->orderBy('aj.OBJECT_DATE', 'asc')
+
             ->get();
 
+        return $result;
+    }
+
+    public function getTrialBalance(string $dateAs, int $LOCATION_ID, int $accountId = 0)
+    {
+        $result = DB::table('account as a')
+            ->select(
+                [
+                    'a.NAME as ACCOUNT_TITLE',
+                    DB::raw("sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)) as AMOUNT "),
+                    DB::raw("
+                    CASE
+                        WHEN t.`ACCOUNT_ORDER` = 0 THEN (sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)))
+                        WHEN t.`ACCOUNT_ORDER` = 1 THEN (sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)))
+
+                  
+                 
+                        WHEN t.`ACCOUNT_ORDER` = 5 THEN (sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)))
+                    END as TX_DEBIT
+                    "),
+                    DB::raw("
+                    CASE
+                        WHEN t.`ACCOUNT_ORDER` = 2 THEN (sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)))
+                        WHEN t.`ACCOUNT_ORDER` = 3 THEN (sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)))
+                        WHEN t.`ACCOUNT_ORDER` = 4 THEN (sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)))
+                    END as TX_CREDIT
+                    "),
+                    't.ACCOUNT_ORDER'
+                ]
+            )
+            ->leftJoin('account_journal as aj', 'aj.ACCOUNT_ID', '=', 'a.ID')
+            ->leftJoin('account_type_map as t', 't.ID', '=', 'a.TYPE')
+            ->where('aj.OBJECT_DATE', '<=', $dateAs)
+            ->when($accountId > 0, function ($query) use (&$accountId) {
+                $query->where('aj.ACCOUNT_ID', '=', $accountId);
+            })
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->groupBy(['a.NAME', 't.ACCOUNT_ORDER'])
+            ->orderBy('t.ACCOUNT_ORDER')
+        
+            ->get();
+
+   
         return $result;
     }
 }

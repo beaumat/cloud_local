@@ -27,7 +27,7 @@
                         <tr>
                             <td>
                                 <livewire:select-option name="ITEM_ID" titleName="Item" :options="$itemList"
-                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false" />
+                                    :zero="true" wire:model.live='ITEM_ID' :vertical="false" :withLabel="false" :isDisabled='false' />
                             </td>
                             <td>
                                 <button class='btn btn-primary btn-xs w-100' wire:click='save()'>

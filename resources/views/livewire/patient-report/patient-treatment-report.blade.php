@@ -136,14 +136,12 @@
                                                     @endphp
                                                 @endif
                                             </td>
-
                                             @php
                                                 $index++;
                                             @endphp
                                         @endforeach
                                         <td class="text-center font-weight-bold text-danger h6">{{ $count }}</td>
                                         @php
-
                                             $total = $total + $count;
                                         @endphp
                                     </tr>

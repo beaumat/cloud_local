@@ -52,7 +52,7 @@
                                         <tr>
                                             <td>{{ $list->DESCRIPTION }}</td>
                                             <td class="text-right">
-                                             {{ $list->DRUG_MED }}
+                                                {{ $list->DRUG_MED }}
 
                                             </td>
                                             <td class="text-right">{{ $list->LAB_DIAG }}</td>
@@ -67,6 +67,8 @@
                                             <td class="text-center">
                                                 <a href="{{ route('maintenancesettingslocation_custom_soa_edit', ['id' => $LOCATION_ID, 'custom' => $list->ID]) }}"
                                                     class='btn btn-sm btn-info'>Edit</a>
+                                                <button class="btn btn-sm btn-danger"
+                                                    wire:click="delete({{ $list->ID }})">Delete</button>
                                             </td>
                                         </tr>
                                     @endforeach

@@ -21,6 +21,10 @@ class PhilCustomSoaList extends Component
     {
         $this->LOCATION_ID = $id;
     }
+    public function delete($id)
+    {
+        $this->philHealthSoaCustomServices->Delete($id);
+    }
     public function render()
     {
         $this->dataList = $this->philHealthSoaCustomServices->List($this->search, $this->LOCATION_ID);
