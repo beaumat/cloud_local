@@ -9,6 +9,122 @@ use function Laravel\Prompts\table;
 
 class AccountJournalServices
 {
+
+    private string $TX_CODE = '
+    CASE
+        WHEN o.`ID` = 2     THEN ( select bill.`CODE` from bill  where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 3     THEN ( select bill.`CODE` from bill_items  join bill on bill.ID = bill_items.BILL_ID  where bill_items.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 78    THEN ( select bill.`CODE` from bill_expenses  join bill on bill.ID = bill_expenses.BILL_ID  where bill_expenses.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 12    THEN ( select credit_memo.`CODE` from credit_memo where credit_memo.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 13    THEN ( select credit_memo.`CODE` from credit_memo_invoices join credit_memo on credit_memo.ID = credit_memo_invoices.CREDIT_MEMO_ID where credit_memo_invoices.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 14    THEN ( select credit_memo.`CODE` from credit_memo_items  join credit_memo on credit_memo.ID = credit_memo_items.CREDIT_MEMO_ID  where credit_memo_items.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 19    THEN ( select inventory_adjustment.`CODE` from inventory_adjustment where inventory_adjustment.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 20    THEN ( select inventory_adjustment.`CODE` from inventory_adjustment_items join inventory_adjustment on inventory_adjustment.ID = inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID where inventory_adjustment_items.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 23    THEN ( select invoice.`CODE` from invoice where invoice.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 24    THEN ( select invoice.`CODE` from invoice_items join invoice on invoice.ID = invoice_items.INVOICE_ID where invoice_items.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 38    THEN ( select stock_transfer.`CODE` from stock_transfer where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE   )
+        WHEN o.`ID` = 39    THEN ( select stock_transfer.`CODE` from stock_transfer_items join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE )
+        WHEN o.`ID` = 41    THEN ( select payment.`CODE` from payment where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 42    THEN ( select payment.`CODE` from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 52    THEN ( select sales_receipt.`CODE` from `sales_receipt`  where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 53    THEN ( select `sales_receipt`.`CODE` from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID  where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 57    THEN ( select `check`.`CODE` from `check`  where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 58    THEN ( select `check`.`CODE` from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 75    THEN ( select `check`.`CODE` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 79    THEN ( select `check`.`CODE` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 59    THEN ( select bill_credit.`CODE` from bill_credit  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 60    THEN ( select bill_credit.`CODE` from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID  where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 80    THEN ( select bill_credit.`CODE` from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 81    THEN ( select deposit.`CODE` from deposit where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 82    THEN ( select deposit.`CODE` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 84    THEN ( select general_journal.`CODE` from general_journal_details join general_journal on general_journal.ID = general_journal_details.GENERAL_JOURNAL_ID where general_journal_details.ID = aj.OBJECT_ID and general_journal.DATE = aj.OBJECT_DATE  and general_journal.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 93    THEN ( select fund_transfer.`CODE` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
+        WHEN o.`ID` = 70    THEN ( select build_assembly.`CODE` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 71    THEN ( select build_assembly.`CODE` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
+        
+        WHEN o.`ID` = 113    THEN ( select pull_out.`CODE` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
+        WHEN o.`ID` = 114    THEN ( select pull_out.`CODE` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
+
+
+    END as TX_CODE';
+
+    private string $TX_NOTES = '
+    CASE
+        WHEN o.`ID` = 2     THEN ( select bill.`NOTES` from bill  where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 3     THEN ( select bill.`NOTES` from bill_items  join bill on bill.ID = bill_items.BILL_ID  where bill_items.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 78    THEN ( select bill.`NOTES` from bill_expenses  join bill on bill.ID = bill_expenses.BILL_ID  where bill_expenses.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 12    THEN ( select credit_memo.`NOTES` from credit_memo where credit_memo.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 13    THEN ( select credit_memo.`NOTES` from credit_memo_invoices join credit_memo on credit_memo.ID = credit_memo_invoices.CREDIT_MEMO_ID where credit_memo_invoices.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 14    THEN ( select credit_memo.`NOTES` from credit_memo_items  join credit_memo on credit_memo.ID = credit_memo_items.CREDIT_MEMO_ID  where credit_memo_items.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 19    THEN ( select inventory_adjustment.`NOTES` from inventory_adjustment where inventory_adjustment.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 20    THEN ( select inventory_adjustment.`NOTES` from inventory_adjustment_items join inventory_adjustment on inventory_adjustment.ID = inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID where inventory_adjustment_items.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 23    THEN ( select invoice.`NOTES` from invoice where invoice.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 24    THEN ( select invoice.`NOTES` from invoice_items join invoice on invoice.ID = invoice_items.INVOICE_ID where invoice_items.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 38    THEN ( select stock_transfer.`NOTES` from stock_transfer where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE )
+        WHEN o.`ID` = 39    THEN ( select stock_transfer.`NOTES` from stock_transfer_items join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE  )
+        WHEN o.`ID` = 41    THEN ( select payment.`NOTES` from payment where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 42    THEN ( select payment.`NOTES` from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 52    THEN ( select sales_receipt.`NOTES` from `sales_receipt`  where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 53    THEN ( select `sales_receipt`.`NOTES` from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID  where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 57    THEN ( select `check`.`NOTES` from `check`  where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 58    THEN ( select `check`.`NOTES` from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 75    THEN ( select `check`.`NOTES` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 79    THEN ( select `check`.`NOTES` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 59    THEN ( select bill_credit.`NOTES` from bill_credit  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 60    THEN ( select bill_credit.`NOTES` from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID  where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 80    THEN ( select bill_credit.`NOTES` from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 81    THEN ( select deposit.`NOTES` from deposit where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 82    THEN ( select deposit.`NOTES` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 84    THEN ( select general_journal.`NOTES` from general_journal_details join general_journal on general_journal.ID = general_journal_details.GENERAL_JOURNAL_ID where general_journal_details.ID = aj.OBJECT_ID and general_journal.DATE = aj.OBJECT_DATE  and general_journal.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 93    THEN ( select fund_transfer.`NOTES` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
+        WHEN o.`ID` = 70    THEN ( select build_assembly.`NOTES` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 71    THEN ( select build_assembly.`NOTES` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
+        
+        WHEN o.`ID` = 113    THEN ( select pull_out.`NOTES` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
+        WHEN o.`ID` = 114    THEN ( select pull_out.`NOTES` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
+
+    END as TX_NOTES';
+
+
+
+    private string $TX_NAME = '
+    CASE
+        WHEN o.`ID` = 2     THEN ( select contact.PRINT_NAME_AS from bill join contact on contact.ID = bill.VENDOR_ID where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 3     THEN ( select contact.PRINT_NAME_AS from bill_items join bill on bill.ID = bill_items.BILL_ID  join contact on contact.ID = bill.VENDOR_ID where bill_items.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 78    THEN ( select contact.PRINT_NAME_AS from bill_expenses  join bill on bill.ID = bill_expenses.BILL_ID join contact on contact.ID = bill.VENDOR_ID where bill_expenses.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 12    THEN ( select contact.PRINT_NAME_AS from credit_memo join contact on contact.ID = credit_memo.CUSTOMER_ID where credit_memo.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 13    THEN ( select contact.PRINT_NAME_AS from credit_memo_invoices join credit_memo on credit_memo.ID = credit_memo_invoices.CREDIT_MEMO_ID join contact on contact.ID = credit_memo.CUSTOMER_ID where credit_memo_invoices.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 14    THEN ( select contact.PRINT_NAME_AS from credit_memo_items join credit_memo on credit_memo.ID = credit_memo_items.CREDIT_MEMO_ID join contact on contact.ID = credit_memo.CUSTOMER_ID where credit_memo_items.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 19    THEN ( select inventory_adjustment_type.`DESCRIPTION` from inventory_adjustment join inventory_adjustment_type on inventory_adjustment_type.ID = inventory_adjustment.ADJUSTMENT_TYPE_ID where inventory_adjustment.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 20    THEN ( select inventory_adjustment_type.`DESCRIPTION` from inventory_adjustment_items join inventory_adjustment on inventory_adjustment.ID = inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID join inventory_adjustment_type on inventory_adjustment_type.ID = inventory_adjustment.ADJUSTMENT_TYPE_ID where inventory_adjustment_items.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 23    THEN ( select contact.PRINT_NAME_AS from invoice join contact on contact.ID = invoice.CUSTOMER_ID where invoice.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 24    THEN ( select contact.PRINT_NAME_AS from invoice_items join invoice on invoice.ID = invoice_items.INVOICE_ID join contact on contact.ID = invoice.CUSTOMER_ID where invoice_items.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 38    THEN ( null)
+        WHEN o.`ID` = 39    THEN ( null)
+        WHEN o.`ID` = 41    THEN ( select contact.PRINT_NAME_AS from payment join contact on contact.ID = payment.CUSTOMER_ID where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 42    THEN ( select contact.PRINT_NAME_AS from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID join contact on contact.ID = payment.CUSTOMER_ID  where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 52    THEN ( select contact.PRINT_NAME_AS from `sales_receipt` join contact on contact.ID = sales_receipt.CUSTOMER_ID where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 53    THEN ( select contact.PRINT_NAME_AS from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID join contact on contact.ID = sales_receipt.CUSTOMER_ID   where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 57    THEN ( select contact.PRINT_NAME_AS from `check` join contact on contact.ID = check.PAY_TO_ID where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 58    THEN ( select contact.PRINT_NAME_AS from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 75    THEN ( select contact.PRINT_NAME_AS from `check_items` join `check` on check.ID = check_items.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 79    THEN ( select contact.PRINT_NAME_AS from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 59    THEN ( select contact.PRINT_NAME_AS from bill_credit join contact on contact.ID = bill_credit.VENDOR_ID  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 60    THEN ( select contact.PRINT_NAME_AS from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID join contact on contact.ID = bill_credit.VENDOR_ID   where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 80    THEN ( select contact.PRINT_NAME_AS from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID join contact on contact.ID = bill_credit.VENDOR_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 81    THEN ( select deposit.`NOTES` from deposit where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 82    THEN ( select deposit.`NOTES` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 84    THEN ( null )
+        WHEN o.`ID` = 93    THEN ( select fund_transfer.`NOTES` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
+        WHEN o.`ID` = 70    THEN ( select item.DESCRIPTION from build_assembly join item on item.ID = build_assembly.ASSEMBLY_ITEM_ID  where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 71    THEN ( select item.DESCRIPTION from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  join  item on item.ID = build_assembly_items.ITEM_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )    
+        WHEN o.`ID` = 113    THEN ( select contact.`PRINT_NAME_AS` from pull_out  left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
+        WHEN o.`ID` = 114    THEN ( select contact.`PRINT_NAME_AS` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
+
+    END as TX_NAME';
+
+
+
     private $object;
     public function __construct(ObjectServices $objectService)
     {
@@ -243,9 +359,6 @@ class AccountJournalServices
             $LOCATION_ID,
             $SUBSIDIARY_ID,
         )) {
-
-
-
             AccountJournal::where('LOCATION_ID', $LOCATION_ID)
                 ->where('JOURNAL_NO', $JOURNAL_NO)
                 ->where('ACCOUNT_ID', $OLD_ACCOUNT_ID)
@@ -352,119 +465,7 @@ class AccountJournalServices
         }
     }
 
-    private string $TX_CODE = '
-    CASE
-        WHEN o.`ID` = 2     THEN ( select bill.`CODE` from bill  where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 3     THEN ( select bill.`CODE` from bill_items  join bill on bill.ID = bill_items.BILL_ID  where bill_items.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 78    THEN ( select bill.`CODE` from bill_expenses  join bill on bill.ID = bill_expenses.BILL_ID  where bill_expenses.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 12    THEN ( select credit_memo.`CODE` from credit_memo where credit_memo.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 13    THEN ( select credit_memo.`CODE` from credit_memo_invoices join credit_memo on credit_memo.ID = credit_memo_invoices.CREDIT_MEMO_ID where credit_memo_invoices.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 14    THEN ( select credit_memo.`CODE` from credit_memo_items  join credit_memo on credit_memo.ID = credit_memo_items.CREDIT_MEMO_ID  where credit_memo_items.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 19    THEN ( select inventory_adjustment.`CODE` from inventory_adjustment where inventory_adjustment.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 20    THEN ( select inventory_adjustment.`CODE` from inventory_adjustment_items join inventory_adjustment on inventory_adjustment.ID = inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID where inventory_adjustment_items.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 23    THEN ( select invoice.`CODE` from invoice where invoice.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 24    THEN ( select invoice.`CODE` from invoice_items join invoice on invoice.ID = invoice_items.INVOICE_ID where invoice_items.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 38    THEN ( select stock_transfer.`CODE` from stock_transfer where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE   )
-        WHEN o.`ID` = 39    THEN ( select stock_transfer.`CODE` from stock_transfer_items join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE )
-        WHEN o.`ID` = 41    THEN ( select payment.`CODE` from payment where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 42    THEN ( select payment.`CODE` from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 52    THEN ( select sales_receipt.`CODE` from `sales_receipt`  where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 53    THEN ( select `sales_receipt`.`CODE` from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID  where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 57    THEN ( select `check`.`CODE` from `check`  where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 58    THEN ( select `check`.`CODE` from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 75    THEN ( select `check`.`CODE` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 79    THEN ( select `check`.`CODE` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 59    THEN ( select bill_credit.`CODE` from bill_credit  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 60    THEN ( select bill_credit.`CODE` from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID  where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 80    THEN ( select bill_credit.`CODE` from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 81    THEN ( select deposit.`CODE` from deposit where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 82    THEN ( select deposit.`CODE` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 84    THEN ( select general_journal.`CODE` from general_journal_details join general_journal on general_journal.ID = general_journal_details.GENERAL_JOURNAL_ID where general_journal_details.ID = aj.OBJECT_ID and general_journal.DATE = aj.OBJECT_DATE  and general_journal.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 93    THEN ( select fund_transfer.`CODE` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
-        WHEN o.`ID` = 70    THEN ( select build_assembly.`CODE` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 71    THEN ( select build_assembly.`CODE` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
-        
-        WHEN o.`ID` = 113    THEN ( select pull_out.`CODE` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
-        WHEN o.`ID` = 114    THEN ( select pull_out.`CODE` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
 
-
-    END as TX_CODE';
-
-    private string $TX_NOTES = '
-    CASE
-        WHEN o.`ID` = 2     THEN ( select bill.`NOTES` from bill  where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 3     THEN ( select bill.`NOTES` from bill_items  join bill on bill.ID = bill_items.BILL_ID  where bill_items.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 78    THEN ( select bill.`NOTES` from bill_expenses  join bill on bill.ID = bill_expenses.BILL_ID  where bill_expenses.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 12    THEN ( select credit_memo.`NOTES` from credit_memo where credit_memo.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 13    THEN ( select credit_memo.`NOTES` from credit_memo_invoices join credit_memo on credit_memo.ID = credit_memo_invoices.CREDIT_MEMO_ID where credit_memo_invoices.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 14    THEN ( select credit_memo.`NOTES` from credit_memo_items  join credit_memo on credit_memo.ID = credit_memo_items.CREDIT_MEMO_ID  where credit_memo_items.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 19    THEN ( select inventory_adjustment.`NOTES` from inventory_adjustment where inventory_adjustment.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 20    THEN ( select inventory_adjustment.`NOTES` from inventory_adjustment_items join inventory_adjustment on inventory_adjustment.ID = inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID where inventory_adjustment_items.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 23    THEN ( select invoice.`NOTES` from invoice where invoice.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 24    THEN ( select invoice.`NOTES` from invoice_items join invoice on invoice.ID = invoice_items.INVOICE_ID where invoice_items.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 38    THEN ( select stock_transfer.`NOTES` from stock_transfer where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE )
-        WHEN o.`ID` = 39    THEN ( select stock_transfer.`NOTES` from stock_transfer_items join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE  )
-        WHEN o.`ID` = 41    THEN ( select payment.`NOTES` from payment where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 42    THEN ( select payment.`NOTES` from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 52    THEN ( select sales_receipt.`NOTES` from `sales_receipt`  where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 53    THEN ( select `sales_receipt`.`NOTES` from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID  where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 57    THEN ( select `check`.`NOTES` from `check`  where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 58    THEN ( select `check`.`NOTES` from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 75    THEN ( select `check`.`NOTES` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 79    THEN ( select `check`.`NOTES` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 59    THEN ( select bill_credit.`NOTES` from bill_credit  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 60    THEN ( select bill_credit.`NOTES` from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID  where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 80    THEN ( select bill_credit.`NOTES` from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 81    THEN ( select deposit.`NOTES` from deposit where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 82    THEN ( select deposit.`NOTES` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 84    THEN ( select general_journal.`NOTES` from general_journal_details join general_journal on general_journal.ID = general_journal_details.GENERAL_JOURNAL_ID where general_journal_details.ID = aj.OBJECT_ID and general_journal.DATE = aj.OBJECT_DATE  and general_journal.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 93    THEN ( select fund_transfer.`NOTES` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
-        WHEN o.`ID` = 70    THEN ( select build_assembly.`NOTES` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 71    THEN ( select build_assembly.`NOTES` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
-        
-        WHEN o.`ID` = 113    THEN ( select pull_out.`NOTES` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
-        WHEN o.`ID` = 114    THEN ( select pull_out.`NOTES` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
-
-    END as TX_NOTES';
-
-
-
-    private string $TX_NAME = '
-    CASE
-        WHEN o.`ID` = 2     THEN ( select contact.PRINT_NAME_AS from bill join contact on contact.ID = bill.VENDOR_ID where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 3     THEN ( select contact.PRINT_NAME_AS from bill_items join bill on bill.ID = bill_items.BILL_ID  join contact on contact.ID = bill.VENDOR_ID where bill_items.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 78    THEN ( select contact.PRINT_NAME_AS from bill_expenses  join bill on bill.ID = bill_expenses.BILL_ID join contact on contact.ID = bill.VENDOR_ID where bill_expenses.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 12    THEN ( select contact.PRINT_NAME_AS from credit_memo join contact on contact.ID = credit_memo.CUSTOMER_ID where credit_memo.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 13    THEN ( select contact.PRINT_NAME_AS from credit_memo_invoices join credit_memo on credit_memo.ID = credit_memo_invoices.CREDIT_MEMO_ID join contact on contact.ID = credit_memo.CUSTOMER_ID where credit_memo_invoices.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 14    THEN ( select contact.PRINT_NAME_AS from credit_memo_items join credit_memo on credit_memo.ID = credit_memo_items.CREDIT_MEMO_ID join contact on contact.ID = credit_memo.CUSTOMER_ID where credit_memo_items.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 19    THEN ( select inventory_adjustment_type.`DESCRIPTION` from inventory_adjustment join inventory_adjustment_type on inventory_adjustment_type.ID = inventory_adjustment.ADJUSTMENT_TYPE_ID where inventory_adjustment.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 20    THEN ( select inventory_adjustment_type.`DESCRIPTION` from inventory_adjustment_items join inventory_adjustment on inventory_adjustment.ID = inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID join inventory_adjustment_type on inventory_adjustment_type.ID = inventory_adjustment.ADJUSTMENT_TYPE_ID where inventory_adjustment_items.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 23    THEN ( select contact.PRINT_NAME_AS from invoice join contact on contact.ID = invoice.CUSTOMER_ID where invoice.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 24    THEN ( select contact.PRINT_NAME_AS from invoice_items join invoice on invoice.ID = invoice_items.INVOICE_ID join contact on contact.ID = invoice.CUSTOMER_ID where invoice_items.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 38    THEN ( null)
-        WHEN o.`ID` = 39    THEN ( null)
-        WHEN o.`ID` = 41    THEN ( select contact.PRINT_NAME_AS from payment join contact on contact.ID = payment.CUSTOMER_ID where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 42    THEN ( select contact.PRINT_NAME_AS from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID join contact on contact.ID = payment.CUSTOMER_ID  where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 52    THEN ( select contact.PRINT_NAME_AS from `sales_receipt` join contact on contact.ID = sales_receipt.CUSTOMER_ID where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 53    THEN ( select contact.PRINT_NAME_AS from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID join contact on contact.ID = sales_receipt.CUSTOMER_ID   where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 57    THEN ( select contact.PRINT_NAME_AS from `check` join contact on contact.ID = check.PAY_TO_ID where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 58    THEN ( select contact.PRINT_NAME_AS from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 75    THEN ( select contact.PRINT_NAME_AS from `check_items` join `check` on check.ID = check_items.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 79    THEN ( select contact.PRINT_NAME_AS from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 59    THEN ( select contact.PRINT_NAME_AS from bill_credit join contact on contact.ID = bill_credit.VENDOR_ID  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 60    THEN ( select contact.PRINT_NAME_AS from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID join contact on contact.ID = bill_credit.VENDOR_ID   where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 80    THEN ( select contact.PRINT_NAME_AS from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID join contact on contact.ID = bill_credit.VENDOR_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 81    THEN ( select deposit.`NOTES` from deposit where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 82    THEN ( select deposit.`NOTES` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 84    THEN ( null )
-        WHEN o.`ID` = 93    THEN ( select fund_transfer.`NOTES` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
-        WHEN o.`ID` = 70    THEN ( select item.DESCRIPTION from build_assembly join item on item.ID = build_assembly.ASSEMBLY_ITEM_ID  where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 71    THEN ( select item.DESCRIPTION from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  join  item on item.ID = build_assembly_items.ITEM_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
-        
-        WHEN o.`ID` = 113    THEN ( select contact.`PRINT_NAME_AS` from pull_out  left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
-        WHEN o.`ID` = 114    THEN ( select contact.`PRINT_NAME_AS` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
-
-    END as TX_NAME';
     public function getJournalList(int $JOURNAL_NO): object
     {
 
@@ -487,6 +488,41 @@ class AccountJournalServices
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->where('aj.AMOUNT', '>', '0')
             ->where('aj.JOURNAL_NO', $JOURNAL_NO)
+            ->get();
+
+        return $result;
+    }
+
+    public function getGeneralLedgerList(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountId = 0)
+    {
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'aj.JOURNAL_NO',
+                'aj.OBJECT_DATE as DATE',
+                'a.TAG as ACCOUNT_CODE',
+                'a.NAME as ACCOUNT_TITLE',
+                'd.DESCRIPTION as TYPE',
+                'l.NAME as LOCATION',
+                DB::raw($this->TX_CODE),
+                DB::raw($this->TX_NOTES),
+                DB::raw(" if(aj.ENTRY_TYPE = 0, aj.AMOUNT, '' ) as DEBIT "),
+                DB::raw(" if(aj.ENTRY_TYPE = 1, aj.AMOUNT, '' ) as CREDIT "),
+                DB::raw($this->TX_NAME),
+            ])->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->whereBetween('aj.OBJECT_DATE',  [$dateFrom, $dateTo])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->when($accountId > 0, function ($query) use (&$accountId) {
+                $query->where('aj.ACCOUNT_ID', '=', $accountId);
+            })
+            ->where('aj.LOCATION_ID', '=', $LOCATION_ID)
+            ->orderBy('aj.OBJECT_DATE', 'asc')
+            ->orderBy('a.TAG', 'asc')
             ->get();
 
         return $result;

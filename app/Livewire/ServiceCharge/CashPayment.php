@@ -24,8 +24,11 @@ class CashPayment extends Component
     private $patientPaymentServices;
 
     private $dateServices;
-    public function boot(ServiceChargeServices $serviceChargeServices, PatientPaymentServices $patientPaymentServices, DateServices $dateServices)
-    {
+    public function boot(
+        ServiceChargeServices $serviceChargeServices,
+        PatientPaymentServices $patientPaymentServices,
+        DateServices $dateServices
+    ) {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->patientPaymentServices = $patientPaymentServices;
         $this->dateServices = $dateServices;
@@ -57,8 +60,7 @@ class CashPayment extends Component
             session()->flash('error', 'Invalid Amount.');
             return;
         }
-
-
+        
         if ($this->serviceChargeServices->getItemBalance($this->SERVICE_CHARGES_ITEM_ID) <= 0) {
             session()->flash('error', 'Invalid this item already paid');
             return;

@@ -128,7 +128,7 @@ class PatientPaymentForm extends Component
         $this->DATE_CONFIRM = $data->DATE_CONFIRM ?? '';
         $this->IS_INVOICE = $data->IS_INVOICE;
         $this->REF_ID = $data->REF_ID ?? 0;
- 
+
         $this->Modify = false;
         $this->PDF = null;
     }
@@ -221,7 +221,7 @@ class PatientPaymentForm extends Component
                     'AMOUNT'                            => 'required|not_in:0',
                     'RECEIPT_REF_NO'                    => 'required',
                     'RECEIPT_DATE'                      => 'required',
-                    'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id' 
+                    'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id'
                 ],
                 [],
                 [
@@ -243,7 +243,7 @@ class PatientPaymentForm extends Component
                     'DATE'                              => 'required',
                     'LOCATION_ID'                       => 'required',
                     'AMOUNT'                            => 'required|not_in:0',
-                    'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id' 
+                    'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id'
                 ],
                 [],
                 [
@@ -374,6 +374,15 @@ class PatientPaymentForm extends Component
 
     public function makeSalesReceipt()
     {
+        // check first
+        $dataItemCheck = $this->patientPaymentServices->PaymentChargesList($this->ID, 0);
+
+        foreach ($dataItemCheck as $list) {
+            if (empty($list->INCOME_ACCOUNT_ID)) {
+                session()->flash('error', 'Invalid. Some items do not have associated revenue accounts. Please set them up first before proceeding.');
+                return;
+            }
+        }
 
         $data = [
             'PAYMENT_METHOD_ID' => $this->PAYMENT_METHOD_ID,

@@ -8,10 +8,11 @@
                 <th class="col-1">Orig. Amount</th>
                 <th class="col-1">Balance</th>
                 <th class="col-2 bg-info">Item Description</th>
-                <th class="col-1 bg-info text-right"> Qty</th>
-                <th class="col-1 bg-info"> UOM</th>
+                <th class="bg-info text-right"> Qty</th>
+                <th class="bg-info"> UOM</th>
                 <th class="col-1 bg-info text-right"> Item Amount</th>
                 <th class="col-1 bg-warning text-right">Paid</th>
+                <th class="col-2 bg-primary ">Revenue Accounts</th>
                 @if ($REF_ID == 0)
                     <th class="text-center col-1">Action</th>
                 @endif
@@ -37,6 +38,10 @@
                         @else
                             {{ number_format($list->AMOUNT_APPLIED, 2) }}
                         @endif
+                    </td>
+
+                    <td>
+                    {{ $list->ACCOUNT_NAME }}
                     </td>
                     @if ($REF_ID == 0)
                         <td class="text-center">
