@@ -66,7 +66,7 @@ class HemoList extends Component
     {
 
 
-        $this->DATE_FROM = $this->dateServices->NowDate();
+        $this->DATE_FROM = $this->userServices->getTransactionDateDefault();
         $this->DATE_TO = $this->dateServices->NowDate();
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
