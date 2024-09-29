@@ -25,7 +25,6 @@ class InventoryTreatment extends Component
     #[Reactive]
     public int $LOCATION_ID;
     public int $openStatus = 1; // draft default
-
     public $isDisabled = false;
     public bool $saveSuccess = false;
     public $dataList = [];
@@ -65,7 +64,6 @@ class InventoryTreatment extends Component
     {
         $this->codeBase = false;
         $this->updatedcodeBase();
-
     }
     public function updatedItemId()
     {
@@ -101,8 +99,7 @@ class InventoryTreatment extends Component
     }
     public function deleteItemInCash(int $ID, int $ITEM_ID)
     {
-
-        $data =   $this->hemoServices->ItemGet($ID);
+        $data =  $this->hemoServices->ItemGet($ID);
         if ($data) {
             DB::beginTransaction();
             try {
@@ -113,7 +110,6 @@ class InventoryTreatment extends Component
                             session()->flash('error', 'Delete action cannot proceed. This item has already been paid.');
                             return;
                         }
-
                         $SC_ID  = $dataItem->SERVICE_CHARGES_ID;
                         $this->serviceChargeServices->ItemDelete($dataItem->ID, $SC_ID);
                         $this->serviceChargeServices->ReComputed($SC_ID);
@@ -145,8 +141,19 @@ class InventoryTreatment extends Component
                 'QUANTITY' => 'Quantity'
             ]
         );
-        $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
-        $this->hemoServices->ItemStore($this->HEMO_ID, $this->ITEM_ID, $this->QUANTITY, $this->UNIT_ID, (float) $unitRelated['QUANTITY'], $this->IS_NEW, true);
+        $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails(
+            $this->ITEM_ID,
+            $this->UNIT_ID ?? 0
+        );
+        $this->hemoServices->ItemStore(
+            $this->HEMO_ID,
+            $this->ITEM_ID,
+            $this->QUANTITY,
+            $this->UNIT_ID,
+            (float) $unitRelated['QUANTITY'],
+            $this->IS_NEW,
+            true
+        );
         $this->resetInsert();
         session()->flash('message', 'Successfully added');
     }
@@ -238,12 +245,19 @@ class InventoryTreatment extends Component
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
                 $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
 
-                if ($this->hemoServices->ItemStoreExists($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew, true)) {
+                if ($this->hemoServices->ItemStoreExists(
+                    $this->HEMO_ID,
+                    $data->ITEM_ID,
+                    $data->QUANTITY,
+                    $data->UNIT_ID ?? 0,
+                    $UNIT_BASE_QUANTITY,
+                    $gotNew,
+                    true
+                )) {
                     $this->dispatch('refresh-item-treatment');
                     session()->flash('error', 'Item already exists');
                     return;
                 }
-
                 $this->hemoServices->ItemStore($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew, true);
                 $dataTrigger = $this->itemTreatmentServices->listItemTrigger($ItemTreatmentId);
                 foreach ($dataTrigger  as $list) {
@@ -264,13 +278,17 @@ class InventoryTreatment extends Component
         if ($data) {
             $result = [
                 'DATE'          => $data->DATE,
-                'LOCATION_ID'   => $data->LOCATION_ID,
+                'LOCATION_ID'   => $data->LOCATION_ID,  
                 'ITEM_ID'       => $ITEM_ID,
                 'CONTACT_ID'    => $data->CUSTOMER_ID
             ];
 
             $this->dispatch('usage-modal-open', result: $result);
         }
+    }
+    public function rePost(int $ID)
+    {
+        $this->hemoServices->updateIsPost($ID, $this->HEMO_ID);
     }
     public function openSubClass(int $SUB_ID)
     {

@@ -3,10 +3,7 @@
 namespace App\Services;
 
 use App\Models\AccountJournal;
-use App\Models\Accounts;
 use Illuminate\Support\Facades\DB;
-
-use function Laravel\Prompts\table;
 
 class AccountJournalServices
 {
@@ -42,7 +39,6 @@ class AccountJournalServices
         WHEN o.`ID` = 93    THEN ( select fund_transfer.`CODE` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
         WHEN o.`ID` = 70    THEN ( select build_assembly.`CODE` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71    THEN ( select build_assembly.`CODE` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
-        
         WHEN o.`ID` = 113    THEN ( select pull_out.`CODE` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114    THEN ( select pull_out.`CODE` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
 
@@ -373,8 +369,19 @@ class AccountJournalServices
                 ]);
         }
     }
-    public function JournalModify(int $ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE, float $AMOUNT, int  $SEQUENCE_GROUP, string $EXTENDED_OPTIONS)
-    {
+    public function JournalModify(
+        int $ACCOUNT_ID,
+        int $LOCATION_ID,
+        int $JOURNAL_NO,
+        int $SUBSIDIARY_ID,
+        int $OBJECT_ID,
+        int $OBJECT_TYPE,
+        string $OBJECT_DATE,
+        int $ENTRY_TYPE,
+        float $AMOUNT,
+        int  $SEQUENCE_GROUP,
+        string $EXTENDED_OPTIONS
+    ) {
         if (!$this->JournalExists(
             $ACCOUNT_ID,
             $ENTRY_TYPE,
@@ -384,7 +391,6 @@ class AccountJournalServices
             $LOCATION_ID,
             $SUBSIDIARY_ID,
         )) {
-
 
             if ($ACCOUNT_ID  ==  0) {
                 return;
@@ -541,9 +547,6 @@ class AccountJournalServices
                     CASE
                         WHEN t.`ACCOUNT_ORDER` = 0 THEN (sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)))
                         WHEN t.`ACCOUNT_ORDER` = 1 THEN (sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)))
-
-                  
-                 
                         WHEN t.`ACCOUNT_ORDER` = 5 THEN (sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)))
                     END as TX_DEBIT
                     "),
@@ -568,10 +571,10 @@ class AccountJournalServices
             })
             ->groupBy(['a.NAME', 't.ACCOUNT_ORDER'])
             ->orderBy('t.ACCOUNT_ORDER')
-        
+
             ->get();
 
-   
+
         return $result;
     }
 }

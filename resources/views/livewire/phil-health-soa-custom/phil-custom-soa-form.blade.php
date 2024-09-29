@@ -60,27 +60,20 @@
                                         <livewire:number-input name="SUPPLIES" titleName="Supplies" vertical=true
                                             :isDisabled=false wire:model='SUPPLIES' />
                                     </div>
-
-
                                     <div class="col-md-6">
                                         <livewire:number-input name="SUPPLIES_PK" titleName="Supplies (PK):"
                                             vertical=true :isDisabled=false wire:model='SUPPLIES_PK' />
                                     </div>
-
-
                                     <div class="col-md-6">
                                         <livewire:number-input name="ADMIN_OTHER_FEE"
                                             titleName="Administrative & Other Fees:" vertical=true :isDisabled=false
                                             wire:model='ADMIN_OTHER_FEE' />
                                     </div>
-
-
                                     <div class="col-md-6">
                                         <livewire:number-input name="ADMIN_OTHER_FEE_PK"
                                             titleName="Administrative & Other Fees (PK):" vertical=true
                                             :isDisabled=false wire:model='ADMIN_OTHER_FEE_PK' />
                                     </div>
-
                                     <div class="col-md-1">
                                         <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
                                             :isDisabled=false wire:model='INACTIVE' />

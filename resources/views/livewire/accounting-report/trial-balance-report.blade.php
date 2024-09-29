@@ -25,7 +25,7 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <livewire:date-input name="DATE" titleName="Date" wire:model.live='DATE'
+                                        <livewire:date-input name="DATE" titleName="Date as of" wire:model.live='DATE'
                                             :isDisabled="false" />
                                     </div>
                                     <div class="col-md-5">

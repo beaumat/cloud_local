@@ -48,7 +48,9 @@
                                 <tbody class="text-xs">
                                     @foreach ($accounts as $list)
                                         <tr>
-                                            <td> {{ $list->TAG }} </td>
+                                            <td> <a
+                                                    href="{{ route('maintenancefinancialcoa_edit', ['id' => $list->ID]) }}">{{ $list->TAG }}
+                                                </a> </td>
                                             <td> {{ $list->NAME }} </td>
                                             <td> {{ $list->ACCOUNT_TYPE }} </td>
                                             <td> {{ $list->GROUP_ACCOUNT }} </td>

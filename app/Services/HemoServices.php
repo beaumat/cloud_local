@@ -1328,6 +1328,14 @@ class HemoServices
             );
         }
     }
+    public function updateIsPost(int $ID, int $HEMO_ID)
+    {
+         HemodialysisItems::where('ID', '=', $ID)
+            ->where('HEMO_ID', '=', $HEMO_ID)
+            ->update([
+                'IS_POST' => false
+            ]);
+    }
     public function ItemUpdateSC_ITEM_ID(int $ID, int $HEMO_ID, int $ITEM_ID, int $SC_ITEM_ID)
     {
         HemodialysisItems::where('ID', $ID)

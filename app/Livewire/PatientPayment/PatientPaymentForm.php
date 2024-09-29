@@ -87,6 +87,7 @@ class PatientPaymentForm extends Component
         InvoiceServices $invoiceServices
 
     ) {
+        
         $this->patientPaymentServices = $patientPaymentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;

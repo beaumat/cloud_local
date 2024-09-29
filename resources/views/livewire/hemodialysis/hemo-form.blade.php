@@ -83,7 +83,6 @@
                                                 <button name="btnSave" type="submit" class="btn btn-sm btn-primary">
                                                     <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Save' }}</button>
-
                                                 <button name="btnCanceled" type='button' wire:click='updateCancel'
                                                     class="btn btn-sm btn-secondary"><i class="fa fa-ban"
                                                         aria-hidden="true"></i> Cancel</button>

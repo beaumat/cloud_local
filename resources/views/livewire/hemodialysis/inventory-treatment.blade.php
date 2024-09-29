@@ -85,9 +85,19 @@
                                                             <i class="fas fa-trash " aria-hidden="true"></i>
                                                         </button>
                                                     @else
-                                                        <button type="button" title="Delete" id="deletebtn"
-                                                            class="btn btn-xs btn-secondary">
-                                                            <i class="fas fa-trash " aria-hidden="true"></i></button>
+                                                        @if (Auth::user()->can('patient.treatment.update'))
+                                                            <button type="button" title="RePost" id="repost"
+                                                                wire:click='rePost({{ $list->ID }})'
+                                                                wire:confirm="Are you sure you want to unpost this particular item?"
+                                                                class="btn btn-xs btn-warning">
+                                                                <i class="fas fa-tools "
+                                                                    aria-hidden="true"></i></button>
+                                                        @else
+                                                            <button type="button" title="Delete" id="repost"
+                                                                class="btn btn-xs btn-secondary">
+                                                                <i class="fas fa-trash "
+                                                                    aria-hidden="true"></i></button>
+                                                        @endif
                                                     @endif
                                                 @endif
                                             </td>
