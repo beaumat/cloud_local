@@ -59,11 +59,11 @@
 
                                                 @if ($list->INACTIVE)
                                                     <strong type='button'
-                                                        wire:click='accountInactive({{ $list->ID }},1)'
+                                                        wire:click='accountInactive({{ $list->ID }},0)'
                                                         class="text-danger"> Yes </strong>
                                                 @else
                                                     <strong type='button'
-                                                        wire:click='accountInactive({{ $list->ID }},0)'
+                                                        wire:click='accountInactive({{ $list->ID }},1)'
                                                         class="text-primary">No</strong>
                                                 @endif
                                             </td>
