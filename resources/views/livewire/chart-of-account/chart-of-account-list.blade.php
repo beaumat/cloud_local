@@ -56,10 +56,15 @@
                                             <td> {{ $list->GROUP_ACCOUNT }} </td>
                                             <td> {{ $list->BANK_ACCOUNT_NO }} </td>
                                             <td class="text-center">
+
                                                 @if ($list->INACTIVE)
-                                                    <strong class="text-danger">Yes</strong>
+                                                    <strong type='button'
+                                                        wire:click='accountInactive({{ $list->ID }},1)'
+                                                        class="text-danger"> Yes </strong>
                                                 @else
-                                                    <strong class="text-primary">No</strong>
+                                                    <strong type='button'
+                                                        wire:click='accountInactive({{ $list->ID }},0)'
+                                                        class="text-primary">No</strong>
                                                 @endif
                                             </td>
                                             <td class="text-center">

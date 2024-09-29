@@ -41,6 +41,10 @@ class ChartOfAccountList extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    public function accountInactive(int $id, int $status)
+    {
+        $this->accountServices->Inactive($id, $status);
+    }
     public function render()
     {
         $this->accounts = $this->accountServices->Search($this->search);

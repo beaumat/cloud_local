@@ -13,30 +13,30 @@ class AccountServices
     }
     public function getBankAccount()
     {
-        return Accounts::whereIn('TYPE', ['0', '6'])->orderBy('NAME','asc')->get();
+        return Accounts::whereIn('TYPE', ['0', '6'])->orderBy('NAME', 'asc')->get();
     }
     public function getExpenses()
     {
-        return Accounts::whereIn('TYPE', ['12', '14'])->orderBy('NAME','asc')->get();
+        return Accounts::whereIn('TYPE', ['12', '14'])->orderBy('NAME', 'asc')->get();
     }
     public function getPayable()
     {
-        return Accounts::whereIn('TYPE', ['5', '6', '7', '8'])->orderBy('NAME','asc')->get();
+        return Accounts::whereIn('TYPE', ['5', '6', '7', '8'])->orderBy('NAME', 'asc')->get();
     }
     public function getReceivable()
     {
-        $result = Accounts::whereIn('TYPE', ['0', '1', '2', '3', '4'])->orderBy('NAME','asc')->get();
+        $result = Accounts::whereIn('TYPE', ['0', '1', '2', '3', '4'])->orderBy('NAME', 'asc')->get();
 
 
         return $result;
     }
     public function getIncome()
     {
-        return Accounts::whereIn('TYPE', ['10', '13'])->orderBy('NAME','asc')->get();
+        return Accounts::whereIn('TYPE', ['10', '13'])->orderBy('NAME', 'asc')->get();
     }
     public function getPay()
     {
-        return Accounts::whereIn('TYPE', ['0', '1', '2'])->orderBy('NAME','asc')->get();
+        return Accounts::whereIn('TYPE', ['0', '1', '2'])->orderBy('NAME', 'asc')->get();
     }
     public function get(int $ID)
     {
@@ -59,7 +59,7 @@ class AccountServices
             $result = Accounts::query()
                 ->select(['ID', 'TAG as CODE'])
                 ->where('INACTIVE', '=', '0')
-                ->orderBy('TAG','asc')
+                ->orderBy('TAG', 'asc')
                 ->get();
 
             return $result;
@@ -68,7 +68,7 @@ class AccountServices
         $result = Accounts::query()
             ->select(['ID', 'NAME as DESCRIPTION'])
             ->where('INACTIVE', '=', '0')
-            ->orderBy('NAME','asc')
+            ->orderBy('NAME', 'asc')
             ->get();
 
         return $result;
@@ -111,6 +111,10 @@ class AccountServices
     public function Delete(int $ID): void
     {
         Accounts::where('ID', $ID)->delete();
+    }
+    public function Inactive(int $ID, int $stats)
+    {
+        Accounts::where('ID', $ID)->update(['INACTIVE' => $stats]);
     }
     public function Search($search)
     {
