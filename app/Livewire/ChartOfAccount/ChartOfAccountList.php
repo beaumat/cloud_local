@@ -18,7 +18,6 @@ class ChartOfAccountList extends Component
     {
         $this->accountServices = $accountServices;
     }
-
     public function delete($id)
     {
         try {

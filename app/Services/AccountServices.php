@@ -22,19 +22,22 @@ class AccountServices
     {
         return Accounts::whereIn('TYPE', ['12', '14'])
             ->where('INACTIVE', '=', '0')
-            ->orderBy('NAME', 'asc')->get();
+            ->orderBy('NAME', 'asc')
+            ->get();
     }
     public function getPayable()
     {
         return Accounts::whereIn('TYPE', ['5', '6', '7', '8'])
             ->where('INACTIVE', '=', '0')
-            ->orderBy('NAME', 'asc')->get();
+            ->orderBy('NAME', 'asc')
+            ->get();
     }
     public function getReceivable()
     {
         $result = Accounts::whereIn('TYPE', ['0', '1', '2', '3', '4'])
             ->where('INACTIVE', '=', '0')
-            ->orderBy('NAME', 'asc')->get();
+            ->orderBy('NAME', 'asc')
+            ->get();
 
 
         return $result;
@@ -43,13 +46,15 @@ class AccountServices
     {
         return Accounts::whereIn('TYPE', ['10', '13'])
             ->where('INACTIVE', '=', '0')
-            ->orderBy('NAME', 'asc')->get();
+            ->orderBy('NAME', 'asc')
+            ->get();
     }
     public function getPay()
     {
         return Accounts::whereIn('TYPE', ['0', '1', '2'])
             ->where('INACTIVE', '=', '0')
-            ->orderBy('NAME', 'asc')->get();
+            ->orderBy('NAME', 'asc')
+            ->get();
     }
     public function get(int $ID)
     {
