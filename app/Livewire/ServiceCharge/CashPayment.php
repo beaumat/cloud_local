@@ -5,6 +5,7 @@ namespace App\Livewire\ServiceCharge;
 use App\Services\DateServices;
 use App\Services\PatientPaymentServices;
 use App\Services\ServiceChargeServices;
+use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -24,14 +25,17 @@ class CashPayment extends Component
     private $patientPaymentServices;
 
     private $dateServices;
+    private $userServices;
     public function boot(
         ServiceChargeServices $serviceChargeServices,
         PatientPaymentServices $patientPaymentServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        UserServices $userServices
     ) {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->patientPaymentServices = $patientPaymentServices;
         $this->dateServices = $dateServices;
+        $this->userServices = $userServices;
     }
     #[On('cash-payment-prompt')]
     public function openModal($itemdata)
@@ -60,7 +64,7 @@ class CashPayment extends Component
             session()->flash('error', 'Invalid Amount.');
             return;
         }
-        
+
         if ($this->serviceChargeServices->getItemBalance($this->SERVICE_CHARGES_ITEM_ID) <= 0) {
             session()->flash('error', 'Invalid this item already paid');
             return;
@@ -75,7 +79,7 @@ class CashPayment extends Component
 
                 $PATIENT_PAYMENT_ID =  $this->patientPaymentServices->Store(
                     "",
-                    $this->dateServices->NowDate(),
+                    $this->userServices->getTransactionDateDefault(),
                     $data->PATIENT_ID,
                     $data->LOCATION_ID,
                     $this->AMOUNT,

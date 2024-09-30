@@ -29,7 +29,6 @@ class HemoList extends Component
     private $locationServices;
     private $userServices;
     public $pendingList = [];
-
     public string $DATE_FROM;
     public string $DATE_TO;
     private $dateServices;
