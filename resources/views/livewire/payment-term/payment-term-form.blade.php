@@ -28,30 +28,30 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE' isDisabled="false" />
+                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE' :isDisabled="false" />
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:text-input name="DESCRIPTION" titleName="Description" isDisabled="false"
+                                            <livewire:text-input name="DESCRIPTION" titleName="Description" :isDisabled="false"
                                                 wire:model='DESCRIPTION' />
                                         </div>
                                         <div class="col-md-4"  @if ($ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <livewire:select-option name="TYPE" :options="$paymentTermTypes" :zero="false" isDisabled="false"
+                                            <livewire:select-option name="TYPE" :options="$paymentTermTypes" :zero="false" :isDisabled="false"
                                                 titleName="Type" wire:model.live='TYPE' :key="$paymentTermTypes->pluck('ID')->join('_')" />
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:number-input name="NET_DUE" titleName="Net Due" isDisabled="false"
+                                            <livewire:number-input name="NET_DUE" titleName="Net Due" :isDisabled="false"
                                                 wire:model='NET_DUE' />
                                         </div>
                                         <div class="col-md-2"  @if ($TYPE > 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <livewire:number-input name="DATE_MIN_DAYS" titleName="Day of Due date" isDisabled="false"
+                                            <livewire:number-input name="DATE_MIN_DAYS" titleName="Day of Due date" :isDisabled="false"
                                                 wire:model='DATE_MIN_DAYS' />
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:number-input name="DISCOUNT_PCT" titleName="Discount Percent" isDisabled="false"
+                                            <livewire:number-input name="DISCOUNT_PCT" titleName="Discount Percent" :isDisabled="false"
                                                 wire:model='DISCOUNT_PCT' />
                                         </div>
                                         <div class="col-md-2">
-                                            <livewire:number-input name="DISCOUNT_DUE" titleName="Discount Due"  isDisabled="false"
+                                            <livewire:number-input name="DISCOUNT_DUE" titleName="Discount Due"  :isDisabled="false"
                                                 wire:model='DISCOUNT_DUE' />
                                         </div>
 
@@ -153,7 +153,7 @@
                                         @endif
 
                                         <div class="col-md-12">
-                                            <livewire:custom-check-box name="INACTIVE" titleName="Inactive" isDisabled="false"
+                                            <livewire:custom-check-box name="INACTIVE" titleName="Inactive" :isDisabled="false"
                                                 wire:model='INACTIVE' />
                                         </div>
                                     </div>
