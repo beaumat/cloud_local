@@ -99,14 +99,6 @@ class ServiceChargeList extends Component
     private function CheckingHavePaymentNotUsed(): bool
     {
         return false;
-        // $data = $this->patientPaymentServices->PaymentHaveAvailable($this->PATIENT_ID);
-        // if ($data) {
-        //     if ($data->ID != $this->PATIENT_PAYMENT_ID) {
-        //         session()->flash('error', "Some payment have not applied. please check this url: <a target='_BLANK' href ='" . route('patientspayment_edit', ['id' => $data->ID]) . "'> Here </a> ");
-        //         return true;
-        //     }
-        // }
-        // return false;
     }
 
     public function save(): void
@@ -151,14 +143,30 @@ class ServiceChargeList extends Component
                     $chargeAmount = 0;
                 }
                 if ($chargeAmount) {
-                    $ID = (int) $this->patientPaymentServices->PaymentChargesExist($this->PATIENT_PAYMENT_ID, $chargeId);
+                    $ID = (int) $this->patientPaymentServices->PaymentChargesExist(
+                        $this->PATIENT_PAYMENT_ID,
+                        $chargeId
+                    );
                     if ($ID > 0) {
-                        $this->patientPaymentServices->PaymentChargesUpdate($ID, $this->PATIENT_PAYMENT_ID, $chargeId, 0, $chargeAmount);
-                        $this->serviceChargeServices->updateServiceChargesItemPaid($chargeId);
+                        $this->patientPaymentServices->PaymentChargesUpdate(
+                            $ID,
+                            $this->PATIENT_PAYMENT_ID,
+                            $chargeId,
+                            0,
+                            $chargeAmount
+                        );
                     } else {
-                        $this->patientPaymentServices->PaymentChargeStore($this->PATIENT_PAYMENT_ID, $chargeId, 0, $chargeAmount, 0, 0);
-                        $this->serviceChargeServices->updateServiceChargesItemPaid($chargeId);
+                        $this->patientPaymentServices->PaymentChargeStore(
+                            $this->PATIENT_PAYMENT_ID,
+                            $chargeId,
+                            0,
+                            $chargeAmount,
+                            0,
+                            0
+                        );
                     }
+
+                    $this->serviceChargeServices->updateServiceChargesItemPaid($chargeId);
                     $this->dispatch('reset-payment');
                 }
             }
@@ -181,7 +189,6 @@ class ServiceChargeList extends Component
     {
 
         if ($this->PHILHEALTH_ID > 0) {
-     
             $this->dataList = $this->serviceChargeServices->getServiceChargeList_PH_Date($this->PATIENT_PAYMENT_ID, $this->PATIENT_ID, $this->LOCATION_ID, $this->DT_FROM, $this->DT_TO);
         } else {
             $this->dataList = $this->serviceChargeServices->getServiceChargeList_NotPhilhealth($this->PATIENT_PAYMENT_ID, $this->PATIENT_ID, $this->LOCATION_ID);

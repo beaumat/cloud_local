@@ -87,7 +87,6 @@ class InvoiceServices
     public function get(int $ID)
     {
         $data = Invoice::where('ID', '=', $ID)->first();
-
         if ($data) {
             return $data;
         }

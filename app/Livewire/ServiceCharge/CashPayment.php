@@ -2,7 +2,6 @@
 
 namespace App\Livewire\ServiceCharge;
 
-use App\Services\DateServices;
 use App\Services\PatientPaymentServices;
 use App\Services\ServiceChargeServices;
 use App\Services\UserServices;
@@ -24,17 +23,14 @@ class CashPayment extends Component
     private $serviceChargeServices;
     private $patientPaymentServices;
 
-    private $dateServices;
     private $userServices;
     public function boot(
         ServiceChargeServices $serviceChargeServices,
         PatientPaymentServices $patientPaymentServices,
-        DateServices $dateServices,
         UserServices $userServices
     ) {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->patientPaymentServices = $patientPaymentServices;
-        $this->dateServices = $dateServices;
         $this->userServices = $userServices;
     }
     #[On('cash-payment-prompt')]

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\PaymentInvoices;
 
@@ -199,6 +200,16 @@ class PaymentServices
             ->where('INVOICE_ID', '=', $INVOICE_ID)
             ->delete();
     }
+    public function getPaymentInvoiceDetails(int $ID)
+    {
+        $data =   PaymentInvoices::where('ID', '=', $ID)->first();
+
+        if ($data) {
+            return $data;
+        }
+
+        return [];
+    }
     public function PaymentInvoiceList(int $PAYMENT_ID)
     {
         return PaymentInvoices::query()
@@ -237,13 +248,17 @@ class PaymentServices
                 'payment.CODE',
                 'payment.DATE',
                 'payment.AMOUNT',
+                'payment.RECEIPT_REF_NO',
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
-                'payment_invoices.AMOUNT_APPLIED'
+                'payment_invoices.AMOUNT_APPLIED',
+                'a.NAME as BANK_ACCOUNT',
+                'payment.NOTES'
             ])
             ->join('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
             ->join('payment_invoices', 'payment_invoices.PAYMENT_ID', '=', 'payment.ID')
-            ->where('payment_invoices.INVOICE_ID', $INVOICE_ID)
-            ->where('payment.CUSTOMER_ID', $CUSTOMER_ID)
+            ->leftJoin('account as a', 'a.ID', '=', 'payment.UNDEPOSITED_FUNDS_ACCOUNT_ID')
+            ->where('payment_invoices.INVOICE_ID', '=', $INVOICE_ID)
+            ->where('payment.CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->get();
     }
     public function PaymentAvailableList(int $CUSTOMER_ID, int $LOCATION_ID)
@@ -329,5 +344,26 @@ class PaymentServices
             ->get();
 
         return $result;
+    }
+
+    public function PaymenIsOver(int $INVOICE_ID, float $NEW_APPLIED): bool
+    {
+        $data = Invoice::where('ID', $INVOICE_ID)->first();
+
+        if ($data) {
+            $ORG_AMOUNT =  $data->AMOUNT ?? 0;
+            $AMOUNT_PAID = $NEW_APPLIED + (float) PaymentInvoices::where('INVOICE_ID', '=', $INVOICE_ID)->sum("AMOUNT_APPLIED");
+
+            $BALANCE =  $ORG_AMOUNT - $AMOUNT_PAID;
+
+            if ($BALANCE < 0) {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        return false;
     }
 }

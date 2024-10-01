@@ -84,7 +84,7 @@ class SalesOrderListPromp extends Component
         } catch (\Exception $ex) {
 
             DB::rollBack();
-            dd($ex);
+   
         }
 
     }

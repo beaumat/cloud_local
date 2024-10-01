@@ -17,7 +17,6 @@
                                         Location | Custom Soa </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
-
                                 </div>
                             </div>
                         </div>

@@ -25,22 +25,23 @@
                         </div>
                         <form id="quickForm" wire:submit.prevent='save'>
                             <div class="card-body bg-light">
-                                <div class="form-group"
-                                   >
+                                <div class="form-group">
                                     <div class="row">
-                                        <div class="col-md-6"  >
-                                            <div class="form-group" @if ($PATIENT_PAYMENT_ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                           @if ($Modify && $STATUS == 0)
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
-                                                    :options="$contactList" :zero="true" :isDisabled="false"
-                                                    wire:model='CUSTOMER_ID' />
-                                            @else
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
-                                                    :options="$contactList" :zero="true" :isDisabled="true"
-                                                    wire:model='CUSTOMER_ID' />
-                                            @endif
+                                        <div class="col-md-6">
+                                            <div class="row"
+                                                @if ($PATIENT_PAYMENT_ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class='col-12'>
+                                                    @if ($Modify && $STATUS == 0)
+                                                        <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                            :options="$contactList" :zero="true" :isDisabled="false"
+                                                            wire:model='CUSTOMER_ID' />
+                                                    @else
+                                                        <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                            :options="$contactList" :zero="true" :isDisabled="true"
+                                                            wire:model='CUSTOMER_ID' />
+                                                    @endif
+                                                </div>
                                             </div>
-                             
 
                                             <div class="row">
                                                 <div class="col-md-3">
@@ -206,6 +207,15 @@
                                             data-toggle="pill" href="#custom-tabs-four-item" role="tab"
                                             aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
                                     </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link @if ($tab == 'payment') active @endif"
+                                            id="custom-tabs-four-payment-tab" wire:click="SelectTab('payment')"
+                                            data-toggle="pill" href="#custom-tabs-four-payment" role="tab"
+                                            aria-controls="custom-tabs-four-payment" aria-selected="true">Receive
+                                            Payment</a>
+                                    </li>
+
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -221,6 +231,20 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="tab-pane fade @if ($tab == 'payment') show active @endif"
+                                        id="custom-tabs-four-payment" role="tabpanel"
+                                        aria-labelledby="custom-tabs-four-payment-tab">
+                                        <div class="row"
+                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            <div class="col-md-12"
+                                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                @livewire('Invoice.ReceivedPayment', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID, 'INVOICE_STATUS_ID' => $STATUS])
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                 </div>
                             </div>
                             <div class="card-footer">
@@ -263,6 +287,11 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+
+        <section>
+
         </section>
     @endif
     @livewire('AccountJournal.AccountJournalModal')
