@@ -29,7 +29,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'
-                                                maxlength='50' isDisabled="{{ false }}" />
+                                                maxlength='70' isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:text-input name="ACCOUNT_NO" titleName="Account No."
@@ -88,7 +88,7 @@
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <livewire:text-input name="NAME" titleName="Company Name"
-                                                                wire:model='COMPANY_NAME'
+                                                                wire:model='COMPANY_NAME'  maxlength='70'
                                                                 isDisabled="{{ false }}" />
                                                         </div>
                                                         <div class="col-md-2">
@@ -126,7 +126,7 @@
                                                         <div class="col-md-12">
                                                             <livewire:text-input name="PRINT_NAME_AS"
                                                                 titleName="Print As" wire:model='PRINT_NAME_AS'
-                                                                isDisabled="{{ false }}" maxlength='50' />
+                                                                isDisabled="{{ false }}" maxlength='70' />
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="row">

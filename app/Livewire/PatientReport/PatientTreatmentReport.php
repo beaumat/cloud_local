@@ -84,6 +84,20 @@ class PatientTreatmentReport extends Component
             $this->LOCATION_ID
         );
     }
+    public function ExportGenerate()
+    {
+        $this->DaySetup();
+        $this->dataList = $this->patientReportServices->getMonthlyTreatment(
+            $this->YEAR,
+            $this->MONTH,
+            $this->dailyList,
+            $this->patientSelected,
+            $this->LOCATION_ID
+        );
+
+
+        
+    }
     public function mount()
     {
         $this->LOCATION_ID = $this->userServices->getLocationDefault();

@@ -28,7 +28,7 @@
                                     <div class="col-3 text-right">
                                         <label>Year:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-3">
                                         <input type="number" class="form-control form-control-sm" wire:model='YEAR' />
                                     </div>
                                     <div class="col-3">
@@ -41,7 +41,7 @@
                                     <div class="col-3 text-right">
                                         <label>Month:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-3">
                                         <select class="form-control form-control-sm" name="MONTH"
                                             wire:model.live='MONTH'>
                                             @foreach ($monthList as $item)
@@ -54,9 +54,15 @@
                                         <button wire:click='generate()'
                                             class="btn btn-xs btn-primary w-100">Generate</button>
                                     </div>
+                                    <div class='col-3'>
+                                        <button wire:click='ExportGenerate()'
+                                            class="btn btn-xs btn-success w-100">Export</button>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="col-md-4">
+
                             </div>
                             <div class="col-md-4">
                                 <div class="row">

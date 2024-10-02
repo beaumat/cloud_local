@@ -55,8 +55,6 @@
                                                 wire:model='DISCOUNT_DUE' />
                                         </div>
 
-
-
                                         @if ($TYPE == 0)
                                         
                                         @elseif ($TYPE === 1)
