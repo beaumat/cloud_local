@@ -2,13 +2,14 @@
 
 namespace App\Exports;
 
+use App\Services\PatientReportServices;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
 class TreatmentReportExport implements FromCollection
-{   
-    public int $YEAR;
-    public int $MONTH;
+{
+    protected int $YEAR;
+    protected int $MONTH;
     public $dataList = [];
     public array $dailyList = [];
     public int $count = 0;
@@ -23,8 +24,17 @@ class TreatmentReportExport implements FromCollection
     public $phicTotal = [];
     public $premTotal = [];
 
-    public function __construct() {
-        
+    protected $patientSelected = [];
+    protected $LOCATION_ID;
+    protected $patientReportServices;
+
+    public function __construct(PatientReportServices $patientReportServices, int $YEAR, int $MONTH, array $patientSelected, int $LOCATION_ID)
+    {
+        $this->patientReportServices = $patientReportServices;
+        $this->YEAR = $YEAR;
+        $this->MONTH = $MONTH;
+        $this->patientSelected = $patientSelected;
+        $this->LOCATION_ID = $LOCATION_ID;
     }
 
     public function DaySetup()
@@ -45,16 +55,62 @@ class TreatmentReportExport implements FromCollection
             $this->premTotal[] = 0;
         }
     }
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
-    {       
-        $this->DaySetup();
 
-        //
+    public function generateData()
+    {
+        $this->dataList = $this->patientReportServices->getMonthlyTreatment(
+            $this->YEAR,
+            $this->MONTH,
+            $this->dailyList,
+            $this->patientSelected,
+            $this->LOCATION_ID
+        );
     }
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function collection()
+    {
+        $this->DaySetup();
+        $this->generateData();
+
+    //     <tr>
+    //     <th class="text-center ">No.</th>
+    //     <th class="col-3">Patient Name</th>
+    //     @foreach ($dailyList as $day)
+    //         <th class="text-center">
+    //             {{ date('d', strtotime($day)) }}<br />{{ date('D', strtotime($day)) }}</th>
+    //     @endforeach
+    //     <th class="text-center">Total</th>
+    // </tr>
+    //     $daySet = [];
+    //     foreach($dailyList as $day) {
+    //         $daySet[] = date('d', strtotime($day)) . ' ' . date('D', strtotime($day));
+    //     }
+        $headers = [
+            '#'     =>  '#',
+            'NO'    => 'NO',
+            'NAME'  => 'NAME',
+    
+            'TOTAL'         => 'TOTAL'
+        ];
+
+        $NUMBER = 0;
+        $finalData = [];
+        $finalData[] = array_values($headers); // Add headers as the first row
 
 
 
+
+
+
+
+
+
+
+
+
+        return collect($finalData);
+
+    }
 }

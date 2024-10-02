@@ -102,18 +102,20 @@
                                                         </button>
                                                     @endif
                                                 @endif
-                                            @else
-                                                @if ($STATUS == 15)
-                                                    @can('patient.treatment.update')
-                                                        <button name="btnUnposted" type='button'
-                                                            class="btn btn-sm btn-secondary"
-                                                            wire:confirm="Are you sure you want to un-posted?"
-                                                            wire:click='getUnposted()'>
-                                                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                                                            Unposted
-                                                        </button>
-                                                    @endcan
-                                                @endif
+
+
+                                            @endif
+
+                                            @if ($STATUS == 4 || $STATUS == 3)
+                                                @can('patient.treatment.update')
+                                                    <button name="btnUnposted" type='button'
+                                                        class="btn btn-sm btn-secondary"
+                                                        wire:confirm="Are you sure you want to un-posted?"
+                                                        wire:click='getUnposted()'>
+                                                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                                        Unposted
+                                                    </button>
+                                                @endcan
                                             @endif
 
                                             @if ($STATUS != 3)
