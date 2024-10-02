@@ -1330,7 +1330,7 @@ class HemoServices
     }
     public function updateIsPost(int $ID, int $HEMO_ID)
     {
-         HemodialysisItems::where('ID', '=', $ID)
+        HemodialysisItems::where('ID', '=', $ID)
             ->where('HEMO_ID', '=', $HEMO_ID)
             ->update([
                 'IS_POST' => false
@@ -1399,13 +1399,11 @@ class HemoServices
                 }
             }
         }
-
-
-
         HemodialysisItems::where('SK_LINE_ID', '=', $ID)
             ->where('HEMO_ID', '=', $HEMO_ID)
             ->delete();
     }
+
     public function ItemDelete2(int $HEMO_ID, int $ITEM_ID, int $UNIT_ID, bool $IS_DEFAULT)
     {
         HemodialysisItems::where('HEMO_ID', $HEMO_ID)
@@ -1413,6 +1411,13 @@ class HemoServices
             ->where('UNIT_ID', '=', $UNIT_ID)
             ->where('IS_DEFAULT', '=', $IS_DEFAULT)
             ->delete();
+    }
+    public function ItemUnposted($HEMO_ID)
+    {
+        HemodialysisItems::where('HEMO_ID', '=', $HEMO_ID)
+            ->update([
+                'IS_POST' =>  false
+            ]);
     }
     public function ItemGet(int $ID)
     {

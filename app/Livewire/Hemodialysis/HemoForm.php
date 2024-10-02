@@ -561,6 +561,8 @@ class HemoForm extends Component
 
             $this->hemoServices->StatusUpdate($this->ID, 2);
             $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 1); //PRESENT
+            $this->hemoServices->ItemUnposted($this->ID);
+            
             DB::commit();
 
             session()->flash("message", 'Successfully posted');
@@ -575,6 +577,7 @@ class HemoForm extends Component
             session()->flash("error", $message);
         }
     }
+    public function InventoryUnposted() {}
     public function showNotes()
     {
         $contact = $this->contactServices->get($this->CUSTOMER_ID, 3);
