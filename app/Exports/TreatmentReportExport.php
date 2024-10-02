@@ -5,13 +5,14 @@ namespace App\Exports;
 use App\Services\PatientReportServices;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class TreatmentReportExport implements FromCollection
+class TreatmentReportExport implements FromCollection, ShouldAutoSize
 {
     protected int $YEAR;
     protected int $MONTH;
     public $dataList = [];
-    public array $dailyList = [];
+    public $dailyList = [];
     public int $count = 0;
     public int $index = 0;
     public int $row = 0;
@@ -74,43 +75,113 @@ class TreatmentReportExport implements FromCollection
         $this->DaySetup();
         $this->generateData();
 
-    //     <tr>
-    //     <th class="text-center ">No.</th>
-    //     <th class="col-3">Patient Name</th>
-    //     @foreach ($dailyList as $day)
-    //         <th class="text-center">
-    //             {{ date('d', strtotime($day)) }}<br />{{ date('D', strtotime($day)) }}</th>
-    //     @endforeach
-    //     <th class="text-center">Total</th>
-    // </tr>
-    //     $daySet = [];
-    //     foreach($dailyList as $day) {
-    //         $daySet[] = date('d', strtotime($day)) . ' ' . date('D', strtotime($day));
-    //     }
+
         $headers = [
-            '#'     =>  '#',
             'NO'    => 'NO',
             'NAME'  => 'NAME',
-    
-            'TOTAL'         => 'TOTAL'
         ];
+        $dayIndex = 0;
+        foreach ($this->dailyList as $day) {
+            $strDay = date('d', strtotime($day)) . ' ' . date('D', strtotime($day));
 
-        $NUMBER = 0;
+            $headers[] = $strDay;
+            $dayIndex = $dayIndex  + 1;
+        }
+        $headers[] = 'TOTAL';
+
         $finalData = [];
         $finalData[] = array_values($headers); // Add headers as the first row
 
+        $patient = 0;
+        $total = 0;
 
 
+        foreach ($this->dataList as $list) {
+            $row = [];
+            $count = 0;
+            $index = 0;
+            $patient = $patient + 1;
+            $row[] = $patient;
+            $row[] = $list->PATIENT_NAME;
+
+            foreach ($this->dailyList as $day) {
+                if ($list[date('d', strtotime($day))] == 1) {
+                    $this->phicTotal[$index] = $this->phicTotal[$index] + 1;
+                }
+                if ($list[date('d', strtotime($day))] == 2) {
+                    $this->premTotal[$index] = $this->premTotal[$index] + 1;
+                }
+                if ($list[date('d', strtotime($day))]) {
+
+                    if($list[date('d', strtotime($day))] == 1){
+                        $row[] = 'G';
+                    }elseif($list[date('d', strtotime($day))] == 2){
+                        $row[] = 'P';
+                    }
+                    else{
+                        $row[] = '';
+                    }
+                  
+                    $this->storeTotal[$index] = $this->storeTotal[$index] + 1;
+                    $count++;
+                }
+                else {
+                    $row[] = '';
+                    
+                }
+                $index++;
+            }
+
+            $row[] = $count;
+            $total = $total + $count;
+
+            $finalData[] = array_values($row);
+        }
+
+        $row = [];
+        $finalData[] = array_values($row);
+        $index = 0;
+        $sum = 0;
+
+        $row = [];
+        $row[] = '';
+        $row[] = 'No. of Treatment W/ PHIC';
 
 
+        foreach ($this->dailyList as $day) {
+            $row[] = $this->phicTotal[$index];
+            $sum = $sum + $this->phicTotal[$index];
+            $index++;
+        }
+        $row[] = $sum;
+        $finalData[] = array_values($row);
+        $row = [];
 
+        $index = 0;
+        $sum = 0;
+        $row[] = '';
+        $row[] = 'No. of Treatment Priming';
 
+        foreach ($this->dailyList as $day) {
+            $row[] = $this->premTotal[$index];
+            $sum = $sum + $this->premTotal[$index];
+            $index++;
+        }
+        $row[] = $sum;
+        $finalData[] = array_values($row);
+        $row = [];
 
+        $index = 0;
+        $row[] = '';
+        $row[] = 'No. of Treatment';
 
-
-
+        foreach ($this->dailyList as $day) {
+            $row[] = $this->storeTotal[$index];
+            $index++;
+        }
+        $row[] = $total;
+        $finalData[] = array_values($row);
 
         return collect($finalData);
-
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PatientReport;
 
+use App\Exports\TreatmentReportExport;
 use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
@@ -10,6 +11,7 @@ use App\Services\UserServices;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Patient Treatment Report')]
 class PatientTreatmentReport extends Component
@@ -86,15 +88,14 @@ class PatientTreatmentReport extends Component
     }
     public function ExportGenerate()
     {
-        $this->DaySetup();
-        $this->dataList = $this->patientReportServices->getMonthlyTreatment(
+        
+        return Excel::download(new TreatmentReportExport(
+            $this->patientReportServices,
             $this->YEAR,
             $this->MONTH,
-            $this->dailyList,
             $this->patientSelected,
             $this->LOCATION_ID
-        );
-
+        ), 'treatment-report.xlsx');
 
         
     }
