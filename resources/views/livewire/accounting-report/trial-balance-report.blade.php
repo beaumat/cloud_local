@@ -67,24 +67,21 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-                <div class="col-md-4" style="max-height: 80vh; overflow-y: auto;">
-                    <table class="table table-sm table-bordered table-hover">
-                        <thead class="bg-sky text-xs">
+                <div class="col-md-6" style="max-height: 80vh; overflow-y: auto;">
+                    <table class="table table-xl table-bordered table-hover">
+                        <thead class="bg-sky">
                             <tr>
                                 <th class="col-6 text-left">Account Title</th>
                                 <th class="col-3 text-right">Debit</th>
                                 <th class="col-3 text-right">Credit</th>
                             </tr>
                         </thead>
-                        <tbody class="text-xs">
+                        <tbody class="h1">
                             @foreach ($dataList as $list)
                                 <tr>
                                     <td>{{ $list->ACCOUNT_TITLE }}</td>
                                     @php
-
                                         $TOTAL_DEBIT = $TOTAL_DEBIT + $list->TX_DEBIT;
                                         $TOTAL_CREDIT = $TOTAL_CREDIT + $list->TX_CREDIT;
                                     @endphp

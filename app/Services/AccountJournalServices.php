@@ -334,18 +334,8 @@ class AccountJournalServices
 
         return $result;
     }
-    public function AccountSwitch(
-        int $NEW_ACCOUNT_ID,
-        int $OLD_ACCOUNT_ID,
-        int $LOCATION_ID,
-        int $JOURNAL_NO,
-        int $SUBSIDIARY_ID,
-        int $OBJECT_ID,
-        int $OBJECT_TYPE,
-        string $OBJECT_DATE,
-        int $ENTRY_TYPE,
-    ) {
-
+    public function AccountSwitch(int $NEW_ACCOUNT_ID, int $OLD_ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE,)
+    {
 
         if ($this->JournalExists(
             $OLD_ACCOUNT_ID,
@@ -369,28 +359,10 @@ class AccountJournalServices
                 ]);
         }
     }
-    public function JournalModify(
-        int $ACCOUNT_ID,
-        int $LOCATION_ID,
-        int $JOURNAL_NO,
-        int $SUBSIDIARY_ID,
-        int $OBJECT_ID,
-        int $OBJECT_TYPE,
-        string $OBJECT_DATE,
-        int $ENTRY_TYPE,
-        float $AMOUNT,
-        int  $SEQUENCE_GROUP,
-        string $EXTENDED_OPTIONS
-    ) {
-        if (!$this->JournalExists(
-            $ACCOUNT_ID,
-            $ENTRY_TYPE,
-            $OBJECT_ID,
-            $OBJECT_TYPE,
-            $OBJECT_DATE,
-            $LOCATION_ID,
-            $SUBSIDIARY_ID,
-        )) {
+    public function JournalModify(int $ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE, float $AMOUNT, int  $SEQUENCE_GROUP, string $EXTENDED_OPTIONS)
+    {
+
+        if (!$this->JournalExists($ACCOUNT_ID, $ENTRY_TYPE, $OBJECT_ID, $OBJECT_TYPE, $OBJECT_DATE, $LOCATION_ID, $SUBSIDIARY_ID,)) {
 
             if ($ACCOUNT_ID  ==  0) {
                 return;
@@ -522,12 +494,11 @@ class AccountJournalServices
             ->where('aj.AMOUNT', '>', '0')
             ->whereBetween('aj.OBJECT_DATE',  [$dateFrom, $dateTo])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
-                $query->where('LOCATION_ID', '=', $LOCATION_ID);
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
             ->when($accountId > 0, function ($query) use (&$accountId) {
                 $query->where('aj.ACCOUNT_ID', '=', $accountId);
             })
-            ->where('aj.LOCATION_ID', '=', $LOCATION_ID)
             ->orderBy('a.TAG', 'asc')
             ->orderBy('aj.OBJECT_DATE', 'asc')
 
@@ -574,6 +545,39 @@ class AccountJournalServices
 
             ->get();
 
+
+        return $result;
+    }
+
+    public function getTransactionJournal(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountId = 0)
+    {
+
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'aj.JOURNAL_NO',
+                'aj.OBJECT_DATE as DATE',
+                'a.TAG as ACCOUNT_CODE',
+                'a.NAME as ACCOUNT_TITLE',
+                'd.DESCRIPTION as TYPE',
+                'l.NAME as LOCATION',
+                DB::raw($this->TX_CODE),
+                DB::raw($this->TX_NOTES),
+                DB::raw(" if(aj.ENTRY_TYPE = 0, aj.AMOUNT, '' ) as DEBIT "),
+                DB::raw(" if(aj.ENTRY_TYPE = 1, aj.AMOUNT, '' ) as CREDIT "),
+                DB::raw($this->TX_NAME),
+            ])->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->when($accountId > 0, function ($query) use (&$accountId) {
+                $query->where('aj.ACCOUNT_ID', '=', $accountId);
+            })
+            ->get();
 
         return $result;
     }

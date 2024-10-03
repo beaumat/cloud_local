@@ -48,7 +48,6 @@
                                     <div class="col-md-8">
                                         <livewire:select-option name="ACCOUNT_ID" titleName="Account " :options="$accountList"
                                             :zero="true" :isDisabled=false wire:model='ACCOUNT_ID' />
-
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">
@@ -69,14 +68,12 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
                 <div class="col-md-12" style="max-height: 80vh; overflow-y: auto;">
                     <table class="table table-sm table-bordered table-hover">
-                        <thead class="bg-sky text-xs">
+                        <thead class="bg-sky h1">
                             <tr>
-                                <th class="col-3">Account Title</th>
+                          
                                 <th>Type</th>
                                 <th>Date</th>
                                 <th>Reference No.</th>
@@ -89,10 +86,10 @@
 
                             </tr>
                         </thead>
-                        <tbody class="text-xs">
+                        <tbody class="h1">
                             @foreach ($dataList as $list)
                                 <tr>
-                                    <td>{{ $list->ACCOUNT_TITLE }}</td>
+                              
                                     <td>{{ $list->TYPE }}</td>
                                     <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                     <td>{{ $list->TX_CODE }}</td>
@@ -116,7 +113,7 @@
 
                                     @php
                                         if ($list->DEBIT > 0) {
-                                            $BALANCE = $BALANCE + $list->DEBIT ?? 0;
+                                        $BALANCE = $BALANCE + $list->DEBIT ?? 0;
                                         } else {
                                             $BALANCE = $BALANCE - $list->CREDIT ?? 0;
                                         }

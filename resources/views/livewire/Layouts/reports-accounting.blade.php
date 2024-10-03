@@ -32,7 +32,7 @@
             </a>
         </li>
         @endcan
-        @can('report.accounting.transaction-details')
+        {{-- @can('report.accounting.transaction-details')
         <li class="nav-item">
             <a href="{{ route('reportsaccountingtransaction_details_report') }}"
                 class="nav-link {{ request()->is('reports/accounting/transaction-details*') ? 'text-warning font-weight-bold' : '' }}">
@@ -40,7 +40,7 @@
                 <p>Transaction Details</p>
             </a>
         </li>
-        @endcan
+        @endcan --}}
 
     </ul>
 </li>

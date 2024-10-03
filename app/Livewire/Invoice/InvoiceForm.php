@@ -433,9 +433,7 @@ class InvoiceForm extends Component
 
                     $PHILHEALTH_ID = $this->philHealthServices->getPhilHealthIdbyPatientPayment($this->PATIENT_PAYMENT_ID);
                     $this->philHealthServices->setUpdateTwoId($PHILHEALTH_ID, $this->PATIENT_PAYMENT_ID, $this->ID);
-
                     $PhData = $this->philHealthServices->get($PHILHEALTH_ID);
-
                     if ($PhData) {
                         $NO_TREATMENT = $this->philHealthServices->getNumberOfTreatment(
                             $this->CUSTOMER_ID,
