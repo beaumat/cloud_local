@@ -129,21 +129,21 @@
                                                         <i class="fa fa-print" aria-hidden="true"></i>
                                                     </span>
                                                 @endif
-
-                                                @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && Auth::user()->can('patient.philhealth.delete'))
-                                                    <span title="Active delete button" type="button"
-                                                        wire:click='delete({{ $list->ID }})'
-                                                        wire:confirm="Are you sure you want to delete this?"
-                                                        class="btn btn-xs btn-danger">
-                                                        <i class="fas fa-trash" aria-hidden="true"></i>
-                                                    </span>
-                                                @else
-                                                    <span title="Disabled delete button" type="button"
-                                                        class="btn btn-xs btn-secondary">
-                                                        <i class="fas fa-trash" aria-hidden="true"></i>
-                                                    </span>
-                                                @endif
-
+                                                @can('patient.philhealth.delete')
+                                                    @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false)
+                                                        <span title="Active delete button" type="button"
+                                                            wire:click='delete({{ $list->ID }})'
+                                                            wire:confirm="Are you sure you want to delete this?"
+                                                            class="btn btn-xs btn-danger">
+                                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                                        </span>
+                                                    @else
+                                                        <span title="Disabled delete button" type="button"
+                                                            class="btn btn-xs btn-secondary">
+                                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                                        </span>
+                                                    @endif
+                                                @endcan
                                                 <button type="button" title="LHIO Form"
                                                     class="btn btn-success active btn-xs"
                                                     wire:click='getARForm({{ $list->ID }})'>
