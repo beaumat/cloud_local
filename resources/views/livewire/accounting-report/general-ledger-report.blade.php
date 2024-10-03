@@ -73,7 +73,7 @@
                     <table class="table table-sm table-bordered table-hover">
                         <thead class="bg-sky h1">
                             <tr>
-                          
+
                                 <th>Type</th>
                                 <th>Date</th>
                                 <th>Reference No.</th>
@@ -87,9 +87,62 @@
                             </tr>
                         </thead>
                         <tbody class="h1">
+                            @php
+                                $TEMP_ACCOUNT = '';
+                                $TEMP_DEBIT = 0;
+                                $TEMP_CRFDIT = 0;
+                            @endphp
                             @foreach ($dataList as $list)
+                                @if ($TEMP_ACCOUNT == '')
+                                    @php
+                                        $TEMP_ACCOUNT = $list->ACCOUNT_TITLE;
+                                        $TEMP_DEBIT = $list->DEBIT ?? 0;
+                                        $TEMP_CRFDIT = $list->CREDIT ?? 0;
+                                    @endphp
+                                    <tr>
+
+                                        <td class="text-primary font-weight-bold text-md">{{ $TEMP_ACCOUNT }}</td>
+                                    </tr>
+                                @else
+                                    @if ($TEMP_ACCOUNT != $list->ACCOUNT_TITLE)
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="text-right text-info ">
+                                                <div class="border-top border-secondary">
+                                                    {{ $TEMP_DEBIT > 0 ? number_format($TEMP_DEBIT, 2) : '0.00' }}
+                                                </div>
+
+
+                                            </td>
+                                            <td class="text-right text-info top-line">
+                                                <div class="border-top border-secondary">
+                                                    {{ $TEMP_CREDIT > 0 ? number_format($TEMP_CREDIT, 2) : '0.00' }}
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        @php
+                                            $TEMP_ACCOUNT = $list->ACCOUNT_TITLE;
+                                            $TEMP_DEBIT = floatval($list->DEBIT);
+                                            $TEMP_CREDIT = floatval($list->CREDIT);
+
+                                        @endphp
+                                        <tr>
+                                            <td class="text-primary font-weight-bold text-md">{{ $TEMP_ACCOUNT }}</td>
+                                        </tr>
+                                    @else
+                                        @php
+                                            $TEMP_DEBIT += floatval($list->DEBIT);
+                                            $TEMP_CREDIT += floatval($list->CREDIT);
+                                        @endphp
+                                    @endif
+                                @endif
                                 <tr>
-                              
                                     <td>{{ $list->TYPE }}</td>
                                     <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                     <td>{{ $list->TX_CODE }}</td>
@@ -106,14 +159,15 @@
                                         }
                                     @endphp
 
-                                    <td class="text-right">{{ $list->DEBIT > 0 ? number_format($list->DEBIT) : '' }}
+                                    <td class="text-right">{{ $list->DEBIT > 0 ? number_format($list->DEBIT, 2) : '' }}
                                     </td>
-                                    <td class="text-right">{{ $list->CREDIT > 0 ? number_format($list->CREDIT) : '' }}
+                                    <td class="text-right">
+                                        {{ $list->CREDIT > 0 ? number_format($list->CREDIT, 2) : '' }}
                                     </td>
 
                                     @php
                                         if ($list->DEBIT > 0) {
-                                        $BALANCE = $BALANCE + $list->DEBIT ?? 0;
+                                            $BALANCE = $BALANCE + $list->DEBIT ?? 0;
                                         } else {
                                             $BALANCE = $BALANCE - $list->CREDIT ?? 0;
                                         }
@@ -121,9 +175,27 @@
                                     <td class="font-weight-bold text-right">{{ number_format($BALANCE, 2) }}</td>
                                 </tr>
                             @endforeach
-
                             <tr>
                                 <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-right text-info  ">
+                                    <div class="border-top border-secondary">
+                                        {{ $TEMP_DEBIT > 0 ? number_format($TEMP_DEBIT, 2) : '0.00' }}
+                                    </div>
+                                </td>
+                                <td class="text-right text-info">
+                                    <div class="border-top border-secondary">
+                                        {{ $TEMP_CREDIT > 0 ? number_format($TEMP_CREDIT, 2) : '0.00' }}
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+
                                 <td></td>
                                 <td></td>
                                 <td></td>
