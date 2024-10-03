@@ -249,8 +249,8 @@
                                 <div class="col-6">
                                     <label> 7. Discharge Diagnosis</label><br />
                                     @if ($CF4_DD_NOTES)
-                                        <h5 class="p-0 m-0 times-new-roman">
-                                            &nbsp;{{ $CF4_DD_NOTES }}</h5>
+                                        <h6 class="p-0 m-0 times-new-roman">
+                                            &nbsp;{{ $CF4_DD_NOTES }}</h6>
                                     @else
                                         <h4 class="p-0 m-0 times-new-roman ">
                                             &nbsp;&nbsp;<b>{{ $FINAL_DIAGNOSIS }}</b> &nbsp;</h4>
