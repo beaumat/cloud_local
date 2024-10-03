@@ -254,7 +254,7 @@ class SalesReceiptForm extends Component
                     $this->ID,
                     $list->ITEM_ID,
                     $list->QUANTITY,
-                    $list->UNIT_ID ?? null,
+                    $list->UNIT_ID ?? 0,
                     $list->UNIT_BASE_QUANTITY ?? 1,
                     $list->RATE,
                     $list->RATE_TYPE,
