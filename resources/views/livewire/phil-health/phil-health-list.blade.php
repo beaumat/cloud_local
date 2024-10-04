@@ -93,7 +93,7 @@
                                                 @endif
                                             </td>
                                             <td class="text-left">
-                                                {{ $list->AR_NO }}
+                                                {{ $list->AR_NO }}  
                                             </td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td class="text-center">
