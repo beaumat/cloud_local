@@ -46,9 +46,9 @@
                                             @if ($refresh)
                                                 <livewire:select-option name="DOCTOR_ID1" titleName=""
                                                     :options="$doctorList" :zero="true" wire:model.live='DOCTOR_ID'
-                                                    :vertical="false" :withLabel="false" />
+                                                    :vertical="false" :withLabel="false" :isDisabled="false" />
                                             @else
-                                                <livewire:select-option name="DOCTOR_ID2" titleName=""
+                                                <livewire:select-option name="DOCTOR_ID2" titleName="" :isDisabled="false" 
                                                     :options="$doctorList" :zero="true" wire:model.live='DOCTOR_ID'
                                                     :vertical="false" :withLabel="false" />
                                             @endif
