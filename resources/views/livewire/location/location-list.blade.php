@@ -33,7 +33,7 @@
                                     <tr>
                                         <th>Name</th>
                                         <th clss="col-1">Inactive</th>
-                                        <th class="text-center col-1">
+                                        <th class="text-center col-3">
                                             <a href="{{ route('maintenancesettingslocation_create') }}"
                                                 class="text-white">
                                                 <i class="fas fa-plus"></i></a>
@@ -43,10 +43,12 @@
                                 <tbody class="text-xs">
                                     @foreach ($locations as $list)
                                         <tr>
-                                            <td> <a
+                                            <td>
+                                                <a
                                                     href="{{ route('maintenancesettingslocation_edit', ['id' => $list->ID]) }}">
                                                     {{ $list->NAME }}
-                                                </a> </td>
+                                                </a>
+                                            </td>
                                             <td>
                                                 @if ($list->INACTIVE)
                                                     <strong class="text-danger">Yes</strong>
@@ -60,7 +62,11 @@
                                                     class="btn btn-info btn-xs">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
+                                                <a class="btn btn-dark btn-xs"
+                                                    href="{{ route('maintenancesettingsdoctor_notes', ['id' => $list->ID]) }}">
+                                                    <i class="fa fa-commenting" aria-hidden="true"></i>
 
+                                                </a>
                                                 <a title="Doctor Location"
                                                     href="{{ route('maintenancesettingslocation_doctor', ['id' => $list->ID]) }}"
                                                     class="btn btn-success btn-xs">

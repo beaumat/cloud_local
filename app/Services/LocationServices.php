@@ -53,12 +53,16 @@ class LocationServices
     }
     public function get(int $ID)
     {
-        $result = Locations::where('ID','=', $ID)->first();
-        if($result) {
+        $result = Locations::where('ID', '=', $ID)->first();
+        if ($result) {
             return $result;
         }
 
         return [];
+    }
+    public function IsExist(int $ID): bool
+    {
+        return Locations::where('ID', '=', $ID)->exists();
     }
     public function Store(
         string $NAME,
@@ -80,7 +84,7 @@ class LocationServices
         string $PHIC_SOA_FORMAT = 'PrintSoa',
         bool $PHIC_FORM_MODIFY = false,
         bool $IS_DAILY = false,
-        string $LOGO_FILE 
+        string $LOGO_FILE
 
     ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
@@ -132,7 +136,7 @@ class LocationServices
         string $PHIC_SOA_FORMAT,
         bool $PHIC_FORM_MODIFY = false,
         bool $IS_DAILY = false,
-        string $LOGO_FILE 
+        string $LOGO_FILE
     ): void {
 
         Locations::where('ID', $ID)

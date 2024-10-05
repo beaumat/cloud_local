@@ -20,7 +20,11 @@ class DoctorOrderDefaultServices
     }
     public function HaveAData(int $LOCATION_ID): bool
     {
-        return DoctorOrderDefault::where('LOCATION_ID','=', $LOCATION_ID)->exists();
+        return DoctorOrderDefault::where('LOCATION_ID', '=', $LOCATION_ID)->exists();
+    }
+    public function Get(int $ID)
+    {
+        return  DoctorOrderDefault::where('ID', '=', $ID)->first();
     }
     public function Store(int $LOCATION_ID, string $DESCRIPTION)
     {
@@ -40,7 +44,7 @@ class DoctorOrderDefaultServices
 
     public function Update(int $ID, string $DESCRIPTION, bool $INACTIVE, bool $MODIFY)
     {
-        DoctorOrderDefault::where('ID','=', $ID)
+        DoctorOrderDefault::where('ID', '=', $ID)
             ->update([
                 'DESCRIPTION'   => $DESCRIPTION,
                 'INACTIVE'      => $INACTIVE,
@@ -49,7 +53,7 @@ class DoctorOrderDefaultServices
     }
     public function Delete(int $ID)
     {
-        DoctorOrderDefault::where('ID','=', $ID)->delete();
+        DoctorOrderDefault::where('ID', '=', $ID)->delete();
     }
 
     public function getListByLocation(int $LOCATION_ID)
@@ -60,7 +64,7 @@ class DoctorOrderDefaultServices
                 'DESCRIPTION',
                 'MODIFY'
             ])
-            ->where('LOCATION_ID','=', $LOCATION_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->orderBy('LINE_NO', 'asc')
             ->get();
 

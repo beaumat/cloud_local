@@ -42,6 +42,7 @@ use App\Livewire\InventoryAdjustment\InventoryAdjustmentList;
 use App\Livewire\Invoice\InvoiceForm;
 use App\Livewire\Invoice\InvoiceList;
 use App\Livewire\List\ItemActiveList;
+use App\Livewire\Location\DoctorNotes;
 use App\Livewire\Location\LocationDoctors;
 use App\Livewire\Option\OptionSettings;
 use App\Livewire\PatientPayment\PatientPaymentForm;
@@ -497,6 +498,7 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/location')->group(function () {
                 Route::get('/', LocationList::class)->name('location')->middleware(['permission:location.view']);
                 Route::get('/{id}/doctor', LocationDoctors::class)->name('location_doctor')->middleware(['permission:location.view']);
+                Route::get('/{id}/doctor-notes', DoctorNotes::class)->name('doctor_notes')->middleware(['permission:location.view']);
                 Route::get('/create', LocationForm::class)->name('location_create')->middleware(['permission:location.create']);
                 Route::get('/{id}/edit', LocationForm::class)->name('location_edit')->middleware(['permission:location.edit']);
 

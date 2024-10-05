@@ -43,14 +43,17 @@ class LocationDoctors extends Component
 
         $this->validate(
             [
-                'DOCTOR_ID' => 'required|integer|min:1'
+                'DOCTOR_ID' => 'required|integer|exists:contact,id'
             ],
             [],
             ['DOCTOR_ID' => 'Doctor']
         );
 
 
-        $this->doctorLocationServices->Store($this->LOCATION_ID, $this->DOCTOR_ID);
+        $this->doctorLocationServices->Store(
+            $this->LOCATION_ID,
+            $this->DOCTOR_ID
+        );
         $this->refresh = $this->refresh ? false : true;
         $this->DOCTOR_ID = 0;
     }

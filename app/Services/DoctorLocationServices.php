@@ -20,9 +20,11 @@ class DoctorLocationServices
     public function Delete(int $LOCATION_ID, int $DOCTOR_ID)
     {
 
-        DoctorLocation::where('LOCATION_ID', $LOCATION_ID)->where('DOCTOR_ID', $DOCTOR_ID)->delete();
+        DoctorLocation::where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('DOCTOR_ID', '=', $DOCTOR_ID)
+            ->delete();
     }
-    public function GetDoctorList(int $LOCATION_ID)
+    public function GetDoctorList(int $LOCATION_ID): object
     {
         $result = Contacts::query()
             ->select([

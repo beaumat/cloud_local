@@ -7,6 +7,7 @@ use App\Models\PriceLevels;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -179,6 +180,15 @@ class LocationForm extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
     }
     public function render()
     {
