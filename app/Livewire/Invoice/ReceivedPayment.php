@@ -142,6 +142,9 @@ class ReceivedPayment extends Component
             $isGood = $this->getPosted($ID, $this->userServices->getTransactionDateDefault());
             if ($isGood) {
                 DB::commit();
+
+                $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
+                $this->dispatch('update-amount', result: $getResult);
                 $this->clearData();
             } else {
                 DB::rollBack();
