@@ -17,6 +17,7 @@ class TaxCredit extends Model
         'RECORDED_ON',
         'CODE',
         'DATE',
+        'CUSTOMER_ID',
         'EWT_ID',
         'EWT_RATE',
         'EWT_ACCOUNT_ID',

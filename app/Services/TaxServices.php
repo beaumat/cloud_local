@@ -29,6 +29,11 @@ class TaxServices
     {
         return Tax::where('TAX_TYPE', $ID)->first()->ID;
     }
+    public function getWTax()
+    {
+        $result = Tax::query()->select(['ID', 'NAME'])->where('TAX_TYPE', 2)->get();
+        return  $result;
+    }
     public function getList()
     {
         $result = Tax::query()->select(['ID', 'NAME'])->where('TAX_TYPE', 3)->get();

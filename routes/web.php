@@ -68,6 +68,7 @@ use App\Livewire\Statement\Statement;
 use App\Livewire\StatementOfAccount\SoaModule;
 use App\Livewire\StockTransfer\StockTransferForm;
 use App\Livewire\StockTransfer\StockTransferList;
+use App\Livewire\TaxCredit\TaxCreditForm;
 use App\Livewire\TaxCredit\TaxCreditList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
@@ -253,6 +254,8 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::prefix('/tax-credit')->group(function () {
             Route::get('/', TaxCreditList::class)->name('tax_credit');
+            Route::get('/create', TaxCreditForm::class)->name('tax_credit_create');
+            Route::get('/{id}/edit', TaxCreditForm::class)->name('tax_credit_edit');
         });
     });
 

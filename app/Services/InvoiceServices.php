@@ -9,6 +9,7 @@ use App\Models\PaymentInvoices;
 use App\Models\PhilHealth;
 use App\Models\SalesOrderItems;
 use App\Models\Tax;
+use App\Models\TaxCreditInvoices;
 use Illuminate\Support\Facades\DB;
 
 
@@ -403,7 +404,9 @@ class InvoiceServices
 
             $paymentApplied = (float) $this->GetPaymentApplied($ID);
             $creditApplied = (float) $this->GetCreditApplied($ID);
-            $totalPay = (float) $paymentApplied + $creditApplied;
+            $taxCredit = (float)  $this->GetTaxCredit($ID);
+            
+            $totalPay = (float) $paymentApplied + $creditApplied + $taxCredit;
 
             $data = $this->compute->taxCompute($itemResult, $TAX_ID);
             foreach ($data as $list) {
@@ -453,12 +456,23 @@ class InvoiceServices
         return $paymentSum->pay ?? 0;
     }
 
+
+    public function GetTaxCredit(int $INVOICE_ID): float
+    {
+        $paymentSum = TaxCreditInvoices::query()
+            ->select(DB::raw('IFNULL(SUM(tax_credit_invoices.AMOUNT_WITHHELD), 0) AS pay'))
+            ->where('tax_credit_invoices.INVOICE_ID', '=', $INVOICE_ID)
+            ->first();
+        return $paymentSum->pay ?? 0;
+    }
+
+
     public function updateInvoiceBalance(int $INVOICE_ID)
     {
         $PAYMENT = (float) $this->GetPaymentApplied($INVOICE_ID);
         $CREDIT = (float) $this->GetCreditApplied($INVOICE_ID);
-
-        $PAY = (float) $PAYMENT + $CREDIT;
+        $TAX = (float) $this->GetTaxCredit($INVOICE_ID);
+        $PAY = (float) $PAYMENT + $CREDIT + $TAX;
 
         $data = Invoice::where('ID', '=', $INVOICE_ID)->first();
         if ($data) {
