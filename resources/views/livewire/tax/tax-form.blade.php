@@ -56,7 +56,7 @@
                                         @elseif($TAX_TYPE == 2)
                                             <div class="col-md-4">
                                                 <livewire:select-option name="TaxAcctID" :options="$accountList"
-                                                    :zero="true" titleName="Tax Account"
+                                                    :zero="true" titleName="Tax Account" :isDisabled='false'
                                                     wire:model.live='TAX_ACCOUNT_ID' />
                                             </div>
                                             <div class="col-md-4">
