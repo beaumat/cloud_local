@@ -337,7 +337,7 @@ class PaymentServices
                 'payment_invoices.ID',
                 'payment_invoices.ACCOUNTS_RECEIVABLE_ID as ACCOUNT_ID',
                 'payment_invoices.INVOICE_ID as SUBSIDIARY_ID',
-                'payment.AMOUNT_APPLIED as AMOUNT',
+                'payment_invoices.AMOUNT_APPLIED as AMOUNT',
                 DB::raw('1 as ENTRY_TYPE')
             ])->join('payment', 'payment.ID', '=', 'payment_invoices.PAYMENT_ID')
             ->where('payment_invoices.PAYMENT_ID', '=', $PAYMENT_ID)

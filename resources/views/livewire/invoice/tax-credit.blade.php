@@ -6,10 +6,9 @@
             <tr>
                 <th class="col-1">Date</th>
                 <th class="col-1">Code</th>
-                <th class="col-1">Payment Method</th>
-                <th class="col-1 text-right">Amount</th>
-                <th class="col-1">Ref No.</th>
-                <th class="col-2">Deposit Account</th>
+                <th class="col-1">Type</th>
+                <th class="col-1 text-right">WTax</th>
+                <th class="col-3">Tax Account</th>
                 <th class="text-center col-4">Notes</th>
                 <th class="text-center col-1">Action</th>
             </tr>
@@ -19,15 +18,13 @@
                 <tr>
                     <td>{{ date('M/d/Y', strtotime($list->DATE)) }}</td>
                     <td>{{ $list->CODE }}</td>
-                    <td>{{ $list->PAYMENT_METHOD }}</td>
-                    <td class="text-right">{{ number_format($list->AMOUNT_APPLIED, 2) }}</td>
-
-                    <td>{{ $list->RECEIPT_REF_NO }}</td>
-                    <td>{{ $list->BANK_ACCOUNT }}</td>
+                    <td>{{ $list->TAX_TYPE }}</td>
+                    <td class="text-right">{{ number_format($list->AMOUNT_WITHHELD, 2) }}</td>
+                    <td>{{ $list->TAX_ACCOUNT }}</td>
                     <td>{{ $list->NOTES }}</td>
                     <td>
                         <a title="View Details" target="_BLANK"
-                            href="{{ route('customerspayment_edit', ['id' => $list->ID]) }}"
+                            href="{{ route('customerstax_credit_edit', ['id' => $list->ID]) }}"
                             class="btn btn-sm btn-info w-100"><i class="fa fa-eye" aria-hidden="true"></i></a>
                     </td>
                 </tr>
@@ -38,27 +35,21 @@
                         <td> </td>
                         <td> </td>
                         <td>
-                            <select class="form-control form-control-sm" wire:model='PAYMENT_METHOD_ID'>
+                            <select class="form-control form-control-sm" wire:model.live='EWT_ID'>
                                 <option value="0"></option>
-                                @foreach ($paymentMethodList as $list)
-                                    <option value="{{ $list->ID }}">{{ $list->DESCRIPTION }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td> <input type="number" class="form-control form-control-sm text-right" wire:model='AMOUNT'
-                                step="0.01" />
-                        </td>
-
-                        <td> <input type="text" class="form-control form-control-sm" wire:model='RECEIPT_REF_NO' />
-                        </td>
-                        <td>
-                            <select class="form-control form-control-sm" wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID'>
-                                <option value="0"></option>
-                                @foreach ($accountList as $list)
+                                @foreach ($taxList as $list)
                                     <option value="{{ $list->ID }}">{{ $list->NAME }}</option>
                                 @endforeach
                             </select>
                         </td>
+                        <td class='text-center'>
+                            <label>{{ number_format($AMOUNT_WITHHELD, 2) }}</label>
+                        </td>
+                        <td>
+                            {{ $TAX_DESCRIPTION }}
+                        </td>
+
+
 
                         <td> <input type="text" class="form-control form-control-sm" wire:model='NOTES' /> </td>
                         <td>

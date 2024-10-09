@@ -4,18 +4,28 @@ namespace App\Services;
 
 use App\Models\TaxCredit;
 use App\Models\TaxCreditInvoices;
+use Illuminate\Support\Facades\DB;
 
 class TaxCreditServices
 {
+    public int $object_type_tax_credit = 72;
+    public int $object_type_tax_credit_invoices = 73;
+    public int $document_type_id = 20;
 
     private $object;
     private $dateServices;
     private $systemSettingServices;
-    public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices)
-    {
+    private $invoiceServices;
+    public function __construct(
+        ObjectServices $objectServices,
+        DateServices $dateServices,
+        SystemSettingServices $systemSettingServices,
+        InvoiceServices $invoiceServices
+    ) {
         $this->object = $objectServices;
         $this->dateServices = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
+        $this->invoiceServices = $invoiceServices;
     }
     public function Get(int $ID)
     {
@@ -63,18 +73,18 @@ class TaxCreditServices
         float $EWT_RATE,
         int $EWT_ACCOUNT_ID,
         string $NOTES,
+        float $AMOUNT,
         int $ACCOUNTS_RECEIVABLE_ID
     ) {
 
         TaxCredit::where('ID', '=', $ID)
             ->update([
-                'ID'                        => $ID,
-                'RECORDED_ON'               => $this->dateServices->Now(),
                 'CODE'                      => $CODE,
                 'EWT_ID'                    => $EWT_ID,
                 'EWT_RATE'                  => $EWT_RATE,
                 'EWT_ACCOUNT_ID'            => $EWT_ACCOUNT_ID > 0 ? $EWT_ACCOUNT_ID : null,
                 'NOTES'                     => $NOTES,
+                'AMOUNT'                    => $AMOUNT,
                 'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
             ]);
     }
@@ -84,7 +94,14 @@ class TaxCreditServices
         TaxCreditInvoices::where('TAX_CREDIT_ID', '=', $ID)->delete();
         TaxCredit::where('ID', '=', $ID)->delete();
     }
-
+    public function setTotal(int $TAX_CREDIT_ID, float $AMOUNT)
+    {
+        $data =  TaxCredit::where('ID', $TAX_CREDIT_ID)->update(
+            [
+                'AMOUNT' => $AMOUNT
+            ]
+        );
+    }
     public function Search($search, int $LOCATION_ID, int $perPage)
     {
 
@@ -167,11 +184,31 @@ class TaxCreditServices
             ->where('INVOICE_ID', '=', $INVOICE_ID)
             ->exists();
     }
+
+
+    public function GetTaxCreditInvoiceExists(int $ID, int $TAX_CREDIT_ID, int $INVOICE_ID)
+    {
+        $result = TaxCreditInvoices::where('ID', '=', $ID)
+            ->where('TAX_CREDIT_ID', '=', $TAX_CREDIT_ID)
+            ->where('INVOICE_ID', '=', $INVOICE_ID)
+            ->first();
+
+        if ($result) {
+            return $result;
+        }
+
+        return [];
+    }
+
     public function DeleteInvoice(int $ID)
     {
         TaxCreditInvoices::where('ID', '=', $ID)->delete();
     }
+    public function GetTaxCreditInvoice(int $ID)
+    {
 
+        return TaxCreditInvoices::where('ID', '=', $ID)->first();
+    }
     public function GetInvoiceist(int $TAX_CREDIT_ID)
     {
 
@@ -191,6 +228,115 @@ class TaxCreditServices
             ->where('tax_credit_invoices.TAX_CREDIT_ID', '=', $TAX_CREDIT_ID)
             ->get();
 
+
         return $result;
+    }
+
+    public function UpdateAMOUNT_WITHHELD(int $TAX_CREDIT_ID, float $EWT_RATE): float
+    {
+        $TOTAL = 0;
+        $result = TaxCreditInvoices::query()
+            ->select([
+                'tax_credit_invoices.INVOICE_ID',
+                'tax_credit_invoices.ID',
+                'i.AMOUNT'
+            ])
+            ->join('invoice as i', 'i.ID', '=', 'tax_credit_invoices.INVOICE_ID')
+            ->where('TAX_CREDIT_ID', '=', $TAX_CREDIT_ID)
+            ->get();
+
+        foreach ($result as $row) {
+            $INVOICE_AMOUNT  = (float) $row->AMOUNT ?? 0;
+            $AMT_WITHHELD = (float) $INVOICE_AMOUNT * ($EWT_RATE / 100);
+            $TOTAL += $AMT_WITHHELD;
+            $this->UpdateInvoice($row->ID, $TAX_CREDIT_ID, $row->INVOICE_ID, $AMT_WITHHELD);
+            $this->invoiceServices->updateInvoiceBalance($row->INVOICE_ID);
+        }
+
+        return $TOTAL;
+    }
+
+    public function getTotal(int $TAX_CREDIT_ID): float
+    {
+        $TOTAL = 0;
+        $result = TaxCreditInvoices::query()
+            ->select([
+                'tax_credit_invoices.AMOUNT_WITHHELD',
+            ])
+            ->where('TAX_CREDIT_ID', '=', $TAX_CREDIT_ID)
+            ->get();
+
+        foreach ($result as $row) {
+            $AMOUNT_WITHHELD  = (float) $row->AMOUNT_WITHHELD ?? 0;
+            $TOTAL += $AMOUNT_WITHHELD;
+        }
+
+        return $TOTAL;
+    }
+
+    public function TaxCreditJournal(int $TAX_CREDIT_ID)
+    {
+        $result = TaxCredit::query()
+            ->select([
+                'ID',
+                'EWT_ACCOUNT_ID as ACCOUNT_ID',
+                'CUSTOMER_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                DB::raw('0 as ENTRY_TYPE')
+            ])
+            ->where('ID', '=', $TAX_CREDIT_ID)
+            ->get();
+
+        return $result;
+    }
+    public function TaxCreditJournalRemaining(int $TAX_CREDIT_ID)
+    {
+        $result = TaxCredit::query()
+            ->select([
+                'tax_credit.ID',
+                'tax_credit.ACCOUNTS_RECEIVABLE_ID as ACCOUNT_ID',
+                'tax_credit.CUSTOMER_ID as SUBSIDIARY_ID',
+                DB::raw("(tax_credit.AMOUNT - (select IFNULL(sum(tax_credit_invoices.AMOUNT_WITHHELD),0)  from tax_credit_invoices where tax_credit_invoices.TAX_CREDIT_ID = tax_credit.ID limit 1)) as AMOUNT"),
+                DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->where('tax_credit.ID', '=', $TAX_CREDIT_ID)
+            ->get();
+
+        return $result;
+    }
+    public function TaxCreditInvoicejournal(int $TAX_CREDIT_ID)
+    {
+        $result = TaxCreditInvoices::query()
+            ->select([
+                'tax_credit_invoices.ID',
+                'tax_credit_invoices.ACCOUNTS_RECEIVABLE_ID as ACCOUNT_ID',
+                'tax_credit_invoices.INVOICE_ID as SUBSIDIARY_ID',
+                'tax_credit_invoices.AMOUNT_WITHHELD as AMOUNT',
+                DB::raw('1 as ENTRY_TYPE')
+            ])->join('tax_credit', 'tax_credit.ID', '=', 'tax_credit_invoices.TAX_CREDIT_ID')
+            ->where('tax_credit_invoices.TAX_CREDIT_ID', '=', $TAX_CREDIT_ID)
+            ->get();
+
+        return $result;
+    }
+    public function InvoiceTaxCreditList(int $INVOICE_ID, int $CUSTOMER_ID)
+    {
+        return TaxCredit::query()
+            ->select([
+                'tax_credit.ID',     
+                'tax_credit.CODE',
+                'tax_credit.DATE',
+                'tax_credit.AMOUNT',
+                'tax.NAME as TAX_TYPE',
+                'tax_credit_invoices.AMOUNT_WITHHELD',
+                'a.NAME as TAX_ACCOUNT',
+                'tax_credit.NOTES'
+            ])
+            ->join('tax', 'tax.ID', '=', 'tax_credit.EWT_ID')
+            ->join('tax_credit_invoices', 'tax_credit_invoices.TAX_CREDIT_ID', '=', 'tax_credit.ID')
+            ->leftJoin('account as a', 'a.ID', '=', 'tax_credit.EWT_ACCOUNT_ID')
+            ->where('tax_credit_invoices.INVOICE_ID', '=', $INVOICE_ID)
+            ->where('tax_credit.CUSTOMER_ID', '=', $CUSTOMER_ID)
+            ->get();
     }
 }

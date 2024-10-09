@@ -62,6 +62,31 @@ class InvoiceServices
 
         return $result;
     }
+
+    public function getInvoiceListViaTaxCredit(int $CUSTOMER_ID, int $LOCATION_ID, int $TAX_CREDIT_ID)
+    {
+        $result = Invoice::query()
+            ->select([
+                'invoice.ID',
+                'invoice.DATE',
+                'invoice.CODE',
+                'invoice.AMOUNT',
+                'invoice.BALANCE_DUE',
+            
+            ])
+            ->whereNotExists(function ($query) use (&$TAX_CREDIT_ID) {
+                $query->select(DB::raw(1))
+                    ->from('tax_credit_invoices as p')
+                    ->whereRaw('p.INVOICE_ID = invoice.ID')
+                    ->where('p.TAX_CREDIT_ID', '=', $TAX_CREDIT_ID);
+            })
+            ->where('invoice.CUSTOMER_ID', $CUSTOMER_ID)
+            ->where('invoice.LOCATION_ID', $LOCATION_ID)
+            ->where('invoice.BALANCE_DUE', '>', 0)
+            ->get();
+
+        return $result;
+    }
     public function getInvoiceListViaCreditMemo(int $CUSTOMER_ID, int $LOCATION_ID, int $CREDIT_MEMO_ID)
     {
         $result = Invoice::query()
@@ -463,6 +488,7 @@ class InvoiceServices
             ->select(DB::raw('IFNULL(SUM(tax_credit_invoices.AMOUNT_WITHHELD), 0) AS pay'))
             ->where('tax_credit_invoices.INVOICE_ID', '=', $INVOICE_ID)
             ->first();
+            
         return $paymentSum->pay ?? 0;
     }
 

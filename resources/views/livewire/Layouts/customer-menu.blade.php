@@ -31,6 +31,13 @@
                     <p>Receive Payment</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('customerstax_credit') }}"
+                    class="nav-link {{ request()->is('customers/tax-credit*') ? 'active' : '' }}">
+                    <i class="fas fa-university nav-icon"></i>
+                    <p>WTax Credit</p>
+                </a>
+            </li>
         @endcan
         @can('customer.credit-memo.view')
             <li class="nav-item">
@@ -62,13 +69,7 @@
             </li>
         @endcan
 
-        <li class="nav-item">
-            <a href="{{ route('customerstax_credit') }}"
-                class="nav-link {{ request()->is('customers/tax-credit*') ? 'active' : '' }}">
-                <i class="fas fa-university nav-icon"></i>
-                <p>Tax Credit</p>
-            </a>
-        </li>
+
 
     </ul>
 </li>

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\TaxCredit;
 
+use App\Services\AccountJournalServices;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
 use App\Services\TaxCreditServices;
@@ -17,7 +18,6 @@ use Livewire\Component;
 class TaxCreditForm extends Component
 {
 
-
     public bool $Modify;
     public int $openStatus = 0;
 
@@ -31,33 +31,32 @@ class TaxCreditForm extends Component
     public int $LOCATION_ID;
     public float $AMOUNT;
     public string $NOTES;
-    public int $STATUS;
+    public int $STATUS = 0;
     public int $STATUS_DESCRIPTION;
     public int $ACCOUNTS_RECEIVABLE_ID;
-
-
     public $contactList = [];
     public $locationList = [];
     public $taxList = [];
-
-
     private $taxCreditServices;
     private $contactServices;
     private $locationServices;
     private $userServices;
     private $taxServices;
+    private $accountJournalServices;
     public function boot(
         TaxCreditServices $taxCreditServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        TaxServices $taxServices
+        TaxServices $taxServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->taxCreditServices = $taxCreditServices;
         $this->contactServices  = $contactServices;
         $this->userServices = $userServices;
         $this->locationServices = $locationServices;
         $this->taxServices = $taxServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     private function LoadDropdown()
     {
@@ -67,6 +66,8 @@ class TaxCreditForm extends Component
     }
     private function getInfo($data)
     {
+
+
         $this->ID = $data->ID;
         $this->CODE = $data->CODE ?? '';
         $this->CUSTOMER_ID = $data->CUSTOMER_ID ?? 0;
@@ -75,9 +76,11 @@ class TaxCreditForm extends Component
         $this->EWT_ACCOUNT_ID = $data->EWT_ACCOUNT_ID ?? 0;
         $this->ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
         $this->AMOUNT = $data->AMOUNT ?? 0;
+
         $this->EWT_RATE = $data->EWT_RATE ?? 0;
         $this->EWT_ID = $data->EWT_ID ?? 0;
         $this->NOTES = $data->NOTES ?? '';
+        $this->STATUS = $data->STATUS ?? 0;
     }
 
     public function updatedEwtId()
@@ -102,9 +105,8 @@ class TaxCreditForm extends Component
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('companystock_transfer')->with('error', $errorMessage);
+            return Redirect::route('customerstax_credit')->with('error', $errorMessage);
         }
-
 
         $this->LoadDropdown();
         $this->DATE = $this->userServices->getTransactionDateDefault();
@@ -113,14 +115,20 @@ class TaxCreditForm extends Component
         $this->CUSTOMER_ID = 0;
         $this->EWT_ACCOUNT_ID = 0;
         $this->ACCOUNTS_RECEIVABLE_ID = 12;
-        $this->AMOUNT =  0;
+        $this->AMOUNT = 0;
         $this->EWT_RATE =  0;
         $this->EWT_ID = 0;
         $this->ID = 0;
         $this->NOTES = '';
         $this->Modify = true;
+        $this->STATUS = 0;
     }
+    #[On('reload_invoice')]
+    public function updateAmount()
+    {
 
+        $this->AMOUNT = $this->taxCreditServices->getTotal($this->ID);
+    }
 
     public function save()
     {
@@ -175,23 +183,53 @@ class TaxCreditForm extends Component
                 DB::commit();
                 return Redirect::route('customerstax_credit_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             }
-            DB::beginTransaction();
-            $this->taxCreditServices->Update(
-                $this->ID,
-                $this->CODE,
-                $this->EWT_ID,
-                $this->EWT_RATE,
-                $this->EWT_ACCOUNT_ID,
-                $this->NOTES,
-                $this->ACCOUNTS_RECEIVABLE_ID
-            );
-            DB::commit();
-            session()->flash('message', 'Successfully updated');
+
+
+            $data =  $this->taxCreditServices->Get($this->ID);
+            if ($data) {
+                if ($this->STATUS == 16) {
+                    $JNO = $this->accountJournalServices->getRecord($this->taxCreditServices->object_type_tax_credit, $this->ID);
+                    if ($JNO > 0) {
+                        $this->accountJournalServices->AccountSwitch(
+                            $this->EWT_ACCOUNT_ID,
+                            $data->EWT_ACCOUNT_ID,
+                            $this->LOCATION_ID,
+                            $JNO,
+                            $data->CUSTOMER_ID,
+                            $this->ID,
+                            $this->taxCreditServices->object_type_tax_credit,
+                            $this->DATE,
+                            0
+                        );
+                    }
+                }
+
+                $this->AMOUNT = (float)  $this->taxCreditServices->UpdateAMOUNT_WITHHELD($this->ID, $this->EWT_RATE);
+                $this->taxCreditServices->Update(
+                    $this->ID,
+                    $this->CODE,
+                    $this->EWT_ID,
+                    $this->EWT_RATE,
+                    $this->EWT_ACCOUNT_ID,
+                    $this->NOTES,
+                    $this->AMOUNT,
+                    $this->ACCOUNTS_RECEIVABLE_ID
+                );
+
+                DB::commit();
+                session()->flash('message', 'Successfully updated');
+            }
+            $this->Modify = false;
         } catch (\Throwable $e) {
             DB::rollback();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+
+    public function getModify()
+    {
+        $this->Modify = true;
     }
     public function updateCancel()
     {
@@ -208,6 +246,97 @@ class TaxCreditForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
+
+    public function getPosted()
+    {
+        try {
+
+            DB::beginTransaction();
+            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->taxCreditServices->object_type_tax_credit, $this->ID);
+            if ($JOURNAL_NO  == 0) {
+                $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->taxCreditServices->object_type_tax_credit, $this->ID) + 1;
+            }
+
+            $paymentData = $this->taxCreditServices->TaxCreditJournal($this->ID);
+
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $paymentData,
+                $this->LOCATION_ID,
+                $this->taxCreditServices->object_type_tax_credit,
+                $this->DATE,
+                "TAX"
+            );
+
+
+            $paymentDataR = $this->taxCreditServices->TaxCreditJournalRemaining($this->ID);
+
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $paymentDataR,
+                $this->LOCATION_ID,
+                $this->taxCreditServices->object_type_tax_credit,
+                $this->DATE,
+                "A/R"
+            );
+
+
+            $paymentInvoiceData = $this->taxCreditServices->TaxCreditInvoicejournal($this->ID);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $paymentInvoiceData,
+                $this->LOCATION_ID,
+                $this->taxCreditServices->object_type_tax_credit_invoices,
+                $this->DATE,
+                "A/R"
+            );
+
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum) {
+                $this->taxCreditServices->StatusUpdate($this->ID, 15);
+                DB::commit();
+                $data = $this->taxCreditServices->get($this->ID);
+                if ($data) {
+                    $this->getInfo($data);
+                    $this->Modify = false;
+                    return;
+                }
+                session()->flash('message', 'Successfully posted');
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            DB::rollBack();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function getUnposted()
+    {
+        try {
+            DB::beginTransaction();
+            $this->taxCreditServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            Redirect::route('customerstax_credit_edit', $this->ID)->with('message', 'Successfully unposted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function OpenJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->taxCreditServices->object_type_tax_credit, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+        }
+    }
+
     public function render()
     {
         return view('livewire.tax-credit.tax-credit-form');

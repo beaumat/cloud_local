@@ -40,7 +40,7 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-6">
-                                                    @if ($Modify && $STATUS == 0)
+                                                    @if (($Modify && $STATUS == 0) || ($Modify && $STATUS == 16))
                                                         <livewire:select-option name="EWT_ID"
                                                             titleName="Withholding Tax Type" :options="$taxList"
                                                             :zero="true" :isDisabled="false"
@@ -141,8 +141,6 @@
                                                 </button>
                                             @endcan
                                         @endif
-
-
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS != 16)
@@ -192,7 +190,7 @@
                                         <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('TaxCredit.InvoiceList', ['TAX_CREDIT_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'AMOUNT' => $AMOUNT])
+                                                @livewire('TaxCredit.InvoiceList', ['TAX_CREDIT_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'EWT_RATE' => $EWT_RATE, 'STATUS' => $STATUS])
                                             </div>
                                         </div>
                                     </div>

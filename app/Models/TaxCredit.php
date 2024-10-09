@@ -22,8 +22,8 @@ class TaxCredit extends Model
         'EWT_RATE',
         'EWT_ACCOUNT_ID',
         'LOCATION_ID',
-        'AMOUNT',
         'NOTES',
+        'AMOUNT',
         'STATUS',
         'STATUS_DATE',
         'ACCOUNTS_RECEIVABLE_ID'

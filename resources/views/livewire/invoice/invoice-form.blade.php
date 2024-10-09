@@ -215,7 +215,13 @@
                                             aria-controls="custom-tabs-four-payment" aria-selected="true">Receive
                                             Payment</a>
                                     </li>
-
+                                    <li class="nav-item">
+                                        <a class="nav-link @if ($tab == 'tax') active @endif"
+                                            id="custom-tabs-four-tax-tab" wire:click="SelectTab('tax')"
+                                            data-toggle="pill" href="#custom-tabs-four-tax" role="tab"
+                                            aria-controls="custom-tabs-four-tax" aria-selected="true">Withholding Tax
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -243,7 +249,17 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="tab-pane fade @if ($tab == 'tax') show active @endif"
+                                        id="custom-tabs-four-tax" role="tabpanel"
+                                        aria-labelledby="custom-tabs-four-tax-tab">
+                                        <div class="row"
+                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            <div class="col-md-12"
+                                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                @livewire('Invoice.TaxCredit', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID, 'INVOICE_STATUS_ID' => $STATUS, 'AMOUNT' => $AMOUNT])
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>

@@ -92,14 +92,7 @@ class PaymentInvoices extends Component
                     $this->paymentServices->object_type_payment,
                     $this->PAYMENT_ID
                 );
-
-                if ($JOURNAL_NO  ==  0) {
-                    session()->flash('error', 'journal not found');
-                    return;
-                }
-
                 $payData = $this->paymentServices->get($this->PAYMENT_ID);
-
                 if ($payData) {
                     $payInvoices = $this->paymentServices->PaymentInvoiceGet($ID, $this->PAYMENT_ID, $INVOICE_ID);
                     if ($payInvoices) {
