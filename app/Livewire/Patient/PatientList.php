@@ -3,9 +3,11 @@
 namespace App\Livewire\Patient;
 
 use App\Exports\PatientListExport;
+use App\Services\ContactRequirementServices;
 use App\Services\ContactServices;
 use App\Services\DoctorLocationServices;
 use App\Services\LocationServices;
+use App\Services\PatientDoctorServices;
 use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -32,12 +34,22 @@ class PatientList extends Component
     private $locationServices;
     private $userServices;
     private $doctorLocationServices;
-    public function boot(ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices, DoctorLocationServices   $doctorLocationServices)
-    {
+    private $patientDoctorServices;
+    private $contactRequirementServices;
+    public function boot(
+        ContactServices $contactServices,
+        LocationServices $locationServices,
+        UserServices $userServices,
+        DoctorLocationServices   $doctorLocationServices,
+        PatientDoctorServices $patientDoctorServices,
+        ContactRequirementServices $contactRequirementServices
+    ) {
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->doctorLocationServices = $doctorLocationServices;
+        $this->patientDoctorServices = $patientDoctorServices;
+        $this->contactRequirementServices = $contactRequirementServices;
     }
     public function mount()
     {
@@ -48,6 +60,9 @@ class PatientList extends Component
     public function delete($id)
     {
         try {
+
+            $this->contactRequirementServices->DeletePatient($id);
+            $this->patientDoctorServices->DeletePatient($id);
             $this->contactServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {

@@ -14,6 +14,10 @@ class PatientDoctorServices
     {
         $this->object = $objectService;
     }
+    public function DeletePatient(int $id)
+    {
+        PatientDoctor::where('PATIENT_ID', '=', $id)->delete();
+    }
     public function Store(int $PATIENT_ID, int $DOCTOR_ID)
     {
         $ID = (int) $this->object->ObjectNextID('PATIENT_DOCTOR');
@@ -38,7 +42,7 @@ class PatientDoctorServices
     }
     public function GetbyTemp(int $id)
     {
-        
+
         $result = PatientDoctor::query()
             ->select([
                 'patient_doctor.ID',

@@ -16,6 +16,10 @@ class ContactRequirementServices
         $this->objectService = $objectService;
         $this->dateServices = $dateServices;
     }
+    public function DeletePatient(int $id)
+    {
+        ContactRequirements::where('CONTACT_ID', '=', $id)->delete();
+    }
     public function AutoCreateList(int $CONTACT_ID)
     {
         $data = Requirements::where('INACTIVE', 0)->get();
