@@ -360,7 +360,9 @@ class ContactServices
     }
 
     public function Delete(int $ID): void
-    {
+    {   
+
+        
         Contacts::where('ID', '=', $ID)->delete();
     }
     public function UpdatePatientType(int $ID, int $TYPE)

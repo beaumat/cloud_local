@@ -323,7 +323,7 @@ class TaxCreditServices
     {
         return TaxCredit::query()
             ->select([
-                'tax_credit.ID',     
+                'tax_credit.ID',
                 'tax_credit.CODE',
                 'tax_credit.DATE',
                 'tax_credit.AMOUNT',
@@ -338,5 +338,20 @@ class TaxCreditServices
             ->where('tax_credit_invoices.INVOICE_ID', '=', $INVOICE_ID)
             ->where('tax_credit.CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->get();
+    }
+
+    public function getTotalPay(int $INVOICE_ID, int $EXCEPT_TAX_CREDIT_ID): float
+    {
+        $data = TaxCreditInvoices::query()
+            ->selectRaw('ifnull(sum(AMOUNT_WITHHELD),0) as total')
+            ->where('INVOICE_ID', $INVOICE_ID)
+            ->where('TAX_CREDIT_ID', '<>', $EXCEPT_TAX_CREDIT_ID)
+            ->first();
+
+        if ($data) {
+            return $data->total;
+        }
+
+        return 0;
     }
 }

@@ -11,6 +11,7 @@ use App\Services\PaymentMethodServices;
 use App\Services\PaymentServices;
 use App\Services\PhilHealthServices;
 use App\Services\ServiceChargeServices;
+use App\Services\TaxCreditServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -38,6 +39,7 @@ class Transmittal extends Component
     private $paymentMethodServices;
     private $hemoServices;
     private $paymentServices;
+    private $taxCreditServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         PatientPaymentServices $patientPaymentServices,
@@ -47,7 +49,8 @@ class Transmittal extends Component
         AccountServices $accountServices,
         PaymentMethodServices $paymentMethodServices,
         HemoServices $hemoServices,
-        PaymentServices $paymentServices
+        PaymentServices $paymentServices,
+        TaxCreditServices $taxCreditServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->patientPaymentServices = $patientPaymentServices;
@@ -58,6 +61,7 @@ class Transmittal extends Component
         $this->paymentMethodServices = $paymentMethodServices;
         $this->hemoServices = $hemoServices;
         $this->paymentServices = $paymentServices;
+        $this->taxCreditServices = $taxCreditServices;
     }
     public function mount()
     {
@@ -172,6 +176,7 @@ class Transmittal extends Component
         }
 
         $this->RECEIVED_AMOUNT  = $this->paymentServices->getTotalPay($this->INVOICE_ID, 0);
+        $this->TAX_CREDIT_AMOUNT = $this->taxCreditServices->getTotalPay($this->INVOICE_ID, 0);
     }
 
     public function render()

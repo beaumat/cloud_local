@@ -81,8 +81,6 @@
                                                     :zero="true" titleName="Input Tax Account" :isDisabled='false'
                                                     wire:model.live='ASSET_ACCOUNT_ID' />
                                             </div>
-
-                                    
                                         @elseif($TAX_TYPE == 4)
                                             <div class="col-md-4">
                                                 <livewire:select-option name="TaxAcctID" :options="$accountList"
@@ -90,9 +88,6 @@
                                                     wire:model.live='TAX_ACCOUNT_ID' />
                                             </div>
                                         @endif
-
-
-
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="INACTIVE" titleName="Inactive" :isDisabled='false'
                                                 wire:model='INACTIVE' />
