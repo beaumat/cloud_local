@@ -321,7 +321,7 @@ class ItemServices
             ->orderBy('item.ID', 'desc')
             ->paginate($perPage);
 
-            return $result;
+        return $result;
     }
     public function getOnhand(int $ITEM_ID, int $locationId): int
     {
@@ -402,7 +402,7 @@ class ItemServices
 
         return $items;
     }
-    public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc, bool $showOutofStock = false):object
+    public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc, bool $showOutofStock = false): object
     {
         $items = DB::table('item')
             ->select(
@@ -493,21 +493,22 @@ class ItemServices
                 'item.CODE',
                 'item.DESCRIPTION',
                 'sc.DESCRIPTION as SUB_CLASS',
-                'c.DESCRIPTION as CLASS'
+                'c.DESCRIPTION as CLASS',
+                'plx.CUSTOM_PRICE',
+                'plx.CUSTOM_COST'
             ])
             ->leftJoin('item_sub_class as sc', 'sc.ID', '=', 'item.SUB_CLASS_ID')
             ->leftJoin('item_class as c', 'c.ID', '=', 'sc.CLASS_ID')
+            ->leftJoin('price_level_lines as plx', function ($join) use ($LOCATION_ID) {
+                $join->join('location as l', 'l.PRICE_LEVEL_ID', '=', 'plx.PRICE_LEVEL_ID')
+                    ->whereColumn('plx.ITEM_ID', '=', 'item.ID')
+                    ->where('l.ID', '=', $LOCATION_ID);
+            })
             ->where('item.INACTIVE', 0)
             ->when($SUB_CLASS_ID > 0, function ($query) use (&$SUB_CLASS_ID) {
                 $query->where('item.SUB_CLASS_ID', $SUB_CLASS_ID);
             })
-            ->whereExists(function ($query) use (&$LOCATION_ID) {
-                $query->select(DB::raw(1))
-                    ->from('price_level_lines as plx')
-                    ->join('location as l', 'l.PRICE_LEVEL_ID', '=', 'plx.PRICE_LEVEL_ID')
-                    ->whereColumn('plx.ITEM_ID', '=', 'item.ID')
-                    ->where('l.ID', '=', $LOCATION_ID);
-            })
+            ->whereExists(function ($query) use (&$LOCATION_ID) {})
             ->where('item.DESCRIPTION', 'like', '%' . $search . '%')
             ->get();
 

@@ -110,7 +110,7 @@
                                                     <input class="text-xs border border-secondary"
                                                         wire:model='editPrice' />
                                                 @else
-                                                    {{ number_format($list->PRICE, 2) }}
+                                                    {{ number_format($list->CUSTOM_PRICE, 2) }}
                                                 @endif
                                             </td>
                                             @if ($showCost)
@@ -119,7 +119,7 @@
                                                         <input class="text-xs border border-secondary"
                                                             wire:model='editCost' />
                                                     @else
-                                                        {{ number_format($list->COST, 2) }}
+                                                        {{ number_format($list->CUSTOM_COST, 2) }}
                                                     @endif
                                                 </td>
                                             @endif
