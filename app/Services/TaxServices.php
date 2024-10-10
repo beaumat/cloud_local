@@ -31,7 +31,7 @@ class TaxServices
     }
     public function getWTax()
     {
-        $result = Tax::query()->select(['ID', 'NAME'])->where('TAX_TYPE', 2)->get();
+        $result = Tax::query()->select(['ID', 'NAME'])->where('TAX_TYPE', 2)->where('INACTIVE', '=', false)->get();
         return  $result;
     }
     public function getList()
