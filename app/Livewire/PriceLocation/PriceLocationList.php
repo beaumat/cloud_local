@@ -105,8 +105,8 @@ class PriceLocationList extends Component
                         $locData->PRICE_LEVEL_ID,
                         $list->ID,
                         $this->LOCATION_ID,
-                        $list->RATE,
-                        $list->COST
+                        $list->RATE ?? 0,
+                        $list->COST ?? 0
                     );
                 }
             }

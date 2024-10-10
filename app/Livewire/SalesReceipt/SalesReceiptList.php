@@ -17,8 +17,11 @@ class SalesReceiptList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public int $perPage = 15;
+    public int $perPage = 25;
     public int $locationid;
+    public $dateFrom;
+    public $dateTo;
+
     public $locationList = [];
     private $salesReceiptServices;
     private $locationServices;
@@ -34,6 +37,8 @@ class SalesReceiptList extends Component
     {
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
+        $this->dateFrom = $this->userServices->getTransactionDateDefault();
+        $this->dateTo = $this->userServices->getTransactionDateDefault();
     }
     public function delete($id)
     {
@@ -57,8 +62,14 @@ class SalesReceiptList extends Component
     }
     public function render()
     {
-        $dataList = $this->salesReceiptServices->Search($this->search, $this->locationid, $this->perPage);
+        $dataList = $this->salesReceiptServices->Search(
+            $this->search,
+            $this->locationid,
+            $this->perPage,
+            $this->dateFrom,
+            $this->dateTo
+        );
 
-        return view('livewire.sales-receipt.sales-receipt-list',['dataList' => $dataList]);
+        return view('livewire.sales-receipt.sales-receipt-list', ['dataList' => $dataList]);
     }
 }

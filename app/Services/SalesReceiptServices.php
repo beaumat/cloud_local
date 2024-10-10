@@ -148,7 +148,7 @@ class SalesReceiptServices
         SalesReceipt::where('ID', '=', $ID)->delete();
     }
 
-    public function Search($search, int $locationId, int $perPage)
+    public function Search($search, int $locationId, int $perPage, $dateFrom, $dateTo)
     {
         $result = SalesReceipt::query()
             ->select([
@@ -182,6 +182,7 @@ class SalesReceiptServices
                         ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
+            ->whereBetween('sales_receipt.DATE', [$dateFrom, $dateTo])
             ->orderBy('sales_receipt.ID', 'desc')
             ->paginate($perPage);
 
