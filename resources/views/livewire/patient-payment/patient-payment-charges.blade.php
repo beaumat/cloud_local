@@ -41,7 +41,7 @@
                     </td>
 
                     <td>
-                    {{ $list->ACCOUNT_NAME }}
+                        {{ $list->ACCOUNT_NAME }}
                     </td>
                     @if ($REF_ID == 0)
                         <td class="text-center">
@@ -72,7 +72,7 @@
             @endforeach
         </tbody>
     </table>
-    @if ($REF_ID == 0)
-        @livewire('PatientPayment.ServiceChargeList', ['PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'PATIENT_PAYMENT_ID' => $PATIENT_PAYMENT_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'PHILHEALTH_ID' => $PHILHEALTH_ID])
-    @endif
+
+    @livewire('PatientPayment.ServiceChargeList', ['PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'PATIENT_PAYMENT_ID' => $PATIENT_PAYMENT_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'PHILHEALTH_ID' => $PHILHEALTH_ID])
+
 </div>

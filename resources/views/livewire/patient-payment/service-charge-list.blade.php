@@ -26,7 +26,7 @@
                                     <th class="col-3 bg-info">Item Description</th>
                                     <th class="text-center bg-info">Qty</th>
                                     <th class="col-1 bg-info">Unit</th>
-                                    <th class="col-1 bg-info">Amoint</th>
+                                    <th class="col-1 bg-info">Amount</th>
                                     <th class="col-1 bg-info">Paid</th>
                                     <th class="col-1 bg-dark">Initial</th>
                                 </tr>
