@@ -62,7 +62,7 @@ class InvoiceFormItems extends Component
     public $itemCodeList = [];
     public $unitList = [];
     public $saveSuccess;
-
+    public bool $reloadAccount = false;
     public float $lineQty;
     public int $lineUnitId;
     public float $lineRate;
@@ -193,14 +193,13 @@ class InvoiceFormItems extends Component
     public function mount()
     {
 
-
         $this->QUANTITY = 0;
         $this->RATE = 0;
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
     }
 
-    public bool $reloadAccount = false;
+
     private function AccountLoad()
     {
 
