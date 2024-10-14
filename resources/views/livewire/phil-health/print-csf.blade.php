@@ -32,7 +32,6 @@
                         <p class="text-center text-sm" style="top:130px;position: absolute;right:40px;">Revised
                             September 2018</p>
                     </div>
-
                 </div>
             </div>
         </div>

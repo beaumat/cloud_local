@@ -198,12 +198,8 @@ class InvoiceFormItems extends Component
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
     }
-
-
     private function AccountLoad()
     {
-
-
         $this->accountList = $this->itemAccountServices->AccountList($this->ITEM_ID);
         $this->reloadAccount = $this->reloadAccount ? false : true;
     }

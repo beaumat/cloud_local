@@ -10,55 +10,78 @@
                             {{ $REPORT_HEADER_3 }}</b>
                     </div>
                 </div>
-                <div class="col-12" >
+                <div class="col-12">
                     <div class="row">
                         <div class="col-6">
-                            <b class="bottom-line" @if ($HEADER) style="opacity: 0.0" @endif>PHILHEALTH ACCREDITED:</b>
+                            <b class="bottom-line"
+                                @if ($HEADER) style="opacity: 0.0" @endif>PHILHEALTH ACCREDITED:</b>
                             <div class="row mt-4">
-                                <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>PATIENT`S NAME : </div>
-                                <div class="col-8 bottom-line" @if ($HEADER) style="opacity: 0.0" @endif>
+                                <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
+                                    PATIENT`S NAME : </div>
+                                <div class="col-8 bottom-line"
+                                    @if ($HEADER) style="opacity: 0.0" @endif>
                                     <div class="row">
                                         <div class="col-9"> &nbsp; {{ $PATIENT_NAME }}</div>
                                         <div class="col-3 text-right">Age: {{ $AGE }}</div>
                                     </div>
                                 </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">ADDRESS : </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS1 }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4"> &nbsp;</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS2 }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">FINAL DIAGNOSIS : </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-8 bottom-line text-xs"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">OTHER DIAGNOSIS : </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-8 bottom-line text-xs"> &nbsp; {{ $OTHER_DIAGNOSIS }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">TREATMENT DATES : </div>
-                                <div class="col-8 @if (!$PRE_SIGN_DATA)  bottom-line @endif text-xs"> &nbsp;
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
+                                    ADDRESS : </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif
+                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS1 }}</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
+                                    &nbsp;</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif
+                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS2 }}</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">FINAL
+                                    DIAGNOSIS : </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif
+                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
+                                    OTHER DIAGNOSIS : </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif
+                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $OTHER_DIAGNOSIS }}</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
+                                    TREATMENT DATES : </div>
+                                <div class="col-8 @if (!$PRE_SIGN_DATA) bottom-line @endif text-xs">
+                                    &nbsp;
                                     {{ $allDate }}
                                 </div>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="row">
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5"> Soa Reference No. : </div>
-                                <div class="col-7 @if ($OUTPUT_SIGN) bottom-line @endif"> {{ $CODE }}</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5"> Soa
+                                    Reference No. : </div>
+                                <div class="col-7 @if ($OUTPUT_SIGN) bottom-line @endif">
+                                    {{ $CODE }}</div>
                             </div>
                             <div class="row mt-4">
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">DATE & TIME ADMITTED :</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">DATE
+                                    & TIME ADMITTED :</div>
                                 <div class="col-7 @if ($OUTPUT_SIGN) bottom-line @endif">
                                     {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') : '' }}
                                     {{ $TIME_ADMITTED ? \Carbon\Carbon::parse($TIME_ADMITTED)->format('h:i:s A') : '' }}
                                 </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">DATE & TIME DISCHARGED :</div>
-                                <div  class="col-7 @if ($OUTPUT_SIGN) bottom-line @endif">
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">DATE
+                                    & TIME DISCHARGED :</div>
+                                <div class="col-7 @if ($OUTPUT_SIGN) bottom-line @endif">
                                     {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : '' }}
                                     {{ $TIME_DISCHARGED ? \Carbon\Carbon::parse($TIME_DISCHARGED)->format('h:i:s A') : '' }}
                                 </div>
                                 <div class="col-12"> <br /></div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">FIRST CASE RATE :</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-7 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">SECOND CASE RATE :</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-7 bottom-line"> &nbsp; {{ $SECOND_CASE_RATE }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">NO. OF TREATMENT :</div>
-                                <div class="col-7  @if ($OUTPUT_SIGN) bottom-line @endif text-center font-weight-bold ">
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
+                                    FIRST CASE RATE :</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif
+                                    class="col-7 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
+                                    SECOND CASE RATE :</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif
+                                    class="col-7 bottom-line"> &nbsp; {{ $SECOND_CASE_RATE }}</div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">NO.
+                                    OF TREATMENT :</div>
+                                <div
+                                    class="col-7  @if ($OUTPUT_SIGN) bottom-line @endif text-center font-weight-bold ">
                                     {{ $NO_OF_TREATMENT > 0 ? $NO_OF_TREATMENT : '' }}</div>
                             </div>
                         </div>
@@ -591,48 +614,70 @@
                             @endif
                         </div>
                         <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
-
                             {{ number_format($OP_TOTAL, 2) }}
-
                         </div>
                     </div>
                 </div>
 
-                @if ($OUTPUT_SIGN)
-                    <div class="col-12 mt-4">
-                        <div class="row">
-                            <div class="col-4">
-                                Prepared by:
-                                <div class="form-group row  mt-4">
-                                    <div class="col-7 text-center"><strong class="bottom-line">
-                                            {{ $USER_NAME }}</strong>
-                                    </div>
-                                    <div class="col-7 text-center">PHIC IN-Charge</div>
-                                    <div class="col-12 ">Date Signed:
-                                        {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
-                                    </div>
-                                    <div class="col-12 ">CONTACT No. {{ $USER_CONTACT }}</div>
+                {{-- @if ($OUTPUT_SIGN) --}}
+                <div class="col-12 mt-4">
+                    <div class="row">
+                        <div class="col-4">
+                            <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Prepared by:</div>
+                            <div class="form-group row mt-4">
+                                <div class="col-7 text-center">
+                                    <strong class="bottom-line"
+                                        @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                        {{ $USER_NAME }}</strong>
                                 </div>
+                                <div class="col-7 text-center"
+                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>PHIC IN-Charge</div>
+                                <div class="col-12">
+                                    <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                        Date Signed:
+                                    </span>
+                                    <span>
+                                        {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
+                                    </span>
+                                </div>
+                                <div class="col-12" @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    CONTACT No. {{ $USER_CONTACT }}</div>
                             </div>
-                            <div class="col-4"></div>
-                            <div class="col-4">
-                                Conforme:
-                                <div class="form-group row  mt-4">
-                                    <div class="col-12 text-center bottom-line"><b>{{ $PATIENT_NAME }}</b></div>
-                                    <div class="col-12 ">Member/Patient/Authorized Representative</div>
-                                    <div class="col-12 ">(Signature over printed name)</div>
-                                    <div class="col-12 text-xs">Relationship of member of authorized representative
-                                    </div>
-                                    <div class="col-12 bottom-line">&nbsp;</div>
-                                    <div class="col-12 ">Date Signed:
-                                        {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
-                                    </div>
-                                    <div class="col-12 ">CONTACT No. {{ $PATIENT_CONTACT }}</div>
+                        </div>
+                        <div class="col-4"></div>
+                        <div class="col-4">
+                            <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Conforme:</div>
+                            <div class="form-group row  mt-4">
+                                <div class="col-12 text-center bottom-line"
+                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    <b>{{ $PATIENT_NAME }}</b>
                                 </div>
+                                <div class="col-12 " @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    Member/Patient/Authorized Representative</div>
+                                <div class="col-12 " @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    (Signature over printed name)</div>
+                                <div class="col-12 text-xs"
+                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Relationship of
+                                    member of authorized representative
+                                </div>
+                                <div class="col-12 bottom-line"
+                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>&nbsp;</div>
+                                <div class="col-12 ">
+                                    <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                        Date Signed:
+                                    </span>
+                                    <span>
+                                        {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
+                                    </span>
+
+                                </div>
+                                <div class="col-12 " @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    CONTACT No. {{ $PATIENT_CONTACT }}</div>
                             </div>
                         </div>
                     </div>
-                @endif
+                </div>
+                {{-- @endif --}}
 
             </div>
         </div>
