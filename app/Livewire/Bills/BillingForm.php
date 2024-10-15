@@ -14,17 +14,26 @@ use App\Services\ObjectServices;
 use App\Services\PaymentTermServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
+use App\Services\UploadServices;
 use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
+use Livewire\WithFileUploads;
 
 #[Title('Billing')]
 class BillingForm extends Component
 {
 
+    use WithFileUploads;
+    public bool $showFileName = true;
+    public $PDF = null;
+    public string $FILE_NAME;
+    public string $FILE_PATH;
+    public bool $IS_CONFIRM;
+    public string $DATE_CONFIRM = '';
     public int $openStatus = 0;
     public int $ID;
     public int $VENDOR_ID;
@@ -67,6 +76,7 @@ class BillingForm extends Component
     private $accountServices;
     private $documentTypeServices;
     private $itemInventoryServices;
+    private $uploadServices;
     public function boot(
         ItemInventoryServices $itemInventoryServices,
         DocumentTypeServices $documentTypeServices,
@@ -80,7 +90,8 @@ class BillingForm extends Component
         SystemSettingServices $systemSettingServices,
         ObjectServices $objectServices,
         AccountJournalServices $accountJournalServices,
-        AccountServices $accountServices
+        AccountServices $accountServices,
+        UploadServices $uploadServices
     ) {
         $this->billingServices = $billingServices;
         $this->locationServices = $locationServices;
@@ -95,8 +106,32 @@ class BillingForm extends Component
         $this->accountServices = $accountServices;
         $this->documentTypeServices = $documentTypeServices;
         $this->itemInventoryServices = $itemInventoryServices;
+        $this->uploadServices = $uploadServices;
     }
 
+    public function updatedCUSTOMFIELD1()
+    {
+        $this->validate([
+            'CUSTOM_FIELD1' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
+        ], [], [
+            'CUSTOM_FIELD1' => 'Files'
+        ]);
+    }
+
+    public function getConfirm()
+    {
+        $this->billingServices->ConfirmProccess($this->ID);
+        return Redirect::route('patientspayment_edit', ['id' => $this->ID])->with('message', 'Successfully confirm');
+    }
+    public function getDocumentProccess()
+    {
+        $returnData = $this->uploadServices->BillFile($this->PDF);
+        $this->billingServices->UpdateFile(
+            $this->ID,
+            $returnData['filename'] . '.' . $returnData['extension'],
+            $returnData['new_path']
+        );
+    }
     public string $tab = 'item';
     #[On('select-tab')]
     public function SelectTab($tab)
@@ -126,6 +161,8 @@ class BillingForm extends Component
     }
     private function getInfo($data)
     {
+
+
         $this->ID = $data->ID;
         $this->CODE = $data->CODE;
         $this->DATE = $data->DATE;
@@ -146,6 +183,18 @@ class BillingForm extends Component
         $this->INPUT_TAX_ACCOUNT_ID = $data->INPUT_TAX_ACCOUNT_ID > 0 ? $data->INPUT_TAX_ACCOUNT_ID : 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
         $this->ACCOUNTS_PAYABLE_ID = $data->ACCOUNTS_PAYABLE_ID;
+        $this->FILE_NAME = $data->FILE_NAME ?? '';
+        $this->FILE_PATH = $data->FILE_PATH ?? '';
+
+        if (empty($this->FILE_NAME)) {
+            $this->showFileName = false;
+        }
+        $this->DATE_CONFIRM = $data->DATE_CONFIRM ?? '';
+        if (empty($this->DATE_CONFIRM) == false) {
+            $this->IS_CONFIRM = true;
+        } else {
+            $this->IS_CONFIRM = false;
+        }
 
         if ($this->useAccount) {
             if ($this->billingServices->isItemTab($data->ID)) {
@@ -203,6 +252,11 @@ class BillingForm extends Component
         $this->STATUS_DESCRIPTION = "";
         $this->ACCOUNTS_PAYABLE_ID = $this->accountServices->getByName('Accounts Payable');
         $this->getTax();
+
+        $this->FILE_NAME =  '';
+        $this->FILE_PATH = '';
+        $this->DATE_CONFIRM = '';
+        $this->IS_CONFIRM = false;
     }
     public function getModify()
     {
@@ -260,6 +314,11 @@ class BillingForm extends Component
                     $this->STATUS
                 );
 
+                if ($this->PDF) {
+                    $this->getDocumentProccess();
+                }
+
+
                 DB::commit();
                 return Redirect::route('vendorsbills_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
@@ -290,7 +349,7 @@ class BillingForm extends Component
 
                 DB::beginTransaction();
 
-             
+
                 $data =  $this->billingServices->Get($this->ID);
                 if ($data) {
                     if ($this->STATUS == 16) {
@@ -340,6 +399,15 @@ class BillingForm extends Component
                     $this->INPUT_TAX_ACCOUNT_ID
                 );
 
+
+                if ($this->PDF) {
+                    $this->uploadServices->RemoveIfExists($this->FILE_PATH);
+                    $this->getDocumentProccess();
+                    $data = $this->patientPaymentServices->get($this->ID);
+                    if ($data) {
+                        $this->getInfo($data);
+                    }
+                }
                 DB::commit();
                 $this->billingServices->getUpdateTaxItem($this->ID, $this->INPUT_TAX_ID);
                 $getResult = $this->billingServices->ReComputed($this->ID);

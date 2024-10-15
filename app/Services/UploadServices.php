@@ -28,6 +28,17 @@ class UploadServices
         ];
         return $dataReturn;
     }
+    public function BillFile($PDF): array
+    {
+        $path = $PDF->store('bills', 'custom_local');
+        $extension = $PDF->extension();
+        $dataReturn = [
+            'new_path' => $path,
+            'extension' => $extension,
+            'filename' => basename($path)
+        ];
+        return $dataReturn;
+    }
     public function Treatment($Image)
     {
 

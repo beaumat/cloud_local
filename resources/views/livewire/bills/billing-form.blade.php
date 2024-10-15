@@ -101,6 +101,34 @@
                                                         :vertical="false" />
 
                                                 </div>
+                                                @if ($showFileName && $Modify)
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="fileUpload" class="text-xs">PDF/Image document
+                                                                file
+                                                                @if ($PDF)
+                                                                    <i class="fa fa-check-circle text-success"
+                                                                        aria-hidden="true"></i>
+                                                                @endif
+                                                            </label>
+                                                            <div class="input-group input-group-sm">
+                                                                <div class="custom-file text-xs">
+                                                                    <input type="file"
+                                                                        class="custom-file-input text-xs"
+                                                                        id="fileUpload" wire:model='PDF'>
+                                                                    <label class="custom-file-label text-xs"
+                                                                        for="fileUpload">
+                                                                        @if ($PDF)
+                                                                            {{ $PDF->getClientOriginalName() }}
+                                                                        @else
+                                                                            Choose file
+                                                                        @endif
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -145,7 +173,33 @@
                                         @endif
                                     </div>
 
-                                    <div class="text-right col-6 col-md-6">
+                                    <div class="text-right col-md-6 col-6">
+                                        @if ($showFileName)
+                                            @can('vendor.bill.print')
+                                                <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Preview
+                                                </a>
+                                            @endcan
+                                            @can('vendor.bill.update')
+                                                @if (!$IS_CONFIRM)
+                                                    <button type="button" wire:click='getConfirm()'
+                                                        wire:confirm="Are you sure this guaranteed letter is confirm?"
+                                                        class="btn btn-sm btn-info">
+                                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                                        Confirm
+                                                    </button>
+                                                @else
+                                                    <label class="text-xs text-primary px-3">
+                                                        <i>
+                                                            File Confirm on
+                                                            <b class="text-info">{{ \Carbon\Carbon::parse($DATE_CONFIRM)->format('m/d/Y') }}
+                                                            </b>
+                                                        </i>
+                                                    </label>
+                                                @endif
+                                            @endcan
+                                        @endif
                                         @if ($STATUS > 0)
                                             @if ($STATUS != 16 && $ID > 0)
                                                 @can('vendor.bill.print')
@@ -154,7 +208,6 @@
                                                         class="btn btn-sm btn-dark">
                                                         <i class="fa fa-print" aria-hidden="true"></i> Print
                                                     </a>
-
                                                     <button type="button" wire:click='OpenJournal()'
                                                         class="btn btn-sm btn-warning">
                                                         <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal

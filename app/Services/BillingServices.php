@@ -16,7 +16,6 @@ class BillingServices
     public int $object_type_map_bill = 2;
     public int $object_type_map_bill_item = 3;
     public int $object_type_map_bill_expenses = 78;
-
     public int $document_type_id = 1;
 
     private $object;
@@ -35,6 +34,19 @@ class BillingServices
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
     }
+    public function ConfirmProccess(int $ID)
+    {
+        Bill::where('ID', '=', $ID)
+            ->update(['DATE_CONFIRM' => $this->dateServices->NowDate()]);
+    }
+    public function UpdateFile(int $ID, $FILE_NAME, $FILE_PATH)
+    {
+        Bill::where('ID', $ID)
+        ->update([
+            'FILE_NAME' => $FILE_NAME,
+            'FILE_PATH' => $FILE_PATH
+        ]);
+    }
     public function get(int $ID)
     {
         try {
@@ -48,8 +60,24 @@ class BillingServices
             return [];
         }
     }
-    public function Store(string $CODE, string $DATE, int $VENDOR_ID, int $LOCATION_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $DISCOUNT_DATE, float $DISCOUNT_PCT, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID, int $STATUS): int
-    {
+    public function Store(
+        string $CODE,
+        string $DATE,
+        int $VENDOR_ID,
+        int $LOCATION_ID,
+        int $PAYMENT_TERMS_ID,
+        string $DUE_DATE,
+        string $DISCOUNT_DATE,
+        float $DISCOUNT_PCT,
+        string $NOTES,
+        int $ACCOUNTS_PAYABLE_ID,
+        int $INPUT_TAX_ID,
+        float $INPUT_TAX_RATE,
+        float $INPUT_TAX_AMOUNT,
+        int $INPUT_TAX_VAT_METHOD,
+        int $INPUT_TAX_ACCOUNT_ID,
+        int $STATUS
+    ): int {
         $ID = (int) $this->object->ObjectNextID('BILL');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL');
         $isLocRef = (bool) boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
@@ -80,8 +108,20 @@ class BillingServices
 
         return $ID;
     }
-    public function Update(int $ID, string $CODE, int $VENDOR_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID)
-    {
+    public function Update(
+        int $ID,
+        string $CODE,
+        int $VENDOR_ID,
+        int $PAYMENT_TERMS_ID,
+        string $DUE_DATE,
+        string $NOTES,
+        int $ACCOUNTS_PAYABLE_ID,
+        int $INPUT_TAX_ID,
+        float $INPUT_TAX_RATE,
+        float $INPUT_TAX_AMOUNT,
+        int $INPUT_TAX_VAT_METHOD,
+        int $INPUT_TAX_ACCOUNT_ID
+    ) {
 
 
         Bill::where('ID', $ID)
@@ -663,4 +703,10 @@ class BillingServices
 
         return $result;
     }
+
+
+
+    public function uploadFile() {}
+
+    public function fileConfirm() {}
 }
