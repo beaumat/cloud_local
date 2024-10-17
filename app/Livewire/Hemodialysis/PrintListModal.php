@@ -69,7 +69,24 @@ class PrintListModal extends Component
     {
         $gotSelect = false;
         $this->id = "";
-        foreach (array_reverse($this->hemoSelected, true) as $hemoId => $isSelected) {
+        // foreach (array_reverse($this->hemoSelected, true) as $hemoId => $isSelected) {
+
+        //     if ($isSelected) {
+        //         try {
+        //             $gotSelect = true;
+        //             if ($this->id == "") {
+        //                 $this->id = $hemoId;
+        //             } else {
+        //                 $this->id = $this->id . "," . $hemoId;
+        //             }
+        //         } catch (\Throwable $th) {
+        //             return;
+        //         }
+        //     }
+        // }
+
+
+        foreach ($this->hemoSelected as $hemoId => $isSelected) {
 
             if ($isSelected) {
                 try {
@@ -80,11 +97,12 @@ class PrintListModal extends Component
                         $this->id = $this->id . "," . $hemoId;
                     }
                 } catch (\Throwable $th) {
+
                     return;
                 }
             }
         }
-
+        
         if (!$gotSelect) {
             return;
         }
