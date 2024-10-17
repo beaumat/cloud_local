@@ -20,7 +20,7 @@
                             <div class="col-3 text-left">
                                 <label class="text-xs">Select :</label>
                             </div>
-                            <div class="col-9">
+                            <div class="col-6">
                                 <select class="form-control form-control-sm text-xs text-left"
                                     wire:model.live='SHIFT_ID'>
                                     <option value="0"> All Shift </option>
@@ -28,6 +28,10 @@
                                         <option value="{{ $list->ID }}"> {{ $list->NAME }} Shift</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="col-3">
+                                <label class="text-xs">With Back </label>
+                                <input type="checkbox" wire:model='withBack' />
                             </div>
                         </div>
                         <div class="form-group">
@@ -66,6 +70,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+
                         <button type="button" class="btn btn-success btn-sm" wire:click="create">Create &
                             Print</button>
 

@@ -17,7 +17,7 @@ use Livewire\Component;
 class ScheduleModal extends Component
 {
     public bool $showModal;
-
+    public bool $withBack;
     #[Reactive]
     public $LOCATION_ID;
     public $DATE;
@@ -92,7 +92,14 @@ class ScheduleModal extends Component
             return;
         }
 
-        $url = route('patientshemo_print', ['id' => $this->ids]);
+        if ($this->withBack) {
+            $url = route('patientshemo_print_front_back', ['id' => $this->ids]);
+        } else {
+
+            $url = route('patientshemo_print', ['id' => $this->ids]);
+        }
+
+
         $this->dispatch('schedOpenNewTab', data: $url);
         $this->dispatch('refresh-list');
         $this->closeModal();
