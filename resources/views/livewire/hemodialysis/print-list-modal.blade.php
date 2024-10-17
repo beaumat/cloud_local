@@ -73,7 +73,10 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-warning btn-sm" wire:click='print'>
-                            <i class="fa fa-print" aria-hidden="true"></i> Preview
+                            <i class="fa fa-print" aria-hidden="true"></i> Front View
+                        </button>
+                        <button class="btn btn-dark btn-sm" wire:click='printback'>
+                            <i class="fa fa-print" aria-hidden="true"></i> Back View
                         </button>
                         <button type="button" class="btn btn-danger btn-sm" wire:click="closeModal">Close</button>
                     </div>

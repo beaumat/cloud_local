@@ -35,6 +35,7 @@ use App\Livewire\GeneralJournal\GeneralJournalList;
 use App\Livewire\Hemodialysis\HemoForm;
 use App\Livewire\Hemodialysis\HemoList;
 use App\Livewire\Hemodialysis\PrintForm;
+use App\Livewire\Hemodialysis\PrintFormBack;
 use App\Livewire\HemodialysisMachine\HemoMachineForm;
 use App\Livewire\HemodialysisMachine\HemoMachineList;
 use App\Livewire\InventoryAdjustment\InventoryAdjustmentForm;
@@ -191,6 +192,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', HemoForm::class)->name('hemo_create')->middleware(['permission:patient.treatment.create']);
             Route::get('/{id}/edit', HemoForm::class)->name('hemo_edit')->middleware(['permission:patient.treatment.view']);
             Route::get('/{id}/print', PrintForm::class)->name('hemo_print')->middleware(['permission:patient.treatment.print']);;
+            Route::get('/{id}/print_back', PrintFormBack::class)->name('hemo_print_back')->middleware(['permission:patient.treatment.print']);;
+      
         });
 
         Route::prefix('/phil-health')->group(function () {

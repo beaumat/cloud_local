@@ -3,12 +3,10 @@
         <div class="container-fluid">
         </div>
     </div>
-
     @foreach ($HEMO_ID as $ID)
-        @livewire('Hemodialysis.PrintContent', ['HEMO_ID' => $ID])
-        <div class="page-break"></div>
+        @livewire('Hemodialysis.PrintBack', ['HEMO_ID' => $ID])
+              <div class="page-break"></div>
     @endforeach
-
 </div>
 
 @script

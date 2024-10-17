@@ -63,6 +63,38 @@ class PrintListModal extends Component
         $this->dispatch('openNewTab', data: $url);
         $this->closeModal();
     }
+
+    public function printback()
+    {
+        $gotSelect = false;
+        $this->id = "";
+        foreach ($this->hemoSelected as $hemoId => $isSelected) {
+
+            if ($isSelected) {
+                try {
+                    $gotSelect = true;
+                    if ($this->id == "") {
+                        $this->id = $hemoId;
+                    } else {
+                        $this->id = $this->id . "," . $hemoId;
+                    }
+                } catch (\Throwable $th) {
+
+                    return;
+                }
+            }
+        }
+
+        if (!$gotSelect) {
+            return;
+        }
+        $url = route('patientshemo_print_back', ['id' => $this->id, 'front' => false]);
+        $this->dispatch('openNewTab', data: $url);
+        $this->closeModal();
+    }
+
+
+
     public function updatedShiftId()
     {
         $this->SelectAll = false;

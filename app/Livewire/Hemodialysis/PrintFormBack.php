@@ -5,10 +5,9 @@ namespace App\Livewire\Hemodialysis;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-
-#[Title('Hemodialysis Treatment - Print Form')]
-class PrintForm extends Component
-{
+#[Title('Hemodialysis Treatment - Print Back Form')]
+class PrintFormBack extends Component
+{   
 
     public $HEMO_ID = [];
     public function mount($id)
@@ -29,6 +28,6 @@ class PrintForm extends Component
     }
     public function render()
     {
-        return view('livewire.hemodialysis.print-form');
+        return view('livewire.hemodialysis.print-form-back');
     }
 }
