@@ -96,11 +96,15 @@ class PriceLocationList extends Component
     }
     public function autoUpdate()
     {
+
+
         $locData =  $this->locationServices->get($this->LOCATION_ID);
         if ($locData) {
             if ($locData->PRICE_LEVEL_ID > 0) {
-                $data = $this->itemServices->SearchPriceLocation("", 300);
+                $data = $this->itemServices->SearchPriceLocation("", 600);
+
                 foreach ($data as $list) {
+
                     $this->UpdateItem(
                         $locData->PRICE_LEVEL_ID,
                         $list->ID,
@@ -142,12 +146,14 @@ class PriceLocationList extends Component
         try {
             $isExistsID =  $this->priceLevelLineServices->DataExists($ITEM_ID, $LOCATION_ID);
             if ($isExistsID > 0) {
+
                 $this->priceLevelLineServices->Update(
                     $isExistsID,
                     $PRICE,
                     $COST
                 );
             } else {
+
                 $this->priceLevelLineServices->Store(
                     $PRICE_LEVEL_ID,
                     $ITEM_ID,
@@ -155,10 +161,13 @@ class PriceLocationList extends Component
                     $COST
                 );
             }
+            DB::commit();
         } catch (\Throwable $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
+
             DB::rollBack();
+            dd($e->getMessage());
+            // $errorMessage = 'Error occurred: ' . $e->getMessage();
+            // session()->flash('error', $errorMessage);
             //throw $th;
         }
     }

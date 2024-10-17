@@ -485,7 +485,7 @@ class ItemServices
         return $data;
     }
     public function PriceLevelItemList($search, int $SUB_CLASS_ID, int $LOCATION_ID)
-    {
+    {   
 
         $result = Items::query()
             ->select([
@@ -499,7 +499,7 @@ class ItemServices
             ])
             ->leftJoin('item_sub_class as sc', 'sc.ID', '=', 'item.SUB_CLASS_ID')
             ->leftJoin('item_class as c', 'c.ID', '=', 'sc.CLASS_ID')
-            ->leftJoin('price_level_lines as plx', function ($join) use ($LOCATION_ID) {
+            ->leftJoin('price_level_lines as plx', function ($join) use (&$LOCATION_ID) {
                 $join->join('location as l', 'l.PRICE_LEVEL_ID', '=', 'plx.PRICE_LEVEL_ID')
                     ->whereColumn('plx.ITEM_ID', '=', 'item.ID')
                     ->where('l.ID', '=', $LOCATION_ID);
@@ -508,7 +508,13 @@ class ItemServices
             ->when($SUB_CLASS_ID > 0, function ($query) use (&$SUB_CLASS_ID) {
                 $query->where('item.SUB_CLASS_ID', $SUB_CLASS_ID);
             })
-            ->whereExists(function ($query) use (&$LOCATION_ID) {})
+            ->whereExists(function ($query) use (&$LOCATION_ID) {
+                $query->select(DB::raw(1))
+                    ->from('price_level_lines as plx')
+                    ->join('location as l', 'l.PRICE_LEVEL_ID', '=', 'plx.PRICE_LEVEL_ID')
+                    ->whereColumn('plx.ITEM_ID', '=', 'item.ID')
+                    ->where('l.ID', '=', $LOCATION_ID);
+            })
             ->where('item.DESCRIPTION', 'like', '%' . $search . '%')
             ->get();
 
