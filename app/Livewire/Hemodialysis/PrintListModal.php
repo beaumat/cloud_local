@@ -69,25 +69,7 @@ class PrintListModal extends Component
     {
         $gotSelect = false;
         $this->id = "";
-        // foreach (array_reverse($this->hemoSelected, true) as $hemoId => $isSelected) {
-
-        //     if ($isSelected) {
-        //         try {
-        //             $gotSelect = true;
-        //             if ($this->id == "") {
-        //                 $this->id = $hemoId;
-        //             } else {
-        //                 $this->id = $this->id . "," . $hemoId;
-        //             }
-        //         } catch (\Throwable $th) {
-        //             return;
-        //         }
-        //     }
-        // }
-
-
         foreach ($this->hemoSelected as $hemoId => $isSelected) {
-
             if ($isSelected) {
                 try {
                     $gotSelect = true;
@@ -97,12 +79,11 @@ class PrintListModal extends Component
                         $this->id = $this->id . "," . $hemoId;
                     }
                 } catch (\Throwable $th) {
-
                     return;
                 }
             }
         }
-        
+
         if (!$gotSelect) {
             return;
         }
@@ -114,6 +95,36 @@ class PrintListModal extends Component
         $this->closeModal();
     }
 
+
+    public function printfrontback()
+    {
+        $gotSelect = false;
+        $this->id = "";
+        foreach ($this->hemoSelected as $hemoId => $isSelected) {
+            if ($isSelected) {
+                try {
+                    $gotSelect = true;
+                    if ($this->id == "") {
+                        $this->id = $hemoId;
+                    } else {
+                        $this->id = $this->id . "," . $hemoId;
+                    }
+                } catch (\Throwable $th) {
+                    return;
+                }
+            }
+        }
+
+        if (!$gotSelect) {
+            return;
+        }
+
+
+
+        $url = route('patientshemo_print_front_back', ['id' => $this->id]);
+        $this->dispatch('openNewTab', data: $url);
+        $this->closeModal();
+    }
 
 
     public function updatedShiftId()
