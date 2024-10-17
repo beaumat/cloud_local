@@ -28,7 +28,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'
+                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' maxlength='80'
                                                 isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-4">
@@ -87,7 +87,7 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <livewire:text-input name="NAME" titleName="Company Name"
+                                                            <livewire:text-input name="NAME" titleName="Company Name" maxlength='80'
                                                                 isDisabled="{{ false }}"
                                                                 wire:model='COMPANY_NAME' />
                                                         </div>
@@ -109,22 +109,22 @@
 
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <livewire:text-input name="FIRST_NAME"
+                                                            <livewire:text-input name="FIRST_NAME" maxlength='80'
                                                                 isDisabled="{{ false }}"
                                                                 titleName="First Name" wire:model='FIRST_NAME' />
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <livewire:text-input name="MIDDLE_NAME" titleName="M.I"
+                                                            <livewire:text-input name="MIDDLE_NAME" titleName="M.I" 
                                                                 isDisabled="{{ false }}"
                                                                 wire:model='MIDDLE_NAME' />
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <livewire:text-input name="LAST_NAME"
+                                                            <livewire:text-input name="LAST_NAME" maxlength='80'
                                                                 isDisabled="{{ false }}" titleName="Last Name"
                                                                 wire:model='LAST_NAME' />
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <livewire:text-input name="PRINT_NAME_AS"
+                                                            <livewire:text-input name="PRINT_NAME_AS" maxlength='80'
                                                                 isDisabled="{{ false }}" titleName="Print As"
                                                                 wire:model='PRINT_NAME_AS' />
                                                         </div>
@@ -153,7 +153,7 @@
                                                                 <div class="col-md-6">
                                                                     <div class="row">
                                                                         <div class="col-md-12">
-                                                                            <livewire:text-input name="CONTACT_PERSON"
+                                                                            <livewire:text-input name="CONTACT_PERSON" maxlength='80'
                                                                                 isDisabled="{{ false }}"
                                                                                 titleName="Contact Person"
                                                                                 wire:model='CONTACT_PERSON' />
