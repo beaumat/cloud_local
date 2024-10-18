@@ -3,7 +3,8 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenanceinventoryprice_level') }}"> Price Level </a>
+                    <h5 class="m-0">
+                        <a href="{{ route('maintenanceinventoryprice_level') }}"> Price Level </a>
                     </h5>
                 </div><!-- /.col -->
                 <div class="col-sm-6">

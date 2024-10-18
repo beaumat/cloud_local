@@ -16,7 +16,6 @@ class GeneralLedgerReport extends Component
 
     public string $TEMP_ACCOUNT = "";
     public float $TEMP_DEBIT = 0;
-
     public float $TEMP_CREDIT = 0;
 
     

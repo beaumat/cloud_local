@@ -3,7 +3,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenanceothersitem-active-list') }}">Item Inventory </a></h5>
+                    <h5 class="m-0">
+                        <a href="{{ route('maintenanceothersitem-active-list') }}">Item Inventory </a>
+                    </h5>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -12,8 +14,8 @@
                             @if ($isControl)
                                 <label class="text-sm "><br /></label>
                                 <button type="button" wire:click='showNotInclude()' class="btn btn-danger btn-xs">
-                                    <i class="fa fa-download" aria-hidden="true"></i> Not Include
-                                    List
+                                    <i class="fa fa-download" aria-hidden="true"></i>
+                                    Not Include List
                                 </button>
                             @endif
                         </li>
@@ -61,8 +63,9 @@
                                                     <label class="form-check-label">
                                                         <input class="form-check-input" type="checkbox"
                                                             wire:model.live="showOutofStock" />
-                                                        <span class="text-xs text-info font-weight-bold">OUT OF
-                                                            STOCKS</span>
+                                                        <span class="text-xs text-info font-weight-bold">
+                                                            OUT OF STOCKS
+                                                        </span>
                                                     </label>
                                                 </div>
                                             </div>

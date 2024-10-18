@@ -28,8 +28,8 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME' maxlength='80'
-                                                isDisabled="{{ false }}" />
+                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'
+                                                maxlength='80' isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:text-input name="ACCOUNT_NO" titleName="Account No."
@@ -72,9 +72,9 @@
                                                     class="nav-link @if ($selectTab == 'add') active @endif"
                                                     id="custom-content-below-add-info-tab" data-toggle="pill"
                                                     href="#custom-content-below-add-info" role="tab"
-                                                    aria-controls="custom-content-below-add-info"
-                                                    aria-selected="false">Addional
-                                                    Info</a>
+                                                    aria-controls="custom-content-below-add-info" aria-selected="false">
+                                                    Addional Info
+                                                </a>
                                             </li>
 
                                         </ul>
@@ -87,8 +87,8 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <livewire:text-input name="NAME" titleName="Company Name" maxlength='80'
-                                                                isDisabled="{{ false }}"
+                                                            <livewire:text-input name="NAME" titleName="Company Name"
+                                                                maxlength='80' isDisabled="{{ false }}"
                                                                 wire:model='COMPANY_NAME' />
                                                         </div>
                                                         <div class="col-md-2">
@@ -114,7 +114,7 @@
                                                                 titleName="First Name" wire:model='FIRST_NAME' />
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <livewire:text-input name="MIDDLE_NAME" titleName="M.I" 
+                                                            <livewire:text-input name="MIDDLE_NAME" titleName="M.I"
                                                                 isDisabled="{{ false }}"
                                                                 wire:model='MIDDLE_NAME' />
                                                         </div>
@@ -153,7 +153,8 @@
                                                                 <div class="col-md-6">
                                                                     <div class="row">
                                                                         <div class="col-md-12">
-                                                                            <livewire:text-input name="CONTACT_PERSON" maxlength='80'
+                                                                            <livewire:text-input name="CONTACT_PERSON"
+                                                                                maxlength='80'
                                                                                 isDisabled="{{ false }}"
                                                                                 titleName="Contact Person"
                                                                                 wire:model='CONTACT_PERSON' />

@@ -551,7 +551,6 @@ class AccountJournalServices
 
     public function getTransactionJournal(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountId = 0)
     {
-
         $result = DB::table('account_journal as aj')
             ->select([
                 'aj.JOURNAL_NO',
@@ -581,4 +580,6 @@ class AccountJournalServices
 
         return $result;
     }
+
+ 
 }

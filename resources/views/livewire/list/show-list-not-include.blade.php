@@ -27,7 +27,6 @@
                                             <th class="col-1 text-center">Unit</th>
                                             <th class="col-1 text-right">Onhand</th>
                                             <th class="col-1 text-center">Action</th>
-
                                         </tr>
                                     </thead>
                                     <tbody class="text-xs">
