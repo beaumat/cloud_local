@@ -6,10 +6,16 @@
                     {{-- @livewire('GenerateQRCode', ['code' => $CODE]) --}}
                 </div>
                 <div class="col-8 text-center mb-4">
-                    <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
-                    <div class="print-address">
-                        <b>{{ $REPORT_HEADER_1 }}</b>
-                    </div>
+                    @if (empty($LOGO_FILE))
+                        <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
+                        <div class="print-address">
+                            <b>{{ $REPORT_HEADER_1 }}</b>
+                        </div>
+                    @else
+                        {{-- nothing customize --}}
+                        <img class="print-logo" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
+                    @endif
+
                 </div>
                 <div class="col-2">
 
@@ -51,14 +57,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                     @for ($i = 0; $i < 40; $i++)
+                        @for ($i = 0; $i < 40; $i++)
                             <tr class="text-center top-line">
-                     
+
                                 <td class="">&nbsp;</td>
                                 <td class="left-line">&nbsp;</td>
                                 <td class="left-line">&nbsp;</td>
                                 <td class="left-line">&nbsp;</td>
-                   
+
                             </tr>
                         @endfor
                     </tbody>

@@ -17,7 +17,7 @@ use Livewire\Component;
 class ScheduleModal extends Component
 {
     public bool $showModal;
-    public bool $withBack;
+    public bool $withBack = false;
     #[Reactive]
     public $LOCATION_ID;
     public $DATE;

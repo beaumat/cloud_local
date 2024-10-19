@@ -68,7 +68,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6" style="max-height: 80vh; overflow-y: auto;">
+                <div class=" col-12 col-sm-12 col-md-12  col-lg-8" style="max-height: 80vh; overflow-y: auto;">
                     <table class="table table-sm table-bordered table-hover ">
                         <thead class="bg-sky h1">
                             <tr>
@@ -292,6 +292,7 @@
                                 @php
                                     $sub_total = 0;
                                 @endphp
+                                
                                 @foreach ($otherExpensesList as $list)
                                     <tr>
                                         <td class="px-4">{{ $list->ACCOUNT_TITLE }}</td>
@@ -345,6 +346,10 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
+                            @php
+                                $net_income = 0;
+                            @endphp
+
                             @if ($operating_income + $net_other_income > 0)
                                 <tr>
                                     <td class="text-info text-sm">Net Income</td>
@@ -352,7 +357,6 @@
                                     <td class="text-right text-info text-sm">
                                         <div class="border-top border-secondary">
                                             @php
-
                                                 $net_income = $operating_income + $net_other_income;
                                             @endphp
                                             {{ number_format($net_income, 2) }}

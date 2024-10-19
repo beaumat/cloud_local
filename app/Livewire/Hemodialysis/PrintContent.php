@@ -164,7 +164,7 @@ class PrintContent extends Component
     public int $SO_COUNT = 0;
 
     public string $REPORT_HEADER_1;
-
+    public string $LOGO_FILE ='';
     private $patientDoctorServices;
     private $locationServices;
     public function boot(
@@ -374,6 +374,7 @@ class PrintContent extends Component
             $locData =  $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+                $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
             }
 
             $this->noteList = $this->hemoServices->ListNotes($this->HEMO_ID);

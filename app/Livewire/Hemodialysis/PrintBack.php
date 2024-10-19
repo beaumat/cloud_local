@@ -20,6 +20,7 @@ class PrintBack extends Component
     private $hemoServices;
     private $locationServices;
     public $REPORT_HEADER_1;
+    public string $LOGO_FILE = '';
     private $contactServices;
     public function boot(HemoServices $hemoServices, LocationServices $locationServices, ContactServices $contactServices)
     {
@@ -38,6 +39,7 @@ class PrintBack extends Component
         $locData =  $this->locationServices->get($data->LOCATION_ID);
         if ($locData) {
             $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+            $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
         }
     }
 

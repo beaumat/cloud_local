@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class FinancialStatementServices
 {
-    private function  getAccountByType(string $dateFrom, string $dateTo, int $LOCATION_ID, int $TYPE, bool $isCreditIncrease = false)
+    private function  getIncomeStatementAccountByType(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false)
     {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
@@ -14,36 +14,57 @@ class FinancialStatementServices
         $result = DB::table('account_journal as aj')
             ->select([
                 'a.NAME as ACCOUNT_TITLE',
-
                 DB::raw($sql),
-            ])->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
-
+            ])->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
             ->where('aj.AMOUNT', '>', '0')
             ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
-            ->where('a.TYPE', '=', $TYPE)
+            ->where('a.TYPE', '=', $accountType)
             ->groupBy(['a.NAME'])
             ->get();
 
         return $result;
+        
     }
+    private function  getIncomeStatementAccountByTypeSum(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false)
+    {
+        $debit_is = $isCreditIncrease ? 1 : 0;
+        $credit_is = $isCreditIncrease ? 0 : 1;
+        $sql = "sum( if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) -  if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT,0) ) as AMOUNT";
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'a.TYPE',
+                DB::raw($sql),
+            ])->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->where('a.TYPE', '=', $accountType)
+            ->groupBy(['a.TYPE'])
+            ->sum('AMOUNT');
+
+        return $result;
+    }
+
     public function IncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getAccountByType($dateFrom, $dateTo, $LOCATION_ID, 10, true);
+        return $this->getIncomeStatementAccountByType($dateFrom, $dateTo, $LOCATION_ID, 10, true);
     }
     public function CogsAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getAccountByType($dateFrom, $dateTo, $LOCATION_ID, 11, false);
+        return $this->getIncomeStatementAccountByType($dateFrom, $dateTo, $LOCATION_ID, 11, false);
     }
     public function ExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getAccountByType($dateFrom, $dateTo, $LOCATION_ID, 12, false);
+        return $this->getIncomeStatementAccountByType($dateFrom, $dateTo, $LOCATION_ID, 12, false);
     }
     public function OtherIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getAccountByType(
+        return $this->getIncomeStatementAccountByType(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -53,7 +74,7 @@ class FinancialStatementServices
     }
     public function OtherExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getAccountByType(
+        return $this->getIncomeStatementAccountByType(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -61,4 +82,54 @@ class FinancialStatementServices
             false
         );
     }
+
+
+    // Balance Sheet
+    public function getBalanceSheetAccountByAcctType(string $date, int $LOCATION_ID, array $AccountType, bool $isCreditIncrease = false, array $NotIncludeAccntID = [])
+    {
+        $debit_is = $isCreditIncrease ? 1 : 0;
+        $credit_is = $isCreditIncrease ? 0 : 1;
+
+        $sql = "sum( if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) -  if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT,0) ) as AMOUNT";
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'a.NAME as ACCOUNT_TITLE',
+                DB::raw($sql),
+            ])->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->where('aj.OBJECT_DATE', '<=', $date)
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->whereIn('a.TYPE', $AccountType)
+            ->whereNotIn('a.ID', $NotIncludeAccntID)
+            ->groupBy(['a.NAME'])
+            ->orderBy('a.TYPE')
+            ->get();
+
+        return $result;
+    }
+    public function getBalanceSheetAccountByAcctID(string $date, int $LOCATION_ID, array $AccountId, bool $isCreditIncrease = false)
+    {
+        $debit_is = $isCreditIncrease ? 1 : 0;
+        $credit_is = $isCreditIncrease ? 0 : 1;
+
+        $sql = "sum( if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) -  if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT,0) ) as AMOUNT";
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'a.NAME as ACCOUNT_TITLE',
+                DB::raw($sql),
+            ])->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->where('aj.OBJECT_DATE', '<=', $date)
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->whereIn('a.ID', $AccountId)
+            ->groupBy(['a.NAME'])
+            ->get();
+
+        return $result;
+    }
+    
 }
