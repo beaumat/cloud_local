@@ -5,17 +5,17 @@
                 <li class="nav-item">
                     <a class="nav-link @if ($tab == 's1st') active @endif" id="custom-tabs-four-s1st-tab"
                         wire:click="SelectTab('s1st')" data-toggle="pill" href="#custom-tabs-four-s1st" role="tab"
-                        aria-controls="custom-tabs-four-s1st" aria-selected="true">1st shift</a>
+                        aria-controls="custom-tabs-four-s1st" aria-selected="true">1st</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link @if ($tab == 's2nd') active @endif" id="custom-tabs-four-s2nd-tab"
                         wire:click="SelectTab('s2nd')" data-toggle="pill" href="#custom-tabs-four-s2nd" role="tab"
-                        aria-controls="custom-tabs-four-s2nd" aria-selected="true">2nd shift</a>
+                        aria-controls="custom-tabs-four-s2nd" aria-selected="true">2nd</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link @if ($tab == 's3rd') active @endif" id="custom-tabs-four-s3rd-tab"
                         wire:click="SelectTab('s3rd')" data-toggle="pill" href="#custom-tabs-four-s3rd" role="tab"
-                        aria-controls="custom-tabs-four-s3rd" aria-selected="true">3rd shift</a>
+                        aria-controls="custom-tabs-four-s3rd" aria-selected="true">3rd</a>
                 </li>
             </ul>
         </div>

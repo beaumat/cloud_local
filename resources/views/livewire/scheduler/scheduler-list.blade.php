@@ -18,7 +18,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="sticky-top mb-3">
                         <div class="card">
                             <div class="card-header">
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-10">
                     <div class="card card-primary">
                         <div class="card-body bg-white">
                             <!-- THE CALENDAR -->
