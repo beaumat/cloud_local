@@ -19,8 +19,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' =>
-                session('message'), 'error' => session('error')])
+                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-md-3">
                     <div class="card">
                         <div class="card-body">
@@ -34,30 +33,29 @@
                                 <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>Assigned Permission</th>
-
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($assignedPermissions as $list)
-                                    @if (stripos($list->name, $searchSign) !== false)
-                                    <tr>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-10">
-                                                    <button class="btn btn-xs w-100"
-                                                        wire:click="deletePermission('{{ $list->name }}')">
-                                                        {{ $list->name}}
-                                                    </button>
-                                                </div>
-                                                <div class="col-2 text-center">
-                                                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                                </div>
+                                        @if (stripos($list->name, $searchSign) !== false)
+                                            <tr>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-10">
+                                                            <button class="btn btn-xs w-100"
+                                                                wire:click="deletePermission('{{ $list->name }}')">
+                                                                {{ $list->name }}
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-2 text-center">
+                                                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                                        </div>
 
-                                            </div>
+                                                    </div>
 
-                                        </td>
-                                    </tr>
-                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -81,32 +79,41 @@
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($unassignedPermissions as $list)
-                                    @if (stripos($list->name, $searchUnsign) !== false)
-                                    <tr>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-2 text-center">
-                                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                                                </div>
-                                                <div class="col-10">
-                                                    <button type="button" class="btn btn-xs w-100"
-                                                        wire:click="addPermission('{{ $list->name }}')">
-                                                        {{ $list->name }}
-                                                    </button>
-                                                </div>
+                                        @if (stripos($list->name, $searchUnsign) !== false)
+                                            <tr>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-2 text-center">
+                                                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                                        </div>
+                                                        <div class="col-10">
+                                                            <button type="button" class="btn btn-xs w-100"
+                                                                wire:click="addPermission('{{ $list->name }}')">
+                                                                {{ $list->name }}
+                                                            </button>
+                                                        </div>
 
-                                            </div>
+                                                    </div>
 
-                                        </td>
-                                    </tr>
-                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class=card-header>
+                            <h6>New Permission</h6>
+                        </div>
+                        <div class="card-body">
 
+                        </div>
+                    </div>
+                </div>
 
 
             </div>

@@ -105,6 +105,8 @@ class BalanceSheetReport extends Component
 
         $this->equityTotal = 0;
         $this->equityList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE, $this->LOCATION_ID, [9], false);
+
+        
         $this->CurrentYearEarnings = 50;
         $this->RetainingEarnings = 10;
     }
