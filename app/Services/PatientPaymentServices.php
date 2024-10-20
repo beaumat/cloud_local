@@ -793,7 +793,7 @@ class PatientPaymentServices
         ])
             ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('PATIENT_ID', $PATIENT_ID)
-            ->whereIn('PAYMENT_METHOD_ID', [91, 92, 93, 94, 96])
+            ->whereIn('PAYMENT_METHOD_ID', [91, 92, 93, 94, 96, 97, 98])
             ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
                 $query->where('patient_payment.LOCATION_ID', $LOCK_LOCATION_ID);
             })

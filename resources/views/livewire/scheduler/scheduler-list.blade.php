@@ -18,48 +18,42 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-2">
-                    <div class="sticky-top mb-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        @can('patient.schedule.modify')
-                                            <a href="{{ route('patientsschedules_setup') }}" class="btn btn-info btn-sm">
-                                                <i class="fa fa-cog" aria-hidden="true"></i> Setup</a>
-                                        @endcan
-                                        @can('patient.schedule.print')
-                                            <button wire:click="openModalPrint" class="btn btn-primary btn-sm">
-                                                <i class="fa fa-print" aria-hidden="true"></i> Preview
-                                            </button>
-                                        @endcan
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12 mb-2">
-                                        <h5 class="text-primary card-title">Date on <b class="text-success">
-                                                @if ($schedContact && count($schedContact) > 0)
-                                                    {{ $DATE->format('m/d/Y') }}
-                                                @endif
-                                            </b>
-                                        </h5>
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    @if ($DATE)
-                                        @livewire('Scheduler.SchedulerListShift', ['LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE->format('Y-m-d')])
-                                    @endif
-                                </div>
+                <div class="col-sm-12 col-md-2">
+                    <div class="sticky-top p-1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @can('patient.schedule.modify')
+                                    <a href="{{ route('patientsschedules_setup') }}" class="btn btn-info btn-sm">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> Setup</a>
+                                @endcan
+                                @can('patient.schedule.print')
+                                    <button wire:click="openModalPrint" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-print" aria-hidden="true"></i> Preview
+                                    </button>
+                                @endcan
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-2">
+                                <h5 class="text-primary card-title">Date on <b class="text-success">
+                                        @if ($schedContact && count($schedContact) > 0)
+                                            {{ $DATE->format('m/d/Y') }}
+                                        @endif
+                                    </b>
+                                </h5>
+                            </div>
+                            <div class="col-md-6 text-right">
+                            </div>
+                            <div class="col-12">
+                                @if ($DATE)
+                                    @livewire('Scheduler.SchedulerListShift', ['LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE->format('Y-m-d')])
+                                @endif
+                            </div>
+                        </div>
+                  
                     </div>
                 </div>
-                <div class="col-md-10">
+                <div class="col-sm-12 col-md-10">
                     <div class="card card-primary">
                         <div class="card-body bg-white">
                             <!-- THE CALENDAR -->

@@ -1,4 +1,3 @@
-<div>
     <div class="card card-primary card-outline card-outline-tabs">
         <div class="card-header p-0 border-bottom-0">
             <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
@@ -17,9 +16,14 @@
                         wire:click="SelectTab('s3rd')" data-toggle="pill" href="#custom-tabs-four-s3rd" role="tab"
                         aria-controls="custom-tabs-four-s3rd" aria-selected="true">3rd</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link @if ($tab == 's4th') active @endif" id="custom-tabs-four-s4th-tab"
+                        wire:click="SelectTab('s4th')" data-toggle="pill" href="#custom-tabs-four-s4th" role="tab"
+                        aria-controls="custom-tabs-four-s4th" aria-selected="true">4th</a>
+                </li>
             </ul>
         </div>
-        <div class="card-body">
+        <div class="card-body p-1">
             <div class="tab-content" id="custom-tabs-four-tabContent">
                 <div class="tab-pane fade @if ($tab == 's1st') show active @endif"
                     id="custom-tabs-four-s1st" role="tabpanel" aria-labelledby="custom-tabs-four-s1st-tab">
@@ -33,28 +37,10 @@
                     id="custom-tabs-four-s3rd" role="tabpanel" aria-labelledby="custom-tabs-four-s3rd-tab">
                     @livewire('Scheduler.SchedulerListShiftDetails', ['SHIFT_ID' => 3, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
                 </div>
+                <div class="tab-pane fade @if ($tab == 's4th') show active @endif"
+                    id="custom-tabs-four-s4th" role="tabpanel" aria-labelledby="custom-tabs-four-s4th-tab">
+                    @livewire('Scheduler.SchedulerListShiftDetails', ['SHIFT_ID' => 4, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
+                </div>
             </div>
         </div>
     </div>
-
-    {{-- <table class="table table-sm mt-2">
-        <thead class="text-xs bg-sky">
-            <tr>
-                <th>Shift</th>
-                <th>Patient</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody class="text-xs">
-
-            @foreach ($schedContact as $list)
-                <tr>
-                    <td>{{ $list->SHIFT }}</td>
-                    <td>{{ $list->CONTACT_NAME }}</td>
-                    <td>{{ $list->STATUS }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table> --}}
-
-</div>
