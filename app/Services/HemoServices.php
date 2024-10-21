@@ -535,7 +535,7 @@ class HemoServices
                     'DFR'               => $data->DFR ?? null,
                     'DURATION'          => $data->DURATION ?? null,
                     'DIALYZER'          => $data->DIALYZER ?? null,
-                    'HEPARIN'           => null,
+                    'HEPARIN'           => $data->HEPARIN ?? null,
                     'REUSE_NO'          => $data->REUSE_NEXT ?? null,
                     'FLUSHING'          => null,
                     'DIALSATE_N'        => $data->DIALSATE_N ?? null,
