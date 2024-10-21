@@ -75,6 +75,7 @@ use App\Livewire\TaxCredit\TaxCreditList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
+use App\Livewire\Invoice\PrintInvoice;
 use App\Livewire\ItemClassPage\ItemClassForm;
 use App\Livewire\ItemClassPage\ItemClassList;
 use App\Livewire\ItemGroupPage\ItemGroupForm;
@@ -235,6 +236,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', InvoiceList::class)->name('invoice')->middleware(['permission:customer.invoice.view']);
             Route::get('/create', InvoiceForm::class)->name('invoice_create')->middleware(['permission:customer.invoice.create']);
             Route::get('/{id}/edit', InvoiceForm::class)->name('invoice_edit')->middleware(['permission:customer.invoice.view']);
+            Route::get('/{id}/print', PrintInvoice::class)->name('invoice_print')->middleware(['permission:customer.invoice.print']);
         });
 
         Route::prefix('/sales-receipt')->group(function () {

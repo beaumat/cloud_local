@@ -14,6 +14,10 @@ class BillingPrint extends Component
 {
 
 
+    public float $billItemAmt = 0;
+    public float $billExpenseAmt = 0;
+    public int $rows = 0;
+    public $LOGO_FILE = null;
     public int $BILL_ID;
     public string $CODE;
     public string $DATE;
@@ -24,6 +28,7 @@ class BillingPrint extends Component
     public float $AMOUNT;
     public string $NOTES;
     public $itemList = [];
+    public $expensesList = [];
 
     private $billingServices;
     private $contactServices;
@@ -61,8 +66,10 @@ class BillingPrint extends Component
                 $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                 $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
                 $this->LOCATION_NAME  = $locData->NAME;
+                $this->LOGO_FILE = $locData->LOGO_FILE ?? null;
             }
             $this->itemList = $this->billingServices->ItemView($this->BILL_ID);
+            $this->expensesList = $this->billingServices->ExpenseView($this->BILL_ID);
             $this->dispatch('preview_print');
             return;
         }

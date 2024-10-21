@@ -2,14 +2,19 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 text-center mb-4">
-                    <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
-                    <div class="text-center">
-                        <b class="print-address1 text-center">
-                            {{ $REPORT_HEADER_1 }} <br />
-                            {{ $REPORT_HEADER_2 }} <br />
-                            {{ $REPORT_HEADER_3 }}</b>
-                    </div>
+                <div class="col-12 text-center mb-1">
+                    @if (empty($LOGO_FILE))
+                        <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
+                        <div class="text-center">
+                            <b class="print-address1 text-center text-xs p-0 m-0">
+                                {{ $REPORT_HEADER_1 }} <br />
+                                {{ $REPORT_HEADER_2 }} <br />
+                                {{ $REPORT_HEADER_3 }}</b>
+                        </div>
+                    @else
+                        {{-- nothing customize --}}
+                        <img class="print-logo" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
+                    @endif
                 </div>
                 <div class="col-4  text-left">
                     <div class="row">
@@ -22,7 +27,7 @@
                     </div>
                 </div>
                 <div class="col-4 text-center">
-                    <b class="h4">BILLING</b>
+                    <b class="h4">Voucher</b>
                 </div>
                 <div class="col-4 ">
                     <div class="row ">
@@ -36,40 +41,95 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 text-center mt-4 ">
-                    <table class="w-100" border="1">
-                        <thead>
-                            <tr class="bgBlack text-white">
-                                <th class="col-1 text-left">CODE</th>
-                                <th class="col-6 text-left">ITEM DESCRIPTION</th>
-                                <th class="col-1 text-right">QTY</th>
-                                <th class="col-1">UOM</th>
-                                <th class="col-1 text-right">Rate</th>
-                                <th class="col-2 text-right">TOTAL</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($itemList as $list)
-                                <tr>
-                                    <td class="text-left p-1">{{ $list->CODE }}</td>
-                                    <td class="text-left p-1">{{ $list->DESCRIPTION }}</td>
-                                    <td class="text-right">{{ number_format($list->QUANTITY, 1) }}&nbsp;</td>
-                                    <td>{{ $list->UNIT_NAME }}</td>
-                                    <td class="text-right">{{ number_format($list->RATE, 2) }}&nbsp;</td>
-                                    <td class="text-right">{{ number_format($list->AMOUNT, 2) }}&nbsp;</td>
+                @if (count($itemList) > 0)
+                    <div class="col-12 text-center mt-4 ">
+                        <table class="w-100" border="1">
+                            <thead>
+                                <tr class="bgBlack text-white">
+                                    <th class="col-1 text-left">No.</th>
+                                    <th class="col-6 text-left">Item Description</th>
+                                    <th class="col-1 text-right">Qty</th>
+                                    <th class="col-1">Uom</th>
+                                    <th class="col-1 text-right">Cost</th>
+                                    <th class="col-2 text-right">Amount</th>
                                 </tr>
-                            @endforeach
-                            <tr>
-                                <td class="text-left p-1"></td>
-                                <td class="text-left p-1"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td class="text-right"><b>{{ number_format($AMOUNT, 2) }} &nbsp;</b></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                @foreach ($itemList as $list)
+                                    @php
+                                        $rows = $rows + 1;
+                                    @endphp
+                                    <tr class="border-dark border-bottom">
+                                        <td class="text-left p-1">{{ $rows }}</td>
+                                        <td class="text-left p-1">{{ $list->DESCRIPTION }}</td>
+                                        <td class="text-right">{{ number_format($list->QUANTITY, 1) }}&nbsp;</td>
+                                        <td>{{ $list->UNIT_NAME }}</td>
+                                        <td class="text-right">{{ number_format($list->RATE, 2) }}&nbsp;</td>
+                                        @php
+                                            $billItemAmt = $billItemAmt + $list->AMOUNT ?? 0;
+                                        @endphp
+                                        <td class="text-right">{{ number_format($list->AMOUNT, 2) }}&nbsp;</td>
+                                    </tr>
+                                @endforeach
+                                <tr class=" border-white border-top border-left border-right ">
+                                    <td class="text-left p-1"></td>
+                                    <td class="text-left p-1"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right"><b>{{ number_format($billItemAmt, 2) }} &nbsp;</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+
+
+                @if (count($expensesList) > 0)
+                    <div class="col-12 text-center mt-4 ">
+                        <table class="w-100" border="1">
+                            <thead>
+                                <tr class="bgBlack text-white">
+                                    <th class="col-1 text-left">Acct. No.</th>
+                                    <th class="col-3 text-left">Account Title</th>
+                                    <th class="col-5 text-left">Particular</th>
+                                    <th class="col-1">Tax</th>
+                                    <th class="col-2 text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($expensesList as $list)
+                                    <tr class="border-dark border-bottom">
+                                        <td class="text-left p-1">{{ $list->CODE }}</td>
+                                        <td class="text-left p-1">{{ $list->NAME }}</td>
+                                        <td class="text-left">{{ $list->PARTICULARS }}</td>
+                                        <td>
+                                            @if ($list->TAXABLE)
+                                                &check;
+                                            @endif
+
+                                        </td>
+
+                                        @php
+                                            $billExpenseAmt = $billExpenseAmt + $list->AMOUNT ?? 0;
+                                        @endphp
+                                        <td class="text-right">{{ number_format($list->AMOUNT, 1) }}&nbsp;</td>
+                                    </tr>
+                                @endforeach
+                                <tr class=" border-white border-top border-left border-right ">
+                                    <td class="text-left p-1"></td>
+                                    <td class="text-left p-1"></td>
+                                    <td></td>
+                                    <td></td>
+
+                                    <td class="text-right"><b>{{ number_format($billExpenseAmt, 2) }} &nbsp;</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+
+
                 <div class="col-12 ">
                     <div class="row mt-1">
                         <div class="col-12 text-left"><b>Notes :</b> {{ $NOTES }}</div>

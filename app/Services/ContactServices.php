@@ -35,6 +35,13 @@ class ContactServices
 
         return $result;
     }
+    public function getSingleData(int $ID)
+    {
+        $result = contacts::where('ID', '=', $ID)
+            ->first();
+
+        return $result;
+    }
     public function IsNotPatient(int $ID): bool
     {
         $result = contacts::where('ID', '=', $ID)
@@ -224,7 +231,7 @@ class ContactServices
         }
 
         $ID = $this->objectService->ObjectNextIdByName('Contact');
-           
+
         Contacts::create([
             "ID"                        => $ID,
             "TYPE"                      => $TYPE,
@@ -360,9 +367,9 @@ class ContactServices
     }
 
     public function Delete(int $ID): void
-    {   
+    {
 
-        
+
         Contacts::where('ID', '=', $ID)->delete();
     }
     public function UpdatePatientType(int $ID, int $TYPE)
