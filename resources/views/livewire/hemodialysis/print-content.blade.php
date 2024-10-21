@@ -40,11 +40,20 @@
                         <div class="col-4">NAME:
                             <label class="text-primary font-weight-bold text-uppercase">{{ $FULL_NAME }}</label>
                         </div>
-                        <div class="col-1">AGE:
-                            <label class="text-primary font-weight-bold text-uppercase">{{ $AGE }}</label>
+
+                        <div class="col-2">
+                            @if ($DRY_WEIGHT)
+                                DRY WEIGHT: ___________
+                            @else
+                                <div class="col-1">AGE:
+                                    <label
+                                        class="text-primary font-weight-bold text-uppercase">{{ $AGE }}</label>
+                                </div>
+                            @endif
                         </div>
-                        <div class="col-3">NO. OF TREATMENT: <label
-                                class="text-primary font-weight-bold">{{ $NO_OF_TREATMENT }}</label></div>
+                        <div class="col-2">NO. OF TREATMENT:
+                            <label class="text-primary font-weight-bold">{{ $NO_OF_TREATMENT }}</label>
+                        </div>
                         <div class="col-2">MACHINE NO. : <label class="text-primary font-weight-bold">
                                 @if ($MACHINE_NO > 0)
                                     {{ $MACHINE_NO }}

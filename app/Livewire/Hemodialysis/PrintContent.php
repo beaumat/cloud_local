@@ -155,7 +155,7 @@ class PrintContent extends Component
     public bool $POST_REGULAR;
     public bool $POST_IRREGULAR;
 
-
+    public bool $DRY_WEIGHT = true;
     public $noteList = [];
 
     public $SE_PARTS = [];
