@@ -14,9 +14,11 @@ class PaymentTermServices
         $this->object = $objectService;
         $this->dateServices = $dateServices;
     }
-    public function getDueDate(int $ID): string
+    public function getDueDate(int $ID, $DATE = null): string
     {
-        $currentDate = $this->dateServices->Now();
+        // Set $currentDate as a Carbon object (use Carbon for date manipulation)
+        $currentDate = $DATE ? Carbon::parse($DATE . " 00:00:00") : $this->dateServices->Now();
+
 
         $NET_DUE = PaymentTerms::where('INACTIVE', '0')->where('ID', $ID)->first()->NET_DUE;
 

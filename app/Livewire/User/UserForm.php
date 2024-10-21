@@ -22,6 +22,7 @@ class UserForm extends Component
     public bool $inactive;
     public int $location_id;
     public bool $locked_location;
+    public bool $date_enabled;
     public $trans_date;
     public $employees = [];
     public $locationList = [];
@@ -56,6 +57,7 @@ class UserForm extends Component
                 $this->location_id = $user->location_id ? $user->location_id : 0;
                 $this->trans_date =  $user->trans_date ?? null;
                 $this->locked_location = $user->locked_location ?? false;
+                $this->date_enabled = $user->date_enabled ?? false;
                 return;
             }
 
@@ -71,6 +73,7 @@ class UserForm extends Component
         $this->location_id  = 0;
         $this->trans_date = '';
         $this->locked_location = false;
+        $this->date_enabled = false;
     }
 
 
@@ -122,10 +125,29 @@ class UserForm extends Component
 
         try {
             if ($this->id === 0) {
-                $this->id = $this->userServices->Store($this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '', $this->locked_location);
+                $this->id = $this->userServices->Store(
+                    $this->name,
+                    $this->password,
+                    $this->contact_id,
+                    $this->inactive,
+                    $this->location_id,
+                    $this->trans_date ?? '',
+                    $this->locked_location,
+                    $this->date_enabled
+                );
                 return Redirect::route('maintenancesettingsusers_edit', ['id' => $this->id])->with('message', 'Successfully created.');
             } else {
-                $this->userServices->Update($this->id, $this->name, $this->password, $this->contact_id, $this->inactive, $this->location_id, $this->trans_date ?? '', $this->locked_location);
+                $this->userServices->Update(
+                    $this->id,
+                    $this->name,
+                    $this->password,
+                    $this->contact_id,
+                    $this->inactive,
+                    $this->location_id,
+                    $this->trans_date ?? '',
+                    $this->locked_location,
+                    $this->date_enabled
+                );
                 session()->flash('message', 'Successfully updated.');
             }
         } catch (\Exception $e) {

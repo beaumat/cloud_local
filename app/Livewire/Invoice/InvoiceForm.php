@@ -173,7 +173,11 @@ class InvoiceForm extends Component
 
     public function updatedPAYMENTTERMSID()
     {
-        $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID);
+        $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID, $this->DATE);
+    }
+    public function updatedDate() {
+
+        $this->updatedPAYMENTTERMSID();
     }
     public function mount($id = null, $IS_MODAL = false, $PATIENT_PAYMENT_ID = 0)
     {

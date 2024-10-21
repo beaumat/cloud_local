@@ -25,7 +25,8 @@ class User extends Authenticatable
         'inactive',
         'location_id',
         'trans_date',
-        'locked_location'
+        'locked_location',
+        'date_enabled'
     ];
 
     /**
