@@ -45,10 +45,8 @@
                             @if ($DRY_WEIGHT)
                                 DRY WEIGHT: ___________
                             @else
-                                <div class="col-1">AGE:
-                                    <label
-                                        class="text-primary font-weight-bold text-uppercase">{{ $AGE }}</label>
-                                </div>
+                                AGE:
+                                <label class="text-primary font-weight-bold text-uppercase">{{ $AGE }}</label>
                             @endif
                         </div>
                         <div class="col-2">NO. OF TREATMENT:

@@ -34,6 +34,7 @@ class Locations extends Model
         'PHIC_SOA_FORMAT',
         'PHIC_FORM_MODIFY',
         'IS_DAILY',
-        'LOGO_FILE'
+        'LOGO_FILE',
+        'USED_DRY_WEIGHT'
     ];
 }

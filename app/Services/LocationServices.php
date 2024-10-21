@@ -84,7 +84,8 @@ class LocationServices
         string $PHIC_SOA_FORMAT = 'PrintSoa',
         bool $PHIC_FORM_MODIFY = false,
         bool $IS_DAILY = false,
-        string $LOGO_FILE
+        string $LOGO_FILE,
+        bool  $USED_DRY_WEIGHT
 
     ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
@@ -109,7 +110,8 @@ class LocationServices
             'PHIC_SOA_FORMAT'       => $PHIC_SOA_FORMAT,
             'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY,
             'IS_DAILY'              => $IS_DAILY,
-            'LOGO_FILE'             => $LOGO_FILE
+            'LOGO_FILE'             => $LOGO_FILE,
+            'USED_DRY_WEIGHT'       => $USED_DRY_WEIGHT
         ]);
 
         return $ID;
@@ -136,7 +138,8 @@ class LocationServices
         string $PHIC_SOA_FORMAT,
         bool $PHIC_FORM_MODIFY = false,
         bool $IS_DAILY = false,
-        string $LOGO_FILE
+        string $LOGO_FILE,
+        bool $USED_DRY_WEIGHT
     ): void {
 
         Locations::where('ID', $ID)
@@ -160,7 +163,8 @@ class LocationServices
                 'PHIC_SOA_FORMAT'       => $PHIC_SOA_FORMAT,
                 'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY,
                 'IS_DAILY'              => $IS_DAILY,
-                'LOGO_FILE'             => $LOGO_FILE
+                'LOGO_FILE'             => $LOGO_FILE,
+                'USED_DRY_WEIGHT'       => $USED_DRY_WEIGHT
 
             ]);
     }

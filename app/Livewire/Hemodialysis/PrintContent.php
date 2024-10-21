@@ -375,6 +375,7 @@ class PrintContent extends Component
             if ($locData) {
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
+                $this->DRY_WEIGHT = $locData->USED_DRY_WEIGHT ?? false;
             }
 
             $this->noteList = $this->hemoServices->ListNotes($this->HEMO_ID);

@@ -149,6 +149,10 @@
                                             <livewire:text-input name="LOGO_FILE" titleName="Logo File"
                                                 isDisabled="{{ false }}" wire:model='LOGO_FILE'
                                                 maxlength='50' />
+
+                                            <livewire:custom-check-box name="USED_DRY_WEIGHT"
+                                                isDisabled="{{ false }}" titleName="Use Dry Weight"
+                                                wire:model='USED_DRY_WEIGHT' />
                                         </div>
                                     </div>
                                 </div>

@@ -37,6 +37,7 @@ class LocationForm extends Component
     public string $PHIC_SOA_FORMAT;
     public bool $PHIC_FORM_MODIFY;
     public bool $IS_DAILY = false;
+    public bool $USED_DRY_WEIGHT = false;
     public string $LOGO_FILE = '';
     public $managerList = [];
     public $inchargeList = [];
@@ -86,6 +87,7 @@ class LocationForm extends Component
                 $this->PHIC_FORM_MODIFY = $data->PHIC_FORM_MODIFY ?? false;
                 $this->IS_DAILY = $data->IS_DAILY ?? false;
                 $this->LOGO_FILE = $data->LOGO_FILE ?? '';
+                $this->USED_DRY_WEIGHT = $data->USED_DRY_WEIGHT ?? false;
                 return;
             }
 
@@ -113,6 +115,7 @@ class LocationForm extends Component
         $this->PHIC_FORM_MODIFY  = false;
         $this->IS_DAILY = false;
         $this->LOGO_FILE = '';
+        $this->USED_DRY_WEIGHT = false;
     }
 
 
@@ -146,7 +149,8 @@ class LocationForm extends Component
                     $this->PHIC_SOA_FORMAT,
                     $this->PHIC_FORM_MODIFY,
                     $this->IS_DAILY,
-                    $this->LOGO_FILE
+                    $this->LOGO_FILE,
+                    $this->USED_DRY_WEIGHT
                 );
 
                 Redirect::route('maintenancesettingslocation_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -172,7 +176,8 @@ class LocationForm extends Component
                     $this->PHIC_SOA_FORMAT,
                     $this->PHIC_FORM_MODIFY,
                     $this->IS_DAILY,
-                    $this->LOGO_FILE
+                    $this->LOGO_FILE,
+                    $this->USED_DRY_WEIGHT
                 );
                 session()->flash('message', 'Successfully updated');
             }
