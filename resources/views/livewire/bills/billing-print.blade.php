@@ -83,8 +83,6 @@
                         </table>
                     </div>
                 @endif
-
-
                 @if (count($expensesList) > 0)
                     <div class="col-12 text-center mt-4 ">
                         <table class="w-100" border="1">

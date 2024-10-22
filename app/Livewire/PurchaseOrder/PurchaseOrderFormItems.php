@@ -158,8 +158,6 @@ class PurchaseOrderFormItems extends Component
                 $this->TAXABLE_AMOUNT = $tax_result['TAXABLE_AMOUNT'];
                 $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
             }
-
-
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
 
             $this->purchaseOrderServices->ItemStore(
@@ -180,7 +178,6 @@ class PurchaseOrderFormItems extends Component
 
             $getResult = $this->purchaseOrderServices->ReComputed($this->PO_ID);
             $this->dispatch('update-amount', result: $getResult);
-
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
             $this->UNIT_ID = 0;
@@ -194,7 +191,6 @@ class PurchaseOrderFormItems extends Component
             $this->TAX_AMOUNT = 0;
             $this->ITEM_CODE = '';
             $this->ITEM_DESCRIPTION = '';
-
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
         } catch (\Exception $e) {
@@ -202,7 +198,6 @@ class PurchaseOrderFormItems extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
 
     public function updatedlineqty()
     {

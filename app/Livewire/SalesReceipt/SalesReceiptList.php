@@ -2,6 +2,8 @@
 
 namespace App\Livewire\SalesReceipt;
 
+use App\Services\AccountJournalServices;
+use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
 use App\Services\SalesReceiptServices;
 use App\Services\UserServices;
@@ -26,12 +28,20 @@ class SalesReceiptList extends Component
     private $salesReceiptServices;
     private $locationServices;
     private $userServices;
-
-    public function boot(SalesReceiptServices $salesReceiptServices, LocationServices $locationServices, UserServices $userServices)
-    {
+    private $accountJournalServices;
+    private $itemInventoryServices;
+    public function boot(
+        SalesReceiptServices $salesReceiptServices,
+        LocationServices $locationServices,
+        UserServices $userServices,
+        AccountJournalServices $accountJournalServices,
+        ItemInventoryServices $itemInventoryServices
+    ) {
         $this->salesReceiptServices = $salesReceiptServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->itemInventoryServices = $itemInventoryServices;
     }
     public function mount()
     {
@@ -40,11 +50,114 @@ class SalesReceiptList extends Component
         $this->dateFrom = $this->userServices->getTransactionDateDefault();
         $this->dateTo = $this->userServices->getTransactionDateDefault();
     }
-    public function delete($id)
+    public function deleteItem(int $Id, int $SALES_RECEIPT_ID, $JOURNAL_NO)
     {
+ 
+        $sr = $this->salesReceiptServices->get($SALES_RECEIPT_ID);
+        if ($sr) {
+            $srItem = $this->salesReceiptServices->ItemGet($Id, $SALES_RECEIPT_ID,);
+            if ($srItem) {
+
+                // Inventory
+                $this->itemInventoryServices->InventoryModify(
+                    $srItem->ITEM_ID,
+                    $sr->LOCATION_ID,
+                    $Id,
+                    $this->salesReceiptServices->document_type_id,
+                    $sr->DATE,
+                    0,
+                    0,
+                    0
+                );
+
+                // INCOME_ACCOUNT_ID
+                $this->accountJournalServices->DeleteJournal(
+                    $srItem->INCOME_ACCOUNT_ID,
+                    $sr->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $srItem->ITEM_ID,
+                    $Id,
+                    $this->salesReceiptServices->object_type_sales_receipt_items,
+                    $sr->DATE,
+                    1,
+
+                );
+                // COGS_ACCOUNT_ID
+                $this->accountJournalServices->DeleteJournal(
+                    $srItem->COGS_ACCOUNT_ID,
+                    $sr->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $srItem->ITEM_ID,
+                    $Id,
+                    $this->salesReceiptServices->object_type_sales_receipt_items,
+                    $sr->DATE,
+                    0,
+
+                );
+                // ASSET_ACCOUNT_ID
+                $this->accountJournalServices->DeleteJournal(
+                    $srItem->ASSET_ACCOUNT_ID,
+                    $sr->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $srItem->ITEM_ID,
+                    $Id,
+                    $this->salesReceiptServices->object_type_sales_receipt_items,
+                    $sr->DATE,
+                    1,
+
+                );
+            }
+        }
+    }
+    public function delete($SR_ID)
+    { 
         try {
             DB::beginTransaction();
-            $this->salesReceiptServices->Delete($id);
+            $data = $this->salesReceiptServices->get($SR_ID);
+            if ($data) {
+                if ($data->STATUS == 15) {
+
+                    $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                        $this->salesReceiptServices->object_type_sales_receipt,
+                        $SR_ID
+                    );
+                    //Main
+                    $this->accountJournalServices->DeleteJournal(
+                        $data->UNDEPOSITED_FUNDS_ACCOUNT_ID ?? 0,
+                        $data->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $data->CUSTOMER_ID,
+                        $SR_ID,
+                        $this->salesReceiptServices->object_type_sales_receipt,
+                        $data->DATE,
+                        0,
+
+                    );
+
+                    //Tax
+                    $this->accountJournalServices->DeleteJournal(
+                        $data->OUTPUT_TAX_ACCOUNT_ID ?? 0,
+                        $data->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $data->CUSTOMER_ID,
+                        $SR_ID,
+                        $this->salesReceiptServices->object_type_sales_receipt,
+                        $data->DATE,
+                        1,
+
+                    );
+
+                    $dataItem = $this->salesReceiptServices->ItemView($SR_ID);
+                    foreach ($dataItem as $list) {
+                        $this->deleteItem($list->ID, $SR_ID, $JOURNAL_NO);
+                    }
+                }
+            }
+
+
+
+
+            $this->salesReceiptServices->Delete($SR_ID);
             DB::commit();
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {

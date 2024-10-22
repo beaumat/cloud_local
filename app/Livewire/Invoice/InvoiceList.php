@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Invoice;
 
+use App\Services\AccountJournalServices;
 use App\Services\InvoiceServices;
+use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
@@ -23,23 +25,133 @@ class InvoiceList extends Component
     private $invoiceServices;
     private $locationServices;
     private $userServices;
+    private $accountJournalServices;
 
-    public function boot(InvoiceServices $invoiceServices, LocationServices $locationServices, UserServices $userServices)
-    {
+    private $itemInventoryServices;
+    public function boot(
+        InvoiceServices $invoiceServices,
+        LocationServices $locationServices,
+        UserServices $userServices,
+        AccountJournalServices $accountJournalServices,
+        ItemInventoryServices $itemInventoryServices
+    ) {
         $this->invoiceServices = $invoiceServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->itemInventoryServices = $itemInventoryServices;
     }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
-    public function delete($id)
+
+
+    private function deleteItem(int $Id, $INVOICE_ID, $JOURNAL_NO)
+    {
+
+        $invoiceDate = $this->invoiceServices->get($INVOICE_ID);
+        if ($invoiceDate) {
+            $invoiceItemData = $this->invoiceServices->ItemGet($Id, $INVOICE_ID);
+            if ($invoiceItemData) {
+
+                // Inventory
+                $this->itemInventoryServices->InventoryModify(
+                    $invoiceItemData->ITEM_ID,
+                    $invoiceDate->LOCATION_ID,
+                    $Id,
+                    $this->invoiceServices->document_type_id,
+                    $invoiceDate->DATE,
+                    0,
+                    0,
+                    0
+                );
+
+                // INCOME_ACCOUNT_ID
+                $this->accountJournalServices->DeleteJournal(
+                    $invoiceItemData->INCOME_ACCOUNT_ID ?? 0,
+                    $invoiceDate->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $invoiceItemData->ITEM_ID,
+                    $Id,
+                    $this->invoiceServices->object_type_invoice_item,
+                    $invoiceDate->DATE,
+                    1,
+
+                );
+                // COGS_ACCOUNT_ID
+                $this->accountJournalServices->DeleteJournal(
+                    $invoiceItemData->COGS_ACCOUNT_ID ?? 0,
+                    $invoiceDate->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $invoiceItemData->ITEM_ID,
+                    $Id,
+                    $this->invoiceServices->object_type_invoice_item,
+                    $invoiceDate->DATE,
+                    0,
+
+                );
+                // ASSET_ACCOUNT_ID
+                $this->accountJournalServices->DeleteJournal(
+                    $invoiceItemData->ASSET_ACCOUNT_ID ?? 0,
+                    $invoiceDate->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $invoiceItemData->ITEM_ID,
+                    $Id,
+                    $this->invoiceServices->object_type_invoice_item,
+                    $invoiceDate->DATE,
+                    1,
+
+                );
+            }
+        }
+    }
+    public function delete($INVOICE_ID)
     {
         try {
             DB::beginTransaction();
-            $this->invoiceServices->Delete($id);
+            $data = $this->invoiceServices->get($INVOICE_ID);
+            if ($data) {
+
+                if ($data->STATUS == 15) {
+                    //Main
+                    $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $INVOICE_ID);
+                    $this->accountJournalServices->DeleteJournal(
+                        $data->ACCOUNTS_RECEIVABLE_ID ?? 0,
+                        $data->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $data->CUSTOMER_ID,
+                        $INVOICE_ID,
+                        $this->invoiceServices->object_type_invoice,
+                        $data->DATE,
+                        0,
+
+                    );
+                    //Tax
+                    $this->accountJournalServices->DeleteJournal(
+                        $data->OUTPUT_TAX_ACCOUNT_ID ?? 0,
+                        $data->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $data->CUSTOMER_ID,
+                        $INVOICE_ID,
+                        $this->invoiceServices->object_type_invoice,
+                        $data->DATE,
+                        1,
+
+                    );
+                    $dataitem = $this->invoiceServices->ItemView($INVOICE_ID);
+                    foreach ($dataitem as $list) {
+                        // delete Item
+                        $this->deleteItem($list->ID, $INVOICE_ID, $JOURNAL_NO);
+                    }
+                }
+            }
+
+
+            // Delete main
+
+            $this->invoiceServices->Delete($INVOICE_ID);
             DB::commit();
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {

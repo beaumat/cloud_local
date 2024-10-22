@@ -28,7 +28,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            @if ($Modify)
+                                            @if ($Modify && $ID == 0)
                                                 <livewire:select-option name="VENDOR_ID" titleName="Vendor"
                                                     :options="$vendorList" :zero="true" :isDisabled=false
                                                     wire:model='VENDOR_ID' />
@@ -129,8 +129,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="card-footer">
                                 <div class="row">
@@ -186,60 +184,62 @@
             </div>
         </div>
     </section>
-    <section class="content">
-        <div class="container-fluid bg-light">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary card-outline card-outline-tabs">
-                        <div class="card-header p-0 border-bottom-0">
-                            <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
-                                        href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tab-content" id="custom-tabs-four-tabContent">
-                                <div class="tab-pane fade show active " id="custom-tabs-four-item" role="tabpanel"
-                                    aria-labelledby="custom-tabs-four-item-tab">
-                                    <div class="row"
-                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        <div class="col-md-12"
-                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('PurchaseOrder.PurchaseOrderFormItems', ['PO_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
+    @if ($ID > 0)
+        <section class="content">
+            <div class="container-fluid bg-light">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-header p-0 border-bottom-0">
+                                <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
+                                            href="#custom-tabs-four-item" role="tab"
+                                            aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade show active " id="custom-tabs-four-item"
+                                        role="tabpanel" aria-labelledby="custom-tabs-four-item-tab">
+                                        <div class="row">
+                                            <div class="col-md-12"
+                                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                @livewire('PurchaseOrder.PurchaseOrderFormItems', ['PO_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-md-6 text-left">
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-md-6 text-left">
 
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-8 text-right">
-                                            <label class="text-sm">Input Tax:</label>
-                                            <label
-                                                class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label>
-                                        </div>
-                                        <div class="col-md-4 text-right">
-                                            <label class="text-sm">Total:</label>
-                                            <label class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-8 text-right">
+                                                <label class="text-sm">Input Tax:</label>
+                                                <label
+                                                    class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label>
+                                            </div>
+                                            <div class="col-md-4 text-right">
+                                                <label class="text-sm">Total:</label>
+                                                <label
+                                                    class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
 
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 </div>
