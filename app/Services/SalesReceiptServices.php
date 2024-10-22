@@ -23,9 +23,17 @@ class SalesReceiptServices
         $this->dateServices = $dateServices;
         $this->compute = $computeServices;
     }
-    public function get(int $ID): object
-    {
-        return SalesReceipt::where('ID', '=', $ID)->first();
+    public function get(int $ID)
+    {   
+ 
+        $data = SalesReceipt::where('ID', '=', $ID)->first();
+  
+        if ($data) {
+            return $data;
+        }
+
+        return null;
+
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
