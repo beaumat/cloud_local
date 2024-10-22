@@ -203,7 +203,11 @@ class PatientPaymentServices
         return  PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->exists();
     }
     public function Delete(int $ID)
-    {
+    {   
+
+
+
+        
         PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->delete();
         PatientPayments::where('ID', $ID)->delete();
     }

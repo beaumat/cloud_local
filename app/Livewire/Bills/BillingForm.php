@@ -157,7 +157,13 @@ class BillingForm extends Component
     }
     public function updatedPAYMENTTERMSID()
     {
-        $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID);
+        $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID, $this->DATE);
+    }
+
+    public function updatedDate()
+    {
+
+        $this->updatedPAYMENTTERMSID();
     }
     private function getInfo($data)
     {
