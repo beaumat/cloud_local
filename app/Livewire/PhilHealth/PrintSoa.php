@@ -106,6 +106,7 @@ class PrintSoa extends Component
     public string $REPORT_HEADER_1;
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
+    public string $LOGO_FILE;
     private $patientDoctorServices;
 
 
@@ -167,6 +168,7 @@ class PrintSoa extends Component
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                 $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                 $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                 if ($conUser) {
                     $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
@@ -291,6 +293,7 @@ class PrintSoa extends Component
                     $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                     $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                     $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                    $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                     $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                     if ($conUser) {
                         $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';

@@ -100,6 +100,7 @@ class PrintTreatment extends Component
     public string $REPORT_HEADER_1;
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
+    public string $LOGO_FILE;
     public $hemoList = [];
     public $i;
     private $patientDoctorServices;
@@ -165,6 +166,7 @@ class PrintTreatment extends Component
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                 $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
 
                 $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                 if ($conPHIC) {
@@ -287,6 +289,7 @@ class PrintTreatment extends Component
                     $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                     $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                     $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                    $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                     $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                     if ($conPHIC) {
                         $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
