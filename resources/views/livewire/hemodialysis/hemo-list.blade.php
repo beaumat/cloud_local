@@ -246,7 +246,11 @@
                                                         </a>
                                                     </td>
                                                     <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                                    <td> {{ $list->CONTACT_NAME }}</td>
+                                                    <td>
+                                                        <a target="_BLANK" class="text-primary"
+                                                            href="{{ route('maintenancecontactpatients_edit', ['id' => $list->PATIENT_ID]) }}">
+                                                            {{ $list->CONTACT_NAME }}</a>
+                                                    </td>
                                                     <td class="text-center">
                                                         {{ $list->PRE_WEIGHT }} | {{ $list->POST_WEIGHT }}
                                                     </td>

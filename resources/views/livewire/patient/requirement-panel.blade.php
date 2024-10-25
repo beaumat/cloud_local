@@ -12,7 +12,7 @@
                 </thead>
                 <tbody class="text-xs">
                     @foreach ($dataList as $list)
-                        <tr>
+                        <tr >
                             <td>{{ $list->DESCRIPTION }}</td>
                             <td class="text-center">
                                 @livewire('Patient.RequirementPanelComplete', ['ID' => $list->ID, 'VALUE' => $list->IS_COMPLETE, 'CONTACT_ID' => $CONTACT_ID], key('complete-' . $list->ID))
@@ -22,17 +22,20 @@
                             </td>
                         </tr>
                     @endforeach
-                    <tr>
-                        <td></td>
-                        <td>
-                            <button type='button' wire:click='markAsCompleted()' class="btn btn-xs btn-info w-100">
-                                Check All </button>
-                        </td>
-                        <td>
-                            <button type='button' wire:click='markAsNotApplicable()'
-                                class="btn btn-xs btn-warning w-100"> Check All</button>
-                        </td>
-                    </tr>
+                    @can('contact.patient.update')
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type='button' wire:click='markAsCompleted()' class="btn btn-xs btn-info w-100">
+                                    Check All </button>
+                            </td>
+                            <td>
+                                <button type='button' wire:click='markAsNotApplicable()'
+                                    class="btn btn-xs btn-warning w-100"> Check All</button>
+                            </td>
+                        </tr>
+                    @endcan
+
                 </tbody>
             </table>
         </div>

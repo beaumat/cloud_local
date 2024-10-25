@@ -23,20 +23,25 @@
                     </td>
                 </tr>
             @endforeach
-            <tr>
-                <td></td>
-                <td>
-                    @if ($saveSuccess)
-                        <livewire:select-option name="DOCTOR_ID1" titleName="" :options="$contactList" :zero="true"
-                            wire:model.live='DOCTOR_ID' :vertical="false" :withLabel="false" isDisabled="{{ false }}" />
-                    @else
-                        <livewire:select-option name="DOCTOR_ID2" titleName="" :options="$contactList" :zero="true"
-                            wire:model.live='DOCTOR_ID' :vertical="false" :withLabel="false" isDisabled="{{ false }}" />
-                    @endif
-                </td>
-                <td><button wire:click='save' type="button" class="btn btn-sm btn-success w-100 mt-2"> <i
-                            class="fa fa-plus" aria-hidden="true"></i> </button></td>
-            </tr>
+            @can('contact.patient.update')
+                <tr>
+                    <td></td>
+                    <td>
+                        @if ($saveSuccess)
+                            <livewire:select-option name="DOCTOR_ID1" titleName="" :options="$contactList" :zero="true"
+                                wire:model.live='DOCTOR_ID' :vertical="false" :withLabel="false"
+                                isDisabled="{{ false }}" />
+                        @else
+                            <livewire:select-option name="DOCTOR_ID2" titleName="" :options="$contactList" :zero="true"
+                                wire:model.live='DOCTOR_ID' :vertical="false" :withLabel="false"
+                                isDisabled="{{ false }}" />
+                        @endif
+                    </td>
+                    <td><button wire:click='save' type="button" class="btn btn-sm btn-success w-100"> <i
+                                class="fa fa-plus" aria-hidden="true"></i> </button></td>
+                </tr>
+            @endcan
+
         </tbody>
     </table>
 </div>

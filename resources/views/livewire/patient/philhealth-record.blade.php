@@ -42,7 +42,8 @@
                          @foreach ($dataList as $list)
                              <tr>
                                  <td>
-                                     <a target="_BLANK" href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
+                                     <a target="_BLANK"
+                                         @can('patient.philhealth.view') href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}" @else href="#" @endcan
                                          class="text-primary">
                                          {{ $list->CODE }}
                                      </a>
@@ -80,10 +81,12 @@
                                              class="btn-sm text-danger"> <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                          </a>
                                      @endcan --}}
-                                     <a href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
-                                         class="btn-sm text-info">
-                                         <i class="fas fa-edit" aria-hidden="true"></i>
-                                     </a>
+                                     @can('patient.philhealth.view')
+                                         <a href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
+                                             class="btn-sm text-info">
+                                             <i class="fas fa-edit" aria-hidden="true"></i>
+                                         </a>
+                                     @endcan
                                      @can('patient.philhealth.delete')
                                          <a href="#" wire:click='delete({{ $list->ID }})'
                                              wire:confirm="Are you sure you want to delete this?"
@@ -102,23 +105,23 @@
                          <i class="fas fa-plus"></i> Add
                      </button> --}}
 
-
-                     <a type="button" target="_BLANK" title="Print Soa"
-                         href="{{ route('patientsprintout_soa_temp', ['id' => $CONTACT_ID]) }}"
-                         class=" btn  btn-sm btn-primary">
-                         <i class="fa fa-print" aria-hidden="true"></i> SOA (Pre-sign)
-                     </a>
-                     <a type="button" target="_BLANK" title="Print Soa"
-                         href="{{ route('patientsprintout_summary_temp', ['id' => $CONTACT_ID]) }}"
-                         class=" btn  btn-sm btn-primary">
-                         <i class="fa fa-print" aria-hidden="true"></i> Summary (Pre-sign)
-                     </a>
-                     <a type="button" target="_BLANK" title="Print Philheath CF4 (pre-sign)"
-                         href="{{ route('patientsprintout_csf_temp', ['id' => $CONTACT_ID]) }}"
-                         class="btn btn-info btn-sm"> <i class="fa fa-print" aria-hidden="true"></i>
-                         CSF (Pre-sign)
-                     </a>
-
+                     @can('patient.philhealth.print')
+                         <a type="button" target="_BLANK" title="Print Soa"
+                             href="{{ route('patientsprintout_soa_temp', ['id' => $CONTACT_ID]) }}"
+                             class=" btn  btn-sm btn-primary">
+                             <i class="fa fa-print" aria-hidden="true"></i> SOA (Pre-sign)
+                         </a>
+                         <a type="button" target="_BLANK" title="Print Soa"
+                             href="{{ route('patientsprintout_summary_temp', ['id' => $CONTACT_ID]) }}"
+                             class=" btn  btn-sm btn-primary">
+                             <i class="fa fa-print" aria-hidden="true"></i> Summary (Pre-sign)
+                         </a>
+                         <a type="button" target="_BLANK" title="Print Philheath CF4 (pre-sign)"
+                             href="{{ route('patientsprintout_csf_temp', ['id' => $CONTACT_ID]) }}"
+                             class="btn btn-info btn-sm"> <i class="fa fa-print" aria-hidden="true"></i>
+                             CSF (Pre-sign)
+                         </a>
+                     @endcan
                  </div>
              </div>
          </div>

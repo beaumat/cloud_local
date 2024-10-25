@@ -744,16 +744,20 @@
                                 <div class="card-footer">
                                     <div class="row">
                                         <div class="col-md-6 col-6">
-                                            <button type="submit"
-                                                @if ($ID > 0) @cannot('contact.patient.update')
-                                                disabled @endcan @endif
-                                                class="btn btn-sm btn-success">{{ $ID === 0 ? 'Save' : 'Update' }}</button>
+                                            @if ($ID == 0 && auth()->user()->can('contact.patient.create'))
+                                                <button type="submit" class="btn btn-sm btn-success">Save</button>
+                                            @elseif ($ID > 0 && auth()->user()->can('contact.patient.update'))
+                                                <button type="submit" class="btn btn-sm btn-success">Update</button>
+                                            @endif
+
                                         </div>
                                         <div class="text-right col-6 col-md-6">
                                             @if ($ID > 0)
-                                                <a id="new" title="Create"
-                                                    href="{{ route('maintenancecontactpatients_create') }}"
-                                                    class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i></a>
+                                                @can('contact.patient.create')
+                                                    <a id="new" title="Create"
+                                                        href="{{ route('maintenancecontactpatients_create') }}"
+                                                        class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i></a>
+                                                @endcan
                                             @endif
                                         </div>
                                     </div>
