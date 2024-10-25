@@ -82,9 +82,15 @@
                                 @livewire('Layouts.ReportsFinancial')
                             @endif
                             {{-- Receivables --}}
-                            @livewire('Layouts.ReportsReceivables')
+
+                            @if (Auth::user()->can('report.financial.ar-aging') || Auth::user()->can('report.financial.customer-balance'))
+                                @livewire('Layouts.ReportsReceivables')
+                            @endif
                             {{-- Payables --}}
-                            @livewire('Layouts.ReportsPayables')
+                            @if (Auth::user()->can('report.financial.ap-aging') || Auth::user()->can('report.financial.vendor-balance'))
+                                @livewire('Layouts.ReportsPayables')
+                            @endif
+
                         </ul>
                     </li>
                 @endif

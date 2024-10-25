@@ -4,18 +4,23 @@
                  <p> Payables <i class="right fas fa-angle-left"></i> </p>
              </a>
              <ul class="nav nav-treeview">
-                 <li class="nav-item">
-                     <a href="{{ route('reportsap_aging') }}" class="nav-link {{ request()->is('reports/payables/ap-aging') ? 'text-warning font-weight-bold' : '' }}">
-                         <i class="fa fa-print  nav-icon"></i>
-                         <p>AP Aging</p>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a href="{{ route('reportsvendor_balance') }}" class="nav-link {{ request()->is('reports/payables/vendor-balance') ? 'text-warning font-weight-bold' : '' }}">
-                         <i class="fa fa-print nav-icon"></i>
-                         <p>Vendor Balance</p>
-                     </a>
-                 </li>
-
+                 @can('report.financial.ap-aging')
+                     <li class="nav-item">
+                         <a href="{{ route('reportsap_aging') }}"
+                             class="nav-link {{ request()->is('reports/payables/ap-aging') ? 'text-warning font-weight-bold' : '' }}">
+                             <i class="fa fa-print  nav-icon"></i>
+                             <p>AP Aging</p>
+                         </a>
+                     </li>
+                 @endcan
+                 @can('report.financial.vendor-balance')
+                     <li class="nav-item">
+                         <a href="{{ route('reportsvendor_balance') }}"
+                             class="nav-link {{ request()->is('reports/payables/vendor-balance') ? 'text-warning font-weight-bold' : '' }}">
+                             <i class="fa fa-print nav-icon"></i>
+                             <p>Vendor Balance</p>
+                         </a>
+                     </li>
+                 @endcan
              </ul>
          </li>
