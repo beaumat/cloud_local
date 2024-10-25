@@ -27,11 +27,9 @@ class SalesReceiptServices
     {   
  
         $data = SalesReceipt::where('ID', '=', $ID)->first();
-  
         if ($data) {
             return $data;
         }
-
         return null;
 
     }

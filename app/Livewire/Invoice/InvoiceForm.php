@@ -552,6 +552,7 @@ class InvoiceForm extends Component
         try {
             $SOURCE_REF_TYPE = (int) $this->invoiceServices->document_type_id;
             $data = $this->invoiceServices->ItemInventory($this->ID);
+            
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute(
                     $data,

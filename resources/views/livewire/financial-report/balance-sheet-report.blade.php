@@ -435,6 +435,8 @@
                                         <td class='text-right'>{{ number_format($RetainingEarnings, 2) }}</td>
                                     </tr>
                                 @endif
+
+
                                 <tr>
                                     <td class="px-4">Total Equity</td>
                                     <td class="text-right">
@@ -443,26 +445,8 @@
                                         </div>
                                     </td>
                                 </tr>
-
-
                                 {{-- end asset --}}
                             @endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         </tbody>
                     </table>

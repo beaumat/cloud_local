@@ -13,6 +13,7 @@ class RolePermissionList extends Component
     public $roles = [];
     public $name = null;
 
+
     private function getList()
     {
         $this->roles = Role::all();

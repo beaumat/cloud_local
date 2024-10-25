@@ -105,13 +105,21 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card">
+                    <div class="card card-sm">
                         <div class=card-header>
                             <h6>New Permission</h6>
                         </div>
-                        <div class="card-body">
+                        <form wire:submit.prevent='newPermission'>
 
-                        </div>
+                            <div class="card-body">
+                                <input type="text" class="form-control form-control-sm" wire:model='permission_name'
+                                    placeholder="Enter permission name" />
+                            </div>
+                            <div class="card-footer text-right">
+                                <button type="submit" class="btn btn-success btn-xs">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> Create </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

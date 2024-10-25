@@ -15,10 +15,8 @@ class BalanceSheetReport extends Component
 
 
     public string $DATE;
-
     public int $LOCATION_ID;
     public $locationList = [];
-    public $incomeList =  [];
 
     public float $amount = 0;
     public float $bankTotal = 0;
@@ -33,9 +31,6 @@ class BalanceSheetReport extends Component
     public $currentAssetList = [];
     public $fixedAssetList = [];
     public $nonCurrentAssietList = [];
-
-
-
     public float $apTotal = 0;
     public float $creditCardTotal = 0;
     public float $currentLiabilityTotal = 0;
@@ -49,8 +44,6 @@ class BalanceSheetReport extends Component
     public float $netAsset = 0;
     public float $equityTotal = 0;
     public $equityList = [];
-
-
     public float $CurrentYearEarnings = 0;
     public float $RetainingEarnings = 0 ;
 
@@ -64,7 +57,6 @@ class BalanceSheetReport extends Component
         UserServices $userServices
     ) {
         $this->financialStatementServices = $financialStatementServices;
-
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
@@ -107,8 +99,8 @@ class BalanceSheetReport extends Component
         $this->equityList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE, $this->LOCATION_ID, [9], false);
 
         
-        $this->CurrentYearEarnings = 50;
-        $this->RetainingEarnings = 10;
+        $this->CurrentYearEarnings = 0;
+        $this->RetainingEarnings = 0;
     }
     public function render()
     {

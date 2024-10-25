@@ -25,6 +25,16 @@ class PhilHealthSoaCustomServices
         }
         return [];
     }
+    public function GetFirst(int $LOCATION_ID)
+    {
+        $result =  PhilHealthSoaCustom::where('LOCATION_ID', '=', $LOCATION_ID)
+            ->first();
+
+        if ($result) {
+            return $result;
+        }
+        return [];
+    }
     public function List($search, int $LOCATION_ID)
     {
         $result = PhilHealthSoaCustom::query()

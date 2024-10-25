@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('reportsfinancialcash_flow_report') }}"> Cash Flow Reports </a>
+                        <a href="{{ route('reportsar_aging') }}"> AR Aging Report </a>
                     </h5>
                 </div>
                 <div class="col-sm-6">
@@ -41,7 +41,6 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
@@ -68,18 +67,7 @@
                     </div>
                 </div>
                 <div class=" col-12 col-sm-12 col-md-12  col-lg-8" style="max-height: 80vh; overflow-y: auto;">
-                    <table class="table table-sm  table-hover ">
-                        <thead class="bg-sky h1">
-                            <tr>
-                                <th>Account Name</th>
-                                <th class="text-right">Amount</th>
 
-                            </tr>
-                        </thead>
-                        <tbody class="h1">
-
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>

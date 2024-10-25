@@ -49,6 +49,7 @@ use App\Livewire\Location\LocationDoctors;
 use App\Livewire\Option\OptionSettings;
 use App\Livewire\PatientPayment\PatientPaymentForm;
 use App\Livewire\PatientPayment\PatientPaymentList;
+use App\Livewire\PayableReport\VendorBalance;
 use App\Livewire\Payment\PaymentForm;
 use App\Livewire\Payment\PaymentList;
 use App\Livewire\PhilHealth\PhilHealthForm;
@@ -101,6 +102,7 @@ use App\Livewire\PatientReport\PatientMonthlyTreatmentReport;
 use App\Livewire\PatientReport\PatientSalesReport;
 use App\Livewire\PatientReport\PatientSalesReportPrint;
 use App\Livewire\PatientReport\PatientTreatmentReport;
+use App\Livewire\PayableReport\AccountPayableAging;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
 use App\Livewire\PaymentMethod\PaymentMethodList;
 use App\Livewire\PaymentTerm\PaymentTermForm;
@@ -130,6 +132,8 @@ use App\Livewire\PullOut\PullOutList;
 use App\Livewire\PullOut\PullOutPrint;
 use App\Livewire\PurchaseOrder\PurchaseOrderForm;
 use App\Livewire\PurchaseOrder\PurchaseOrderList;
+use App\Livewire\ReceivableReport\AccountReceivableAging;
+use App\Livewire\ReceivableReport\CustomerBalance;
 use App\Livewire\RolePermissionPage\RolePermissionConfig;
 use App\Livewire\RolePermissionPage\RolePermissionList;
 use App\Livewire\SalesReceipt\SalesReceiptForm;
@@ -196,7 +200,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/print', PrintForm::class)->name('hemo_print')->middleware(['permission:patient.treatment.print']);;
             Route::get('/{id}/print_back', PrintFormBack::class)->name('hemo_print_back')->middleware(['permission:patient.treatment.print']);;
             Route::get('/{id}/print_front_back', PrintFormFrontBack::class)->name('hemo_print_front_back')->middleware(['permission:patient.treatment.print']);;
-
         });
 
         Route::prefix('/phil-health')->group(function () {
@@ -575,10 +578,17 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('/sales')->group(function () {});
-        Route::prefix('/receivables')->group(function () {});
+        Route::prefix('/receivables')->group(function () {
+            Route::get('/ar-aging', AccountReceivableAging::class)->name('ar_aging')->middleware(['permission:report.receivables.ar-aging']);
+            Route::get('/customer-balance', CustomerBalance::class)->name('customer_balance')->middleware(['permission:report.receivables.customer-balance']);
+        });
+        Route::prefix('/payables')->group(function () {
+            Route::get('/ap-aging', AccountPayableAging::class)->name('ap_aging')->middleware(['permission:report.payables.ap-aging']);
+            Route::get('/vendor-balance', VendorBalance::class)->name('vendor_balance')->middleware(['permission:report.payables.vendor-balance']);
+        });
         Route::prefix('/purchases')->group(function () {});
         Route::prefix('/expenses')->group(function () {});
-        Route::prefix('/payables')->group(function () {});
+
         Route::prefix('/inventory')->group(function () {});
         Route::prefix('/documents')->group(function () {});
     });

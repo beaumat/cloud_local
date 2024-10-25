@@ -191,8 +191,9 @@ class QuickCreate extends Component
                                 $this->FIRST_CASE_RATE,
                                 $this->SECOND_CASE_RATE
                             );
-                            $this->philHealthServices->DefaultEntry($ID);
 
+                            $this->philHealthServices->DefaultEntry($ID);
+                          
                             if ($this->DATE_ADMITTED == $this->DATE_DISCHARGED && $this->PHIC_FORM_MODIFY == true) {
                                 $HEMO_ID = (int)  $this->hemoServices->GetHemoID(
                                     $this->DATE_DISCHARGED,

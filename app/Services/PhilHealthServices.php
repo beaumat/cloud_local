@@ -174,14 +174,14 @@ class PhilHealthServices
 
         return false;
     }
-    private function CustomSoa(int $PATIENT_ID, int $LOCATIOON_ID, string $DATE_DISCHARGE)
+    private function CustomSoa(int $PATIENT_ID, int $LOCATON_ID, string $DATE_DISCHARGE)
     {
-        $loc = $this->locationServices->get($LOCATIOON_ID);
+        $loc = $this->locationServices->get($LOCATON_ID);
 
         if ($loc->PHIC_FORM_MODIFY == true) {
 
-            $scItem = $this->serviceChargeServices->GetItemForCustomSoa($DATE_DISCHARGE, $PATIENT_ID, $LOCATIOON_ID);
-            $customSOA = $this->philHealthSoaCustomServices->CollectionRequirements($LOCATIOON_ID, $scItem);
+            $scItem = $this->serviceChargeServices->GetItemForCustomSoa($DATE_DISCHARGE, $PATIENT_ID, $LOCATON_ID);
+            $customSOA = $this->philHealthSoaCustomServices->CollectionRequirements($LOCATON_ID, $scItem);
             foreach ($customSOA as $st) {
                 $req = $this->philHealthSoaCustomServices->GetList(SOA_CUSTOM_ID: $st['ID']);
                 $con = 0;
@@ -192,8 +192,9 @@ class PhilHealthServices
                     }
                     $con++;
                 }
+
                 if ($con == $got_con) {
-                    $soaData = $this->philHealthSoaCustomServices->Get($st['ID'], $LOCATIOON_ID);
+                    $soaData = $this->philHealthSoaCustomServices->Get($st['ID'], $LOCATON_ID);
                     if ($soaData) {
 
                         $this->LAB_N_DIAGNOSTICS_AMOUNT = $soaData->LAB_DIAG ?? 0;
@@ -215,6 +216,26 @@ class PhilHealthServices
                     return;
                 }
             }
+        }
+        // By Default
+        $soaData = $this->philHealthSoaCustomServices->GetFirst($LOCATON_ID);
+        if ($soaData) {
+
+            $this->LAB_N_DIAGNOSTICS_AMOUNT = $soaData->LAB_DIAG ?? 0;
+            $this->DRUG_N_MEDINE_AMOUNT = $soaData->DRUG_MED ?? 0;
+            $this->OPERATING_ROOM_FEE_AMOUNT =  0;
+            $this->OTHER_CHARGES_AMOUNT = $soaData->ADMIN_OTHER_FEE ?? 0;
+            $this->ROOM_FEE = $soaData->OPERATING_ROOM_FEE;
+            $this->SUPPLIES = $soaData->SUPPLIES ?? 0;
+
+            $this->OP_ROOM_N_BOARD = 0;
+            $this->OP_DRUG_N_MEDICINE = $soaData->DRUG_MED_PK ?? 0;
+            $this->OP_LAB_N_DIAGNOSTICS = $soaData->LAB_DIAG_PK ?? 0;
+            $this->OP_OPERATING_ROOM_FEE = $soaData->OPERATING_ROOM_FEE_PK ?? 0;
+            $this->OP_SUPPLIES = $soaData->SUPPLIES_PK ?? 0;
+            $this->OP_OTHERS = $soaData->ADMIN_OTHER_FEE_PK ?? 0;
+
+            $this->OP_SUB_TOTAL =  $this->OP_DRUG_N_MEDICINE +   $this->OP_LAB_N_DIAGNOSTICS +  $this->OP_OPERATING_ROOM_FEE +    $this->OP_SUPPLIES +  $this->OP_OTHERS;
         }
     }
     public function DefaultEntry(int $ID)

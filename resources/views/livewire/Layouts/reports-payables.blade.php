@@ -1,29 +1,21 @@
-         <li id="payables" class="nav-item">
-             <a href="#" class="nav-link">
+         <li id="payables" class="nav-item  {{ request()->is('reports/payables*') ? 'menu-open' : '' }}">
+             <a href="#" class="nav-link {{ request()->is('reports/payables*') ? 'active' : '' }}">
                  <i class="fa fa-file-text-o nav-icon"></i>
-                 <p>
-                     Payables
-                     <i class="right fas fa-angle-left"></i>
-                 </p>
+                 <p> Payables <i class="right fas fa-angle-left"></i> </p>
              </a>
              <ul class="nav nav-treeview">
                  <li class="nav-item">
-                     <a href="#" class="nav-link">
+                     <a href="{{ route('reportsap_aging') }}" class="nav-link {{ request()->is('reports/payables/ap-aging') ? 'text-warning font-weight-bold' : '' }}">
                          <i class="fa fa-print  nav-icon"></i>
-                         <p>Level 3</p>
+                         <p>AP Aging</p>
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="#" class="nav-link">
-                         <i class="fa fa-print  nav-icon"></i>
-                         <p>Level 3</p>
+                     <a href="{{ route('reportsvendor_balance') }}" class="nav-link {{ request()->is('reports/payables/vendor-balance') ? 'text-warning font-weight-bold' : '' }}">
+                         <i class="fa fa-print nav-icon"></i>
+                         <p>Vendor Balance</p>
                      </a>
                  </li>
-                 <li class="nav-item">
-                     <a href="#" class="nav-link">
-                         <i class="fa fa-print  nav-icon"></i>
-                         <p>Level 3</p>
-                     </a>
-                 </li>
+
              </ul>
          </li>

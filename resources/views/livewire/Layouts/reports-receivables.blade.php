@@ -1,5 +1,5 @@
-        <li id="receivables" class="nav-item">
-            <a href="#" class="nav-link">
+        <li id="receivables" class="nav-item {{ request()->is('reports/receivables*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ request()->is('reports/receivables*') ? 'active' : '' }}">
                 <i class="fa fa-file-text-o nav-icon"></i>
                 <p>
                     Receivables
@@ -8,22 +8,19 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('reportsar_aging') }}"
+                        class="nav-link {{ request()->is('reports/receivables/ar-aging') ? 'text-warning font-weight-bold' : '' }}">
                         <i class="fa fa-print nav-icon"></i>
-                        <p>Level 3</p>
+                        <p>AR Aging</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('reportscustomer_balance') }}"
+                        class="nav-link {{ request()->is('reports/receivables/customer-balance') ? 'text-warning font-weight-bold' : '' }}">
                         <i class="fa fa-print nav-icon"></i>
-                        <p>Level 3</p>
+                        <p>Customer Balance</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fa fa-print nav-icon"></i>
-                        <p>Level 3</p>
-                    </a>
-                </li>
+
             </ul>
         </li>

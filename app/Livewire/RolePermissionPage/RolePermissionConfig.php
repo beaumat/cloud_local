@@ -3,6 +3,7 @@
 namespace App\Livewire\RolePermissionPage;
 
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Route;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
@@ -21,6 +22,24 @@ class RolePermissionConfig extends Component
     public $searchUnsign;
     public $unassignedPermissions = [];
 
+    public  $permission_name = '';
+    public function newPermission()
+    {
+
+        $this->validate([
+            'permission_name' => 'required|string|min:6|unique:permissions,name'
+        ], [], [
+            'permission_name' => 'permission'
+        ]);
+
+        try {
+            Permission::create(['name' => $this->permission_name]);
+            // session()->flash('message', 'Successfully added');
+            return redirect()->route('maintenancesettingsroles_permission', ['id' => $this->id])->with('message', 'Successfully Added.');
+        } catch (\Throwable $th) {
+            session()->flash('errors', $th->getMessage());
+        }
+    }
     public function updatedsearchUnsign()
     {
         $this->assignedList();
