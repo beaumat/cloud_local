@@ -100,56 +100,58 @@
                                                     Nephro & Diagnosis
                                                 </a>
                                             </li>
-                                            <li class="nav-item">
-                                                <a wire:click="SelectTab('requirements')"
-                                                    class="nav-link @if ($selectTab == 'requirements') active @endif"
-                                                    id="custom-content-below-requirements-info-tab" data-toggle="pill"
-                                                    href="#custom-content-below-requirements-info" role="tab"
-                                                    aria-controls="custom-content-below-requirements-info"
-                                                    aria-selected="false">
-                                                    Requirements
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a wire:click="SelectTab('charges')"
-                                                    class="nav-link @if ($selectTab == 'charges') active @endif"
-                                                    id="custom-content-below-charges-info-tab" data-toggle="pill"
-                                                    href="#custom-content-below-charges-info" role="tab"
-                                                    aria-controls="custom-content-below-charges-info"
-                                                    aria-selected="false">
-                                                    Service Charges Record
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a wire:click="SelectTab('assistance')"
-                                                    class="nav-link @if ($selectTab == 'assistance') active @endif"
-                                                    id="custom-content-below-assistance-info-tab" data-toggle="pill"
-                                                    href="#custom-content-below-assistance-info" role="tab"
-                                                    aria-controls="custom-content-below-assistance-info"
-                                                    aria-selected="false">
-                                                    Assistance Record
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a wire:click="SelectTab('treatment')"
-                                                    class="nav-link @if ($selectTab == 'treatment') active @endif"
-                                                    id="custom-content-below-treatment-info-tab" data-toggle="pill"
-                                                    href="#custom-content-below-treatment-info" role="tab"
-                                                    aria-controls="custom-content-below-treatment-info"
-                                                    aria-selected="false">
-                                                    Treatment Record
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a wire:click="SelectTab('philhealth')"
-                                                    class="nav-link @if ($selectTab == 'philhealth') active @endif"
-                                                    id="custom-content-below-philhealth-info-tab" data-toggle="pill"
-                                                    href="#custom-content-below-philhealth-info" role="tab"
-                                                    aria-controls="custom-content-below-philhealth-info"
-                                                    aria-selected="false">
-                                                    Philhealth Record
-                                                </a>
-                                            </li>
+                                            @can('contact.patient.update')
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('requirements')"
+                                                        class="nav-link @if ($selectTab == 'requirements') active @endif"
+                                                        id="custom-content-below-requirements-info-tab" data-toggle="pill"
+                                                        href="#custom-content-below-requirements-info" role="tab"
+                                                        aria-controls="custom-content-below-requirements-info"
+                                                        aria-selected="false">
+                                                        Requirements
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('charges')"
+                                                        class="nav-link @if ($selectTab == 'charges') active @endif"
+                                                        id="custom-content-below-charges-info-tab" data-toggle="pill"
+                                                        href="#custom-content-below-charges-info" role="tab"
+                                                        aria-controls="custom-content-below-charges-info"
+                                                        aria-selected="false">
+                                                        Service Charges Record
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('assistance')"
+                                                        class="nav-link @if ($selectTab == 'assistance') active @endif"
+                                                        id="custom-content-below-assistance-info-tab" data-toggle="pill"
+                                                        href="#custom-content-below-assistance-info" role="tab"
+                                                        aria-controls="custom-content-below-assistance-info"
+                                                        aria-selected="false">
+                                                        Assistance Record
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('treatment')"
+                                                        class="nav-link @if ($selectTab == 'treatment') active @endif"
+                                                        id="custom-content-below-treatment-info-tab" data-toggle="pill"
+                                                        href="#custom-content-below-treatment-info" role="tab"
+                                                        aria-controls="custom-content-below-treatment-info"
+                                                        aria-selected="false">
+                                                        Treatment Record
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('philhealth')"
+                                                        class="nav-link @if ($selectTab == 'philhealth') active @endif"
+                                                        id="custom-content-below-philhealth-info-tab" data-toggle="pill"
+                                                        href="#custom-content-below-philhealth-info" role="tab"
+                                                        aria-controls="custom-content-below-philhealth-info"
+                                                        aria-selected="false">
+                                                        Philhealth Record
+                                                    </a>
+                                                </li>
+                                            @endcan
                                         </ul>
                                     </div>
                                     <div class="card-body bg-light">
@@ -686,58 +688,61 @@
                                                 </div>
 
                                             </div>
-                                            <div class="tab-pane fade @if ($selectTab == 'requirements') show active @endif"
-                                                id="custom-content-below-requirements-info" role="tabpanel"
-                                                aria-labelledby="custom-content-below-requirements-info-tab">
-                                                <div class="container-fluid"
-                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            @can('contact.patient.update')
+                                                <div class="tab-pane fade @if ($selectTab == 'requirements') show active @endif"
+                                                    id="custom-content-below-requirements-info" role="tabpanel"
+                                                    aria-labelledby="custom-content-below-requirements-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
 
-                                                    @if ($refreshToggle)
-                                                        @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key('p1'))
-                                                    @else
-                                                        @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key('p2'))
-                                                    @endif
+                                                        @if ($refreshToggle)
+                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key('p1'))
+                                                        @else
+                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key('p2'))
+                                                        @endif
 
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="tab-pane fade @if ($selectTab == 'charges') show active @endif"
-                                                id="custom-content-below-charges-info" role="tabpanel"
-                                                aria-labelledby="custom-content-below-charges-info-tab">
-                                                <div class="container-fluid"
-                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @livewire('Patient.ChargesRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                <div class="tab-pane fade @if ($selectTab == 'charges') show active @endif"
+                                                    id="custom-content-below-charges-info" role="tabpanel"
+                                                    aria-labelledby="custom-content-below-charges-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        @livewire('Patient.ChargesRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
 
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="tab-pane fade @if ($selectTab == 'assistance') show active @endif"
-                                                id="custom-content-below-assistance-info" role="tabpanel"
-                                                aria-labelledby="custom-content-below-assistance-info-tab">
-                                                <div class="container-fluid"
-                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @livewire('Patient.AssistanceRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                <div class="tab-pane fade @if ($selectTab == 'assistance') show active @endif"
+                                                    id="custom-content-below-assistance-info" role="tabpanel"
+                                                    aria-labelledby="custom-content-below-assistance-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        @livewire('Patient.AssistanceRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
 
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="tab-pane fade @if ($selectTab == 'treatment') show active @endif"
-                                                id="custom-content-below-treatment-info" role="tabpanel"
-                                                aria-labelledby="custom-content-below-treatment-info-tab">
-                                                <div class="container-fluid"
-                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="tab-pane fade @if ($selectTab == 'treatment') show active @endif"
+                                                    id="custom-content-below-treatment-info" role="tabpanel"
+                                                    aria-labelledby="custom-content-below-treatment-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
 
-                                                    @livewire('Patient.TreatmentRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                        @livewire('Patient.TreatmentRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="tab-pane fade @if ($selectTab == 'philhealth') show active @endif"
-                                                id="custom-content-below-philhealth-info" role="tabpanel"
-                                                aria-labelledby="custom-content-below-philhealth-info-tab">
-                                                <div class="container-fluid"
-                                                    @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @livewire('Patient.PhilhealthRecord', ['CONTACT_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                <div class="tab-pane fade @if ($selectTab == 'philhealth') show active @endif"
+                                                    id="custom-content-below-philhealth-info" role="tabpanel"
+                                                    aria-labelledby="custom-content-below-philhealth-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        @livewire('Patient.PhilhealthRecord', ['CONTACT_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @endcan
+
                                         </div>
                                     </div>
                                 </div>
