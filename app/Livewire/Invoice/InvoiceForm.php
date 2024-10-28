@@ -18,6 +18,7 @@ use App\Services\PaymentTermServices;
 use App\Services\PhilHealthServices;
 use App\Services\PriceLevelLineServices;
 use App\Services\PriceLevelServices;
+use App\Services\ServiceChargeServices;
 use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
@@ -83,6 +84,7 @@ class InvoiceForm extends Component
     private $patientPaymentServices;
     private $philHealthServices;
     private $priceLevelLineServices;
+    private $serviceChargeServices;
     public string $tab = "item";
     public function SelectTab(string $select)
     {
@@ -104,7 +106,8 @@ class InvoiceForm extends Component
         AccountJournalServices $accountJournalServices,
         PatientPaymentServices $patientPaymentServices,
         PhilHealthServices $philHealthServices,
-        PriceLevelLineServices $priceLevelLineServices
+        PriceLevelLineServices $priceLevelLineServices,
+        ServiceChargeServices $serviceChargeServices
     ) {
         $this->invoiceServices = $invoiceServices;
         $this->locationServices = $locationServices;
@@ -121,6 +124,7 @@ class InvoiceForm extends Component
         $this->patientPaymentServices = $patientPaymentServices;
         $this->philHealthServices = $philHealthServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
+        $this->serviceChargeServices = $serviceChargeServices;
     }
     public function LoadDropdown()
     {
@@ -446,10 +450,14 @@ class InvoiceForm extends Component
                             $PhData->DATE_DISCHARGED
                         );
 
-                        $RATE = $this->priceLevelLineServices->GetPriceByLocation(
-                            $this->LOCATION_ID,
-                            $this->philHealthServices->PHIL_HEALTH_ITEM_ID
-                        );
+                        // get Service Charge
+
+                        $RATE =  $this->serviceChargeServices->getPhilHealthItem($PhData->DATE_ADMITTED, $this->LOCATION_ID, $this->CUSTOMER_ID);
+                            
+                        // $RATE = $this->priceLevelLineServices->GetPriceByLocation(
+                        //     $this->LOCATION_ID,
+                        //     $this->philHealthServices->PHIL_HEALTH_ITEM_ID
+                        // );
 
                         //philheatlh
                         $this->invoiceServices->ItemStore(

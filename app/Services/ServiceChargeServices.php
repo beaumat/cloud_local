@@ -466,6 +466,22 @@ class ServiceChargeServices
 
         return $count;
     }
+    public function getPhilHealthItem(string $DATE, int $LOCATION_ID, int $PATIENT_ID): float
+    {
+
+        $result = ServiceChargesItems::select('service_charges_items.RATE')
+            ->join('service_charges as sc', 'sc.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->where('ITEM_ID', '=', '2')
+            ->where('sc.DATE', '=', $DATE)
+            ->where('sc.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('PATIENT_ID', '=', $PATIENT_ID)
+            ->first();
+
+        if ($result) {
+            return $result->RATE ?? 0;
+        }
+        return 0;
+    }
     public function ItemView(int $SERVICE_CHARGES_ID)
     {
         return ServiceChargesItems::query()
