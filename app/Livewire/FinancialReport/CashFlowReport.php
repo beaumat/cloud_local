@@ -40,9 +40,11 @@ class CashFlowReport extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
     }
-    public function generate()
+    public function generate() {}
+    public function clickHeader()
     {
-            
+
+        $this->dispatch('open-cf-header', result: ['ID' => 0, 'LOCATION_ID' => $this->LOCATION_ID]);
     }
     public function render()
     {

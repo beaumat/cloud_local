@@ -114,6 +114,7 @@
                                                 <th class="text-center ">Start</th>
                                                 <th class="text-center ">End</th>
                                                 <th class="text-center">IC</th>
+                                                <th class="text-center">ACCESS</th>
                                                 <th class="col-2">Nurse Encoded</th>
                                                 {{-- <th class="text-center">JTF</th> --}}
                                                 <th>Location</th>
@@ -172,19 +173,19 @@
                                                             <i class="fa fa-times text-danger" aria-hidden="true"></i>
                                                         @endif
                                                     </td>
+                                                    <td class="text-center">
+                                                        {{ $list->ACCESS_TYPE }}
+                                                    </td>
                                                     <td>{{ $list->NURSE_NAME }}</td>
-                                                    {{-- <td class="text-center">
-                                                @if ($list->JUSTIFY)
-                                                    <i class="fa fa-check text-primary" aria-hidden="true"></i>
-                                                @endif
-                                            </td> --}}
+
                                                     <td> {{ $list->LOCATION_NAME }} </td>
                                                     <td
                                                         class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success  @elseif ($list->STATUS_ID == 4) bg-secondary @else bg-danger @endif ">
                                                         {{ substr($list->STATUS, 0, 1) }} </td>
                                                     <td class="text-center">
                                                         @if ($list->IS_SC)
-                                                            <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                                            <i class="fa fa-check text-success"
+                                                                aria-hidden="true"></i>
                                                         @else
                                                             <i class="fa fa-times text-danger" aria-hidden="true"></i>
                                                         @endif
@@ -283,12 +284,11 @@
                                                             <i class="fa fa-times text-danger" aria-hidden="true"></i>
                                                         @endif
                                                     </td>
+                                                    <td class="text-center">
+                                                        {{ $list->ACCESS_TYPE }}
+                                                    </td>
                                                     <td>{{ $list->NURSE_NAME }}</td>
-                                                    {{-- <td class="text-center">
-                                                @if ($list->JUSTIFY)
-                                                    <i class="fa fa-check text-primary" aria-hidden="true"></i>
-                                                @endif
-                                            </td> --}}
+
                                                     <td> {{ $list->LOCATION_NAME }} </td>
                                                     <td
                                                         class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success  @elseif ($list->STATUS_ID == 4) bg-secondary @else bg-danger @endif ">

@@ -20,7 +20,16 @@ class CashFlowServices
         return (int) CashFlowHeader::where('LOCATION_ID', '=', $LOCATION_ID)
             ->max('LINE_NO');
     }
-    public function StoreHeader(string $NAME, int $LOCATION_ID, int $LINE_NO)
+    public function getHeader(int $ID)
+    {
+        $result = CashFlowHeader::where('ID', '=', $ID)->first();
+        if ($result) {
+            return $result;
+        }
+
+        return [];
+    }
+    public function StoreHeader(string $NAME, int $LOCATION_ID, int $LINE_NO, bool $INACTIVE = false)
     {
 
 
@@ -28,8 +37,9 @@ class CashFlowServices
             'NAME'          => $NAME,
             'LOCATION_ID'   => $LOCATION_ID,
             'LINE_NO'       => $LINE_NO > 0 ? $LINE_NO : $this->getHeader_LINE_NO($LOCATION_ID) + 1,
-            'INACTIVE'      => false,
+            'INACTIVE'      => $INACTIVE,
             'RECORDED_ON'   => $this->dateServices->Now()
+            
         ]);
     }
     public function UpdateHeader(int $ID, string $NAME, int $LINE_NO, bool $INACTIVE)

@@ -38,7 +38,8 @@ class TreatmentListExport implements FromCollection, ShouldAutoSize
             'LOCATION'      => 'LOCATION',
             'STATUS'        => 'STATUS',
             'SC'            => 'SC',
-            'NURSE'         => 'NURSE ON DUTY'
+            'NURSE'         => 'NURSE ON DUTY',
+            'ACCESS_TYPE'   => 'ACCESS_TYPE'
         ];
         $NUMBER = 0;
         $finalData = [];
@@ -61,7 +62,8 @@ class TreatmentListExport implements FromCollection, ShouldAutoSize
                 'LOCATION'      => $list->LOCATION_NAME,
                 'STATUS'        => $list->STATUS,
                 'SC'            => $list->IS_SC == true ? 'Yes' : 'No',
-                'NURSE_NAME'    => $list->NURSE_NAME
+                'NURSE_NAME'    => $list->NURSE_NAME,
+                'ACCESS_TYPE'   => $list->ACCESS_TYPE
             ];
 
             $finalData[] = array_values($rowData);
