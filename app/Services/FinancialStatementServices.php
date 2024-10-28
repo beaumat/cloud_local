@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use DateTime;
 use Illuminate\Support\Facades\DB;
 
 class FinancialStatementServices
@@ -37,38 +38,35 @@ class FinancialStatementServices
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
 
-        // Use DB::raw with proper placeholders for debit/credit checks
-        $sql = "SUM(IF(aj.ENTRY_TYPE = ?, aj.AMOUNT, 0) - IF(aj.ENTRY_TYPE = ?, aj.AMOUNT, 0)) AS AMOUNT";
-
-        // Build the query
+        $sql = "sum( if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ) as AMOUNT";
         $result = DB::table('account_journal as aj')
             ->select([
-                'a.TYPE',
                 DB::raw($sql),
-            ])
-            ->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
-            ->where('aj.AMOUNT', '>', 0)
+            ])->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->where('aj.AMOUNT', '>', '0')
             ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
-            ->when($LOCATION_ID > 0, function ($query) use ($LOCATION_ID) {
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
             ->where('a.TYPE', '=', $accountType)
-            ->setBindings([$debit_is, $credit_is]) // Bind values for the SQL placeholders
-            ->first(); // Get the first record
+            ->first()
+            ->AMOUNT;
 
         // Return the result or 0 if no data found
-        return (float)  $result ? $result->AMOUNT : 0;
+        return (float)   $result;
     }
 
-    public function IncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public function IncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): object
     {
-        return $this->getIncomeStatementAccountByType(
+        $result = $this->getIncomeStatementAccountByType(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
             10,
             true
         );
+
+        return $result;
     }
     public function SumIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
@@ -82,13 +80,15 @@ class FinancialStatementServices
     }
     public function CogsAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getIncomeStatementAccountByType(
+        $result = $this->getIncomeStatementAccountByType(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
             11,
             false
         );
+
+        return $result;
     }
     public function SumCogsAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
@@ -120,8 +120,6 @@ class FinancialStatementServices
             false
         );
     }
-
-
     public function OtherIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
         return $this->getIncomeStatementAccountByType(
@@ -163,14 +161,30 @@ class FinancialStatementServices
         );
     }
 
+    public function getTotalNetIncome(string $dateFrom, string $dateTo, int $LOCATION_ID): float
+    {
+        // Create a DateTime object from the input date string
+
+
+        $IncomeSum = $this->SumIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $COGSSum = $this->SumCogsAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $gross_profit = $IncomeSum + $COGSSum;
+
+        $ExpenseSum = $this->SumExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $operating_income = $gross_profit - $ExpenseSum;
+
+        $OtherIncomeSum = $this->SumOtherIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $OtherExpenseSum = $this->SumOtherExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
+
+        $net_other_income = $OtherIncomeSum - $OtherExpenseSum;
+
+        $net_income = $operating_income + $net_other_income;
+
+        return $net_income;
+    }
     // Balance Sheet
-    public function getBalanceSheetAccountByAcctType(
-        string $date,
-        int $LOCATION_ID,
-        array $AccountType,
-        bool $isCreditIncrease = false,
-        array $NotIncludeAccntID = []
-    ) {
+    public function getBalanceSheetAccountByAcctType(string $dateFrom, string $dateTo, int $LOCATION_ID, array $AccountType, bool $isCreditIncrease = false, array $NotIncludeAccntID = [])
+    {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
 
@@ -181,7 +195,7 @@ class FinancialStatementServices
                 DB::raw($sql),
             ])->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
             ->where('aj.AMOUNT', '>', '0')
-            ->where('aj.OBJECT_DATE', '<=', $date)
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
@@ -193,12 +207,8 @@ class FinancialStatementServices
 
         return $result;
     }
-    public function getBalanceSheetAccountByAcctID(
-        string $date,
-        int $LOCATION_ID,
-        array $AccountId,
-        bool $isCreditIncrease = false
-    ) {
+    public function getBalanceSheetAccountByAcctID(string $date,  int $LOCATION_ID, array $AccountId, bool $isCreditIncrease = false)
+    {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
 
@@ -219,4 +229,7 @@ class FinancialStatementServices
 
         return $result;
     }
+
+
+    public function getEquityRetainingEarningPrevious(string $Date, int $LOCATION_ID) {}
 }

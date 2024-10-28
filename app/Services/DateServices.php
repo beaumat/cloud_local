@@ -3,9 +3,23 @@
 namespace App\Services;
 
 use Carbon\Carbon;
+use DateTime;
 
 class DateServices
 {
+    public function GetFirstDay_Year(string $BASE_DATE): string
+    {
+        $date = new DateTime($BASE_DATE);
+        $y = $date->format('Y');
+        return "$y-01-01";
+    }
+    public function GetFirstDay_Month(string $BASE_DATE): string
+    {
+        $date = new DateTime($BASE_DATE);
+        $y = $date->format('Y');
+        $m  = $date->format('m');
+        return "$y-$m-01";
+    }
     public function NowDate()
     {
         return Carbon::now()->format('Y-m-d');

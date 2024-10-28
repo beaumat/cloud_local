@@ -114,7 +114,6 @@
                                         @endphp
                                     </td>
                                 </tr>
-
                                 {{-- END OF REVENUE --}}
                             @endif
                             @if (count($cogsList) > 0)
@@ -217,7 +216,8 @@
                                 </tr>
                             @endif
                             @php
-                                $operating_income = 0;
+                                $operating_income = $gross_profit - $total_expenses;
+
                             @endphp
                             @if ($total_expenses > 0)
                                 <tr>
@@ -225,9 +225,7 @@
                                     <td></td>
                                     <td class="text-right text-info text-sm text-danger">
                                         <div class="border-top border-secondary">
-                                            @php
-                                                $operating_income = $gross_profit - $total_expenses;
-                                            @endphp
+
                                             {{ number_format($operating_income, 2) }}
 
                                         </div>
@@ -292,7 +290,7 @@
                                 @php
                                     $sub_total = 0;
                                 @endphp
-                                
+
                                 @foreach ($otherExpensesList as $list)
                                     <tr>
                                         <td class="px-4">{{ $list->ACCOUNT_TITLE }}</td>
@@ -321,17 +319,17 @@
 
                                 </tr>
                             @endif
+                            @php
 
-                            @if ($total_other_income > 0 || $total_other_expenses > 0)
+                                $net_other_income = $total_other_income - $total_other_expenses;
+                            @endphp
+                            @if ($net_other_income > 0)
                                 <tr>
                                     <td>Net Other Income/Expenses</td>
                                     <td></td>
                                     <td class="text-right text-info text-sm text-danger">
                                         <div class="border-top border-secondary">
-                                            @php
 
-                                                $net_other_income = $total_other_income - $total_other_expense;
-                                            @endphp
                                             {{ number_format($net_other_income, 2) }}
 
                                         </div>
@@ -346,6 +344,7 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
+
                             @php
                                 $net_income = 0;
                             @endphp
@@ -360,7 +359,6 @@
                                                 $net_income = $operating_income + $net_other_income;
                                             @endphp
                                             {{ number_format($net_income, 2) }}
-
                                         </div>
                                     </td>
                                 </tr>

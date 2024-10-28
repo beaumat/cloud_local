@@ -25,12 +25,12 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <livewire:date-input name="DATE" titleName="As of Date "
-                                            wire:model.live='DATE' :isDisabled="false" />
+                                        <livewire:date-input name="DATE_FROM" titleName="Start Date "
+                                            wire:model.live='DATE_FROM' :isDisabled="false" />
                                     </div>
                                     <div class="col-md-5">
-                                        {{-- <livewire:date-input name="DATE_TO" titleName="Date To"
-                                            wire:model.live='DATE_TO' :isDisabled="false" /> --}}
+                                        <livewire:date-input name="DATE_TO" titleName="End Date"
+                                            wire:model.live='DATE_TO' :isDisabled="false" />
                                     </div>
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
@@ -394,16 +394,17 @@
                                 $netAsset = $assetTotal - $liabilityTotal;
                             @endphp
                             <tr>
-                                <td class="px-1 text-md text-info">Net Asset</td>
+                                <td class="px-1 text-md text-success">Net Asset</td>
                                 <td class="text-right">
-                                    <div class="border-top border-secondary text-info text-md">
+                                    <div class="border-top border-secondary text-success text-md">
                                         {{ number_format($netAsset, 2) }}
                                     </div>
                                 </td>
                             </tr>
 
                             {{-- EQUITY --}}
-                            @if (count($equityList) > 0 || $CurrentYearEarnings > 0 || $RetainingEarnings > 0)
+                            @if (count($equityList) > 0 || $RetainingEarnings > 0 || $net_income > 0)
+                            
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
@@ -422,25 +423,35 @@
                                         <td class='text-right'>{{ number_format($amount, 2) }}</td>
                                     </tr>
                                 @endforeach
-                                @if ($CurrentYearEarnings > 0)
+                                {{-- @if ($CurrentYearEarnings > 0)
                                     <tr>
                                         <td class="px-4">Current Year Earnings</td>
                                         <td class='text-right'>{{ number_format($CurrentYearEarnings, 2) }}</td>
                                     </tr>
-                                @endif
+                                @endif --}}
 
                                 @if ($RetainingEarnings > 0)
                                     <tr>
-                                        <td class="px-4">Retaining Earnings</td>
+                                        <td class="px-4">Retaining Earnings (Previous)</td>
                                         <td class='text-right'>{{ number_format($RetainingEarnings, 2) }}</td>
                                     </tr>
                                 @endif
 
+                                @if ($net_income > 0)
+                                    <tr>
+                                        <td class="px-4">Net Income</td>
+                                        <td class='text-right'>{{ number_format($net_income, 2) }}</td>
+                                    </tr>
+                                @endif
+
+                                @php
+                                    $equityTotal = $equityTotal + $net_income + $RetainingEarnings;
+                                @endphp
 
                                 <tr>
-                                    <td class="px-4">Total Equity</td>
+                                    <td class="px-1 text-md text-primary">Total Equity</td>
                                     <td class="text-right">
-                                        <div class="border-top border-secondary">
+                                        <div class="border-top border-secondary text-primary text-md">
                                             {{ number_format($equityTotal, 2) }}
                                         </div>
                                     </td>
@@ -448,6 +459,14 @@
                                 {{-- end asset --}}
                             @endif
 
+                            <tr>
+                                <td class="text-md text-success">Total Liabilites & Equity</td>
+                                <td class="text-right">
+                                    <div class="border-top border-secondary text-success text-md">
+                                        {{ number_format($liabilityTotal + $equityTotal, 2) }}
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
