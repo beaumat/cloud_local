@@ -3,6 +3,7 @@
 namespace App\Livewire\GeneralJournal;
 
 use App\Services\AccountJournalServices;
+use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
 use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
@@ -24,7 +25,9 @@ class GeneralJournalForm extends Component
     public int $LOCATION_ID;
     public bool $ADJUSTING_ENTRY;
     public string $NOTES;
+    public  int $CONTACT_ID;
     public $locationList = [];
+    public $contactList = [];
     public bool $Modify;
     private $generalJournalServices;
     private $locationServices;
@@ -35,14 +38,15 @@ class GeneralJournalForm extends Component
 
     private $objectServices;
     private $accountJournalServices;
-
+    private $contactServices;
     public function boot(
         GeneralJournalServices $generalJournalServices,
         LocationServices $locationServices,
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
         ObjectServices $objectServices,
-        AccountJournalServices $accountJournalServices
+        AccountJournalServices $accountJournalServices,
+        ContactServices $contactServices
     ) {
         $this->generalJournalServices = $generalJournalServices;
         $this->locationServices = $locationServices;
@@ -50,10 +54,12 @@ class GeneralJournalForm extends Component
         $this->documentStatusServices = $documentStatusServices;
         $this->objectServices = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->contactServices = $contactServices;
     }
     public function LoadDropdown()
     {
         $this->locationList = $this->locationServices->getList();
+        $this->contactList = $this->contactServices->getListAllType();
     }
 
     public function AccountJournal(): bool
@@ -102,6 +108,7 @@ class GeneralJournalForm extends Component
         $this->CODE = $data->CODE;
         $this->DATE = $data->DATE;
         $this->LOCATION_ID = $data->LOCATION_ID;
+        $this->CONTACT_ID = $data->CONTACT_ID ?? 0;
         $this->NOTES = $data->NOTES ?? '';
         $this->ADJUSTING_ENTRY = $data->ADJUSTING_ENTRY ?? false;
         $this->STATUS = $data->STATUS ?? 0;
@@ -130,7 +137,7 @@ class GeneralJournalForm extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->ADJUSTING_ENTRY = false;
         $this->NOTES = '';
-
+        $this->CONTACT_ID  = 0;
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = '';
     }
@@ -140,61 +147,47 @@ class GeneralJournalForm extends Component
     }
     public function save()
     {
+        $this->validate(
+            [
+                'CODE'          =>  $this->ID > 0 ? 'required|max:20|unique:general_journal,code,' . $this->ID : 'nullable',
+                'DATE'          => 'required',
+                'LOCATION_ID'   => 'required|exists:location,id',
+                'CONTACT_ID'    =>  $this->CONTACT_ID  > 0 ? 'exists:contact,id' : 'nullable',
+
+            ],
+            [],
+            [
+                'CODE'          => 'Reference No.',
+                'DATE'          => 'Date',
+                'LOCATION_ID'   => 'Location',
+                'CONTACT_ID'    => 'Contact Name'
+            ]
+        );
+
+
         try {
             if ($this->ID == 0) {
-
-                $this->validate(
-                    [
-
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-
-                    ],
-                    [],
-                    [
-
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-
-                    ]
-                );
-
 
                 $this->ID = $this->generalJournalServices->Store(
                     $this->DATE,
                     $this->CODE,
                     $this->LOCATION_ID,
                     $this->ADJUSTING_ENTRY,
-                    $this->NOTES
+                    $this->NOTES,
+                    $this->CONTACT_ID
 
                 );
 
                 return Redirect::route('companygeneral_journal_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
-                $this->validate(
-                    [
-
-                        'CODE' => 'required|max:20|unique:general_journal,code,' . $this->ID,
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required'
-
-                    ],
-                    [],
-                    [
-                        'CODE' => 'Reference No.',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                    ]
-                );
-
-
                 $this->generalJournalServices->Update(
                     $this->ID,
                     $this->CODE,
                     $this->LOCATION_ID,
                     $this->ADJUSTING_ENTRY,
-                    $this->NOTES
+                    $this->NOTES,
+                    $this->CONTACT_ID
                 );
                 session()->flash('message', 'Successfully updated');
             }

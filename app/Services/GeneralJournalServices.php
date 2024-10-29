@@ -20,7 +20,7 @@ class GeneralJournalServices
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
     }
-    public function Store(string $DATE, string $CODE, int $LOCATION_ID, bool $ADJUSTING_ENTRY, string $NOTES): int
+    public function Store(string $DATE, string $CODE, int $LOCATION_ID, bool $ADJUSTING_ENTRY, string $NOTES, int $CONTACT_ID = 0): int
     {
 
         $ID = (int) $this->object->ObjectNextID('GENERAL_JOURNAL');
@@ -36,7 +36,8 @@ class GeneralJournalServices
             'ADJUSTING_ENTRY'   => $ADJUSTING_ENTRY,
             'NOTES'             => $NOTES,
             'STATUS'            => 0,
-            'STRATUS_DATE'      => $this->dateServices->NowDate()
+            'STRATUS_DATE'      => $this->dateServices->NowDate(),
+            'CONTACT_ID'        => $CONTACT_ID > 0 ? $CONTACT_ID : null
         ]);
 
         return $ID;
@@ -49,20 +50,20 @@ class GeneralJournalServices
                 'STATUS_DATE'   => $this->dateServices->NowDate()
             ]);
     }
-    public function Update(int $ID, string $CODE, int $LOCATION_ID, bool $ADJUSTING_ENTRY, string $NOTES)
+    public function Update(int $ID, string $CODE, int $LOCATION_ID, bool $ADJUSTING_ENTRY, string $NOTES, int $CONTACT_ID = 0)
     {
-        GeneralJournal::where('ID', $ID)
-            ->where('LOCATION_ID', $LOCATION_ID)
+        GeneralJournal::where('ID','=', $ID)
+            ->where('LOCATION_ID','=', $LOCATION_ID)
             ->update([
                 'CODE'              => $CODE,
                 'ADJUSTING_ENTRY'   => $ADJUSTING_ENTRY,
-                'NOTES'             => $NOTES
+                'NOTES'             => $NOTES,
+                'CONTACT_ID'        => $CONTACT_ID > 0 ? $CONTACT_ID : null
             ]);
     }
     public function Delete(int $ID)
     {
         GeneralJournalDetails::where('GENERAL_JOURNAL_ID', $ID)->delete();
-
         GeneralJournal::where('ID', $ID)->delete();
     }
     public function Get(int $ID)
@@ -80,8 +81,9 @@ class GeneralJournalServices
                 'general_journal.ADJUSTING_ENTRY',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                'general_journal.STATUS as STATUS_ID'
-
+                'general_journal.STATUS as STATUS_ID',
+                'general_journal.CONTACT_ID',
+                'c.PRINT_NAME_AS as CONTACT_NAME'
             ])
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'general_journal.LOCATION_ID');
@@ -90,6 +92,7 @@ class GeneralJournalServices
                 }
             })
             ->join('document_status_map as s', 's.ID', '=', 'general_journal.STATUS')
+            ->leftJoin('contact as c', 'c.ID', '=', 'general_journal.CONTACT_ID')
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
                     $q->where('general_journal.CODE', 'like', '%' . $search . '%')
@@ -136,6 +139,7 @@ class GeneralJournalServices
         if ($CREDIT != 0) {
             $ENTRY_TYPE = 1;
         }
+        
         GeneralJournalDetails::where('ID', $ID)
             ->where('GENERAL_JOURNAL_ID', $GENERAL_JOURNAL_ID)
             ->where('ACCOUNT_ID', $ACCOUNT_ID)

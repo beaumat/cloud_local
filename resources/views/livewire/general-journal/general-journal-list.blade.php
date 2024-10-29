@@ -52,13 +52,15 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">Ref No.</th>
-                                        <th class="col-1">Date</th>
-                                        <th class="col-1">Location</th>
-                                        <th class="col-6">Notes</th>
+                                        <th>Ref No.</th>
+                                        <th>Date</th>
+                                        <th>Contact Name</th>
+
+                                        <th class="col-4">Notes</th>
                                         <th class="col-1 text-center">Adjustment Entry</th>
+                                        <th class="col-1">Location</th>
                                         <th class="col-1">Status</th>
-                                        <th class="text-center bg-success col-1">
+                                        <th class="text-center bg-success col-2">
                                             @can('company.general-journal.create')
                                                 <a href="{{ route('companygeneral_journal_create') }}" class="text-white">
                                                     <i class="fas fa-plus"></i></a>
@@ -76,13 +78,15 @@
                                                 </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                            <td> {{ $list->LOCATION_NAME }}</td>
+                                            <td>{{ $list->CONTACT_NAME }}</td>
+
                                             <td> {{ $list->NOTES }}</td>
                                             <td class="text-center">
                                                 @if ($list->ADJUSTING_ENTRY)
                                                     Yes
                                                 @endif
                                             </td>
+                                            <td> {{ $list->LOCATION_NAME }}</td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
 

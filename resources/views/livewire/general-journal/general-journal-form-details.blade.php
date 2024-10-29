@@ -13,7 +13,7 @@
                 <th class="col-1 text-right">Debit</th>
                 <th class="col-1 text-right">Credit</th>
                 <th class="col-3">Particular</th>
-                <th class="col-2">Class</th>
+          
                 @if ($STATUS == 0 || $STATUS == 16)
                     <th class="text-center col-1">Action</th>
                 @endif
@@ -51,7 +51,7 @@
                         @endif
 
                     </td>
-                    <td>
+                    {{-- <td>
                         @if ($editId === $list->ID)
                             <select wire:model='editNotes' name="editNotes"
                                 class="text-sm form-control form-control-sm">
@@ -63,7 +63,7 @@
                         @else
                             {{ $list->CLASS_NAME }}
                         @endif
-                    </td>
+                    </td> --}}
                     @if ($STATUS == 0 || $STATUS == 16)
                         <td class="text-center">
                             @if ($editId === $list->ID)
@@ -145,7 +145,7 @@
                             <input type="text" class="form-control form-control-sm mt-1" wire:model='NOTES'
                                 name="NOTES" />
                         </td>
-                        <td>
+                        {{-- <td>
                             @if ($saveSuccess)
                                 @if (!$codeBase)
                                     <livewire:select-option name="CLASS_ID1" titleName="" :options="$classList"
@@ -159,7 +159,7 @@
                                         :isDisabled=false :withLabel="false" />
                                 @endif
                             @endif
-                        </td>
+                        </td> --}}
                         <td>
                             <div class="mt-1">
                                 <button type="submit" wire:loading.attr='hidden'
@@ -187,7 +187,7 @@
                     <label class='text-primary text-xs'>{{ number_format($TOTAL_CREDIT, 2) }}</label>
                 </td>
                 <td></td>
-                <td></td>
+                {{-- <td></td> --}}
                 @if ($STATUS == 0 || $STATUS == 16)
                     <td></td>
                 @endif

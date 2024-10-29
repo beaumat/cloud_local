@@ -67,8 +67,7 @@ class ContactServices
     public function getFirstFromListByID(int $TYPE): int
     {
         // Temporary
-        $data = contacts::where('TYPE', $TYPE)->first();
-
+        $data = contacts::where('TYPE', '=', $TYPE)->first();
         if ($data) {
             return (int) $data->ID ?? 0;
         }
@@ -88,6 +87,10 @@ class ContactServices
                 ->get();
         }
         return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();
+    }
+    public function getListAllType()
+    {
+        return Contacts::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
     }
     public function getCustoPatientList(): object
     {

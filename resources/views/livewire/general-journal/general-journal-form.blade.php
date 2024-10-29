@@ -27,6 +27,17 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
+                                            @if ($Modify)
+                                                <livewire:select-option name="CONTACT_ID" titleName="Contact Name"
+                                                    :options="$contactList" :zero="true" :isDisabled=false
+                                                    wire:model='CONTACT_ID' />
+                                            @else
+                                                <livewire:select-option name="CONTACT_ID" titleName="Contact Contact"
+                                                    :options="$contactList" :zero="true" :isDisabled=true
+                                                    wire:model='CONTACT_ID' />
+                                            @endif
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <livewire:date-input name="DATE" titleName="Date"
@@ -53,32 +64,35 @@
                                                             wire:model='LOCATION_ID' />
                                                     @endif
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class='row'>
                                                 <div class="col-md-12">
-                                                    @if ($Modify)
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=false wire:model='NOTES' :vertical="false" />
-                                                    @else
-                                                        <livewire:text-input name="NOTES" titleName="Notes"
-                                                            :isDisabled=true wire:model='NOTES' :vertical="false" />
-                                                    @endif
-                                                </div>
-                                                <div class="col-md-3">
-                                                    @if ($Modify)
-                                                        <livewire:checkbox-input name="ADJUSTING_ENTRY"
-                                                            titleName="Adjusting Entry" :isDisabled=false
-                                                            wire:model='ADJUSTING_ENTRY' :vertical="false" />
-                                                    @else
-                                                        <livewire:checkbox-input name="ADJUSTING_ENTRY"
-                                                            titleName="Adjusting Entry" :isDisabled=true
-                                                            wire:model='ADJUSTING_ENTRY' :vertical="false" />
-                                                    @endif
+                                                    <div class='row'>
+                                                        <div class="col-md-12">
+                                                            @if ($Modify)
+                                                                <livewire:text-input name="NOTES" titleName="Notes"
+                                                                    :isDisabled=false wire:model='NOTES'
+                                                                    :vertical="false" />
+                                                            @else
+                                                                <livewire:text-input name="NOTES" titleName="Notes"
+                                                                    :isDisabled=true wire:model='NOTES'
+                                                                    :vertical="false" />
+                                                            @endif
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            @if ($Modify)
+                                                                <livewire:checkbox-input name="ADJUSTING_ENTRY"
+                                                                    titleName="Adjusting Entry" :isDisabled=false
+                                                                    wire:model='ADJUSTING_ENTRY' :vertical="false" />
+                                                            @else
+                                                                <livewire:checkbox-input name="ADJUSTING_ENTRY"
+                                                                    titleName="Adjusting Entry" :isDisabled=true
+                                                                    wire:model='ADJUSTING_ENTRY' :vertical="false" />
+                                                            @endif
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>

@@ -20,7 +20,7 @@ class GeneralJournal extends Model
         'ADJUSTING_ENTRY',
         'NOTES',
         'STATUS',
-        'STATUS_DATE'
+        'STATUS_DATE',
+        'CONTACT_ID'
     ];
-
 }
