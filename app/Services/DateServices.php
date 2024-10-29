@@ -7,11 +7,19 @@ use DateTime;
 
 class DateServices
 {
+
     public function GetFirstDay_Year(string $BASE_DATE): string
     {
         $date = new DateTime($BASE_DATE);
         $y = $date->format('Y');
-        return "$y-01-01";
+        return $this->getFirstDayViaYear($y);
+    }
+    public  static function getFirstDayViaYear(int $YEAR)
+    {
+        return "$YEAR-01-01";
+    }
+    public  static function getLastDayViaYear(int $YEAR)  {
+        return "$YEAR-12-31";
     }
     public function GetFirstDay_Month(string $BASE_DATE): string
     {

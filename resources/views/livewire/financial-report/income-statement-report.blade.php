@@ -329,15 +329,11 @@
                                     <td></td>
                                     <td class="text-right text-info text-sm text-danger">
                                         <div class="border-top border-secondary">
-
                                             {{ number_format($net_other_income, 2) }}
-
                                         </div>
                                     </td>
                                 </tr>
                             @endif
-
-
                             {{-- Net Income=Operating Income+Net Other Income --}}
                             <tr>
                                 <td>&nbsp;</td>
@@ -363,7 +359,6 @@
                                     </td>
                                 </tr>
                             @endif
-
                         </tbody>
                     </table>
                 </div>

@@ -18,6 +18,7 @@ class CashFlowKey extends Model
         'DEBIT_DEFAULT',
         'LINE_NO',
         'INACTIVE',
-        'CS_FLOW_DETAILS_ID'
+        'CS_FLOW_DETAILS_ID',
+        'NAME'
     ];
 }

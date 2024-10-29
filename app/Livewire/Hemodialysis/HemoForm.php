@@ -301,7 +301,7 @@ class HemoForm extends Component
     public function getModify()
     {
 
-        if ($this->ActiveRequired == true && $this->STATUS == 1) {
+        if ($this->ActiveRequired == true && $this->STATUS == 1 || $this->ActiveRequired == true && $this->STATUS == 4  ) {
             $isRequiredItemAdded = $this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->ID);
             if (!$isRequiredItemAdded) {
                 session()->flash('error', ' You must select either a CVC Kit or an AVF Kit before making modifications.');

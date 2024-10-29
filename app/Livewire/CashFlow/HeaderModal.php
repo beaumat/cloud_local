@@ -10,9 +10,6 @@ class HeaderModal extends Component
 {
 
     public $showModal = false;
-
-
-
     public $ID;
     public $NAME;
     public int $LOCATION_ID;
@@ -29,25 +26,37 @@ class HeaderModal extends Component
 
         $this->validate(
             [
-                'NAME' => 'required|min:6',
-                'LOCATION_ID' => 'required|numeric',
-                'LINE_NO'     => 'required|numeric',
-                'INACTIVE'  => 'required',
+                'NAME'          => 'required|min:6',
+                'LOCATION_ID'   => 'required|numeric',
+                'LINE_NO'       => 'required|numeric',
+                'INACTIVE'      => 'required',
             ],
             [],
-            []
+            [
+                'NAME'          => 'Name',
+                'LOCATION_ID'   => 'Location',
+                'LINE_NO'       => 'Line no.',
+                'INACTIVE'      => 'Inactive',
+            ]
         );
 
 
         try {
+
+            if ($this->ID >  0) {
+                $this->cashFlowServices->UpdateHeader($this->ID, $this->NAME, $this->LINE_NO, $this->INACTIVE);
+
+                $this->closeModal();
+                return;
+            }
+
             $this->cashFlowServices->StoreHeader($this->NAME, $this->LOCATION_ID, $this->LINE_NO, $this->INACTIVE);
+
             $this->closeModal();
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
     }
-
-
     #[On('open-cf-header')]
     public function openModal($result)
     {
@@ -65,13 +74,15 @@ class HeaderModal extends Component
                 return;
             }
         }
-
+        $this->ID = 0;
         $this->LINE_NO = 0;
         $this->INACTIVE = false;
     }
     public function closeModal()
     {
+
         $this->showModal = false;
+        $this->dispatch('refresh-generate');
     }
     public function render()
     {

@@ -17,6 +17,7 @@ class CashFlowDetails extends Model
         'NAME',
         'LINE_NO',
         'RECORDED_ON',
-        'INACTIVE'
+        'INACTIVE',
+        'IS_TOTAL'
     ];
 }

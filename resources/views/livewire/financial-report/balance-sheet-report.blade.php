@@ -390,7 +390,6 @@
                                 {{-- end asset --}}
                             @endif
                             @php
-
                                 $netAsset = $assetTotal - $liabilityTotal;
                             @endphp
                             <tr>
@@ -403,8 +402,7 @@
                             </tr>
 
                             {{-- EQUITY --}}
-                            @if (count($equityList) > 0 || $RetainingEarnings > 0 || $net_income > 0)
-                            
+                            @if (count($equityList) > 0 || $RetainingEarnings > 0 || $net_income > 0)                 
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>

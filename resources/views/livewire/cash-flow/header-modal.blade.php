@@ -9,7 +9,6 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-
                     <form wire:submit.prevent='save' wire:loading.attr='disabled'>
                         <div class="modal-body">
                             <div class="row">
@@ -20,21 +19,20 @@
                             <div class="row">
                                 <div class="col-12">
                                     <label class="text-xs">Name:</label>
-                                    <input type="text" wire:modal='NAME' class="form-control form-control-sm" />
+                                    <input type="text" wire:model='NAME' class="form-control form-control-sm" />
                                 </div>
                                 <div class="col-12">
                                     <label class="text-xs">Line No.:</label>
-                                    <input type="number" wire:modal='LINE_NO' class="form-control form-control-sm" />
+                                    <input type="number" wire:model='LINE_NO' class="form-control form-control-sm" />
                                 </div>
-
                                 <div class="col-12">
                                     <label class="text-xs">Inactive:</label>
-                                    <input type="checkbox" wire:modal='INACTIVE' class="form-check form-check-sm" />
+                                    <input type="checkbox" wire:model='INACTIVE' class="form-check form-check-sm" />
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success btn-sm">Save</button>
+                            <button type="submit" class="btn btn-success btn-sm">@if($ID==0) Save @else Update @endif</button>
                             <button type="button" class="btn btn-secondary btn-sm"
                                 wire:click="closeModal">Close</button>
                         </div>

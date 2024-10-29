@@ -51,7 +51,7 @@
                                                 <i type="button" onclick="alert('Justification: {{ $list->JUSTIFY_NOTES }}')" class="fa fa-envelope fa-2x text-primary" aria-hidden="true"></i>
                                             @endif
                                         </td> --}}
-                                        @if ($STATUS == $openStatus || Auth::user()->can('patient.treatment.update'))
+                                        @if ($STATUS == $openStatus || $STATUS == 4 || Auth::user()->can('patient.treatment.update'))
                                             <td class="text-center">
                                                 @if ($lineId == $list->ID)
                                                     <button type="button" title="Update" id="updatebtn"
@@ -109,7 +109,10 @@
                     </div>
                     <div class="col-md-12">
                         @if ($ActiveRequired)
-                            @if ($STATUS == $openStatus)
+         
+                            @if ($STATUS == $openStatus || $STATUS == 4)
+
+
                                 @foreach ($ItemRequiredList as $list)
                                     <button wire:click='addItem({{ $list->ID }})'
                                         class="btn btn-warning btn-sm m-1">

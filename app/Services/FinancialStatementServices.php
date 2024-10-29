@@ -7,12 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class FinancialStatementServices
 {
-    private function  getIncomeStatementAccountByType(
-        string $dateFrom,
-        string $dateTo,
-        int $LOCATION_ID,
-        int $accountType,
-        bool $isCreditIncrease = false
+    private static function  getIncomeStatementAccountByType( string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false
     ) {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
@@ -33,7 +28,7 @@ class FinancialStatementServices
 
         return $result;
     }
-    private function  getIncomeStatementAccountByTypeSum(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false): float
+    public static function  getIncomeStatementAccountByTypeSum(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false): float
     {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
@@ -55,7 +50,74 @@ class FinancialStatementServices
         // Return the result or 0 if no data found
         return (float)   $result;
     }
+    public static function  getIncomeStatementAccountByTypeSumArray(string $dateFrom, string $dateTo, int $LOCATION_ID, array $accountType = [], bool $isCreditIncrease = false): float
+    {
+        $debit_is = $isCreditIncrease ? 1 : 0;
+        $credit_is = $isCreditIncrease ? 0 : 1;
 
+        $sql = "sum( if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ) as AMOUNT";
+        $result = DB::table('account_journal as aj')
+            ->select([
+                DB::raw($sql),
+            ])->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->whereIn('a.TYPE',  $accountType)
+            ->first()
+            ->AMOUNT;
+
+        // Return the result or 0 if no data found
+        return (float)   $result;
+    }
+    public static function  getIncomeStatementAccountByIDSum(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountId, bool $isCreditIncrease = false): float
+    {
+        $debit_is = $isCreditIncrease ? 1 : 0;
+        $credit_is = $isCreditIncrease ? 0 : 1;
+
+        $sql = "sum( if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ) as AMOUNT";
+        $result = DB::table('account_journal as aj')
+            ->select([
+                DB::raw($sql),
+            ])->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->where('a.ID', '=', $accountId)
+            ->first()
+            ->AMOUNT;
+
+        // Return the result or 0 if no data found
+        return (float)   $result;
+    }
+
+
+    public static function  getIncomeStatementAccountByIDSumArray(string $dateFrom, string $dateTo, int $LOCATION_ID, array $accountId = [], bool $isCreditIncrease = false): float
+    {
+        $debit_is = $isCreditIncrease ? 1 : 0;
+        $credit_is = $isCreditIncrease ? 0 : 1;
+
+        $sql = "sum( if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ) as AMOUNT";
+        $result = DB::table('account_journal as aj')
+            ->select([
+                DB::raw($sql),
+            ])->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->whereIn('a.ID',  $accountId)
+            ->first()
+            ->AMOUNT;
+
+        // Return the result or 0 if no data found
+        return (float)   $result;
+    }
     public function IncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): object
     {
         $result = $this->getIncomeStatementAccountByType(
@@ -68,9 +130,9 @@ class FinancialStatementServices
 
         return $result;
     }
-    public function SumIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
+    public static function SumIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
-        return $this->getIncomeStatementAccountByTypeSum(
+        return self::getIncomeStatementAccountByTypeSum(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -90,9 +152,9 @@ class FinancialStatementServices
 
         return $result;
     }
-    public function SumCogsAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
+    public static function SumCogsAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
-        return $this->getIncomeStatementAccountByTypeSum(
+        return self::getIncomeStatementAccountByTypeSum(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -100,9 +162,9 @@ class FinancialStatementServices
             false
         );
     }
-    public function ExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public static function ExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getIncomeStatementAccountByType(
+        return self::getIncomeStatementAccountByType(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -110,9 +172,9 @@ class FinancialStatementServices
             false
         );
     }
-    public function SumExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
+    public static function SumExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
-        return $this->getIncomeStatementAccountByTypeSum(
+        return self::getIncomeStatementAccountByTypeSum(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -120,9 +182,9 @@ class FinancialStatementServices
             false
         );
     }
-    public function OtherIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public static function OtherIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getIncomeStatementAccountByType(
+        return self::getIncomeStatementAccountByType(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -130,9 +192,9 @@ class FinancialStatementServices
             false
         );
     }
-    public function SumOtherIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public static function SumOtherIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getIncomeStatementAccountByTypeSum(
+        return self::getIncomeStatementAccountByTypeSum(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -140,9 +202,9 @@ class FinancialStatementServices
             false
         );
     }
-    public function OtherExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public static function OtherExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getIncomeStatementAccountByType(
+        return self::getIncomeStatementAccountByType(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -150,9 +212,9 @@ class FinancialStatementServices
             false
         );
     }
-    public function SumOtherExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public static function SumOtherExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return $this->getIncomeStatementAccountByTypeSum(
+        return self::getIncomeStatementAccountByTypeSum(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -161,20 +223,20 @@ class FinancialStatementServices
         );
     }
 
-    public function getTotalNetIncome(string $dateFrom, string $dateTo, int $LOCATION_ID): float
+    public  static function getTotalNetIncome(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
         // Create a DateTime object from the input date string
 
 
-        $IncomeSum = $this->SumIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
-        $COGSSum = $this->SumCogsAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $IncomeSum = self::SumIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $COGSSum = self::SumCogsAccount($dateFrom, $dateTo, $LOCATION_ID);
         $gross_profit = $IncomeSum + $COGSSum;
 
-        $ExpenseSum = $this->SumExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $ExpenseSum = self::SumExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
         $operating_income = $gross_profit - $ExpenseSum;
 
-        $OtherIncomeSum = $this->SumOtherIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
-        $OtherExpenseSum = $this->SumOtherExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $OtherIncomeSum = self::SumOtherIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $OtherExpenseSum = self::SumOtherExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
 
         $net_other_income = $OtherIncomeSum - $OtherExpenseSum;
 

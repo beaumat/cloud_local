@@ -63,8 +63,6 @@ class HemoList extends Component
     }
     public function mount()
     {
-
-
         $this->DATE_FROM = $this->userServices->getTransactionDateDefault();
         $this->DATE_TO = $this->dateServices->NowDate();
         $this->locationList = $this->locationServices->getList();
@@ -90,9 +88,7 @@ class HemoList extends Component
     #[On('refresh-list')]
     public function render()
     {
-
         $this->pendingList = $this->hemoServices->UnpostedTratment($this->locationid, $this->search);
-
         $dataList = $this->hemoServices->Search(
             $this->search,
             $this->locationid,
