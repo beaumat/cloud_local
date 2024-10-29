@@ -29,8 +29,9 @@ class DateServices
         return "$y-$m-01";
     }
     public function NowDate()
-    {
-        return Carbon::now()->format('Y-m-d');
+    {   
+
+        return '2024-10-29'; //Carbon::now()->format('Y-m-d');
     }
     public function Now()
     {
