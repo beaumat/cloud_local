@@ -18,7 +18,8 @@ class DateServices
     {
         return "$YEAR-01-01";
     }
-    public  static function getLastDayViaYear(int $YEAR)  {
+    public  static function getLastDayViaYear(int $YEAR)
+    {
         return "$YEAR-12-31";
     }
     public function GetFirstDay_Month(string $BASE_DATE): string
@@ -29,9 +30,9 @@ class DateServices
         return "$y-$m-01";
     }
     public function NowDate()
-    {   
-
-        return '2024-10-29'; //Carbon::now()->format('Y-m-d');
+    {
+        // '2024-10-29'
+        return Carbon::now()->format('Y-m-d');
     }
     public function Now()
     {
