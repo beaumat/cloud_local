@@ -20,13 +20,12 @@ class HeaderModal extends Component
     {
         $this->cashFlowServices  =  $cashFlowServices;
     }
-
     public function save()
     {
 
         $this->validate(
             [
-                'NAME'          => 'required|min:6',
+                'NAME'          => 'required|min:2',
                 'LOCATION_ID'   => 'required|numeric',
                 'LINE_NO'       => 'required|numeric',
                 'INACTIVE'      => 'required',
@@ -39,19 +38,15 @@ class HeaderModal extends Component
                 'INACTIVE'      => 'Inactive',
             ]
         );
-
-
         try {
 
             if ($this->ID >  0) {
                 $this->cashFlowServices->UpdateHeader($this->ID, $this->NAME, $this->LINE_NO, $this->INACTIVE);
-
                 $this->closeModal();
                 return;
             }
 
             $this->cashFlowServices->StoreHeader($this->NAME, $this->LOCATION_ID, $this->LINE_NO, $this->INACTIVE);
-
             $this->closeModal();
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
@@ -64,7 +59,7 @@ class HeaderModal extends Component
         $dataID = $result['ID'] ?? 0;
         $this->LOCATION_ID = $result['LOCATION_ID'];
         if ($dataID > 0) {
-            $data =    $this->cashFlowServices->getHeader($dataID);
+            $data =  $this->cashFlowServices->getHeader($dataID);
             if ($data) {
                 $this->ID = $data->ID;
                 $this->NAME = $data->NAME;
@@ -80,7 +75,6 @@ class HeaderModal extends Component
     }
     public function closeModal()
     {
-
         $this->showModal = false;
         $this->dispatch('refresh-generate');
     }

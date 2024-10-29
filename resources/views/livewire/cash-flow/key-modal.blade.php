@@ -50,7 +50,7 @@
                                     <input type="checkbox" wire:model='INACTIVE' class="form-check form-check-sm" />
                                 </div>
                                 <div class="col-12">
-
+                                                
                                 </div>
                                 {{-- IS_TOTAL --}}
                             </div>

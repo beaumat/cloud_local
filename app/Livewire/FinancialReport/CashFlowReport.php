@@ -13,8 +13,11 @@ use Livewire\Component;
 
 #[Title('Cash Flow Report')]
 class CashFlowReport extends Component
-{
+{   
+
+
     public float $AMOUNT  = 0;
+    public float $TOTAL_AFTER_NEW_HEADER = 0;
     public int $YEAR;
 
     public  $modify = false;
@@ -51,7 +54,7 @@ class CashFlowReport extends Component
 
     public function generate() {
 
-        
+
     }
     public function clickHeader()
     {

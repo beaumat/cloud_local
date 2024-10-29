@@ -85,7 +85,11 @@
                             {{-- Header --}}
                             @foreach (CashFlowServices::GetHeaderList($LOCATION_ID) as $hlist)
                                 <tr class="font-weight-bold">
-                                    <td>{{ $hlist->NAME }}
+                                    @php
+                                        $TOTAL_AFTER_NEW_HEADER = $TOTAL_AFTER_NEW_HEADER + $AMOUNT;
+                                        $AMOUNT = 0;
+                                    @endphp
+                                    <td ><b class="text-primary">{{ $hlist->NAME }}</b>
                                         @if ($modify)
                                             <button wire:click='editHeader({{ $hlist->ID }})'
                                                 class="btn btn-xs btn-success">
@@ -97,8 +101,17 @@
                                             </button>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-info text-right">
                                         {{-- Header AMOUNT --}}
+                                        @php
+                                            $tempTotal = CashFlowServices::getHeaderAmount(
+                                                $hlist->ID,
+                                                $TOTAL_AFTER_NEW_HEADER,
+                                            );
+                                        @endphp
+                                        @if ($tempTotal != 0)
+                                            <strong class="text-md">     {{ number_format($tempTotal, 2) }}</strong>
+                                        @endif
                                     </td>
                                 </tr>
                                 {{-- Details --}}
@@ -126,7 +139,7 @@
                                                 $AMOUNT = $AMOUNT + $tempVar;
                                             @endphp {{-- Detail AMOUNT --}}
                                             @if ($dList->IS_TOTAL)
-                                                {{ number_format($AMOUNT, 2) }}
+                                               <b>{{ number_format($AMOUNT, 2) }}</b> 
                                             @else
                                                 @if ($tempVar != 0)
                                                     {{ number_format($tempVar, 2) }}

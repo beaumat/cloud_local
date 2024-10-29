@@ -23,6 +23,9 @@ class CashFlowServices
             ['ID' => 1, 'NAME' => 'ACCOUNT_TYPE'],
             ['ID' => 2, 'NAME' => 'ACCOUNT_IN'],
             ['ID' => 3, 'NAME' => 'ACCOUNT_TYPE_IN'],
+            ['ID' => 4, 'NAME' => 'I/(D) in Cash'],
+            ['ID' => 5, 'NAME' => 'Cash End on Last Year']
+
         ];
     }
     private function getHeader_LINE_NO(int $LOCATION_ID): int
@@ -30,7 +33,7 @@ class CashFlowServices
         return (int) CashFlowHeader::where('LOCATION_ID', '=', $LOCATION_ID)
             ->max('LINE_NO');
     }
-    public function getHeader(int $ID)
+    public static function getHeader(int $ID)
     {
         $result = CashFlowHeader::where('ID', '=', $ID)->first();
         if ($result) {
@@ -39,10 +42,13 @@ class CashFlowServices
 
         return [];
     }
-    public function getHeaderAmount(int $ID): float
+    public static function getHeaderAmount(int $ID, float $AMOUNT): float
     {
-        $data =  $this->getHeader($ID);
+        $data =  self::getHeader($ID);
         if ($data) {
+            if ($data->NAME == "END") {
+                return $AMOUNT;
+            }
             return 0;
         }
 
@@ -71,7 +77,8 @@ class CashFlowServices
 
     public function DeleteHeader(int $ID)
     {
-        CashFlowHeader::where('ID', '=', $ID)->delete();
+        CashFlowHeader::where('ID', '=', $ID)
+        ->delete();
     }
     public static function GetHeaderList(int $LOCATION_ID)
     {
