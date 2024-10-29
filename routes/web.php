@@ -32,6 +32,7 @@ use App\Livewire\FinancialReport\IncomeStatementReport;
 use App\Livewire\FundTransfer\FundTransferList;
 use App\Livewire\GeneralJournal\GeneralJournalForm;
 use App\Livewire\GeneralJournal\GeneralJournalList;
+use App\Livewire\GeneralJournal\GeneralJournalPrint;
 use App\Livewire\Hemodialysis\HemoForm;
 use App\Livewire\Hemodialysis\HemoList;
 use App\Livewire\Hemodialysis\PrintForm;
@@ -309,6 +310,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', GeneralJournalList::class)->name('general_journal')->middleware(['permission:company.general-journal.view']);
             Route::get('/create', GeneralJournalForm::class)->name('general_journal_create')->middleware(['permission:company.general-journal.create']);
             Route::get('/{id}/edit', GeneralJournalForm::class)->name('general_journal_edit')->middleware(['permission:company.general-journal.view']);
+            Route::get('/{id}/print', GeneralJournalPrint::class)->name('general_journal_print')->middleware(['permission:company.general-journal.print']);
         });
 
         Route::prefix('/inventory-adjustment')->group(function () {
