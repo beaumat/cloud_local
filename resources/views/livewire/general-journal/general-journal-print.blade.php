@@ -17,7 +17,7 @@
                     @endif
                 </div>
                 <div class="col-12 text-center">
-                    <b class="h4">Genereal Journal</b>
+                    <b class="h4">GENERAL JOURNAL</b>
                 </div>
                 <div class="col-8  text-left">
                     <div class="row">
@@ -42,45 +42,50 @@
                         </div>
                     </div>
                 </div>
-
+                @php
+                    $varDebit = 0;
+                    $varCredit = 0;
+                @endphp
                 <div class="col-12 text-center mt-4 ">
                     <table class="w-100" border="1">
                         <thead>
                             <tr class="bgBlack text-white">
                                 <th class="col-1 text-left">Acct. No.</th>
                                 <th class="col-3 text-left">Account Title</th>
-                        
                                 <th class="col-1 text-right">Debit</th>
                                 <th class="col-1 text-right">Credit</th>
-                                        <th class="col-5 text-left">Particular</th>
+                                <th class="col-5 text-left">Particular</th>
                             </tr>
                         </thead>
                         <tbody>
+
+                            @foreach ($listDetails as $list)
+                                <tr class="border-dark border-bottom">
+                                    <td class="text-left p-1">{{ $list->CODE }}</td>
+                                    <td class="text-left p-1">{{ $list->ACCOUNT_DESCRIPTION }}</td>
+                                    @php
+                                        $varDebit += $list->DEBIT;
+                                        $varCredit += $list->CREDIT;
+                                    @endphp
+                                    <td class="text-right p-1">
+                                        {{ $list->DEBIT > 0 ? number_format($list->DEBIT, 2) : '' }}
+                                    </td>
+                                    <td class="text-right p-1">
+                                        {{ $list->CREDIT > 0 ? number_format($list->CREDIT, 2) : '' }}
+                                    </td>
+                                    <td class="text-left">{{ $list->NOTES }}</td>
+                                </tr>
+                            @endforeach
                             {{-- @foreach ($expensesList as $list)
-                                    <tr class="border-dark border-bottom">
-                                        <td class="text-left p-1">{{ $list->CODE }}</td>
-                                        <td class="text-left p-1">{{ $list->NAME }}</td>
-                                        <td class="text-left">{{ $list->PARTICULARS }}</td>
-                                        <td>
-                                            @if ($list->TAXABLE)
-                                                &check;
-                                            @endif
-
-                                        </td>
-
-                                        @php
-                                            $billExpenseAmt = $billExpenseAmt + $list->AMOUNT ?? 0;
-                                        @endphp
-                                        <td class="text-right">{{ number_format($list->AMOUNT, 1) }}&nbsp;</td>
-                                    </tr>
+                         
                                 @endforeach --}}
                             <tr class=" border-white border-top border-left border-right ">
                                 <td class="text-left p-1"></td>
                                 <td class="text-left p-1"></td>
-                                <td class="text-right"></td>
-                                <td class="text-right"></td>
+                                <td class="text-right"> {{ number_format($varDebit, 2) }}</td>
+                                <td class="text-right"> {{ number_format($varCredit, 2) }}</td>
 
-                                <td ><b></b></td>
+                                <td><b></b></td>
                             </tr>
                         </tbody>
                     </table>

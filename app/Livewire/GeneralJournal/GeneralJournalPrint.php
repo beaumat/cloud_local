@@ -28,6 +28,8 @@ class GeneralJournalPrint extends Component
     public string $REPORT_HEADER_3;
     public string $LOGO_FILE;
 
+    public $listDetails = [];
+
     public function boot(
         GeneralJournalServices $generalJournalServices,
         ContactServices $contactServices,
@@ -47,7 +49,7 @@ class GeneralJournalPrint extends Component
 
                 $this->CODE = $data->CODE;
                 $this->DATE = $data->DATE;
-
+                $this->listDetails =  $this->generalJournalServices->ListDetails($id);
                 $con = $this->contactServices->getSingleData($data->CONTACT_ID);
                 if ($con) {
                     $this->CONTACT_NAME = $con->PRINT_NAME_AS;
