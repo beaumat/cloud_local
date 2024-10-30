@@ -56,7 +56,6 @@ class BillingPrint extends Component
             $this->NOTES = $data->NOTES;
             $this->AMOUNT = $data->AMOUNT;
             $con = $this->contactServices->get($this->VENDOR_ID, 0);
-
             if ($con) {
                 $this->CONTACT_NAME = $con->PRINT_NAME_AS;
             }

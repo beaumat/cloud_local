@@ -260,6 +260,10 @@ class GeneralJournalForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public function print() 
+    {
+        
+    }
     public function OpenJournal()
     {
         $FirstID = $this->generalJournalServices->getFirstDetailsID($this->ID);

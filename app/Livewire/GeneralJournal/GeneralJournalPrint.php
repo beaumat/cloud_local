@@ -5,6 +5,7 @@ namespace App\Livewire\GeneralJournal;
 use App\Services\ContactServices;
 use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -22,6 +23,10 @@ class GeneralJournalPrint extends Component
     private $generalJournalServices;
     private $contactServices;
     private $locationServices;
+    public string $REPORT_HEADER_1;
+    public string $REPORT_HEADER_2;
+    public string $REPORT_HEADER_3;
+    public string $LOGO_FILE;
 
     public function boot(
         GeneralJournalServices $generalJournalServices,
@@ -31,22 +36,41 @@ class GeneralJournalPrint extends Component
         $this->generalJournalServices = $generalJournalServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
-
     }
 
     public function mount($id = null)
     {
         if (is_numeric($id)) {
+
             $data = $this->generalJournalServices->Get($id);
             if ($data) {
-            
 
+                $this->CODE = $data->CODE;
+                $this->DATE = $data->DATE;
 
+                $con = $this->contactServices->getSingleData($data->CONTACT_ID);
+                if ($con) {
+                    $this->CONTACT_NAME = $con->PRINT_NAME_AS;
+                }
+                $locData = $this->locationServices->get($data->LOCATION_ID);
+                if ($locData) {
+                    $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
+                    $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
+                    $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                    $this->LOCATION_NAME  = $locData->NAME;
+                    $this->LOGO_FILE = $locData->LOGO_FILE ?? null;
+                }
 
+                $this->dispatch('preview_print');
+                return;
             }
         }
     }
-
+    #[On('preview_print')]
+    public function print()
+    {
+        $this->dispatch('print');
+    }
     public function render()
     {
         return view('livewire.general-journal.general-journal-print');
