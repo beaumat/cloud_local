@@ -350,10 +350,10 @@ class PrintContent extends Component
             $this->DIALSATE_K = $data->DIALSATE_K ?? '';
             $this->DIALSATE_C = $data->DIALSATE_C ?? '';
             $this->SE_COUNT = 0;
-            $this->SE_PARTS = str_split($this->SE_DETAILS, 35);
+            $this->SE_PARTS = str_split($this->SE_DETAILS, 40);
 
             $this->SO_COUNT = 0;
-            $this->SO_PARTS = str_split($this->SO_DETAILS, 35);
+            $this->SO_PARTS = str_split($this->SO_DETAILS, 40);
             $this->getPreviousTreatment();
 
 
