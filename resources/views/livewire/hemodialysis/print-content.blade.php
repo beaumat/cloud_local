@@ -420,7 +420,7 @@
                     <div class="row">
                         <div class="col-4 ">
                             <label class="text-sm">NEPHROLOGIST:</label>
-                            <div class="form-group px-1">
+                            <div class="form-group px-3">
                                 <div class="row ">
                                     <div class="col-12 bottom-line2 text-uppercase text-center text-primary">
                                         &nbsp;{{ $NEPRHO_NAME }}
@@ -449,7 +449,7 @@
                         </div>
                         <div class="col-4 left-line">
                             <label class="text-sm">DIAGNOSIS:</label>
-                            <div class="form-group px-1">
+                            <div class="form-group px-3">
                                 <div class="row">
                                     <div class="col-12 bottom-line2 text-uppercase text-center text-primary">
                                         &nbsp; {{ $DIAGNOSIS }}
