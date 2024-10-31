@@ -164,7 +164,7 @@ class PrintContent extends Component
     public int $SO_COUNT = 0;
 
     public string $REPORT_HEADER_1;
-    public string $LOGO_FILE ='';
+    public string $LOGO_FILE = '';
     private $patientDoctorServices;
     private $locationServices;
     public function boot(
@@ -229,19 +229,19 @@ class PrintContent extends Component
                 }
             }
 
-            $this->PRE_WEIGHT = $data->PRE_WEIGHT ?? '';
-            $this->PRE_BLOOD_PRESSURE = $data->PRE_BLOOD_PRESSURE ?? '';
-            $this->PRE_BLOOD_PRESSURE2 = $data->PRE_BLOOD_PRESSURE2 ?? '';
-            $this->PRE_HEART_RATE = $data->PRE_HEART_RATE ?? '';
-            $this->PRE_O2_SATURATION = $data->PRE_O2_SATURATION ?? '';
-            $this->PRE_TEMPERATURE = $data->PRE_TEMPERATURE ?? '';
+            $this->PRE_WEIGHT = ''; // $data->PRE_WEIGHT ?? '';
+            $this->PRE_BLOOD_PRESSURE = ''; // $data->PRE_BLOOD_PRESSURE ?? '';
+            $this->PRE_BLOOD_PRESSURE2 = ''; // $data->PRE_BLOOD_PRESSURE2 ?? '';
+            $this->PRE_HEART_RATE = ''; // $data->PRE_HEART_RATE ?? '';
+            $this->PRE_O2_SATURATION = ''; // $data->PRE_O2_SATURATION ?? '';
+            $this->PRE_TEMPERATURE = ''; // $data->PRE_TEMPERATURE ?? '';
 
-            $this->POST_WEIGHT = $data->POST_WEIGHT ?? '';
-            $this->POST_BLOOD_PRESSURE = $data->POST_BLOOD_PRESSURE ?? '';
-            $this->POST_BLOOD_PRESSURE2 = $data->POST_BLOOD_PRESSURE2 ?? '';
-            $this->POST_HEART_RATE = $data->POST_HEART_RATE ?? '';
-            $this->POST_O2_SATURATION = $data->POST_O2_SATURATION ?? '';
-            $this->POST_TEMPERATURE = $data->POST_TEMPERATURE ?? '';
+            $this->POST_WEIGHT = ''; // $data->POST_WEIGHT ?? '';
+            $this->POST_BLOOD_PRESSURE = ''; // $data->POST_BLOOD_PRESSURE ?? '';
+            $this->POST_BLOOD_PRESSURE2 = ''; // $data->POST_BLOOD_PRESSURE2 ?? '';
+            $this->POST_HEART_RATE = ''; // $data->POST_HEART_RATE ?? '';
+            $this->POST_O2_SATURATION = ''; // $data->POST_O2_SATURATION ?? '';
+            $this->POST_TEMPERATURE = ''; // $data->POST_TEMPERATURE ?? '';
 
 
 
