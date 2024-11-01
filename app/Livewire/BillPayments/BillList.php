@@ -108,7 +108,6 @@ class BillList extends Component
             }
 
             $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
-
             $this->billingServices->UpdateBalance($BILL_ID);
             DB::commit();
             $this->dispatch('reset-payment');

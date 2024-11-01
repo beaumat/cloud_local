@@ -152,6 +152,8 @@ use App\Livewire\User\UserList;
 use App\Livewire\User\UserRoles;
 use App\Livewire\Vendor\VendorForm;
 use App\Livewire\Vendor\VendorList;
+use App\Livewire\WriteCheck\WriteCheckForm;
+use App\Livewire\WriteCheck\WriteCheckFormPrint;
 use App\Livewire\WriteCheck\WriteCheckList;
 
 /*
@@ -344,6 +346,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('/make-cheque')->group(function () {
             Route::get('/', WriteCheckList::class)->name('make_cheque')->middleware(['permission:banking.make-cheque.view']);
+            Route::get('/create', WriteCheckForm::class)->name('make_cheque_create')->middleware(['permission:banking.make-cheque.create']);
+            Route::get('/{id}/edit', WriteCheckForm::class)->name('make_cheque_edit')->middleware(['permission:banking.make-cheque.view']);
+            Route::get('/{id}/print', WriteCheckFormPrint::class)->name('make_cheque_print')->middleware(['permission:banking.make-cheque.print']);
         });
     });
 

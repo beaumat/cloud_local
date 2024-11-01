@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class BillPaymentServices
 {
-
+    private int $CHECK_TYPE_ID = 1;
     public int $object_type_check = 57;
     public int $object_type_check_bills  = 58;
 
@@ -29,7 +29,9 @@ class BillPaymentServices
     }
     public function Get(int $ID)
     {
-        return Check::where('ID', $ID)->where('TYPE', 1)->first();
+        return Check::where('ID', $ID)
+            ->where('TYPE', '=', $this->CHECK_TYPE_ID)
+            ->first();
     }
     public function Store(
         string $CODE,
@@ -50,7 +52,7 @@ class BillPaymentServices
             'RECORDED_ON'       => $this->dateServices->Now(),
             'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DATE'              => $DATE,
-            'TYPE'              => 1,
+            'TYPE'              => $this->CHECK_TYPE_ID,
             'BANK_ACCOUNT_ID'   => $BANK_ACCOUNT_ID,
             'PAY_TO_ID'         => $PAY_TO_ID,
             'LOCATION_ID'       => $LOCATION_ID,
@@ -82,8 +84,8 @@ class BillPaymentServices
         float $AMOUNT,
         string $NOTES
     ) {
-        Check::where('ID', $ID)
-            ->where('TYPE', 1)
+        Check::where('ID', '=', $ID)
+            ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->update([
                 'ID'                => $ID,
                 'CODE'              => $CODE,
@@ -108,11 +110,11 @@ class BillPaymentServices
     public function Delete(int $ID)
     {
         CheckBills::where('CHECK_ID', $ID)->delete();
-        Check::where('ID', $ID)->where('TYPE', 1)->delete();
+        Check::where('ID', $ID)->where('TYPE', '=', $this->CHECK_TYPE_ID)->delete();
     }
     public function Search($search, $locationId, $perPage)
     {
-        return Check::query()
+        $result = Check::query()
             ->select([
                 'check.ID',
                 'check.CODE',
@@ -133,7 +135,7 @@ class BillPaymentServices
                 }
             })
             ->join('document_status_map as s', 's.ID', '=', 'check.STATUS')
-            ->where('check.TYPE', 1)
+            ->where('check.TYPE', '=', $this->CHECK_TYPE_ID)
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
                     $q->where('check.CODE', 'like', '%' . $search . '%')
@@ -145,6 +147,8 @@ class BillPaymentServices
             })
             ->orderBy('check.ID', 'desc')
             ->paginate($perPage);
+
+        return $result;
     }
     public function BillPaymentBillsExist(int $CHECK_ID, int $BILL_ID): int
     {
@@ -257,7 +261,7 @@ class BillPaymentServices
                 DB::raw(' 1 as ENTRY_TYPE')
             ])
             ->where('ID', $CHECK_ID)
-            ->where('TYPE', 1)
+            ->where('TYPE',  '=', $this->CHECK_TYPE_ID)
             ->get();
 
         return $result;
@@ -273,7 +277,7 @@ class BillPaymentServices
                 DB::raw(' 0 as ENTRY_TYPE')
             ])
             ->where('check.ID', $CHECK_ID)
-            ->where('check.TYPE', 1)
+            ->where('check.TYPE', '=', $this->CHECK_TYPE_ID)
             ->get();
 
         return $result;
