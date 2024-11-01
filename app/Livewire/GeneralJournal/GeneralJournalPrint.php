@@ -50,7 +50,7 @@ class GeneralJournalPrint extends Component
                 $this->CODE = $data->CODE;
                 $this->DATE = $data->DATE;
                 $this->listDetails =  $this->generalJournalServices->ListDetails($id);
-                $con = $this->contactServices->getSingleData($data->CONTACT_ID);
+                $con = $this->contactServices->getSingleData($data->CONTACT_ID ?? 0);
                 if ($con) {
                     $this->CONTACT_NAME = $con->PRINT_NAME_AS;
                 }
