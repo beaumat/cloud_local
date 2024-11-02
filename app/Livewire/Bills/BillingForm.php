@@ -117,7 +117,9 @@ class BillingForm extends Component
             'CUSTOM_FIELD1' => 'Files'
         ]);
     }
-
+    public function updatedInputTaxId(){
+        $this->getTax();
+    }
     public function getConfirm()
     {
         $this->billingServices->ConfirmProccess($this->ID);
@@ -162,7 +164,6 @@ class BillingForm extends Component
 
     public function updatedDate()
     {
-
         $this->updatedPAYMENTTERMSID();
     }
     private function getInfo($data)

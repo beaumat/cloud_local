@@ -706,7 +706,5 @@ class BillingServices
 
 
 
-    public function uploadFile() {}
 
-    public function fileConfirm() {}
 }

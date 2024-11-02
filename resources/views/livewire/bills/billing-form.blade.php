@@ -88,7 +88,6 @@
                                                         isDisabled="{{ !$Modify }}" wire:model='LOCATION_ID' />
                                                 </div>
                                                 <div class="col-md-4">
-
                                                     @if ($Modify)
                                                         <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
                                                             :options="$taxList" :zero="false" :isDisabled="false"
@@ -98,8 +97,6 @@
                                                             :options="$taxList" :zero="false" :isDisabled="true"
                                                             wire:model='INPUT_TAX_ID' />
                                                     @endif
-
-
                                                 </div>
                                                 <div class="col-md-8">
                                                     <livewire:text-input name="NOTES" titleName="Notes"
