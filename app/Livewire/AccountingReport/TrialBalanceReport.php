@@ -18,9 +18,11 @@ class TrialBalanceReport extends Component
     public float $TOTAL_CREDIT = 0;
     public $DATE;
     public int $LOCATION_ID;
-    public int $ACCOUNT_ID = 0;
     public $locationList = [];
     public $accountList = [];
+    public array $selectedAccount = [];
+    public $accountTypeList = [];
+    public $selectedAccountType = [];
     public $dataList = [];
     private $accountJournalServices;
     private $dateServices;
@@ -48,12 +50,18 @@ class TrialBalanceReport extends Component
         $this->LOCATION_ID =  $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
         $this->accountList = $this->accountServices->getAccount(false);
+        $this->accountTypeList = $this->accountServices->GetTypeList();
     }
 
     public function generate()
     {
 
-        $this->dataList = $this->accountJournalServices->getTrialBalance($this->DATE, $this->LOCATION_ID, $this->ACCOUNT_ID);
+        $this->dataList = $this->accountJournalServices->getTrialBalance(
+            $this->DATE,
+            $this->LOCATION_ID,
+            $this->selectedAccount,
+            $this->selectedAccountType
+        );
     }
     public function render()
     {

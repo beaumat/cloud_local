@@ -31,7 +31,8 @@ class ChartOfAccountForm extends Component
     }
     public function mount($id = null)
     {
-        $this->accountTypes = AccountType::all();
+        $this->accountTypes = $this->accountServices->GetTypeList();
+
         $this->accountGroups = Accounts::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
 
         if (is_numeric($id)) {

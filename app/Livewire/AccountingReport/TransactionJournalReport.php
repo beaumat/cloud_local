@@ -21,9 +21,11 @@ class TransactionJournalReport extends Component
     public string $DATE_FROM;
     public string $DATE_TO;
     public int $LOCATION_ID;
-    public int $ACCOUNT_ID;
     public $locationList = [];
     public $accountList = [];
+    public array $selectedAccount = [];
+    public $accountTypeList = [];
+    public array $selectedAccountType = [];
 
     public $dataList = [];
     private $accountJournalServices;
@@ -47,12 +49,13 @@ class TransactionJournalReport extends Component
     }
     public function mount()
     {
-        $this->ACCOUNT_ID = 0;
+
         $this->DATE_FROM = $this->dateServices->NowDate();
         $this->DATE_TO = $this->dateServices->NowDate();
         $this->LOCATION_ID =  $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
         $this->accountList = $this->accountServices->getAccount(false);
+        $this->accountTypeList = $this->accountServices->GetTypeList();
     }
     public function generate()
     {
@@ -62,7 +65,8 @@ class TransactionJournalReport extends Component
             $this->DATE_FROM,
             $this->DATE_TO,
             $this->LOCATION_ID,
-            $this->ACCOUNT_ID
+            $this->selectedAccount,
+            $this->selectedAccountType
         );
     }
 

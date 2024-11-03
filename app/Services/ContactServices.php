@@ -47,6 +47,7 @@ class ContactServices
         $result = contacts::where('ID', '=', $ID)
             ->where('TYPE', '=', 3)
             ->first();
+            
         if ($result) {
             return false;
         }
@@ -131,7 +132,7 @@ class ContactServices
                     'ID',
                     DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME")
                 ]
-            )->where('TYPE', 3)
+            )->where('TYPE', '=', 3)
             ->whereExists(function ($query) use (&$LOCATION_ID, &$DATE_FROM, &$DATE_TO) {
                 $query->select(DB::raw(1))
                     ->from('service_charges as s')

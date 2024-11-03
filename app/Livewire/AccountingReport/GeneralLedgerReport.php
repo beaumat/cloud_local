@@ -12,13 +12,13 @@ use Livewire\Component;
 
 #[Title('General Ledger Report')]
 class GeneralLedgerReport extends Component
-{   
+{
 
     public string $TEMP_ACCOUNT = "";
     public float $TEMP_DEBIT = 0;
     public float $TEMP_CREDIT = 0;
 
-    
+
     public float $TOTAL_DEBIT = 0;
     public float $TOTAL_CREDIT = 0;
     public float $BALANCE  = 0;
@@ -26,8 +26,10 @@ class GeneralLedgerReport extends Component
     public string $DATE_TO;
     public int $LOCATION_ID;
     public $locationList = [];
-    public int $ACCOUNT_ID = 0;
     public $accountList  = [];
+    public $accountTypeList = [];
+    public array $selectedAccount = [];
+    public array $selectedAccountType = [];
     public $dataList =  [];
     private $accountJournalServices;
     private $dateServices;
@@ -39,7 +41,8 @@ class GeneralLedgerReport extends Component
         DateServices $dateServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        AccountServices $accountServices
+        AccountServices $accountServices,
+
     ) {
         $this->accountJournalServices = $accountJournalServices;
         $this->locationServices = $locationServices;
@@ -54,6 +57,7 @@ class GeneralLedgerReport extends Component
         $this->LOCATION_ID =  $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
         $this->accountList = $this->accountServices->getAccount(false);
+        $this->accountTypeList = $this->accountServices->GetTypeList();
     }
     public function generate()
     {
@@ -62,9 +66,9 @@ class GeneralLedgerReport extends Component
             $this->DATE_FROM,
             $this->DATE_TO,
             $this->LOCATION_ID,
-            accountId: $this->ACCOUNT_ID
+            $this->selectedAccount,
+            $this->selectedAccountType
         );
-        
     }
 
     public function render()

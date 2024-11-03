@@ -25,8 +25,8 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <livewire:date-input name="DATE" titleName="Date as of" wire:model.live='DATE'
-                                            :isDisabled="false" />
+                                        <livewire:date-input name="DATE" titleName="Date as of"
+                                            wire:model.live='DATE' :isDisabled="false" />
                                     </div>
                                     <div class="col-md-5">
 
@@ -40,13 +40,16 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-
+                                <livewire:select-checkbox name="ACCOUNT_ID" titleName="Filter Account" :options="$accountList"
+                                    :zero="true" :isDisabled=false wire:model='selectedAccount' />
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <livewire:select-option name="ACCOUNT_ID" titleName="Account " :options="$accountList"
-                                            :zero="true" :isDisabled=false wire:model='ACCOUNT_ID' />
+
+                                        <livewire:select-checkbox name="ACCOUNT_TYPE_ID" titleName="Filter Account Type"
+                                            :options="$accountTypeList" :zero="true" :isDisabled=false
+                                            wire:model='selectedAccountType' />
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">

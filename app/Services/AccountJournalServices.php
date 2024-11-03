@@ -472,7 +472,7 @@ class AccountJournalServices
         return $result;
     }
 
-    public function getGeneralLedgerList(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountId = 0)
+    public function getGeneralLedgerList(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
     {
         $result = DB::table('account_journal as aj')
             ->select([
@@ -496,8 +496,11 @@ class AccountJournalServices
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
-            ->when($accountId > 0, function ($query) use (&$accountId) {
-                $query->where('aj.ACCOUNT_ID', '=', $accountId);
+            ->when($account, function ($query) use (&$account) {
+                $query->whereIn('aj.ACCOUNT_ID', $account);
+            })
+            ->when($accountType, function ($query) use (&$accountType) {
+                $query->whereIn('a.TYPE', $accountType);
             })
             ->orderBy('a.TAG', 'asc')
             ->orderBy('aj.OBJECT_DATE', 'asc')
@@ -507,7 +510,7 @@ class AccountJournalServices
         return $result;
     }
 
-    public function getTrialBalance(string $dateAs, int $LOCATION_ID, int $accountId = 0)
+    public function getTrialBalance(string $dateAs, int $LOCATION_ID, array $account = [], array $accountType = [])
     {
         $result = DB::table('account as a')
             ->select(
@@ -534,8 +537,11 @@ class AccountJournalServices
             ->leftJoin('account_journal as aj', 'aj.ACCOUNT_ID', '=', 'a.ID')
             ->leftJoin('account_type_map as t', 't.ID', '=', 'a.TYPE')
             ->where('aj.OBJECT_DATE', '<=', $dateAs)
-            ->when($accountId > 0, function ($query) use (&$accountId) {
-                $query->where('aj.ACCOUNT_ID', '=', $accountId);
+            ->when($account, function ($query) use (&$account) {
+                $query->whereIn('aj.ACCOUNT_ID', $account);
+            })
+            ->when($accountType, function ($query) use (&$accountType) {
+                $query->whereIn('t.ID', $accountType);
             })
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
@@ -549,7 +555,7 @@ class AccountJournalServices
         return $result;
     }
 
-    public function getTransactionJournal(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountId = 0)
+    public function getTransactionJournal(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account =  [], array $accountType = [])
     {
         $result = DB::table('account_journal as aj')
             ->select([
@@ -573,13 +579,14 @@ class AccountJournalServices
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
-            ->when($accountId > 0, function ($query) use (&$accountId) {
-                $query->where('aj.ACCOUNT_ID', '=', $accountId);
+            ->when($account, function ($query) use (&$account) {
+                $query->whereIn('aj.ACCOUNT_ID', $account);
+            })
+            ->when($accountType, function ($query) use (&$accountType) {
+                $query->whereIn('a.TYPE', $accountType);
             })
             ->get();
 
         return $result;
     }
-
- 
 }

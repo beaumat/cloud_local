@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Accounts;
+use App\Models\AccountType;
 
 class AccountServices
 {
@@ -10,6 +11,12 @@ class AccountServices
     public function __construct(ObjectServices $objectService)
     {
         $this->object = $objectService;
+    }
+    public function GetTypeList()
+    {
+        $result = AccountType::get();
+
+        return $result;
     }
     public function getBankAccount()
     {

@@ -41,13 +41,16 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-
+                                <livewire:select-checkbox name="ACCOUNT_ID" titleName="Filter Account" :options="$accountList"
+                                    :zero="true" :isDisabled=false wire:model='selectedAccount' />
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <livewire:select-option name="ACCOUNT_ID" titleName="Account " :options="$accountList"
-                                            :zero="true" :isDisabled=false wire:model='ACCOUNT_ID' />
+                                        <livewire:select-checkbox name="ACCOUNT_TYPE_ID" titleName="Filter Account Type"
+                                            :options="$accountTypeList" :zero="true" :isDisabled=false
+                                            wire:model='selectedAccountType' />
+
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">
@@ -96,8 +99,8 @@
                                 @if ($TEMP_ACCOUNT == '')
                                     @php
                                         $TEMP_ACCOUNT = $list->ACCOUNT_TITLE;
-                                        $TEMP_DEBIT = $list->DEBIT ?? 0;
-                                        $TEMP_CRFDIT = $list->CREDIT ?? 0;
+                                        $TEMP_DEBIT = (float) $list->DEBIT ?? 0;
+                                        $TEMP_CRFDIT = (float) $list->CREDIT ?? 0;
                                     @endphp
                                     <tr>
 
@@ -128,8 +131,8 @@
                                         </tr>
                                         @php
                                             $TEMP_ACCOUNT = $list->ACCOUNT_TITLE;
-                                            $TEMP_DEBIT = floatval($list->DEBIT);
-                                            $TEMP_CREDIT = floatval($list->CREDIT);
+                                            $TEMP_DEBIT = (float) $list->DEBIT ?? 0;
+                                            $TEMP_CREDIT = (float) $list->CREDIT ?? 0;
 
                                         @endphp
                                         <tr>
@@ -137,8 +140,8 @@
                                         </tr>
                                     @else
                                         @php
-                                            $TEMP_DEBIT += floatval($list->DEBIT);
-                                            $TEMP_CREDIT += floatval($list->CREDIT);
+                                            $TEMP_DEBIT += (float) $list->DEBIT ?? 0;
+                                            $TEMP_CREDIT += (float) $list->CREDIT ?? 0;
                                         @endphp
                                     @endif
                                 @endif
