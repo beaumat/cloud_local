@@ -16,12 +16,20 @@ class WriteCheckServices
     public int $object_type_check_expenses = 79;
     public int $document_type_id = 21;
 
+
+    public float $ITEM_TOTAL = 0;
+    public float $EXPENSES_TOTAL = 0;
+
     private $object;
     private $dateServices;
     private $systemSettingServices;
     private $compute;
-    public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices, ComputeServices $computeServices)
-    {
+    public function __construct(
+        ObjectServices $objectServices,
+        DateServices $dateServices,
+        SystemSettingServices $systemSettingServices,
+        ComputeServices $computeServices
+    ) {
         $this->object = $objectServices;
         $this->dateServices = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
@@ -233,7 +241,6 @@ class WriteCheckServices
     public function getUpdateTaxItem(int $CHECK_ID, int $TAX_ID)
     {
         $taxRate = (float) Tax::where('ID', $TAX_ID)->first()->RATE ?? 0;
-
         $items = CheckItems::query()
             ->select([
                 'check_items.ID',
@@ -462,7 +469,7 @@ class WriteCheckServices
                 'a.TAG as CODE'
             ])
             ->leftJoin('account as a', 'a.ID', '=', 'check_expenses.ACCOUNT_ID')
-            ->where('check_expenses.CHECK_ID','=', $CHECK_ID)
+            ->where('check_expenses.CHECK_ID', '=', $CHECK_ID)
             ->orderBy('check_expenses.LINE_NO', 'asc')
             ->get();
 
@@ -530,7 +537,7 @@ class WriteCheckServices
                 DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
                 DB::raw('IF(AMOUNT >= 0, 0, 1)  as ENTRY_TYPE')
             ])
-            ->where('CHECK_ID','=', $CHECK_ID)
+            ->where('CHECK_ID', '=', $CHECK_ID)
             ->orderBy('LINE_NO', 'asc')
             ->get();
 
@@ -546,7 +553,7 @@ class WriteCheckServices
                 DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
                 DB::raw('IF(AMOUNT >= 0, 0, 1) as ENTRY_TYPE')
             ])
-            ->where('CHECK_ID','=', $CHECK_ID)
+            ->where('CHECK_ID', '=', $CHECK_ID)
             ->orderBy('LINE_NO', 'asc')
             ->get();
 

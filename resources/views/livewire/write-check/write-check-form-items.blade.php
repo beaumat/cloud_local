@@ -153,7 +153,7 @@
                         </td>
                         <td>
                             <input type="number" step="0.01" class="form-control form-control-sm mt-1 text-right"
-                                name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount"rca />
+                                name="rate" wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                         </td>
                         <td class="text-right">
                             <label class="mt-2">{{ number_format($AMOUNT, 2) }}</label>

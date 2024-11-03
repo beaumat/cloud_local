@@ -28,8 +28,8 @@
                         <li class="nav-item">
                             <a href="{{ route('bankingmake_cheque') }}"
                                 class="nav-link  {{ request()->is('banking/make-cheque*') ? 'text-warning font-weight-bold' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Make Cheque</p>
+                                <i class="far fa-credit-card nav-icon"></i>
+                                <p>Direct Pay</p>
                             </a>
                         </li>
                     @endcan

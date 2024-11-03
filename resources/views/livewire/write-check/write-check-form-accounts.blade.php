@@ -9,7 +9,7 @@
                 <th class="col-1 text-right">Amount</th>
                 <th class="col-1 text-center">Tax</th>
                 <th class="col-3">Particular</th>
-                <th class="col-2">Class</th>
+                {{-- <th class="col-2">Class</th> --}}
                 @if ($STATUS == $openStatus || $STATUS == 16)
                     <th class="text-center col-1">Action</th>
                 @endif
@@ -46,7 +46,7 @@
                         @endif
 
                     </td>
-                    <td>
+                    {{-- <td>
                         @if ($editExpensesId === $list->ID)
                             <select wire:model='lineClassId' name="CLASS_ID_Edit"
                                 class="text-sm form-control form-control-sm">
@@ -58,7 +58,7 @@
                         @else
                             {{ $list->CLASS_NAME }}
                         @endif
-                    </td>
+                    </td> --}}
                     @if ($STATUS == $openStatus || $STATUS == 16)
                         <td class="text-center">
                             @if ($editExpensesId === $list->ID)
@@ -140,7 +140,7 @@
                             <input type="text" class="form-control form-control-sm mt-1" wire:model='PARTICULARS'
                                 name="PARTICULARS" />
                         </td>
-                        <td>
+                        {{-- <td>
                             @if ($saveSuccess)
                                 @if (!$codeBase)
                                     <livewire:select-option name="CLASS_ID1" titleName="" :options="$classList"
@@ -155,7 +155,7 @@
                                 @endif
                             @endif
 
-                        </td>
+                        </td> --}}
                         <td>
                             <div class="mt-1">
                                 <button type="submit" wire:loading.attr='hidden'

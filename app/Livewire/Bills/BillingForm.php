@@ -203,13 +203,13 @@ class BillingForm extends Component
             $this->IS_CONFIRM = false;
         }
 
-        if ($this->useAccount) {
+
             if ($this->billingServices->isItemTab($data->ID)) {
                 $this->tab = "item";
                 return;
             }
             $this->tab = "account";
-        }
+        
     }
 
     public function mount($id = null)

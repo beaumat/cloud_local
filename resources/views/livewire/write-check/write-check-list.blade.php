@@ -58,7 +58,6 @@
                                         <th class="col-4">Pay To</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Amount</th>
-
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">
                                             @if (auth()->user()->can('banking.make-cheque.create'))

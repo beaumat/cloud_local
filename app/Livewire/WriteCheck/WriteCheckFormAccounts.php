@@ -26,7 +26,6 @@ class WriteCheckFormAccounts extends Component
     public string $DATE;
     #[Reactive]
     public int $STATUS;
-
     public int $ID;
     public int $LINE_NO;
     public int $ACCOUNT_ID;
@@ -82,7 +81,7 @@ class WriteCheckFormAccounts extends Component
         if ($acct) {
             $this->ACCOUNT_CODE = $acct->TAG ? $acct->TAG : '';
             $this->ACCOUNT_DESCRIPTION = $acct->NAME;
-            $this->TAXABLE = true;
+            $this->TAXABLE = false;
             $this->PARTICULARS = '';
         }
     }
@@ -100,7 +99,7 @@ class WriteCheckFormAccounts extends Component
         $this->ACCOUNT_ID = 0;
         $this->AMOUNT = 0;
         $this->PARTICULARS = '';
-        $this->TAXABLE = true;
+        $this->TAXABLE = false;
         $this->updatedcodeBase();
         $this->CLASS_ID = 0;
         $this->classList = $this->classServices->GetList();
@@ -170,7 +169,7 @@ class WriteCheckFormAccounts extends Component
     {
         $this->ACCOUNT_ID = 0;
         $this->AMOUNT = 0;
-        $this->TAXABLE = true;
+        $this->TAXABLE = false;
         $this->TAXABLE_AMOUNT = 0;
         $this->TAX_AMOUNT = 0;
         $this->PARTICULARS = '';

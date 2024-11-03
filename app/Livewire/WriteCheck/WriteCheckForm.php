@@ -14,13 +14,19 @@ use App\Services\UserServices;
 use App\Services\WriteCheckServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\Modelable;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Reactive;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Title('Direct Pay')]
 class WriteCheckForm extends Component
 {
+
+
+    public float $TOTAL_ITEMS = 0;
+    public float $TOTAL_EXPENSES = 0;
     public int $ID;
     public string $CODE;
     public bool $UNPOSTED = true;
@@ -120,6 +126,8 @@ class WriteCheckForm extends Component
         $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->AMOUNT = 0;
+        $this->TOTAL_EXPENSES = 0;
+        $this->TOTAL_ITEMS = 0;
         $this->NOTES = '';
         $this->BANK_ACCOUNT_ID = 0;
         $this->PAY_TO_ID = 0;
@@ -151,6 +159,16 @@ class WriteCheckForm extends Component
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
         $this->Modify = false;
         $this->getTax();
+        $getResult = $this->writeCheckServices->ReComputed($this->ID);
+        $this->getUpdateAmount($getResult);
+
+
+
+        if ($this->writeCheckServices->isItemTab($data->ID)) {
+            $this->tab = "item";
+            return;
+        }
+        $this->tab = "account";
     }
     public function getModify()
     {
@@ -273,7 +291,9 @@ class WriteCheckForm extends Component
     public function getUpdateAmount($result)
     {
         foreach ($result as $list) {
-            $this->AMOUNT = $list['AMOUNT'];
+            $this->AMOUNT = (float) $list['AMOUNT'];
+            $this->TOTAL_ITEMS = (float) $list['ITEM_AMOUNT'];
+            $this->TOTAL_EXPENSES = (float) $list['EXPENSES_AMOUNT'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
         }
     }
@@ -285,11 +305,9 @@ class WriteCheckForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function render()
+
+    public function updatedInputTaxId()
     {
-        return view('livewire.write-check.write-check-form');
-    }
-    public function updatedInputTaxId(){
         $this->getTax();
     }
     private function ItemInventory(): bool
@@ -410,5 +428,9 @@ class WriteCheckForm extends Component
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+    public function render()
+    {
+        return view('livewire.write-check.write-check-form');
     }
 }

@@ -104,21 +104,30 @@ class ComputeServices
         $taxableAmount = 0;
         $nonTaxableAmount = 0;
 
+        $item_amount = 0;
+        $expenses_amount = 0;
+
         foreach ($itemResult as $item) {
             if ($item->TAXABLE) {
                 switch ($taxID) {
                     case  12:
                         $amount +=  ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
+                        $item_amount +=  ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
+
                         $taxAmount += $item->TAX_AMOUNT;
                         $taxableAmount += $item->TAXABLE_AMOUNT;
                         break;
                     case 13:
                         $amount += ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
+                        $item_amount += ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
+
                         $taxAmount += $item->TAX_AMOUNT;
                         $taxableAmount += $item->TAXABLE_AMOUNT;
                         break;
                     case 14:
                         $amount += $item->AMOUNT;
+                        $item_amount += $item->AMOUNT;
+
                         $taxAmount += 0;
                         $nonTaxableAmount += $item->AMOUNT;
                         break;
@@ -127,6 +136,8 @@ class ComputeServices
                 }
             } else {
                 $amount += $item->AMOUNT;
+                $item_amount += $item->AMOUNT;
+                
                 $nonTaxableAmount  += $item->AMOUNT;
             }
         }
@@ -136,16 +147,19 @@ class ComputeServices
                 switch ($taxID) {
                     case  12:
                         $amount +=  ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
+                        $expenses_amount +=  ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
                         $taxAmount += $item->TAX_AMOUNT;
                         $taxableAmount += $item->TAXABLE_AMOUNT;
                         break;
                     case 13:
                         $amount += ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
+                        $expenses_amount += ($item->TAX_AMOUNT +  $item->TAXABLE_AMOUNT);
                         $taxAmount += $item->TAX_AMOUNT;
                         $taxableAmount += $item->TAXABLE_AMOUNT;
                         break;
                     case 14:
                         $amount += $item->AMOUNT;
+                        $expenses_amount += $item->AMOUNT;
                         $taxAmount += 0;
                         $nonTaxableAmount += $item->AMOUNT;
                         break;
@@ -154,16 +168,19 @@ class ComputeServices
                 }
             } else {
                 $amount += $item->AMOUNT;
+                $expenses_amount += $item->AMOUNT;
                 $nonTaxableAmount  += $item->AMOUNT;
             }
         }
 
         $getResult = array(
             [
-                'AMOUNT' => $amount,
-                'TAX_AMOUNT' => $taxAmount,
-                'TAXABLE_AMOUNT' => $taxableAmount,
-                'NONTAXABLE_AMOUNT' => $nonTaxableAmount
+                'AMOUNT'                => $amount,
+                'TAX_AMOUNT'            => $taxAmount,
+                'TAXABLE_AMOUNT'        => $taxableAmount,
+                'NONTAXABLE_AMOUNT'     => $nonTaxableAmount,
+                'ITEM_AMOUNT'           => $item_amount,
+                'EXPENSES_AMOUNT'       => $expenses_amount
             ]
         );
 

@@ -80,7 +80,7 @@
                                                             wire:model='LOCATION_ID' />
                                                     @endif
                                                 </div>
-                                                 <div class="col-md-4">
+                                                <div class="col-md-4">
                                                     @if ($Modify)
                                                         <livewire:select-option name="INPUT_TAX_ID" titleName="Tax"
                                                             :options="$taxList" :zero="false" :isDisabled="false"
@@ -129,11 +129,10 @@
                                                     wire:confirm="Are you sure you want to post?">
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
-
                                             @endif
                                         @endif
                                         @if ($STATUS == 15)
-                                            @can('vendor.bill-payment.update')
+                                            @can('banking.make-cheque.update')
                                                 <button type="button" wire:click='getUnposted()'
                                                     class="btn btn-sm btn-secondary"
                                                     wire:confirm="Are you sure you want to unpost?">
@@ -143,16 +142,15 @@
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($STATUS != 16)
+                                        @if ($STATUS == 15)
                                             @if ($ID > 0)
                                                 <button type="button" wire:click='OpenJournal()'
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                                 </button>
-
-                                                @can('vendor.bill-payment.create')
+                                                @can('banking.make-cheque.create')
                                                     <a id="new" title="Create"
-                                                        href="{{ route('vendorsbill_payment_create') }}"
+                                                        href="{{ route('bankingmake_cheque_create') }}"
                                                         class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New
                                                     </a>
                                                 @endcan
@@ -218,34 +216,34 @@
                             </div>
                             <div class="card-footer">
                                 <div class="row">
-                                    <div class="col-md-6 text-left">
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                {{-- @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID]) --}}
-                                            </div>
-                                            <div class="col-md-2">
-                                                {{-- @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID]) --}}
-                                            </div>
-                                            <div class="col-md-2">
-
-                                            </div>
-                                        </div>
+                                    <div class="col-md-4 text-left">
 
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
                                         <div class="row">
-                                            <div class="col-md-4 text-right">
+                                            <div class="col-md-3 text-right">
                                                 <label class="text-sm">Input Tax:</label>
-                                                <label
-                                                    class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label>
+                                                <label class="text-info text-lg">
+                                                    {{ number_format($INPUT_TAX_AMOUNT, 2) }}
+                                                </label>
                                             </div>
-                                            <div class="col-md-4 text-right">
+                                            <div class="col-md-3 text-right">
+                                                <label class="text-sm">Items:</label>
+                                                <label class="text-orange text-lg">
+                                                    {{ number_format($TOTAL_ITEMS, 2) }}
+                                                </label>
+                                            </div>
+                                            <div class="col-md-3 text-right">
+                                                <label class="text-sm">Expenses:</label>
+                                                <label class="text-orange text-lg">
+                                                    {{ number_format($TOTAL_EXPENSES, 2) }}
+                                                </label>
+                                            </div>
+
+                                            <div class="col-md-3 text-right">
                                                 <label class="text-sm">Total:</label>
                                                 <label
                                                     class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
-                                            </div>
-                                            <div class="col-md-4 text-right">
-                                              
                                             </div>
                                         </div>
                                     </div>
