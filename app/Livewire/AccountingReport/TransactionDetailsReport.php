@@ -9,7 +9,6 @@ use Livewire\Component;
 class TransactionDetailsReport extends Component
 {   
 
-    
 
     public function render()
     {

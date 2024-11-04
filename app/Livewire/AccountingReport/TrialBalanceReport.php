@@ -22,7 +22,7 @@ class TrialBalanceReport extends Component
     public $accountList = [];
     public array $selectedAccount = [];
     public $accountTypeList = [];
-    public $selectedAccountType = [];
+    public array $selectedAccountType = [];
     public $dataList = [];
     private $accountJournalServices;
     private $dateServices;

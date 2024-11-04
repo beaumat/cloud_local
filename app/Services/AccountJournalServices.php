@@ -123,8 +123,7 @@ class AccountJournalServices
         WHEN o.`ID` = 71    THEN ( select item.DESCRIPTION from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  join  item on item.ID = build_assembly_items.ITEM_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )    
         WHEN o.`ID` = 72    THEN ( select contact.`PRINT_NAME_AS` from tax_credit left join contact on contact.ID = tax_credit.CUSTOMER_ID where tax_credit.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 73    THEN ( select contact.`PRINT_NAME_AS` from tax_credit_invoices join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  left join contact on contact.ID = tax_credit.CUSTOMER_ID where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
-      
-      
+       
         WHEN o.`ID` = 113    THEN ( select contact.`PRINT_NAME_AS` from pull_out  left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114    THEN ( select contact.`PRINT_NAME_AS` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
 
