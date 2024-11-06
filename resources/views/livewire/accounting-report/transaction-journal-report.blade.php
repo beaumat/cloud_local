@@ -35,8 +35,12 @@
                                     </div>
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
-                                            <button class="btn btn-danger btn-xs w-25"
-                                                wire:click='generate()'>Generate</button>
+                                            <button class="btn btn-danger btn-xs w-25" wire:click='generate()'>
+                                                Generate
+                                            </button>
+                                            <button class="btn btn-success btn-xs w-25" wire:click='export()'>
+                                                Export
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +109,6 @@
                                             if ($list->DEBIT > 0) {
                                                 $TOTAL_DEBIT = $TOTAL_DEBIT + $list->DEBIT ?? 0;
                                             }
-
                                         @endphp
                                     </td>
                                     <td class="text-right">

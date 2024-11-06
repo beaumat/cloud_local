@@ -2,6 +2,7 @@
 
 namespace App\Livewire\AccountingReport;
 
+use App\Exports\TransactionJournalReportExport;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\DateServices;
@@ -9,7 +10,7 @@ use App\Services\LocationServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Transaction Journal Report')]
 class TransactionJournalReport extends Component
@@ -50,8 +51,11 @@ class TransactionJournalReport extends Component
     public function mount()
     {
 
-        $this->DATE_FROM = $this->dateServices->NowDate();
+
         $this->DATE_TO = $this->dateServices->NowDate();
+        $this->DATE_FROM = $this->dateServices->GetFirstDay_Month($this->DATE_TO);
+
+
         $this->LOCATION_ID =  $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
         $this->accountList = $this->accountServices->getAccount(false);
@@ -70,6 +74,22 @@ class TransactionJournalReport extends Component
         );
     }
 
+    public function export()
+    {
+        $dataExport = $this->accountJournalServices->getTransactionJournal(
+            $this->DATE_FROM,
+            $this->DATE_TO,
+            $this->LOCATION_ID,
+            $this->selectedAccount,
+            $this->selectedAccountType
+        );
+
+
+
+        return Excel::download(new TransactionJournalReportExport(
+            $dataExport
+        ), 'transaction-journal-export.xlsx');
+    }
 
     public function render()
     {
