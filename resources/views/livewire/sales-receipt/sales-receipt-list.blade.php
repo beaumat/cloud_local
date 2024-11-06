@@ -65,6 +65,7 @@
                                         <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
                                         <th>Customer</th>
+                                        <th class="col-2">Deposit to Bank Account</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Amount</th>
                                         <th class="col-1">Tax</th>
@@ -90,6 +91,7 @@
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
+                                            <td>{{ $list->ACCOUNT_NAME }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td> {{ $list->TAX_NAME }}</td>

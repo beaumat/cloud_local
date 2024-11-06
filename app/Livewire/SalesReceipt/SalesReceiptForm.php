@@ -26,7 +26,6 @@ use Livewire\Component;
 class SalesReceiptForm extends Component
 {
 
-
     public bool $BANK_MODE = true;
     public bool $IS_MODAL = false;
     public int $PATIENT_PAYMENT_ID;

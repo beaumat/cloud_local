@@ -168,9 +168,11 @@ class SalesReceiptServices
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
                 's.DESCRIPTION as STATUS',
-                'sales_receipt.STATUS as STATUS_ID'
+                'sales_receipt.STATUS as STATUS_ID',
+                'a.NAME as ACCOUNT_NAME'
             ])
             ->join('contact as c', 'c.ID', '=', 'sales_receipt.CUSTOMER_ID')
+            ->leftJoin('account as a','a.ID','=','sales_receipt.UNDEPOSITED_FUNDS_ACCOUNT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'sales_receipt.LOCATION_ID');
                 if ($locationId > 0) {
