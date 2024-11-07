@@ -22,7 +22,7 @@
                 </a>
             </li>
         @endcan
-        @if(Auth()->user()->can('company.build-assembly.view'))
+        @if (Auth()->user()->can('company.build-assembly.view'))
             <li class="nav-item">
                 <a href="{{ route('companybuild_assembly') }}"
                     class="nav-link {{ request()->is('company/build-assembly*') ? 'text-warning font-weight-bold' : '' }}">
@@ -40,13 +40,13 @@
                 </a>
             </li>
         @endcan
-        
+
         @can('company.general-journal.view')
             <li class="nav-item">
                 <a href="{{ route('companygeneral_journal') }}"
                     class="nav-link  {{ request()->is('company/general-journal*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fa fa-table nav-icon"></i>
-                    <p>General Journal</p>
+                    <p>General Journal <i>(Manual)</i></p>
                 </a>
             </li>
         @endcan

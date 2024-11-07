@@ -29,6 +29,12 @@ class DateServices
         $m  = $date->format('m');
         return "$y-$m-01";
     }
+    public function GetLastDay_Month(string $BASE_DATE): string
+    {
+        $date = new DateTime($BASE_DATE);
+        $date->modify('last day of this month');
+        return $date->format('Y-m-d');
+    }
     public function NowDate()
     {
         // '2024-10-29'

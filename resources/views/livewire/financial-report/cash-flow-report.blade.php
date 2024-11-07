@@ -1,7 +1,4 @@
-@php
-    use App\Services\CashFlowServices;
 
-@endphp
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -28,20 +25,40 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="row">
+                                    <div class="col-3 text-right">
+                                        <label>Year:</label>
+                                    </div>
                                     <div class="col-3">
-                                        <livewire:number-input name="YEAR" titleName="Year" wire:model.live='YEAR'
-                                            :isDisabled="false" />
+                                        <input type="number" class="form-control form-control-sm" wire:model='YEAR' />
                                     </div>
-                                    <div class="col-md-9">
-                                        {{-- <livewire:date-input name="DATE_TO" titleName="Date End"
-                                            wire:model.live='DATE_TO' :isDisabled="false" /> --}}
+                                    <div class="col-3">
+                                        <button wire:click='reload()'
+                                            class="btn btn-xs btn-warning w-100 ">Reload</button>
                                     </div>
-                                    <div class='col-6 mt-1'>
-                                        <div class="form-group">
-                                            <button class="btn btn-danger btn-xs w-25"
-                                                wire:click='generate()'>Generate</button>
-                                        </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-3 text-right">
+                                        <label>Month:</label>
                                     </div>
+                                    <div class="col-3">
+                                        <select class="form-control form-control-sm" name="MONTH"
+                                            wire:model.live='MONTH'>
+                                            @foreach ($monthList as $item)
+                                                <option value="{{ $item['ID'] }}"> {{ $item['NAME'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <button wire:click='generate()'
+                                            class="btn btn-xs btn-primary w-100">Generate</button>
+                                    </div>
+                                    <div class='col-3'>
+                                        <button wire:click='ExportGenerate()'
+                                            class="btn btn-xs btn-success w-100">Export</button>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -50,8 +67,6 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <label class="text-xs mt-1">Modify</label> <input wire:model.live='modify'
-                                            type='checkbox' class="text-xs" />
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">
@@ -73,128 +88,51 @@
                         </div>
                     </div>
                 </div>
-                <div class=" col-12 col-sm-12 col-md-12  col-lg-8" style="max-height: 80vh; overflow-y: auto;">
-                    <table class="table table-sm  table-hover ">
-                        <thead class="bg-sky h1">
+                <div class=" col-12 col-sm-12 col-md-12  col-lg-6" >
+                    <table class="table table-bordered table-hover ">
+                        <thead class="bg-sky">
                             <tr>
-                                <th>Statement of Cash Flows</th>
-                                <th class="text-right">Amount</th>
+                                <th class="col-8">Statement of Cash Flows</th>
+                                <th class="col-4 text-right">Amount</th>
                             </tr>
                         </thead>
                         <tbody class="h1">
-                            {{-- Header --}}
-                            @foreach (CashFlowServices::GetHeaderList($LOCATION_ID) as $hlist)
-                                <tr class="font-weight-bold">
-                                    @php
-                                        $TOTAL_AFTER_NEW_HEADER = $TOTAL_AFTER_NEW_HEADER + $AMOUNT;
-                                        $AMOUNT = 0;
-                                    @endphp
-                                    <td ><b class="text-primary">{{ $hlist->NAME }}</b>
-                                        @if ($modify)
-                                            <button wire:click='editHeader({{ $hlist->ID }})'
-                                                class="btn btn-xs btn-success">
-                                                <i class="fa fa-wrench" aria-hidden="true"></i>
-                                            </button>
-                                            <button class="btn btn-xs btn-primary"
-                                                wire:click='clickDetails({{ $hlist->ID }})'>
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        @endif
-                                    </td>
-                                    <td class="text-info text-right">
-                                        {{-- Header AMOUNT --}}
-                                        @php
-                                            $tempTotal = CashFlowServices::getHeaderAmount(
-                                                $hlist->ID,
-                                                $TOTAL_AFTER_NEW_HEADER,
-                                            );
-                                        @endphp
-                                        @if ($tempTotal != 0)
-                                            <strong class="text-md">     {{ number_format($tempTotal, 2) }}</strong>
-                                        @endif
-                                    </td>
-                                </tr>
-                                {{-- Details --}}
-                                @foreach (CashFlowServices::GetDetailList($hlist->ID) as $dList)
-                                    <tr class="font-weight-normal">
-                                        <td class="px-2">{{ $dList->NAME }}
-                                            @if ($modify)
-                                                <button wire:click='editDetails({{ $dList->ID }})'
-                                                    class="btn btn-xs btn-primary">
-                                                    <i class="fa fa-wrench" aria-hidden="true"></i>
-                                                </button>
-                                                <button class="btn btn-xs btn-warning"
-                                                    wire:click='clickKey({{ $dList->ID }})'>
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            @endif
-                                        </td>
-                                        <td class="text-right">
-                                            @php
-                                                $tempVar = CashFlowServices::getDetailsAmount(
-                                                    $dList->ID,
-                                                    $YEAR,
-                                                    $LOCATION_ID,
-                                                );
-                                                $AMOUNT = $AMOUNT + $tempVar;
-                                            @endphp {{-- Detail AMOUNT --}}
-                                            @if ($dList->IS_TOTAL)
-                                               <b>{{ number_format($AMOUNT, 2) }}</b> 
-                                            @else
-                                                @if ($tempVar != 0)
-                                                    {{ number_format($tempVar, 2) }}
-                                                @endif
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    {{-- key Account --}}
-                                    @foreach (CashFlowServices::GetKeyList($dList->ID) as $keyList)
-                                        <tr class="font-weight-light">
-                                            <td class="px-4">
-                                                {{ $keyList->NAME }}
-                                                @if ($modify)
-                                                    <button wire:click='editKey({{ $keyList->ID }})'
-                                                        class="btn btn-xs btn-warning">
-                                                        <i class="fa fa-wrench" aria-hidden="true"></i>
-                                                    </button>
-                                                @endif
-                                            </td>
-                                            <td class="text-right">
-                                                @php
-                                                    $tempKey = CashFlowServices::getKeyAmount(
-                                                        $keyList->ID,
-                                                        $YEAR,
-                                                        $LOCATION_ID,
-                                                    );
 
-                                                    $AMOUNT = $AMOUNT + $tempKey;
-                                                @endphp
-                                                @if ($tempKey != 0)
-                                                    {{ number_format($tempKey, 2) }}
-                                                @endif
-                                                {{-- Key AMOUNT --}}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endforeach
-                            @endforeach
-                            @if ($modify)
+                            @foreach ($dataList as $list)
                                 <tr>
-                                    <td>
-                                        <button wire:click='clickHeader()' class="btn btn-xs btn-success">
-                                            <i class="fa fa-plus" aria-hidden="true"></i> Header
-                                        </button>
-                                    </td>
-                                    <td></td>
+                                    @if ($list['name'] == '')
+                                        <td><br /></td>
+                                        <td><br /></td>
+                                    @else
+                                        @if ($list['underline'])
+                                            <td class="text-xs {{ $list['class'] }}">
+                                                <div class="top-line2">
+                                                    {{ $list['name'] }}
+                                                </div>
+                                            </td>
+                                            <td class="text-xs text-right">
+                                                <div class="top-line2">
+                                                    {{ $list['amount'] }}
+                                                </div>
+                                            </td>
+                                        @else
+                                            <td class="text-xs {{ $list['class'] }}">
+                                                {{ $list['name'] }}
+                                            </td>
+                                            <td class="text-xs text-right">
+                                                {{ $list['amount'] }}
+                                            </td>
+                                        @endif
+                                    @endif
                                 </tr>
-                            @endif
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </section>
-    @livewire('CashFlow.KeyModal')
+    {{-- @livewire('CashFlow.KeyModal')
     @livewire('CashFlow.DetailsModal')
-    @livewire('CashFlow.HeaderModal')
+    @livewire('CashFlow.HeaderModal') --}}
 </div>

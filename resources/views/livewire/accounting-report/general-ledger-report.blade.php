@@ -50,7 +50,6 @@
                                         <livewire:select-checkbox name="ACCOUNT_TYPE_ID" titleName="Filter Account Type"
                                             :options="$accountTypeList" :zero="true" :isDisabled=false
                                             wire:model='selectedAccountType' />
-
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">

@@ -28,11 +28,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             @if ($Modify)
-                                                <livewire:select-option name="CONTACT_ID" titleName="Contact Name"
+                                                <livewire:select-option name="CONTACT_ID" titleName="Contact (optional)"
                                                     :options="$contactList" :zero="true" :isDisabled=false
                                                     wire:model='CONTACT_ID' />
                                             @else
-                                                <livewire:select-option name="CONTACT_ID" titleName="Contact Contact"
+                                                <livewire:select-option name="CONTACT_ID" titleName="Contact (optional)"
                                                     :options="$contactList" :zero="true" :isDisabled=true
                                                     wire:model='CONTACT_ID' />
                                             @endif
