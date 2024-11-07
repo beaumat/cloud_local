@@ -136,4 +136,13 @@ class PatientPaymentList extends Component
 
         return view('livewire.patient-payment.patient-payment-list', ['dataList' => $dataList]);
     }
+    public function updatedlocationid()
+    {
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
 }
