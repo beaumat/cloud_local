@@ -40,15 +40,26 @@ class BillPaymentList extends Component
     public function delete(int $id)
     {
 
-        try {
-            DB::beginTransaction();
-            $this->billPaymentServices->Delete($id);
-            session()->flash('message', 'Successfully deleted.');
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
+        $data = $this->billPaymentServices->Get($id);
+        if ($data) {
+
+            if ($data->STATUS == 0) {
+
+                try {
+                    DB::beginTransaction();
+                    $this->billPaymentServices->Delete($id);
+                    session()->flash('message', 'Successfully deleted.');
+                    DB::commit();
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $errorMessage = 'Error occurred: ' . $e->getMessage();
+                    session()->flash('error', $errorMessage);
+                }
+
+                return;
+            }
+
+            session()->flash('error', 'Invalid. this file cannot be deleted.');
         }
     }
     #[On('clear-alert')]

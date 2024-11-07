@@ -109,8 +109,12 @@ class BillPaymentServices
     }
     public function Delete(int $ID)
     {
-        CheckBills::where('CHECK_ID', $ID)->delete();
-        Check::where('ID', $ID)->where('TYPE', '=', $this->CHECK_TYPE_ID)->delete();
+        CheckBills::where('CHECK_ID', '=', $ID)
+            ->delete();
+            
+        Check::where('ID', $ID)
+            ->where('TYPE', '=', $this->CHECK_TYPE_ID)
+            ->delete();
     }
     public function Search($search, $locationId, $perPage)
     {

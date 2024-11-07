@@ -38,13 +38,24 @@ class StockTransferList extends Component
     }
     public function delete($id)
     {
-        try {
-            $this->stockTransferServices->Delete($id);
-            session()->flash('message', 'Successfully deleted.');
 
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
+        $data = $this->stockTransferServices->Get($id);
+
+        if ($data) {
+
+            if ($data->STATUS ==  0) {
+                
+                try {
+                    $this->stockTransferServices->Delete($id);
+                    session()->flash('message', 'Successfully deleted.');
+                } catch (\Exception $e) {
+                    $errorMessage = 'Error occurred: ' . $e->getMessage();
+                    session()->flash('error', $errorMessage);
+                }
+                return;
+            }
+
+            session()->flash('error', 'Invalid. this file cannot be deleted.');
         }
     }
     public function render()

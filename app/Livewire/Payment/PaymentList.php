@@ -18,7 +18,7 @@ class PaymentList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public int $perPage = 15;
+    public int $perPage = 30;
     public int $locationid;
     public $locationList = [];
     private $paymentServices;
@@ -43,15 +43,20 @@ class PaymentList extends Component
     }
     public function delete(int $id)
     {
-
         try {
             $data = $this->paymentServices->get($id);
             if ($data) {
-                DB::beginTransaction();
-                $this->uploadServices->RemoveIfExists($data->FILE_PATH);
-                $this->paymentServices->Delete($data->ID);
-                session()->flash('message', 'Successfully deleted.');
-                DB::commit();
+
+                if ($data->STATUS == 0) {
+                    DB::beginTransaction();
+                    $this->uploadServices->RemoveIfExists($data->FILE_PATH);
+                    $this->paymentServices->Delete($data->ID);
+                    session()->flash('message', 'Successfully deleted.');
+                    DB::commit();
+                    return;
+                }
+
+                session()->flash('error', 'Invalid. this file cannot be deleted.');
             }
         } catch (\Exception $e) {
             DB::rollBack();

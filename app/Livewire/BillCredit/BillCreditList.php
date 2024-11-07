@@ -15,7 +15,7 @@ use Livewire\WithPagination;
 class BillCreditList extends Component
 {
     use WithPagination;
-    public int $perPage = 15;
+    public int $perPage = 30;
     protected $paginationTheme = 'bootstrap';
 
     public $search = '';
@@ -42,7 +42,6 @@ class BillCreditList extends Component
     }
     public function updatedlocationid()
     {
-
         try {
             $this->userServices->SwapLocation($this->locationid);
         } catch (\Exception $e) {
@@ -52,15 +51,24 @@ class BillCreditList extends Component
     }
     public function delete(int $ID)
     {
-        try {
-            DB::beginTransaction();
-            $this->billCreditServices->Delete($ID);
-            DB::commit();
-            session()->flash('message', 'Successfully deleted.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
+        $data = $this->billCreditServices->get($ID);
+        if ($data) {
+            if ($data->STATUS == 0) {
+                try {
+                    DB::beginTransaction();
+                    $this->billCreditServices->Delete($ID);
+                    DB::commit();
+                    session()->flash('message', 'Successfully deleted.');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $errorMessage = 'Error occurred: ' . $e->getMessage();
+                    session()->flash('error', $errorMessage);
+                }
+
+                return;
+            }
+
+            session()->flash('error', 'Invalid. this file cannot be deleted.');
         }
     }
     public function render()

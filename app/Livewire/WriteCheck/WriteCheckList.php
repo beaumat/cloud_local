@@ -40,16 +40,26 @@ class WriteCheckList extends Component
     }
     public function delete(int $id)
     {
+        $data  = $this->writeCheckServices->Get($id);
 
-        try {
-            DB::beginTransaction();
-            $this->writeCheckServices->Delete($id);
-            session()->flash('message', 'Successfully deleted.');
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
+        if ($data) {
+
+            if ($data->STATUS == 0) {
+                try {
+
+                    DB::beginTransaction();
+                    $this->writeCheckServices->Delete($id);
+                    session()->flash('message', 'Successfully deleted.');
+                    DB::commit();
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $errorMessage = 'Error occurred: ' . $e->getMessage();
+                    session()->flash('error', $errorMessage);
+                }
+
+                return;
+            }
+            session()->flash('error', 'Invalid. this file cannot be deleted.');
         }
     }
     #[On('clear-alert')]
@@ -62,12 +72,10 @@ class WriteCheckList extends Component
     public function render()
     {
         $dataList = $this->writeCheckServices->Search($this->search, $this->locationid, $this->perPage);
-
-        return view('livewire.write-check.write-check-list',['dataList' => $dataList]);
+        return view('livewire.write-check.write-check-list', ['dataList' => $dataList]);
     }
     public function updatedlocationid()
     {
-
         try {
             $this->userServices->SwapLocation($this->locationid);
         } catch (\Exception $e) {
