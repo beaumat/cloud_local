@@ -37,6 +37,10 @@ class GeneralJournalList extends Component
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
+    public function updatedlocationid()
+    {
+        $this->userServices->SwapLocation($this->locationid);
+    }
     public function delete($id)
     {
         try {
