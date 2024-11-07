@@ -70,9 +70,16 @@ class PatientList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+
     public function updatedlocationid()
     {
         $this->doctorid = 0;
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function export()
     {

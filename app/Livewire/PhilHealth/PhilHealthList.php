@@ -42,7 +42,16 @@ class PhilHealthList extends Component
     {
         $this->show = true;
     }
+    public function updatedlocationid()
+    {
 
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function getARForm(int $ID)
     {
         $data = [

@@ -50,6 +50,16 @@ class GeneralLedgerReport extends Component
         $this->userServices = $userServices;
         $this->accountServices = $accountServices;
     }
+    public function updatedlocationid()
+    {
+
+        try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function mount()
     {
         $this->DATE_FROM = $this->dateServices->NowDate();

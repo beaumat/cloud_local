@@ -173,4 +173,14 @@ class InvoiceList extends Component
 
         return view('livewire.invoice.invoice-list', ['dataList' => $dataList]);
     }
+    public function updatedlocationid()
+    {   
+        try {
+            $this->userServices->SwapLocation($this->locationid );
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+ 
+    }
 }

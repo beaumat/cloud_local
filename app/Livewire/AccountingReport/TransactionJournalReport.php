@@ -73,7 +73,16 @@ class TransactionJournalReport extends Component
             $this->selectedAccountType
         );
     }
+    public function updatedlocationid()
+    {
 
+        try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function export()
     {
         $dataExport = $this->accountJournalServices->getTransactionJournal(

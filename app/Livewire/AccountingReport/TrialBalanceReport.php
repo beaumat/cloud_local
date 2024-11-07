@@ -52,7 +52,16 @@ class TrialBalanceReport extends Component
         $this->accountList = $this->accountServices->getAccount(false);
         $this->accountTypeList = $this->accountServices->GetTypeList();
     }
+    public function updatedlocationid()
+    {
 
+        try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function generate()
     {
 

@@ -71,4 +71,14 @@ class PaymentList extends Component
         $dataList = $this->paymentServices->Search($this->search, $this->locationid, $this->perPage);
         return view('livewire.payment.payment-list', ['dataList' => $dataList]);
     }
+    public function updatedlocationid()
+    {
+
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
 }

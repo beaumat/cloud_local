@@ -38,8 +38,14 @@ class GeneralJournalList extends Component
         $this->locationid = $this->userServices->getLocationDefault();
     }
     public function updatedlocationid()
-    {
-        $this->userServices->SwapLocation($this->locationid);
+    {   
+        try {
+            $this->userServices->SwapLocation($this->locationid );
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+ 
     }
     public function delete($id)
     {

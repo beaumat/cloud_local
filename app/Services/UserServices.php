@@ -158,6 +158,11 @@ class UserServices
 
     public function SwapLocation(int $LOCATION_ID)
     {
+        if ($LOCATION_ID == 0) {
+            return;
+        }
+
+        
         $id = Auth::user()->id;
         User::where('id', '=', $id)
             ->update([

@@ -53,4 +53,14 @@ class InventoryAdjustmentList extends Component
         $dataList = $this->inventoryAdjustmentServices->Search($this->search, $this->locationid, $this->perPage);
         return view('livewire.inventory-adjustment.inventory-adjustment-list', ['dataList' => $dataList]);
     }
+    public function updatedlocationid()
+    {   
+        try {
+            $this->userServices->SwapLocation($this->locationid );
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+ 
+    }
 }
