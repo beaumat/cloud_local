@@ -2,18 +2,11 @@
 
 namespace App\Services;
 
-use DateTime;
 use Illuminate\Support\Facades\DB;
 
 class FinancialStatementServices
 {
-    private static function  getIncomeStatementAccountByType(
-        string $dateFrom,
-        string $dateTo,
-        int $LOCATION_ID,
-        int $accountType,
-        bool $isCreditIncrease = false
-    ) {
+    private  function  getIncomeStatementAccountByType( string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false ) {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
         $sql = "sum( if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) -  if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT,0) ) as AMOUNT";
@@ -52,7 +45,6 @@ class FinancialStatementServices
             ->first()
             ->AMOUNT;
 
-        // Return the result or 0 if no data found
         return (float)   $result;
     }
     public static function  getIncomeStatementAccountByTypeSumArray(string $dateFrom, string $dateTo, int $LOCATION_ID, array $accountType = [], bool $isCreditIncrease = false): float
@@ -169,7 +161,7 @@ class FinancialStatementServices
     }
     public  function ExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return self::getIncomeStatementAccountByType(
+        return $this->getIncomeStatementAccountByType(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -245,7 +237,7 @@ class FinancialStatementServices
         $OtherExpenseSum = $this->SumOtherExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
 
         $net_other_income = $OtherIncomeSum - $OtherExpenseSum;
-    
+
         $net_income = $operating_income + $net_other_income;
 
         return $net_income;

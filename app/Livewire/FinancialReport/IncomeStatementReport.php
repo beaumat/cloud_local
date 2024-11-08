@@ -58,8 +58,9 @@ class IncomeStatementReport extends Component
     }
     public function mount()
     {
-        $this->DATE_FROM = $this->userServices->getTransactionDateDefault();
+
         $this->DATE_TO = $this->userServices->getTransactionDateDefault();
+        $this->DATE_FROM = $this->dateServices->GetFirstDay_Month($this->DATE_TO);
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
     }

@@ -12,7 +12,7 @@
                 <a href="{{ route('reportsfinancialincome_statement_report') }}"
                     class="nav-link {{ request()->is('reports/financial/income-statement*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fa fa-print nav-icon"></i>
-                    <p>Income Statement</p>
+                    <p>Profit and Loss</p>
                 </a>
             </li>
         @endcan

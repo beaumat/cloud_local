@@ -1,3 +1,7 @@
+@php
+    use App\Services\NumberServices;
+@endphp
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -95,7 +99,7 @@
                                                 $amount = $list->AMOUNT;
                                                 $sub_total = $sub_total + $amount;
                                             @endphp
-                                            {{ number_format($amount, 2) }}
+                                            {{ NumberServices::AcctFormat($amount) }}
                                         </td>
                                         <td></td>
 
@@ -108,7 +112,7 @@
                                         </div>
                                     </td>
                                     <td class="text-right text-primary">
-                                        {{ number_format($sub_total, 2) }}
+                                        {{ NumberServices::AcctFormat($sub_total) }}
                                         @php
                                             $total_income = $sub_total;
                                         @endphp
@@ -133,7 +137,7 @@
                                                 $amount = $list->AMOUNT;
                                                 $sub_total = $sub_total + $amount;
                                             @endphp
-                                            {{ number_format($amount, 2) }}
+                                            {{ NumberServices::AcctFormat($amount) }}
                                         </td>
                                         <td></td>
                                     </tr>
@@ -145,8 +149,7 @@
                                         </div>
                                     </td>
                                     <td class="text-right text-primary">
-                                        {{ number_format($sub_total, 2) }}
-
+                                        {{ NumberServices::AcctFormat($sub_total) }}
                                         @php
                                             $total_cogs = $sub_total;
                                         @endphp
@@ -157,66 +160,66 @@
                             @php
                                 $gross_profit = 0;
                             @endphp
-                        
-                                <tr>
-                                    <td class="text-sm text-danger">Gross Profit</td>
-                                    <td></td>
-                                    <td class="text-right text-info text-sm text-danger">
-                                        <div class="border-top border-secondary">
-                                            @php
-                                                $gross_profit = $total_income - $total_cogs;
-                                            @endphp
-                                            {{ number_format($gross_profit, 2) }}
-                                        </div>
-                                    </td>
-                                </tr>
-                                {{-- end of Gross Profit --}}
-                
+
+                            <tr>
+                                <td class="text-sm text-danger">Gross Profit</td>
+                                <td></td>
+                                <td class="text-right text-info text-sm text-danger">
+                                    <div class="border-top border-secondary">
+                                        @php
+                                            $gross_profit = $total_income - $total_cogs;
+                                        @endphp
+                                        {{ NumberServices::AcctFormat($gross_profit) }}
+                                    </div>
+                                </td>
+                            </tr>
+                            {{-- end of Gross Profit --}}
+
                             <tr>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
-                         
-                                <tr>
-                                    <td class="text-primary">Operating Expenses</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                @php
-                                    $sub_total = 0;
-                                @endphp
-                                @foreach ($expensesList as $list)
-                                    <tr>
-                                        <td class="px-4">{{ $list->ACCOUNT_TITLE }}</td>
-                                        <td class="text-right">
-                                            @php
-                                                $amount = $list->AMOUNT;
-                                                $sub_total = $sub_total + $amount;
-                                            @endphp
-                                            {{ number_format($amount, 2) }}
-                                        </td>
 
-                                        <td></td>
-                                    </tr>
-                                @endforeach
+                            <tr>
+                                <td class="text-primary">Operating Expenses</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @php
+                                $sub_total = 0;
+                            @endphp
+                            @foreach ($expensesList as $list)
                                 <tr>
-                                    <td class="text-primary px-2">Total Operating Expenses</td>
-                                    <td>
-                                        <div class="border-top border-secondary">
-                                        </div>
-                                    </td>
-                                    <td class="text-right text-primary">
-                                        {{ number_format($sub_total, 2) }}
+                                    <td class="px-4">{{ $list->ACCOUNT_TITLE }}</td>
+                                    <td class="text-right">
                                         @php
-                                            $total_expenses = $sub_total;
+                                            $amount = $list->AMOUNT;
+                                            $sub_total = $sub_total + $amount;
                                         @endphp
+                                        {{ NumberServices::AcctFormat($amount) }}
                                     </td>
+
+                                    <td></td>
                                 </tr>
-               
+                            @endforeach
+                            <tr>
+                                <td class="text-primary px-2">Total Operating Expenses</td>
+                                <td>
+                                    <div class="border-top border-secondary">
+                                    </div>
+                                </td>
+                                <td class="text-right text-primary">
+                                    {{ NumberServices::AcctFormat($sub_total) }}
+                                    @php
+                                        $total_expenses = $sub_total;
+                                    @endphp
+                                </td>
+                            </tr>
+
                             @php
                                 $operating_income = $gross_profit - $total_expenses;
-                          
+
                             @endphp
                             @if ($total_expenses > 0)
                                 <tr>
@@ -225,7 +228,7 @@
                                     <td class="text-right text-info text-sm text-danger">
                                         <div class="border-top border-secondary">
 
-                                            {{ number_format($operating_income, 2) }}
+                                            {{ NumberServices::AcctFormat($operating_income) }}
 
                                         </div>
                                     </td>
@@ -257,7 +260,7 @@
                                                 $amount = $list->AMOUNT;
                                                 $sub_total = $sub_total + $amount;
                                             @endphp
-                                            {{ number_format($amount, 2) }}
+                                            {{ NumberServices::AcctFormat($amount) }}
                                         </td>
                                     <tr></tr>
                                     </tr>
@@ -270,7 +273,7 @@
                                         </div>
                                     </td>
                                     <td class="text-right text-info">
-                                        {{ number_format($sub_total, 2) }}
+                                        {{ NumberServices::AcctFormat($sub_total) }}
                                         @php
                                             $total_other_income = $sub_total;
                                         @endphp
@@ -298,7 +301,7 @@
                                                 $amount = $list->AMOUNT;
                                                 $sub_total = $sub_total + $amount;
                                             @endphp
-                                            {{ number_format($amount, 2) }}
+                                            {{ NumberServices::AcctFormat($amount) }}
                                         </td>
                                     <tr></tr>
                                     </tr>
@@ -310,7 +313,7 @@
                                         </div>
                                     </td>
                                     <td class="text-right text-info">
-                                        {{ number_format($sub_total, 2) }}
+                                        {{ NumberServices::AcctFormat($sub_total) }}
                                         @php
                                             $total_other_expenses = $sub_total;
                                         @endphp
@@ -328,7 +331,7 @@
                                     <td></td>
                                     <td class="text-right text-info text-sm text-danger">
                                         <div class="border-top border-secondary">
-                                            {{ number_format($net_other_income, 2) }}
+                                            {{ NumberServices::AcctFormat($net_other_income) }}
                                         </div>
                                     </td>
                                 </tr>
@@ -351,7 +354,7 @@
                                     <td class="text-right text-info text-sm">
                                         <div class="border-top border-secondary">
 
-                                            {{ number_format($net_income, 2) }}
+                                            {{ NumberServices::AcctFormat($net_income) }}
                                         </div>
                                     </td>
                                 </tr>
