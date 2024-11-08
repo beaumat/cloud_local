@@ -92,7 +92,7 @@
                                         <td class="px-4">{{ $list->ACCOUNT_TITLE }}</td>
                                         <td class="text-right">
                                             @php
-                                                $amount = $list->AMOUNT >= 0 ? $list->AMOUNT : $list->AMOUNT * -1;
+                                                $amount = $list->AMOUNT;
                                                 $sub_total = $sub_total + $amount;
                                             @endphp
                                             {{ number_format($amount, 2) }}
@@ -130,7 +130,7 @@
                                         <td class="px-4">{{ $list->ACCOUNT_TITLE }}</td>
                                         <td class="text-right">
                                             @php
-                                                $amount = $list->AMOUNT >= 0 ? $list->AMOUNT : $list->AMOUNT * -1;
+                                                $amount = $list->AMOUNT;
                                                 $sub_total = $sub_total + $amount;
                                             @endphp
                                             {{ number_format($amount, 2) }}
@@ -157,7 +157,7 @@
                             @php
                                 $gross_profit = 0;
                             @endphp
-                            @if ($total_income - $total_cogs > 0)
+                        
                                 <tr>
                                     <td class="text-sm text-danger">Gross Profit</td>
                                     <td></td>
@@ -171,14 +171,13 @@
                                     </td>
                                 </tr>
                                 {{-- end of Gross Profit --}}
-                            @endif
-
+                
                             <tr>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
-                            @if (count($expensesList) > 0)
+                         
                                 <tr>
                                     <td class="text-primary">Operating Expenses</td>
                                     <td></td>
@@ -192,7 +191,7 @@
                                         <td class="px-4">{{ $list->ACCOUNT_TITLE }}</td>
                                         <td class="text-right">
                                             @php
-                                                $amount = $list->AMOUNT >= 0 ? $list->AMOUNT : $list->AMOUNT * -1;
+                                                $amount = $list->AMOUNT;
                                                 $sub_total = $sub_total + $amount;
                                             @endphp
                                             {{ number_format($amount, 2) }}
@@ -214,10 +213,10 @@
                                         @endphp
                                     </td>
                                 </tr>
-                            @endif
+               
                             @php
                                 $operating_income = $gross_profit - $total_expenses;
-
+                          
                             @endphp
                             @if ($total_expenses > 0)
                                 <tr>
@@ -255,7 +254,7 @@
                                         <td class="px-4">{{ $list->ACCOUNT_TITLE }}</td>
                                         <td class="text-right">
                                             @php
-                                                $amount = $list->AMOUNT >= 0 ? $list->AMOUNT : $list->AMOUNT * -1;
+                                                $amount = $list->AMOUNT;
                                                 $sub_total = $sub_total + $amount;
                                             @endphp
                                             {{ number_format($amount, 2) }}
@@ -296,7 +295,7 @@
                                         <td class="px-4">{{ $list->ACCOUNT_TITLE }}</td>
                                         <td class="text-right">
                                             @php
-                                                $amount = $list->AMOUNT >= 0 ? $list->AMOUNT : $list->AMOUNT * -1;
+                                                $amount = $list->AMOUNT;
                                                 $sub_total = $sub_total + $amount;
                                             @endphp
                                             {{ number_format($amount, 2) }}
@@ -320,9 +319,9 @@
                                 </tr>
                             @endif
                             @php
-
                                 $net_other_income = $total_other_income - $total_other_expenses;
                             @endphp
+
                             @if ($net_other_income > 0)
                                 <tr>
                                     <td>Net Other Income/Expenses</td>
@@ -342,7 +341,7 @@
                             </tr>
 
                             @php
-                                $net_income = 0;
+                                $net_income = $operating_income + $net_other_income;
                             @endphp
 
                             @if ($operating_income + $net_other_income > 0)
@@ -351,9 +350,7 @@
                                     <td></td>
                                     <td class="text-right text-info text-sm">
                                         <div class="border-top border-secondary">
-                                            @php
-                                                $net_income = $operating_income + $net_other_income;
-                                            @endphp
+
                                             {{ number_format($net_income, 2) }}
                                         </div>
                                     </td>

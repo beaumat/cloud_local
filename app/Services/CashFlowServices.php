@@ -99,56 +99,6 @@ class CashFlowServices
         $result = CashFlowDetails::where('ID', '=', $ID)->first();
         return $result;
     }
-    public static function getDetailsAmount(int $ID, int $YEAR, int $LOCATION_ID): float
-    {
-
-        $dateStart = dateServices::getFirstDayViaYear($YEAR);
-        $dateEnd = dateServices::getLastDayViaYear($YEAR);
-
-        $data = self::GetDetails($ID);
-
-        if ($data) {
-            if ($data->NAME == 'NET INCOME') {
-                return (float) financialStatementServices::getTotalNetIncome($dateStart, $dateEnd, $LOCATION_ID);
-            }
-
-            switch ($data->BASE_ACCOUNT) {
-                case '0':
-                    return (float) financialStatementServices::getIncomeStatementAccountByIDSum(
-                        $dateStart,
-                        $dateEnd,
-                        $LOCATION_ID,
-                        $data->ACCOUNT_KEY,
-                        $data->DEBIT_DEFAULT ? false : true
-                    );
-
-                case '1':
-                    return (float) financialStatementServices::getIncomeStatementAccountByTypeSum(
-                        $dateStart,
-                        $dateEnd,
-                        $LOCATION_ID,
-                        $data->ACCOUNT_KEY,
-                        $data->DEBIT_DEFAULT ? false : true
-                    );
-
-
-                case '2':
-                    # code...
-                    break;
-
-                case '3':
-                    # code...
-                    break;
-
-
-                default:
-                    # code...
-                    break;
-            }
-        }
-
-        return 0;
-    }
     public function StoreDetails(int $CF_HEADER_ID, string $NAME, int $LINE_NO, bool $IS_TOTAL)
     {
         CashFlowDetails::create([
@@ -233,61 +183,5 @@ class CashFlowServices
         return $result;
     }
 
-    public static function getKeyAmount(int $ID, int $YEAR, int $LOCATION_ID)
-    {
-        $dateStart = dateServices::getFirstDayViaYear($YEAR);
-        $dateEnd = dateServices::getLastDayViaYear($YEAR);
 
-        $data = self::GetKey($ID);
-
-        if ($data) {
-            if ($data->NAME == 'NET INCOME') {
-                return (float) financialStatementServices::getTotalNetIncome($dateStart, $dateEnd, $LOCATION_ID);
-            }
-
-            switch ($data->ACCOUNT_BASE) {
-                case '0':
-                    return (float) financialStatementServices::getIncomeStatementAccountByIDSum(
-                        $dateStart,
-                        $dateEnd,
-                        $LOCATION_ID,
-                        $data->ACCOUNT_KEY,
-                        $data->DEBIT_DEFAULT ? false : true
-                    );
-
-                case '1':
-                    return (float) financialStatementServices::getIncomeStatementAccountByTypeSum(
-                        $dateStart,
-                        $dateEnd,
-                        $LOCATION_ID,
-                        $data->ACCOUNT_KEY,
-                        $data->DEBIT_DEFAULT ? false : true
-                    );
-
-
-                case '2':
-                    return (float) financialStatementServices::getIncomeStatementAccountByIDSumArray(
-                        $dateStart,
-                        $dateEnd,
-                        $LOCATION_ID,
-                        [$data->ACCOUNT_KEY],
-                        $data->DEBIT_DEFAULT ? false : true
-                    );
-
-                case '3':
-                    return (float) financialStatementServices::getIncomeStatementAccountByTypeSumArray(
-                        $dateStart,
-                        $dateEnd,
-                        $LOCATION_ID,
-                        [$data->ACCOUNT_KEY],
-                        $data->DEBIT_DEFAULT ? false : true
-                    );
-
-
-                default:
-                    # code...
-                    break;
-            }
-        }
-    }
 }

@@ -7,7 +7,12 @@ use Illuminate\Support\Facades\DB;
 
 class FinancialStatementServices
 {
-    private static function  getIncomeStatementAccountByType( string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false
+    private static function  getIncomeStatementAccountByType(
+        string $dateFrom,
+        string $dateTo,
+        int $LOCATION_ID,
+        int $accountType,
+        bool $isCreditIncrease = false
     ) {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
@@ -28,7 +33,7 @@ class FinancialStatementServices
 
         return $result;
     }
-    public static function  getIncomeStatementAccountByTypeSum(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false): float
+    public function  getIncomeStatementAccountByTypeSum(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false): float
     {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
@@ -130,9 +135,9 @@ class FinancialStatementServices
 
         return $result;
     }
-    public static function SumIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
+    public  function SumIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
-        return self::getIncomeStatementAccountByTypeSum(
+        return $this->getIncomeStatementAccountByTypeSum(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -152,9 +157,9 @@ class FinancialStatementServices
 
         return $result;
     }
-    public static function SumCogsAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
+    public  function SumCogsAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
-        return self::getIncomeStatementAccountByTypeSum(
+        return $this->getIncomeStatementAccountByTypeSum(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -162,7 +167,7 @@ class FinancialStatementServices
             false
         );
     }
-    public static function ExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public  function ExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
         return self::getIncomeStatementAccountByType(
             $dateFrom,
@@ -172,9 +177,9 @@ class FinancialStatementServices
             false
         );
     }
-    public static function SumExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
+    public  function SumExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
-        return self::getIncomeStatementAccountByTypeSum(
+        return $this->getIncomeStatementAccountByTypeSum(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -182,9 +187,9 @@ class FinancialStatementServices
             false
         );
     }
-    public static function OtherIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public  function OtherIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return self::getIncomeStatementAccountByType(
+        return $this->getIncomeStatementAccountByType(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -192,9 +197,9 @@ class FinancialStatementServices
             false
         );
     }
-    public static function SumOtherIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public  function SumOtherIncomeAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return self::getIncomeStatementAccountByTypeSum(
+        return $this->getIncomeStatementAccountByTypeSum(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -202,9 +207,9 @@ class FinancialStatementServices
             false
         );
     }
-    public static function OtherExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public  function OtherExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return self::getIncomeStatementAccountByType(
+        return $this->getIncomeStatementAccountByType(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -212,9 +217,9 @@ class FinancialStatementServices
             false
         );
     }
-    public static function SumOtherExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    public  function SumOtherExpensesAccount(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {
-        return self::getIncomeStatementAccountByTypeSum(
+        return $this->getIncomeStatementAccountByTypeSum(
             $dateFrom,
             $dateTo,
             $LOCATION_ID,
@@ -223,23 +228,24 @@ class FinancialStatementServices
         );
     }
 
-    public  static function getTotalNetIncome(string $dateFrom, string $dateTo, int $LOCATION_ID): float
+    public   function getTotalNetIncome(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
         // Create a DateTime object from the input date string
 
 
-        $IncomeSum = self::SumIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
-        $COGSSum = self::SumCogsAccount($dateFrom, $dateTo, $LOCATION_ID);
-        $gross_profit = $IncomeSum + $COGSSum;
 
-        $ExpenseSum = self::SumExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $IncomeSum = $this->SumIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $COGSSum = $this->SumCogsAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $gross_profit = $IncomeSum - $COGSSum;
+
+        $ExpenseSum = $this->SumExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
         $operating_income = $gross_profit - $ExpenseSum;
 
-        $OtherIncomeSum = self::SumOtherIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
-        $OtherExpenseSum = self::SumOtherExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $OtherIncomeSum = $this->SumOtherIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
+        $OtherExpenseSum = $this->SumOtherExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
 
         $net_other_income = $OtherIncomeSum - $OtherExpenseSum;
-
+    
         $net_income = $operating_income + $net_other_income;
 
         return $net_income;

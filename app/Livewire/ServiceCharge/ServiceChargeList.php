@@ -27,8 +27,12 @@ class ServiceChargeList extends Component
     private $userServices;
     private $serviceChargeServices;
     private $dateServices;
-    public function boot(ServiceChargeServices $serviceChargeServices, LocationServices $locationServices, UserServices $userServices, DateServices $dateServices)
-    {
+    public function boot(
+        ServiceChargeServices $serviceChargeServices,
+        LocationServices $locationServices,
+        UserServices $userServices,
+        DateServices $dateServices
+    ) {
         $this->serviceChargeServices = $serviceChargeServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -59,9 +63,17 @@ class ServiceChargeList extends Component
         session()->forget('error');
     }
     public function render()
-    {   
+    {
         $this->DATE_NOW  = $this->dateServices->NowDate();
-        $dataList = $this->serviceChargeServices->Search($this->search, $this->locationid, $this->perPage, $this->DATE_FROM == '' ?  $this->dateServices->NowDate() : $this->DATE_FROM, $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO);
+        
+        $dataList = $this->serviceChargeServices->Search(
+            $this->search,
+            $this->locationid,
+            $this->perPage,
+            $this->DATE_FROM == '' ?  $this->dateServices->NowDate() : $this->DATE_FROM,
+            $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO
+        );
+
         return view('livewire.service-charge.service-charge-list', ['dataList' => $dataList]);
     }
     public function updatedlocationid()
