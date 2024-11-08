@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('reportsfinancialincome_statement_report') }}"> Profit and Loss </a>
+                        <a href="{{ route('reportsfinancialincome_statement_report') }}"> Profit and Loss  Statement</a>
                     </h5>
                 </div>
                 <div class="col-sm-6">

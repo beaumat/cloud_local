@@ -1,10 +1,13 @@
+@php
+    use App\Services\NumberServices;
+@endphp
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('reportsfinancialbalance_sheet_report') }}"> Balance Sheet Report </a>
+                        <a href="{{ route('reportsfinancialbalance_sheet_report') }}"> Balance Sheet Statement </a>
                     </h5>
                 </div>
                 <div class="col-sm-6">
