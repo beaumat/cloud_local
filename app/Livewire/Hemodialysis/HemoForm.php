@@ -22,11 +22,14 @@ use Livewire\WithFileUploads;
 
 #[Title('Hemodialysis Treatment')]
 class HemoForm extends Component
-{
+{   
+
+
     use WithFileUploads;
     public string $FILE_NAME;
     public string $FILE_PATH;
     public $IMAGE = null;
+    public string $RECORDED_ON;
     public $data;
     public int $ID;
     public bool $PIN_ALLOWED = true;
@@ -118,7 +121,8 @@ class HemoForm extends Component
         $this->EMPLOYEE_NAME = '';
     }
     public function reloadData($data)
-    {
+    {   
+        $this->RECORDED_ON = $data->RECORDED_ON ??'';
         $this->ID = $data->ID;
         $this->DATE = $data->DATE;
         $this->LOCATION_ID = $data->LOCATION_ID;

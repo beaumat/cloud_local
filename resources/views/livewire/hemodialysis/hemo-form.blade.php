@@ -16,12 +16,12 @@
                                         @if ($ID == 0)
                                             Create
                                         @endif
-                                        Hemodialysis Treatment
+                                        Hemodialysis Treatment 
                                     </a>
                                 </div>
                                 <div class="col-4 col-sm-6 text-right">
                                     @if ($ID > 0)
-                                        <i> {{ $STATUS_DESCRIPTION }}</i>
+                                        <i> {{ $STATUS_DESCRIPTION }}  <strong class="text-white"> Created On : {{ $RECORDED_ON  }}</strong></i>
                                     @endif
                                 </div>
                             </div>
