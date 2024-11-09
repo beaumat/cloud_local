@@ -121,4 +121,14 @@ class BalanceSheetReport extends Component
     {
         return view('livewire.financial-report.balance-sheet-report');
     }
+    public function updatedlocationid()
+    {   
+        try {
+            $this->userServices->SwapLocation($this->LOCATION_ID );
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+ 
+    }
 }

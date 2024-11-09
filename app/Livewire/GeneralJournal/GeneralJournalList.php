@@ -38,27 +38,36 @@ class GeneralJournalList extends Component
         $this->locationid = $this->userServices->getLocationDefault();
     }
     public function updatedlocationid()
-    {   
+    {
         try {
-            $this->userServices->SwapLocation($this->locationid );
+            $this->userServices->SwapLocation($this->locationid);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
- 
     }
     public function delete($id)
     {
-        try {
-            DB::beginTransaction();
-            $this->generalJournalServices->Delete($id);
-            DB::commit();
-            session()->flash('message', 'Successfully deleted.');
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
+        $data = $this->generalJournalServices->Get($id);
+
+        if ($data) {
+
+            if ($data->STATUS == 0) {
+                try {
+                    DB::beginTransaction();
+                    $this->generalJournalServices->Delete($id);
+                    DB::commit();
+                    session()->flash('message', 'Successfully deleted.');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $errorMessage = 'Error occurred: ' . $e->getMessage();
+                    session()->flash('error', $errorMessage);
+                }
+                return;
+            }
+
+            session()->flash('error', 'Invalid. this file cannot be deleted.');
         }
     }
     public function render()

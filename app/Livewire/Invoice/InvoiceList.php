@@ -167,12 +167,6 @@ class InvoiceList extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function render()
-    {
-        $dataList = $this->invoiceServices->Search($this->search, $this->locationid, $this->perPage);
-
-        return view('livewire.invoice.invoice-list', ['dataList' => $dataList]);
-    }
     public function updatedlocationid()
     {   
         try {
@@ -183,4 +177,11 @@ class InvoiceList extends Component
         }
  
     }
+    public function render()
+    {
+        $dataList = $this->invoiceServices->Search($this->search, $this->locationid, $this->perPage);
+
+        return view('livewire.invoice.invoice-list', ['dataList' => $dataList]);
+    }
+   
 }

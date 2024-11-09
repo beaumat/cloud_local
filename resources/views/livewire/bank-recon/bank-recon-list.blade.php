@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('bankingmake_cheque') }}"> Pay by Check </a></h5>
+                    <h5 class="m-0"><a href="{{ route('bankingbank_recon') }}"> Bank Reconciliation </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -54,16 +54,18 @@
                                     <tr>
                                         <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
-                                        <th class="col-2">Bank Account</th>
-                                        <th class="col-4">Pay To</th>
+                                        <th class="col-2">Bank Account </th>
                                         <th class="col-1">Location</th>
-                                        <th class="col-1">Amount</th>
+                                        <th class="col-1">Ending Balance</th>
+                                        <th>Notes </th>
                                         <th class="col-1">Status</th>
-                                        <th class="text-center bg-success col-1">
-                                            @if (auth()->user()->can('banking.make-cheque.create'))
-                                                <a href="{{ route('bankingmake_cheque_create') }}" class="text-white">
-                                                    <i class="fas fa-plus"></i></a>
-                                            @endif
+                                        <th class="text-center col-1 bg-success">
+                                            @can('banking.bank-recon.create')
+                                                <a href="{{ route('bankingbank_recon_create') }}"
+                                                    class="text-white btn btn-xs w-100">
+                                                    <i class="fas fa-plus"></i> New
+                                                </a>
+                                            @endcan
                                         </th>
                                     </tr>
                                 </thead>
@@ -71,24 +73,24 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('bankingmake_cheque_edit', ['id' => $list->ID]) }}">
+                                                <a href="{{ route('bankingbank_recon_edit', ['id' => $list->ID]) }}"
+                                                    class="text-primary">
                                                     {{ $list->CODE }}
                                                 </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                            <td> {{ $list->BANK_ACCOUNT_NAME }}</td>
-                                            <td> {{ $list->CONTACT_NAME }}</td>
+                                            <td> {{ $list->ACCOUNT_NAME }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
-                                            <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
+                                            <td class="text-right"> {{ number_format($list->ENDING_BALANCE, 2) }}</td>
+                                            <td> {{ $list->NOTES }}</td>
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
-                                                <a type="button"
-                                                    href="{{ route('bankingmake_cheque_edit', ['id' => $list->ID]) }}"
+                                                <a href="{{ route('bankingbank_recon_edit', ['id' => $list->ID]) }}"
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-
-                                                @if (auth()->user()->can('banking.make-cheque.delete') && $list->STATUS == 0)
+                                                @if (
+                                                    (Auth::user()->can('banking.bank-recon.delete') && $list->STATUS_ID == 0))
                                                     <button wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-xs btn-danger">
@@ -99,7 +101,6 @@
                                                         <i class="fas fa-trash" aria-hidden="true"></i>
                                                     </button>
                                                 @endif
-
                                             </td>
                                         </tr>
                                     @endforeach
@@ -108,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-6 col-md-6">
                     {{ $dataList->links() }}
                 </div>
             </div>

@@ -13,7 +13,7 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     {{ $ID == 0 ? 'Create' : '' }}
-                                    <a class="text-white" href="{{ route('bankingmake_cheque') }}"> Direct Pay </a>
+                                    <a class="text-white" href="{{ route('bankingmake_cheque') }}"> Pay by Check </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)

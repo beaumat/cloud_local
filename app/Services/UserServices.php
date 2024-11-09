@@ -162,7 +162,6 @@ class UserServices
             return;
         }
 
-        
         $id = Auth::user()->id;
         User::where('id', '=', $id)
             ->update([

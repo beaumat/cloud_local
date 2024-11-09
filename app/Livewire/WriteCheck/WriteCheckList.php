@@ -11,7 +11,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title('Direct Pay')]
+#[Title('Pay by Check')]
 class WriteCheckList extends Component
 {
 
@@ -46,7 +46,6 @@ class WriteCheckList extends Component
 
             if ($data->STATUS == 0) {
                 try {
-
                     DB::beginTransaction();
                     $this->writeCheckServices->Delete($id);
                     session()->flash('message', 'Successfully deleted.');

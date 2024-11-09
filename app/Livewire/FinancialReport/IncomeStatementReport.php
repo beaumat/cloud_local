@@ -102,4 +102,13 @@ class IncomeStatementReport extends Component
     {
         return view('livewire.financial-report.income-statement-report');
     }
+    public function updatedlocationid()
+    {
+        try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
 }

@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\DB;
 
 class FinancialStatementServices
 {
-    private  function  getIncomeStatementAccountByType( string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false ) {
+    private  function  getIncomeStatementAccountByType(string $dateFrom, string $dateTo, int $LOCATION_ID, int $accountType, bool $isCreditIncrease = false): object
+    {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
         $sql = "sum( if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) -  if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT,0) ) as AMOUNT";
@@ -220,20 +221,22 @@ class FinancialStatementServices
         );
     }
 
-    public   function getTotalNetIncome(string $dateFrom, string $dateTo, int $LOCATION_ID): float
+    public function getTotalNetIncome(string $dateFrom, string $dateTo, int $LOCATION_ID): float
     {
         // Create a DateTime object from the input date string
 
-
-
         $IncomeSum = $this->SumIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
+
         $COGSSum = $this->SumCogsAccount($dateFrom, $dateTo, $LOCATION_ID);
+
         $gross_profit = $IncomeSum - $COGSSum;
 
         $ExpenseSum = $this->SumExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
+
         $operating_income = $gross_profit - $ExpenseSum;
 
         $OtherIncomeSum = $this->SumOtherIncomeAccount($dateFrom, $dateTo, $LOCATION_ID);
+
         $OtherExpenseSum = $this->SumOtherExpensesAccount($dateFrom, $dateTo, $LOCATION_ID);
 
         $net_other_income = $OtherIncomeSum - $OtherExpenseSum;
@@ -243,12 +246,13 @@ class FinancialStatementServices
         return $net_income;
     }
     // Balance Sheet
-    public function getBalanceSheetAccountByAcctType(string $dateFrom, string $dateTo, int $LOCATION_ID, array $AccountType, bool $isCreditIncrease = false, array $NotIncludeAccntID = [])
+    public function getBalanceSheetAccountByAcctType(string $dateFrom, string $dateTo, int $LOCATION_ID, array $AccountType, bool $isCreditIncrease = false, array $NotIncludeAccntID = []): object
     {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
 
         $sql = "sum( if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) -  if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT,0) ) as AMOUNT";
+
         $result = DB::table('account_journal as aj')
             ->select([
                 'a.NAME as ACCOUNT_TITLE',

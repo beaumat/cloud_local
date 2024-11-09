@@ -172,8 +172,9 @@
                                     <li class="nav-item">
                                         <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
                                             href="#custom-tabs-four-item" role="tab"
-                                            aria-controls="custom-tabs-four-item" aria-selected="true">Journal
-                                            Entries</a>
+                                            aria-controls="custom-tabs-four-item" aria-selected="true">
+                                            Journal Entries
+                                        </a>
                                     </li>
                                 </ul>
                             </div>

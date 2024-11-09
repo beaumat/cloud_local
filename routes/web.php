@@ -5,6 +5,9 @@ use App\Livewire\AccountingReport\GeneralLedgerReport;
 use App\Livewire\AccountingReport\TransactionDetailsReport;
 use App\Livewire\AccountingReport\TransactionJournalReport;
 use App\Livewire\AccountingReport\TrialBalanceReport;
+use App\Livewire\BankRecon\BankReconForm;
+use App\Livewire\BankRecon\BankReconFormPrint;
+use App\Livewire\BankRecon\BankReconList;
 use App\Livewire\BillCredit\BillCreditForm;
 use App\Livewire\BillCredit\BillCreditList;
 use App\Livewire\BillPayments\BillPaymentForm;
@@ -176,6 +179,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    // Patient Start Category
     Route::prefix('/patients')->name('patients')->group(function () {
 
         Route::prefix('/schedules')->group(function () {
@@ -230,6 +234,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/printout-csf-temp-temp-out', PrintOutCsfTempOut::class)->name('printout_csf_temp_out')->middleware(['permission:patient.philhealth.print']);
         });
     });
+    // Patient End Category
+
+    // Customer Start Category
 
     Route::prefix('/customers')->name('customers')->group(function () {
         Route::prefix('/sales-order')->group(function () {
@@ -271,6 +278,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', TaxCreditForm::class)->name('tax_credit_edit');
         });
     });
+    // Customer End Category
+
+
+    // Vendor Start Category
 
     Route::prefix('/vendors')->name('vendors')->group(function () {
         Route::prefix('/purchase-order')->group(function () {
@@ -300,6 +311,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('/withholding-tax')->group(function () {});
     });
+    // Vendor End Category
 
     Route::prefix('/company')->name('company')->group(function () {
         Route::prefix('/build-assembly')->group(function () {
@@ -349,6 +361,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', WriteCheckForm::class)->name('make_cheque_create')->middleware(['permission:banking.make-cheque.create']);
             Route::get('/{id}/edit', WriteCheckForm::class)->name('make_cheque_edit')->middleware(['permission:banking.make-cheque.view']);
             Route::get('/{id}/print', WriteCheckFormPrint::class)->name('make_cheque_print')->middleware(['permission:banking.make-cheque.print']);
+        });
+
+
+        Route::prefix('/bank-recon')->group(function () {
+            Route::get('/', BankReconList::class)->name('bank_recon')->middleware(['permission:banking.bank-recon.view']);
+            Route::get('/create', BankReconForm::class)->name('bank_recon_create')->middleware(['permission:banking.bank-recon.create']);
+            Route::get('/{id}/edit', BankReconForm::class)->name('bank_recon_edit')->middleware(['permission:banking.bank-recon.view']);
+            Route::get('/{id}/print', BankReconFormPrint::class)->name('bank_recon_print')->middleware(['permission:banking.bank-recon.print']);
         });
     });
 

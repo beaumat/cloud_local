@@ -43,7 +43,8 @@
                 @endif
                 @if (Auth::user()->can('banking.deposit.view') ||
                         Auth::user()->can('banking.fund-transfer.view') ||
-                        Auth::user()->can('banking.make-cheque.view'))
+                        Auth::user()->can('banking.make-cheque.view') ||
+                        Auth::user()->can('banking.bank-recon.view'))
                     @livewire('Layouts.BankingMenu')
                 @endif
                 @if (Auth::user()->can('report.patient.sales') ||

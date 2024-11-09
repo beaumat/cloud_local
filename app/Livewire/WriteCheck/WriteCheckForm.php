@@ -20,7 +20,7 @@ use Livewire\Attributes\Reactive;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Direct Pay')]
+#[Title('Pay by Check')]
 class WriteCheckForm extends Component
 {
 
