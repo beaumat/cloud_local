@@ -56,8 +56,9 @@
                                         <th class="col-1">Date</th>
                                         <th class="col-2">Bank Account </th>
                                         <th class="col-1">Location</th>
+                                        <th class="col-1">Beginning Balance</th>
                                         <th class="col-1">Ending Balance</th>
-                                        <th>Notes </th>
+                                        <th>Notes</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center col-1 bg-success">
                                             @can('banking.bank-recon.create')
@@ -81,6 +82,8 @@
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->ACCOUNT_NAME }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
+                                            <td class="text-right"> {{ number_format($list->BEGINNING_BALANCE, 2) }}
+                                            </td>
                                             <td class="text-right"> {{ number_format($list->ENDING_BALANCE, 2) }}</td>
                                             <td> {{ $list->NOTES }}</td>
                                             <td> {{ $list->STATUS }}</td>
@@ -89,8 +92,7 @@
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @if (
-                                                    (Auth::user()->can('banking.bank-recon.delete') && $list->STATUS_ID == 0))
+                                                @if (Auth::user()->can('banking.bank-recon.delete') && $list->STATUS_ID == 0)
                                                     <button wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-xs btn-danger">

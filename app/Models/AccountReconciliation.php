@@ -33,6 +33,8 @@ class AccountReconciliation extends Model
         'SC_ACCOUNT_ID',
         'SC_RATE',
         'IE_ACCOUNT_ID',
-        'IE_RATE'
+        'IE_RATE',
+        'SC_DATE',
+        'IE_DATE'
     ];
 }

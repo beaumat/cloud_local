@@ -6,6 +6,7 @@ use App\Services\AccountServices;
 use App\Services\BankReconServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -14,9 +15,10 @@ use Livewire\Component;
 #[Title('Bank Reconciliation')]
 class BankReconForm extends Component
 {
+    public string $STATUS_DESCRIPTION;
     public int $openStatus = 0;
     public int $ID;
-    public string $DATE;
+    public $DATE;
     public string $CODE;
     public int $ACCOUNT_ID;
     public int $LOCATION_ID;
@@ -35,10 +37,10 @@ class BankReconForm extends Component
     public int $IE_ACCOUNT_ID;
     public float $SC_RATE;
     public float $IE_RATE;
-
+    public $SC_DATE;
+    public $IE_DATE;
     public $sc_accountList =  [];
     public $ie_accountList = [];
-
 
     public $accountList = [];
     public $locationList = [];
@@ -58,17 +60,44 @@ class BankReconForm extends Component
         $this->accountServices = $accountServices;
         $this->locationServices = $locationServices;
     }
+
+
+    public string $tab = "check";
+    #[On('select-tab')]
+    public function SelectTab($tab)
+    {
+        $this->tab = $tab;
+    }
+
     private function dropDownLoad()
     {
         $this->accountList = $this->accountServices->getBankAccount();
         $this->locationList = $this->locationServices->getList();
         $this->sc_accountList = $this->accountServices->getExpenses();
         $this->ie_accountList = $this->accountServices->getIncome();
+    }
+    public function updatedaccountid()
+    {
+        $data = $this->bankReconServices->HavePreviousHistory($this->ACCOUNT_ID, $this->LOCATION_ID);
 
+        if ($data) {
+            $this->PREVIOUS_ID = $data->ID;
+            $this->BEGINNING_BALANCE = $data->ENDING_BALANCE ?? 0;
+            return;
+        }
+        $this->PREVIOUS_ID = 0;
+        $this->BEGINNING_BALANCE = 0;
+    }
+    public function openSalesCollection()
+    {
+        $this->dispatch('open-collection');
+    }
+    public function openCheckPayment()
+    {
+        $this->dispatch('open-check');
     }
     private function getInfo($data)
     {
-
         $this->ID  = $data->ID;
         $this->DATE = $data->DATE;
         $this->CODE = $data->CODE ?? 0;
@@ -83,6 +112,12 @@ class BankReconForm extends Component
         $this->ENDING_BALANCE = $data->ENDING_BALANCE ?? 0;
         $this->NOTES = $data->NOTES ?? '';
         $this->STATUS = $data->STATUS ?? 0;
+        $this->SC_DATE = $data->SC_DATE ?? null;
+        $this->IE_DATE = $data->IE_DATE ?? null;
+        $this->SC_RATE = $data->SC_RATE ?? 0;
+        $this->SC_ACCOUNT_ID = $data->SC_ACCOUNT_ID ?? 0;
+        $this->IE_ACCOUNT_ID = $data->IE_ACCOUNT_ID ?? 0;
+        $this->IE_RATE = $data->IE_RATE ?? 0;
     }
     public function mount($id = null)
     {
@@ -100,7 +135,7 @@ class BankReconForm extends Component
 
         $this->dropDownLoad();
         $this->ID  = 0;
-        $this->DATE = $this->userServices->getTransactionDateDefault();
+        $this->DATE = null;
         $this->CODE = '';
         $this->ACCOUNT_ID = 0;
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
@@ -114,29 +149,49 @@ class BankReconForm extends Component
         $this->NOTES =  '';
         $this->STATUS = 0;
         $this->Modify = true;
+
+        $this->SC_RATE = 0;
+        $this->SC_ACCOUNT_ID = 0;
+        $this->SC_DATE = null;
+
+        $this->IE_ACCOUNT_ID = 0;
+        $this->IE_RATE = 0;
+        $this->IE_DATE = null;
     }
     public function save()
     {
 
         $this->validate(
             [
-                'ACCOUNT_ID'        => 'required|not_in:0|exists:account,id',
-                'CODE'              =>  $this->ID > 0 ? 'required|max:20|unique:account_reconciliation,code,' . $this->ID : 'nullable',
-                'DATE'              => 'required',
-                'LOCATION_ID'       => 'required|exists:location,id'
-
+                'ACCOUNT_ID'            => 'required|not_in:0|exists:account,id',
+                'CODE'                  =>  $this->ID > 0 ? 'required|max:20|unique:account_reconciliation,code,' . $this->ID : 'nullable',
+                'DATE'                  => 'required|date',
+                'LOCATION_ID'           => 'required|numeric|exists:location,id',
+                'SC_RATE'               => 'required|numeric|min:0',
+                'IE_RATE'               => 'required|numeric|min:0',
+                'SC_ACCOUNT_ID'         => $this->SC_RATE > 0 ? 'required|numeric|exists:account,id' : 'nullable',
+                'IE_ACCOUNT_ID'         => $this->IE_RATE > 0 ? 'required|numeric|exists:account,id' : 'nullable',
+                'SC_DATE'               => $this->SC_RATE > 0 ? 'required|date' : 'nullable',
+                'IE_DATE'               => $this->IE_RATE > 0 ? 'required|date' : 'nullable',
+                'BEGINNING_BALANCE'     => 'required|numeric',
+                'ENDING_BALANCE'       =>  'required|numeric|min:1',
             ],
             [],
             [
-                'ACCOUNT_ID' => 'Bank Account',
-                'CODE'       => 'Reference No.',
-                'DATE'       => 'Date',
-                'LOCATION_ID' => 'Location'
-
+                'ACCOUNT_ID'        => 'Bank Account',
+                'CODE'              => 'Reference No.',
+                'DATE'              => 'Bank Statement Date',
+                'LOCATION_ID'       => 'Location',
+                'SC_ACCOUNT_ID'     => 'Service Charge Account',
+                'IE_ACCOUNT_ID'     => 'Interest Earn Account',
+                'SC_DATE'           => 'Service Charge Date',
+                'IE_DATE'           => 'Interest Earn Date',
+                'BEGINNING_BALANCE' => 'Beginning Balance',
+                'ENDING_BALANCE'    => 'Ending Balance'
             ]
         );
 
-
+        DB::beginTransaction();
         try {
 
             if ($this->ID == 0) {
@@ -151,13 +206,17 @@ class BankReconForm extends Component
                     $this->CLEARED_DEPOSITS,
                     $this->CLEARED_WITHDRAWALS,
                     $this->CLEARED_BALANCE,
+                    $this->ENDING_BALANCE,
                     $this->NOTES,
                     $this->SC_ACCOUNT_ID,
                     $this->SC_RATE,
                     $this->IE_ACCOUNT_ID,
-                    $this->IE_RATE
+                    $this->IE_RATE,
+                    $this->SC_DATE,
+                    $this->IE_DATE
                 );
-
+                $this->bankReconServices->Recomputed($this->ID);
+                DB::commit();
                 return Redirect::route('bankingbank_recon_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 $this->bankReconServices->Update(
@@ -168,17 +227,25 @@ class BankReconForm extends Component
                     $this->SC_ACCOUNT_ID,
                     $this->SC_RATE,
                     $this->IE_ACCOUNT_ID,
-                    $this->IE_RATE
+                    $this->IE_RATE,
+                    $this->SC_DATE,
+                    $this->IE_DATE
                 );
+                $this->bankReconServices->Recomputed($this->ID);
+                DB::commit();
                 session()->flash('message', 'Successfully updated');
                 $this->Modify = false;
             }
         } catch (\Exception $e) {
+            DB::rollback();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
     }
-
+    public function updateCancel()
+    {
+        return Redirect::route('bankingbank_recon_edit', ['id' => $this->ID]);
+    }
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -186,7 +253,22 @@ class BankReconForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function getPosted() {}
+    public function getModify()
+    {
+        $this->Modify = true;
+    }
+    public function getPosted()
+    {
+
+        $this->bankReconServices->StatusUpdate($this->ID, 15);
+        $data = $this->bankReconServices->get($this->ID);
+        if ($data) {
+            $this->getInfo($data);
+            $this->Modify = false;
+            session()->flash('message', 'Successfully posted');
+            return;
+        }
+    }
     public function render()
     {
 

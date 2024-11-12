@@ -22,6 +22,7 @@ class AccountReconciliationItems extends Model
         'ENTRY_TYPE',
         'CLEARED_DEBIT',
         'CLEARED_CREDIT',
-        'AMOUNT'
+        'AMOUNT',
+        'OBJECT_DATE'
     ];
 }
