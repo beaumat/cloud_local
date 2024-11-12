@@ -44,19 +44,19 @@
                     <div class="float-right ">
                         <div class="row" style="position: absolute;right:10px;width:400px;">
                             <p class="font-weight-bold text-sm"> Series#&nbsp;</p>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box2 text-primary courier-new font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
+                            <div class="box2   font-weight-bold">&nbsp;</div>
                         </div>
                     </div>
                 </div>
@@ -210,14 +210,14 @@
                                 </div>
                                 <div class="col-12 pb-3">
                                     <label style="margin-right: 20px;"> 4. SEX</label>
-                                    <div class="box text-primary courier-new font-weight-bold">
+                                    <div class="box   font-weight-bold">
                                         @if ($PATIENT_GENDER == 0)
                                             &#10004;
                                         @else
                                             &nbsp;
                                         @endif
                                     </div>&nbsp; Male
-                                    <div class="box text-primary courier-new font-weight-bold">
+                                    <div class="box   font-weight-bold">
                                         @if ($PATIENT_GENDER == 1)
                                             &#10004;
                                         @else
@@ -286,30 +286,30 @@
                                 </div>
                                 <div class="col-7 text-left">
                                     <div class="form-group text-md">
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_ADMITTED, 5, 1) }}
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_ADMITTED, 6, 1) }}
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_ADMITTED, 8, 1) }}
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_ADMITTED, 9, 1) }}
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_ADMITTED, 0, 1) }}
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_ADMITTED, 1, 1) }}
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_ADMITTED, 2, 1) }}
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_ADMITTED, 3, 1) }}
                                         </div>
                                         <br>
@@ -332,17 +332,17 @@
                                 </div>
                                 <div class="col-7 text-left ">
                                     <div class="form-group text-md">
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($TIME_ADMITTED, 0, 1) }}</div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($TIME_ADMITTED, 1, 1) }}</div><label
                                             class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($TIME_ADMITTED, 3, 1) }}</div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($TIME_ADMITTED, 4, 1) }}</div><label
                                             class="px-1">&nbsp;</label>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) == 'A')
                                                 &#10004;
                                             @else
@@ -350,7 +350,7 @@
                                             @endif
                                         </div>&nbsp;
                                         AM
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
 
                                             @if ($TIME_ADMITTED && substr($TIME_ADMITTED, 6, 1) != 'A')
                                                 &#10004;
@@ -384,30 +384,30 @@
                                 </div>
                                 <div class="col-7 text-left">
                                     <div class="form-group text-md">
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_DISCHARGED, 5, 1) }}
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_DISCHARGED, 6, 1) }}
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_DISCHARGED, 8, 1) }}
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_DISCHARGED, 9, 1) }}
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_DISCHARGED, 0, 1) }}
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_DISCHARGED, 1, 1) }}
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_DISCHARGED, 2, 1) }}
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($DATE_DISCHARGED, 3, 1) }}
                                         </div>
                                         <br>
@@ -431,17 +431,17 @@
                                 </div>
                                 <div class="col-7 text-left">
                                     <div class="form-group text-md">
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($TIME_DISCHARGED, 0, 1) }}</div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($TIME_DISCHARGED, 1, 1) }}</div><label
                                             class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($TIME_DISCHARGED, 3, 1) }}</div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             {{ substr($TIME_DISCHARGED, 4, 1) }}</div><label
                                             class="px-1">&nbsp;</label>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             @if ($TIME_ADMITTED && substr($TIME_DISCHARGED, 6, 1) == 'A')
                                                 &#10004;
                                             @else
@@ -449,7 +449,7 @@
                                             @endif
                                         </div>&nbsp;
                                         AM
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             @if ($TIME_ADMITTED && substr($TIME_DISCHARGED, 6, 1) != 'A')
                                                 &#10004;
                                             @else
@@ -506,7 +506,7 @@
                     <div class="" style="bottom: -10px; position: absolute;">
                         <label class="text-xs">2.b OB/GYN History </label>
                         <p class="text-xs">G ___ P ___ ( ___ - ___ - ____ - ____ ) LMP: ________________________ <b
-                                class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;NA</p>
+                                class="box   font-weight-bold">&#10004;</b> &nbsp;NA</p>
                     </div>
                 </div>
                 <div class="col-12 bottom-line2 text-xs">
@@ -514,70 +514,70 @@
 
                     <div class="row p-2 ">
                         <div class="col-3">
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Altered mental
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Altered mental
                             sensorium<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Abdominal
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Abdominal
                             cramp/pain<br />
-                            <b class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;Anorexia<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Bleeding
+                            <b class="box   font-weight-bold">&#10004;</b> &nbsp;Anorexia<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Bleeding
                             gums<br />
-                            <b class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;Body
+                            <b class="box   font-weight-bold">&#10004;</b> &nbsp;Body
                             weakness<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Blurring of
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Blurring of
                             vision<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Chest
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Chest
                             pain/discomfort<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>
+                            <b class="box   font-weight-bold">&nbsp;</b>
                             &nbsp;Constipation<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Cough<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Cough<br />
                         </div>
                         <div class="col-3">
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Diarrhea <br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Dizziness<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Dysphagia<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Dyspnea<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Dysuria<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Epistaxis<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Fever<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Frequency of
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Diarrhea <br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Dizziness<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Dysphagia<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Dyspnea<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Dysuria<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Epistaxis<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Fever<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Frequency of
                             urination<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Headache<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Headache<br />
                         </div>
                         <div class="col-3">
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Hematemesis
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Hematemesis
                             <br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Hematuria<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Hemoptysis<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Hematuria<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Hemoptysis<br />
+                            <b class="box   font-weight-bold">&nbsp;</b>
                             &nbsp;Irritability<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Jaundice<br />
-                            <b class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;Lower extremity
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Jaundice<br />
+                            <b class="box   font-weight-bold">&#10004;</b> &nbsp;Lower extremity
                             edema<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Myalgia<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Orthopnea<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Pain,
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Myalgia<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Orthopnea<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Pain,
                             ________________ (site)<br />
                         </div>
                         <div class="col-3">
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Palpitations
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Palpitations
                             <br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Seizures<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Skin rashes<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Seizures<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Skin rashes<br />
+                            <b class="box   font-weight-bold">&nbsp;</b>
                             &nbsp;Stool,bloody/black tarry/mucoid<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Sweating<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Urgency<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Vomiting<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Weight loss<br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Others
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Sweating<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Urgency<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Vomiting<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Weight loss<br />
+                            <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Others
                             ______________________
                         </div>
                     </div>
                 </div>
                 <div class="col-12 bottom-line2  text-left text-xs pt-2">
                     <label> 4. Referred from another health care institution (HCI):</label>
-                    <b class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;No
-                    <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Yes , Specity Reason
+                    <b class="box   font-weight-bold">&#10004;</b> &nbsp;No
+                    <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Yes , Specity Reason
                     _______________________________________________________________<br />
                     <div class="text-right mt-2 pb-1">
                         Name of Originating HCI _____________________________________________________________
@@ -590,9 +590,9 @@
                         System):</label>
                     <div class="row text-sm">
                         <div class="col-2">General Survey</div>
-                        <div class="col-2"><b class="box text-primary courier-new font-weight-bold">&#10004;</b>
+                        <div class="col-2"><b class="box   font-weight-bold">&#10004;</b>
                             &nbsp;Awake and alert</div>
-                        <div class="col-5"><b class="box text-primary courier-new font-weight-bold">&nbsp;</b>
+                        <div class="col-5"><b class="box   font-weight-bold">&nbsp;</b>
                             &nbsp;Altered sensorium: ___________________________ </div>
                         <div class="col-3">
                             <div class="m-2 p-2 blackbox2" style="top:-30px;position: relative;height:60px;">
@@ -674,34 +674,34 @@
                         <div class="col-2">HEENT</div>
                         <div class="col-2">
                             <b
-                                class="box text-primary courier-new font-weight-bold">&#10004;</b>&nbsp;&nbsp;Essentially
+                                class="box   font-weight-bold">&#10004;</b>&nbsp;&nbsp;Essentially
                             normal
                             <br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Icteric
+                            <b class="box   font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Icteric
                             sclerae
 
                         </div>
                         <div class="col-3">
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Abnormal
+                            <b class="box   font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Abnormal
                             pupillary
                             reaction
                             <br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Pale
+                            <b class="box   font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Pale
                             conjunctivae
                         </div>
                         <div class="col-3">
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Cervical
+                            <b class="box   font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Cervical
                             lymphadenopahy
                             <br />
-                            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Sunken
+                            <b class="box   font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Sunken
                             eyeballs
                         </div>
                         <div class="col-2">
                             <div style="width: 300px;margin-left: -30px;">
-                                <b class="box text-primary courier-new font-weight-bold ">&nbsp;</b>&nbsp;&nbsp;Dry
+                                <b class="box   font-weight-bold ">&nbsp;</b>&nbsp;&nbsp;Dry
                                 mucous membrane
                                 <br />
-                                <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Sunken
+                                <b class="box   font-weight-bold">&nbsp;</b>&nbsp;&nbsp;Sunken
                                 fontanelle
                             </div>
 

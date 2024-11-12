@@ -77,7 +77,6 @@ class CashFlowServices
                 'INACTIVE'  => $INACTIVE
             ]);
     }
-
     public function DeleteHeader(int $ID)
     {
         CashFlowHeader::where('ID', '=', $ID)

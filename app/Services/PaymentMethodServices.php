@@ -28,7 +28,7 @@ class PaymentMethodServices
     {
         $result = PaymentMethods::query()
             ->select(['ID', 'DESCRIPTION'])
-            ->whereIn('ID', $this->CASH_N_GL)
+            ->whereIn('PAYMENT_TYPE', $this->CASH_N_GL)
             ->get();
 
         return $result;

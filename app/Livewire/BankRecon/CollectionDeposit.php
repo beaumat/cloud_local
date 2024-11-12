@@ -16,7 +16,6 @@ class CollectionDeposit extends Component
     public int $ACCOUNT_RECONCILIATION_ID;
     #[Reactive]
     public int $ACCOUNT_ID;
-
     public int $LOCATION_ID;
     public $locationList = [];
     public bool $showModal = false;

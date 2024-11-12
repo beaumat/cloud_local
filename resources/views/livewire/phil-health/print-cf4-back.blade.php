@@ -11,30 +11,30 @@
                     CHEST/LUNGS:
                 </div>
                 <div class="col-3">
-                    <b class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;Essentially normal
+                    <b class="box   font-weight-bold">&#10004;</b> &nbsp;Essentially normal
                     <br />
-                    <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp; Lump/s over breast(s)
+                    <b class="box   font-weight-bold">&nbsp;</b> &nbsp; Lump/s over breast(s)
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:60px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Asymmetrical chest
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Asymmetrical chest
                         expansion
                         <br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Rales/crackles/rhonch
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Rales/crackles/rhonch
                     </div>
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:100px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Decreased breath
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Decreased breath
                         sounds
                         <br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Intercostal
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Intercostal
                         rib/clavicular retraction
                     </div>
                 </div>
                 <div class="col-1">
                     <div style="width: 250px;right:150px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Wheezes
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Wheezes
                     </div>
                 </div>
                 <div class="col-2"></div>
@@ -48,27 +48,27 @@
                     CVS:
                 </div>
                 <div class="col-3">
-                    <b class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;Essentially normal
+                    <b class="box   font-weight-bold">&#10004;</b> &nbsp;Essentially normal
                     <br />
-                    <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp; Irregular rhythm
+                    <b class="box   font-weight-bold">&nbsp;</b> &nbsp; Irregular rhythm
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:60px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Displaced apex beat
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Displaced apex beat
                         <br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Muffled heart sounds
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Muffled heart sounds
                     </div>
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:100px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Heaves and/or thrills
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Heaves and/or thrills
                         <br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Murmur
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Murmur
                     </div>
                 </div>
                 <div class="col-1">
                     <div style="width: 250px;right:150px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Pericardia! bulge
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Pericardia! bulge
                     </div>
                 </div>
                 <div class="col-2"></div>
@@ -82,28 +82,28 @@
                     ABDOMEN:
                 </div>
                 <div class="col-3">
-                    <b class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;Essentially normal
+                    <b class="box   font-weight-bold">&#10004;</b> &nbsp;Essentially normal
                     <br />
-                    <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp; Palpable mass(es)
+                    <b class="box   font-weight-bold">&nbsp;</b> &nbsp; Palpable mass(es)
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:60px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Abdominal rigidity
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Abdominal rigidity
                         <br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Tympanitic/dull
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Tympanitic/dull
                         abdomen
                     </div>
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:100px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Abdomen tenderness
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Abdomen tenderness
                         <br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Uterine contraction
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Uterine contraction
                     </div>
                 </div>
                 <div class="col-1">
                     <div style="width: 250px;right:150px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Hyperactive bowel
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Hyperactive bowel
                         sounds
                     </div>
                 </div>
@@ -118,24 +118,24 @@
                     GU (IE):
                 </div>
                 <div class="col-3">
-                    <b class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;Essentially normal
+                    <b class="box   font-weight-bold">&#10004;</b> &nbsp;Essentially normal
 
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:60px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Blood stained in exam
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Blood stained in exam
                         finger
 
                     </div>
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:100px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Cervical dilatation
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Cervical dilatation
                     </div>
                 </div>
                 <div class="col-1">
                     <div style="width: 250px;right:150px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Presence of abnormal
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Presence of abnormal
                         discharge
                     </div>
                 </div>
@@ -150,31 +150,31 @@
                     SKIN/EXTREMITIES:
                 </div>
                 <div class="col-3">
-                    <b class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;Essentially normal
+                    <b class="box   font-weight-bold">&#10004;</b> &nbsp;Essentially normal
                     <br />
-                    <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Edema/swelling <br />
-                    <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Rashes/petechiae
+                    <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Edema/swelling <br />
+                    <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Rashes/petechiae
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:60px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Clubbing<br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Decreased mobility
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Clubbing<br />
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Decreased mobility
                         <br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Weak pulses
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Weak pulses
                     </div>
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:100px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Cold clammy skin<br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Pale nailbeds
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Cold clammy skin<br />
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Pale nailbeds
 
                     </div>
                 </div>
                 <div class="col-1">
                     <div style="width: 250px;right:150px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Cyanosis/mottled skin
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Cyanosis/mottled skin
                         <br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Poor skin turgor
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Poor skin turgor
                     </div>
                 </div>
                 <div class="col-2"></div>
@@ -188,31 +188,31 @@
                     NEURO·EXAM:
                 </div>
                 <div class="col-3">
-                    <b class="box text-primary courier-new font-weight-bold">&#10004;</b> &nbsp;Essentially normal
+                    <b class="box   font-weight-bold">&#10004;</b> &nbsp;Essentially normal
                     <br />
-                    <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Abnormal reflex(es)
+                    <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Abnormal reflex(es)
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:60px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Abnormal gait
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Abnormal gait
                         <br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Poor/altered memory
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Poor/altered memory
                     </div>
                 </div>
                 <div class="col-3">
                     <div style="width: 250px;right:100px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Abnormal position
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Abnormal position
                         sense
                         <br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Poor muscle
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Poor muscle
                         tone/strength
                     </div>
                 </div>
                 <div class="col-1">
                     <div style="width: 250px;right:150px;position: relative;">
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Abnormal/decreased
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Abnormal/decreased
                         sensation<br />
-                        <b class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp;Poor coordination
+                        <b class="box   font-weight-bold">&nbsp;</b> &nbsp;Poor coordination
                     </div>
                 </div>
                 <div class="col-2"></div>
@@ -227,7 +227,7 @@
         <div id='part_id' class="col-12 text-center text-sm pb-1 bottom-line2 top-line2">
             <b class="verdana font-weight-bold" style="font-size: 14.4">
                 IV. COURSE IN THE WARD (Attach photocopy of laboratory/Imaging results)</b> &nbsp; <b
-                class="box text-primary courier-new font-weight-bold">&nbsp;</b> &nbsp; Check box if there is/are
+                class="box   font-weight-bold">&nbsp;</b> &nbsp; Check box if there is/are
             additional sheet(s).
 
         </div>
@@ -265,7 +265,7 @@
         </table>
         <div id='part_id' class="col-12 text-center text-sm pb-1 bottom-line2 top-line2">
             <b class="verdana font-weight-bold" style="font-size: 14.4">
-                V. DRUGS/MEDICINES</b> &nbsp; <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>
+                V. DRUGS/MEDICINES</b> &nbsp; <b class="box   font-weight-bold">&nbsp;</b>
             &nbsp; Check box if there is/are
             additional sheet(s).
         </div>
@@ -646,12 +646,12 @@
                 VI. OUTCOME OF TREATMENT</b>
         </div>
         <div class="col-12 text-xs pt-2 pb-1">
-            <b class="box text-primary courier-new font-weight-bold">&#10004;</b>&nbsp; IMPROVED &nbsp;
-            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp; RECOVERED &nbsp;
-            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp; HAMA/DAMA &nbsp;
-            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp; EXPIRED &nbsp;
-            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp; ABSCONDED &nbsp;
-            <b class="box text-primary courier-new font-weight-bold">&nbsp;</b>&nbsp; TRANSFERRED &nbsp;&nbsp;&nbsp;
+            <b class="box   font-weight-bold">&#10004;</b>&nbsp; IMPROVED &nbsp;
+            <b class="box   font-weight-bold">&nbsp;</b>&nbsp; RECOVERED &nbsp;
+            <b class="box   font-weight-bold">&nbsp;</b>&nbsp; HAMA/DAMA &nbsp;
+            <b class="box   font-weight-bold">&nbsp;</b>&nbsp; EXPIRED &nbsp;
+            <b class="box   font-weight-bold">&nbsp;</b>&nbsp; ABSCONDED &nbsp;
+            <b class="box   font-weight-bold">&nbsp;</b>&nbsp; TRANSFERRED &nbsp;&nbsp;&nbsp;
             Specify reason: _______________________
         </div>
         <div id='part_id' class="col-12 text-center text-sm pb-1 bottom-line2 top-line2">
@@ -688,16 +688,16 @@
                 <div class="col-4">
                     <div class="text-xs" style="position: relative; top:-5px;">
                         {{-- <div class="form-group text-md">
-                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div><label
+                            <div class="box   font-weight-bold">&nbsp;</div>
+                            <div class="box   font-weight-bold">&nbsp;</div><label
                                 class="px-1">&nbsp;-</label>
-                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div><label
+                            <div class="box   font-weight-bold">&nbsp;</div>
+                            <div class="box   font-weight-bold">&nbsp;</div><label
                                 class="px-1">&nbsp;-</label>
-                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
-                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                            <div class="box   font-weight-bold">&nbsp;</div>
+                            <div class="box   font-weight-bold">&nbsp;</div>
+                            <div class="box   font-weight-bold">&nbsp;</div>
+                            <div class="box   font-weight-bold">&nbsp;</div>
                             <br>
                             <p style="position: absolute;top:27px; left:70px;" class="text-xs">month
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;day
@@ -707,30 +707,30 @@
                         </div> --}}
                         <div class="form-group text-md">
 
-                            <div class="box text-primary courier-new font-weight-bold">
+                            <div class="box   font-weight-bold">
                                 {{ substr($DATE_DISCHARGED, 5, 1) }}
                             </div>
-                            <div class="box text-primary courier-new font-weight-bold">
+                            <div class="box   font-weight-bold">
                                 {{ substr($DATE_DISCHARGED, 6, 1) }}
                             </div>
                             <label class="px-1">&nbsp;-</label>
-                            <div class="box text-primary courier-new font-weight-bold">
+                            <div class="box   font-weight-bold">
                                 {{ substr($DATE_DISCHARGED, 8, 1) }}
                             </div>
-                            <div class="box text-primary courier-new font-weight-bold">
+                            <div class="box   font-weight-bold">
                                 {{ substr($DATE_DISCHARGED, 9, 1) }}
                             </div>
                             <label class="px-1">&nbsp;-</label>
-                            <div class="box text-primary courier-new font-weight-bold">
+                            <div class="box   font-weight-bold">
                                 {{ substr($DATE_DISCHARGED, 0, 1) }}
                             </div>
-                            <div class="box text-primary courier-new font-weight-bold">
+                            <div class="box   font-weight-bold">
                                 {{ substr($DATE_DISCHARGED, 1, 1) }}
                             </div>
-                            <div class="box text-primary courier-new font-weight-bold">
+                            <div class="box   font-weight-bold">
                                 {{ substr($DATE_DISCHARGED, 2, 1) }}
                             </div>
-                            <div class="box text-primary courier-new font-weight-bold">
+                            <div class="box   font-weight-bold">
                                 {{ substr($DATE_DISCHARGED, 3, 1) }}
                             </div>
                             <br>
