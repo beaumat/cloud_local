@@ -130,12 +130,11 @@ class OtherDetails extends Component
     public function reload()
     {
         $data = $this->hemoServices->Get($this->HEMO_ID);
-
         if ($data) {
             $this->SE_DETAILS = $data->SE_DETAILS ?? '';
             $this->SO_DETAILS =  $data->SO_DETAILS ?? '';
-            $this->BFR = $data->BFR ?? '';
-            $this->DFR = $data->DFR ?? '';
+            $this->BFR = $data->BFR ?? 0;
+            $this->DFR = $data->DFR ?? 0;
             $this->DURATION = $data->DURATION ?? 0;
             $this->DIALYZER = $data->DIALYZER ?? '';
             $this->DIALSATE_N =  $data->DIALSATE_N ?? '';
@@ -148,18 +147,15 @@ class OtherDetails extends Component
             $this->REUSE_NO = $data->REUSE_NO ?? '';
             $this->REUSE_NEXT = $data->REUSE_NEXT ?? '';
             $this->FLUSHING = $data->FLUSHING ?? '';
-
             $this->UF_GOAL = $data->UF_GOAL ?? '';
             $this->DB_STANDARD_HCOA = $data->DB_STANDARD_HCOA ?? false;
             $this->DB_ACID = $data->DB_ACID ?? false;
-
             $this->SC_MACHINE_TEST  = $data->SC_MACHINE_TEST ?? false;
             $this->SC_SECURED_CONNECTIONS = $data->SC_SECURED_CONNECTIONS ?? false;
             $this->SC_SALINE_LINE_DOUBLE_CLAMP = $data->SC_SALINE_LINE_DOUBLE_CLAMP ?? false;
             $this->SC_CONDUCTIVITY = $data->SC_CONDUCTIVITY ?? '';
             $this->SC_DIALYSATE_TEMP = $data->SC_DIALYSATE_TEMP ?? '';
             $this->SC_RESIDUAL_TEST_NEGATIVE = $data->SC_RESIDUAL_TEST_NEGATIVE ?? false;
-
             $this->AT_FISTULA = $data->AT_FISTULA ?? false;
             $this->AT_GRAFT = $data->AT_GRAFT ?? false;
             $this->AT_RIGHT = $data->AT_RIGHT ?? false;
@@ -209,7 +205,6 @@ class OtherDetails extends Component
             $this->PRE_REGULAR = $data->PRE_REGULAR ?? false;
             $this->PRE_IRREGULAR = $data->PRE_IRREGULAR ?? false;
 
-
             $this->POST_AMBULATORY = $data->POST_AMBULATORY ?? false;
             $this->POST_AMBULATORY_W_ASSIT = $data->POST_AMBULATORY_W_ASSIT ?? false;
             $this->POST_WHEEL_CHAIR = $data->POST_WHEEL_CHAIR ?? false;
@@ -241,8 +236,6 @@ class OtherDetails extends Component
 
         try {
             //code...
-
-        
             $this->hemoServices->SaveOthers(
                 $this->HEMO_ID,
                 $this->SE_DETAILS,
