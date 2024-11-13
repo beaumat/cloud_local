@@ -150,6 +150,7 @@ class PatientPaymentForm extends Component
     {
         if (is_numeric($id)) {
             $data = $this->patientPaymentServices->getPatientPayment($id);
+            
             if ($data) {
                 $this->getInfo($data);
                 $this->LoadDropDown();

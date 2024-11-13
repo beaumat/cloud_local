@@ -12,7 +12,7 @@ class PaymentMethodServices
     {
         $this->object = $objectService;
     }
-    public array $CASH_N_GL = [1, 92, 93, 94, 96];
+    public array $CASH_N_GL =  [0, 10]; //[1, 92, 93, 94, 96];
     public int $PHIL_HEALTH_ID = 91;
     public function get($id)
     {

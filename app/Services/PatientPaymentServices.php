@@ -64,8 +64,9 @@ class PatientPaymentServices
     }
     public function getPatientPayment($ID): object
     {
-        $result = PatientPayments::where('ID', '=', $ID)
-            ->whereIn('PAYMENT_METHOD_ID', $this->paymentMethodServices->CASH_N_GL)
+        $result = PatientPayments::where('patient_payments.ID', '=', $ID)
+            ->join('payment_method as p', 'p.ID', '=', second: 'patient_payments.PAYMENT_METHOD_ID')
+            ->whereIn('PAYMENT_TYPE', $this->paymentMethodServices->CASH_N_GL)
             ->first();
 
         return $result;
@@ -203,11 +204,11 @@ class PatientPaymentServices
         return  PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->exists();
     }
     public function Delete(int $ID)
-    {   
+    {
 
 
 
-        
+
         PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->delete();
         PatientPayments::where('ID', $ID)->delete();
     }
@@ -316,7 +317,7 @@ class PatientPaymentServices
                 })
                 ->join('document_status_map as s', 's.ID', '=', 'patient_payment.STATUS')
                 ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
-                ->whereIn('patient_payment.PAYMENT_METHOD_ID', $this->paymentMethodServices->CASH_N_GL)
+                ->whereIn('pm.PAYMENT_TYPE', $this->paymentMethodServices->CASH_N_GL)
                 ->when($search, function ($query) use (&$search) {
                     $query->where(function ($q) use (&$search) {
                         $q->where('patient_payment.CODE', 'like', '%' . $search . '%')
@@ -378,7 +379,7 @@ class PatientPaymentServices
             ->leftJoin('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')
             ->leftJoin('item as i', 'i.ID', '=', 'sci.ITEM_ID')
             ->whereBetween('sc.DATE', [$DT_FROM, $DT_TO])
-            ->whereIn('patient_payment.PAYMENT_METHOD_ID', $this->paymentMethodServices->CASH_N_GL)
+            ->whereIn('pm.PAYMENT_TYPE', $this->paymentMethodServices->CASH_N_GL)
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
                     $q->where('patient_payment.CODE', 'like', '%' . $search . '%')
