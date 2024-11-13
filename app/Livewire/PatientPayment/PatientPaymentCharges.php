@@ -96,7 +96,7 @@ class PatientPaymentCharges extends Component
     public function render()
     {   
 
-        dd($this->PATIENT_PAYMENT_ID);
+    
         $this->dataList = $this->patientPaymentServices->PaymentChargesList($this->PATIENT_PAYMENT_ID, $this->PHILHEALTH_ID);
     
         return view('livewire.patient-payment.patient-payment-charges');
