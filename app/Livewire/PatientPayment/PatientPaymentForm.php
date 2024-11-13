@@ -102,6 +102,7 @@ class PatientPaymentForm extends Component
     public function getInfo($data)
     {
         $this->ID = $data->ID;
+   
         $this->DATE = $data->DATE;
         $this->CODE = $data->CODE;
         $this->PATIENT_ID = $data->PATIENT_ID;

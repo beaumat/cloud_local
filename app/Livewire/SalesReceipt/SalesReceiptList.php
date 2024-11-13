@@ -5,6 +5,7 @@ namespace App\Livewire\SalesReceipt;
 use App\Services\AccountJournalServices;
 use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
+use App\Services\PatientPaymentServices;
 use App\Services\SalesReceiptServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
@@ -30,18 +31,24 @@ class SalesReceiptList extends Component
     private $userServices;
     private $accountJournalServices;
     private $itemInventoryServices;
+
+    private $patientPaymentServices;
+
+
     public function boot(
         SalesReceiptServices $salesReceiptServices,
         LocationServices $locationServices,
         UserServices $userServices,
         AccountJournalServices $accountJournalServices,
-        ItemInventoryServices $itemInventoryServices
+        ItemInventoryServices $itemInventoryServices,
+        PatientPaymentServices $patientPaymentServices
     ) {
         $this->salesReceiptServices = $salesReceiptServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->itemInventoryServices = $itemInventoryServices;
+        $this->patientPaymentServices = $patientPaymentServices;
     }
     public function mount()
     {
@@ -159,11 +166,14 @@ class SalesReceiptList extends Component
                     foreach ($dataItem as $list) {
                         $this->deleteItem($list->ID, $SR_ID, $JOURNAL_NO);
                     }
+
+
+                    $PP_ID = $this->patientPaymentServices->GetCustomerRef(false, $SR_ID);
+                    if ($PP_ID > 0) {
+                        $this->patientPaymentServices->CustomerRef($PP_ID, false, 0);
+                    }
                 }
             }
-
-
-
 
             $this->salesReceiptServices->Delete($SR_ID);
             DB::commit();

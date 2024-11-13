@@ -88,19 +88,17 @@ class PatientPaymentCharges extends Component
 
         $this->dispatch('reset-payment');
     }
-    public function mount(int $PATIENT_PAYMENT_ID, int $PATIENT_ID, int $LOCATION_ID, float $AMOUNT, float $AMOUNT_APPLIED, int $PHILHEALTH_ID = 0)
+    public function mount()
     {
-        $this->PATIENT_PAYMENT_ID = $PATIENT_PAYMENT_ID;
-        $this->PATIENT_ID = $PATIENT_ID;
-        $this->LOCATION_ID = $LOCATION_ID;
-        $this->AMOUNT = $AMOUNT;
-        $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
-        $this->PHILHEALTH_ID =  $PHILHEALTH_ID;
+  
     }
-    #[On('reload_payment_invoice')]
+
     public function render()
-    {
+    {   
+
+        dd($this->PATIENT_PAYMENT_ID);
         $this->dataList = $this->patientPaymentServices->PaymentChargesList($this->PATIENT_PAYMENT_ID, $this->PHILHEALTH_ID);
+    
         return view('livewire.patient-payment.patient-payment-charges');
     }
 }

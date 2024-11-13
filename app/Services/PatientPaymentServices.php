@@ -64,11 +64,7 @@ class PatientPaymentServices
     }
     public function getPatientPayment($ID): object
     {
-        $result = PatientPayments::where('patient_payment.ID', '=', $ID)
-            ->join('payment_method as p', 'p.ID', '=', second: 'patient_payment.PAYMENT_METHOD_ID')
-            ->whereIn('p.PAYMENT_TYPE', $this->paymentMethodServices->CASH_N_GL)
-            ->first();
-
+        $result = PatientPayments::where('patient_payment.ID', '=', $ID)->first();
         return $result;
     }
     public function PaymentHaveAvailable(int $PATIENT_ID)
@@ -201,13 +197,11 @@ class PatientPaymentServices
     }
     public function ChargesAreAlreadyExists(int $ID): bool
     {
-        return  PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->exists();
+        $r = (bool) PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->exists();;
+        return  $r;
     }
     public function Delete(int $ID)
     {
-
-
-
 
         PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->delete();
         PatientPayments::where('ID', $ID)->delete();
@@ -470,14 +464,25 @@ class PatientPaymentServices
             'FILE_PATH' => $FILE_PATH
         ]);
     }
-    public function CustomerRef(int $PATIENT_PAY_ID, bool $IS_INVOICE, int $REF_ID)
+    public function CustomerRef(int $PATIENT_PAY_ID, bool $IS_INVOICE, int $REF_ID = 0)
     {
 
         PatientPayments::where('ID', '=', $PATIENT_PAY_ID)
             ->update([
                 'IS_INVOICE' => $IS_INVOICE,
-                'REF_ID'    => $REF_ID
+                'REF_ID'    => $REF_ID > 0 ? $REF_ID : null
             ]);
+    }
+    public function GetCustomerRef(bool $IS_INVOICE, int $REF_ID)
+    {
+        $data = PatientPayments::where('IS_INVOICE', '=', $IS_INVOICE)
+            ->where('REF_ID', '=', $REF_ID)
+            ->first();
+
+        if ($data) {
+            return (int)  $data->ID;
+        }
+        return 0;
     }
     public function PaymentChargesExist(int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID): int
     {
@@ -541,11 +546,10 @@ class PatientPaymentServices
                 'patient_payment_charges.AMOUNT_APPLIED',
             ])
             ->leftJoin('service_charges_items as sci', 'sci.ID', '=', 'patient_payment_charges.SERVICE_CHARGES_ITEM_ID')
+            ->leftJoin('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')
             ->leftJoin('account as a', 'a.ID', '=', 'sci.INCOME_ACCOUNT_ID')
-            ->join('item as i', 'i.ID', '=', 'sci.ITEM_ID')
+            ->leftJoin('item as i', 'i.ID', '=', 'sci.ITEM_ID')
             ->leftJoin('unit_of_measure', 'unit_of_measure.ID', '=', 'sci.UNIT_ID')
-            ->join('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')
-
             ->where('patient_payment_charges.PATIENT_PAYMENT_ID', '=', $PATIENT_PAYMENT_ID)
             ->when($PHILHEALTH_ID > 0, function ($query) use (&$PH_ITEM_ID) {
                 $query->where('sci.ITEM_ID', '=', $PH_ITEM_ID);
