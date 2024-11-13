@@ -52,7 +52,7 @@ class SalesReceiptList extends Component
     }
     public function deleteItem(int $Id, int $SALES_RECEIPT_ID, $JOURNAL_NO)
     {
- 
+
         $sr = $this->salesReceiptServices->get($SALES_RECEIPT_ID);
         if ($sr) {
             $srItem = $this->salesReceiptServices->ItemGet($Id, $SALES_RECEIPT_ID,);
@@ -71,46 +71,54 @@ class SalesReceiptList extends Component
                 );
 
                 // INCOME_ACCOUNT_ID
-                $this->accountJournalServices->DeleteJournal(
-                    $srItem->INCOME_ACCOUNT_ID,
-                    $sr->LOCATION_ID,
-                    $JOURNAL_NO,
-                    $srItem->ITEM_ID,
-                    $Id,
-                    $this->salesReceiptServices->object_type_sales_receipt_items,
-                    $sr->DATE,
-                    1,
 
-                );
+                if ($srItem->INCOME_ACCOUNT_ID) {
+                    $this->accountJournalServices->DeleteJournal(
+                        $srItem->INCOME_ACCOUNT_ID,
+                        $sr->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $srItem->ITEM_ID,
+                        $Id,
+                        $this->salesReceiptServices->object_type_sales_receipt_items,
+                        $sr->DATE,
+                        1,
+
+                    );
+                }
+
                 // COGS_ACCOUNT_ID
-                $this->accountJournalServices->DeleteJournal(
-                    $srItem->COGS_ACCOUNT_ID,
-                    $sr->LOCATION_ID,
-                    $JOURNAL_NO,
-                    $srItem->ITEM_ID,
-                    $Id,
-                    $this->salesReceiptServices->object_type_sales_receipt_items,
-                    $sr->DATE,
-                    0,
+                if ($srItem->COGS_ACCOUNT_ID) {
+                    $this->accountJournalServices->DeleteJournal(
+                        $srItem->COGS_ACCOUNT_ID,
+                        $sr->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $srItem->ITEM_ID,
+                        $Id,
+                        $this->salesReceiptServices->object_type_sales_receipt_items,
+                        $sr->DATE,
+                        0,
+                    );
+                }
 
-                );
                 // ASSET_ACCOUNT_ID
-                $this->accountJournalServices->DeleteJournal(
-                    $srItem->ASSET_ACCOUNT_ID,
-                    $sr->LOCATION_ID,
-                    $JOURNAL_NO,
-                    $srItem->ITEM_ID,
-                    $Id,
-                    $this->salesReceiptServices->object_type_sales_receipt_items,
-                    $sr->DATE,
-                    1,
+                if ($srItem->ASSET_ACCOUNT_ID) {
+                    $this->accountJournalServices->DeleteJournal(
+                        $srItem->ASSET_ACCOUNT_ID,
+                        $sr->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $srItem->ITEM_ID,
+                        $Id,
+                        $this->salesReceiptServices->object_type_sales_receipt_items,
+                        $sr->DATE,
+                        1,
 
-                );
+                    );
+                }
             }
         }
     }
     public function delete($SR_ID)
-    { 
+    {
         try {
             DB::beginTransaction();
             $data = $this->salesReceiptServices->get($SR_ID);
