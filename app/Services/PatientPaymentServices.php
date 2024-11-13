@@ -64,9 +64,9 @@ class PatientPaymentServices
     }
     public function getPatientPayment($ID): object
     {
-        $result = PatientPayments::where('patient_payments.ID', '=', $ID)
-            ->join('payment_method as p', 'p.ID', '=', second: 'patient_payments.PAYMENT_METHOD_ID')
-            ->whereIn('PAYMENT_TYPE', $this->paymentMethodServices->CASH_N_GL)
+        $result = PatientPayments::where('patient_payment.ID', '=', $ID)
+            ->join('payment_method as p', 'p.ID', '=', second: 'patient_payment.PAYMENT_METHOD_ID')
+            ->whereIn('p.PAYMENT_TYPE', $this->paymentMethodServices->CASH_N_GL)
             ->first();
 
         return $result;
