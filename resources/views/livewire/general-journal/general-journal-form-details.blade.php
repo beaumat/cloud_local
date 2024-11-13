@@ -27,7 +27,7 @@
                     <td>{{ $list->ACCOUNT_DESCRIPTION }}</td>
                     <td class="text-right">
                         @if ($editId === $list->ID)
-                            <input type="number" class="form-control form-control-sm" wire:model='editDebit'
+                            <input step="0.01" type="number" class="form-control form-control-sm" wire:model='editDebit'
                                 name="editDebit" />
                         @else
                             {{ number_format($list->DEBIT, 2) }}
@@ -35,7 +35,7 @@
                     </td>
                     <td class="text-right">
                         @if ($editId === $list->ID)
-                            <input type="number" class="form-control form-control-sm" wire:model='editCredit'
+                            <input step="0.01" type="number" class="form-control form-control-sm" wire:model='editCredit'
                                 name="editCredit" />
                         @else
                             {{ number_format($list->CREDIT, 2) }}
@@ -134,11 +134,11 @@
                         </td>
 
                         <td>
-                            <input type="number" class="form-control form-control-sm mt-1 text-right" name="DEBIT"
+                            <input step="0.01" type="number" class="form-control form-control-sm mt-1 text-right" name="DEBIT"
                                 wire:model='DEBIT' />
                         </td>
                         <td>
-                            <input type="number" class="form-control form-control-sm mt-1 text-right" name="CREDIT"
+                            <input step="0.01" type="number" class="form-control form-control-sm mt-1 text-right" name="CREDIT"
                                 wire:model='CREDIT' />
                         </td>
                         <td class="text-left">

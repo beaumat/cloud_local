@@ -102,7 +102,6 @@ class PatientPaymentForm extends Component
     public function getInfo($data)
     {
         $this->ID = $data->ID;
-   
         $this->DATE = $data->DATE;
         $this->CODE = $data->CODE;
         $this->PATIENT_ID = $data->PATIENT_ID;
@@ -377,9 +376,8 @@ class PatientPaymentForm extends Component
 
     public function makeSalesReceipt()
     {
-        // check first
-        $dataItemCheck = $this->patientPaymentServices->PaymentChargesList($this->ID, 0);
 
+        $dataItemCheck = $this->patientPaymentServices->PaymentChargesList($this->ID, 0);
         foreach ($dataItemCheck as $list) {
             if (empty($list->INCOME_ACCOUNT_ID)) {
                 session()->flash('error', 'Invalid. Some items do not have associated revenue accounts. Please set them up first before proceeding.');
