@@ -329,9 +329,6 @@ class PhilHealthServices
             }
 
 
-
-
-
             PhilHealth::where('ID', $data->ID)
                 ->update([
                     'CHARGES_DRUG_N_MEDICINE'           => $DRUG_MED,

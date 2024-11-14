@@ -94,9 +94,9 @@
                     <div class="row">
                         <div id="name_of_member" class="col-12">
                             <label class="text-xs"> 3. Address of HCI</label>
-                            <h4 class="p-0 m-0 times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $BLDG_NAME_LOT_BLOCK }}
+                            <h5 class="p-0 m-0 times-new-roman">&nbsp;&nbsp;&nbsp;&nbsp;<b>{{ $BLDG_NAME_LOT_BLOCK }}
                                     {{ $STREET_SUB_VALL }} {{ $BRGY_CITY_MUNI }} {{ $PROVINCE }}
-                                    {{ $ZIP_CODE }}</b> &nbsp;</h4>
+                                    {{ $ZIP_CODE }}</b> &nbsp;</h5>
                         </div>
                     </div>
                 </div>
