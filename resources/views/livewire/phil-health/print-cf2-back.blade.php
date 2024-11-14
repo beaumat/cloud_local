@@ -1052,7 +1052,7 @@
                             correct.</i>
                     </div>
                 </div>
-                <div class="col-12 text-center mb-2" style="height: 55px;">
+                <div class="col-12 text-center mb-2" >
                     <div class="row" style="position: relative;bottom:10px;">
                         <div class="col-5  text-center">
                             <div class="ml-2 mr-2 mt-3">
