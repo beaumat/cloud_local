@@ -150,7 +150,9 @@ class PhilHealthSoaCustomServices
     }
     public function ItemExist(int $SOA_CUSTOM_ID, int $ITEM_ID): bool
     {
-        return   PhilHealthSoaCustomRequired::where('SOA_CUSTOM_ID', $SOA_CUSTOM_ID)->where('ITEM_ID', $ITEM_ID)->exists();
+        return   PhilHealthSoaCustomRequired::where('SOA_CUSTOM_ID', $SOA_CUSTOM_ID)
+        ->where('ITEM_ID', $ITEM_ID)
+        ->exists();
     }
     public function ItemStore(int $SOA_CUSTOM_ID, int $ITEM_ID)
     {
