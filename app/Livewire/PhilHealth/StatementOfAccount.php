@@ -123,16 +123,13 @@ class StatementOfAccount extends Component
     {
         if (is_numeric($ID)) {
             $data = $this->philHealthServices->get($ID);
-
-
-
             if ($data) {
-
                 // $this->NO_OF_TREATMENT = $this->philHealthServices->getNumberOfTreatment($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $this->CHARGES_ROOM_N_BOARD = $data->CHARGES_ROOM_N_BOARD;
                 $this->CHARGES_DRUG_N_MEDICINE = $data->CHARGES_DRUG_N_MEDICINE;
                 $this->CHARGES_LAB_N_DIAGNOSTICS = $data->CHARGES_LAB_N_DIAGNOSTICS;
                 $this->CHARGES_OPERATING_ROOM_FEE = $data->CHARGES_OPERATING_ROOM_FEE;
+   
                 $this->CHARGES_SUPPLIES = $data->CHARGES_SUPPLIES;
                 $this->CHARGES_OTHERS = $data->CHARGES_OTHERS;
                 $this->CHARGES_SUB_TOTAL = $data->CHARGES_SUB_TOTAL;

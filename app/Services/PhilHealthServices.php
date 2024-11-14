@@ -173,7 +173,7 @@ class PhilHealthServices
             'TOTAL_FIRST_CASE' => $TOTAL_FIRST_CASE
         ];
 
-        
+
         return  $dataReturn;
     }
     public function getNumberOfTreatment(int $CONTACT_ID, int $LOCATION_ID, string $DATE_ADMITTED, string $DATE_DISCHARGED): int
@@ -230,7 +230,7 @@ class PhilHealthServices
 
                         $this->LAB_N_DIAGNOSTICS_AMOUNT = $soaData->LAB_DIAG ?? 0;
                         $this->DRUG_N_MEDINE_AMOUNT = $soaData->DRUG_MED ?? 0;
-                        $this->OPERATING_ROOM_FEE_AMOUNT =  0;
+                        $this->OPERATING_ROOM_FEE_AMOUNT =  $soaData->OPERATING_ROOM_FEE ?? 0;
                         $this->OTHER_CHARGES_AMOUNT = $soaData->ADMIN_OTHER_FEE ?? 0;
                         $this->ROOM_FEE = $soaData->OPERATING_ROOM_FEE;
                         $this->SUPPLIES = $soaData->SUPPLIES ?? 0;
@@ -245,7 +245,6 @@ class PhilHealthServices
                         $this->PROF_FEE_AMOUNT = $soaData->ACTUAL_FEE ?? 0;
                         $this->PROF_FEE_HIDE = $soaData->HIDE_FEE ?? 0;
 
-
                         $this->OP_SUB_TOTAL =  $this->OP_DRUG_N_MEDICINE +   $this->OP_LAB_N_DIAGNOSTICS +  $this->OP_OPERATING_ROOM_FEE +    $this->OP_SUPPLIES +  $this->OP_OTHERS;
                     }
                     return;
@@ -258,7 +257,7 @@ class PhilHealthServices
 
             $this->LAB_N_DIAGNOSTICS_AMOUNT = $soaData->LAB_DIAG ?? 0;
             $this->DRUG_N_MEDINE_AMOUNT = $soaData->DRUG_MED ?? 0;
-            $this->OPERATING_ROOM_FEE_AMOUNT =  0;
+            $this->OPERATING_ROOM_FEE_AMOUNT =  $soaData->OPERATING_ROOM_FEE ?? 0;
             $this->OTHER_CHARGES_AMOUNT = $soaData->ADMIN_OTHER_FEE ?? 0;
             $this->ROOM_FEE = $soaData->OPERATING_ROOM_FEE;
             $this->SUPPLIES = $soaData->SUPPLIES ?? 0;
