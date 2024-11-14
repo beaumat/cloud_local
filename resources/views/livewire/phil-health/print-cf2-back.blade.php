@@ -32,42 +32,42 @@
                                     <div class="form-group row">
                                         <div class="col-12 mb-1" style="height: 10px; position:absolute;left:-70px; ">
                                             <span> Accreditation No.: </span>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 0, 1) }}
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 1, 1) }}
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 2, 1) }}
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 3, 1) }}
                                             </div>
                                             <label class="px-1">&nbsp;-</label>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 4, 1) }}
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 5, 1) }}
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 6, 1) }}
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 7, 1) }}
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 8, 1) }}
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 9, 1) }}
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 10, 1) }}
                                             </div>
                                             <label class="px-1">&nbsp;-</label>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 {{ substr($HCP_1_AN, 11, 1) }}
                                             </div>
                                         </div>
@@ -87,14 +87,14 @@
                                             </div>
                                             <div class="col-9 text-left">
                                                 <div class="form-group text-md" style="width:300px;">
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         @if ($DATE_DISCHARGED)
                                                             {{ substr($DATE_DISCHARGED, 5, 1) }}
                                                         @else
                                                             &nbsp;
                                                         @endif
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
 
                                                         @if ($DATE_DISCHARGED)
                                                             {{ substr($DATE_DISCHARGED, 6, 1) }}
@@ -103,14 +103,14 @@
                                                         @endif
                                                     </div>
                                                     <label class="px-1">&nbsp;-</label>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         @if ($DATE_DISCHARGED)
                                                             {{ substr($DATE_DISCHARGED, 8, 1) }}
                                                         @else
                                                             &nbsp;
                                                         @endif
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         @if ($DATE_DISCHARGED)
                                                             {{ substr($DATE_DISCHARGED, 9, 1) }}
                                                         @else
@@ -118,28 +118,28 @@
                                                         @endif
                                                     </div>
                                                     <label class="px-1">&nbsp;-</label>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         @if ($DATE_DISCHARGED)
                                                             {{ substr($DATE_DISCHARGED, 0, 1) }}
                                                         @else
                                                             &nbsp;
                                                         @endif
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         @if ($DATE_DISCHARGED)
                                                             {{ substr($DATE_DISCHARGED, 1, 1) }}
                                                         @else
                                                             &nbsp;
                                                         @endif
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         @if ($DATE_DISCHARGED)
                                                             {{ substr($DATE_DISCHARGED, 2, 1) }}
                                                         @else
                                                             &nbsp;
                                                         @endif
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         @if ($DATE_DISCHARGED)
                                                             {{ substr($DATE_DISCHARGED, 3, 1) }}
                                                         @else
@@ -163,7 +163,7 @@
                                 <div class="col-6 text-left">
                                     <div class="row" style="top:20px;position:relative;">
                                         <div class="col-12">
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 &#10004;
                                             </div> &nbsp;
                                             No co-pay on top of PhilHealth Benefit
@@ -172,7 +172,7 @@
 
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div> &nbsp;
                                                     <span style="position:absolute;top:5px;width:300px;"> With co-pay on
@@ -203,42 +203,42 @@
                                     <div class="form-group row">
                                         <div class="col-12 mb-1" style="height: 10px; position:absolute;left:-70px; ">
                                             <span> Accreditation No.: </span>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 &nbsp;
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <label class="px-1">&nbsp;-</label>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 &nbsp;
                                             </div>
                                             <label class="px-1">&nbsp;-</label>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <label class="px-1">&nbsp;-</label>
+                                            <div class="box   font-weight-bold">
                                                 &nbsp;
                                             </div>
                                         </div>
@@ -260,31 +260,31 @@
                                             </div>
                                             <div class="col-9 text-left">
                                                 <div class="form-group text-md" style="width:300px;">
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
 
                                                         &nbsp;
                                                     </div>
                                                     <label class="px-1">&nbsp;-</label>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
                                                     <label class="px-1">&nbsp;-</label>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
                                                     <br>
@@ -304,7 +304,7 @@
                                 <div class="col-6 text-left">
                                     <div class="row" style="top:20px;position:relative;">
                                         <div class="col-12">
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 &nbsp;
                                             </div> &nbsp;&nbsp;
                                             No co-pay on top of PhilHealth Benefit
@@ -313,7 +313,7 @@
 
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div> &nbsp;
                                                     <span style="position:absolute;top:5px;width:300px;">
@@ -344,42 +344,42 @@
                                     <div class="form-group row">
                                         <div class="col-12 mb-1" style="height: 10px; position:absolute;left:-70px; ">
                                             <span> Accreditation No.: </span>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 &nbsp;
                                             </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <label class="px-1">&nbsp;-</label>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
-                                                &nbsp;
-                                            </div>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 &nbsp;
                                             </div>
                                             <label class="px-1">&nbsp;-</label>
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <div class="box   font-weight-bold">
+                                                &nbsp;
+                                            </div>
+                                            <label class="px-1">&nbsp;-</label>
+                                            <div class="box   font-weight-bold">
                                                 &nbsp;
                                             </div>
                                         </div>
@@ -401,30 +401,30 @@
                                             </div>
                                             <div class="col-9 text-left">
                                                 <div class="form-group text-md" style="width:300px;">
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
-                                                        &nbsp;
-                                                    </div>
-                                                    <label class="px-1">&nbsp;-</label>
-                                                    <div class="box text-primary courier-new font-weight-bold">
-                                                        &nbsp;
-                                                    </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
                                                     <label class="px-1">&nbsp;-</label>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <label class="px-1">&nbsp;-</label>
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
+                                                        &nbsp;
+                                                    </div>
+                                                    <div class="box   font-weight-bold">
+                                                        &nbsp;
+                                                    </div>
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div>
                                                     <br>
@@ -444,7 +444,7 @@
                                 <div class="col-6 text-left">
                                     <div class="row" style="top:20px;position:relative;">
                                         <div class="col-12">
-                                            <div class="box text-primary courier-new font-weight-bold">
+                                            <div class="box   font-weight-bold">
                                                 &nbsp;
                                             </div> &nbsp;&nbsp;
                                             No co-pay on top of PhilHealth Benefit
@@ -452,7 +452,7 @@
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <div class="box text-primary courier-new font-weight-bold">
+                                                    <div class="box   font-weight-bold">
                                                         &nbsp;
                                                     </div> &nbsp;
                                                     <span style="position:absolute;top:5px;width:300px;"> With co-pay
@@ -496,7 +496,7 @@
                         <thead>
                             <tr>
                                 <td style='width:1%' class="text-center">
-                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp; </div>
+                                    <div class="box   font-weight-bold"> &nbsp; </div>
                                 </td>
                                 <td style='width:25%'>
                                     <span> PhilHealth benefit is enough to cover HCI and PF Charges.</span>
@@ -558,7 +558,7 @@
                     <table class="width:100%">
                         <tr>
                             <td style='width:1%' class="text-center">
-                                <div class="box text-primary courier-new font-weight-bold"> &#10004; </div>
+                                <div class="box   font-weight-bold"> &#10004; </div>
                             </td>
                             <td style='width:25%'> The benefit of the member/patient was completely consumed prior to
                                 co-pay OR the
@@ -634,7 +634,7 @@
                                                             <div class="col-12">
                                                                 <span>
                                                                     <div
-                                                                        class="box text-primary courier-new font-weight-bold">
+                                                                        class="box   font-weight-bold">
                                                                         &nbsp;
                                                                     </div>
                                                                     &nbsp; Member/Patient
@@ -642,7 +642,7 @@
                                                                 </span>
                                                                 <span>
                                                                     <div
-                                                                        class="box text-primary courier-new font-weight-bold">
+                                                                        class="box   font-weight-bold">
                                                                         &nbsp;
                                                                     </div>
                                                                     &nbsp; HMO
@@ -651,7 +651,7 @@
                                                             <div class="col-12">
                                                                 <span>
                                                                     <div
-                                                                        class="box text-primary courier-new font-weight-bold">
+                                                                        class="box   font-weight-bold">
                                                                         &nbsp;
                                                                     </div>
                                                                     &nbsp;&nbsp;Others (i.e., PCSO, Promisory note,
@@ -694,7 +694,7 @@
                                                             <div class="col-12">
                                                                 <span>
                                                                     <div
-                                                                        class="box text-primary courier-new font-weight-bold">
+                                                                        class="box   font-weight-bold">
                                                                         &nbsp;
                                                                     </div>
                                                                     &nbsp; Member/Patient
@@ -702,7 +702,7 @@
                                                                 </span>
                                                                 <span>
                                                                     <div
-                                                                        class="box text-primary courier-new font-weight-bold">
+                                                                        class="box   font-weight-bold">
                                                                         &nbsp;
                                                                     </div>
                                                                     &nbsp; HMO
@@ -711,7 +711,7 @@
                                                             <div class="col-12">
                                                                 <span>
                                                                     <div
-                                                                        class="box text-primary courier-new font-weight-bold">
+                                                                        class="box   font-weight-bold">
                                                                         &nbsp;
                                                                     </div>
                                                                     &nbsp;&nbsp;Others (i.e., PCSO, Promisory note,
@@ -766,7 +766,7 @@
                                                             <div class="col-4 text-center">
                                                                 <span>
                                                                     <div
-                                                                        class="box text-primary courier-new font-weight-bold">
+                                                                        class="box   font-weight-bold">
                                                                         &nbsp;
                                                                     </div>
                                                                     &nbsp; None
@@ -777,7 +777,7 @@
                                                                     <div class="col-5 text-left">
                                                                         <span>
                                                                             <div
-                                                                                class="box text-primary courier-new font-weight-bold">
+                                                                                class="box   font-weight-bold">
                                                                                 &nbsp; </div> &nbsp;
                                                                             <span
                                                                                 style="top:10px;width:500px;position:absolute;">Total
@@ -809,7 +809,7 @@
                                                             <div class="col-4 text-center">
                                                                 <span>
                                                                     <div
-                                                                        class="box text-primary courier-new font-weight-bold">
+                                                                        class="box   font-weight-bold">
                                                                         &nbsp;
                                                                     </div>
                                                                     &nbsp; None
@@ -820,7 +820,7 @@
                                                                     <div class="col-5 text-left">
                                                                         <span>
                                                                             <div
-                                                                                class="box text-primary courier-new font-weight-bold">
+                                                                                class="box   font-weight-bold">
                                                                                 &nbsp; </div> &nbsp;
                                                                             <span
                                                                                 style="top:10px;width:500px;position:absolute;">Total
@@ -896,14 +896,14 @@
                                                 </div>
                                                 <div class="col-9 text-left">
                                                     <div class="form-group text-md" style="width:300px;">
-                                                        <div class="box text-primary courier-new font-weight-bold">
+                                                        <div class="box   font-weight-bold">
                                                             @if ($DATE_DISCHARGED)
                                                                 {{ substr($DATE_DISCHARGED, 5, 1) }}
                                                             @else
                                                                 &nbsp;
                                                             @endif
                                                         </div>
-                                                        <div class="box text-primary courier-new font-weight-bold">
+                                                        <div class="box   font-weight-bold">
 
                                                             @if ($DATE_DISCHARGED)
                                                                 {{ substr($DATE_DISCHARGED, 6, 1) }}
@@ -912,14 +912,14 @@
                                                             @endif
                                                         </div>
                                                         <label class="px-1">&nbsp;-</label>
-                                                        <div class="box text-primary courier-new font-weight-bold">
+                                                        <div class="box   font-weight-bold">
                                                             @if ($DATE_DISCHARGED)
                                                                 {{ substr($DATE_DISCHARGED, 8, 1) }}
                                                             @else
                                                                 &nbsp;
                                                             @endif
                                                         </div>
-                                                        <div class="box text-primary courier-new font-weight-bold">
+                                                        <div class="box   font-weight-bold">
                                                             @if ($DATE_DISCHARGED)
                                                                 {{ substr($DATE_DISCHARGED, 9, 1) }}
                                                             @else
@@ -927,28 +927,28 @@
                                                             @endif
                                                         </div>
                                                         <label class="px-1">&nbsp;-</label>
-                                                        <div class="box text-primary courier-new font-weight-bold">
+                                                        <div class="box   font-weight-bold">
                                                             @if ($DATE_DISCHARGED)
                                                                 {{ substr($DATE_DISCHARGED, 0, 1) }}
                                                             @else
                                                                 &nbsp;
                                                             @endif
                                                         </div>
-                                                        <div class="box text-primary courier-new font-weight-bold">
+                                                        <div class="box   font-weight-bold">
                                                             @if ($DATE_DISCHARGED)
                                                                 {{ substr($DATE_DISCHARGED, 1, 1) }}
                                                             @else
                                                                 &nbsp;
                                                             @endif
                                                         </div>
-                                                        <div class="box text-primary courier-new font-weight-bold">
+                                                        <div class="box   font-weight-bold">
                                                             @if ($DATE_DISCHARGED)
                                                                 {{ substr($DATE_DISCHARGED, 2, 1) }}
                                                             @else
                                                                 &nbsp;
                                                             @endif
                                                         </div>
-                                                        <div class="box text-primary courier-new font-weight-bold">
+                                                        <div class="box   font-weight-bold">
                                                             @if ($DATE_DISCHARGED)
                                                                 {{ substr($DATE_DISCHARGED, 3, 1) }}
                                                             @else
@@ -981,20 +981,20 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                            <div class="box   font-weight-bold">&nbsp;</div>
                                             &nbsp;&nbsp;Spouse&nbsp;
-                                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                            <div class="box   font-weight-bold">&nbsp;</div>
                                             &nbsp;&nbsp;Child&nbsp;
-                                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                            <div class="box   font-weight-bold">&nbsp;</div>
                                             &nbsp;&nbsp;Parent<br />
-                                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                            <div class="box   font-weight-bold">&nbsp;</div>
                                             &nbsp;&nbsp;Sibling&nbsp;&nbsp;
-                                            <div class="box text-primary courier-new font-weight-bold"
+                                            <div class="box   font-weight-bold"
                                                 style="margin-left:1px;">&nbsp;</div>&nbsp;&nbsp;Others,
                                             Specify&nbsp;________________<br />
-                                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                            <div class="box   font-weight-bold">&nbsp;</div>
                                             &nbsp;&nbsp;Patient is incapacitated&nbsp;&nbsp;<br />
-                                            <div class="box text-primary courier-new font-weight-bold">&nbsp;</div>
+                                            <div class="box   font-weight-bold">&nbsp;</div>
                                             &nbsp;&nbsp;Other reasons:&nbsp;&nbsp; ______________________
                                         </div>
 
@@ -1015,12 +1015,12 @@
                                             </span>
                                             <div class='row' style="margin-top:60px;">
                                                 <div class="col-12">
-                                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp;
+                                                    <div class="box   font-weight-bold"> &nbsp;
                                                     </div> &nbsp; <span> Patient</span>
 
                                                 </div>
                                                 <div class="col-12">
-                                                    <div class="box text-primary courier-new font-weight-bold"> &nbsp;
+                                                    <div class="box   font-weight-bold"> &nbsp;
                                                     </div> &nbsp; <span> Representative</span>
                                                 </div>
                                             </div>
@@ -1088,14 +1088,14 @@
                                 </div>
                                 <div class="col-8 text-left">
                                     <div class="form-group text-md" style="width:300px;">
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             @if ($DATE_DISCHARGED)
                                                 {{ substr($DATE_DISCHARGED, 5, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
 
                                             @if ($DATE_DISCHARGED)
                                                 {{ substr($DATE_DISCHARGED, 6, 1) }}
@@ -1104,14 +1104,14 @@
                                             @endif
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             @if ($DATE_DISCHARGED)
                                                 {{ substr($DATE_DISCHARGED, 8, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             @if ($DATE_DISCHARGED)
                                                 {{ substr($DATE_DISCHARGED, 9, 1) }}
                                             @else
@@ -1119,28 +1119,28 @@
                                             @endif
                                         </div>
                                         <label class="px-1">&nbsp;-</label>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             @if ($DATE_DISCHARGED)
                                                 {{ substr($DATE_DISCHARGED, 0, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             @if ($DATE_DISCHARGED)
                                                 {{ substr($DATE_DISCHARGED, 1, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             @if ($DATE_DISCHARGED)
                                                 {{ substr($DATE_DISCHARGED, 2, 1) }}
                                             @else
                                                 &nbsp;
                                             @endif
                                         </div>
-                                        <div class="box text-primary courier-new font-weight-bold">
+                                        <div class="box   font-weight-bold">
                                             @if ($DATE_DISCHARGED)
                                                 {{ substr($DATE_DISCHARGED, 3, 1) }}
                                             @else
