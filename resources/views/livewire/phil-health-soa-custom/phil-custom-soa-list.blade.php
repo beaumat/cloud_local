@@ -39,6 +39,8 @@
                                         <th class='col-1'>Operating Room Fee</th>
                                         <th class="col-1">Supplies</th>
                                         <th class="col-1">Admin & Other Fee</th>
+                                        <th class="col-1">Actual Fee</th>
+                                        <th class="col-1">Hide Fee</th>
                                         <th class="col-1 text-center">Inactive</th>
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('maintenancesettingslocation_custom_soa_create', ['id' => $LOCATION_ID]) }}"
@@ -52,13 +54,15 @@
                                         <tr>
                                             <td>{{ $list->DESCRIPTION }}</td>
                                             <td class="text-right">
-                                                {{ $list->DRUG_MED }}
-
+                                                {{ number_format($list->DRUG_MED, 2) }}
                                             </td>
-                                            <td class="text-right">{{ $list->LAB_DIAG }}</td>
-                                            <td class="text-right">{{ $list->OPERATING_ROOM_FEE }}</td>
-                                            <td class="text-right">{{ $list->SUPPLIES }}</td>
-                                            <td class="text-right">{{ $list->ADMIN_OTHER_FEE }}</td>
+                                            <td class="text-right">{{ number_format($list->LAB_DIAG, 2) }}</td>
+                                            <td class="text-right">{{ number_format($list->OPERATING_ROOM_FEE, 2) }}
+                                            </td>
+                                            <td class="text-right">{{ number_format($list->SUPPLIES, 2) }}</td>
+                                            <td class="text-right">{{ number_format($list->ADMIN_OTHER_FEE, 2) }}</td>
+                                            <td class="text-right">{{ number_format($list->ACTUAL_FEE, 2) }}</td>
+                                            <td class="text-right">{{ number_format($list->HIDE_FEE, 2) }}</td>
                                             <td class="text-center">
                                                 @if ($list->INACTIVE)
                                                     <span>Yes</span>

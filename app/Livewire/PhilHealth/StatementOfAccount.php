@@ -296,11 +296,6 @@ class StatementOfAccount extends Component
     }
     public function render()
     {
-
-
-
-  
-
         return view('livewire.phil-health.statement-of-account');
     }
 }

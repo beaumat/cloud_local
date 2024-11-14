@@ -455,7 +455,8 @@
                             <div id="p-gov" class="col-1 text-right  left-line text-xs"> </div>
                             <div id="p-after-disc" class="col-1 text-right  left-line">
                                 @if ($list->DISCOUNT > 0)
-                                    <i> {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }}</i>
+                                    {{-- <i> {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }}</i> --}}
+                                    <i> {{ number_format($list->FIRST_CASE, 2) }}</i>
                                 @endif
                             </div>
                             <div id="p-first" class="col-1  left-line text-right">
@@ -466,7 +467,10 @@
                             <div id="p-second" class="col-1 left-line text-right "> </div>
                             <div id="p-pocket" class="col-1 text-right left-line">
                                 @if ($list->FIRST_CASE > 0)
-                                    <i> {{ number_format($list->AMOUNT - $list->DISCOUNT - $list->FIRST_CASE, 2) }}</i>
+                                    <i>
+                                        {{-- {{ number_format($list->AMOUNT - $list->DISCOUNT - $list->FIRST_CASE, 2) }} --}}
+                                        0.00
+                                    </i>
                                 @endif
                             </div>
                         </div>
@@ -548,8 +552,11 @@
                         <div id="p-gov" class="col-1 text-right  left-line text-xs font-weight-bold"> </div>
                         <div id="p-after-disc" class="col-1 text-right  left-line font-weight-bold">
 
-                            @if ($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL > 0)
+                            {{-- @if ($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL > 0)
                                 {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
+                            @endif --}}
+                            @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
+                                {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
                             @endif
                         </div>
                         <div id="p-first" class="col-1  left-line text-right font-weight-bold">
@@ -560,7 +567,8 @@
                         <div id="p-second" class="col-1 left-line text-right font-weight-bold"> </div>
                         <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
                             @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL - $PROFESSIONAL_P1_SUB_TOTAL, 2) }}
+                                {{-- {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL - $PROFESSIONAL_P1_SUB_TOTAL, 2) }} --}}
+                                0.00
                             @endif
                         </div>
                     </div>

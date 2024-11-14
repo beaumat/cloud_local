@@ -315,7 +315,8 @@
                             <td></td>
                             <td class="discount text-right font-weight-bold">
                                 @if ($list->DISCOUNT > 0)
-                                    {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }}
+                                    {{-- {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }} --}}
+                                       {{ number_format($list->FIRST_CASE, 2) }}
                                 @endif
                             </td>
                             <td class="text-right font-weight-bold text-xs ">
@@ -326,7 +327,7 @@
                             <td></td>
                             <td class="text-right">
                                 @if ($list->FIRST_CASE > 0)
-                                    {{ number_format($list->AMOUNT - $list->DISCOUNT - $list->FIRST_CASE, 2) }}
+                                    {{-- {{ number_format($list->AMOUNT - $list->DISCOUNT - $list->FIRST_CASE, 2) }} --}} 0
                                 @endif
                             </td>
                         </tr>

@@ -29,16 +29,16 @@ class PhilHealthServices
     public float $OP_SUPPLIES = 0;
     public float $OP_OTHERS = 0;
     public float $OP_SUB_TOTAL = 0;
-
     private float $DISCOUNT_PERCENT = 20;
-    public float $LAB_N_DIAGNOSTICS_AMOUNT = 250;
-    public float $P1_PHIC_AMOUNT = 2250;
-    public float $DRUG_N_MEDINE_AMOUNT = 1270.00;
+    public float $LAB_N_DIAGNOSTICS_AMOUNT = 0;
+    public float $P1_PHIC_AMOUNT = 0;
+    public float $DRUG_N_MEDINE_AMOUNT = 0;
     public float $OPERATING_ROOM_FEE_AMOUNT = 0;
-    public float $OTHER_CHARGES_AMOUNT = 1960.50;
-    public float $ROOM_FEE = 1960;
-    public float $SUPPLIES = 1082;
-    public float $PROF_FEE_AMOUNT = 437.50;
+    public float $OTHER_CHARGES_AMOUNT = 0;
+    public float $ROOM_FEE = 0;
+    public float $SUPPLIES = 0; // 1082;
+    public float $PROF_FEE_AMOUNT = 0; //437.50;
+    public float $PROF_FEE_HIDE = 0;
     public int $PHIL_HEALTH_ITEM_ID  = 2;
 
     private $object;
@@ -117,33 +117,64 @@ class PhilHealthServices
         $TOTAL_FEE = 0;
         $TOTAL_DISC = 0;
         $TOTAL_FIRST_CASE = 0;
-        $data = PatientDoctor::query()->select(['DOCTOR_ID'])->where("PATIENT_ID", $PATIENT_ID)->get();
+
+        $data = PatientDoctor::query()->select(['DOCTOR_ID'])
+            ->where("PATIENT_ID", $PATIENT_ID)
+            ->get();
+
         if ($data) {
             foreach ($data as $list) {
-                $isDataExists = PhilHealthProfFee::where('PHIC_ID', $PHIC_ID)->where('CONTACT_ID', $list->DOCTOR_ID)->first();
-                $AMOUNT = (float) $this->PROF_FEE_AMOUNT * $COUNT;
+                $isDataExists = PhilHealthProfFee::where('PHIC_ID', $PHIC_ID)
+                    ->where('CONTACT_ID', '=', $list->DOCTOR_ID)
+                    ->first();
 
-                $LESS_AMT =  $this->PROF_FEE_AMOUNT * ($this->DISCOUNT_PERCENT / 100);
-                $NEW_LESS =  $this->PROF_FEE_AMOUNT - $LESS_AMT;
-                $FIRST_CASE = (float)  $NEW_LESS * $COUNT;
+                $AMOUNT = (float) $this->PROF_FEE_AMOUNT * $COUNT;
+                $LESS_AMT = (float) $this->PROF_FEE_AMOUNT * ($this->DISCOUNT_PERCENT / 100);
+                $NEW_LESS = (float)  $this->PROF_FEE_AMOUNT - $LESS_AMT;
+                $FIRST_CASE = (float)  $NEW_LESS * $COUNT; // FIXED
+
+
+                if ($this->PROF_FEE_HIDE > 0) {
+                    $AMOUNT = (float) $this->PROF_FEE_HIDE * $COUNT;
+                    $LESS_AMT_HIDE = (float)  $this->PROF_FEE_HIDE * ($this->DISCOUNT_PERCENT / 100);
+                    $NEW_LESS = (float)  $this->PROF_FEE_HIDE - $LESS_AMT_HIDE;
+                }
 
                 $DISCOUNT = $AMOUNT * ($this->DISCOUNT_PERCENT / 100);
+
+
+
+
                 if (!$isDataExists) {
-                    $this->StoreProfFee($PHIC_ID, $list->DOCTOR_ID, $AMOUNT, $DISCOUNT, $FIRST_CASE);
+                    $this->StoreProfFee(
+                        $PHIC_ID,
+                        $list->DOCTOR_ID,
+                        $AMOUNT,
+                        $DISCOUNT,
+                        $FIRST_CASE
+                    );
                 } else {
-                    $this->UpdateProfFee($isDataExists->ID, $AMOUNT, $DISCOUNT, $FIRST_CASE);
+                    $this->UpdateProfFee(
+                        $isDataExists->ID,
+                        $AMOUNT,
+                        $DISCOUNT,
+                        $FIRST_CASE
+                    );
                 }
+
                 $TOTAL_FEE = $TOTAL_FEE + $AMOUNT;
                 $TOTAL_DISC = $TOTAL_DISC + $DISCOUNT;
                 $TOTAL_FIRST_CASE = $TOTAL_FIRST_CASE +  $FIRST_CASE;
             }
         }
-
-        return [
+        $dataReturn = [
             'TOTAL_FEE' => $TOTAL_FEE,
             'TOTAL_DISCOUNT' => $TOTAL_DISC,
             'TOTAL_FIRST_CASE' => $TOTAL_FIRST_CASE
         ];
+
+        
+        return  $dataReturn;
     }
     public function getNumberOfTreatment(int $CONTACT_ID, int $LOCATION_ID, string $DATE_ADMITTED, string $DATE_DISCHARGED): int
     {
@@ -211,6 +242,10 @@ class PhilHealthServices
                         $this->OP_SUPPLIES = $soaData->SUPPLIES_PK ?? 0;
                         $this->OP_OTHERS = $soaData->ADMIN_OTHER_FEE_PK ?? 0;
 
+                        $this->PROF_FEE_AMOUNT = $soaData->ACTUAL_FEE ?? 0;
+                        $this->PROF_FEE_HIDE = $soaData->HIDE_FEE ?? 0;
+
+
                         $this->OP_SUB_TOTAL =  $this->OP_DRUG_N_MEDICINE +   $this->OP_LAB_N_DIAGNOSTICS +  $this->OP_OPERATING_ROOM_FEE +    $this->OP_SUPPLIES +  $this->OP_OTHERS;
                     }
                     return;
@@ -235,6 +270,10 @@ class PhilHealthServices
             $this->OP_SUPPLIES = $soaData->SUPPLIES_PK ?? 0;
             $this->OP_OTHERS = $soaData->ADMIN_OTHER_FEE_PK ?? 0;
 
+            $this->PROF_FEE_AMOUNT = $soaData->ACTUAL_FEE ?? 0;
+            $this->PROF_FEE_HIDE = $soaData->HIDE_FEE ?? 0;
+
+
             $this->OP_SUB_TOTAL =  $this->OP_DRUG_N_MEDICINE +   $this->OP_LAB_N_DIAGNOSTICS +  $this->OP_OPERATING_ROOM_FEE +    $this->OP_SUPPLIES +  $this->OP_OTHERS;
         }
     }
@@ -246,7 +285,7 @@ class PhilHealthServices
         $data = $this->get($ID);
 
         if ($data) {
-
+            //Get Default Custom Variable
             $this->CustomSoa(
                 $data->CONTACT_ID,
                 $data->LOCATION_ID,
@@ -269,19 +308,29 @@ class PhilHealthServices
 
             $SP_SUB_TOTAL = (float)  $C_SUB_TOTAL *  ($this->DISCOUNT_PERCENT / 100);
             $AD_SUB_TOTAL = $C_SUB_TOTAL  -  $SP_SUB_TOTAL;
-            $P1_SUB_TOTAL = $AD_SUB_TOTAL - $this->OP_SUB_TOTAL; // (float) $this->P1_PHIC_AMOUNT * $NO_OF_TREATMENT;
-            $OP_SUB_TOTAL = $this->OP_SUB_TOTAL;  //(float) $AD_SUB_TOTAL - $P1_SUB_TOTAL;
+            $P1_SUB_TOTAL = $AD_SUB_TOTAL - $this->OP_SUB_TOTAL;
+            $OP_SUB_TOTAL = $this->OP_SUB_TOTAL;
 
             $profArray = $this->AutoMakeProfFeeDetails($data->ID, $data->CONTACT_ID, $NO_OF_TREATMENT);
+
             $PROFESSIONAL_FEE_SUB_TOTAL  = (float) $profArray['TOTAL_FEE'];
             $PROFESSIONAL_DISCOUNT_SUB_TOTAL = (float) $profArray['TOTAL_DISCOUNT'];
             $PROFESSIONAL_P1_SUB_TOTAL = (float) $profArray['TOTAL_FIRST_CASE'];
 
             $CHARGE_TOTAL = $PROFESSIONAL_FEE_SUB_TOTAL + $C_SUB_TOTAL;
             $SP_TOTAL = $CHARGE_TOTAL * ($this->DISCOUNT_PERCENT / 100);
-            $AD_TOTAL = $CHARGE_TOTAL - $SP_TOTAL;
-            $P1_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
-            $OP_TOTAL = $this->OP_SUB_TOTAL;
+            if ($this->PROF_FEE_HIDE  == 0) {
+                $AD_TOTAL = $CHARGE_TOTAL - $SP_TOTAL;
+                $P1_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
+                $OP_TOTAL = $this->OP_SUB_TOTAL;
+            } else {
+                $AD_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
+                $P1_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
+                $OP_TOTAL = 0;
+            }
+
+
+
 
 
             PhilHealth::where('ID', $data->ID)

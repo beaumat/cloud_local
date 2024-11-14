@@ -25,7 +25,11 @@ class PhilHealthSoaCustom extends Model
         'OPERATING_ROOM_FEE_PK',
         'SUPPLIES_PK',
         'ADMIN_OTHER_FEE_PK',
-        'INACTIVE'
+        'INACTIVE',
+        'LINE_NO',
+        'ACTUAL_FEE',
+        'HIDE_FEE'
+
 
     ];
 }

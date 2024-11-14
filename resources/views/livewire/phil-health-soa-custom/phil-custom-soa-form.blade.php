@@ -73,10 +73,21 @@
                                             titleName="Administrative & Other Fees (PK):" vertical=true
                                             :isDisabled=false wire:model='ADMIN_OTHER_FEE_PK' />
                                     </div>
+                                    <div class="col-6">
+                                        <livewire:number-input name="ACTUAL_FEE" titleName="Actual Fee:" vertical=true
+                                            :isDisabled=false wire:model='ACTUAL_FEE' />
+                                    </div>
+                                    <div class="col-6">
+                                        <livewire:number-input name="HIDE_FEE" titleName="Hide Fee:" vertical=true
+                                            :isDisabled=false wire:model='HIDE_FEE' />
+                                    </div>
+
                                     <div class="col-md-1">
                                         <livewire:custom-check-box name="INACTIVE" titleName="Inactive"
                                             :isDisabled=false wire:model='INACTIVE' />
                                     </div>
+
+
                                     <div class="col-md-12 text-left pt-4">
                                         <button class="btn btn-success btn-sm" type='submit'>
                                             @if ($SOA_ID > 0)

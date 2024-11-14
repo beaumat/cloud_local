@@ -53,6 +53,8 @@ class PhilHealthSoaCustomServices
                 'philhealth_soa_custom.SUPPLIES_PK',
                 'philhealth_soa_custom.ADMIN_OTHER_FEE_PK',
                 'philhealth_soa_custom.INACTIVE',
+                'philhealth_soa_custom.ACTUAL_FEE',
+                'philhealth_soa_custom.HIDE_FEE',
                 'l.NAME as LOCATION'
 
             ])
@@ -76,7 +78,9 @@ class PhilHealthSoaCustomServices
         float $OPERATING_ROOM_FEE_PK,
         float $SUPPLIES_PK,
         float $ADMIN_OTHER_FEE_PK,
-        bool $INACTIVE = false
+        bool $INACTIVE = false,
+        float $ACTUAL_FEE,
+        float $HIDE_FEE
     ): int {
         $ID = $this->objectServices->ObjectNextID('PHILHEALTH_SOA_CUSTOM');
 
@@ -94,7 +98,9 @@ class PhilHealthSoaCustomServices
             'OPERATING_ROOM_FEE_PK' => $OPERATING_ROOM_FEE_PK,
             'SUPPLIES_PK'           => $SUPPLIES_PK,
             'ADMIN_OTHER_FEE_PK'    => $ADMIN_OTHER_FEE_PK,
-            'INACTIVE'              => $INACTIVE
+            'INACTIVE'              => $INACTIVE,
+            'ACTUAL_FEE'            => $ACTUAL_FEE,
+            'HIDE_FEE'              => $HIDE_FEE
         ]);
 
         return $ID;
@@ -113,7 +119,9 @@ class PhilHealthSoaCustomServices
         float $OPERATING_ROOM_FEE_PK,
         float $SUPPLIES_PK,
         float $ADMIN_OTHER_FEE_PK,
-        bool $INACTIVE = false
+        bool $INACTIVE = false,
+        float $ACTUAL_FEE,
+        float $HIDE_FEE
     ) {
         PhilHealthSoaCustom::where('ID', $ID)
             ->update([
@@ -129,7 +137,9 @@ class PhilHealthSoaCustomServices
                 'OPERATING_ROOM_FEE_PK' => $OPERATING_ROOM_FEE_PK,
                 'SUPPLIES_PK'           => $SUPPLIES_PK,
                 'ADMIN_OTHER_FEE_PK'    => $ADMIN_OTHER_FEE_PK,
-                'INACTIVE'              => $INACTIVE
+                'INACTIVE'              => $INACTIVE,
+                'ACTUAL_FEE'            => $ACTUAL_FEE,
+                'HIDE_FEE'              => $HIDE_FEE
             ]);
     }
 
