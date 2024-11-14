@@ -49,13 +49,13 @@ class PhilCustomSoaForm extends Component
         if (is_numeric($custom)) {
 
             $data = $this->philHealthSoaCustomServices->Get($custom, $id);
-
+     
             if ($data) {
                 $this->SOA_ID = $data->ID;
                 $this->DESCRIPTION = $data->DESCRIPTION ?? '';
                 $this->DRUG_MED = $data->DRUG_MED ?? 0;
                 $this->LAB_DIAG = $data->LAB_DIAG ?? 0;
-                $this->OPERATING_ROOM_FEE = $data->OPERATION_ROOM_FEE ?? 0;
+                $this->OPERATING_ROOM_FEE = $data->OPERATING_ROOM_FEE ?? 0;
                 $this->SUPPLIES = $data->SUPPLIES ?? 0;
                 $this->ADMIN_OTHER_FEE = $data->ADMIN_OTHER_FEE ?? 0;
                 $this->SUPPLIES_PK = $data->SUPPLIES_PK ?? 0;
