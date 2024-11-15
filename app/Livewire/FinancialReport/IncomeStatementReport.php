@@ -15,7 +15,6 @@ use Livewire\Component;
 class IncomeStatementReport extends Component
 {
 
-
     public string $DATE_FROM;
     public string $DATE_TO;
     public int $LOCATION_ID;

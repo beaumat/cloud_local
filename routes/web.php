@@ -24,6 +24,7 @@ use App\Livewire\CreditMemo\CreditMemoList;
 use App\Livewire\Customer\CustomerForm;
 use App\Livewire\Customer\CustomerList;
 use App\Livewire\DashboardPage\Dashboard;
+use App\Livewire\Deposit\DepositForm;
 use App\Livewire\Deposit\DepositList;
 use App\Livewire\Doctor\DoctorForm;
 use App\Livewire\Doctor\DoctorList;
@@ -350,6 +351,8 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/banking')->name('banking')->group(function () {
         Route::prefix('/deposit')->group(function () {
             Route::get('/', DepositList::class)->name('deposit')->middleware(['permission:banking.deposit.view']);
+            Route::get('/create', DepositForm::class)->name('deposit_create')->middleware(['permission:banking.deposit.create']);
+            Route::get('/{id}/edit', DepositForm::class)->name('deposit_edit')->middleware(['permission:banking.deposit.view']);
         });
 
         Route::prefix('/fund-transfer')->group(function () {

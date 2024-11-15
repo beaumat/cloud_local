@@ -62,8 +62,7 @@ class PaymentMethodForm extends Component
                 'PAYMENT_TYPE' => 'required',
             ],
             [],
-            [
-              
+            [     
                 'DESCRIPTION' => 'Description',
                 'PAYMENT_TYPE' => 'Payment Type',
             ]

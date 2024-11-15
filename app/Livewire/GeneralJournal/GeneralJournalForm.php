@@ -7,7 +7,6 @@ use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
 use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
-use App\Services\ObjectServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -35,8 +34,6 @@ class GeneralJournalForm extends Component
     public int $STATUS;
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
-
-    private $objectServices;
     private $accountJournalServices;
     private $contactServices;
     public function boot(
@@ -44,7 +41,6 @@ class GeneralJournalForm extends Component
         LocationServices $locationServices,
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
-        ObjectServices $objectServices,
         AccountJournalServices $accountJournalServices,
         ContactServices $contactServices
     ) {
@@ -52,7 +48,6 @@ class GeneralJournalForm extends Component
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->objectServices = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->contactServices = $contactServices;
     }
@@ -64,9 +59,7 @@ class GeneralJournalForm extends Component
 
     public function AccountJournal(): bool
     {
-
         try {
-
             $generaljournal = $this->generalJournalServices->object_type_general_journal_details_id;
             $getFirstId = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
             $JOURNAL_NO = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);

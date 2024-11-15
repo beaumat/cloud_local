@@ -4,9 +4,7 @@
         <div class="input-group input-group-sm">
             <input type='text' class='form-control form-control-sm' wire:model='DOCTOR_ORDER'
                 placeholder="Doctors Order Description" />
-
         </div>
-
     </div>
     <div class="col-md-2 col-2">
         <button class="btn btn-sm btn-success" wire:click='saveIt()'>

@@ -11,7 +11,6 @@ class BankReconFormItems extends Component
 {
     #[Reactive]
     public int $ACCOUNT_RECONCILIATION_ID;
-
     #[Reactive]
     public int $STATUS;
     public $dataList = [];

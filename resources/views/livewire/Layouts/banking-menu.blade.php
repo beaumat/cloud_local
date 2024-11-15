@@ -8,7 +8,7 @@
             <li class="nav-item">
                 <a href="{{ route('bankingdeposit') }}"
                     class="nav-link  {{ request()->is('banking/deposit*') ? 'text-warning font-weight-bold' : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="fa fa-balance-scale nav-icon"></i>
                     <p>Deposit</p>
                 </a>
             </li>
@@ -17,7 +17,7 @@
             <li class="nav-item">
                 <a href="{{ route('bankingfund_transfer') }}"
                     class="nav-link  {{ request()->is('banking/fund-transfer*') ? 'text-warning font-weight-bold' : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="fa fa-exchange nav-icon"></i>
                     <p>Fund Transfer</p>
                 </a>
             </li>
