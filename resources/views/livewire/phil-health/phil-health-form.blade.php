@@ -107,15 +107,22 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-md-3">
-                                                    @if ($Modify)
-                                                        <livewire:time-input name="TIME_DISCHARGED"
-                                                            titleName="Time Discharged" wire:model='TIME_DISCHARGED'
-                                                            :isDisabled="false" />
-                                                    @else
-                                                        <livewire:time-input name="TIME_DISCHARGED"
-                                                            titleName="Time Discharged" wire:model='TIME_DISCHARGED'
+                                                    @if ($IS_HIDE)
+                                                        <livewire:time-input name="TIME_HIDE"
+                                                            titleName="Time Discharged*" wire:model='TIME_HIDE'
                                                             :isDisabled="true" />
+                                                    @else
+                                                        @if ($Modify)
+                                                            <livewire:time-input name="TIME_DISCHARGED"
+                                                                titleName="Time Discharged" wire:model='TIME_DISCHARGED'
+                                                                :isDisabled="false" />
+                                                        @else
+                                                            <livewire:time-input name="TIME_DISCHARGED"
+                                                                titleName="Time Discharged" wire:model='TIME_DISCHARGED'
+                                                                :isDisabled="true" />
+                                                        @endif
                                                     @endif
+
                                                 </div>
                                                 <div class="col-md-3">
                                                     <livewire:text-input name="AR_NO" titleName="AR No."

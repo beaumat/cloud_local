@@ -44,8 +44,9 @@
                                     &nbsp;</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
                                     class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS2 }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">FINAL
-                                    DIAGNOSIS : </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
+                                    FINAL DIAGNOSIS :
+                                </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
                                     class="col-8 bottom-line text-xs"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
@@ -157,7 +158,7 @@
                             Second Case Rate amount
                         </div>
                         <div class="col-2 text-center left-line">
-                            Ouf of <br/> Pocket <br/> of Patient
+                            Ouf of <br /> Pocket <br /> of Patient
                         </div>
                     </div>
 

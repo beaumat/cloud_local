@@ -6,6 +6,7 @@ use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
+use App\Services\PhilHealthSoaCustomServices;
 use App\Services\UserServices;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
@@ -31,8 +32,12 @@ class PhilHealthForm extends Component
     public $DATE;
     public $DATE_ADMITTED;
     public $TIME_ADMITTED;
+
     public $DATE_DISCHARGED;
     public $TIME_DISCHARGED;
+    public $TIME_HIDE;
+
+    public bool $IS_HIDE = false;
     public string $FINAL_DIAGNOSIS;
     public string $OTHER_DIAGNOSIS;
     public string $FIRST_CASE_RATE;
@@ -47,6 +52,7 @@ class PhilHealthForm extends Component
     private $contactServices;
     private $locationServices;
     private $userServices;
+    private $philHealthSoaCustomServices;
     public function SelectTab($tab)
     {
         $this->tab = $tab;
@@ -62,13 +68,15 @@ class PhilHealthForm extends Component
         HemoServices $hemoServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
-        UserServices $userServices
+        UserServices $userServices,
+        PhilHealthSoaCustomServices $philHealthSoaCustomServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
+        $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
     }
     public function UpdatedContactId()
     {
@@ -94,6 +102,17 @@ class PhilHealthForm extends Component
         $this->locationList = $this->locationServices->getList();
         $this->patientList = $this->contactServices->getList(3);
     }
+    private function GotHide()
+    {
+        $data =  $this->philHealthSoaCustomServices->GetFirst($this->LOCATION_ID);
+        if ($data) {
+            if ($data->HIDE_FEE > 0) {
+                $this->IS_HIDE = true;
+                return;
+            }
+        }
+        $this->IS_HIDE = false;
+    }
     public function mount($id = null)
     {
         if (is_numeric($id)) {
@@ -104,11 +123,13 @@ class PhilHealthForm extends Component
                 $this->CODE = $data->CODE;
                 $this->DATE = $data->DATE;
                 $this->LOCATION_ID = $data->LOCATION_ID;
+                $this->GotHide();
                 $this->CONTACT_ID = $data->CONTACT_ID;
                 $this->DATE_ADMITTED = $data->DATE_ADMITTED;
                 $this->TIME_ADMITTED = $data->TIME_ADMITTED;
                 $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
                 $this->TIME_DISCHARGED = $data->TIME_DISCHARGED;
+                $this->TIME_HIDE = $data->TIME_HIDE ?? '';
                 $this->FINAL_DIAGNOSIS = $data->FINAL_DIAGNOSIS;
                 $this->OTHER_DIAGNOSIS = $data->OTHER_DIAGNOSIS;
                 $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE;
@@ -127,11 +148,13 @@ class PhilHealthForm extends Component
         $this->CODE = '';
         $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->GotHide();
         $this->CONTACT_ID = 0;
         $this->DATE_ADMITTED = null;
         $this->TIME_ADMITTED = null;
         $this->DATE_DISCHARGED = null;
-        $this->TIME_ADMITTED = null;
+        $this->TIME_DISCHARGED = null;
+        $this->TIME_HIDE = null;
         $this->FINAL_DIAGNOSIS = '';
         $this->OTHER_DIAGNOSIS = '';
         $this->FIRST_CASE_RATE = '';

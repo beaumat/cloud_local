@@ -6,6 +6,7 @@ use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
+use App\Services\PhilHealthSoaCustomServices;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
 
@@ -84,16 +85,32 @@ class PrintCf2 extends Component
     private $locationServices;
     private $hemoServices;
 
+
+    public $TIME_HIDE;
+    public bool $IS_HIDE = false;
+    private $philHealthSoaCustomServices;
+
     public function boot(
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
-        HemoServices $hemoServices
+        HemoServices $hemoServices,
+        PhilHealthSoaCustomServices $philHealthSoaCustomServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
+        $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
+    }
+    private function gotHide()
+    {
+        $cusFirst =   $this->philHealthSoaCustomServices->GetFirst($this->LOCATION_ID);
+        if ($cusFirst) {
+            if ($cusFirst->HIDE_FEE > 0) {
+                $this->IS_HIDE = true;
+            }
+        }
     }
     public function mount(int $id = 0,  int $PATIENT_ID = 0, $OUTPUT = true)
     {
@@ -104,13 +121,16 @@ class PrintCf2 extends Component
             $this->FIRST_CASE_RATE = '90935';
             $data = $this->philHealthServices->get($id);
             if ($data) {
+                $this->LOCATION_ID = $data->LOCATION_ID;
+                $this->gotHide();
                 $this->RR_NO = $data->RR_NO ?? '';
+                $this->TIME_HIDE = $data->TIME_HIDE ?? $data->TIME_ADMITTED;
                 $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
                 $this->TIME_ADMITTED = $data->TIME_ADMITTED ? Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A') : '';
                 $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
-                $this->TIME_DISCHARGED = $data->TIME_DISCHARGED ? Carbon::createFromFormat('H:i:s', $data->TIME_DISCHARGED)->format('h:i A') : '';
+                $this->TIME_DISCHARGED = $data->TIME_DISCHARGED ? Carbon::createFromFormat('H:i:s', $this->IS_HIDE ? $this->TIME_HIDE : $data->TIME_DISCHARGED)->format('h:i A') : '';
 
-                $this->LOCATION_ID = $data->LOCATION_ID;
+
                 $fee = $this->philHealthServices->getProfFee($id);
                 $row = 1;
 

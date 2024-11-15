@@ -376,7 +376,8 @@ class PhilHealthServices
                 'FINAL_DIAGNOSIS'   => $FINAL_DIAGNOSIS,
                 'OTHER_DIAGNOSIS'   => $OTHER_DIAGNOSIS,
                 'FIRST_CASE_RATE'   => $FIRST_CASE_RATE,
-                'SECOND_CASE_RATE'  => $SECOND_CASE_RATE
+                'SECOND_CASE_RATE'  => $SECOND_CASE_RATE,
+                'TIME_HIDE'         => date('H:i:s', strtotime($TIME_ADMITTED . ' +4 hours'))
             ]);
     }
     public function preSave(string $CODE, string $DATE, int $LOCATION_ID, int $CONTACT_ID, string $DATE_ADMITTED, string $TIME_ADMITTED, string $DATE_DISCHARGED, string $TIME_DISCHARGED, string $FINAL_DIAGNOSIS, string $OTHER_DIAGNOSIS, string $FIRST_CASE_RATE, string $SECOND_CASE_RATE): int
@@ -397,6 +398,7 @@ class PhilHealthServices
             'TIME_ADMITTED'     => $TIME_ADMITTED,
             'DATE_DISCHARGED'   => $DATE_DISCHARGED,
             'TIME_DISCHARGED'   => $TIME_DISCHARGED,
+            'TIME_HIDE'         => date('H:i:s', strtotime($TIME_ADMITTED . ' +4 hours')),
             'FINAL_DIAGNOSIS'   => $FINAL_DIAGNOSIS,
             'OTHER_DIAGNOSIS'   => $OTHER_DIAGNOSIS,
             'FIRST_CASE_RATE'   => $FIRST_CASE_RATE,

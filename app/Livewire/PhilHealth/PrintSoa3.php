@@ -7,6 +7,7 @@ use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
 use App\Services\PhilHealthServices;
+use App\Services\PhilHealthSoaCustomServices;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -109,22 +110,39 @@ class PrintSoa3 extends Component
     public string $REPORT_HEADER_3;
     public string $LOGO_FILE;
     private $patientDoctorServices;
-
-
-    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, LocationServices $locationServices, HemoServices $hemoServices, PatientDoctorServices $patientDoctorServices)
-    {
+    public $TIME_HIDE;
+    public bool $IS_HIDE = false;
+    private $philHealthSoaCustomServices;
+    public function boot(
+        PhilHealthServices $philHealthServices,
+        ContactServices $contactServices,
+        LocationServices $locationServices,
+        HemoServices $hemoServices,
+        PatientDoctorServices $patientDoctorServices,
+        PhilHealthSoaCustomServices $philHealthSoaCustomServices
+    ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
         $this->patientDoctorServices = $patientDoctorServices;
+        $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
     }
-
+    private function gotHide()
+    {
+        $cusFirst =   $this->philHealthSoaCustomServices->GetFirst($this->LOCATION_ID);
+        if ($cusFirst) {
+            if ($cusFirst->HIDE_FEE > 0) {
+                $this->IS_HIDE = true;
+            }
+        }
+    }
     public function profFeeList($PHIC_ID)
     {
         $this->i = 0;
         $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
     }
+
     public function mount(int $PRINT_ID, int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
         $this->OUTPUT_SIGN = $OUTPUT;
@@ -152,6 +170,7 @@ class PrintSoa3 extends Component
                 $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME .   $MI_NAME   . $contact->LAST_NAME . $EX_NAME);
                 $this->PIN = $contact->PIN ?? '';
                 $this->LOCATION_ID = $contact->LOCATION_ID;
+                $this->gotHide();
                 $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                 $this->ADDRESS1 = $this->GetAddress1($contact);
                 $this->ADDRESS2 = $this->GetAddress2($contact);
@@ -184,12 +203,13 @@ class PrintSoa3 extends Component
             $data = $this->philHealthServices->get($ID);
             if ($data) {
                 $this->LOCATION_ID =        $data->LOCATION_ID;
+                $this->gotHide();
                 $this->CONTACT_ID =         $data->CONTACT_ID;
                 $this->CODE =               $data->CODE;
                 $this->DATE_ADMITTED =      $data->DATE_ADMITTED;
                 $this->TIME_ADMITTED =      $data->TIME_ADMITTED;
                 $this->DATE_DISCHARGED =    $data->DATE_DISCHARGED;
-                $this->TIME_DISCHARGED =    $data->TIME_DISCHARGED;
+                $this->TIME_DISCHARGED =    $this->IS_HIDE ? $data->TIME_HIDE  : $data->TIME_DISCHARGED;
                 $this->FINAL_DIAGNOSIS =    $data->FINAL_DIAGNOSIS ?? '';
                 $this->OTHER_DIAGNOSIS =    $data->OTHER_DIAGNOSIS ?? '';
                 $this->FIRST_CASE_RATE =    $data->FIRST_CASE_RATE ?? '';
