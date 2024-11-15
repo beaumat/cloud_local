@@ -116,7 +116,7 @@
                         <div class="col-1 left-line">
                         </div>
                         <div class="col-3 text-center  left-line bottom-line">
-                            AMOUNT OF DISCOUNTS
+                            AMOUNT OF <br /> DISCOUNTS
                         </div>
                         <div class="col-2  text-center left-line bottom-line">
                             PHILHEALTH BENEFITS
@@ -157,7 +157,7 @@
                             Second Case Rate amount
                         </div>
                         <div class="col-2 text-center left-line">
-                            Ouf of Pocket of Patient
+                            Ouf of <br/> Pocket <br/> of Patient
                         </div>
                     </div>
 
@@ -426,7 +426,7 @@
                     </div>
                     <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left font-weight-light">
-                           Professional Fee/s
+                            Professional Fee/s
                         </div>
                         <div id="p-charge" class="col-1 text-center  left-line"> </div>
                         <div id="p-vat" class="col-1 text-center  left-line"> </div>
