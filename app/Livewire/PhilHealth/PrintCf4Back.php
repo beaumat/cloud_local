@@ -53,6 +53,9 @@ class PrintCf4Back extends Component
     }
     public function mount($id = null,  int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
+
+
+
         $this->OUTPUT_SIGN = $OUTPUT;
         $getData = ['GENERIC_NAME' => '', 'QUANTITY' => '', 'DOSSAGE' => '', 'ROUTE' => '', 'FREQUENCY' => '', 'TOTAL_COST' => '', 'CONT_GENERIC_NAME' => '', 'CONT_QUANTITY' => '', 'CONT_DOSSAGE' => '', 'CONT_ROUTE' => '', 'CONT_FREQUENCY' => '', 'CONT_TOTAL_COST' => ''];
 
@@ -76,6 +79,7 @@ class PrintCf4Back extends Component
                 $dataLoc = $this->locationServices->get($this->LOCATION_ID);
                 if ($dataLoc) {
                     $this->PHIC_FORM_MODIFY = $dataLoc->PHIC_FORM_MODIFY ?? false;
+                    $this->DOCTOR_ORDER = $dataLoc->DOCTOR_ORDER_DEFAULT ?? 'UNDERGO HEMODIALYSIS TREATMENT WITH NO COMPLICATIONS';
                 }
 
                 $this->DATE_DISCHARGED =  $data->DATE_DISCHARGED ?? '';

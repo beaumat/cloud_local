@@ -63,6 +63,11 @@ class HemoServices
                 'DOCTOR_ORDER' => $DOCTOR_ORDER == '' ? null : $DOCTOR_ORDER
             ]);
     }
+    public function GetDoctorOrder($ID): string
+    {
+
+        return (string)  Hemodialysis::where('ID', $ID)->first()->DOCTOR_ORDER ?? '';
+    }
     public function GetHemoID($DATE, $PATIENT_ID, $LOCATION_ID): int
     {
         $dataRecord = Hemodialysis::where('CUSTOMER_ID', $PATIENT_ID)
@@ -164,7 +169,9 @@ class HemoServices
                 'sci.ID as SCI_ID',
                 'sci.ITEM_ID',
                 'sci.AMOUNT',
-                'sci.SERVICE_CHARGES_ID'
+                'sci.SERVICE_CHARGES_ID',
+                'hemodialysis.TIME_START',
+                'hemodialysis.TIME_END'
             ])
             ->join('service_charges as s', function ($join) {
                 $join->on('s.PATIENT_ID', '=', 'hemodialysis.CUSTOMER_ID');

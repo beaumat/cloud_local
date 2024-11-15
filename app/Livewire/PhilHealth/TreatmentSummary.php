@@ -20,6 +20,24 @@ class TreatmentSummary extends Component
     private $hemoServices;
     public int $i;
     public $hemoList = [];
+
+    public $editId = null;
+    public $editDoctorOrder = '';
+    public function clickEdit($id)
+    {
+        $this->editId = $id;
+        $this->editDoctorOrder =   $this->hemoServices->GetDoctorOrder($id);
+    }
+    public function clickCancel()
+    {
+        $this->editId = null;
+        $this->editDoctorOrder = '';
+    }
+    public function clickSave()
+    {
+        $this->hemoServices->UpdateDoctorOrder($this->editId, $this->editDoctorOrder);
+        $this->clickCancel();
+    }
     public function boot(HemoServices $hemoServices)
     {
         $this->hemoServices = $hemoServices;

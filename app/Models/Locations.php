@@ -35,6 +35,7 @@ class Locations extends Model
         'PHIC_FORM_MODIFY',
         'IS_DAILY',
         'LOGO_FILE',
-        'USED_DRY_WEIGHT'
+        'USED_DRY_WEIGHT',
+        'DOCTOR_ORDER_DEFAULT'
     ];
 }
