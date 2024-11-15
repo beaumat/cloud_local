@@ -16,12 +16,13 @@
                                         @if ($ID == 0)
                                             Create
                                         @endif
-                                        Hemodialysis Treatment 
+                                        Hemodialysis Treatment
                                     </a>
                                 </div>
                                 <div class="col-4 col-sm-6 text-right">
                                     @if ($ID > 0)
-                                        <i> {{ $STATUS_DESCRIPTION }}  <strong class="text-white"> Created On : {{ $RECORDED_ON  }}</strong></i>
+                                        <i> {{ $STATUS_DESCRIPTION }} <strong class="text-white"> Created On :
+                                                {{ $RECORDED_ON }}</strong></i>
                                     @endif
                                 </div>
                             </div>
@@ -388,10 +389,10 @@
                                                 <div class="row">
                                                     <div class="col-6 col-md-4">
                                                         <div class="row form-group mt-1 text-left">
-                                                            <div class="col-md-5">
-                                                                <label class="text-sm">TIME START :</label>
+                                                            <div class="col-md-12">
+                                                                <label class="text-xs">TIME START :</label>
                                                             </div>
-                                                            <div class="col-md-7">
+                                                            <div class="col-md-12">
                                                                 <input type="time"
                                                                     @if (!$Modify) disabled @endif
                                                                     wire:model='TIME_START'
@@ -402,10 +403,10 @@
                                                     </div>
                                                     <div class="col-6 col-md-4">
                                                         <div class="row form-group mt-1 text-left">
-                                                            <div class="col-md-5">
-                                                                <label class="text-sm">TIME END :</label>
+                                                            <div class="col-md-12">
+                                                                <label class="text-xs">TIME END :</label>
                                                             </div>
-                                                            <div class="col-md-7">
+                                                            <div class="col-md-12">
                                                                 <input type="time"
                                                                     @if (!$Modify) disabled @endif
                                                                     wire:model='TIME_END'
@@ -477,6 +478,10 @@
                                         </div>
                                     </div>
                                 @endif
+                            </div>
+
+                            <div class="col-md-12">
+                                @livewire('Hemodialysis.DoctorsOrder', ['HEMO_ID' => $ID])
                             </div>
                         </div>
                     </div>

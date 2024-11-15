@@ -22,7 +22,7 @@ use Livewire\WithFileUploads;
 
 #[Title('Hemodialysis Treatment')]
 class HemoForm extends Component
-{   
+{
 
 
     use WithFileUploads;
@@ -97,8 +97,19 @@ class HemoForm extends Component
     private $unitOfMeasureServices;
     private $scheduleServices;
     private $patientDoctorServices;
-    public function boot(HemoServices $hemoServices, ContactServices $contactServices, LocationServices $locationServices, UserServices $userServices, UploadServices $uploadServices, ItemInventoryServices $itemInventoryServices, DocumentTypeServices $documentTypeServices, ItemTreatmentServices $itemTreatmentServices, UnitOfMeasureServices $unitOfMeasureServices, ScheduleServices $scheduleServices, PatientDoctorServices $patientDoctorServices)
-    {
+    public function boot(
+        HemoServices $hemoServices,
+        ContactServices $contactServices,
+        LocationServices $locationServices,
+        UserServices $userServices,
+        UploadServices $uploadServices,
+        ItemInventoryServices $itemInventoryServices,
+        DocumentTypeServices $documentTypeServices,
+        ItemTreatmentServices $itemTreatmentServices,
+        UnitOfMeasureServices $unitOfMeasureServices,
+        ScheduleServices $scheduleServices,
+        PatientDoctorServices $patientDoctorServices
+    ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
@@ -121,8 +132,8 @@ class HemoForm extends Component
         $this->EMPLOYEE_NAME = '';
     }
     public function reloadData($data)
-    {   
-        $this->RECORDED_ON = $data->RECORDED_ON ??'';
+    {
+        $this->RECORDED_ON = $data->RECORDED_ON ?? '';
         $this->ID = $data->ID;
         $this->DATE = $data->DATE;
         $this->LOCATION_ID = $data->LOCATION_ID;
@@ -305,7 +316,7 @@ class HemoForm extends Component
     public function getModify()
     {
 
-        if ($this->ActiveRequired == true && $this->STATUS == 1 || $this->ActiveRequired == true && $this->STATUS == 4  ) {
+        if ($this->ActiveRequired == true && $this->STATUS == 1 || $this->ActiveRequired == true && $this->STATUS == 4) {
             $isRequiredItemAdded = $this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->ID);
             if (!$isRequiredItemAdded) {
                 session()->flash('error', ' You must select either a CVC Kit or an AVF Kit before making modifications.');
@@ -566,7 +577,7 @@ class HemoForm extends Component
             $this->hemoServices->StatusUpdate($this->ID, 2);
             $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 1); //PRESENT
             $this->hemoServices->ItemUnposted($this->ID);
-            
+
             DB::commit();
 
             session()->flash("message", 'Successfully posted');
