@@ -32,6 +32,7 @@ class DoctorOrder extends Component
     public function openModal($result)
     {
         $this->HEMO_ID = (int) $result['HEMO_ID'];
+        
         $data = $this->hemoServices->get($this->HEMO_ID); // virify
         if ($data) {
             $this->LOCATION_ID = $data->LOCATION_ID;
