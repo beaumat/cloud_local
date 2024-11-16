@@ -597,7 +597,7 @@
                         <div id="p-particular" class="col-4 text-center text-md ">
                             <b>TOTAL</b>
                         </div>
-                        <div id="p-charge" class="col-1 text-right  left-line font-weight-bold text-sm">
+                        <div id="p-charge" class="col-1 text-right  left-line font-weight-bold text-md">
                             @if ($CHARGE_TOTAL > 0)
                                 {{ number_format($CHARGE_TOTAL, 2) }}
                             @endif
@@ -628,7 +628,7 @@
                                 {{ number_format($P2_TOTAL, 2) }}
                             @endif
                         </div>
-                        <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
+                        <div id="p-pocket" class="col-1 text-right left-line font-weight-bold text-md">
                             {{ number_format($OP_TOTAL, 2) }}
                         </div>
                     </div>
