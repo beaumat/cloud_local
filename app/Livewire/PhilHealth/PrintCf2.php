@@ -85,7 +85,7 @@ class PrintCf2 extends Component
     private $locationServices;
     private $hemoServices;
 
-
+    public string $allDate;
     public $TIME_HIDE;
     public bool $IS_HIDE = false;
     private $philHealthSoaCustomServices;
@@ -224,15 +224,13 @@ class PrintCf2 extends Component
                     } else {
                         $this->NAME_REPRESENTATIVE = "";
                     }
-
                     $this->PEN = $contact->PEN ?? '';
                     $this->PEN_CONTACT = $contact->PEN_CONTACT ?? '';
                     $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
                 }
 
-
+                $this->GetAddDate($data->CONTACT_ID);
                 $hemo = $this->hemoServices->GetPost($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE_DISCHARGED);
-
                 if ($hemo) {
                     $this->POST_WEIGHT = $hemo->POST_WEIGHT;
                     $this->POST_BLOOD_PRESSURE = $hemo->POST_BLOOD_PRESSURE;
@@ -242,7 +240,11 @@ class PrintCf2 extends Component
                     $this->POST_BLOOD_PRESSURE2 =  $hemo->POST_BLOOD_PRESSURE2;
                 }
             }
+
+
+            return;
         }
+
         if ($PATIENT_ID > 0) {
             $this->PRE_SIGN_DATA =  true;
             $contact = $this->contactServices->get($PATIENT_ID, 3);
@@ -308,14 +310,30 @@ class PrintCf2 extends Component
                 } else {
                     $this->NAME_REPRESENTATIVE = "";
                 }
-
                 $this->PEN = $contact->PEN ?? '';
                 $this->PEN_CONTACT = $contact->PEN_CONTACT ?? '';
                 $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
             }
         }
     }
+    private function GetAddDate($CONTACT_ID)
+    {
+        $this->allDate = '';
+        $dataList = $this->hemoServices->GetSummary($CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
+        $LastDate = '';
+        foreach ($dataList as $list) {
+            if ($this->allDate == '') {
+                $this->allDate =  date('M d', strtotime($list->DATE));
+            } else {
+                $this->allDate = $this->allDate . ', ' .  date('d', strtotime($list->DATE));
+            }
+            $LastDate = $list->DATE;
+        }
 
+        if ($LastDate !== '') {
+            $this->allDate = $this->allDate . ', ' .  date('Y', strtotime($LastDate));
+        }
+    }
     public function render()
     {
         return view('livewire.phil-health.print-cf2');

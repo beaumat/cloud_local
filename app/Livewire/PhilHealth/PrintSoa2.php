@@ -159,7 +159,7 @@ class PrintSoa2 extends Component
                 $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                 $this->ADDRESS1 = $this->GetAddress1($contact);
                 $this->ADDRESS2 = $this->GetAddress2($contact);
-                $this->PATIENT_CONTACT = $contact->MOBILE_NO ." ". $contact->TELEPHONE_NO;
+                $this->PATIENT_CONTACT = $contact->MOBILE_NO . " " . $contact->TELEPHONE_NO;
                 $this->FINAL_DIAGNOSIS = $this->philHealthServices->DEFAULT_DIAGNOSIS2 . $contact->FINAL_DIAGNOSIS ?? '';
                 $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                 $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
@@ -286,7 +286,7 @@ class PrintSoa2 extends Component
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS1 = $this->GetAddress1($contact);
                     $this->ADDRESS2 = $this->GetAddress2($contact);
-                    $this->PATIENT_CONTACT = $contact->MOBILE_NO ." ". $contact->TELEPHONE_NO;
+                    $this->PATIENT_CONTACT = $contact->MOBILE_NO . " " . $contact->TELEPHONE_NO;
                     $this->FINAL_DIAGNOSIS = $this->philHealthServices->DEFAULT_DIAGNOSIS2 . $contact->FINAL_DIAGNOSIS ?? '';
                     $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                     $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
@@ -310,18 +310,17 @@ class PrintSoa2 extends Component
                 $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
 
                 $this->allDate == '';
-
                 $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
                 $LastDate = '';
                 foreach ($dataList as $list) {
-
                     if ($this->allDate == '') {
-                        $this->allDate =  date('F d', strtotime($list->DATE));
+                        $this->allDate =  date('M d', strtotime($list->DATE));
                     } else {
                         $this->allDate = $this->allDate . ', ' .  date('d', strtotime($list->DATE));
                     }
                     $LastDate = $list->DATE;
                 }
+
                 if ($LastDate !== '') {
                     $this->allDate = $this->allDate . ', ' .  date('Y', strtotime($LastDate));
                 }

@@ -76,7 +76,6 @@
                                     {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : '' }}
                                     {{ $TIME_DISCHARGED ? \Carbon\Carbon::parse($TIME_DISCHARGED)->format('h:i:s A') : '' }}
                                 </div>
-
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     Session Date :</div>
                                 <div class="col-7 @if (!$PRE_SIGN_DATA) bottom-line @endif">

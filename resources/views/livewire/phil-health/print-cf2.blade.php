@@ -881,7 +881,7 @@
                     <div class="col-2 text-center">
                         <div class="bottom-line2">
                             <span class="text-sm w-100 font-weight-bold">
-                                {{ date('m-d-Y', strtotime($DATE_DISCHARGED)) }}
+                                {{ $allDate }}
                             </span>
                         </div>
                     </div>
@@ -1124,7 +1124,7 @@
                     <div class="col-3 text-center">
                         <div class='row'>
                             <div class='col-1 text-left'>
-                                <span>iiI.</span>
+                                <span>iii.</span>
                             </div>
                             <div class='col-11'>
                                 <div class="bottom-line2">
@@ -1181,8 +1181,9 @@
                                 </div>
                                 <div class='col-7'>
                                     <div class="w-100 bottom-line2">
-                                        <b
-                                            class=" font-weight-bold">{{ date('m-d-Y', strtotime($DATE_DISCHARGED)) }}</b>
+                                        <b class=" font-weight-bold">
+                                            {{ $allDate }}
+                                        </b>
                                     </div>
                                 </div>
 
