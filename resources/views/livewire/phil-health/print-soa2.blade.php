@@ -79,7 +79,7 @@
 
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     Session Date :</div>
-                                <div class="col-7 @if (!$PRE_SIGN_DATA) bottom-line @endif text-xs">
+                                <div class="col-7 @if (!$PRE_SIGN_DATA) bottom-line @endif">
                                     &nbsp;
                                     {{ $allDate }}
                                 </div>
