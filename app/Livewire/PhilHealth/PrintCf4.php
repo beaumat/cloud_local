@@ -132,7 +132,7 @@ class PrintCf4 extends Component
                 $this->CF4_COMPLAINT = $data->CF4_COMPLAINT ?? '';
                 $this->CF4_HPI = $data->CF4_HPI ?? '';
                 $this->CF4_PPMH = $data->CF4_PPMH ?? '';
-                $this->TIME_HIDE = $data->TIME_HIDE ?? $data->TIME_ADMITTED;
+                $this->TIME_HIDE = $data->TIME_HIDE ?? $data->TIME_DISCHARGED;
                 $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
                 $this->TIME_ADMITTED = $data->TIME_ADMITTED ? Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A') : '';
                 $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';

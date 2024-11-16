@@ -124,7 +124,7 @@ class PrintCf2 extends Component
                 $this->LOCATION_ID = $data->LOCATION_ID;
                 $this->gotHide();
                 $this->RR_NO = $data->RR_NO ?? '';
-                $this->TIME_HIDE = $data->TIME_HIDE ?? $data->TIME_ADMITTED;
+                $this->TIME_HIDE = $data->TIME_HIDE ?? $data->TIME_DISCHARGED;
                 $this->DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
                 $this->TIME_ADMITTED = $data->TIME_ADMITTED ? Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A') : '';
                 $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
