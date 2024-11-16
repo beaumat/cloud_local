@@ -14,7 +14,8 @@
                     <div class="row">
                         <div class="col-6">
                             <b class="bottom-line"
-                                @if ($HEADER) style="opacity: 0.0" @endif>PHILHEALTH ACCREDITED: <strong class="text-primary">{{  $CENTER_ACCREDITED_NO }}</strong></b>
+                                @if ($HEADER) style="opacity: 0.0" @endif>PHILHEALTH ACCREDITED:
+                                <strong class="text-primary">{{ $CENTER_ACCREDITED_NO }}</strong></b>
                             <div class="row mt-4">
                                 <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
                                     Patient`s Name : </div>
@@ -78,9 +79,9 @@
 
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     Session Date :</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-7 bottom-line">
-                                    {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') : '' }}
+                                <div class="col-7 @if (!$PRE_SIGN_DATA) bottom-line @endif text-xs">
+                                    &nbsp;
+                                    {{ $allDate }}
                                 </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     First Case Rate :</div>
