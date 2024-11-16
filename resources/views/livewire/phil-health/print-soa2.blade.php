@@ -594,36 +594,36 @@
                     </div>
 
                     <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-center text-lg ">
+                        <div id="p-particular" class="col-4 text-center text-md ">
                             <b>TOTAL</b>
                         </div>
-                        <div id="p-charge" class="col-1 text-right  left-line font-weight-bold text-lg">
+                        <div id="p-charge" class="col-1 text-right  left-line font-weight-bold text-sm">
                             @if ($CHARGE_TOTAL > 0)
                                 {{ number_format($CHARGE_TOTAL, 2) }}
                             @endif
                         </div>
-                        <div id="p-vat" class="col-1 text-right  left-line font-weight-bold text-lg">
+                        <div id="p-vat" class="col-1 text-right  left-line font-weight-bold text-md">
                             @if ($VAT_TOTAL > 0)
                                 {{ number_format($VAT_TOTAL, 2) }}
                             @endif
                         </div>
-                        <div id="p-sp" class="col-1 text-right   left-line font-weight-bold text-lg">
+                        <div id="p-sp" class="col-1 text-right   left-line font-weight-bold text-md">
                             @if ($SP_TOTAL > 0)
                                 {{ number_format($SP_TOTAL, 2) }}
                             @endif
                         </div>
-                        <div id="p-gov" class="col-1 text-right  left-line text-xs font-weight-bold text-lg">
+                        <div id="p-gov" class="col-1 text-right  left-line text-xs font-weight-bold text-md">
                             @if ($GOV_TOTAL > 0)
                                 {{ number_format($GOV_TOTAL, 2) }}
                             @endif
                         </div>
 
-                        <div id="p-first" class="col-2  left-line text-right font-weight-bold text-lg">
+                        <div id="p-first" class="col-2  left-line text-right font-weight-bold text-md">
                             @if ($P1_TOTAL > 0)
                                 {{ number_format($P1_TOTAL, 2) }}
                             @endif
                         </div>
-                        <div id="p-second" class="col-1 left-line text-right  font-weight-bold text-lg">
+                        <div id="p-second" class="col-1 left-line text-right  font-weight-bold text-md">
                             @if ($P2_TOTAL > 0)
                                 {{ number_format($P2_TOTAL, 2) }}
                             @endif
