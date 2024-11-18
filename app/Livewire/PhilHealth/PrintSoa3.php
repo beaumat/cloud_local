@@ -332,7 +332,7 @@ class PrintSoa3 extends Component
                 foreach ($dataList as $list) {
 
                     if ($this->allDate == '') {
-                        $this->allDate =  date('F d', strtotime($list->DATE));
+                        $this->allDate =  date('M d', strtotime($list->DATE));
                     } else {
                         $this->allDate = $this->allDate . ', ' .  date('d', strtotime($list->DATE));
                     }

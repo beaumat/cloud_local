@@ -58,7 +58,7 @@
                                     class="col-8 bottom-line text-xs"> &nbsp; {{ $OTHER_DIAGNOSIS }}</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
                                     TREATMENT DATES : </div>
-                                <div class="col-8 @if (!$PRE_SIGN_DATA) bottom-line @endif text-xs">
+                                <div class="col-8 @if (!$PRE_SIGN_DATA) bottom-line @endif text-sm">
                                     &nbsp;
                                     {{ $allDate }}
                                 </div>
