@@ -16,7 +16,15 @@ class DepositServices
         $this->dateServices = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
     }
+    public function Get(int $ID)
+    {
+        $result = Deposit::where('ID', '=', $ID)->first();
+        if ($result) {
+            return $result;
+        }
 
+        return [];
+    }
     public function Store(string $CODE, string $DATE, int $BANK_ACCOUNT_ID, string $NOTES, int $CASH_BACK_ACCOUNT_ID, float $CASH_BACK_AMOUNT, string $CASH_BACK_NOTES, int $LOCATION_ID): int
     {
 

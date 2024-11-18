@@ -36,7 +36,6 @@ class PhilHealthForm extends Component
     public $DATE_DISCHARGED;
     public $TIME_DISCHARGED;
     public $TIME_HIDE;
-
     public bool $IS_HIDE = false;
     public string $FINAL_DIAGNOSIS;
     public string $OTHER_DIAGNOSIS;
