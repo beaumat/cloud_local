@@ -19,6 +19,7 @@ class PrintSoa3 extends Component
     public int $CONTACT_ID;
     public int $AGE;
     public string $PATIENT_NAME;
+    public string $DATE_BIRTH;
     public string $PATIENT_CONTACT;
     public string $USER_CONTACT;
     public string $PIN;
@@ -166,8 +167,8 @@ class PrintSoa3 extends Component
                 $EX_COUNT = strlen($contact->SALUTATION);
                 $MI_NAME = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
                 $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
-
-                $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME .   $MI_NAME   . $contact->LAST_NAME . $EX_NAME);
+                $this->DATE_BIRTH = date('m/d/Y', strtotime($contact->DATE_OF_BIRTH));
+                $this->PATIENT_NAME = strtoupper($contact->LAST_NAME . ', ' .   $contact->FIRST_NAME . ' '  . $contact->MIDDLE_NAME . ' ' . $EX_NAME);
                 $this->PIN = $contact->PIN ?? '';
                 $this->LOCATION_ID = $contact->LOCATION_ID;
                 $this->gotHide();
@@ -296,7 +297,8 @@ class PrintSoa3 extends Component
                     $MI_NAME = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
                     $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
                     $this->PIN =  $contact->PIN ?? '';
-                    $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME .   $MI_NAME   . $contact->LAST_NAME . $EX_NAME);
+                    $this->DATE_BIRTH = date('m/d/Y', strtotime($contact->DATE_OF_BIRTH));
+                    $this->PATIENT_NAME = strtoupper($contact->LAST_NAME . ', ' .   $contact->FIRST_NAME . ' '  . $contact->MIDDLE_NAME . ' ' . $EX_NAME);
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS1 = $this->GetAddress1($contact);
                     $this->ADDRESS2 = $this->GetAddress2($contact);

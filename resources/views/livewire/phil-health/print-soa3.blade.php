@@ -1,5 +1,4 @@
 <div>
-
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -27,8 +26,12 @@
                                 @if ($HEADER) style="opacity: 0.0" @endif>PHILHEALTH ACCREDITED
                                 :</b>
                             <div class="row mt-4">
+                                <div class="col-12 text-right">
+                                    <i>DOB</i>: {{ $DATE_BIRTH }}
+                                </div>
                                 <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
-                                    PATIENT`S NAME : </div>
+                                    PATIENT`S NAME :
+                                </div>
                                 <div class="col-8 bottom-line"
                                     @if ($HEADER) style="opacity: 0.0" @endif>
                                     <div class="row">
@@ -70,6 +73,7 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
+                                <div class="col-12"> &nbsp;</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     PHILHEALTH No. :
                                 </div>
@@ -624,7 +628,7 @@
                         </div>
                         <div id="p-after-disc" class="col-1 text-right  left-line font-weight-bold">
                             @if ($CHARGE_TOTAL > 0)
-                                {{ number_format($CHARGE_TOTAL - $SP_TOTAL , 2) }}
+                                {{ number_format($CHARGE_TOTAL - $SP_TOTAL, 2) }}
                             @endif
                         </div>
                         <div id="p-first" class="col-1  left-line text-right font-weight-bold">
