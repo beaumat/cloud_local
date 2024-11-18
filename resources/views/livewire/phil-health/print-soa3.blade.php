@@ -116,7 +116,7 @@
                         </div>
                         <div class="col-1 left-line">
                         </div>
-                        <div class="col-3 text-center  left-line bottom-line">
+                        <div class="col-4 text-center  left-line bottom-line">
                             AMOUNT OF <br /> DISCOUNTS
                         </div>
                         <div class="col-2  text-center left-line bottom-line">
@@ -148,16 +148,16 @@
                                 <div class="col-12">___LINGAP</div>
                             </div>
                         </div>
-                        {{-- <div class="col-1 text-center left-line">
+                        <div class="col-1 text-center left-line">
                             AMOUNT AFTER DISCOUNT
-                        </div> --}}
+                        </div>
                         <div class="col-1  left-line text-center ">
                             First <br /> Case Rate amount
                         </div>
                         <div class="col-1 left-line text-center ">
                             Second Case Rate amount
                         </div>
-                        <div class="col-2 text-center left-line">
+                        <div class="col-1 text-center left-line">
                             Ouf of <br /> Pocket <br /> of Patient
                         </div>
                     </div>
@@ -174,13 +174,13 @@
                         </div>
                         <div id="p-gov" class="col-1 text-center  left-line text-xs">
                         </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-center  left-line">
-                        </div> --}}
+                        <div id="p-after-disc" class="col-1 text-center  left-line">
+                        </div>
                         <div id="p-first" class="col-1  left-line text-center ">
                         </div>
                         <div id="p-second" class="col-1 left-line text-center ">
                         </div>
-                        <div id="p-pocket" class="col-2 text-center left-line">
+                        <div id="p-pocket" class="col-1 text-center left-line">
                         </div>
                     </div>
                     {{-- <div class="row bottom-line right-line left-line">
@@ -236,14 +236,14 @@
                                 {{ number_format($GOV_DRUG_N_MEDICINE, 2) }}
                             @endif
                         </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-center  left-line"> </div> --}}
+                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
                         <div id="p-first" class="col-1  left-line text-center ">
 
                         </div>
                         <div id="p-second" class="col-1 left-line text-center ">
 
                         </div>
-                        <div id="p-pocket" class="col-2 text-center left-line">
+                        <div id="p-pocket" class="col-1 text-center left-line">
 
                         </div>
                     </div>
@@ -271,14 +271,14 @@
                                 {{ number_format($GOV_LAB_N_DIAGNOSTICS, 2) }}
                             @endif
                         </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-center  left-line"> </div> --}}
+                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
                         <div id="p-first" class="col-1  left-line text-center ">
 
                         </div>
                         <div id="p-second" class="col-1 left-line text-center ">
 
                         </div>
-                        <div id="p-pocket" class="col-2 text-center left-line">
+                        <div id="p-pocket" class="col-1 text-center left-line">
 
                         </div>
                     </div>
@@ -306,12 +306,12 @@
                                 {{ number_format($GOV_OPERATING_ROOM_FEE, 2) }}
                             @endif
                         </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-center  left-line"> </div> --}}
+                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
                         <div id="p-first" class="col-1  left-line text-center ">
                         </div>
                         <div id="p-second" class="col-1 left-line text-center ">
                         </div>
-                        <div id="p-pocket" class="col-2 text-center left-line">
+                        <div id="p-pocket" class="col-1 text-center left-line">
 
                         </div>
                     </div>
@@ -339,12 +339,12 @@
                                 {{ number_format($GOV_SUPPLIES, 2) }}
                             @endif
                         </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-center  left-line"> </div> --}}
+                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
                         <div id="p-first" class="col-1  left-line text-center ">
                         </div>
                         <div id="p-second" class="col-1 left-line text-center ">
                         </div>
-                        <div id="p-pocket" class="col-2 text-center left-line">
+                        <div id="p-pocket" class="col-1 text-center left-line">
 
                         </div>
                     </div>
@@ -372,10 +372,10 @@
                                 {{ number_format($GOV_OTHERS, 2) }}
                             @endif
                         </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-center  left-line"> </div> --}}
+                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
                         <div id="p-first" class="col-1  left-line text-center "> </div>
                         <div id="p-second" class="col-1 left-line text-center "> </div>
-                        <div id="p-pocket" class="col-2 text-center left-line"> </div>
+                        <div id="p-pocket" class="col-1 text-center left-line"> </div>
                     </div>
 
 
@@ -404,11 +404,11 @@
                                 {{ number_format($GOV_SUB_TOTAL, 2) }}
                             @endif
                         </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-right  left-line font-weight-bold">
+                        <div id="p-after-disc" class="col-1 text-right  left-line font-weight-bold">
                             @if ($AD_SUB_TOTAL > 0)
                                 {{ number_format($AD_SUB_TOTAL, 2) }}
                             @endif
-                        </div> --}}
+                        </div>
                         <div id="p-first" class="col-1  left-line text-right  font-weight-bold">
                             @if ($P1_SUB_TOTAL > 0)
                                 {{ number_format($P1_SUB_TOTAL, 2) }}
@@ -419,7 +419,7 @@
                                 {{ number_format($P2_SUB_TOTAL, 2) }}
                             @endif
                         </div>
-                        <div id="p-pocket" class="col-2 text-right left-line font-weight-bold">
+                        <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
 
                             {{ number_format($OP_SUB_TOTAL, 2) }}
 
@@ -433,10 +433,10 @@
                         <div id="p-vat" class="col-1 text-center  left-line"> </div>
                         <div id="p-sp" class="col-1 text-center   left-line"> </div>
                         <div id="p-gov" class="col-1 text-center  left-line text-xs"> </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-center  left-line"> </div> --}}
+                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
                         <div id="p-first" class="col-1  left-line text-center "> </div>
                         <div id="p-second" class="col-1 left-line text-center "> </div>
-                        <div id="p-pocket" class="col-2 text-center left-line"> </div>
+                        <div id="p-pocket" class="col-1 text-center left-line"> </div>
                     </div>
                     {{-- Doctor --}}
                     @php
@@ -462,18 +462,18 @@
                                 @endif
                             </div>
                             <div id="p-gov" class="col-1 text-right  left-line text-xs"> </div>
-                            {{-- <div id="p-after-disc" class="col-1 text-right  left-line">
+                            <div id="p-after-disc" class="col-1 text-right  left-line">
                                 @if ($list->DISCOUNT > 0)
-                                    <i> {{ number_format($list->FIRST_CASE, 2) }}</i>
+                                    <i> {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }}</i>
                                 @endif
-                            </div> --}}
+                            </div>
                             <div id="p-first" class="col-1  left-line text-right">
                                 @if ($list->FIRST_CASE > 0)
                                     <i> {{ number_format($list->FIRST_CASE, 2) }}</i>
                                 @endif
                             </div>
                             <div id="p-second" class="col-1 left-line text-right "> </div>
-                            <div id="p-pocket" class="col-2 text-right left-line">
+                            <div id="p-pocket" class="col-1 text-right left-line">
                                 @if ($list->FIRST_CASE > 0)
                                     <i>
                                         {{-- {{ number_format($list->AMOUNT - $list->DISCOUNT - $list->FIRST_CASE, 2) }} --}}
@@ -496,16 +496,16 @@
                             </div>
                             <div id="p-gov" class="col-1 text-center  left-line text-xs">
                                 &nbsp; </div>
-                            {{-- <div id="p-after-disc" class="col-1 text-center  left-line">
+                            <div id="p-after-disc" class="col-1 text-center  left-line">
                                 &nbsp;
-                            </div> --}}
+                            </div>
                             <div id="p-first" class="col-1  left-line text-center ">
                                 &nbsp;
                             </div>
                             <div id="p-second" class="col-1 left-line text-center ">
                                 &nbsp;
                             </div>
-                            <div id="p-pocket" class="col-2 text-center left-line">
+                            <div id="p-pocket" class="col-1 text-center left-line">
                                 &nbsp;
                             </div>
                         </div>
@@ -526,17 +526,18 @@
                                     &nbsp;
                                 </div>
                                 <div id="p-gov" class="col-1 text-center  left-line text-xs">
-                                    &nbsp; </div>
-                                {{-- <div id="p-after-disc" class="col-1 text-center  left-line">
                                     &nbsp;
-                                </div> --}}
+                                </div>
+                                <div id="p-after-disc" class="col-1 text-center  left-line">
+                                    &nbsp;
+                                </div>
                                 <div id="p-first" class="col-1  left-line text-center ">
                                     &nbsp;
                                 </div>
                                 <div id="p-second" class="col-1 left-line text-center ">
                                     &nbsp;
                                 </div>
-                                <div id="p-pocket" class="col-2 text-center left-line">
+                                <div id="p-pocket" class="col-1 text-center left-line">
                                     &nbsp;
                                 </div>
                             </div>
@@ -558,18 +559,18 @@
                             @endif
                         </div>
                         <div id="p-gov" class="col-1 text-right  left-line text-xs font-weight-bold"> </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-right  left-line font-weight-bold"> 
+                        <div id="p-after-disc" class="col-1 text-right  left-line font-weight-bold">
                             @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
+                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
                             @endif
-                        </div> --}}
+                        </div>
                         <div id="p-first" class="col-1  left-line text-right font-weight-bold">
                             @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
                                 {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
                             @endif
                         </div>
                         <div id="p-second" class="col-1 left-line text-right font-weight-bold"> </div>
-                        <div id="p-pocket" class="col-2 text-right left-line font-weight-bold">
+                        <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
                             @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
                                 {{-- {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL - $PROFESSIONAL_P1_SUB_TOTAL, 2) }} --}}
                                 0.00
@@ -588,12 +589,12 @@
                         </div>
                         <div id="p-gov" class="col-1 text-center  left-line text-xs">
                         </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-center  left-line"> </div> --}}
+                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
                         <div id="p-first" class="col-1  left-line text-center ">
                         </div>
                         <div id="p-second" class="col-1 left-line text-center ">
                         </div>
-                        <div id="p-pocket" class="col-2 text-center left-line">
+                        <div id="p-pocket" class="col-1 text-center left-line">
                         </div>
                     </div>
 
@@ -621,11 +622,11 @@
                                 {{ number_format($GOV_TOTAL, 2) }}
                             @endif
                         </div>
-                        {{-- <div id="p-after-disc" class="col-1 text-right  left-line font-weight-bold">
-                            @if ($AD_TOTAL > 0)
-                                {{ number_format($AD_TOTAL, 2) }}
+                        <div id="p-after-disc" class="col-1 text-right  left-line font-weight-bold">
+                            @if ($CHARGE_TOTAL > 0)
+                                {{ number_format($CHARGE_TOTAL - $SP_TOTAL , 2) }}
                             @endif
-                        </div> --}}
+                        </div>
                         <div id="p-first" class="col-1  left-line text-right font-weight-bold">
                             @if ($P1_TOTAL > 0)
                                 {{ number_format($P1_TOTAL, 2) }}
@@ -636,7 +637,7 @@
                                 {{ number_format($P2_TOTAL, 2) }}
                             @endif
                         </div>
-                        <div id="p-pocket" class="col-2 text-right left-line font-weight-bold">
+                        <div id="p-pocket" class="col-1 text-right left-line font-weight-bold">
                             {{ number_format($OP_TOTAL, 2) }}
                         </div>
                     </div>

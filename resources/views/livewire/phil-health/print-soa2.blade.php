@@ -51,8 +51,6 @@
                                     Diagnosis : </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
                                     class="col-8 bottom-line text-sm"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
-
-
                             </div>
                         </div>
                         <div class="col-6">
