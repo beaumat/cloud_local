@@ -824,17 +824,12 @@
                 <span class="text-sm"> (Use additional CF2 if necessary):</span>
                 <div class="row" style="top:-5px;position:relative">
                     <div class="col-2 text-center">Diagnosis </div>
-                    <div class="col-2 text-center">
-                        ICD-10 Code/s
-                    </div>
+                    <div class="col-2 text-center"> ICD-10 Code/s </div>
                     <div class="col-3 text-center">Related Procedure/s (if there’s any) </div>
                     <div class="col-1 text-center">RVS Code </div>
                     <div class="col-2 text-center">Date of Procedure </div>
-                    <div class="col-2 text-center text-left">
-                        <span style="position:absolute;width:230px;left:-20px;">
-                            Laterality (check applicable box)
-                        </span>
-                    </div>
+                    <div class="col-2 text-center text-left"> <span style="position:absolute;width:230px;left:-20px;">
+                            Laterality (check applicable box) </span> </div>
                 </div>
                 <div class="row" style="position:absolute;width:100%;height:30px;top:50px;">
                     <div class="col-2 text-center">
@@ -845,7 +840,6 @@
                             <div class='col-11 text-left'>
                                 <div class="bottom-line2">
                                     <span class="text-sm w-100 font-weight-bold">
-
                                         {{ $DEFAULT_SEC_TO }} </span>
                                 </div>
                             </div>
@@ -854,8 +848,13 @@
                     <div class="col-2 text-center">
                         <div class="bottom-line2">
                             <span class="text-sm w-100 font-weight-bold">
-                                <span class="text-sm w-100  font-weight-bold">
-                                    {{ $ICD_CODE }}</span>
+                                &nbsp;
+                                @if (!empty($treatdata[0]))
+                                    <span class="text-sm w-100  font-weight-bold">
+                                        {{ $ICD_CODE }}
+                                        <span class="text-sm w-100  font-weight-bold">
+                                @endif
+                            </span>
                             </span>
                         </div>
                     </div>
@@ -866,23 +865,36 @@
                             </div>
                             <div class='col-11'>
                                 <div class="bottom-line2">
-                                    <span class="text-sm w-100  font-weight-bold">
-                                        {{ $RELATED_PROCEDURE }}</span>
+
+                                    &nbsp;
+                                    @if (!empty($treatdata[0]))
+                                        <span class="text-sm w-100  font-weight-bold">
+                                            {{ $RELATED_PROCEDURE }}
+                                        </span>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-1 text-center">
                         <div class="bottom-line2">
-                            <span class="text-sm w-100  font-weight-bold">
-                                {{ $FIRST_CASE_RATE }} </span>
+                            &nbsp;
+                            @if (!empty($treatdata[0]))
+                                <span class="text-sm w-100  font-weight-bold">
+                                    {{ $FIRST_CASE_RATE }}
+                                </span>
+                            @endif
+
                         </div>
                     </div>
                     <div class="col-2 text-center">
                         <div class="bottom-line2">
-                            <span class="text-sm w-100 font-weight-bold">
-                                {{ $allDate }}
-                            </span>
+                            &nbsp; @if (!empty($treatdata[0]))
+                                <span class="text-sm w-100 font-weight-bold">
+                                    {{ $treatdata[0] }}
+                                </span>
+                            @endif
                         </div>
                     </div>
                     <div class="col-2 text-center">
@@ -910,14 +922,10 @@
                             </div>
                             <div class='col-11 text-center'>
                                 <div class="bottom-line2 " style="height:25px;">
-
-
                                     <div class="text-sm w-100 font-weight-bold text-left">
                                         <div style="position:absolute;width:500px;"> {{ $FINAL_DIAGNOSIS }}
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
@@ -933,15 +941,32 @@
                             <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
+                                    @if (!empty($treatdata[1]))
+                                        <span class="text-sm w-100  font-weight-bold">
+                                            {{ $RELATED_PROCEDURE }}
+                                        </span>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-1 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2"> &nbsp;
+                            @if (!empty($treatdata[1]))
+                                <span class="text-sm w-100  font-weight-bold">
+                                    {{ $FIRST_CASE_RATE }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2"> &nbsp; @if (!empty($treatdata[1]))
+                                <span class="text-sm w-100 font-weight-bold">
+                                    {{ $treatdata[1] }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2 text-center">
                         <div style="position:absolute;width:300px;left:-50px;">
@@ -977,20 +1002,36 @@
                     <div class="col-3 text-center">
                         <div class='row'>
                             <div class='col-1 text-left'>
-                                <span>iiI.</span>
+                                <span>iii.</span>
                             </div>
                             <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
+                                    @if (!empty($treatdata[2]))
+                                        <span class="text-sm w-100  font-weight-bold">
+                                            {{ $RELATED_PROCEDURE }}
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-1 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2"> &nbsp;
+                            @if (!empty($treatdata[2]))
+                                <span class="text-sm w-100  font-weight-bold">
+                                    {{ $FIRST_CASE_RATE }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2"> &nbsp; @if (!empty($treatdata[2]))
+                                <span class="text-sm w-100 font-weight-bold">
+                                    {{ $treatdata[2] }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2 text-center">
                         <div style="position:absolute;width:300px;left:-50px;">
@@ -1031,15 +1072,31 @@
                             <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
+                                    @if (!empty($treatdata[3]))
+                                        <span class="text-sm w-100  font-weight-bold">
+                                            {{ $RELATED_PROCEDURE }}
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-1 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2"> &nbsp;
+                            @if (!empty($treatdata[3]))
+                                <span class="text-sm w-100  font-weight-bold">
+                                    {{ $FIRST_CASE_RATE }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2"> &nbsp; @if (!empty($treatdata[3]))
+                                <span class="text-sm w-100 font-weight-bold">
+                                    {{ $treatdata[3] }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2 text-center">
                         <div style="position:absolute;width:300px;left:-50px;">
@@ -1080,15 +1137,32 @@
                             <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
+                                    @if (!empty($treatdata[4]))
+                                        <span class="text-sm w-100  font-weight-bold">
+                                            {{ $RELATED_PROCEDURE }}
+                                        </span>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-1 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2"> &nbsp;
+                            @if (!empty($treatdata[4]))
+                                <span class="text-sm w-100  font-weight-bold">
+                                    {{ $FIRST_CASE_RATE }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2"> &nbsp; @if (!empty($treatdata[4]))
+                                <span class="text-sm w-100 font-weight-bold">
+                                    {{ $treatdata[4] }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2 text-center">
                         <div style="position:absolute;width:300px;left:-50px;">
@@ -1129,15 +1203,33 @@
                             <div class='col-11'>
                                 <div class="bottom-line2">
                                     &nbsp;
+                                    @if (!empty($treatdata[5]))
+                                        <span class="text-sm w-100  font-weight-bold">
+                                            {{ $RELATED_PROCEDURE }}
+                                        </span>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-1 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2">
+                            &nbsp;
+                            @if (!empty($treatdata[5]))
+                                <span class="text-sm w-100  font-weight-bold">
+                                    {{ $FIRST_CASE_RATE }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2 text-center">
-                        <div class="bottom-line2"> &nbsp; </div>
+                        <div class="bottom-line2"> &nbsp; @if (!empty($treatdata[5]))
+                                <span class="text-sm w-100 font-weight-bold">
+                                    {{ $treatdata[5] }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2 text-center">
                         <div style="position:absolute;width:300px;left:-50px;">

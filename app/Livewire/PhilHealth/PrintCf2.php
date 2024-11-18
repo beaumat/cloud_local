@@ -89,7 +89,7 @@ class PrintCf2 extends Component
     public $TIME_HIDE;
     public bool $IS_HIDE = false;
     private $philHealthSoaCustomServices;
-
+    public $treatdata = [];
     public function boot(
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
@@ -114,6 +114,8 @@ class PrintCf2 extends Component
     }
     public function mount(int $id = 0,  int $PATIENT_ID = 0, $OUTPUT = true)
     {
+
+   
         $this->RELATED_PROCEDURE = "HEMODIALYSIS";
         $this->OUTPUT_SIGN = $OUTPUT;
         if ($id > 0) {
@@ -230,6 +232,12 @@ class PrintCf2 extends Component
                 }
 
                 $this->GetAddDate($data->CONTACT_ID);
+                $dataRow = $this->getTreatment($data->CONTACT_ID);
+           
+                foreach ($dataRow as $list) {
+                    $this->treatdata[] =  date('m/d/Y',strtotime( $list->DATE));
+                 
+                }
                 $hemo = $this->hemoServices->GetPost($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE_DISCHARGED);
                 if ($hemo) {
                     $this->POST_WEIGHT = $hemo->POST_WEIGHT;
@@ -333,6 +341,12 @@ class PrintCf2 extends Component
         if ($LastDate !== '') {
             $this->allDate = $this->allDate . ', ' .  date('Y', strtotime($LastDate));
         }
+    }
+
+
+    private function getTreatment(int $CONTACT_ID)
+    {
+        return $this->hemoServices->GetSummary($CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED, $this->DATE_DISCHARGED);
     }
     public function render()
     {
