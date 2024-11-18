@@ -6,7 +6,6 @@ use App\Services\AccountServices;
 use App\Services\DepositServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
-use Hamcrest\Type\IsNumeric;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -34,8 +33,12 @@ class DepositForm extends Component
     private $locationServices;
     private $userServices;
 
-    public function boot(DepositServices $depositServices, AccountServices $accountServices, LocationServices $locationServices, UserServices $userServices)
-    {
+    public function boot(
+        DepositServices $depositServices,
+        AccountServices $accountServices,
+        LocationServices $locationServices,
+        UserServices $userServices
+    ) {
         $this->depositServices = $depositServices;
         $this->accountServices = $accountServices;
         $this->locationServices = $locationServices;
@@ -116,15 +119,12 @@ class DepositForm extends Component
                     $this->CASH_BACK_NOTES,
                     $this->LOCATION_ID
                 );
-    
-                return Redirect::route('bankingdeposit_edit',['id' => $this->ID]);
-    
+
+                return Redirect::route('bankingdeposit_edit', ['id' => $this->ID]);
             } else {
             }
         } catch (\Exception $e) {
-                
         }
-      
     }
 
     public function render()

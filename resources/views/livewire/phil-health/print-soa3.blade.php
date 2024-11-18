@@ -14,7 +14,7 @@
                         </div>
                     @else
                         {{-- nothing customize --}}
-                        <img class="print-logo" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
+                        <img class="print-logo w-75" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
                     @endif
                 </div>
                 <div class="col-12">
