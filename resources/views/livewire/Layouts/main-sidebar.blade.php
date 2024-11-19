@@ -84,11 +84,11 @@
                             @endif
                             {{-- Receivables --}}
 
-                            @if (Auth::user()->can('report.financial.ar-aging') || Auth::user()->can('report.financial.customer-balance'))
+                            @if (Auth::user()->can('report.receivables.ar-aging') || Auth::user()->can('report.receivables.customer-balance'))
                                 @livewire('Layouts.ReportsReceivables')
                             @endif
                             {{-- Payables --}}
-                            @if (Auth::user()->can('report.financial.ap-aging') || Auth::user()->can('report.financial.vendor-balance'))
+                            @if (Auth::user()->can('report.payables.ap-aging') || Auth::user()->can('report.payables.vendor-balance'))
                                 @livewire('Layouts.ReportsPayables')
                             @endif
 

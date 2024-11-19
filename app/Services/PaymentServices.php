@@ -32,6 +32,14 @@ class PaymentServices
         $result =  Payment::where('ID', $ID)->first();
         return $result;
     }
+    public function getViaUndeposit($ID)
+    {
+        $result =  Payment::where('ID', $ID)->where('DEPOSITED', '=', '0')->first();
+        if ($result) {
+            return $result;
+        }
+        return [];
+    }
     public function getTotalPay(int $INVOICE_ID, int $EXECPT_PAYMENT_ID): float
     {
         $data = PaymentInvoices::query()

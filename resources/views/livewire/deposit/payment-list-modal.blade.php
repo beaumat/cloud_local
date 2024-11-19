@@ -12,16 +12,34 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <table class="table table-sm ">
-                            <thead class="text-xs bg-success">
+                        @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+                        <div class='form-group form-group-sm'>
+                            <div class="row">
+                                <div class="col-4">
+                                    <label class="text-xs form-label">Payment Method :</label>
+                                    <select class="form-select text-xs p-1" wire:model.live ='PAYMENT_METHOD_ID'>
+                                        <option value="0"> All Payment Method</option>
+                                        @foreach ($paymentMethodList as $list)
+                                            <option value="{{ $list->ID }}">{{ $list->DESCRIPTION }}</option>
+                                        @endforeach
+                                    </select>
+
+                                </div>
+                                <div class="col-4">
+                                    <label class="text-xs form-label">Search :</label>
+                                    <input type="text" class="w-50 text-xs p-1" wire:model.live='search' />
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-sm table-hover table-bordered">
+                            <thead class="text-xs bg-sky">
                                 <tr>
-                                    <th class="col-1 text-center"></th>
+                                    <th class="text-center"></th>
                                     <th class="col-1">Date</th>
                                     <th class="col-1">Type</th>
                                     <th class="col-1">Ref No.</th>
                                     <th class="col-1">Payment Method</th>
-                                    <th class="col-6">Received From</th>
-
+                                    <th class="col-7">Received From</th>
                                     <th class="col-1 text-right">Amount</th>
                                 </tr>
                             </thead>
@@ -29,15 +47,17 @@
                                 @foreach ($dataList as $list)
                                     <tr>
                                         <td>
-                                            <button class="btn btn-success btn-xs"> <i class="fa fa-plus-circle"
-                                                    aria-hidden="true"></i></button>
+                                            <button class="btn btn-success btn-xs"
+                                                wire:click='AddFund({{ $list->ID }},{{ $list->OBJECT_TYPE }})'>
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                            </button>
                                         </td>
-                                        <td>{{ $list->DATE }}</td>
+                                        <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                         <td>{{ $list->TYPE }}</td>
                                         <td>{{ $list->CODE }}</td>
                                         <td>{{ $list->PAYMENT_METHOD }}</td>
                                         <td>{{ $list->RECEIVED_FROM_NAME }}</td>
-                                        <td>{{ number_format($list->AMOUNT, 2) }}</td>
+                                        <td class='text-right'>{{ number_format($list->AMOUNT, 2) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

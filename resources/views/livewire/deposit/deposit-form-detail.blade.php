@@ -8,7 +8,9 @@
                 <th class="col-1">Payment Method</th>
                 <th class="col-2">Check No.</th>
                 <th class="col-2 text-right">Amount</th>
-                <th class="col-1 text-center">Action</th>
+                @if ($STATUS == 0 || $STATUS == 16)
+                    <th class="text-center col-1">Action</th>
+                @endif
             </tr>
         </thead>
         <tbody class="text-xs">
@@ -58,90 +60,94 @@
                         @endif
 
                     </td>
-                    <td class="text-center">
-                        @if ($editFundId === $list->ID)
-                            <button title="Update" id="updatebtn" wire:click="UpdateFund()"
-                                class="btn btn-xs btn-success">
-                                <i class="fas fa-check" aria-hidden="true"></i>
-                            </button>
-                            <button title="Cancel" id="cancelbtn" href="#" wire:click="CancelFund()"
-                                class="btn btn-xs btn-warning">
-                                <i class="fas fa-ban" aria-hidden="true"></i>
-                            </button>
-                        @else
-                            @if ($list->SOURCE_OBJECT_ID == null)
-                                <button title="Edit" id="editbtn" wire:click='EditFund( {{ $list->ID }})'
-                                    class="btn btn-xs btn-info">
-                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                    @if ($STATUS == 0 || $STATUS == 16)
+                        <td class="text-center">
+                            @if ($editFundId === $list->ID)
+                                <button title="Update" id="updatebtn" wire:click="UpdateFund()"
+                                    class="btn btn-xs btn-success">
+                                    <i class="fas fa-check" aria-hidden="true"></i>
+                                </button>
+                                <button title="Cancel" id="cancelbtn" href="#" wire:click="CancelFund()"
+                                    class="btn btn-xs btn-warning">
+                                    <i class="fas fa-ban" aria-hidden="true"></i>
+                                </button>
+                            @else
+                                @if ($list->SOURCE_OBJECT_ID == null)
+                                    <button title="Edit" id="editbtn" wire:click='EditFund( {{ $list->ID }})'
+                                        class="btn btn-xs btn-info">
+                                        <i class="fas fa-edit" aria-hidden="true"></i>
+                                    </button>
+                                @endif
+                                <button title="Delete" id="deletebtn" wire:click='DeleteFund({{ $list->ID }})'
+                                    wire:confirm="Are you sure you want to delete this?" class="btn btn-xs btn-danger">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                             @endif
-                            <button title="Delete" id="deletebtn" wire:click='DeleteFund({{ $list->ID }})'
-                                wire:confirm="Are you sure you want to delete this?" class="btn btn-xs btn-danger">
-                                <i class="fas fa-trash" aria-hidden="true"></i>
-                            </button>
-                        @endif
-                    </td>
+                        </td>
+                    @endif
                 </tr>
             @endforeach
+            @if ($STATUS == 0 || $STATUS == 16)
+                <tr>
+                    <form wire:submit.prevent='AddFund()' wire:loading.attr='disabled'>
+                        <td>
+                            @if ($saveSuccess)
+                                <livewire:select-option name="RECEIVED_FROM_ID1" titleName="" :options="$contactList"
+                                    :zero="true" wire:model='RECEIVED_FROM_ID' :isDisabled=false
+                                    :vertical="false" :withLabel="false" />
+                            @else
+                                <livewire:select-option name="RECEIVED_FROM_ID2" titleName="" :options="$contactList"
+                                    :zero="true" wire:model='RECEIVED_FROM_ID' :isDisabled=false
+                                    :vertical="false" :withLabel="false" />
+                            @endif
+                        </td>
+                        <td>
+                            @if ($saveSuccess)
+                                <livewire:select-option name="ACCOUNT_ID1" titleName="" :options="$accountList"
+                                    :zero="true" wire:model.live='ACCOUNT_ID' :isDisabled=false :vertical="false"
+                                    :withLabel="false" />
+                            @else
+                                <livewire:select-option name="ACCOUNT_ID2" titleName="" :options="$accountList"
+                                    :zero="true" wire:model.live='ACCOUNT_ID' :isDisabled=false :vertical="false"
+                                    :withLabel="false" />
+                            @endif
+                        </td>
+                        <td>
+                            @if ($saveSuccess)
+                                <livewire:select-option name="PAYMENT_METHOD_ID1" titleName="" :options="$paymentMethodList"
+                                    :zero="true" wire:model='PAYMENT_METHOD_ID' :isDisabled=false
+                                    :vertical="false" :withLabel="false" />
+                            @else
+                                <livewire:select-option name="PAYMENT_METHOD_ID2" titleName="" :options="$paymentMethodList"
+                                    :zero="true" wire:model='PAYMENT_METHOD_ID' :isDisabled=false
+                                    :vertical="false" :withLabel="false" />
+                            @endif
+                        </td>
 
-            <tr>
-                <form wire:submit.prevent='AddFund()' wire:loading.attr='disabled'>
-                    <td>
-                        @if ($saveSuccess)
-                            <livewire:select-option name="RECEIVED_FROM_ID1" titleName="" :options="$contactList"
-                                :zero="true" wire:model='RECEIVED_FROM_ID' :isDisabled=false :vertical="false"
-                                :withLabel="false" />
-                        @else
-                            <livewire:select-option name="RECEIVED_FROM_ID2" titleName="" :options="$contactList"
-                                :zero="true" wire:model='RECEIVED_FROM_ID' :isDisabled=false :vertical="false"
-                                :withLabel="false" />
-                        @endif
-                    </td>
-                    <td>
-                        @if ($saveSuccess)
-                            <livewire:select-option name="ACCOUNT_ID1" titleName="" :options="$accountList"
-                                :zero="true" wire:model.live='ACCOUNT_ID' :isDisabled=false :vertical="false"
-                                :withLabel="false" />
-                        @else
-                            <livewire:select-option name="ACCOUNT_ID2" titleName="" :options="$accountList"
-                                :zero="true" wire:model.live='ACCOUNT_ID' :isDisabled=false :vertical="false"
-                                :withLabel="false" />
-                        @endif
-                    </td>
-                    <td>
-                        @if ($saveSuccess)
-                            <livewire:select-option name="PAYMENT_METHOD_ID1" titleName="" :options="$paymentMethodList"
-                                :zero="true" wire:model='PAYMENT_METHOD_ID' :isDisabled=false :vertical="false"
-                                :withLabel="false" />
-                        @else
-                            <livewire:select-option name="PAYMENT_METHOD_ID2" titleName="" :options="$paymentMethodList"
-                                :zero="true" wire:model='PAYMENT_METHOD_ID' :isDisabled=false :vertical="false"
-                                :withLabel="false" />
-                        @endif
-                    </td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm text-left" name="CHECK_NO"
+                                wire:model='CHECK_NO' maxlength='20' />
 
-                    <td>
-                        <input type="text" class="form-control form-control-sm text-left" name="CHECK_NO"
-                            wire:model='CHECK_NO' maxlength='20' />
-
-                    </td>
-                    <td>
-                        <input step="0.01" type="number" class="form-control form-control-sm text-right"
-                            name="AMOUNT" wire:model='AMOUNT' />
-                    </td>
-                    <td>
-                        <div>
-                            <button type="submit" wire:loading.attr='hidden'
-                                @if ($ACCOUNT_ID == 0) disabled @endif class="btn btn-primary btn-xs w-100">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                            <div wire:loading.delay>
-                                <span class="spinner"></span>
+                        </td>
+                        <td>
+                            <input step="0.01" type="number" class="form-control form-control-sm text-right"
+                                name="AMOUNT" wire:model='AMOUNT' />
+                        </td>
+                        <td>
+                            <div>
+                                <button type="submit" wire:loading.attr='hidden'
+                                    @if ($ACCOUNT_ID == 0) disabled @endif
+                                    class="btn btn-primary btn-xs w-100">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <div wire:loading.delay>
+                                    <span class="spinner"></span>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                </form>
-            </tr>
+                        </td>
+                    </form>
+                </tr>
+            @endif
         </tbody>
     </table>
 

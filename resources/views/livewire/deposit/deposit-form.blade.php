@@ -98,14 +98,14 @@
                                                     <i class="fa fa-money" aria-hidden="true"></i> Payment
                                                 </button>
 
-                                                <button type="button" wire:click='posted()'
+                                                <button type="button" wire:click='getPosted()'
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
                                             @endif
                                         @endif
                                         @if ($STATUS == 15)
-                                            @can('company.pull-out.update')
+                                            @can('banking.deposit.update')
                                                 <button type="button" wire:click='getUnposted()'
                                                     class="btn btn-sm btn-secondary"
                                                     wire:confirm="Are you sure you want to unpost?">
@@ -116,12 +116,12 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS == 15)
-                                            @can('company.pull-out.print')
-                                                <a target='_BLANK'
+                                            @can('banking.deposit.print')
+                                                {{-- <a target='_BLANK'
                                                     href="{{ route('companypull_out_print', ['id' => $ID]) }}"
                                                     type="button" class="btn btn-sm btn-dark">
                                                     <i class="fa fa-print" aria-hidden="true"></i> Print
-                                                </a>
+                                                </a> --}}
                                                 <button type="button" wire:click='OpenJournal()'
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
@@ -143,7 +143,7 @@
         </div>
     </section>
     @if ($ID > 0)
-        <section class="content">
+        <section class="content" @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
             <div class="container-fluid bg-light">
                 <div class="row">
                     <div class="col-md-12">
@@ -164,21 +164,13 @@
                                     <div class="tab-pane fade show active " id="custom-tabs-four-item"
                                         role="tabpanel" aria-labelledby="custom-tabs-four-item-tab">
                                         <div class="row">
-                                            <div class="col-md-12"
-                                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('Deposit.DepositFormDetail', ['DEPOSIT_ID' => $ID])
+                                            <div class="col-md-12">
+                                                @livewire('Deposit.DepositFormDetail', ['DEPOSIT_ID' => $ID, 'STATUS' => $STATUS])
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-8">
 
-                                    </div>
-                                    <div class="col-md-4 text-right">
-
-                                    </div>
-                                </div>
                             </div>
                             <div class="card-footer">
                                 <div class="row">

@@ -4,10 +4,17 @@ namespace App\Services;
 
 use App\Models\Deposit;
 use App\Models\DepositFunds;
+use App\Models\Payment;
+use App\Models\SalesReceipt;
 use Illuminate\Support\Facades\DB;
 
 class DepositServices
 {
+
+
+    public int $object_type_deposit = 81;
+    public int $object_type_deposit_fund = 82;
+
     private $object;
     private $dateServices;
     private $systemSettingServices;
@@ -76,8 +83,7 @@ class DepositServices
     }
     public function Delete(int $ID)
     {
-        Deposit::where('ID', '=', $ID)
-            ->delete();
+        Deposit::where('ID', '=', $ID)->delete();
     }
 
     public function StatusUpdate(int $ID, int $STATUS)
@@ -179,6 +185,23 @@ class DepositServices
             ->where('DEPOSIT_ID', '=', $DEPOSIT_ID)
             ->delete();
     }
+
+    public function  UndepositedUpdate(int $OBJECT_ID, int $OBJECT_TYPE, int $DEPOSITED)
+    {
+        switch ($OBJECT_TYPE) {
+            case 13:
+                # sales_receipt...
+                SalesReceipt::where('ID', $OBJECT_ID)->update(['DEPOSITED' => $DEPOSITED]);
+                break;
+            case 11:
+                # payment...
+                Payment::where('ID', $OBJECT_ID)->update(['DEPOSITED' => $DEPOSITED]);
+                break;
+            default:
+                # code...
+                break;
+        }
+    }
     public function getAmount($ID): float
     {
         return (float)  Deposit::where('ID', '=', $ID)->first()->AMOUNT ?? 0.00;
@@ -228,10 +251,10 @@ class DepositServices
         Deposit::where('ID', '=', $DEPOSIT_ID)->update(['AMOUNT' => $TOTAL]);
     }
 
-    public function getUndositedCollection(int $LOCATION_ID, int $PAYMENT_METHOD_ID = 0)
+    public function getUndositedCollection(int $LOCATION_ID, int $PAYMENT_METHOD_ID = 0, $SEARCH)
     {
 
-        $collection = DB::table(function ($query) use (&$LOCATION_ID, &$PAYMENT_METHOD_ID) {
+        $collection = DB::table(function ($query) use (&$LOCATION_ID, &$PAYMENT_METHOD_ID, &$SEARCH) {
             $query->select([
                 'sr.ID',
                 DB::raw('13 AS OBJECT_TYPE'),
@@ -244,10 +267,16 @@ class DepositServices
             ])
                 ->from('sales_receipt AS sr')
                 ->join('contact AS c', 'c.ID', '=', 'sr.CUSTOMER_ID')
-                ->join('payment_method AS pm', 'pm.id', '=', 'sr.PAYMENT_METHOD_ID')
+                ->join('payment_method AS pm', 'pm.ID', '=', 'sr.PAYMENT_METHOD_ID')
                 ->where('sr.LOCATION_ID', '=', $LOCATION_ID)
                 ->when($PAYMENT_METHOD_ID > 0, function ($sql) use (&$PAYMENT_METHOD_ID) {
-                    $sql->where('pm.ID ', '=', $PAYMENT_METHOD_ID);
+                    $sql->where('pm.ID', '=', $PAYMENT_METHOD_ID);
+                })
+                ->when($SEARCH, function ($query) use (&$SEARCH) {
+                    $query->where(function ($sql) use (&$SEARCH) {
+                        $sql->where('c.NAME', 'like', '%' . $SEARCH . '%')
+                            ->orWhere('sr.CODE', 'like', '%' . $SEARCH . '%');
+                    });
                 })
                 ->where('sr.UNDEPOSITED_FUNDS_ACCOUNT_ID', '=', '5')
                 ->where('sr.DEPOSITED', '=', '0')
@@ -264,13 +293,19 @@ class DepositServices
                             'pm.DESCRIPTION AS PAYMENT_METHOD',
                         ])
                         ->join('contact AS c', 'c.ID', '=', 'p.CUSTOMER_ID')
-                        ->join('payment_method AS pm', 'pm.id', '=', 'p.PAYMENT_METHOD_ID')
+                        ->join('payment_method AS pm', 'pm.ID', '=', 'p.PAYMENT_METHOD_ID')
                         ->where('p.LOCATION_ID', '=', $LOCATION_ID)
                         ->when($PAYMENT_METHOD_ID > 0, function ($sql) use (&$PAYMENT_METHOD_ID) {
-                            $sql->where('pm.ID ', '=', $PAYMENT_METHOD_ID);
+                            $sql->where('pm.ID', '=', $PAYMENT_METHOD_ID);
                         })
                         ->where('p.UNDEPOSITED_FUNDS_ACCOUNT_ID', '=', '5')
                         ->where('p.DEPOSITED', '=', '0')
+                        ->when($SEARCH, function ($query) use (&$SEARCH) {
+                            $query->where(function ($sql) use (&$SEARCH) {
+                                $sql->where('c.NAME', 'like', '%' . $SEARCH . '%')
+                                    ->orWhere('p.CODE', 'like', '%' . $SEARCH . '%');
+                            });
+                        })
                 );
         }, 'collection')
             ->orderBy('collection.DATE')
@@ -279,5 +314,36 @@ class DepositServices
 
 
         return $collection;
+    }
+
+    public function DepositJournal(int $DEPOSIT_ID)
+    {
+        $result = Deposit::query()
+            ->select([
+                'ID',
+                'BANK_ACCOUNT_ID as ACCOUNT_ID',
+                DB::raw('0 as SUBSIDIARY_ID'),
+                'AMOUNT',
+                DB::raw('0 as ENTRY_TYPE')
+            ])
+            ->where('ID','=', $DEPOSIT_ID)
+            ->get();
+
+        return $result;
+    }
+    public function DepositFundJournal(int $DEPOSIT_ID)
+    {
+        $result = DepositFunds::query()
+            ->select([
+                'deposit_funds.ID',
+                'deposit_funds.ACCOUNT_ID',
+                'deposit_funds.RECEIVED_FROM_ID as SUBSIDIARY_ID',
+                'deposit_funds.AMOUNT',
+                DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->where('deposit_funds.DEPOSIT_ID', '=', $DEPOSIT_ID)
+            ->get();
+
+        return $result;
     }
 }

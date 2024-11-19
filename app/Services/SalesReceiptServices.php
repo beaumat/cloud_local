@@ -24,14 +24,25 @@ class SalesReceiptServices
         $this->compute = $computeServices;
     }
     public function get(int $ID)
-    {   
- 
+    {
+
         $data = SalesReceipt::where('ID', '=', $ID)->first();
         if ($data) {
             return $data;
         }
         return null;
+    }
+    public function getViaUndeposit(int $ID)
+    {
+        $result = SalesReceipt::where('ID', '=', $ID)
+        ->where('DEPOSITED', '=', 0)
+        ->first();
+        
+        if ($result) {
+            return $result;
+        }
 
+        return [];
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
@@ -93,7 +104,8 @@ class SalesReceiptServices
             'OUTPUT_TAX_AMOUNT'             => $OUTPUT_TAX_AMOUNT,
             'OUTPUT_TAX_VAT_METHOD'         => $OUTPUT_TAX_VAT_METHOD,
             'OUTPUT_TAX_ACCOUNT_ID'         => $OUTPUT_TAX_ACCOUNT_ID,
-            'STATUS'                        => $STATUS
+            'STATUS'                        => $STATUS,
+            'DEPOSITED'                     => 0,
         ]);
 
         return $ID;
@@ -145,7 +157,8 @@ class SalesReceiptServices
                 'OUTPUT_TAX_AMOUNT'             => $OUTPUT_TAX_AMOUNT,
                 'OUTPUT_TAX_VAT_METHOD'         => $OUTPUT_TAX_VAT_METHOD,
                 'OUTPUT_TAX_ACCOUNT_ID'         => $OUTPUT_TAX_ACCOUNT_ID,
-                'STATUS'                        => $STATUS
+                'STATUS'                        => $STATUS,
+                'DEPOSITED'                     => 0,
             ]);
     }
     public function Delete(int $ID)
@@ -172,7 +185,7 @@ class SalesReceiptServices
                 'a.NAME as ACCOUNT_NAME'
             ])
             ->join('contact as c', 'c.ID', '=', 'sales_receipt.CUSTOMER_ID')
-            ->leftJoin('account as a','a.ID','=','sales_receipt.UNDEPOSITED_FUNDS_ACCOUNT_ID')
+            ->leftJoin('account as a', 'a.ID', '=', 'sales_receipt.UNDEPOSITED_FUNDS_ACCOUNT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'sales_receipt.LOCATION_ID');
                 if ($locationId > 0) {

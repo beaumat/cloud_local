@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Deposit;
 
+use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DepositServices;
@@ -14,6 +15,8 @@ class DepositFormDetail extends Component
 {
     #[Reactive]
     public int $DEPOSIT_ID;
+    #[Reactive]
+    public int $STATUS;
     public int $RECEIVED_FROM_ID;
     public int $ACCOUNT_ID;
     public int $PAYMENT_METHOD_ID;
@@ -31,16 +34,19 @@ class DepositFormDetail extends Component
     private $contactServices;
     private $accountServices;
     private $paymentMethodServices;
+    private $accountJournalServices;
     public function boot(
         DepositServices $depositServices,
         ContactServices $contactServices,
         AccountServices $accountServices,
-        PaymentMethodServices $paymentMethodServices
+        PaymentMethodServices $paymentMethodServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->depositServices = $depositServices;
         $this->contactServices = $contactServices;
         $this->accountServices = $accountServices;
         $this->paymentMethodServices = $paymentMethodServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function LoadDropDown()
     {
@@ -84,6 +90,7 @@ class DepositFormDetail extends Component
                 0,
                 0
             );
+
             $this->depositServices->UpdateAmount($this->DEPOSIT_ID);
             DB::commit();
             $this->dispatch('get-amount');
@@ -148,23 +155,62 @@ class DepositFormDetail extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function DeleteFund(int $id)
-    {   
+    public function DeleteFund(int $ID)
+    {
 
+        DB::beginTransaction();
         try {
-            $this->depositServices->DeleteFund($id, $this->DEPOSIT_ID);
-            $this->depositServices->UpdateAmount($this->DEPOSIT_ID);
-            $this->dispatch('get-amount');
+
+
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                    $this->depositServices->object_type_deposit_fund,
+                    $ID
+                );
+
+                if ($JOURNAL_NO  >  0) {
+                    $gData = $this->depositServices->get($this->DEPOSIT_ID);
+                    if ($gData) {
+                        $gDetails = $this->depositServices->GetFund($ID);
+                        if ($gDetails) {
+                            // ACCOUNT_ID
+                            $this->accountJournalServices->DeleteJournal(
+                                $gDetails->ACCOUNT_ID,
+                                $gData->LOCATION_ID,
+                                $JOURNAL_NO,
+                                0,
+                                $ID,
+                                $this->depositServices->object_type_deposit_fund,
+                                $gData->DATE,
+                                $gDetails->ENTRY_TYPE
+                            );
+                        }
+                    }
+                }
+            }
+
+
+
+
+            $data = $this->depositServices->GetFund($ID);
+            if ($data) {
+                if ($data->SOURCE_OBJECT_ID > 0) {
+                    $this->depositServices->UndepositedUpdate($data->SOURCE_OBJECT_ID, $data->SOURCE_OBJECT_TYPE, 0);
+                }
+
+                $this->depositServices->DeleteFund($ID, $this->DEPOSIT_ID);
+                $this->depositServices->UpdateAmount($this->DEPOSIT_ID);
+                DB::commit();
+                $this->dispatch('get-amount');
+            }
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-      
-
     }
     public function CancelFund()
     {
-
         $this->editFundId = null;
         $this->editReceivedFromId = 0;
         $this->editAccountId = 0;

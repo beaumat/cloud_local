@@ -7,7 +7,7 @@
                 </p>
             </a>
             <ul class="nav nav-treeview">
-                @can('report.financial.ar-aging')
+                @can('report.receivables.ar-aging')
                     <li class="nav-item">
                         <a href="{{ route('reportsar_aging') }}"
                             class="nav-link {{ request()->is('reports/receivables/ar-aging') ? 'text-warning font-weight-bold' : '' }}">
@@ -16,7 +16,7 @@
                         </a>
                     </li>
                 @endcan
-                @can('report.financial.customer-balance')
+                @can('report.receivables.customer-balance')
                     <li class="nav-item">
                         <a href="{{ route('reportscustomer_balance') }}"
                             class="nav-link {{ request()->is('reports/receivables/customer-balance') ? 'text-warning font-weight-bold' : '' }}">

@@ -4,7 +4,7 @@
                  <p> Payables <i class="right fas fa-angle-left"></i> </p>
              </a>
              <ul class="nav nav-treeview">
-                 @can('report.financial.ap-aging')
+                 @can('report.payables.ap-aging')
                      <li class="nav-item">
                          <a href="{{ route('reportsap_aging') }}"
                              class="nav-link {{ request()->is('reports/payables/ap-aging') ? 'text-warning font-weight-bold' : '' }}">
@@ -13,7 +13,7 @@
                          </a>
                      </li>
                  @endcan
-                 @can('report.financial.vendor-balance')
+                 @can('report.payables.vendor-balance')
                      <li class="nav-item">
                          <a href="{{ route('reportsvendor_balance') }}"
                              class="nav-link {{ request()->is('reports/payables/vendor-balance') ? 'text-warning font-weight-bold' : '' }}">

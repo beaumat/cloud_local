@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Deposit;
 
+use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\DepositServices;
 use App\Services\DocumentStatusServices;
@@ -36,18 +37,22 @@ class DepositForm extends Component
     private $locationServices;
     private $userServices;
     private $documentStatusServices;
+    private $accountJournalServices;
     public function boot(
         DepositServices $depositServices,
         AccountServices $accountServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        DocumentStatusServices $documentStatusServices
+        DocumentStatusServices $documentStatusServices,
+        AccountJournalServices $accountJournalServices
+
     ) {
         $this->depositServices = $depositServices;
         $this->accountServices = $accountServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->documentStatusServices = $documentStatusServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     private function loadDropdown()
     {
@@ -154,6 +159,84 @@ class DepositForm extends Component
         }
         $this->Modify = false;
     }
+    public function getModify()
+    {
+        $this->Modify = true;
+    }
+    public function getUnposted()
+    {
+        try {
+            DB::beginTransaction();
+            $this->depositServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            Redirect::route('bankingdeposit_edit', $this->ID)->with('message', 'Successfully unposted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function OpenJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->depositServices->object_type_deposit, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+        }
+    }
+    public function getPosted()
+    {
+        try {
+            DB::beginTransaction();
+
+            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->depositServices->object_type_deposit, $this->ID);
+            if ($JOURNAL_NO  == 0) {
+                $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->depositServices->object_type_deposit, $this->ID) + 1;
+            }
+
+            $depositData = $this->depositServices->DepositJournal($this->ID);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $depositData,
+                $this->LOCATION_ID,
+                $this->depositServices->object_type_deposit,
+                $this->DATE,
+                ""
+            );
+
+            $depositFundData = $this->depositServices->DepositFundJournal($this->ID);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $depositFundData,
+                $this->LOCATION_ID,
+                $this->depositServices->object_type_deposit_fund,
+                $this->DATE,
+                "FUND"
+            );
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum) {
+                $this->depositServices->StatusUpdate($this->ID, 15);
+                DB::commit();
+                $data = $this->depositServices->Get($this->ID);
+                if ($data) {
+                    $this->refreshInfo($data);
+                    $this->Modify = false;
+                    return;
+                }
+                session()->flash('message', 'Successfully posted');
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            DB::rollBack();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     private function refreshInfo($data)
     {
 
@@ -178,7 +261,7 @@ class DepositForm extends Component
     }
     public function openPayment()
     {
-        $this->dispatch('open-payment', result: ['LOCATION_ID' => $this->LOCATION_ID]);
+        $this->dispatch('open-payment', result: ['DEPOSIT_ID' => $this->ID, 'LOCATION_ID' => $this->LOCATION_ID]);
     }
     public function render()
     {
