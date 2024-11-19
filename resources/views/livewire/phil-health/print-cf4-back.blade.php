@@ -275,33 +275,33 @@
                     <p> Generic Name </p>
                     <div class="row top-line2 ">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[0]['GENERIC_NAME'] ?? '' }} </strong>
+                        &nbsp; <strong class="text-xs"> {{ $dataMed[0]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
 
                     <div class="row top-line2 ">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[1]['GENERIC_NAME'] ?? '' }} </strong>
+                        &nbsp; <strong class="text-xs"> {{ $dataMed[1]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
 
                     <div class="row top-line2 ">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[2]['GENERIC_NAME'] ?? '' }} </strong>
+                        &nbsp; <strong class="text-xs"> {{ $dataMed[2]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2 ">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[3]['GENERIC_NAME'] ?? '' }} </strong>
+                        &nbsp; <strong class="text-xs"> {{ $dataMed[3]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[4]['GENERIC_NAME'] ?? '' }} </strong>
+                        &nbsp; <strong class="text-xs"> {{ $dataMed[4]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[5]['GENERIC_NAME'] ?? '' }} </strong>
+                        &nbsp; <strong class="text-xs"> {{ $dataMed[5]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
                     <div class="row top-line2 ">
                         <br />
-                        &nbsp; <strong class="h6"> {{ $dataMed[6]['GENERIC_NAME'] ?? '' }} </strong>
+                        &nbsp; <strong class="text-xs"> {{ $dataMed[6]['GENERIC_NAME'] ?? '' }} </strong>
                     </div>
 
 

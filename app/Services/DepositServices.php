@@ -4,17 +4,20 @@ namespace App\Services;
 
 use App\Models\Deposit;
 use App\Models\DepositFunds;
+use Illuminate\Support\Facades\DB;
 
 class DepositServices
 {
     private $object;
     private $dateServices;
     private $systemSettingServices;
-    public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices)
+    private $accountJournalServices;
+    public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices, AccountJournalServices $accountJournalServices)
     {
         $this->object = $objectServices;
         $this->dateServices = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function Get(int $ID)
     {
@@ -25,8 +28,17 @@ class DepositServices
 
         return [];
     }
-    public function Store(string $CODE, string $DATE, int $BANK_ACCOUNT_ID, string $NOTES, int $CASH_BACK_ACCOUNT_ID, float $CASH_BACK_AMOUNT, string $CASH_BACK_NOTES, int $LOCATION_ID): int
-    {
+
+    public function Store(
+        string $CODE,
+        string $DATE,
+        int $BANK_ACCOUNT_ID,
+        string $NOTES,
+        int $CASH_BACK_ACCOUNT_ID,
+        float $CASH_BACK_AMOUNT,
+        string $CASH_BACK_NOTES,
+        int $LOCATION_ID
+    ): int {
 
         $ID = $this->object->ObjectNextID('DEPOSIT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('DEPOSIT');
@@ -37,10 +49,10 @@ class DepositServices
             'RECORDED_ON'           => $this->dateServices->Now(),
             'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DATE'                  => $DATE,
-            'BANK_ACCOUNT_ID'       => $BANK_ACCOUNT_ID,
+            'BANK_ACCOUNT_ID'       => $BANK_ACCOUNT_ID > 0 ? $BANK_ACCOUNT_ID : null,
             'AMOUNT'                => 0,
             'NOTES'                 => $NOTES,
-            'CASH_BACK_ACCOUNT_ID'  => $CASH_BACK_ACCOUNT_ID,
+            'CASH_BACK_ACCOUNT_ID'  => $CASH_BACK_ACCOUNT_ID > 0 ? $CASH_BACK_ACCOUNT_ID : null,
             'CASH_BACK_AMOUNT'      => $CASH_BACK_AMOUNT,
             'CASH_BACK_NOTES'       => $CASH_BACK_NOTES,
             'LOCATION_ID'           => $LOCATION_ID,
@@ -55,9 +67,9 @@ class DepositServices
         Deposit::where('ID', '=', $ID)
             ->update([
                 'CODE'                  => $CODE,
-                'BANK_ACCOUNT_ID'       => $BANK_ACCOUNT_ID,
+                'BANK_ACCOUNT_ID'       => $BANK_ACCOUNT_ID > 0 ? $BANK_ACCOUNT_ID : null,
                 'NOTES'                 => $NOTES,
-                'CASH_BACK_ACCOUNT_ID'  => $CASH_BACK_ACCOUNT_ID,
+                'CASH_BACK_ACCOUNT_ID'  => $CASH_BACK_ACCOUNT_ID > 0 ? $CASH_BACK_ACCOUNT_ID : null,
                 'CASH_BACK_AMOUNT'      => $CASH_BACK_AMOUNT,
                 'CASH_BACK_NOTES'       => $CASH_BACK_NOTES,
             ]);
@@ -109,8 +121,16 @@ class DepositServices
             ->orderBy('deposit.ID', 'desc')
             ->paginate($perPage);
     }
-    public function StoreFund(int $DEPOSIT_ID, int $RECEIVED_FROM_ID = 0, int $ACCOUNT_ID, int $PAYMENT_METHOD_ID, string $CHECK_NO, float $AMOUNT, int $SOURCE_OBJECT_TYPE, int $SOURCE_OBJECT_ID)
-    {
+    public function StoreFund(
+        int $DEPOSIT_ID,
+        int $RECEIVED_FROM_ID = 0,
+        int $ACCOUNT_ID,
+        int $PAYMENT_METHOD_ID,
+        string $CHECK_NO,
+        float $AMOUNT,
+        int $SOURCE_OBJECT_TYPE,
+        int $SOURCE_OBJECT_ID
+    ) {
 
         $ID = $this->object->ObjectNextID('DEPOSIT_FUNDS');
 
@@ -119,28 +139,145 @@ class DepositServices
             'DEPOSIT_ID'            => $DEPOSIT_ID,
             'RECEIVED_FROM_ID'      => $RECEIVED_FROM_ID > 0  ? $RECEIVED_FROM_ID : null,
             'ACCOUNT_ID'            => $ACCOUNT_ID,
-            'PAYMENT_METHOD_ID'     => $PAYMENT_METHOD_ID,
+            'PAYMENT_METHOD_ID'     => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
             'CHECK_NO'              => $CHECK_NO,
             'AMOUNT'                => $AMOUNT,
-            'SOURCE_OBJECT_TYPE'    => $SOURCE_OBJECT_TYPE,
-            'SOURCE_OBJECT_ID'      => $SOURCE_OBJECT_ID
+            'SOURCE_OBJECT_TYPE'    => $SOURCE_OBJECT_TYPE > 0 ? $SOURCE_OBJECT_TYPE : null,
+            'SOURCE_OBJECT_ID'      => $SOURCE_OBJECT_ID > 0 ? $SOURCE_OBJECT_ID : null
         ]);
 
         return $ID;
     }
-    public function UpdateFund(int $ID, int $DEPOSIT_ID, int $RECEIVED_FROM_ID, string $CHECK_NO)
-    {
+    public function UpdateFund(
+        int $ID,
+        int $DEPOSIT_ID,
+        int $RECEIVED_FROM_ID,
+        int $ACCOUNT_ID,
+        int $PAYMENT_METHOD_ID,
+        string $CHECK_NO,
+        float $AMOUNT
+    ) {
         DepositFunds::where('ID', '=', $ID)
             ->where('DEPOSIT_ID', '=', $DEPOSIT_ID)
             ->update([
                 'RECEIVED_FROM_ID'      => $RECEIVED_FROM_ID > 0  ? $RECEIVED_FROM_ID : null,
-                'CHECK_NO'              => $CHECK_NO
+                'ACCOUNT_ID'            => $ACCOUNT_ID,
+                'PAYMENT_METHOD_ID'     => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+                'CHECK_NO'              => $CHECK_NO,
+                'AMOUNT'                => $AMOUNT,
             ]);
     }
-    public function DeleteFund(int $ID, int $DEPOSIT_ID,)
+    public function GetFund(int $ID)
+    {
+        $result = DepositFunds::where('ID', '=', $ID)->first();
+
+        return $result;
+    }
+    public function DeleteFund(int $ID, int $DEPOSIT_ID)
     {
         DepositFunds::where('ID', '=', $ID)
             ->where('DEPOSIT_ID', '=', $DEPOSIT_ID)
             ->delete();
+    }
+    public function getAmount($ID): float
+    {
+        return (float)  Deposit::where('ID', '=', $ID)->first()->AMOUNT ?? 0.00;
+    }
+    public function FundList(int $DEPOSIT_ID)
+    {
+
+        $result = DepositFunds::query()
+            ->select([
+                'deposit_funds.ID',
+                'deposit_funds.RECEIVED_FROM_ID',
+                'deposit_funds.ACCOUNT_ID',
+                'deposit_funds.PAYMENT_METHOD_ID',
+                'deposit_funds.CHECK_NO',
+                'deposit_funds.AMOUNT',
+                'deposit_funds.SOURCE_OBJECT_TYPE',
+                'deposit_funds.SOURCE_OBJECT_ID',
+                'doc.DESCRIPTION as DOC_NAME',
+                'c.PRINT_NAME_AS as RECEIVED_FROM_NAME',
+                'p.DESCRIPTION as PAYMENT_METHOD',
+                'a.NAME as ACCOUNT_NAME'
+            ])
+            ->leftJoin('account as a', 'a.ID', '=', 'deposit_funds.ACCOUNT_ID')
+            ->leftJoin('contact as c', 'c.ID', 'deposit_funds.RECEIVED_FROM_ID')
+            ->leftJoin('payment_method as p', 'p.ID', 'deposit_funds.PAYMENT_METHOD_ID')
+            ->leftJoin('account_journal as aj', function ($query) {
+                $query->On('aj.OBJECT_TYPE', '=', 'deposit_funds.SOURCE_OBJECT_TYPE')
+                    ->On('aj.OBJECT_ID', '=', 'deposit_funds.SOURCE_OBJECT_ID')
+                    ->On('aj.ACCOUNT_ID', '=', 'deposit_funds.ACCOUNT_ID');
+            })
+            ->leftJoin('object_type_map as ob', 'ob.ID', '=', 'aj.OBJECT_ID')
+            ->leftJoin('document_type_map as doc', 'doc.ID', '=', 'ob.DOCUMENT_TYPE')
+            ->where('deposit_funds.DEPOSIT_ID', '=', $DEPOSIT_ID)
+            ->orderBy('deposit_funds.ID', 'asc')
+            ->get();
+
+        return $result;
+    }
+
+    private function FundSum(int $DEPOSIT_ID)
+    {
+        return (float) DepositFunds::where('DEPOSIT_ID', '=', $DEPOSIT_ID)->sum('AMOUNT') ?? 0;
+    }
+    public function UpdateAmount(int $DEPOSIT_ID)
+    {
+        $TOTAL = (float) $this->FundSum($DEPOSIT_ID);
+        Deposit::where('ID', '=', $DEPOSIT_ID)->update(['AMOUNT' => $TOTAL]);
+    }
+
+    public function getUndositedCollection(int $LOCATION_ID, int $PAYMENT_METHOD_ID = 0)
+    {
+
+        $collection = DB::table(function ($query) use (&$LOCATION_ID, &$PAYMENT_METHOD_ID) {
+            $query->select([
+                'sr.ID',
+                DB::raw('13 AS OBJECT_TYPE'),
+                DB::raw("'Sales Receipt' AS TYPE"),
+                'sr.DATE',
+                'sr.CODE',
+                'sr.AMOUNT',
+                'c.NAME AS RECEIVED_FROM_NAME',
+                'pm.DESCRIPTION AS PAYMENT_METHOD',
+            ])
+                ->from('sales_receipt AS sr')
+                ->join('contact AS c', 'c.ID', '=', 'sr.CUSTOMER_ID')
+                ->join('payment_method AS pm', 'pm.id', '=', 'sr.PAYMENT_METHOD_ID')
+                ->where('sr.LOCATION_ID', '=', $LOCATION_ID)
+                ->when($PAYMENT_METHOD_ID > 0, function ($sql) use (&$PAYMENT_METHOD_ID) {
+                    $sql->where('pm.ID ', '=', $PAYMENT_METHOD_ID);
+                })
+                ->where('sr.UNDEPOSITED_FUNDS_ACCOUNT_ID', '=', '5')
+                ->where('sr.DEPOSITED', '=', '0')
+                ->unionAll(
+                    DB::table('payment AS p')
+                        ->select([
+                            'p.ID',
+                            DB::raw('11 AS OBJECT_TYPE'),
+                            DB::raw("'Payments' AS TYPE"),
+                            'p.DATE',
+                            'p.CODE',
+                            'p.AMOUNT',
+                            'c.NAME AS RECEIVED_FROM_NAME',
+                            'pm.DESCRIPTION AS PAYMENT_METHOD',
+                        ])
+                        ->join('contact AS c', 'c.ID', '=', 'p.CUSTOMER_ID')
+                        ->join('payment_method AS pm', 'pm.id', '=', 'p.PAYMENT_METHOD_ID')
+                        ->where('p.LOCATION_ID', '=', $LOCATION_ID)
+                        ->when($PAYMENT_METHOD_ID > 0, function ($sql) use (&$PAYMENT_METHOD_ID) {
+                            $sql->where('pm.ID ', '=', $PAYMENT_METHOD_ID);
+                        })
+                        ->where('p.UNDEPOSITED_FUNDS_ACCOUNT_ID', '=', '5')
+                        ->where('p.DEPOSITED', '=', '0')
+                );
+        }, 'collection')
+            ->orderBy('collection.DATE')
+            ->get();
+
+
+
+        return $collection;
     }
 }

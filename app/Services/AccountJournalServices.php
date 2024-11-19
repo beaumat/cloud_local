@@ -616,6 +616,7 @@ class AccountJournalServices
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->where('aj.AMOUNT', '>', '0')
+            ->whereIn('d.ID',[])
             ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
@@ -627,6 +628,33 @@ class AccountJournalServices
                 $query->whereIn('a.TYPE', $accountType);
             })
             ->get();
+
+        return $result;
+    }
+
+    public function getUndepositedActiveList(int $LOCATION_ID)
+    {
+        $undeposited_account_id = 0;
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'aj.OBJECT_DATE as DATE',
+                'd.DESCRIPTION as TYPE',
+                'l.NAME as LOCATION',
+                DB::raw($this->TX_CODE),
+                DB::raw($this->TX_NOTES),
+                DB::raw($this->TX_NAME),
+            ])->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->where('aj.ACCOUNT_ID', '=', $undeposited_account_id)
+            ->get();
+
+
 
         return $result;
     }

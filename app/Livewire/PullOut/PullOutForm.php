@@ -239,9 +239,9 @@ class PullOutForm extends Component
         } else {
             $this->validate(
                 [
-                    'CODE' => 'required|max:20|unique:pull_out,code,' . $this->ID,
-                    'DATE' => 'required',
-                    'LOCATION_ID' => 'required',
+                    'CODE'          => 'required|max:20|unique:pull_out,code,' . $this->ID,
+                    'DATE'          => 'required',
+                    'LOCATION_ID'   => 'required',
                     'PREPARED_BY_ID' => 'required|not_in:0'
                 ],
                 [],
@@ -333,8 +333,6 @@ class PullOutForm extends Component
 
     public function OpenJournal()
     {
-
-
         $JOURNAL_NO = $this->accountJournalServices->getRecord(
             $this->pullOutServices->object_type_map_pull_out,
             $this->ID

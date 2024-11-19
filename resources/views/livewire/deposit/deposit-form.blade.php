@@ -92,6 +92,12 @@
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
+
+                                                <button type="button" wire:click='openPayment()'
+                                                    class="btn btn-sm btn-success">
+                                                    <i class="fa fa-money" aria-hidden="true"></i> Payment
+                                                </button>
+
                                                 <button type="button" wire:click='posted()'
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
@@ -122,9 +128,8 @@
                                                 </button>
                                             @endcan
 
-                                            @can('company.pull-out.create')
-                                                <a id="new" title="Create"
-                                                    href="{{ route('companypull_out_create') }}"
+                                            @can('banking.deposit.create')
+                                                <a id="new" title="Create" href="{{ route('bankingdeposit_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endcan
                                         @endif
@@ -149,7 +154,7 @@
                                         <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
                                             href="#custom-tabs-four-item" role="tab"
                                             aria-controls="custom-tabs-four-item" aria-selected="true">
-                                            Collection Details
+                                            Funds To Deposit
                                         </a>
                                     </li>
                                 </ul>
@@ -161,7 +166,7 @@
                                         <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-
+                                                @livewire('Deposit.DepositFormDetail', ['DEPOSIT_ID' => $ID])
                                             </div>
                                         </div>
                                     </div>
@@ -175,6 +180,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-6">
+
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <label>Total Fund :
+                                            <b class="text-primary">{{ number_format($AMOUNT, 2) }}</b>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -182,4 +199,5 @@
         </section>
     @endif
     @livewire('AccountJournal.AccountJournalModal')
+    @livewire('Deposit.PaymentListModal')
 </div>
