@@ -269,8 +269,55 @@
             &nbsp; Check box if there is/are
             additional sheet(s).
         </div>
-        <div class="col-12 text-center" style="font-size: 11px;">
-            <div class="row">
+        <table class="col-12 text-center" style="width:100%;padding:0;margin:0;font-size: 11px;" border="1">
+            <tr>
+                <th>Generic Name</th>
+                <th>Quantity/Dosage/Route/Frequency</th>
+                <th>Total Cost</th>
+                <th>Generic Name (cont)</th>
+                <th>Quantity/Dosage/Route/Frequency(cont)</th>
+                <th>Total Cost(cont)</th>
+            </tr>
+            @foreach ($dataMed as $list)
+                <tr>
+                    <td class="text-sm  ">{{ $list['GENERIC_NAME'] }} &nbsp;</td>
+                    <td>
+                        <strong class="text-sm">
+                            @if ($list['QUANTITY'])
+                                {{ $list['QUANTITY'] }}/{{ $list['DOSSAGE'] }}/{{ $list['ROUTE'] }}/{{ $list['FREQUENCY'] }}
+                            @endif
+                        </strong>
+                    </td>
+                    <td>
+                        @if ($list['TOTAL_COST'])
+                            <strong class="text-sm"> {{ $list['TOTAL_COST'] }}</strong>
+                        @endif
+                    </td>
+                    <td class="text-sm">
+                        {{ $list['CONT_GENERIC_NAME'] }}
+                        {{-- CONT_GENERIC_NAME --}}
+                    </td>
+                    <td>
+                        @if ($list['CONT_QUANTITY'] > 0)
+                            <strong class="text-sm">
+                                {{ $list['CONT_QUANTITY'] }}/{{ $list['CONT_DOSSAGE'] }}/{{ $list['CONT_ROUTE'] }}/{{ $list['CONT_FREQUENCY'] }}
+                            </strong>
+                        @endif
+
+                    </td>
+                    <td>
+                        @if ($list['CONT_TOTAL_COST'] > 0)
+                            <strong class="text-sm"> {{ $list['CONT_TOTAL_COST'] }}</strong>
+                        @endif
+                        {{-- CONT_TOTAL_COST --}}
+                    </td>
+                </tr>
+            @endforeach
+        </table>
+        <div style="font-size: 11px;">
+
+
+            {{-- <div class="row">
                 <div class="col bottom-line2 ">
                     <p> Generic Name </p>
                     <div class="row top-line2 ">
@@ -638,7 +685,7 @@
                         @endif
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <div id='part_id' class="col-12 text-center text-sm pb-1 bottom-line2">
