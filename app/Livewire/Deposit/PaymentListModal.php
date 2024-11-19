@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class PaymentListModal extends Component
 {
-    public int $UNDEPOSITED_ACCOUNT_ID = 0;
+    public int $UNDEPOSITED_ACCOUNT_ID = 5;
     public int $PAYMENT_METHOD_ID = 0;
     public int $LOCATION_ID;
     public $dataList = [];
@@ -32,7 +32,7 @@ class PaymentListModal extends Component
     }
     public function render()
     {
-        if ($this->LOCATION_ID > 0) {
+        if ($this->showModal) {
             $this->dataList = $this->depositServices->getUndositedCollection($this->LOCATION_ID, $this->PAYMENT_METHOD_ID);
         }
 

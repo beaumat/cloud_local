@@ -146,6 +146,8 @@ class PhilHealthServices
 
 
                 if (!$isDataExists) {
+
+                    // clean
                     $this->StoreProfFee(
                         $PHIC_ID,
                         $list->DOCTOR_ID,
@@ -630,6 +632,8 @@ class PhilHealthServices
     }
     public function StoreProfFee(int $PHIC_ID, int $CONTACT_ID, float $AMOUNT, float $DISCOUNT, float $FIRST_CASE)
     {
+        $this->CleanProfFee($PHIC_ID); // reset purspose
+
         $ID = $this->object->ObjectNextID('PHILHEALTH_PROF_FEE');
         $LINE_NO = $this->getLine($PHIC_ID) + 1;
 
@@ -656,6 +660,11 @@ class PhilHealthServices
     public function DeleteProfFee(int $ID)
     {
         PhilHealthProfFee::where('ID', $ID)->delete();
+    }
+    public function CleanProfFee(int $PHIC_ID)
+    {
+
+        PhilHealthProfFee::where('PHIC_ID', $PHIC_ID)->delete();
     }
     public function DrugMedicineStore(int $PHILHEALTH_ID, string $GENERIC_NAME, float $QUANTITY, string $DOSSAGE, string $ROUTE, string $FREQUENCY, float $TOTAL_COST, string $CONT_GENERIC_NAME, float $CONT_QUANTITY, string $CONT_DOSSAGE, string $CONT_ROUTE, string $CONT_FREQUENCY, float $CONT_TOTAL_COST)
     {

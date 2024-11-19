@@ -52,7 +52,7 @@ class SalesReceiptForm extends Component
 
     public float $TAXABLE_AMOUNT;
     public float $NONTAXABLE_AMOUNT;
-    public int $UNDEPOSITED_FUNDS_ACCOUNT_ID;
+    public int $UNDEPOSITED_FUNDS_ACCOUNT_ID = 5;
     public $contactList = [];
     public $locationList = [];
     public $paymentMethodList = [];
@@ -72,8 +72,6 @@ class SalesReceiptForm extends Component
     private $accountJournalServices;
     private $patientPaymentServices;
     private $paymentMethodServices;
-
-
     public bool $showCardNo = false;
     public bool $showCardDateExpire = false;
     public bool $showReceiptNo = false;
@@ -116,7 +114,7 @@ class SalesReceiptForm extends Component
         $this->locationList = $this->locationServices->getList();
         $this->paymentMethodList = $this->paymentMethodServices->getListNonPatient();
         $this->taxList = $this->taxServices->getList();
-        $this->accountList = $this->accountServices->getBankAccount();
+        $this->accountList = $this->accountServices->getBankAccountDeposit();
     }
 
     public string $tab = "item";

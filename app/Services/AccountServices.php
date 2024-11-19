@@ -25,6 +25,15 @@ class AccountServices
             ->orderBy('NAME', 'asc')
             ->get();
     }
+    public int $UNDEPOSITED_ACCOUNT_ID = 5;
+    public function getBankAccountDeposit()
+    {
+        return Accounts::whereIn('TYPE', ['0', '6'])
+            ->where('INACTIVE', '=', '0')
+            ->orWhere('ID','=',$this->UNDEPOSITED_ACCOUNT_ID)
+            ->orderBy('NAME', 'asc')
+            ->get();
+    }
     public function getExpenses()
     {
         return Accounts::whereIn('TYPE', ['12', '14'])

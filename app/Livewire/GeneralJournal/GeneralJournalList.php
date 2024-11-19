@@ -14,7 +14,7 @@ use Livewire\WithPagination;
 class GeneralJournalList extends Component
 {
     use WithPagination;
-    public int $perPage = 15;
+    public int $perPage = 30;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
     public int $locationid;

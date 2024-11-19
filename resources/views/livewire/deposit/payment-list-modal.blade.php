@@ -26,7 +26,20 @@
                                 </tr>
                             </thead>
                             <tbody class="text-sm">
-
+                                @foreach ($dataList as $list)
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-success btn-xs"> <i class="fa fa-plus-circle"
+                                                    aria-hidden="true"></i></button>
+                                        </td>
+                                        <td>{{ $list->DATE }}</td>
+                                        <td>{{ $list->TYPE }}</td>
+                                        <td>{{ $list->CODE }}</td>
+                                        <td>{{ $list->PAYMENT_METHOD }}</td>
+                                        <td>{{ $list->RECEIVED_FROM_NAME }}</td>
+                                        <td>{{ number_format($list->AMOUNT, 2) }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
