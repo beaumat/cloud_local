@@ -10,7 +10,7 @@ use Livewire\Component;
 
 #[Title("Accounts Payables Aging Report")]
 class AccountPayableAging extends Component
-{   
+{
 
     public bool $D_CURRENT = false;
     public bool $D_1_30 = false;
@@ -49,12 +49,12 @@ class AccountPayableAging extends Component
         $this->summaryList = $this->agingServices->APAgingSummary($this->DATE, $this->LOCATION_ID, []);
     }
     public function details()
-    {   
-          $this->D_CURRENT = false;
-          $this->D_1_30 = false;
-          $this->D_31_60 = false;
-          $this->D_61_90 = false;
-          $this->D_91_OVER = false;
+    {
+        $this->D_CURRENT = false;
+        $this->D_1_30 = false;
+        $this->D_31_60 = false;
+        $this->D_61_90 = false;
+        $this->D_91_OVER = false;
         $this->isSummary = false;
         $this->detailList =  $this->agingServices->APAgingDetais($this->DATE, $this->LOCATION_ID, []);
     }
