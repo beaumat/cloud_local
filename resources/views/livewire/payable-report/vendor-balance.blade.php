@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('reportsvendor_balance') }}"> Vendor Balance Report </a>
+                        <a href="{{ route('reportsvendor_balance') }}"> Bill Balance Reports </a>
                     </h5>
                 </div>
                 <div class="col-sm-6">
@@ -34,19 +34,18 @@
                                     </div>
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
-                                            <button class="btn btn-danger btn-xs w-25"
-                                                wire:click='generate()'>Generate</button>
+                                            <button class="btn btn-primary btn-xs w-25"
+                                                wire:click='generate()'>Genrate</button>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-8">
-
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">
@@ -68,7 +67,45 @@
                         </div>
                     </div>
                 </div>
+
                 <div class=" col-12 col-sm-12 col-md-12  col-lg-8" style="max-height: 80vh; overflow-y: auto;">
+                    @php
+                        $BALANCE = 0;
+                    @endphp
+                    <table class="table table-sm  table-bordered table-hover ">
+                        <thead class="bg-sky h1">
+                            <tr>
+                                <th>Customer</th>
+                                <th>Type</th>
+                                <th class="text-right">Balance</th>
+                                <th class="text-left">Location</th>
+                            </tr>
+                        </thead>
+                        <tbody class="h1">
+                            @foreach ($dataList as $list)
+                                <tr>
+                                    <td>{{ $list->CONTACT_NAME }}</td>
+                                    <td>{{ $list->TYPE }}</td>
+                                    <td class="text-right">{{ number_format($list->BALANCE, 2) }}</td>
+                                    <td>{{ $list->LOCATION_NAME }}</td>
+
+                                    @php
+                                        $BALANCE = $BALANCE + $list->BALANCE;
+                                    @endphp
+                                </tr>
+                            @endforeach
+                            @if ($BALANCE > 0)
+                                <tr>
+                                    <td class="text-danger">TOTAL</td>
+                                    <td></td>
+                                    <td class="text-danger text-right">{{ number_format($BALANCE, 2) }}</td>
+                                    <td> </td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+
+
 
                 </div>
             </div>

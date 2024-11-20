@@ -131,7 +131,6 @@
                         <table class="table table-sm  table-bordered table-hover ">
                             <thead class="bg-info h1">
                                 <tr>
-
                                     <th class="text-left">Date</th>
                                     <th class="text-left">Reference #</th>
                                     <th class="text-left">Customer</th>
@@ -143,53 +142,162 @@
                                 </tr>
                             </thead>
                             <tbody class="h1">
+                                @php
+                                    $TMP_AGING = '';
+                                    $COMPARE = '';
+                                    $RUN_BALANCE = 0;
+                                    $RUN_TOTAL = 0;
+                                @endphp
                                 @foreach ($detailList as $list)
                                     @if ($list->AGING <= 0)
                                         @if ($D_CURRENT == false)
+                                            @if ($COMPARE != $TMP_AGING && $RUN_BALANCE > 0)
+                                                <tr>
+                                                    <td class="text-primary">TOTAL {{ $TMP_AGING }}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="text-right text-primary">
+                                                        {{ number_format($RUN_BALANCE, 2) }}
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            @endif
+
                                             <tr>
                                                 <td class="h4 text-primary">CURRENT</td>
                                             </tr>
                                             @php
                                                 $D_CURRENT = true;
+                                                $TMP_AGING = 'CURRENT';
+                                                $RUN_BALANCE = 0;
                                             @endphp
                                         @endif
                                     @elseif ($list->AGING <= 30)
                                         @if ($D_1_30 == false)
+                                            @if ($RUN_BALANCE > 0)
+                                                <tr>
+                                                    <td class="text-primary">TOTAL {{ $TMP_AGING }}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="text-right text-primary">
+                                                        {{ number_format($RUN_BALANCE, 2) }}
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="h4 text-primary">&nbsp;</td>
+                                                </tr>
+                                            @endif
+
                                             <tr>
                                                 <td class="h4 text-primary">1-30</td>
                                             </tr>
                                             @php
                                                 $D_1_30 = true;
+                                                $TMP_AGING = '1-30';
+                                                $RUN_BALANCE = 0;
                                             @endphp
                                         @endif
                                     @elseif ($list->AGING <= 60)
                                         @if ($D_31_60 == false)
+                                            @if ($RUN_BALANCE > 0)
+                                                <tr>
+                                                    <td class="text-primary">TOTAL {{ $TMP_AGING }}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="text-right text-primary">
+                                                        {{ number_format($RUN_BALANCE, 2) }}
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="h4 text-primary">&nbsp;</td>
+                                                </tr>
+                                            @endif
                                             <tr>
                                                 <td class="h4 text-primary">31-60</td>
                                             </tr>
                                             @php
                                                 $D_31_60 = true;
+                                                $TMP_AGING = '31-60';
+                                                $RUN_BALANCE = 0;
                                             @endphp
                                         @endif
                                     @elseif ($list->AGING <= 90)
                                         @if ($D_61_90 == false)
+                                            @if ($RUN_BALANCE > 0)
+                                                <tr>
+                                                    <td class="text-primary">TOTAL {{ $TMP_AGING }}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="text-right text-primary">
+                                                        {{ number_format($RUN_BALANCE, 2) }} </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="h4 text-primary">&nbsp;</td>
+                                                </tr>
+                                            @endif
                                             <tr>
                                                 <td class="h4 text-primary">61-90</td>
                                             </tr>
                                             @php
                                                 $D_61_90 = true;
+                                                $TMP_AGING = '61-90';
+                                                $RUN_BALANCE = 0;
                                             @endphp
                                         @endif
                                     @else
                                         @if ($D_91_OVER == false)
+                                            @if ($RUN_BALANCE > 0)
+                                                <tr>
+                                                    <td class="text-primary">TOTAL {{ $TMP_AGING }}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="text-right text-primary">
+                                                        {{ number_format($RUN_BALANCE, 2) }}
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="h4 text-primary">&nbsp;</td>
+                                                </tr>
+                                            @endif
                                             <tr>
                                                 <td class="h4 text-primary">91 OVER</td>
                                             </tr>
                                             @php
                                                 $D_91_OVER = true;
+                                                $TMP_AGING = '91 OVER';
+                                                $RUN_BALANCE = 0;
                                             @endphp
                                         @endif
                                     @endif
+
+
+
+
+
+                                    @php
+                                        $RUN_BALANCE = $RUN_BALANCE + $list->BALANCE_DUE;
+                                    @endphp
+
+
 
 
                                     <tr>
@@ -199,10 +307,41 @@
                                         <td>{{ $list->PAYMENT_TERMS }}</td>
                                         <td>{{ date('M/d/Y', strtotime($list->DUE_DATE)) }}</td>
                                         <td>{{ $list->AGING < 1 ? '' : $list->AGING }}</td>
-                                        <td>{{ number_format($list->BALANCE_DUE, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
                                         <td>{{ $list->LOCATION_NAME }}</td>
                                     </tr>
+
+                                    @php
+                                        $COMPARE = $TMP_AGING;
+                                        $RUN_TOTAL = $RUN_TOTAL + $list->BALANCE_DUE ?? 0;
+                                    @endphp
                                 @endforeach
+
+
+                                <tr>
+                                    <td class="text-primary">TOTAL {{ $TMP_AGING }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right text-primary">
+                                        {{ number_format($RUN_BALANCE, 2) }}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right text-danger">{{ number_format($RUN_TOTAL, 2) }}</td>
+                                    <td></td>
+
+
+                                </tr>
                             </tbody>
                         </table>
 

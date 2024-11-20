@@ -54,8 +54,6 @@ class AccountReceivableAging extends Component
           $this->D_31_60 = false;
           $this->D_61_90 = false;
           $this->D_91_OVER = false;
-
-
         $this->isSummary = false;
         $this->detailList =  $this->agingServices->ARAgingDetais($this->DATE, $this->LOCATION_ID, []);
     }
