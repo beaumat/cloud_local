@@ -15,7 +15,7 @@
                     <td><label>{{ $list->NAME }}</label> </td>
                     <td>
                         <button type="button"
-                            @if ($ID > 0) @cannot('contact.patient.delete')  disabled  @endcan @endif
+                            @if ($ID > 0) @cannot('contact.patient.update')  disabled  @endcan @endif
                             wire:click='delete({{ $list->ID }})' wire:confirm="Are you sure you want to delete this?"
                             class="btn btn-sm text-xs btn-danger w-100">
                             <i class="fas fa-times" aria-hidden="true"></i>
@@ -37,8 +37,8 @@
                                 isDisabled="{{ false }}" />
                         @endif
                     </td>
-                    <td><button wire:click='save' type="button" class="btn btn-sm btn-success w-100"> <i
-                                class="fa fa-plus" aria-hidden="true"></i> </button></td>
+                    <td><button wire:click='save' type="button" class="btn btn-sm btn-success w-100"> <i class="fa fa-plus"
+                                aria-hidden="true"></i> </button></td>
                 </tr>
             @endcan
 

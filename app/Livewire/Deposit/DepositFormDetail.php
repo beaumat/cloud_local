@@ -189,9 +189,6 @@ class DepositFormDetail extends Component
                 }
             }
 
-
-
-
             $data = $this->depositServices->GetFund($ID);
             if ($data) {
                 if ($data->SOURCE_OBJECT_ID > 0) {
