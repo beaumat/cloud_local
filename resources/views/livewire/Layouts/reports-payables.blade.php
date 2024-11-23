@@ -18,7 +18,7 @@
                          <a href="{{ route('reportsvendor_balance') }}"
                              class="nav-link {{ request()->is('reports/payables/vendor-balance') ? 'text-warning font-weight-bold' : '' }}">
                              <i class="fa fa-print nav-icon"></i>
-                             <p>Vendor Balance</p>
+                             <p>Billing Balance</p>
                          </a>
                      </li>
                  @endcan

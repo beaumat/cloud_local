@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('reportsvendor_balance') }}"> Bill Balance Reports </a>
+                        <a href="{{ route('reportsvendor_balance') }}"> Billing Balance Reports </a>
                     </h5>
                 </div>
                 <div class="col-sm-6">

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\AccountingReport;
 
+use App\Exports\GeneralLedgerExport;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\DateServices;
@@ -9,6 +10,7 @@ use App\Services\LocationServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('General Ledger Report')]
 class GeneralLedgerReport extends Component
@@ -80,7 +82,16 @@ class GeneralLedgerReport extends Component
             $this->selectedAccountType
         );
     }
-
+    public function export()
+    {
+        if (!$this->dataList) {
+            session()->flash('error', 'Please generate first.');
+            return;
+        }
+        return Excel::download(new GeneralLedgerExport(
+            $this->dataList
+        ), 'general-ledger-export.xlsx');
+    }
     public function render()
     {
         return view('livewire.accounting-report.general-ledger-report');

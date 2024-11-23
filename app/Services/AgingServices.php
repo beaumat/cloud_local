@@ -103,7 +103,6 @@ class AgingServices
         return $result;
     }
 
-
     public function APAgingSummary(string $AS_OF_DATE, int $LOCATION_ID, array $CONTACT_SELECT)
     {
         $result = DB::table('contact as c')

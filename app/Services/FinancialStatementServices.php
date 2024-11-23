@@ -257,7 +257,11 @@ class FinancialStatementServices
             ->select([
                 'a.NAME as ACCOUNT_TITLE',
                 DB::raw($sql),
-            ])->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+                'at.DESCRIPTION as ACCOUNT_TYPE',
+                'at.ACCOUNT_ORDER as ORDER' 
+            ])
+            ->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->join('account_type_map as at', 'at.ID', '=', 'a.TYPE')
             ->where('aj.AMOUNT', '>', '0')
             ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {

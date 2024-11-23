@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('reportsfinancialincome_statement_report') }}"> Profit and Loss  Statement</a>
+                        <a href="{{ route('reportsfinancialincome_statement_report') }}"> Profit and Loss Statement</a>
                     </h5>
                 </div>
                 <div class="col-sm-6">
@@ -73,6 +73,7 @@
                     </div>
                 </div>
                 <div class=" col-12 col-sm-12 col-md-12  col-lg-8" style="max-height: 80vh; overflow-y: auto;">
+                    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                     <table class="table table-sm table-bordered table-hover ">
                         <thead class="bg-sky h1">
                             <tr>

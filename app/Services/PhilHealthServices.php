@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Bill;
 use App\Models\PhilHealth;
 use App\Models\Hemodialysis;
 use App\Models\PatientDoctor;
@@ -47,13 +48,15 @@ class PhilHealthServices
     private $philHealthSoaCustomServices;
     private $locationServices;
     private $serviceChargeServices;
+    private $billingServices;
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
         SystemSettingServices $systemSettingServices,
         PhilHealthSoaCustomServices $philHealthSoaCustomServices,
         LocationServices $locationServices,
-        ServiceChargeServices $serviceChargeServices
+        ServiceChargeServices $serviceChargeServices,
+        BillingServices $billingServices
     ) {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
@@ -61,6 +64,7 @@ class PhilHealthServices
         $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
         $this->locationServices = $locationServices;
         $this->serviceChargeServices = $serviceChargeServices;
+        $this->billingServices = $billingServices;
     }
     public function get($ID)
     {
@@ -886,5 +890,16 @@ class PhilHealthServices
         }
 
         return [];
+    }
+
+    public function makePayableForDoctor(int $PHILHEALTH_ID)
+    {       
+
+       $data = $this->get($PHILHEALTH_ID);
+        if($data) {
+            // $this->billingServices->Store("",$th)
+        }
+
+        
     }
 }

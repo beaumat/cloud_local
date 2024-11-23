@@ -616,7 +616,6 @@ class AccountJournalServices
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->where('aj.AMOUNT', '>', '0')
-            ->whereIn('d.ID',[''])
             ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
@@ -628,7 +627,7 @@ class AccountJournalServices
                 $query->whereIn('a.TYPE', $accountType);
             })
             ->get();
-
+          
         return $result;
     }
 

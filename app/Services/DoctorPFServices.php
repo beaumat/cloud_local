@@ -64,4 +64,8 @@ class DoctorPFServices
 
         return $patients;
     }
+
+    public function makePayable(int $PHILHEALTH_ID) {
+
+    }
 }

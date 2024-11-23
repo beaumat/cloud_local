@@ -72,6 +72,8 @@
                     </div>
                 </div>
                 <div class=" col-12 col-sm-12 col-md-12  col-lg-8" style="max-height: 80vh; overflow-y: auto;">
+                    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+
                     <table class="table table-sm  table-hover ">
                         <thead class="bg-sky h1">
                             <tr>
@@ -405,7 +407,7 @@
                             </tr>
 
                             {{-- EQUITY --}}
-                            @if (count($equityList) > 0 || $RetainingEarnings > 0 || $net_income > 0)                 
+                            @if (count($equityList) > 0 || $RetainingEarnings > 0 || $net_income > 0)
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>

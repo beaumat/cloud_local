@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Exports;
+
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+
+class BalanceSheetExport implements FromCollection, ShouldAutoSize
+{
+
+    protected  $dataList = [];
+
+    public function __construct($dataList)
+    {
+        $this->dataList = $dataList;
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function collection()
+    {
+        $finalData = [];
+
+        $headers = [
+            'JOURNAL_NO'    => 'Jrnl#', 
+        ];
+        $finalData[] = array_values($headers);
+
+        foreach($this->dataList as $list) {
+            $rowData =[ 
+                'JOURNAL_NO'    => $list->D, 
+            ];
+
+            $finalData[] = array_values($rowData);
+        }
+
+        return collect($finalData);
+
+    }
+}

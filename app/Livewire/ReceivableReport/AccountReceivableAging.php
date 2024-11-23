@@ -48,12 +48,12 @@ class AccountReceivableAging extends Component
         $this->summaryList = $this->agingServices->ARAgingSummary($this->DATE, $this->LOCATION_ID, []);
     }
     public function details()
-    {   
-          $this->D_CURRENT = false;
-          $this->D_1_30 = false;
-          $this->D_31_60 = false;
-          $this->D_61_90 = false;
-          $this->D_91_OVER = false;
+    {
+        $this->D_CURRENT = false;
+        $this->D_1_30 = false;
+        $this->D_31_60 = false;
+        $this->D_61_90 = false;
+        $this->D_91_OVER = false;
         $this->isSummary = false;
         $this->detailList =  $this->agingServices->ARAgingDetais($this->DATE, $this->LOCATION_ID, []);
     }

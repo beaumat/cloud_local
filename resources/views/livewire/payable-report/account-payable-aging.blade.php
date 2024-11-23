@@ -288,18 +288,9 @@
                                             @endphp
                                         @endif
                                     @endif
-
-
-
-
-
                                     @php
                                         $RUN_BALANCE = $RUN_BALANCE + $list->BALANCE_DUE;
                                     @endphp
-
-
-
-
                                     <tr>
                                         <td>{{ date('M/d/Y', strtotime($list->DATE)) }}</td>
                                         <td>{{ $list->CODE }}</td>
@@ -310,14 +301,11 @@
                                         <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
                                         <td>{{ $list->LOCATION_NAME }}</td>
                                     </tr>
-
                                     @php
                                         $COMPARE = $TMP_AGING;
                                         $RUN_TOTAL = $RUN_TOTAL + $list->BALANCE_DUE ?? 0;
                                     @endphp
                                 @endforeach
-
-
                                 <tr>
                                     <td class="text-primary">TOTAL {{ $TMP_AGING }}</td>
                                     <td></td>
@@ -339,17 +327,10 @@
                                     <td></td>
                                     <td class="text-right text-danger">{{ number_format($RUN_TOTAL, 2) }}</td>
                                     <td></td>
-
-
                                 </tr>
                             </tbody>
                         </table>
-
-
                     @endif
-
-
-
                 </div>
             </div>
         </div>

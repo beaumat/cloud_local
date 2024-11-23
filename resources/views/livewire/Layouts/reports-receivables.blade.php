@@ -21,7 +21,7 @@
                         <a href="{{ route('reportscustomer_balance') }}"
                             class="nav-link {{ request()->is('reports/receivables/customer-balance') ? 'text-warning font-weight-bold' : '' }}">
                             <i class="fa fa-print nav-icon"></i>
-                            <p>Customer Balance</p>
+                            <p>Invoice Balance</p>
                         </a>
                     </li>
                 @endcan

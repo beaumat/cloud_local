@@ -48,6 +48,9 @@ class PatientSalesReport extends Component
     public float $LINGAP_AMOUNT;
     public float $PCSO_AMOUNT;
     public float $OTHER_GL_AMOUNT;
+    public float $OP_AMOUNT;
+    public float $OVP_AMOUNT;
+
     public int $NO_OF_PATIENT = 0;
     public int $NO_OF_TREATMENT = 0;
     private $contactServices;
@@ -133,6 +136,9 @@ class PatientSalesReport extends Component
         $this->LINGAP_AMOUNT = 0;
         $this->PCSO_AMOUNT = 0;
         $this->OTHER_GL_AMOUNT = 0;
+        $this->OP_AMOUNT = 0;
+        $this->OVP_AMOUNT = 0;
+        
         $this->NO_OF_TREATMENT = 0;
 
         $this->dataList = $this->patientReportServices->generateSalesReportData(

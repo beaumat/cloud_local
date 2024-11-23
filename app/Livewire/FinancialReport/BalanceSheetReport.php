@@ -17,10 +17,9 @@ class BalanceSheetReport extends Component
 
     public string $DATE_FROM;
     public string $DATE_TO;
-
     public int $LOCATION_ID;
     public $locationList = [];
-
+    public $dataList = [];
     public float $amount = 0;
     public float $bankTotal = 0;
     public float $arTotal = 0;
@@ -76,35 +75,43 @@ class BalanceSheetReport extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
     }
+
     public function generate()
     {
 
-        $this->netAsset = 0;
-        $this->assetTotal = 0;
-        $this->bankTotal = 0;
-        $this->arTotal = 0;
-        $this->currentAssetTotal = 0;
-        $this->fixedAssetTotal = 0;
-        $this->nonCurrentAssietTotal = 0;
 
-        $this->bankList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [0], false);
-        $this->arList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [1], false);
-        $this->currentAssetList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [2], false);
-        $this->fixedAssetList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [3], false);
-        $this->nonCurrentAssietList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [4], false);
 
-        $this->liabilityTotal = 0;
-        $this->apTotal = 0;
-        $this->creditCardTotal = 0;
-        $this->currentLiabilityTotal = 0;
-        $this->nonCurrentLiabilityTotal = 0;
+        $bankList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [0], false);
+        $bankTotal =  $this->SetParameter($bankList);
+        $this->SetTotalParam($bankTotal, 'TOTAL BANK');
+        $arList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [1], false);
+        $arTotal = $this->SetParameter($arList);
 
-        $this->apList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [5], true);
-        $this->creditCardList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [6], true);
-        $this->currentLiabilityList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [7], true);
-        $this->nonCurrentLiabilityList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [8], true);
-        $this->equityTotal = 0;
-        $this->equityList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [9], true);
+        $currentAssetList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [2], false);
+        $currentAsset  = $this->SetParameter($currentAssetList);
+
+        $fixedAssetList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [3], false);
+        $fixAssetTotal = $this->SetParameter($fixedAssetList);
+
+        $nonCurrentAssetList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [4], false);
+        $nonCurrentAssetTotal =  $this->SetParameter($nonCurrentAssetList);
+
+
+        $apList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [5], true);
+        $apTotal =  $this->SetParameter($apList);
+
+        $creditCardList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [6], true);
+        $creditCardTotal =  $this->SetParameter($creditCardList);
+
+        $currentLiabilityList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [7], true);
+        $currentLiabilityTotal = $this->SetParameter($currentLiabilityList);
+
+        $nonCurrentLiabilityList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [8], true);
+        $nonCurrentLiabilityTotal =  $this->SetParameter($nonCurrentLiabilityList);
+
+        $equityList = $this->financialStatementServices->getBalanceSheetAccountByAcctType($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, [9], true);
+        $equityTotal =  $this->SetParameter($equityList);
+
 
         $this->CurrentYearEarnings = 0;
         $this->net_income = $this->financialStatementServices->getTotalNetIncome($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
@@ -115,20 +122,47 @@ class BalanceSheetReport extends Component
         $START_BUSSINES_DATE = '2020-1-1';
         $NEW_DATE = date('Y-m-d', strtotime($PREV_DATE . ' -1 day'));
         $amt = $this->financialStatementServices->getTotalNetIncome($START_BUSSINES_DATE, $NEW_DATE, $this->LOCATION_ID);
+
         return $amt;
     }
-    public function render()
-    {
-        return view('livewire.financial-report.balance-sheet-report');
-    }
     public function updatedlocationid()
-    {   
+    {
         try {
-            $this->userServices->SwapLocation($this->LOCATION_ID );
+            $this->userServices->SwapLocation($this->LOCATION_ID);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
- 
+    }
+    private function SetParameter($DataList): float
+    {
+        $PRE_AMOUNT = 0.00;
+        foreach ($DataList as $list) {
+            $this->dataList = [
+                'ORDER'     => $list->ORDER,
+                'TYPE'      => $list->ACCOUNT_TYPE,
+                'ACCOUNT'   => $list->ACCOUNT_TITLE,
+                'AMOUNT'    => $list->AMOUNT
+            ];
+            $PRE_AMOUNT =  $PRE_AMOUNT +  $list->AMOUNT ?? 0.00;
+        }
+
+        return $PRE_AMOUNT ?? 0.00;
+    }
+    private function SetTotalParam(float $TOTAL, string $ACCOUNT_NAME)
+    {
+        if ($TOTAL == 0) {
+            return;
+        }
+        $this->dataList = [
+            'ORDER'     => '',
+            'TYPE'      => '',
+            'ACCOUNT'   => $ACCOUNT_NAME,
+            'AMOUNT'    => $TOTAL
+        ];
+    }
+    public function render()
+    {
+        return view('livewire.financial-report.balance-sheet-report');
     }
 }

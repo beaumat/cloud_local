@@ -54,8 +54,6 @@ class TransactionJournalReport extends Component
 
         $this->DATE_TO = $this->dateServices->NowDate();
         $this->DATE_FROM = $this->dateServices->GetFirstDay_Month($this->DATE_TO);
-
-
         $this->LOCATION_ID =  $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
         $this->accountList = $this->accountServices->getAccount(false);
@@ -85,18 +83,14 @@ class TransactionJournalReport extends Component
     }
     public function export()
     {
-        $dataExport = $this->accountJournalServices->getTransactionJournal(
-            $this->DATE_FROM,
-            $this->DATE_TO,
-            $this->LOCATION_ID,
-            $this->selectedAccount,
-            $this->selectedAccountType
-        );
+        if (!$this->dataList) {
 
-
+            session()->flash('error', 'Please generate first.');
+            return;
+        }
 
         return Excel::download(new TransactionJournalReportExport(
-            $dataExport
+            $this->dataList
         ), 'transaction-journal-export.xlsx');
     }
 

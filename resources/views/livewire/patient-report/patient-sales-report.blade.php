@@ -89,7 +89,7 @@
                                     wire:loading.attr='disabled'>Generate</button>
                                 <button class="btn btn-xs btn-success w-25" wire:click='export()'
                                     wire:loading.attr='disabled'>Export</button>
-                           
+
 
                                 <a type="button" class="btn btn-xs btn-warning w-25"
                                     href="{{ route('reportspatient_sales_report_print', ['date_from' => $DATE_TRANSACTION_FROM, 'date_to' => $DATE_TRANSACTION_TO, 'location_id' => $LOCATION_ID]) }}"
@@ -311,7 +311,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-6">
                             <h6 class="text-xs"><label>No. of Patient : </label> <span class="text-primary">
@@ -337,9 +337,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
                             <div class="row">
                                 <div class=" col-12 text-xs"> <label class="text-xs">Cash Paid : </label>
                                     <span
@@ -376,7 +378,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <h6 class="text-xs"> <label class="text-xs">TOTAL (SC) : </label>
                                 <span
                                     class="text-primary font-weight-bold h6">{{ number_format($TOTAL_CHARGE, 2) }}</span>

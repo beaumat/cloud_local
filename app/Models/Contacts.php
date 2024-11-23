@@ -113,6 +113,6 @@ class Contacts extends Model
         'IS_DEPENDENT',
         'HEIGHT',
         'IS_COMPLETE',
-        'EMPLOYEE_ID'
+        'DATE_EXPIRED',
     ];
 }
