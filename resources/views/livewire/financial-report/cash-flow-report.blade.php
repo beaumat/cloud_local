@@ -133,7 +133,4 @@
             </div>
         </div>
     </section>
-    {{-- @livewire('CashFlow.KeyModal')
-    @livewire('CashFlow.DetailsModal')
-    @livewire('CashFlow.HeaderModal') --}}
 </div>

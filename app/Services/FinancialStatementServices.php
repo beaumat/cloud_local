@@ -269,7 +269,7 @@ class FinancialStatementServices
             })
             ->whereIn('a.TYPE', $AccountType)
             ->whereNotIn('a.ID', $NotIncludeAccntID)
-            ->groupBy(['a.NAME'])
+            ->groupBy(['a.NAME','at.DESCRIPTION','at.ACCOUNT_ORDER'])
             ->orderBy('a.TYPE')
             ->get();
 

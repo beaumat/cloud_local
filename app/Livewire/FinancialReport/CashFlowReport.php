@@ -2,6 +2,7 @@
 
 namespace App\Livewire\FinancialReport;
 
+use App\Exports\CashFlowExport;
 use App\Services\CashFlowServices;
 use App\Services\DateServices;
 use App\Services\FinancialStatementServices;
@@ -10,6 +11,7 @@ use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Cash Flow Report')]
 class CashFlowReport extends Component
@@ -185,10 +187,14 @@ class CashFlowReport extends Component
 
     public function ExportGenerate()
     {
-            if(!$this->dataList) {
-                session()->flash('error','Please generate first');
-                return;
-            }
+        if (!$this->dataList) {
+            session()->flash('error', 'Please generate first');
+            return;
+        }
+
+        return Excel::download(new CashFlowExport(
+            $this->dataList
+        ), 'cash-flow-export.xlsx');
     }
     public function render()
     {

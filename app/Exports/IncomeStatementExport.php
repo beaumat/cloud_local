@@ -22,19 +22,22 @@ class IncomeStatementExport implements FromCollection, ShouldAutoSize
         $finalData = [];
 
         $headers = [
-            'JOURNAL_NO'    => 'Jrnl#', 
+            'ACCOUNT'    => 'ACCOUNT',
+            'AMOUNT'     => 'AMOUNT',
+            'TOTAL'      => 'TOTAL'
         ];
         $finalData[] = array_values($headers);
 
-        foreach($this->dataList as $list) {
-            $rowData =[ 
-                'JOURNAL_NO'    => $list->D, 
+        foreach ($this->dataList as $list) {
+            $rowData = [
+                'ACCOUNT'  => $list['ACCOUNT'],
+                'AMOUNT'   => $list['AMOUNT'],
+                'TOTAL'    => $list['TOTAL'],
             ];
 
             $finalData[] = array_values($rowData);
         }
 
         return collect($finalData);
-
     }
 }

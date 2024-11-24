@@ -5,8 +5,9 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class CashFlowExport implements FromCollection,ShouldAutoSize
-{ protected  $dataList = [];
+class CashFlowExport implements FromCollection, ShouldAutoSize
+{
+    protected  $dataList = [];
 
     public function __construct($dataList)
     {
@@ -21,19 +22,21 @@ class CashFlowExport implements FromCollection,ShouldAutoSize
         $finalData = [];
 
         $headers = [
-            'JOURNAL_NO'    => 'Jrnl#', 
+            'ACCOUNT'    => 'ACCOUNT',
+            'AMOUNT'     => 'AMOUNT'
         ];
         $finalData[] = array_values($headers);
 
-        foreach($this->dataList as $list) {
-            $rowData =[ 
-                'JOURNAL_NO'    => $list->D, 
+        foreach ($this->dataList as $list) {
+
+            $rowData = [
+                'ACCOUNT'    => $list['name'],
+                'AMOUNT'    => $list['amount'],
             ];
 
             $finalData[] = array_values($rowData);
         }
 
         return collect($finalData);
-
     }
 }

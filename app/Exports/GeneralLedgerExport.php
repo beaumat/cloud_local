@@ -45,8 +45,6 @@ class GeneralLedgerExport implements FromCollection, ShouldAutoSize
 
         foreach ($this->dataList as $list) {
 
-
-
             if ($TEMP_ACCOUNT == '') {
                 $TEMP_ACCOUNT = $list->ACCOUNT_TITLE;
                 $TEMP_DEBIT = (float) $list->DEBIT ?? 0;
@@ -79,11 +77,9 @@ class GeneralLedgerExport implements FromCollection, ShouldAutoSize
                         'BALANCE'       => ''
                     ];
                     $finalData[] = array_values($rowData);
-
                     $TEMP_ACCOUNT = $list->ACCOUNT_TITLE;
                     $TEMP_DEBIT = (float) $list->DEBIT ?? 0;
                     $TEMP_CREDIT = (float) $list->CREDIT ?? 0;
-
                     $rowData = [
                         'TYPE'          => $TEMP_ACCOUNT,
                         'DATE'          => '',
