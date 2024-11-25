@@ -47,7 +47,7 @@ class ContactServices
         $result = contacts::where('ID', '=', $ID)
             ->where('TYPE', '=', 3)
             ->first();
-            
+
         if ($result) {
             return false;
         }
@@ -88,6 +88,21 @@ class ContactServices
                 ->get();
         }
         return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();
+    }
+    public function getVendorDoc()
+    {
+        $result = Contacts::query()
+            ->select([
+                'contact.ID',
+                'contact.NAME',
+                't.DESCRIPTION as TYPE'
+            ])
+            ->join('contact_type_map as t', 't.ID', '=', 'contact.TYPE')
+            ->whereIn('contact.TYPE', [0, 4])
+            ->where('INACTIVE', '0')
+            ->get();
+
+        return $result;
     }
     public function getListAllType()
     {

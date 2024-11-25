@@ -20,7 +20,7 @@ class DoctorPFServices
                 (select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = ph.CONTACT_ID and hemodialysis.DATE between ph.DATE_ADMITTED and ph.DATE_DISCHARGED ) as HEMO_TOTAL,
                 pf.FIRST_CASE
             from
-                philhealth_prof_fee as pf
+            philhealth_prof_fee as pf
             inner join philhealth as ph on ph.ID = pf.PHIC_ID
             inner join contact as c on c.ID = pf.CONTACT_ID
             inner join contact as p on p.id = ph.CONTACT_ID
@@ -68,4 +68,6 @@ class DoctorPFServices
     public function makePayable(int $PHILHEALTH_ID) {
 
     }
+
+    
 }

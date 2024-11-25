@@ -28,6 +28,7 @@ use App\Livewire\Deposit\DepositForm;
 use App\Livewire\Deposit\DepositList;
 use App\Livewire\Doctor\DoctorForm;
 use App\Livewire\Doctor\DoctorList;
+use App\Livewire\DoctorFee\DoctorFeeList;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
 use App\Livewire\FinancialReport\BalanceSheetReport;
@@ -215,7 +216,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', PhilHealthForm::class)->name('phic_create')->middleware(['permission:patient.philhealth.create']);
             Route::get('/{id}/edit', PhilHealthForm::class)->name('phic_edit')->middleware(['permission:patient.philhealth.view']);
 
-
             // Print on Philhealth
             Route::get('/{id}/printout-soa', PrintOutSoa::class)->name('printout_soa')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-summary', PrintOutSummary::class)->name('printout_summary')->middleware(['permission:patient.philhealth.print']);
@@ -232,7 +232,12 @@ Route::middleware(['auth'])->group(function () {
             // Print Temporary Pre-sign Result Only
             Route::get('/{id}/printout-soa-temp-out', PrintOutSoaTempOut::class)->name('printout_soa_temp_out')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-summary-temp-out', PrintOutSummaryTempOut::class)->name('printout_summary_temp_out')->middleware(['permission:patient.philhealth.print']);
-            Route::get('/{id}/printout-csf-temp-temp-out', PrintOutCsfTempOut::class)->name('printout_csf_temp_out')->middleware(['permission:patient.philhealth.print']);
+            Route::get('/{id}/printout-csf-temp-out', PrintOutCsfTempOut::class)->name('printout_csf_temp_out')->middleware(['permission:patient.philhealth.print']);
+        });
+
+        Route::prefix('/doctor-pf')->group(function () {
+            Route::get('/', DoctorFeeList::class)->name('doctor_fee')->middleware(['permission:report.patient.doctor-pf']);
+            Route::get('/{id}/{locationid}/print-form', DoctorsFeeReportPrint::class)->name('doctor_fee_print');
         });
     });
     // Patient End Category
@@ -572,10 +577,7 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/balance')->group(function () {
                 Route::get('/', PatientBalanceReport::class)->name('patient_balance_report')->middleware(['permission:report.patient.balance']);
             });
-            Route::prefix('/doctor-pro-fees')->group(function () {
-                Route::get('/', DoctorProFeeReport::class)->name('patient_doctor_fee_report')->middleware(['permission:report.patient.doctor-pf']);
-                Route::get('/{id}/{locationid}/print-form', DoctorsFeeReportPrint::class)->name('patient_doctor_fee_report_print');
-            });
+     
         });
         Route::prefix('/accounting')->name('accounting')->group(function () {
             Route::prefix('/general-ledger')->middleware(['permission:report.accounting.general-ledger'])->group(function () {

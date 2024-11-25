@@ -25,7 +25,7 @@
                             </thead>
                             <tbody class="text-xs">
 
-          
+
 
                                 @foreach ($dataList as $list)
                                     <tr>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="modal-footer">
                         <a target="_BLANK"
-                            href="{{ route('reportspatient_doctor_fee_report_print', ['id' => $DOCTOR_ID,'locationid' => $LOCATION_ID]) }}"
+                            href="{{ route('patientsdoctor_fee_print', ['id' => $DOCTOR_ID, 'locationid' => $LOCATION_ID]) }}"
                             class="btn btn-sm btn-danger"> Print </a>
 
                         <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">Close</button>

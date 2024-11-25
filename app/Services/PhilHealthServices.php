@@ -13,6 +13,8 @@ use App\Models\PhilhealthItemAdjustment;
 
 class PhilHealthServices
 {
+
+    public int $PROFESSIONAL_FEE_ACCOUNT_ID = 270;
     public float  $TAX = 0.02;
     public string $FIRST_CASE_RATE = "90935";
     public string $DEFAULT_DIAGNOSIS = "CHRONIC KIDNEY DISEASE STAGE 5 TO ";
@@ -49,6 +51,8 @@ class PhilHealthServices
     private $locationServices;
     private $serviceChargeServices;
     private $billingServices;
+    private $paymentTermServices;
+    private $accountJournalServices;
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
@@ -56,7 +60,9 @@ class PhilHealthServices
         PhilHealthSoaCustomServices $philHealthSoaCustomServices,
         LocationServices $locationServices,
         ServiceChargeServices $serviceChargeServices,
-        BillingServices $billingServices
+        BillingServices $billingServices,
+        PaymentTermServices $paymentTermServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
@@ -65,6 +71,8 @@ class PhilHealthServices
         $this->locationServices = $locationServices;
         $this->serviceChargeServices = $serviceChargeServices;
         $this->billingServices = $billingServices;
+        $this->paymentTermServices = $paymentTermServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function get($ID)
     {
@@ -891,15 +899,75 @@ class PhilHealthServices
 
         return [];
     }
-
-    public function makePayableForDoctor(int $PHILHEALTH_ID)
-    {       
-
-       $data = $this->get($PHILHEALTH_ID);
+    public function Get_ID_by_INVOICE_ID(int $INVOICE_ID) {
+        $data = PhilHealth::select(['ID'])->where('INVOICE_ID','=', $INVOICE_ID)->first();
         if($data) {
-            // $this->billingServices->Store("",$th)
+            return (int) $data->ID;
         }
+        return 0;
+    }
+    public function makePayableForDoctor(int $PHILHEALTH_ID, int $LOCATION_ID)
+    {
 
-        
+        $data = PhilHealthProfFee::where('PHIC_ID', '=', $PHILHEALTH_ID)->whereNull('BILL_ID')->first();
+
+        if ($data) {
+            $DOCTOR_ID = $data->CONTACT_ID;
+            $TERM_ID = 2;
+            $DATE = $this->dateServices->NowDate();
+            $DUE_DATE = $this->paymentTermServices->getDueDate(2, $DATE);
+            $PAYABLE_ACCT_ID = 21;
+            $AMOUNT = $data->FIRST_CASE ?? 0;
+            $INPUT_TAX_ID = 14;
+            $INPUT_TAX_ACCOUNT_ID = 28;
+            $BILL_ID = $this->billingServices->Store(
+                '',
+                $DATE,
+                $DOCTOR_ID,
+                $LOCATION_ID,
+                $TERM_ID,
+                $DUE_DATE,
+                '',
+                0,
+                '',
+                $PAYABLE_ACCT_ID,
+                $INPUT_TAX_ID,
+                0,
+                0,
+                0,
+                $INPUT_TAX_ACCOUNT_ID,
+                15
+            );
+            $this->billingServices->ExpenseStore(
+                $BILL_ID,
+                $this->PROFESSIONAL_FEE_ACCOUNT_ID,
+                $AMOUNT,
+                0,
+                0,
+                0,
+                '',
+                0
+            );
+            $this->billingServices->ReComputed($BILL_ID);
+            // 
+            // Make Journal Entry;
+            $bills = (int) $this->billingServices->object_type_map_bill;
+            $billExpenses = (int) $this->billingServices->object_type_map_bill_expenses;
+
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $BILL_ID);
+            if ($JOURNAL_NO  ==  0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->billingServices->object_type_map_bill, $BILL_ID) + 1;
+            }
+
+            $billCreditExpensesData = $this->billingServices->getBillExpenseJournal($BILL_ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditExpensesData, $LOCATION_ID, $billExpenses, $DATE, "EXPENSE");
+            //Main
+            $billData = $this->billingServices->getBillJournal($BILL_ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billData, $LOCATION_ID, $bills, $DATE, "AP");
+
+            PhilHealthProfFee::where('PHIC_ID', '=', $PHILHEALTH_ID)
+                ->whereNull('BILL_ID')
+                ->update(['BILL_ID' => $BILL_ID]);
+        }
     }
 }

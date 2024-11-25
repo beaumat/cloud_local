@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Livewire\PatientReport;
+namespace App\Livewire\DoctorFee;
 
 use App\Services\ContactServices;
 use App\Services\DoctorPFServices;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class DoctorsFeeReportForm extends Component
+class DoctorFeeForm extends Component
 {
-
     public bool $isDisabled = false;
     public bool $showModal = false;
     public $dataList = [];
@@ -43,6 +42,6 @@ class DoctorsFeeReportForm extends Component
     }
     public function render()
     {
-        return view('livewire.patient-report.doctors-fee-report-form');
+        return view('livewire.doctor-fee.doctor-fee-form');
     }
 }

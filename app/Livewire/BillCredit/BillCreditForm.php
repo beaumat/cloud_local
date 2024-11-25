@@ -89,7 +89,7 @@ class BillCreditForm extends Component
     }
     public function LoadDropdown()
     {
-        $this->vendorList = $this->contactServices->getList(0);
+        $this->vendorList = $this->contactServices->getVendorDoc();
         $this->locationList = $this->locationServices->getList();
         $this->taxList = $this->taxServices->getList();
     }

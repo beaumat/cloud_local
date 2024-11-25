@@ -126,7 +126,7 @@ class AgingServices
             ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
                 $query->whereIn('c.ID', $CONTACT_SELECT);
             })
-            ->whereIn('c.TYPE', [0, 2])
+            ->whereIn('c.TYPE', [0, 4])
             ->groupBy('c.ID', 'c.NAME')
             ->having('BALANCE', '>', 0)
             ->get();
@@ -159,7 +159,7 @@ class AgingServices
             ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
                 $query->whereIn('c.ID', $CONTACT_SELECT);
             })
-            ->whereIn('c.TYPE', [0, 2])
+            ->whereIn('c.TYPE', [0, 4])
             ->where('i.BALANCE_DUE', '>', 0)
             ->orderBy('DUE_DATE', 'desc')
             ->get();
@@ -187,7 +187,7 @@ class AgingServices
                 $query->whereIn('c.ID', $CONTACT_SELECT);
             })
             ->where('i.DATE', '<=', $AS_OF_DATE)
-            ->whereIn('c.TYPE', [0, 2])
+            ->whereIn('c.TYPE', [0, 4])
             ->where('i.BALANCE_DUE', '>', 0)
             ->groupBy('c.ID', 'c.NAME', 't.DESCRIPTION', 'l.NAME')
             ->orderBy('c.NAME', 'asc')

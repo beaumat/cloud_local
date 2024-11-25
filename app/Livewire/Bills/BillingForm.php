@@ -144,7 +144,7 @@ class BillingForm extends Component
     public function LoadDropdown()
     {
         $this->accountList = $this->accountServices->getPayable();
-        $this->vendorList = $this->contactServices->getList(0);
+        $this->vendorList = $this->contactServices->getVendorDoc();
         $this->locationList = $this->locationServices->getList();
         $this->paymentTermList = $this->paymentTermServices->getList();
         $this->taxList = $this->taxServices->getList();

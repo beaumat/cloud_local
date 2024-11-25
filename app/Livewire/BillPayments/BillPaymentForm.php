@@ -70,7 +70,7 @@ class BillPaymentForm extends Component
     }
     private function LoadDropDown()
     {
-        $this->contactList = $this->contactServices->getList(0);
+        $this->contactList = $this->contactServices->getVendorDoc();
         $this->locationList = $this->locationServices->getList();
         $this->accountList = $this->accountServices->getBankAccount();
     }

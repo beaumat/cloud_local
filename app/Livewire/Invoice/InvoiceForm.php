@@ -210,6 +210,7 @@ class InvoiceForm extends Component
                 $this->NOTES = $dataPay->NOTES ?? '';
                 $this->PO_NUMBER = $dataPay->RECEIPT_REF_NO ?? '';
             }
+            
         } else {
 
             $this->CUSTOMER_ID = 0;

@@ -7,6 +7,7 @@ use App\Services\AccountServices;
 use App\Services\InvoiceServices;
 use App\Services\PaymentMethodServices;
 use App\Services\PaymentServices;
+use App\Services\PhilHealthServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -44,13 +45,16 @@ class ReceivedPayment extends Component
     private $paymentMethodServices;
     private $accountServices;
     private $accountJournalServices;
+
+    private $philHealthServices;
     public function boot(
         PaymentServices $paymentServices,
         UserServices $userServices,
         InvoiceServices $invoiceServices,
         PaymentMethodServices $paymentMethodServices,
         AccountServices $accountServices,
-        AccountJournalServices $accountJournalServices
+        AccountJournalServices $accountJournalServices,
+        PhilHealthServices $philHealthServices
     ) {
         $this->paymentServices = $paymentServices;
         $this->userServices = $userServices;
@@ -58,6 +62,7 @@ class ReceivedPayment extends Component
         $this->paymentMethodServices = $paymentMethodServices;
         $this->accountServices = $accountServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->philHealthServices = $philHealthServices;
     }
     public function clearData()
     {
@@ -141,6 +146,11 @@ class ReceivedPayment extends Component
 
             $isGood = $this->getPosted($ID, $this->userServices->getTransactionDateDefault());
             if ($isGood) {
+                $PHILHEALTH_ID =  $this->philHealthServices->Get_ID_by_INVOICE_ID($this->INVOICE_ID);
+                if ($PHILHEALTH_ID > 0) {
+                    $this->philHealthServices->makePayableForDoctor($PHILHEALTH_ID, $this->LOCATION_ID);
+                }
+
                 DB::commit();
 
                 $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
@@ -148,6 +158,7 @@ class ReceivedPayment extends Component
                 $this->clearData();
             } else {
                 DB::rollBack();
+                return;
             }
         } catch (\Exception $e) {
             DB::rollBack();
