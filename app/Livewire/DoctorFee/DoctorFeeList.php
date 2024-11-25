@@ -5,6 +5,7 @@ namespace App\Livewire\DoctorFee;
 use App\Services\DoctorPFServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class DoctorFeeList extends Component
@@ -31,6 +32,7 @@ class DoctorFeeList extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
     }
+    #[On('doctor-fee-list-reload')]
     public function Generate()
     {
         $data = $this->doctorPFServices->getDoctorList($this->LOCATION_ID);
@@ -55,7 +57,14 @@ class DoctorFeeList extends Component
         ];
         $this->dispatch('pf-open-list', result: $data);
     }
-    public function printList() {}
+    public function openRemarks(int $DOCTOR_ID)
+    {
+        $data = [
+            'DOCTOR_ID' => $DOCTOR_ID,
+            'LOCATION_ID' => $this->LOCATION_ID
+        ];
+        $this->dispatch('remarks-open-list', result: $data);
+    }
     public function render()
     {
         return view('livewire.doctor-fee.doctor-fee-list');

@@ -899,9 +899,13 @@ class PhilHealthServices
 
         return [];
     }
-    public function Get_ID_by_INVOICE_ID(int $INVOICE_ID) {
-        $data = PhilHealth::select(['ID'])->where('INVOICE_ID','=', $INVOICE_ID)->first();
-        if($data) {
+    public function Get_ID_by_INVOICE_ID(int $INVOICE_ID)
+    {
+        $data = PhilHealth::select(['ID'])
+            ->where('INVOICE_ID', '=', $INVOICE_ID)
+            ->first();
+
+        if ($data) {
             return (int) $data->ID;
         }
         return 0;
@@ -969,5 +973,48 @@ class PhilHealthServices
                 ->whereNull('BILL_ID')
                 ->update(['BILL_ID' => $BILL_ID]);
         }
+    }
+
+    public function getListNonReceivedPFDoctor(int $DOCTOR_ID, int $LOCATION_ID, bool $IS_RECEIVED = false)
+    {
+
+        $result = DB::table('philhealth as p')
+            ->select([
+                'p.ID',
+                'p.CODE',
+                'p.DATE',
+                'p.DATE_ADMITTED',
+                'p.DATE_DISCHARGED',
+                DB::raw('CONCAT( c.LAST_NAME, ", ", c.FIRST_NAME, ", ", LEFT(c.MIDDLE_NAME, 1) ) as PATIENT_NAME'),
+                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = p.CONTACT_ID and hemodialysis.DATE between p.DATE_ADMITTED and p.DATE_DISCHARGED ) as NO_TREAT '),
+                'pf.FIRST_CASE as AMOUNT',
+                'p.PF_RECEIVED_DATE',
+
+            ])
+
+            ->join('contact as c', 'c.ID', 'p.CONTACT_ID')
+            ->join('philhealth_prof_fee as pf', 'pf.PHIC_ID', '=', 'p.ID')
+            ->join('location as l', 'l.ID', '=', 'p.LOCATION_ID')
+            ->where('pf.CONTACT_ID', '=', $DOCTOR_ID)
+            ->whereNotNull('p.INVOICE_ID')
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('p.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->when($IS_RECEIVED == true, function ($query) {
+                $query->whereNotNull('PF_RECEIVED_DATE');
+            })
+            ->when($IS_RECEIVED == false, function ($query) {
+                $query->whereNull('PF_RECEIVED_DATE');
+            })
+            ->get();
+
+        return  $result;
+    }
+    public function setReceived(int $PHILHEALTH_ID,  $PF_RECEIVED_DATE)
+    {
+        PhilHealth::where('ID', '=', $PHILHEALTH_ID)
+            ->update([
+                'PF_RECEIVED_DATE' => $PF_RECEIVED_DATE
+            ]);
     }
 }

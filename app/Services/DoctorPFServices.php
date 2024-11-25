@@ -21,13 +21,14 @@ class DoctorPFServices
                 pf.FIRST_CASE
             from
             philhealth_prof_fee as pf
-            inner join philhealth as ph on ph.ID = pf.PHIC_ID
+            join philhealth as ph on ph.ID = pf.PHIC_ID
             inner join contact as c on c.ID = pf.CONTACT_ID
             inner join contact as p on p.id = ph.CONTACT_ID
             where p.LOCATION_ID = ' . $LOCATION_ID . ' 
               and ph.STATUS_ID = ' . $STATUS_ID . ' 
               and ph.PF_RECEIVED_DATE is null
-        ) as pf'))
+        ) as pf
+         '))
             ->select('DOCTOR_NAME', 'ID as DOCTOR_ID', DB::raw(' sum(HEMO_TOTAL) as NO_TREAT'), DB::raw(' sum(FIRST_CASE) as TOTAL'))
             ->groupBy('DOCTOR_NAME', 'ID')
             ->get();
@@ -65,7 +66,7 @@ class DoctorPFServices
         return $patients;
     }
 
-    public function makePayable(int $PHILHEALTH_ID) {
+    public function getList(int $LOCATION_ID, int $DOCTOR_ID) {
 
     }
 
