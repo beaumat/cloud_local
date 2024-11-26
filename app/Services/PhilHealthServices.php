@@ -14,7 +14,7 @@ use App\Models\PhilhealthItemAdjustment;
 class PhilHealthServices
 {
 
-    public int $PROFESSIONAL_FEE_ACCOUNT_ID = 270;
+    public int $PROFESSIONAL_FEE_ACCOUNT_ID = 243;
     public float  $TAX = 0.02;
     public string $FIRST_CASE_RATE = "90935";
     public string $DEFAULT_DIAGNOSIS = "CHRONIC KIDNEY DISEASE STAGE 5 TO ";

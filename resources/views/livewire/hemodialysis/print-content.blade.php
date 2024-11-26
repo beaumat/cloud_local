@@ -1146,8 +1146,37 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
+            @if ($OTHER_SIGN)
+                <div class="row">
+                    <div class="col-6">
+
+                    </div>
+                    <div class=" col-6 form-group text-right">
+                        <div class="row">
+                            <div class="col-12 row">
+                                <div class="col-3"></div>
+                                <div class="col-9 ">
+                                    <div class="pt-2 bottom-line2"> &nbsp;</div>
+                                </div>
+                                <div class="col-12 text-sm">
+                                    PATIENT/PT. WATCHER PRINTED NAME & SIGNATURE
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+
+                            </div>
+                            <div class="col-12 row">
+                                <div class="col-6 text-sm"> DATE SIGNED :</div>
+                                <div class='col-6 bottom-line2'> &nbsp;</div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            @endif
         </div>
     </section>
 

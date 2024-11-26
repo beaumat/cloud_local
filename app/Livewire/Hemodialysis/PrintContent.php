@@ -162,7 +162,7 @@ class PrintContent extends Component
     public $SO_PARTS = [];
     public int $SE_COUNT = 0;
     public int $SO_COUNT = 0;
-
+    public bool $OTHER_SIGN = false;    
     public string $REPORT_HEADER_1;
     public string $LOGO_FILE = '';
     private $patientDoctorServices;
@@ -376,6 +376,7 @@ class PrintContent extends Component
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                 $this->DRY_WEIGHT = $locData->USED_DRY_WEIGHT ?? false;
+                $this->OTHER_SIGN = $locData->OTHER_SIGN ?? false;
             }
 
             $this->noteList = $this->hemoServices->ListNotes($this->HEMO_ID);
