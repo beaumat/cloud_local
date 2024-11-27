@@ -37,6 +37,7 @@ class Locations extends Model
         'LOGO_FILE',
         'USED_DRY_WEIGHT',
         'DOCTOR_ORDER_DEFAULT',
-        'OTHER_SIGN'
+        'OTHER_SIGN',
+        'PREPARED_BY_ID'
     ];
 }

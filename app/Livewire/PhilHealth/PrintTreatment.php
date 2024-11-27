@@ -104,6 +104,7 @@ class PrintTreatment extends Component
     public $hemoList = [];
     public $i;
     private $patientDoctorServices;
+
     public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, HemoServices $hemoServices, LocationServices $locationServices, PatientDoctorServices $patientDoctorServices)
     {
         $this->philHealthServices = $philHealthServices;
@@ -262,7 +263,7 @@ class PrintTreatment extends Component
                 $this->P1_TOTAL = $data->P1_TOTAL;
                 $this->P2_TOTAL = $data->P2_TOTAL;
                 $this->OP_TOTAL = $data->OP_TOTAL;
-                $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
+                // $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
                 $this->DATE_SIGNED = $data->DATE_SIGNED ?? '';
                 $this->OTHER_NAME = $data->OTHER_NAME ?? '';
 
@@ -290,7 +291,7 @@ class PrintTreatment extends Component
                     $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                     $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
                     $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
-                    $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                    $conPHIC = $this->contactServices->get($locData->PREPARED_BY_ID ?? $locData->PHIC_INCHARGE_ID, 2); // Employee
                     if ($conPHIC) {
                         $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
                         $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';

@@ -85,7 +85,10 @@ class LocationServices
         bool $PHIC_FORM_MODIFY = false,
         bool $IS_DAILY = false,
         string $LOGO_FILE,
-        bool  $USED_DRY_WEIGHT
+        bool $USED_DRY_WEIGHT,
+        string $DOCTOR_ORDER_DEFAULT,
+        bool $OTHER_SIGN,
+        int $PREPARED_BY_ID
 
     ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
@@ -111,7 +114,10 @@ class LocationServices
             'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY,
             'IS_DAILY'              => $IS_DAILY,
             'LOGO_FILE'             => $LOGO_FILE,
-            'USED_DRY_WEIGHT'       => $USED_DRY_WEIGHT
+            'USED_DRY_WEIGHT'       => $USED_DRY_WEIGHT,
+            'DOCTOR_ORDER_DEFAULT'  => $DOCTOR_ORDER_DEFAULT,
+            'OTHER_SIGN'            => $OTHER_SIGN,
+            'PREPARED_BY_ID'        => $PREPARED_BY_ID
         ]);
 
         return $ID;
@@ -139,7 +145,11 @@ class LocationServices
         bool $PHIC_FORM_MODIFY = false,
         bool $IS_DAILY = false,
         string $LOGO_FILE,
-        bool $USED_DRY_WEIGHT
+        bool $USED_DRY_WEIGHT,
+        string $DOCTOR_ORDER_DEFAULT,
+        bool $OTHER_SIGN,
+        int $PREPARED_BY_ID
+
     ): void {
 
         Locations::where('ID', $ID)
@@ -164,7 +174,10 @@ class LocationServices
                 'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY,
                 'IS_DAILY'              => $IS_DAILY,
                 'LOGO_FILE'             => $LOGO_FILE,
-                'USED_DRY_WEIGHT'       => $USED_DRY_WEIGHT
+                'USED_DRY_WEIGHT'       => $USED_DRY_WEIGHT,
+                'DOCTOR_ORDER_DEFAULT'  => $DOCTOR_ORDER_DEFAULT,
+                'OTHER_SIGN'            => $OTHER_SIGN,
+                'PREPARED_BY_ID'        => $PREPARED_BY_ID
 
             ]);
     }

@@ -1043,7 +1043,7 @@ class PhilHealthServices
             //
             return [
                 'STATUS'        => false,
-                'MESSAGE'      => 'File not found.',
+                'MESSAGE'      => 'AR No. not found.',
                 'INVOICE_ID'    => 0
             ];
         }

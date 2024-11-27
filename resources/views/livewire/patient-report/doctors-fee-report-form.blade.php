@@ -24,9 +24,6 @@
                                 </tr>
                             </thead>
                             <tbody class="text-xs">
-
-          
-
                                 @foreach ($dataList as $list)
                                     <tr>
                                         <td>{{ $list->PATIENT_NAME }}</td>
@@ -36,9 +33,6 @@
                                         <td class="text-right">{{ number_format($list->TOTAL, 2) }}</td>
                                     </tr>
                                 @endforeach
-
-
-
                             </tbody>
                         </table>
                     </div>

@@ -104,6 +104,12 @@
                                                 isDisabled="{{ false }}" :zero="true"
                                                 titleName="Phic In-charge" wire:model.live='PHIC_INCHARGE_ID' />
                                         </div>
+                                        <div class="col-md-4">
+                                            <livewire:select-option name="PREPARED_BY_ID" :options="$preparedByList"
+                                                isDisabled="{{ false }}" :zero="true"
+                                                titleName="Prepared By (Treatment Summary)"
+                                                wire:model.live='PREPARED_BY_ID' />
+                                        </div>
                                     </div>
                                 </div>
 
@@ -153,6 +159,16 @@
                                             <livewire:custom-check-box name="USED_DRY_WEIGHT"
                                                 isDisabled="{{ false }}" titleName="Use Dry Weight"
                                                 wire:model='USED_DRY_WEIGHT' />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <livewire:text-input name="DOCTOR_ORDER_DEFAULT"
+                                                isDisabled="{{ false }}" titleName="DOCTOR ORDER DEFAULT :"
+                                                wire:model='DOCTOR_ORDER_DEFAULT' maxlength='500' />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <livewire:custom-check-box name="OTHER_SIGN"
+                                                isDisabled="{{ false }}"
+                                                titleName="Watcher Sign on Treatment Sheet" wire:model='OTHER_SIGN' />
                                         </div>
                                     </div>
                                 </div>
