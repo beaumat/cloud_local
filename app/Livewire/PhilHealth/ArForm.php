@@ -3,6 +3,7 @@
 namespace App\Livewire\PhilHealth;
 
 use App\Services\PhilHealthServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -42,7 +43,26 @@ class ArForm extends Component
             }
         }
 
-        $this->philHealthServices->UpdateAR($this->PHILHEALTH_ID, $this->AR_NO, $this->AR_DATE);
+        DB::beginTransaction();
+        try {
+            $this->philHealthServices->UpdateAR($this->PHILHEALTH_ID, $this->AR_NO, $this->AR_DATE);
+            $data = $this->philHealthServices->makeReceivableForCustomer($this->PHILHEALTH_ID);
+            if ($data['STATUS'] == true) {
+                session()->flash('message', $data['MESSAGE']);
+                $this->dispatch('reload-list');
+            } else {
+                session()->flash('error', $data['MESSAGE']);
+            }
+
+
+            DB::commit();
+        } catch (\Exception $e) {
+            //throw $th;
+            DB::rollBack();
+            session()->flash('error', $e->getMessage());
+            return;
+        }
+
 
         $dataAR = [
             'AR_DATE'       => $this->AR_DATE,
@@ -51,7 +71,7 @@ class ArForm extends Component
         ];
 
         $this->dispatch('ar-form-data', ar: $dataAR);
-        
+
         session()->flash('message', 'Successfully save.');
     }
     #[On('ar-form-show')]

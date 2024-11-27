@@ -1152,7 +1152,6 @@
             @if ($OTHER_SIGN)
                 <div class="row">
                     <div class="col-6">
-
                     </div>
                     <div class=" col-6 form-group text-right">
                         <div class="row">
@@ -1165,7 +1164,6 @@
                                     PATIENT/PT. WATCHER PRINTED NAME & SIGNATURE
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
-
                             </div>
                             <div class="col-12 row">
                                 <div class="col-6 text-sm"> DATE SIGNED :</div>

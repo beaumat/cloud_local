@@ -111,12 +111,11 @@ class PriceLevelLineServices
             }
         }
     }
-    public function GetPriceByLocation(int $LOCTION_ID, int $ITEM_ID): float
+    public function GetPriceByLocation(int $LOCATION_ID, int $ITEM_ID): float
     {
-        $locDate =  $this->locationServices->get($LOCTION_ID);
+        $locDate =  $this->locationServices->get($LOCATION_ID);
         if ($locDate) {
             $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
-
             if ($PRICE_LEVEL_ID > 0) {
                 $PRICE_LEVEL_ID = $locDate->PRICE_LEVEL_ID ?? 0;
                 $result =  PriceLevelLines::select(['CUSTOM_PRICE'])

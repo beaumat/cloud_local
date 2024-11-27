@@ -13,7 +13,8 @@ use App\Models\PhilhealthItemAdjustment;
 
 class PhilHealthServices
 {
-
+    public int $TAX_ID = 12;
+    public int $TERM_ID = 2;
     public int $PROFESSIONAL_FEE_ACCOUNT_ID = 243;
     public float  $TAX = 0.02;
     public string $FIRST_CASE_RATE = "90935";
@@ -53,6 +54,11 @@ class PhilHealthServices
     private $billingServices;
     private $paymentTermServices;
     private $accountJournalServices;
+    private $invoiceServices;
+    private $itemServices;
+    private $priceLevelLineServices;
+    private $taxServices;
+    private $computeServices;
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
@@ -62,7 +68,12 @@ class PhilHealthServices
         ServiceChargeServices $serviceChargeServices,
         BillingServices $billingServices,
         PaymentTermServices $paymentTermServices,
-        AccountJournalServices $accountJournalServices
+        AccountJournalServices $accountJournalServices,
+        InvoiceServices $invoiceServices,
+        ItemServices $itemServices,
+        PriceLevelLineServices $priceLevelLineServices,
+        TaxServices $taxServices,
+        ComputeServices $computeServices
     ) {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
@@ -73,6 +84,11 @@ class PhilHealthServices
         $this->billingServices = $billingServices;
         $this->paymentTermServices = $paymentTermServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->invoiceServices = $invoiceServices;
+        $this->itemServices = $itemServices;
+        $this->priceLevelLineServices = $priceLevelLineServices;
+        $this->taxServices = $taxServices;
+        $this->computeServices = $computeServices;
     }
     public function get($ID)
     {
@@ -569,10 +585,9 @@ class PhilHealthServices
 
         return $result;
     }
-
     public function UpdateAR(int $ID, string $AR_NO, string $AR_DATE)
     {
-        PhilHealth::where('ID', $ID)
+        PhilHealth::where('ID', '=', $ID)
             ->update([
                 'AR_NO'     => $AR_NO == '' ? null : $AR_NO,
                 'AR_DATE'   => $AR_DATE  == '' ? null : $AR_DATE
@@ -668,7 +683,6 @@ class PhilHealthServices
                 'FIRST_CASE'    => $FIRST_CASE
             ]);
     }
-
     public function DeleteProfFee(int $ID)
     {
         PhilHealthProfFee::where('ID', $ID)->delete();
@@ -1016,5 +1030,143 @@ class PhilHealthServices
             ->update([
                 'PF_RECEIVED_DATE' => $PF_RECEIVED_DATE
             ]);
+    }
+
+    public function makeReceivableForCustomer(int $PHILHEALTH_ID): array
+    {
+
+        $exists =  PhilHealth::where('ID', '=', $PHILHEALTH_ID)
+            ->whereNotNull('AR_NO')
+            ->exists();
+
+        if (!$exists) {
+            //
+            return [
+                'STATUS'        => false,
+                'MESSAGE'      => 'File not found.',
+                'INVOICE_ID'    => 0
+            ];
+        }
+
+        $invoiceExists = PhilHealth::where('ID', '=', $PHILHEALTH_ID)
+            ->whereNotNull('INVOICE_ID')
+            ->exists();
+
+        if ($invoiceExists) {
+            // invoice already created
+            return [
+                'STATUS'        => false,
+                'MESSAGE'      => 'Invoice Already created',
+                'INVOICE_ID'    => 0
+            ];
+        }
+
+        $data = $this->get($PHILHEALTH_ID);
+
+
+        $DUE_DATE = (string)  $this->paymentTermServices->getDueDate($this->TERM_ID, $data->AR_DATE);
+        $ACCOUNT_RECEIVABLE_ID = 4;
+        $OUTPUT_TAX_ID = 12;
+        $OUTPUT_TAX_RATE = 0;
+        $OUTPUT_TAX_VAT_METHOD = 0;
+        $OUTPUT_TAX_ACCOUNT_ID = 28;
+
+        $INVOICE_ID = (int) $this->invoiceServices->Store(
+            '',
+            $data->AR_DATE,
+            $data->CONTACT_ID,
+            $data->LOCATION_ID,
+            0,
+            0,
+            $data->AR_NO,
+            '',
+            0,
+            null,
+            $this->TERM_ID,
+            $DUE_DATE,
+            null,
+            0,
+            '',
+            $ACCOUNT_RECEIVABLE_ID,
+            15,
+            $OUTPUT_TAX_ID,
+            $OUTPUT_TAX_RATE,
+            $OUTPUT_TAX_VAT_METHOD,
+            $OUTPUT_TAX_ACCOUNT_ID,
+            $PHILHEALTH_ID
+        );
+
+        $QTY = (float) $this->getNumberOfTreatment(
+            $data->CONTACT_ID,
+            $data->LOCATION_ID,
+            $data->DATE_ADMITTED,
+            $data->DATE_DISCHARGED
+        );
+
+
+        $dataItem =   $this->itemServices->get($this->PHIL_HEALTH_ITEM_ID);
+        if ($dataItem) {
+            $RATE  = $this->priceLevelLineServices->GetPriceByLocation($data->LOCATION_ID, $this->PHIL_HEALTH_ITEM_ID);
+            $AMOUNT = $RATE * $QTY;
+
+            $taxRate = $this->taxServices->getRate($this->TAX_ID);
+            $tax_result = $this->computeServices->ItemComputeTax($AMOUNT, $dataItem->TAXABLE, $this->TAX_ID, $taxRate);
+            if ($tax_result) {
+                $TAXABLE_AMOUNT = $tax_result['TAXABLE_AMOUNT'];
+                $TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
+            }
+
+            $this->invoiceServices->ItemStore(
+                $INVOICE_ID,
+                $this->PHIL_HEALTH_ITEM_ID,
+                $QTY,
+                0,
+                1,
+                $RATE,
+                0,
+                $AMOUNT,
+                $dataItem->TAXABLE ?? false,
+                $TAXABLE_AMOUNT,
+                $TAX_AMOUNT,
+                $dataItem->COGS_ACCOUNT_ID ?? 0,
+                $dataItem->ASSET_ACCOUNT_ID ?? 0,
+                $dataItem->GL_ACCOUNT_ID ?? 0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            );
+
+            $this->invoiceServices->ReComputed($INVOICE_ID);
+        }
+
+        // JOURNAL
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $INVOICE_ID);
+        if ($JOURNAL_NO  ==  0) {
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->invoiceServices->object_type_invoice, $INVOICE_ID) + 1;
+        }
+
+        //Main
+        $invoiceData = $this->invoiceServices->getInvoiceJournal($INVOICE_ID);
+        $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceData, $data->LOCATION_ID, $this->invoiceServices->object_type_invoice, $data->AR_DATE);
+        //Tax
+        $invoiceDataTax = $this->invoiceServices->getInvoiceTaxJournal($INVOICE_ID);
+        $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceDataTax, $data->LOCATION_ID, $this->invoiceServices->object_type_invoice, $data->AR_DATE);
+        //Income
+        $invoiceItemData = $this->invoiceServices->getInvoiceItemJournalIncome($INVOICE_ID);
+        $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceItemData, $data->LOCATION_ID, $this->invoiceServices->object_type_invoice_item, $data->AR_DATE);
+
+        PhilHealth::where('ID', '=', $PHILHEALTH_ID)
+            ->update([
+                'INVOICE_ID' => $INVOICE_ID
+            ]);
+
+        return [
+            'STATUS'        => true,
+            'MESSAGE'       => 'Successfully invoice created',
+            'INVOICE_ID'    => $INVOICE_ID
+        ];
     }
 }

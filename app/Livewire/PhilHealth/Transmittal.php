@@ -13,6 +13,7 @@ use App\Services\PhilHealthServices;
 use App\Services\ServiceChargeServices;
 use App\Services\TaxCreditServices;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -63,6 +64,7 @@ class Transmittal extends Component
         $this->paymentServices = $paymentServices;
         $this->taxCreditServices = $taxCreditServices;
     }
+    #[On('reload-list')]
     public function mount()
     {
         $data = $this->philHealthServices->getTwoId($this->PHILHEALTH_ID);

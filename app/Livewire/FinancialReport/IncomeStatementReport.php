@@ -102,7 +102,9 @@ class IncomeStatementReport extends Component
     private function SetParameter($dataList = [], string $TYPE): float
     {
         $TYPE_TITLE = '';
+        
         $total = 0;
+
         foreach ($dataList as $list) {
             if ($TYPE_TITLE == '') {
                 $TYPE_TITLE = $TYPE;

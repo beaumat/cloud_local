@@ -86,11 +86,14 @@
                                     <th class="text-right">{{ number_format($list->TOTAL, 2) }}</th>
                                     <td>
                                         <button class="btn btn-primary btn-xs"
-                                            wire:click='openList({{ $list->DOCTOR_ID }})'>Patients</button>
-                                            
+                                            wire:click='openList({{ $list->DOCTOR_ID }})'>Patients
+                                        </button>
+
                                         <a target="_BLANK"
                                             href="{{ route('patientsdoctor_fee_print', ['id' => $list->DOCTOR_ID, 'locationid' => $LOCATION_ID]) }}"
-                                            class="btn btn-xs btn-danger"> Print </a>
+                                            class="btn btn-xs btn-danger">
+                                            Print
+                                        </a>
 
                                         <button class="btn btn-success btn-xs"
                                             wire:click='openRemarks({{ $list->DOCTOR_ID }})'>Remarks</button>
