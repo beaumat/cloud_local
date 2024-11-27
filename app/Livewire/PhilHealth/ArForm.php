@@ -56,6 +56,16 @@ class ArForm extends Component
 
 
             DB::commit();
+
+            $dataAR = [
+                'AR_DATE'       => $this->AR_DATE,
+                'AR_NO'         => $this->AR_NO,
+                'PHILHEALTH_ID' => $this->PHILHEALTH_ID
+            ];
+    
+            $this->dispatch('ar-form-data', ar: $dataAR);
+            
+
         } catch (\Exception $e) {
             //throw $th;
             DB::rollBack();
@@ -64,15 +74,9 @@ class ArForm extends Component
         }
 
 
-        $dataAR = [
-            'AR_DATE'       => $this->AR_DATE,
-            'AR_NO'         => $this->AR_NO,
-            'PHILHEALTH_ID' => $this->PHILHEALTH_ID
-        ];
 
-        $this->dispatch('ar-form-data', ar: $dataAR);
 
-        session()->flash('message', 'Successfully save.');
+
     }
     #[On('ar-form-show')]
     public function openModal($result)

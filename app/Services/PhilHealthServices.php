@@ -1056,7 +1056,7 @@ class PhilHealthServices
             // invoice already created
             return [
                 'STATUS'        => false,
-                'MESSAGE'      => 'Invoice Already created',
+                'MESSAGE'      => 'Successfully save but invoice already created',
                 'INVOICE_ID'    => 0
             ];
         }
@@ -1165,7 +1165,7 @@ class PhilHealthServices
 
         return [
             'STATUS'        => true,
-            'MESSAGE'       => 'Successfully invoice created',
+            'MESSAGE'       => 'Successfully save & invoice created',
             'INVOICE_ID'    => $INVOICE_ID
         ];
     }
