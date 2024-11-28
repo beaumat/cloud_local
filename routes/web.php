@@ -587,7 +587,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', TrialBalanceReport::class)->name('trial_balance_report');
             });
 
-            Route::prefix('/transaction-details')->middleware(['permission:report.accounting.transaction-details'])->group(function () {
+            Route::prefix('/account-transaction')->middleware(['permission:report.accounting.transaction-details'])->group(function () {
                 Route::get('/', TransactionDetailsReport::class)->name('transaction_details_report');
             });
 

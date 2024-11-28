@@ -90,7 +90,6 @@ class InvoiceForm extends Component
     {
         $this->tab = $select;
     }
-
     public function boot(
         InvoiceServices $invoiceServices,
         LocationServices $locationServices,
@@ -246,8 +245,6 @@ class InvoiceForm extends Component
         $this->DISCOUNT_PCT = 0;
         $this->getTax();
     }
-
-
     public function getModify()
     {
         $this->Modify = true;

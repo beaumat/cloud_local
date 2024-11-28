@@ -6,41 +6,41 @@
     <ul class="nav nav-treeview">
 
         @can('report.accounting.general-ledger')
-        <li class="nav-item">
-            <a href="{{ route('reportsaccountinggeneral_ledeger_report') }}"
-                class="nav-link {{ request()->is('reports/accounting/general-ledger*') ? 'text-warning font-weight-bold' : '' }}">
-                <i class="fa fa-print  nav-icon"></i>
-                <p>General Ledger</p>
-            </a>
-        </li>
+            <li class="nav-item">
+                <a href="{{ route('reportsaccountinggeneral_ledeger_report') }}"
+                    class="nav-link {{ request()->is('reports/accounting/general-ledger*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print  nav-icon"></i>
+                    <p>General Ledger</p>
+                </a>
+            </li>
         @endcan
         @can('report.accounting.trial-balance')
-        <li class="nav-item">
-            <a href="{{  route('reportsaccountingtrial_balance_report') }}"
-                class="nav-link {{ request()->is('reports/accounting/trial-balance*') ? 'text-warning font-weight-bold' : '' }}">
-                <i class="fa fa-print  nav-icon"></i>
-                <p>Trial Balance</p>
-            </a>
-        </li>
+            <li class="nav-item">
+                <a href="{{ route('reportsaccountingtrial_balance_report') }}"
+                    class="nav-link {{ request()->is('reports/accounting/trial-balance*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print  nav-icon"></i>
+                    <p>Trial Balance</p>
+                </a>
+            </li>
         @endcan
         @can('report.accounting.transaction-journal')
-        <li class="nav-item">
-            <a href="{{ route('reportsaccountingtransaction_journal_report') }}"
-                class="nav-link {{ request()->is('reports/accounting/transaction-journal*') ? 'text-warning font-weight-bold' : '' }}">
-                <i class="fa fa-print  nav-icon"></i>
-                <p>Transaction Journal</p>
-            </a>
-        </li>
+            <li class="nav-item">
+                <a href="{{ route('reportsaccountingtransaction_journal_report') }}"
+                    class="nav-link {{ request()->is('reports/accounting/transaction-journal*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print  nav-icon"></i>
+                    <p>Transaction Journal</p>
+                </a>
+            </li>
         @endcan
-        {{-- @can('report.accounting.transaction-details')
-        <li class="nav-item">
-            <a href="{{ route('reportsaccountingtransaction_details_report') }}"
-                class="nav-link {{ request()->is('reports/accounting/transaction-details*') ? 'text-warning font-weight-bold' : '' }}">
-                <i class="fa fa-print  nav-icon"></i>
-                <p>Transaction Details</p>
-            </a>
-        </li>
-        @endcan --}}
+        @can('report.accounting.transaction-details')
+            <li class="nav-item">
+                <a href="{{ route('reportsaccountingtransaction_details_report') }}"
+                    class="nav-link {{ request()->is('reports/accounting/account-transaction*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print  nav-icon"></i>
+                    <p>Account Transaction</p>
+                </a>
+            </li>
+        @endcan
 
     </ul>
 </li>

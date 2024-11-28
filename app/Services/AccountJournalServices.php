@@ -545,7 +545,6 @@ class AccountJournalServices
             })
             ->orderBy('a.TAG', 'asc')
             ->orderBy('aj.OBJECT_DATE', 'asc')
-
             ->get();
 
         return $result;
@@ -627,7 +626,7 @@ class AccountJournalServices
                 $query->whereIn('a.TYPE', $accountType);
             })
             ->get();
-          
+
         return $result;
     }
 
@@ -656,5 +655,87 @@ class AccountJournalServices
 
 
         return $result;
+    }
+
+    public function getAccountTransaction(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = []): object
+    {
+        $forwardedQuery = DB::table('account_journal as aj')
+            ->select([
+                DB::raw("'F' as JOURNAL_NO"),
+                DB::raw("'2020-1-1' as DATE"),
+                DB::raw("'' as ACCOUNT_CODE"),
+                DB::raw("a.NAME as ACCOUNT_TITLE"),
+                DB::raw("'' as TYPE"),
+                DB::raw("'' as LOCATION"),
+                DB::raw("'' as TX_NAME"),
+                DB::raw("'' as TX_CODE"),
+                DB::raw("0 as DEBIT"),
+                DB::raw("0 as CREDIT"),
+                DB::raw("SUM(if(aj.ENTRY_TYPE = 0,AMOUNT,0)) - SUM(if(aj.ENTRY_TYPE = 1,AMOUNT,0))  as BALANCE")
+
+            ])
+            ->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->where('aj.OBJECT_DATE', '<',  $dateFrom)
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->when($account, function ($query) use (&$account) {
+                $query->whereIn('aj.ACCOUNT_ID', $account);
+            })
+            ->when($accountType, function ($query) use (&$accountType) {
+                $query->whereIn('a.TYPE', $accountType);
+            })->groupBy(['aj.ACCOUNT_ID', 'a.NAME']);
+
+        $resultQuery = DB::table('account_journal as aj')
+            ->select([
+                'aj.JOURNAL_NO',
+                'aj.OBJECT_DATE as DATE',
+                'a.TAG as ACCOUNT_CODE',
+                'a.NAME as ACCOUNT_TITLE',
+                'd.DESCRIPTION as TYPE',
+                'l.NAME as LOCATION',
+                DB::raw($this->TX_NAME),
+                DB::raw($this->TX_CODE),
+                DB::raw(" if(aj.ENTRY_TYPE = 0, aj.AMOUNT, '' ) as DEBIT "),
+                DB::raw(" if(aj.ENTRY_TYPE = 1, aj.AMOUNT, '' ) as CREDIT "),
+                DB::raw(" 0  as BALANCE")
+            ])->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->whereBetween('aj.OBJECT_DATE',  [$dateFrom, $dateTo])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->when($account, function ($query) use (&$account) {
+                $query->whereIn('aj.ACCOUNT_ID', $account);
+            })
+            ->when($accountType, function ($query) use (&$accountType) {
+                $query->whereIn('a.TYPE', $accountType);
+            });
+
+        //     $forwardedQuery = DB::table('forwarded_table')
+        //     ->select('TAG', 'OBJECT_DATE')
+        //     ->where('some_condition', true);
+
+        // $resultQuery = DB::table('result_table')
+        //     ->select('TAG', 'OBJECT_DATE')
+        //     ->where('another_condition', true);
+
+        $final_result = DB::query()
+            ->fromSub(
+                $forwardedQuery->union($resultQuery),
+                'combined_results'
+            )
+            ->orderBy('ACCOUNT_TITLE', 'asc')
+            ->orderBy('DATE', 'asc')
+            ->get();
+
+        return $final_result;
     }
 }

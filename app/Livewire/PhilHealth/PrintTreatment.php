@@ -291,7 +291,7 @@ class PrintTreatment extends Component
                     $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                     $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
                     $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
-                    $conPHIC = $this->contactServices->get($locData->PREPARED_BY_ID ?? $locData->PHIC_INCHARGE_ID, 2); // Employee
+                    $conPHIC = $this->contactServices->get($locData->PREPARED_BY_ID ?? $locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                     if ($conPHIC) {
                         $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
                         $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
