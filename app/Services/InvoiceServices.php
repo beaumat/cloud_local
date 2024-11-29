@@ -72,7 +72,7 @@ class InvoiceServices
                 'invoice.CODE',
                 'invoice.AMOUNT',
                 'invoice.BALANCE_DUE',
-            
+
             ])
             ->whereNotExists(function ($query) use (&$TAX_CREDIT_ID) {
                 $query->select(DB::raw(1))
@@ -430,7 +430,7 @@ class InvoiceServices
             $paymentApplied = (float) $this->GetPaymentApplied($ID);
             $creditApplied = (float) $this->GetCreditApplied($ID);
             $taxCredit = (float)  $this->GetTaxCredit($ID);
-            
+
             $totalPay = (float) $paymentApplied + $creditApplied + $taxCredit;
 
             $data = $this->compute->taxCompute($itemResult, $TAX_ID);
@@ -488,7 +488,7 @@ class InvoiceServices
             ->select(DB::raw('IFNULL(SUM(tax_credit_invoices.AMOUNT_WITHHELD), 0) AS pay'))
             ->where('tax_credit_invoices.INVOICE_ID', '=', $INVOICE_ID)
             ->first();
-            
+
         return $paymentSum->pay ?? 0;
     }
 
@@ -685,6 +685,35 @@ class InvoiceServices
             ->where('invoice_items.INVOICE_ID', $INVOICE_ID)
             ->whereNotNull('invoice_items.COGS_ACCOUNT_ID')
             ->orderBy('invoice_items.LINE_NO', 'asc')
+            ->get();
+
+
+        return $result;
+    }
+
+    public function getActiveList($search, int $LOCATION_ID): object
+    {
+        $result = Invoice::query()->select([
+            'invoice.ID',
+            'invoice.CODE',
+            'invoice.DATE',
+            'invoice.AMOUNT',
+            'invoice.BALANCE_DUE',
+            'invoice.DUE_DATE',
+            'invoice.NOTES',
+            'invoice.PO_NUMBER',
+            'c.NAME as CUSTOMER_NAME'
+
+        ])->join('contact as c', 'c.ID', '=', 'invoice.CUSTOMER_ID')
+            ->where('invoice.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('invoice.BALANCE_DUE', '>', 0)
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($sql) use (&$search) {
+                    $sql->where('invoice.CODE', 'like' . '%' . $search . '%');
+                    $sql->where('invoice.NOTES', 'like' . '%' . $search . '%');
+                    $sql->where('c.NAME', 'like' . '%' . $search . '%');
+                });
+            })
             ->get();
 
 

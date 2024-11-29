@@ -130,7 +130,8 @@ class ReceivedPayment extends Component
                 $this->UNDEPOSITED_FUNDS_ACCOUNT_ID,
                 0,
                 false,
-                $this->ACCOUNTS_RECEIVABLE_ID
+                $this->ACCOUNTS_RECEIVABLE_ID,
+                0
             );
 
 
@@ -144,15 +145,13 @@ class ReceivedPayment extends Component
             );
             $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
 
-            $isGood = $this->getPosted($ID, $this->userServices->getTransactionDateDefault());
+            $isGood = $this->paymentServices->getPosted($ID, $this->userServices->getTransactionDateDefault(),$this->LOCATION_ID);
             if ($isGood) {
                 $PHILHEALTH_ID =  $this->philHealthServices->Get_ID_by_INVOICE_ID($this->INVOICE_ID);
                 if ($PHILHEALTH_ID > 0) {
                     $this->philHealthServices->makePayableForDoctor($PHILHEALTH_ID, $this->LOCATION_ID);
                 }
-
                 DB::commit();
-
                 $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
                 $this->dispatch('update-amount', result: $getResult);
                 $this->clearData();
@@ -192,63 +191,6 @@ class ReceivedPayment extends Component
         session()->forget('error');
     }
 
-    public function getPosted(int $PAYMENT_ID, string $DATE): bool
-    {
-
-        $payment = $this->paymentServices->object_type_payment;
-        $paymentInvoicesId = $this->paymentServices->object_type_payment_invoices;
-        $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($payment, $PAYMENT_ID);
-        if ($JOURNAL_NO  == 0) {
-            $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($payment, $PAYMENT_ID) + 1;
-        }
-
-        $paymentData = $this->paymentServices->PaymentJournal($PAYMENT_ID);
-
-        $this->accountJournalServices->JournalExecute(
-            $JOURNAL_NO,
-            $paymentData,
-            $this->LOCATION_ID,
-            $payment,
-            $DATE,
-            "UF"
-        );
-
-
-        $paymentDataR = $this->paymentServices->PaymentJournalRemaining($PAYMENT_ID);
-
-        $this->accountJournalServices->JournalExecute(
-            $JOURNAL_NO,
-            $paymentDataR,
-            $this->LOCATION_ID,
-            $payment,
-            $DATE,
-            "A/R"
-        );
-
-
-        $paymentInvoiceData = $this->paymentServices->PaymentInvoicejournal($PAYMENT_ID);
-
-        $this->accountJournalServices->JournalExecute(
-            $JOURNAL_NO,
-            $paymentInvoiceData,
-            $this->LOCATION_ID,
-            $paymentInvoicesId,
-            $DATE,
-            "A/R"
-        );
-
-
-        $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-        $debit_sum = (float) $data['DEBIT'];
-        $credit_sum = (float) $data['CREDIT'];
-
-        if ($debit_sum == $credit_sum) {
-            $this->paymentServices->StatusUpdate($PAYMENT_ID, 15);
-            return true;
-        }
-
-        return false;
-    }
 
     public function render()
     {

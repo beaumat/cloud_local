@@ -5,11 +5,13 @@
                 <div class="col-sm-6">
                     <h5 class="m-0"><a href="{{ route('customersinvoice') }}"> Invoice </a></h5>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
+                <div class="col-sm-6 text-right">
+                    {{-- <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
                         </li>
-                    </ol>
+                    </ol> --}}
+
+                    @livewire('Invoice.QuickPaid', ['LOCATION_ID' => $locationid])
                 </div>
             </div>
         </div>
@@ -91,7 +93,9 @@
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @if ((Auth::user()->can('customer.invoice.delete') && $list->STATUS_ID == 0) || Auth::user()->name == 'admin' && $list->STATUS_ID == 15 )
+                                                @if (
+                                                    (Auth::user()->can('customer.invoice.delete') && $list->STATUS_ID == 0) ||
+                                                        (Auth::user()->name == 'admin' && $list->STATUS_ID == 15))
                                                     <button wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-xs btn-danger">

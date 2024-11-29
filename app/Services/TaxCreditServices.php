@@ -16,16 +16,19 @@ class TaxCreditServices
     private $dateServices;
     private $systemSettingServices;
     private $invoiceServices;
+    private $accountJournalServices;
     public function __construct(
         ObjectServices $objectServices,
         DateServices $dateServices,
         SystemSettingServices $systemSettingServices,
-        InvoiceServices $invoiceServices
+        InvoiceServices $invoiceServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->object = $objectServices;
         $this->dateServices = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->invoiceServices = $invoiceServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function Get(int $ID)
     {
@@ -353,5 +356,62 @@ class TaxCreditServices
         }
 
         return 0;
+    }
+
+    public function getPosted(int $TAX_CREDIT_ID, string $DATE, int $LOCATION_ID): bool
+    {
+        $taxCredit = $this->object_type_tax_credit;
+        $taxCreditInvoices = $this->object_type_tax_credit_invoices;
+        $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($taxCredit, $TAX_CREDIT_ID);
+        if ($JOURNAL_NO  == 0) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($taxCredit, $TAX_CREDIT_ID) + 1;
+        }
+
+        $paymentData = $this->TaxCreditJournal($TAX_CREDIT_ID);
+
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $paymentData,
+            $LOCATION_ID,
+            $taxCredit,
+            $DATE,
+            "TAX"
+        );
+
+
+        $paymentDataR = $this->TaxCreditJournalRemaining($TAX_CREDIT_ID);
+
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $paymentDataR,
+            $LOCATION_ID,
+            $taxCredit,
+            $DATE,
+            "A/R"
+        );
+
+
+        $paymentInvoiceData = $this->TaxCreditInvoicejournal($TAX_CREDIT_ID);
+
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $paymentInvoiceData,
+            $LOCATION_ID,
+            $taxCreditInvoices,
+            $DATE,
+            "A/R"
+        );
+
+
+        $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+        $debit_sum = (float) $data['DEBIT'];
+        $credit_sum = (float) $data['CREDIT'];
+
+        if ($debit_sum == $credit_sum) {
+            $this->StatusUpdate($TAX_CREDIT_ID, 15);
+            return true;
+        }
+
+        return false;
     }
 }

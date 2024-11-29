@@ -95,7 +95,7 @@ class TaxCredit extends Component
             'EWT_RATE'          => 'required|numeric|not_in:0',
             'EWT_ACCOUNT_ID'    => 'required|exists:account,id',
             'AMOUNT_WITHHELD'   => 'required|numeric|not_in:0'
-        
+
         ], [], [
             'EWT_ID'            => 'Tax Type',
             'EWT_RATE'          => 'Rate',
@@ -124,11 +124,13 @@ class TaxCredit extends Component
                 $this->AMOUNT_WITHHELD,
                 $this->ACCOUNTS_RECEIVABLE_ID
             );
+            
             $total  = $this->taxCreditServices->GetTotal($ID);
             $this->taxCreditServices->setTotal($ID, $total);
             $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
 
-            $isGood = $this->getPosted($ID, $this->userServices->getTransactionDateDefault());
+            $isGood = $this->taxCreditServices->getPosted($ID, $this->userServices->getTransactionDateDefault(), $this->LOCATION_ID);
+         
             if ($isGood) {
                 DB::commit();
                 $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);
@@ -156,63 +158,6 @@ class TaxCredit extends Component
         session()->forget('error');
     }
 
-    public function getPosted(int $TAX_CREDIT_ID, string $DATE): bool
-    {
-
-        $taxCredit = $this->taxCreditServices->object_type_tax_credit;
-        $taxCreditInvoices = $this->taxCreditServices->object_type_tax_credit_invoices;
-        $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($taxCredit, $TAX_CREDIT_ID);
-        if ($JOURNAL_NO  == 0) {
-            $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($taxCredit, $TAX_CREDIT_ID) + 1;
-        }
-
-        $paymentData = $this->taxCreditServices->TaxCreditJournal($TAX_CREDIT_ID);
-
-        $this->accountJournalServices->JournalExecute(
-            $JOURNAL_NO,
-            $paymentData,
-            $this->LOCATION_ID,
-            $taxCredit,
-            $DATE,
-            "TAX"
-        );
-
-
-        $paymentDataR = $this->taxCreditServices->TaxCreditJournalRemaining($TAX_CREDIT_ID);
-
-        $this->accountJournalServices->JournalExecute(
-            $JOURNAL_NO,
-            $paymentDataR,
-            $this->LOCATION_ID,
-            $taxCredit,
-            $DATE,
-            "A/R"
-        );
-
-
-        $paymentInvoiceData = $this->taxCreditServices->TaxCreditInvoicejournal($TAX_CREDIT_ID);
-
-        $this->accountJournalServices->JournalExecute(
-            $JOURNAL_NO,
-            $paymentInvoiceData,
-            $this->LOCATION_ID,
-            $taxCreditInvoices,
-            $DATE,
-            "A/R"
-        );
-
-
-        $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-        $debit_sum = (float) $data['DEBIT'];
-        $credit_sum = (float) $data['CREDIT'];
-
-        if ($debit_sum == $credit_sum) {
-            $this->taxCreditServices->StatusUpdate($TAX_CREDIT_ID, 15);
-            return true;
-        }
-
-        return false;
-    }
 
     public function render()
     {

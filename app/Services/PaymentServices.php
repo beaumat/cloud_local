@@ -18,14 +18,17 @@ class PaymentServices
     private $object;
     private $dateServices;
     private $systemSettingServices;
+    private $accountJournalServices;
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
-        SystemSettingServices $systemSettingServices
+        SystemSettingServices $systemSettingServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function get($ID)
     {
@@ -54,8 +57,25 @@ class PaymentServices
 
         return 0;
     }
-    public function Store(string $CODE, $DATE, int $CUSTOMER_ID, int $LOCATION_ID, float $AMOUNT, float $AMOUNT_APPLIED, int $PAYMENT_METHOD_ID, string $CARD_NO, $CARD_EXPIRY_DATE, string $RECEIPT_REF_NO, $RECEIPT_DATE, string $NOTES, int $UNDEPOSITED_FUNDS_ACCOUNT_ID, int $OVERPAYMENT_ACCOUNT_ID, bool $DEPOSITED, int $ACCOUNTS_RECEIVABLE_ID): int
-    {
+    public function Store(
+        string $CODE,
+        $DATE,
+        int $CUSTOMER_ID,
+        int $LOCATION_ID,
+        float $AMOUNT,
+        float $AMOUNT_APPLIED,
+        int $PAYMENT_METHOD_ID,
+        string $CARD_NO,
+        $CARD_EXPIRY_DATE,
+        string $RECEIPT_REF_NO,
+        $RECEIPT_DATE,
+        string $NOTES,
+        int $UNDEPOSITED_FUNDS_ACCOUNT_ID,
+        int $OVERPAYMENT_ACCOUNT_ID,
+        bool $DEPOSITED,
+        int $ACCOUNTS_RECEIVABLE_ID,
+        int $PAYMENT_PERIOD_ID = 0
+    ): int {
 
         $ID = (int) $this->object->ObjectNextID('PAYMENT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PAYMENT');
@@ -81,7 +101,8 @@ class PaymentServices
             'STATUS'                => 0,
             'STATUS_DATE'           => $this->dateServices->NowDate(),
             'DEPOSITED'             => $DEPOSITED,
-            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID
+            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
+            'PAYMENT_PERIOD_ID'       => $PAYMENT_PERIOD_ID > 0  ? $PAYMENT_PERIOD_ID : null
         ]);
 
         return $ID;
@@ -371,6 +392,64 @@ class PaymentServices
             return false;
         }
 
+
+        return false;
+    }
+
+    public function getPosted(int $PAYMENT_ID, string $DATE, $LOCATION_ID): bool
+    {
+
+        $payment = $this->object_type_payment;
+        $paymentInvoicesId = $this->object_type_payment_invoices;
+        $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($payment, $PAYMENT_ID);
+        if ($JOURNAL_NO  == 0) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($payment, $PAYMENT_ID) + 1;
+        }
+
+        $paymentData = $this->PaymentJournal($PAYMENT_ID);
+
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $paymentData,
+            $LOCATION_ID,
+            $payment,
+            $DATE,
+            "UF"
+        );
+
+
+        $paymentDataR = $this->PaymentJournalRemaining($PAYMENT_ID);
+
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $paymentDataR,
+            $LOCATION_ID,
+            $payment,
+            $DATE,
+            "A/R"
+        );
+
+
+        $paymentInvoiceData = $this->PaymentInvoicejournal($PAYMENT_ID);
+
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $paymentInvoiceData,
+            $LOCATION_ID,
+            $paymentInvoicesId,
+            $DATE,
+            "A/R"
+        );
+
+
+        $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+        $debit_sum = (float) $data['DEBIT'];
+        $credit_sum = (float) $data['CREDIT'];
+
+        if ($debit_sum == $credit_sum) {
+            $this->StatusUpdate($PAYMENT_ID, 15);
+            return true;
+        }
 
         return false;
     }

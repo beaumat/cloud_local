@@ -113,7 +113,6 @@ class InvoiceList extends Component
             DB::beginTransaction();
             $data = $this->invoiceServices->get($INVOICE_ID);
             if ($data) {
-
                 if ($data->STATUS == 15) {
                     //Main
                     $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $INVOICE_ID);
@@ -177,6 +176,7 @@ class InvoiceList extends Component
         }
  
     }
+    #[On('quick-paid-reload')]
     public function render()
     {
         $dataList = $this->invoiceServices->Search($this->search, $this->locationid, $this->perPage);
