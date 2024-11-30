@@ -169,7 +169,13 @@ class PrintSoa3 extends Component
                 $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
                 $this->DATE_BIRTH = date('m/d/Y', strtotime($contact->DATE_OF_BIRTH));
                 $this->PATIENT_NAME = strtoupper($contact->LAST_NAME . ', ' .   $contact->FIRST_NAME . ' '  . $contact->MIDDLE_NAME . ' ' . $EX_NAME);
-                $this->PIN = $contact->PIN ?? '';
+              
+                if ($this->IS_DEPENDENT) {
+                    $this->PIN = $contact->PIN_DEPENDENT ?? '';
+                } else {
+                    $this->PIN = $contact->PIN  ?? '';
+                }
+
                 $this->LOCATION_ID = $contact->LOCATION_ID;
                 $this->gotHide();
                 $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
@@ -296,11 +302,11 @@ class PrintSoa3 extends Component
                     $EX_COUNT = strlen($contact->SALUTATION);
                     $MI_NAME = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
                     $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
-                    
+
                     if ($this->IS_DEPENDENT) {
-                        $this->PIN = $contact->PIN_DEPENDENT;
+                        $this->PIN = $contact->PIN_DEPENDENT ?? '';
                     } else {
-                        $this->PIN = $contact->PIN;
+                        $this->PIN = $contact->PIN  ?? '';
                     }
 
                     $this->DATE_BIRTH = date('m/d/Y', strtotime($contact->DATE_OF_BIRTH));
