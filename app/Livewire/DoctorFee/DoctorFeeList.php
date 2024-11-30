@@ -2,8 +2,10 @@
 
 namespace App\Livewire\DoctorFee;
 
+use App\Services\DateServices;
 use App\Services\DoctorPFServices;
 use App\Services\LocationServices;
+use App\Services\PaymentPeriodServices;
 use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -18,26 +20,33 @@ class DoctorFeeList extends Component
     private $doctorPFServices;
     private $locationServices;
     private $userServices;
-
-
-    public function boot(DoctorPFServices $doctorPFServices, LocationServices $locationServices, UserServices $userServices)
+    private $paymentPeriodServices;
+    public int $YEAR;
+    public $dataList = [];
+    public $headerList = [];
+    private $dateServices;
+    public function boot(DoctorPFServices $doctorPFServices, LocationServices $locationServices, UserServices $userServices, PaymentPeriodServices $paymentPeriodServices, DateServices $dateServices)
     {
         $this->doctorPFServices = $doctorPFServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
+        $this->paymentPeriodServices = $paymentPeriodServices;
+        $this->dateServices = $dateServices;
     }
 
     public function mount()
     {
+        $this->YEAR  = $this->dateServices->NowYear();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
     }
+
+
     #[On('doctor-fee-list-reload')]
+
     public function Generate()
     {
-        $data = $this->doctorPFServices->getDoctorList($this->LOCATION_ID);
-
-        $this->doctorList = $data;
+        $this->headerList  = $this->paymentPeriodServices->GetYear($this->YEAR, $this->LOCATION_ID);
     }
     public function updatedlocationid()
     {

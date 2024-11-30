@@ -66,9 +66,26 @@ class DoctorPFServices
         return $patients;
     }
 
-    public function getList(int $LOCATION_ID, int $DOCTOR_ID) {
+    public function getPayFee(int $LOCATION_ID, int $DOCTOR_ID, string $DATE_FROM, string $DATE_TO)
+    {
 
+        $data = DB::table('philhealth_prof_fee as pf')
+            ->select(
+                DB::raw(' IFNULL(SUM(pf.FIRST_CASE),0) as AMOUNT')
+            )
+            ->join('philhealth as ph', '=', 'pf.PHIC_ID')
+            ->join('contact as c', 'c.ID', '=', 'pf.CONTACT_ID')
+            ->where('pf.CONTACT_ID', '=', $DOCTOR_ID)
+            ->whereNull('ph.PF_RECEIVED_DATE')
+            ->whereBetween('ph.DATE_ADMITTED', [$DATE_FROM, $DATE_TO])
+            ->whereBetween('ph.DATE_DISCHARGED', [$DATE_FROM, $DATE_TO])
+            ->first();
+
+        if ($data) {
+            $data->AMOUNT ?? 0;
+        }
+
+        return 0;
     }
-
     
 }

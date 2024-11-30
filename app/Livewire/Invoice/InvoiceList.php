@@ -55,7 +55,6 @@ class InvoiceList extends Component
         if ($invoiceDate) {
             $invoiceItemData = $this->invoiceServices->ItemGet($Id, $INVOICE_ID);
             if ($invoiceItemData) {
-
                 // Inventory
                 $this->itemInventoryServices->InventoryModify(
                     $invoiceItemData->ITEM_ID,

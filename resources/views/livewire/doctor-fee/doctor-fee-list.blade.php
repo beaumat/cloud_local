@@ -28,6 +28,15 @@
                                 <button class="btn btn-sm btn-primary" wire:click='Generate()'>Filter</button>
                             </div>
                             <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-4 text-right">
+                                        <label class="text-primary ">Year :</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="number" class="form-control form-control-sm w-25"
+                                            wire:model='YEAR' />
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
@@ -70,15 +79,24 @@
                 <div class="col-md-8" style="max-height: 80vh; overflow-y: auto;">
 
                     <table class="table table-sm table-bordered table-hover">
-                        <thead class='text-xs bg-sky'>
-                            <tr>
-                                <th>Nephro Name</th>
-                                <th class="col-2 text-center">No. Treatment</th>
-                                <th class="col-2 text-right">PF Amount</th>
-                                <th class="col-2">Action</th>
-                            </tr>
-                        </thead>
+
                         <tbody class="text-xs">
+                            <tr>
+                                <th class="col-3"></th>
+                                @foreach ($headerList as $list)
+                                    <th >{{ date('M-d', strtotime($list->DATE_FROM)) }}-{{ date('M-d', strtotime($list->DATE_TO)) }}
+                                    </th>
+                                @endforeach
+
+                            </tr>
+                            <tr>
+                                <th class="col-3"c>Nephro Name</th>
+                                @foreach ($headerList as $list)
+                                    <th>OR#{{ $list->RECEIPT_NO }}
+                                    </th>
+                                @endforeach
+                            </tr>
+
                             @foreach ($doctorList as $list)
                                 <tr>
                                     <td> {{ $list->DOCTOR_NAME }} </td>

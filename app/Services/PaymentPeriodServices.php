@@ -21,6 +21,21 @@ class PaymentPeriodServices
 
         return $result;
     }
+    public function GetYear(int $YEAR, int $LOCATION_ID)
+    {
+        $data = PaymentPeriod::query()
+            ->select([
+                'RECEIPT_NO',
+                'DATE_FROM',
+                'DATE_TO'
+            ])
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->whereYear('DATE_FROM', '=', $YEAR)
+            ->whereYear('DATE_TO', '=', $YEAR)
+            ->get();
+
+        return $data;
+    }
     public function Store(string $RECEIPT_NO, int $LOCATION_ID, string $DATE_FROM, string $DATE_TO, float $TOTAL_PAYMENT, float $TOTAL_WTAX, int $BANK_ACCOUNT_ID)
     {
         $ID = (int) $this->object->ObjectNextID(TABLE_NAME: 'PAYMENT_PERIOD');
