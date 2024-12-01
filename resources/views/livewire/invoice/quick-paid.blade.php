@@ -16,7 +16,6 @@
                         </button>
                     </div>
                     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-
                     <div class="modal-body">
                         <div class='row'>
                             <div class="col-8">
@@ -29,33 +28,36 @@
                                 </select>
                             </div>
                             <div class="col-12">
-                                <table class="table table-sm table-bordered table-hover mt-1">
-                                    <thead class='bg-sky'>
-                                        <th>Invoice No.</th>
-                                        <th>Date</th>
-                                        <th>PO Number</th>
-                                        <th>Date Due</th>
-                                        <th>Name</th>
-                                        <th>Amount</th>
-                                        <th>Balance</th>
-                                        <th>Action</th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($dataList as $list)
-                                            <tr>
-                                                <td>{{ $list->CODE }}</td>
-                                                <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                                <td>{{ $list->PO_NUMBER }}</td>
-                                                <td>{{ date('m/d/Y', strtotime($list->DUE_DATE)) }}</td>
-                                                <td>{{ $list->CUSTOMER_NAME }}</td>
-                                                <td>{{ number_format($list->AMOUNT, 2) }}</td>
-                                                <td>{{ number_format($list->BALANCE_DUE, 2) }}</td>
-                                                <td><button class="btn btn-xs btn-success w-100"
-                                                        wire:click='makePaid({{ $list->ID }})'>Paid</button></td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                <div style="max-height: 73vh; overflow-y: auto;" class="border">
+                                    <table class="table table-sm table-bordered table-hover mt-1">
+                                        <thead class='bg-sky'>
+                                            <th>Invoice No.</th>
+                                            <th>Date</th>
+                                            <th>PO Number</th>
+                                            <th>Date Due</th>
+                                            <th>Name</th>
+                                            <th>Amount</th>
+                                            <th>Balance</th>
+                                            <th>Action</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($dataList as $list)
+                                                <tr>
+                                                    <td>{{ $list->CODE }}</td>
+                                                    <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
+                                                    <td>{{ $list->PO_NUMBER }}</td>
+                                                    <td>{{ date('m/d/Y', strtotime($list->DUE_DATE)) }}</td>
+                                                    <td>{{ $list->CUSTOMER_NAME }}</td>
+                                                    <td>{{ number_format($list->AMOUNT, 2) }}</td>
+                                                    <td>{{ number_format($list->BALANCE_DUE, 2) }}</td>
+                                                    <td><button class="btn btn-xs btn-success w-100"
+                                                            wire:click='makePaid({{ $list->ID }})'>Paid</button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
 

@@ -1,7 +1,7 @@
 <div wire:ignore class="mt-0 text-sm">
     @if ($vertical)
         <div class="row">
-            <div class="col-3">
+            <div class="col-3 text-right">
                 @if ($withLabel)
                     <label for="{{ $name }}" class="text-xs"> {{ $titleName }}</label>
                 @endif

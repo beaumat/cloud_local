@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\PaymentPeriod;
+use Illuminate\Support\Facades\DB;
 
 class PaymentPeriodServices
 {
@@ -21,10 +22,11 @@ class PaymentPeriodServices
 
         return $result;
     }
-    public function GetYear(int $YEAR, int $LOCATION_ID)
+    public function GetYear(int $YEAR, int $LOCATION_ID, array $PAYMENT_PERIOD = [])
     {
         $data = PaymentPeriod::query()
             ->select([
+                'ID',
                 'RECEIPT_NO',
                 'DATE_FROM',
                 'DATE_TO'
@@ -32,6 +34,10 @@ class PaymentPeriodServices
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->whereYear('DATE_FROM', '=', $YEAR)
             ->whereYear('DATE_TO', '=', $YEAR)
+            ->when($PAYMENT_PERIOD, function ($query) use (&$PAYMENT_PERIOD) {
+                $query->whereIn('ID', $PAYMENT_PERIOD);
+            })
+            ->orderBy('ID', 'asc')
             ->get();
 
         return $data;
@@ -94,5 +100,74 @@ class PaymentPeriodServices
             ->get();
 
         return $result;
+    }
+    public function getDoctorByYearPeriod(int $LOCATION_ID, int $YEAR)
+    {
+        $result = PaymentPeriod::query()
+            ->select(
+                [
+                    'c.ID as DOCTOR_ID',
+                    'c.NAME as DOCTOR_NAME'
+                ]
+            )
+            ->join('payment as p', 'p.PAYMENT_PERIOD_ID', '=', 'payment_period.ID')
+            ->join('payment_invoices as pn', 'pn.PAYMENT_ID', '=', 'p.ID')
+            ->join('invoice as i', 'i.ID', '=', 'pn.INVOICE_ID')
+            ->join('philhealth as ph', 'ph.INVOICE_ID', '=', 'i.ID')
+            ->join('philhealth_prof_fee as pf', 'pf.PHIC_ID', '=', 'ph.ID')
+            ->join('bill as b', 'b.ID', '=', 'pf.BILL_ID')
+            ->join('contact as c', 'c.ID', '=', 'b.VENDOR_ID')
+            ->where('payment_period.LOCATION_ID', '=', $LOCATION_ID)
+            ->whereYear('payment_period.DATE_FROM', '=', $YEAR)
+            ->whereYear('payment_period.DATE_TO', '=', $YEAR)
+            ->groupBy('c.ID', 'c.NAME')
+            ->get();
+
+        return $result;
+    }
+    public function getPeriodbyYear(int $LOCATION_ID, int $YEAR)
+    {
+        $result = PaymentPeriod::query()
+            ->select(
+                [
+                    'ID',
+                    DB::raw("CONCAT(RECEIPT_NO,' ', DATE_FORMAT(DATE_FROM,'%b %d'),' - ', DATE_FORMAT(DATE_TO,'%b %d')  )  as DESCRIPTION")
+                ]
+            )
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->whereYear('DATE_FROM', '=', $YEAR)
+            ->whereYear('DATE_TO', '=', $YEAR)
+            ->get();
+
+        return $result;
+    }
+    public function getDoctorFeeTotal(int $LOCATION_ID, int $PAYMENT_PERIOD_ID, int $DOCTOR_ID)
+    {
+        $result = PaymentPeriod::query()
+            ->select(
+                [
+                    DB::raw('IFNULL(SUM(b.AMOUNT),0) as TOTAL')
+                ]
+            )
+            ->join('payment as p', 'p.PAYMENT_PERIOD_ID', '=', 'payment_period.ID')
+            ->join('payment_invoices as pn', 'pn.PAYMENT_ID', '=', 'p.ID')
+            ->join('invoice as i', 'i.ID', '=', 'pn.INVOICE_ID')
+            ->join('philhealth as ph', 'ph.INVOICE_ID', '=', 'i.ID')
+            ->join('philhealth_prof_fee as pf', 'pf.PHIC_ID', '=', 'ph.ID')
+            ->join('bill as b', 'b.ID', '=', 'pf.BILL_ID')
+            ->join('contact as c', 'c.ID', '=', 'b.VENDOR_ID')
+            ->where('payment_period.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('payment_period.ID', '=', $PAYMENT_PERIOD_ID)
+            ->where('b.VENDOR_ID', '=', $DOCTOR_ID)
+            ->where('b.STATUS', '=', 15)
+            ->where('p.STATUS', '=', 15)
+            ->first();
+
+        if ($result) {
+
+            return (float) $result->TOTAL ?? 0.00;
+        }
+
+        return 0.00;
     }
 }

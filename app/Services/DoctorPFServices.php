@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\PhilHealthProfFee;
 use Illuminate\Support\Facades\DB;
 
 class DoctorPFServices
@@ -87,5 +88,5 @@ class DoctorPFServices
 
         return 0;
     }
-    
+ 
 }

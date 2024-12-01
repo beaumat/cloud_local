@@ -15,16 +15,22 @@ class DoctorFeeList extends Component
 
 
     public int $LOCATION_ID;
+    public int $YEAR;
+    public array $SelectedPaymentPeriod = [];
+    public $filterPaymentPeriod = [];
+    public bool $refreshComponent = false;
     public $locationList = [];
     public $doctorList = [];
     private $doctorPFServices;
     private $locationServices;
     private $userServices;
     private $paymentPeriodServices;
-    public int $YEAR;
+
     public $dataList = [];
     public $headerList = [];
+    public $totalList = [];
     private $dateServices;
+    public int $row;
     public function boot(DoctorPFServices $doctorPFServices, LocationServices $locationServices, UserServices $userServices, PaymentPeriodServices $paymentPeriodServices, DateServices $dateServices)
     {
         $this->doctorPFServices = $doctorPFServices;
@@ -40,14 +46,18 @@ class DoctorFeeList extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
     }
-
-
+    private function getPeriodList()
+    {
+        $this->filterPaymentPeriod = $this->paymentPeriodServices->getPeriodbyYear($this->LOCATION_ID, $this->YEAR);
+        $this->refreshComponent =  $this->refreshComponent ? false : true;
+    }
     #[On('doctor-fee-list-reload')]
-
     public function Generate()
     {
-        $this->headerList  = $this->paymentPeriodServices->GetYear($this->YEAR, $this->LOCATION_ID);
+        $this->getPeriodList();
+        $this->filterPeriod();
     }
+
     public function updatedlocationid()
     {
         $this->doctorList  = [];
@@ -72,7 +82,65 @@ class DoctorFeeList extends Component
             'DOCTOR_ID' => $DOCTOR_ID,
             'LOCATION_ID' => $this->LOCATION_ID
         ];
+
         $this->dispatch('remarks-open-list', result: $data);
+    }
+
+    public function filterPeriod()
+    {
+
+        $dataHeader  = $this->paymentPeriodServices->GetYear($this->YEAR, $this->LOCATION_ID, $this->SelectedPaymentPeriod);
+        $this->headerList = [];
+        $this->doctorList = [];
+        $this->totalList =  [];
+
+        foreach ($dataHeader as $list) {
+
+            $dataRow = [
+                'ID'            => $list->ID,
+                'RECEIPT_NO'    => $list->RECEIPT_NO,
+                'DATE_FROM'     => $list->DATE_FROM,
+                'DATE_TO'       => $list->DATE_TO
+            ];
+
+            $this->headerList[] = $dataRow;
+        }
+
+        $dataDoctorActive = $this->paymentPeriodServices->getDoctorByYearPeriod($this->LOCATION_ID, $this->YEAR);
+
+        $this->totalList = [];
+        $daTotal = [];
+        foreach ($dataDoctorActive as $list) {
+            $dataH = [
+                'DOCTOR_ID'     => $list->DOCTOR_ID,
+                'DOCTOR_NAME'   => $list->DOCTOR_NAME,
+            ];
+            $row = 0;
+
+            foreach ($dataHeader as $listHeader) {
+                $row++;
+
+                $AMOUNT = (float)  $this->paymentPeriodServices->getDoctorFeeTotal(
+                    $this->LOCATION_ID,
+                    $listHeader->ID,
+                    $list->DOCTOR_ID
+                );
+
+                $dataH[$row] = $AMOUNT;
+
+                $PREV_AMOUNT   =   $daTotal[$row] ?? 0;
+                $daTotal[$row] =  $PREV_AMOUNT  + $AMOUNT;
+            }
+            $this->row = $row;
+            $this->doctorList[] = $dataH;
+        }
+        $row = 0;
+        foreach ($dataHeader as $listHeader) {
+            $row++;
+            $this->totalList[$row] =     $daTotal[$row];
+        }
+
+ 
     }
     public function render()
     {

@@ -653,6 +653,27 @@ class PhilHealthServices
 
         return $result;
     }
+    public function getProfFeeFirst($ID)
+    {
+        $result = PhilHealthProfFee::query()
+            ->select([
+                'philhealth_prof_fee.ID',
+                'philhealth_prof_fee.CONTACT_ID',
+                'philhealth_prof_fee.AMOUNT',
+                'philhealth_prof_fee.DISCOUNT',
+                'philhealth_prof_fee.FIRST_CASE',
+                'c.PRINT_NAME_AS as NAME',
+                'c.PIN as PIN_NUM'
+            ])
+            ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
+            ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
+            ->where('PHIC_ID','=', $ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->first();
+
+        return $result;
+    }
+
     private function getLine($Id): int
     {
         return (int) PhilHealthProfFee::where('PHIC_ID', $Id)->max('LINE_NO');
@@ -923,6 +944,18 @@ class PhilHealthServices
             return (int) $data->ID;
         }
         return 0;
+    }
+    public function getDataByInvoiceId(int $INVOICE_ID)
+    {
+        $data = PhilHealth::query()
+            ->where('INVOICE_ID', '=', $INVOICE_ID)
+            ->first();
+
+        if ($data) {
+            return $data;
+        }
+
+        return null;
     }
     public function makePayableForDoctor(int $PHILHEALTH_ID, int $LOCATION_ID)
     {

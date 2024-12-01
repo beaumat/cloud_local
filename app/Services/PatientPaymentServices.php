@@ -202,9 +202,8 @@ class PatientPaymentServices
     }
     public function Delete(int $ID)
     {
-
-        PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->delete();
-        PatientPayments::where('ID', $ID)->delete();
+        PatientPaymentCharges::where('PATIENT_PAYMENT_ID','=', $ID)->delete();
+        PatientPayments::where('ID','=', $ID)->delete();
     }
     public function getSumOnPhilHealth(int $PATIENT_ID, float $LOCATION_ID, int $PHILHEALTH_ID): float
     {

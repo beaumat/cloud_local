@@ -3,8 +3,7 @@
           <div class="row">
               <div class="col-12 mt-4">
                   <table class="w-100" border="1">
-                      <tbody style="font-size:9px;">
-                       
+                      <tbody style="font-size:9px;">          
                        <tr class="bgBlack text-white"  style="font-size:10px;">
                               <th>Patient</th>
                               <th>Item</th>
