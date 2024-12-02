@@ -13,6 +13,7 @@ use App\Services\ScheduleServices;
 use App\Services\UnitOfMeasureServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -191,7 +192,7 @@ class HemoForm extends Component
                 // checking if 
                 if ($data->STATUS_ID  <> 4) {
                     $isRestrik = (bool) $this->hemoServices->IsRestrictedFromUnposted($data->DATE, $data->LOCATION_ID);
-                    if ($isRestrik) {
+                    if ($isRestrik && Auth::user()->name <> 'admin') {
                         return Redirect::route('patientshemo')->with('error', 'Invalid action. Please complete the unposted(U) treatment before proceeding.');
                     }
                 }

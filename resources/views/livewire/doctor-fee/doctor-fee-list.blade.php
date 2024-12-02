@@ -37,9 +37,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <div class="row">
-                                    <div class="col-11">
+                                    <div class="col-12">
                                         @if ($refreshComponent)
                                             <livewire:select-checkbox name="FilterPP1" titleName="Period"
                                                 :options="$filterPaymentPeriod" :zero="true" :isDisabled=false :vertical=true
@@ -50,11 +50,11 @@
                                                 wire:model='SelectedPaymentPeriod' />
                                         @endif
                                     </div>
-                                    <div class="col-1 ">
+                                    {{-- <div class="col-1 ">
                                         <button class="btn btn-primary btn-sm" wire:click='filterPeriod()'>
                                             Filter
                                         </button>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -103,7 +103,7 @@
                                             {{ date('M/d', strtotime($list['DATE_FROM'])) }}&nbsp;-&nbsp;{{ date('M/d', strtotime($list['DATE_TO'])) }}
                                         </th>
                                     @endforeach
-                                    <th class="text-right">Total</th>
+                                    <th class="text-right bg-warning">Total</th>
                                 </tr>
                                 <tr class="bg-info">
                                     <th class="col-3 bg-warning">Nephro Name</th>
@@ -111,7 +111,7 @@
                                         <th class="text-white">{{ $list['RECEIPT_NO'] }}
                                         </th>
                                     @endforeach
-                                    <th class="text-right">Balance</th>
+                                    <th class="text-right"></th>
                                 </tr>
                             @endif
                         </thead>
