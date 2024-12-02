@@ -22,6 +22,7 @@ class QuickPaidPanel extends Component
 {
 
 
+    public bool $refreshComponent = false;
     public int $PAYMENT_METHOD_ID = 5;
     public int $ACCOUNTS_RECEIVABLE_ID;
     public int $INVOICE_ID;
@@ -163,17 +164,14 @@ class QuickPaidPanel extends Component
         $this->PH_DOCTOR_NAME = '';
         $this->DOCTOR_FEE = 0;
     }
-    private function patientPayment(int $INVOICE_ID)
-    {
 
-        // $data = $this->patientPaymentServices->
-
-    }
 
     #[On('period-refresh')]
     public function ReloadPeriodList()
     {
-        $this->paymentPeriodList = $this->paymentPeriodServices->List($this->LOCATION_ID);
+
+        $this->paymentPeriodList = $this->paymentPeriodServices->GetDropDownList($this->LOCATION_ID);
+        $this->refreshComponent = $this->refreshComponent ? false : true;
     }
     public float $EWT_RATE;
     public float $AMOUNT_WITHHELD;
@@ -197,6 +195,7 @@ class QuickPaidPanel extends Component
             $this->TAX_DESCRIPTION = '';
         }
         $this->NewPaymentAMount();
+        $this->ReloadPeriodList();
     }
     private function NewPaymentAMount()
     {
@@ -284,7 +283,7 @@ class QuickPaidPanel extends Component
             if ($isGood) {
                 $PHILHEALTH_ID =  $this->philHealthServices->Get_ID_by_INVOICE_ID($this->INVOICE_ID);
                 if ($PHILHEALTH_ID > 0) {
-                    $this->philHealthServices->makePayableForDoctor($PHILHEALTH_ID, $this->LOCATION_ID);
+                    $this->philHealthServices->makePayableForDoctor($PHILHEALTH_ID, $this->LOCATION_ID, $this->DATE);
                 }
                 return true;
             }
@@ -308,7 +307,7 @@ class QuickPaidPanel extends Component
         );
 
 
-        $dataPeriod = $this->paymentPeriodServices->Get($this->PAYMENT_METHOD_ID);
+        $dataPeriod = $this->paymentPeriodServices->Get($this->PAYMENT_PERIOD_ID);
 
         if ($dataPeriod) {
             $this->DATE = $dataPeriod->DATE ?? $this->userServices->getTransactionDateDefault();

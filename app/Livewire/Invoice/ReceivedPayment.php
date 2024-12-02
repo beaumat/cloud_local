@@ -145,11 +145,11 @@ class ReceivedPayment extends Component
             );
             $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
 
-            $isGood = $this->paymentServices->getPosted($ID, $this->userServices->getTransactionDateDefault(),$this->LOCATION_ID);
+            $isGood = $this->paymentServices->getPosted($ID, $this->userServices->getTransactionDateDefault(), $this->LOCATION_ID);
             if ($isGood) {
                 $PHILHEALTH_ID =  $this->philHealthServices->Get_ID_by_INVOICE_ID($this->INVOICE_ID);
                 if ($PHILHEALTH_ID > 0) {
-                    $this->philHealthServices->makePayableForDoctor($PHILHEALTH_ID, $this->LOCATION_ID);
+                    $this->philHealthServices->makePayableForDoctor($PHILHEALTH_ID, $this->LOCATION_ID, $this->userServices->getTransactionDateDefault());
                 }
                 DB::commit();
                 $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);

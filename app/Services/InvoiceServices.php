@@ -23,12 +23,12 @@ class InvoiceServices
     private $compute;
     private $systemSettingServices;
     private $dateServices;
-
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         SystemSettingServices $systemSettingServices,
         DateServices $dateServices
+
     ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
@@ -37,7 +37,7 @@ class InvoiceServices
     }
     public function getBalance(int $INVOICE_ID): float
     {
-        return (float) Invoice::where('ID', $INVOICE_ID)->first()->BALANCE_DUE;
+        return (float) Invoice::where('ID', '=', $INVOICE_ID)->first()->BALANCE_DUE;
     }
     public function getInvoiceListViaPayment(int $CUSTOMER_ID, int $LOCATION_ID, int $PAYMENT_ID)
     {
@@ -693,26 +693,42 @@ class InvoiceServices
 
     public function getActiveList($search, int $LOCATION_ID): object
     {
-        $result = Invoice::query()->select([
-            'invoice.ID',
-            'invoice.CODE',
-            'invoice.DATE',
-            'invoice.AMOUNT',
-            'invoice.BALANCE_DUE',
-            'invoice.DUE_DATE',
-            'invoice.NOTES',
-            'invoice.PO_NUMBER',
-            'c.NAME as CUSTOMER_NAME'
+        $result = Invoice::query()
+            ->select([
+                'invoice.ID',
+                'invoice.CODE',
+                'invoice.DATE',
+                'invoice.AMOUNT',
+                'invoice.BALANCE_DUE',
+                'invoice.DUE_DATE',
+                'invoice.NOTES',
+                'invoice.PO_NUMBER',
+                'c.NAME as CUSTOMER_NAME',
+                'ph.AR_NO',
+                'ph.AR_DATE',
+                'ph.CODE as SOA_NO',
+                'ph.DATE_ADMITTED',
+                'ph.DATE_DISCHARGED',
+                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = ph.CONTACT_ID and hemodialysis.DATE between ph.DATE_ADMITTED and ph.DATE_DISCHARGED) as TOTAL_TREATMENT '),
 
-        ])->join('contact as c', 'c.ID', '=', 'invoice.CUSTOMER_ID')
+            ])->join('contact as c', 'c.ID', '=', 'invoice.CUSTOMER_ID')
+            ->join('philhealth as ph', 'ph.INVOICE_ID', '=', 'invoice.ID')
             ->where('invoice.LOCATION_ID', '=', $LOCATION_ID)
             ->where('invoice.BALANCE_DUE', '>', 0)
+            ->whereNotNull('ph.AR_NO')
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($sql) use (&$search) {
-                    $sql->where('invoice.CODE', 'like' . '%' . $search . '%');
-                    $sql->where('invoice.NOTES', 'like' . '%' . $search . '%');
-                    $sql->where('c.NAME', 'like' . '%' . $search . '%');
+                    $sql->orWhere('invoice.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('invoice.NOTES', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('invoice.PO_NUMBER', 'like', '%' . $search . '%');
                 });
+            })
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('invoice_items')
+                    ->whereColumn('invoice_items.INVOICE_ID', '=', 'invoice.ID')
+                    ->where('invoice_items.ITEM_ID', '=', 2);
             })
             ->get();
 

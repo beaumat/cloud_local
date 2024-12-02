@@ -667,7 +667,7 @@ class PhilHealthServices
             ])
             ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
             ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
-            ->where('PHIC_ID','=', $ID)
+            ->where('PHIC_ID', '=', $ID)
             ->orderBy('LINE_NO', 'asc')
             ->first();
 
@@ -957,7 +957,7 @@ class PhilHealthServices
 
         return null;
     }
-    public function makePayableForDoctor(int $PHILHEALTH_ID, int $LOCATION_ID)
+    public function makePayableForDoctor(int $PHILHEALTH_ID, int $LOCATION_ID, string $DATE_BILL)
     {
 
         $data = PhilHealthProfFee::where('PHIC_ID', '=', $PHILHEALTH_ID)->whereNull('BILL_ID')->first();
@@ -965,7 +965,7 @@ class PhilHealthServices
         if ($data) {
             $DOCTOR_ID = $data->CONTACT_ID;
             $TERM_ID = 2;
-            $DATE = $this->dateServices->NowDate();
+            $DATE = $DATE_BILL;
             $DUE_DATE = $this->paymentTermServices->getDueDate(2, $DATE);
             $PAYABLE_ACCT_ID = 21;
             $AMOUNT = $data->FIRST_CASE ?? 0;

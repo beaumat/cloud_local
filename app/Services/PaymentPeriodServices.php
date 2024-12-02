@@ -22,7 +22,7 @@ class PaymentPeriodServices
 
         return $result;
     }
-    public function GetYear(int $YEAR, int $LOCATION_ID, array $PAYMENT_PERIOD = [])
+    public function GetYear(int $YEAR, int $LOCATION_ID, array $PAYMENT_PERIOD = []): object
     {
         $data = PaymentPeriod::query()
             ->select([
@@ -88,7 +88,8 @@ class PaymentPeriodServices
                 'ID',
                 'RECEIPT_NO',
                 'DATE_FROM',
-                'DATE_TO'
+                'DATE_TO',
+                'DATE'
             ])->where('LOCATION_ID', '=', $LOCATION_ID)
             ->when($search, function ($query) use (&$search) {
                 $query->where('RECEIPT_NO', 'like', '%' . $search . '%');
@@ -104,7 +105,23 @@ class PaymentPeriodServices
                 'ID',
                 'RECEIPT_NO',
                 'DATE_FROM',
-                'DATE_TO'
+                'DATE_TO',
+                'DATE'
+            ])
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->orderBy('ID', 'desc')
+            ->get();
+
+        return $result;
+    }
+
+    public function GetDropDownList(int $LOCATION_ID)
+    {
+        $result = PaymentPeriod::query()
+            ->select([
+                'ID',
+                DB::raw( "CONCAT('#',RECEIPT_NO,' Date:', DATE_FORMAT(DATE,'%b/%d/%Y')  ,'  period:[',DATE_FORMAT(DATE_FROM,'%b %d, %Y'),'-',DATE_FORMAT(DATE_TO,'%b %d, %Y'),'] ' ) as DESCRIPTION"),
+       
             ])
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->orderBy('ID', 'desc')
@@ -142,7 +159,7 @@ class PaymentPeriodServices
             ->select(
                 [
                     'ID',
-                    DB::raw("CONCAT(RECEIPT_NO,' ', DATE_FORMAT(DATE_FROM,'%b %d'),' - ', DATE_FORMAT(DATE_TO,'%b %d')  )  as DESCRIPTION")
+                    DB::raw("CONCAT(RECEIPT_NO,' [', DATE_FORMAT(DATE_FROM,'%b %d'),' - ', DATE_FORMAT(DATE_TO,'%b %d'),'] '  )  as DESCRIPTION")
                 ]
             )
             ->where('LOCATION_ID', '=', $LOCATION_ID)

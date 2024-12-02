@@ -1,6 +1,6 @@
 <div>
     <button wire:click="openModal" class="btn btn-warning btn-sm text-xs ">
-        Quick Paid
+        Quick Philhealth Paid
     </button>
 
     @if ($showModal)
@@ -10,7 +10,7 @@
                 style="width: 90%; max-width: none; height: auto; margin: auto; top: 50%; transform: translateY(-50%);">
                 <div class="modal-content text-left">
                     <div class="modal-header">
-                        <h6 class="modal-title">Quick Paid</h6>
+                        <h6 class="modal-title">Philhealth</h6>
                         <button type="button" class="close" wire:click="closeModal">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -18,14 +18,15 @@
                     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                     <div class="modal-body">
                         <div class='row'>
-                            <div class="col-8">
+                            <div class="col-4">
                                 <input type="text" wire:model.live='search' placeholder="Search here..."
                                     class="form-control form-control-sm" />
                             </div>
                             <div class="col-4">
-                                <select class="form-control form-control-sm">
-                                    <option></option>
-                                </select>
+
+                            </div>
+                            <div class="col-4">
+
                             </div>
                             <div class="col-12">
                                 <div style="max-height: 73vh; overflow-y: auto;" class="border">
@@ -33,9 +34,12 @@
                                         <thead class='bg-sky'>
                                             <th>Invoice No.</th>
                                             <th>Date</th>
-                                            <th>PO Number</th>
+                                            <th>LHIO No.</th>
                                             <th>Date Due</th>
-                                            <th>Name</th>
+                                            <th>No. Treatment</th>
+                                            <th>Admitted</th>
+                                            <th>Discharged</th>
+                                            <th>Patient Name</th>
                                             <th>Amount</th>
                                             <th>Balance</th>
                                             <th>Action</th>
@@ -47,9 +51,13 @@
                                                     <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                                     <td>{{ $list->PO_NUMBER }}</td>
                                                     <td>{{ date('m/d/Y', strtotime($list->DUE_DATE)) }}</td>
+                                                    <td class="text-center">{{ $list->TOTAL_TREATMENT }}</td>
+                                                    <td>{{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
+                                                    <td>{{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
                                                     <td>{{ $list->CUSTOMER_NAME }}</td>
-                                                    <td>{{ number_format($list->AMOUNT, 2) }}</td>
-                                                    <td>{{ number_format($list->BALANCE_DUE, 2) }}</td>
+                                                    <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
+                                                    <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}
+                                                    </td>
                                                     <td><button class="btn btn-xs btn-success w-100"
                                                             wire:click='makePaid({{ $list->ID }})'>Paid</button>
                                                     </td>
