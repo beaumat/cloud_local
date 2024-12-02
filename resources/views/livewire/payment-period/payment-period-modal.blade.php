@@ -1,6 +1,6 @@
-<div>
-    <button wire:click="openModal()" type="button" class="btn btn-success btn-xs text-xs w-100">
-        <i class="fa fa-plus" aria-hidden="true"></i> New
+<div class="mt-1">
+    <button wire:click="openModal()" type="button" class="btn btn-primary btn-xs text-xs">
+        <i class="fa fa-plus" aria-hidden="true"></i> Make Payment Period
     </button>
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">

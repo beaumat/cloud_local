@@ -18,8 +18,8 @@
                     <form id="quickForm" wire:submit.prevent='save'>
                         <div class="modal-body">
                             <div class="form-group row">
-                                <div class="col-4">
-                                    <div class="card">
+                                <div class="col-3">
+                                    <div class="card text-xs">
                                         <div class="card-header">
                                             <div class="card-title">
                                                 Invoice No. : <b>{{ $CODE }}</b>
@@ -47,8 +47,12 @@
                                     </div>
 
 
+
+                                </div>
+
+                                <div class="col-3">
                                     @if ($isPhilHealth)
-                                        <div class="card">
+                                        <div class="card text-xs">
                                             <div class="card-header">
                                                 <div class='card-title'>
                                                     Philhealth Summary
@@ -57,31 +61,31 @@
                                             <div class="card-body">
                                                 <div class='row'>
                                                     <div class="col-4">
-                                                        <label>SOA NO. : </label>
+                                                        <label>SOA NO.: </label>
                                                     </div>
                                                     <div class='col-8 text-info'>
                                                         {{ $PH_CODE }}
                                                     </div>
                                                     <div class="col-4">
-                                                        <label>Admitted : </label>
+                                                        <label>Admitted: </label>
                                                     </div>
                                                     <div class='col-8 text-info'>
                                                         {{ date('M/d/Y', strtotime($PH_DATE_ADMITTED)) }}
                                                     </div>
                                                     <div class="col-4">
-                                                        <label>Discharged : </label>
+                                                        <label>Discharged:</label>
                                                     </div>
                                                     <div class='col-8 text-info'>
                                                         {{ date('M/d/Y', strtotime($PH_DATE_DISCHARGED)) }}
                                                     </div>
                                                     <div class="col-4">
-                                                        <label>Doctor Name : </label>
+                                                        <label>Doctor: </label>
                                                     </div>
                                                     <div class='col-8 text-info'>
                                                         {{ $PH_DOCTOR_NAME }}
                                                     </div>
                                                     <div class="col-4">
-                                                        <label>Doctor PF : </label>
+                                                        <label>PF Rate: </label>
                                                     </div>
                                                     <div class='col-8 text-info'>
                                                         {{ number_format($DOCTOR_FEE, 2) }}
@@ -92,9 +96,9 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="col-8">
+                                <div class="col-6">
                                     {{-- payment --}}
-                                    <div class="card">
+                                    <div class="card text-xs">
                                         <div class="card-header">
                                             <div class="card-title">
                                                 Make Payment
@@ -102,10 +106,10 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-3 text-right">
+                                                <div class="col-2 text-right">
                                                     WTax :
                                                 </div>
-                                                <div class="col-9">
+                                                <div class="col-10">
                                                     <select class="form-control form-control-sm w-50"
                                                         wire:model.live='TAX_ID'>
                                                         <option value='0'></option>
@@ -115,26 +119,26 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div class="col-3 text-right">
+                                                <div class="col-2 text-right">
                                                     Less :
                                                 </div>
-                                                <div class="col-9">
+                                                <div class="col-10">
                                                     <label
                                                         class='text-sm text-danger'>-{{ number_format($AMOUNT_WITHHELD, 2) }}</label>
                                                 </div>
-                                                <div class="col-3 text-right">
-                                                    Payment :
+                                                <div class="col-2 text-right">
+                                                    Gross :
                                                 </div>
-                                                <div class="col-9">
+                                                <div class="col-10">
                                                     <input type="number" step="0.01" wire:model='PAYMENT_AMOUNT'
                                                         class="form-control form-control-sm w-50" />
                                                 </div>
-                                                <div class="col-3 text-right">
-                                                    OR# :
+                                                <div class="col-2 text-right">
+                                                    ACPN:
                                                 </div>
-                                                <div class="col-9">
+                                                <div class="col-10">
                                                     <div class="row mt-1">
-                                                        <div class="col-9">
+                                                        <div class="col-12">
                                                             @if ($refreshComponent)
                                                                 <livewire:select-option name="PAYMENT_PERIOD_ID1"
                                                                     titleName="" :options="$paymentPeriodList" :zero="true"
@@ -147,10 +151,12 @@
                                                                     wire:model='PAYMENT_PERIOD_ID' />
                                                             @endif
                                                         </div>
-                                                        <div class="col-3">
-                                                            @livewire('PaymentPeriod.PaymentPeriodModal', ['LOCATION_ID' => $LOCATION_ID])
-                                                        </div>
+                                                      
                                                     </div>
+                                                </div>
+                                                <div class="col-2"></div>
+                                                <div class="col-10">
+                                                              @livewire('PaymentPeriod.PaymentPeriodModal', ['LOCATION_ID' => $LOCATION_ID])
                                                 </div>
                                             </div>
                                         </div>

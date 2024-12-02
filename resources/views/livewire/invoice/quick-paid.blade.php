@@ -36,7 +36,7 @@
                                             <th>Date</th>
                                             <th>LHIO No.</th>
                                             <th>Date Due</th>
-                                            <th>No. Treatment</th>
+                                            <th class="text-center">No. Treatment</th>
                                             <th>Admitted</th>
                                             <th>Discharged</th>
                                             <th>Patient Name</th>
