@@ -19,6 +19,7 @@ class PaymentPeriod extends Model
         'LOCATION_ID',
         'TOTAL_PAYMENT',
         'TOTAL_WTAX',
-        'BANK_ACCOUNT_ID'
+        'BANK_ACCOUNT_ID',
+        'DATE'
     ];
 }

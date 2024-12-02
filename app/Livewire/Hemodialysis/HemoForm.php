@@ -196,9 +196,7 @@ class HemoForm extends Component
                         return Redirect::route('patientshemo')->with('error', 'Invalid action. Please complete the unposted(U) treatment before proceeding.');
                     }
                 }
-
                 $this->reloadData($data);
-
                 $statusData = DB::table('hemo_status')->select('description')->where('ID', $data->STATUS_ID)->first();
                 if ($statusData) {
                     $this->STATUS_DESCRIPTION = $statusData->description ?? '';

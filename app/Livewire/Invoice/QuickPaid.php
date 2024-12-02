@@ -9,7 +9,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-class Quickpaid extends Component
+class QuickPaid extends Component
 {
     #[Reactive]
     public $LOCATION_ID;

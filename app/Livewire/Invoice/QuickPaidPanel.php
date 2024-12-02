@@ -215,7 +215,7 @@ class QuickPaidPanel extends Component
 
         $ID = $this->taxCreditServices->Store(
             "",
-            $this->userServices->getTransactionDateDefault(),
+            $this->DATE,
             $this->CUSTOMER_ID,
             $this->TAX_ID,
             $this->EWT_RATE,
@@ -252,7 +252,7 @@ class QuickPaidPanel extends Component
 
             $ID = $this->paymentServices->Store(
                 "",
-                $this->userServices->getTransactionDateDefault(),
+                $this->DATE,
                 $this->CUSTOMER_ID,
                 $this->LOCATION_ID,
                 $this->PAYMENT_AMOUNT,
@@ -306,6 +306,16 @@ class QuickPaidPanel extends Component
                 'PAYMENT_PERIOD_ID' => 'Payment Period'
             ]
         );
+
+
+        $dataPeriod = $this->paymentPeriodServices->Get($this->PAYMENT_METHOD_ID);
+
+        if ($dataPeriod) {
+            $this->DATE = $dataPeriod->DATE ?? $this->userServices->getTransactionDateDefault();
+        } else {
+            session()->flash('error', 'Payment Period not found.');
+            return;
+        }
 
         DB::beginTransaction();
         try {

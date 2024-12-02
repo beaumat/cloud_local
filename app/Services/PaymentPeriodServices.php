@@ -29,7 +29,8 @@ class PaymentPeriodServices
                 'ID',
                 'RECEIPT_NO',
                 'DATE_FROM',
-                'DATE_TO'
+                'DATE_TO',
+                'DATE'
             ])
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->whereYear('DATE_FROM', '=', $YEAR)
@@ -42,8 +43,16 @@ class PaymentPeriodServices
 
         return $data;
     }
-    public function Store(string $RECEIPT_NO, int $LOCATION_ID, string $DATE_FROM, string $DATE_TO, float $TOTAL_PAYMENT, float $TOTAL_WTAX, int $BANK_ACCOUNT_ID)
-    {
+    public function Store(
+        string $RECEIPT_NO,
+        int $LOCATION_ID,
+        string $DATE_FROM,
+        string $DATE_TO,
+        float $TOTAL_PAYMENT,
+        float $TOTAL_WTAX,
+        int $BANK_ACCOUNT_ID,
+        string $DATE
+    ) {
         $ID = (int) $this->object->ObjectNextID(TABLE_NAME: 'PAYMENT_PERIOD');
 
         PaymentPeriod::create([
@@ -54,16 +63,18 @@ class PaymentPeriodServices
             'DATE_TO'           => $DATE_TO,
             'TOTAL_PAYMENT'     => $TOTAL_PAYMENT,
             'TOTAL_WTAX'        => $TOTAL_WTAX,
-            'BANK_ACCOUNT_ID'   => $BANK_ACCOUNT_ID
+            'BANK_ACCOUNT_ID'   => $BANK_ACCOUNT_ID,
+            'DATE' => $DATE
         ]);
     }
-    public function Update(int $ID, string $RECEIPT_NO, string $DATE_FROM, string $DATE_TO)
+    public function Update(int $ID, string $RECEIPT_NO, string $DATE_FROM, string $DATE_TO, $DATE)
     {
         PaymentPeriod::where('ID', '=', $ID)
             ->update([
                 'RECEIPT_NO'    => $RECEIPT_NO,
                 'DATE_FROM'     => $DATE_FROM,
                 'DATE_TO'       => $DATE_TO,
+                'DATE'          => $DATE
             ]);
     }
     public function Delete(int $ID)

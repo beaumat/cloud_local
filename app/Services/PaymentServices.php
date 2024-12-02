@@ -95,7 +95,7 @@ class PaymentServices
             'CARD_EXPIRY_DATE'      => $CARD_EXPIRY_DATE ?? null,
             'RECEIPT_REF_NO'        => $RECEIPT_REF_NO,
             'RECEIPT_DATE'          => $RECEIPT_DATE ?? null,
-            'NOTES'                 => $NOTES,
+            'NOTES'                         => $NOTES,
             'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
             'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
             'STATUS'                => 0,

@@ -100,7 +100,8 @@ class DoctorFeeList extends Component
                 'ID'            => $list->ID,
                 'RECEIPT_NO'    => $list->RECEIPT_NO,
                 'DATE_FROM'     => $list->DATE_FROM,
-                'DATE_TO'       => $list->DATE_TO
+                'DATE_TO'       => $list->DATE_TO,
+                'DATE'          => $list->DATE
             ];
 
             $this->headerList[] = $dataRow;

@@ -103,15 +103,26 @@
                                             {{ date('M/d', strtotime($list['DATE_FROM'])) }}&nbsp;-&nbsp;{{ date('M/d', strtotime($list['DATE_TO'])) }}
                                         </th>
                                     @endforeach
-                                    <th class="text-right bg-warning">Total</th>
+                                    <th class=""></th>
                                 </tr>
-                                <tr class="bg-info">
-                                    <th class="col-3 bg-warning">Nephro Name</th>
+                                <tr  class="bg-info">
+
+                                    <th class="col-3"></th>
                                     @foreach ($headerList as $list)
-                                        <th class="text-white">{{ $list['RECEIPT_NO'] }}
+                                        <th class="">
+                                            {{ date('m/d/Y', strtotime($list['DATE'])) }}
                                         </th>
                                     @endforeach
-                                    <th class="text-right"></th>
+                                    <th class=""></th>
+                                </tr>
+                                <tr class="bg-warning">
+                                    <th class="col-3">Nephro Name</th>
+                                    @foreach ($headerList as $list)
+                                        <th class="font-weight-bold">
+                                            {{ $list['RECEIPT_NO'] }}
+                                        </th>
+                                    @endforeach
+                                    <th class="text-right"> Total</th>
                                 </tr>
                             @endif
                         </thead>
@@ -122,8 +133,8 @@
                             @foreach ($doctorList as $list)
                                 <tr>
                                     <td>{{ $list['DOCTOR_NAME'] }}</td>
-                                    @php   
-                                       $total = 0;
+                                    @php
+                                        $total = 0;
                                     @endphp
 
                                     @for ($n = 1; $n <= $row; $n++)
@@ -143,10 +154,11 @@
                                 <td class="font-weight-bold text-primary">TOTAL</td>
                                 @for ($n = 1; $n <= $row; $n++)
                                     <td class='text-right font-weight-bold text-primary'>
-                                    {{ number_format($totalList[$n], 2) }}
+                                        {{ number_format($totalList[$n], 2) }}
                                     </td>
                                 @endfor
-                                <td class="text-right font-weight-bold text-primary">{{ number_format($grandtotal, 2) }}</td>
+                                <td class="text-right font-weight-bold text-primary">
+                                    {{ number_format($grandtotal, 2) }}</td>
                             </tr>
                         </tbody>
                     </table>

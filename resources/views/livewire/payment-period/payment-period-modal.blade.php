@@ -14,7 +14,13 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-4 text-right">
-                                    <label class="text-sm">Receipt No. :</label>
+                                    <label class="text-sm">OR Date :</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="date" class="form-control form-control-sm" wire:model='DATE' />
+                                </div>
+                                <div class="col-4 text-right">
+                                    <label class="text-sm">OR No. :</label>
                                 </div>
                                 <div class="col-8">
                                     <input type="text" maxlength='20' class="form-control form-control-sm"

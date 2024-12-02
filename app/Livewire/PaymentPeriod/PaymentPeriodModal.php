@@ -22,6 +22,7 @@ class PaymentPeriodModal extends Component
     public float $TOTAL_PAYMENT;
     public float $TOTAL_WTAX;
     public int $BANK_ACCOUNT_ID;
+    public string $DATE;
 
     public $accountList = [];
     public bool $showModal = false;
@@ -44,6 +45,7 @@ class PaymentPeriodModal extends Component
         $this->validate(
             [
                 'RECEIPT_NO'        => 'required|string|unique:payment_period,receipt_no',
+                'DATE'              => 'required|date',
                 'DATE_FROM'         => 'required|date',
                 'DATE_TO'           => 'required|date',
                 'LOCATION_ID'       => 'required|numeric|exists:location,id',
@@ -53,7 +55,8 @@ class PaymentPeriodModal extends Component
             ],
             [],
             [
-                'RECEIPT_NO'        => 'Receipt No.',
+                'RECEIPT_NO'        => 'OR No.',
+                'DATE'              => 'OR Date',
                 'DATE_FROM'         => 'Date From',
                 'DATE_TO'           => 'Date To',
                 'LOCATION_ID'       => 'Location',
@@ -74,7 +77,8 @@ class PaymentPeriodModal extends Component
                 $this->DATE_TO,
                 $this->TOTAL_PAYMENT,
                 $this->TOTAL_WTAX,
-                $this->BANK_ACCOUNT_ID
+                $this->BANK_ACCOUNT_ID,
+                $this->DATE
             );
             DB::commit();
             $this->closeModal();
