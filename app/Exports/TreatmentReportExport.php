@@ -6,8 +6,10 @@ use App\Services\PatientReportServices;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class TreatmentReportExport implements FromCollection, ShouldAutoSize
+class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyles
 {
     protected int $YEAR;
     protected int $MONTH;
@@ -113,21 +115,18 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize
                 }
                 if ($list[date('d', strtotime($day))]) {
 
-                    if($list[date('d', strtotime($day))] == 1){
+                    if ($list[date('d', strtotime($day))] == 1) {
                         $row[] = 'G';
-                    }elseif($list[date('d', strtotime($day))] == 2){
+                    } elseif ($list[date('d', strtotime($day))] == 2) {
                         $row[] = 'P';
-                    }
-                    else{
+                    } else {
                         $row[] = '';
                     }
-                  
+
                     $this->storeTotal[$index] = $this->storeTotal[$index] + 1;
                     $count++;
-                }
-                else {
+                } else {
                     $row[] = '';
-                    
                 }
                 $index++;
             }
@@ -183,5 +182,38 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize
         $finalData[] = array_values($row);
 
         return collect($finalData);
+    }
+
+
+
+    public function styles(Worksheet $sheet)
+    {
+        $highestRow = $sheet->getHighestRow();    // e.g., 5
+        $highestColumn = $sheet->getHighestColumn(); // e.g., 'C'
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+        for ($row = 1; $row <= $highestRow; $row++) {
+            for ($col = 1; $col <= $highestColumnIndex; $col++) {
+                $cellCoordinate = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col) . $row;
+                $cellValue = $sheet->getCell($cellCoordinate)->getValue();
+                if ($cellValue === 'G') {
+                    $sheet->getStyle($cellCoordinate)
+                        ->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('FF00FF00'); // Green
+                }
+
+                if ($cellValue === 'P') {
+                    $sheet->getStyle($cellCoordinate)
+                        ->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('#FF9D00'); // ORANGE
+                }
+            }
+        }
+
+        return [];
     }
 }
