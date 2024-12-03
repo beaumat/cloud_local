@@ -10,7 +10,6 @@
                     <div class="modal-header">Make Payment Period</div>
                     <form id="quickForm" wire:submit.prevent='save'>
                         @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-4 text-right">

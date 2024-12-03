@@ -107,8 +107,24 @@ class PaymentServices
 
         return $ID;
     }
-    public function Update(int $ID, string $CODE, $DATE, int $CUSTOMER_ID, int $LOCATION_ID, float $AMOUNT, int $PAYMENT_METHOD_ID, string $CARD_NO, $CARD_EXPIRY_DATE, string $RECEIPT_REF_NO, $RECEIPT_DATE, string $NOTES, int $UNDEPOSITED_FUNDS_ACCOUNT_ID, int $OVERPAYMENT_ACCOUNT_ID, bool $DEPOSITED, int $ACCOUNTS_RECEIVABLE_ID)
-    {
+    public function Update(
+        int $ID,
+        string $CODE,
+        $DATE,
+        int $CUSTOMER_ID,
+        int $LOCATION_ID,
+        float $AMOUNT,
+        int $PAYMENT_METHOD_ID,
+        string $CARD_NO,
+        $CARD_EXPIRY_DATE,
+        string $RECEIPT_REF_NO,
+        $RECEIPT_DATE,
+        string $NOTES,
+        int $UNDEPOSITED_FUNDS_ACCOUNT_ID,
+        int $OVERPAYMENT_ACCOUNT_ID,
+        bool $DEPOSITED,
+        int $ACCOUNTS_RECEIVABLE_ID
+    ) {
         Payment::where('ID', $ID)
             ->update([
                 'CODE'                          => $CODE,

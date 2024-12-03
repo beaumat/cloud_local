@@ -235,7 +235,8 @@ class QuickPaidPanel extends Component
         $this->taxCreditServices->setTotal($ID, $total);
         $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
 
-        $isGood = $this->taxCreditServices->getPosted($ID, $this->userServices->getTransactionDateDefault(), $this->LOCATION_ID);
+        $isGood = $this->taxCreditServices->getPosted($ID, $this->DATE, $this->LOCATION_ID);
+
         return $isGood;
     }
     public function AddPayment()
@@ -279,7 +280,7 @@ class QuickPaidPanel extends Component
                 $this->ACCOUNTS_RECEIVABLE_ID
             );
             $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
-            $isGood = $this->paymentServices->getPosted($ID, $this->userServices->getTransactionDateDefault(), $this->LOCATION_ID);
+            $isGood = $this->paymentServices->getPosted($ID, $this->DATE, $this->LOCATION_ID);
             if ($isGood) {
                 $PHILHEALTH_ID =  $this->philHealthServices->Get_ID_by_INVOICE_ID($this->INVOICE_ID);
                 if ($PHILHEALTH_ID > 0) {
