@@ -5,6 +5,7 @@ use App\Livewire\AccountingReport\GeneralLedgerReport;
 use App\Livewire\AccountingReport\TransactionDetailsReport;
 use App\Livewire\AccountingReport\TransactionJournalReport;
 use App\Livewire\AccountingReport\TrialBalanceReport;
+use App\Livewire\AssetManagement\AssetManagementList;
 use App\Livewire\BankRecon\BankReconForm;
 use App\Livewire\BankRecon\BankReconFormPrint;
 use App\Livewire\BankRecon\BankReconList;
@@ -34,6 +35,8 @@ use App\Livewire\Employees\EmployeeList;
 use App\Livewire\FinancialReport\BalanceSheetReport;
 use App\Livewire\FinancialReport\CashFlowReport;
 use App\Livewire\FinancialReport\IncomeStatementReport;
+use App\Livewire\FixedAssetItem\FixedAssetItemForm;
+use App\Livewire\FixedAssetItem\FixedAssetItemList;
 use App\Livewire\FundTransfer\FundTransferList;
 use App\Livewire\GeneralJournal\GeneralJournalForm;
 use App\Livewire\GeneralJournal\GeneralJournalList;
@@ -351,7 +354,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', PullOutForm::class)->name('pull_out_edit')->middleware(['permission:company.pull-out.view']);
             Route::get('/{id}/print', PullOutPrint::class)->name('pull_out_print')->middleware(['permission:company.pull-out.print']);
         });
+
+        Route::prefix('/asset-management')->group(function () {
+            Route::get('/', AssetManagementList::class)->name('asset_management');
+        });
     });
+
+
+
 
     Route::prefix('/banking')->name('banking')->group(function () {
         Route::prefix('/deposit')->group(function () {
@@ -498,6 +508,12 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/price-location')->group(function () {
                 Route::get('/', PriceLocationList::class)->name('price_location')->middleware(['permission:price-location']);
             });
+
+            Route::prefix('/fixed-asset-items')->group(function () {
+                Route::get('/', FixedAssetItemList::class)->name('fixed_asset_item');
+                Route::get('/create', FixedAssetItemForm::class)->name('fixed_asset_item_create');
+                Route::get('/{id}/edit', FixedAssetItemForm::class)->name('fixed_asset_item_edit');
+            });
         });
 
         Route::prefix('/others')->name('others')->group(function () {
@@ -577,7 +593,6 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/balance')->group(function () {
                 Route::get('/', PatientBalanceReport::class)->name('patient_balance_report')->middleware(['permission:report.patient.balance']);
             });
-     
         });
         Route::prefix('/accounting')->name('accounting')->group(function () {
             Route::prefix('/general-ledger')->middleware(['permission:report.accounting.general-ledger'])->group(function () {

@@ -336,7 +336,6 @@ class InvoiceFormItems extends Component
         DB::beginTransaction();
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
-
             $tax_result = $this->computeServices->ItemComputeTax($this->lineAmount, $this->lineTax, $this->TAX_ID, $taxRate);
             if ($tax_result) {
                 $this->lineTaxable = $tax_result['TAXABLE_AMOUNT'];

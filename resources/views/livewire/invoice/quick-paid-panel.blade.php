@@ -151,12 +151,12 @@
                                                                     wire:model='PAYMENT_PERIOD_ID' />
                                                             @endif
                                                         </div>
-                                                      
+
                                                     </div>
                                                 </div>
                                                 <div class="col-2"></div>
                                                 <div class="col-10">
-                                                              @livewire('PaymentPeriod.PaymentPeriodModal', ['LOCATION_ID' => $LOCATION_ID])
+                                                    @livewire('PaymentPeriod.PaymentPeriodModal', ['LOCATION_ID' => $LOCATION_ID])
                                                 </div>
                                             </div>
                                         </div>

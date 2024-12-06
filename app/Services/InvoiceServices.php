@@ -319,10 +319,13 @@ class InvoiceServices
         ]);
         return $ID;
     }
-    public function ItemGet(int $ID, int $INVOICE_ID)
+    public function ItemGet(int $ID, int $INVOICE_ID, int $ITEM_ID = 0)
     {
         return  InvoiceItems::where('ID', '=', $ID)
             ->where('INVOICE_ID', '=', $INVOICE_ID)
+            ->when($ITEM_ID > 0, function ($query) use (&$ITEM_ID) {
+                $query->where('ITEM_ID', '=', $ITEM_ID);
+            })
             ->first();
     }
     public function ItemUpdate(
@@ -342,7 +345,7 @@ class InvoiceServices
         int $PRICE_LEVEL_ID,
         int $INCOME_ACCOUNT_ID
     ) {
-        $data =  $this->ItemGet($ID, $INVOICE_ID);
+        $data =  $this->ItemGet($ID, $INVOICE_ID, $ITEM_ID);
 
         if ($data) {
             $data->update([
