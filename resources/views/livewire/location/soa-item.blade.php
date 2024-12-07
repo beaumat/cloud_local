@@ -85,14 +85,19 @@
                                             </td>
                                             <td>
                                                 @if ($editid === $list->ID)
-                                                    <button type="button" class="btn btn-sm btn-success"
+                                                    <button name="btnUpdate" type="button"
+                                                        class="btn btn-sm btn-success"
                                                         wire:click='Update()'>Update</button>
-                                                    <button type="button" class="btn btn-sm btn-secondary"
+                                                    <button name="btnCanceled" type="button"
+                                                        class="btn btn-sm btn-secondary" wire:confirm="cancel?"
                                                         wire:click='Canceled()'>Cancel</button>
                                                 @else
-                                                    <button type="button" class='btn btn-sm btn-primary'
+                                                    <button name="btnEdit" type="button" class='btn btn-sm btn-primary'
                                                         wire:click='Edit({{ $list->ID }})'>Edit</button>
-                                                    <button type="button" class='btn btn-sm btn-danger'>Delete</button>
+                                                    <button name="btnDelete" type="button"
+                                                        class='btn btn-sm btn-danger'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        wire:click='Delete({{ $list->ID }})'>Delete</button>
                                                 @endif
 
                                             </td>

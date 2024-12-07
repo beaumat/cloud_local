@@ -118,7 +118,7 @@ class SoaItem extends Component
 
         $this->validate(
             [
-                'editTYPE' => 'required|numeric|exists:soa_item_type,id',
+                'editTYPE'      => 'required|numeric|exists:soa_item_type,id',
                 'editITEM_NAME' => 'required|string',
                 'editUNIT_NAME' => 'required|string',
                 'editRATE'      => 'required|numeric|not_in:0',
@@ -148,7 +148,8 @@ class SoaItem extends Component
     }
     public function Delete(int $ID)
     {
-
+        dd('Stop');
+        return;
         $this->itemSoaServices->Delete($ID);
     }
     public function Canceled()
