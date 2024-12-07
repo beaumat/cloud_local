@@ -149,8 +149,8 @@ class SoaItem extends Component
     public function Delete(int $ID)
     {
         dd('Stop');
-        return;
-        $this->itemSoaServices->Delete($ID);
+        // return;
+        // $this->itemSoaServices->Delete($ID);
     }
     public function Canceled()
     {
