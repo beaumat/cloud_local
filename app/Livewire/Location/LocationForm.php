@@ -95,7 +95,6 @@ class LocationForm extends Component
                 $this->IS_DAILY = $data->IS_DAILY ?? false;
                 $this->LOGO_FILE = $data->LOGO_FILE ?? '';
                 $this->USED_DRY_WEIGHT = $data->USED_DRY_WEIGHT ?? false;
-
                 $this->DOCTOR_ORDER_DEFAULT = $data->DOCTOR_ORDER_DEFAULT ?? '';
                 $this->OTHER_SIGN = $data->OTHER_SIGN ?? false;
                 $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;

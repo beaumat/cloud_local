@@ -72,6 +72,11 @@
                                                     class="btn btn-success btn-xs">
                                                     <i class="fas fa-user" aria-hidden="true"></i>
                                                 </a>
+                                                <a title="Soa Item"
+                                                    href="{{ route('maintenancesettingssoa_item', ['id' => $list->ID]) }}"
+                                                    class="btn btn-secondary btn-xs">
+                                                    <i class="fas fa-sitemap" aria-hidden="true"></i>
+                                                </a>
                                                 <a title="Custom Soa"
                                                     href="{{ route('maintenancesettingslocation_custom_soa', ['id' => $list->ID]) }}"
                                                     class="btn btn-xs btn-warning">

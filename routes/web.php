@@ -98,6 +98,7 @@ use App\Livewire\ItemTreatment\ItemTreatmentForm;
 use App\Livewire\ItemTreatment\ItemTreatmentList;
 use App\Livewire\Location\LocationForm;
 use App\Livewire\Location\LocationList;
+use App\Livewire\Location\SoaItem;
 use App\Livewire\LocationGroup\LocationGroupForm;
 use App\Livewire\LocationGroup\LocationGroupList;
 use App\Livewire\ManufacturerPage\ManufacturerForm;
@@ -562,6 +563,7 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/location')->group(function () {
                 Route::get('/', LocationList::class)->name('location')->middleware(['permission:location.view']);
                 Route::get('/{id}/doctor', LocationDoctors::class)->name('location_doctor')->middleware(['permission:location.view']);
+                Route::get('/{id}/soa-item', SoaItem::class)->name('soa_item')->middleware(['permission:location.edit']);
                 Route::get('/{id}/doctor-notes', DoctorNotes::class)->name('doctor_notes')->middleware(['permission:location.view']);
                 Route::get('/create', LocationForm::class)->name('location_create')->middleware(['permission:location.create']);
                 Route::get('/{id}/edit', LocationForm::class)->name('location_edit')->middleware(['permission:location.edit']);
@@ -569,6 +571,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/custom-soa', PhilCustomSoaList::class)->name('location_custom_soa')->middleware(['permission:location.view']);
                 Route::get('/{id}/custom-soa/create', PhilCustomSoaForm::class)->name('location_custom_soa_create')->middleware(['permission:location.view']);
                 Route::get('/{id}/custom-soa/{custom}/edit', PhilCustomSoaForm::class)->name('location_custom_soa_edit')->middleware(['permission:location.view']);
+
+
             });
             Route::prefix('/location-group')->group(function () {
                 Route::get('/', LocationGroupList::class)->name('location_group')->middleware(['permission:location-group.view']);

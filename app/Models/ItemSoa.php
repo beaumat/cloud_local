@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class ItemSoa extends Model
+{   
+    use HasFactory;
+
+    protected $table = 'soa_item';
+    protected $primaryKey = 'ID';
+    public $timestamps = false;
+    protected $fillable = [
+        'ID',
+        'LOCATION_ID',
+        'LINE',
+        'TYPE',
+        'ITEM_NAME',
+        'UNIT_NAME',
+        'RATE'
+    ];
+}
