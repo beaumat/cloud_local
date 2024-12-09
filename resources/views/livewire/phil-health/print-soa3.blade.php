@@ -2,9 +2,9 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 text-center mb-4" @if ($HEADER) style="opacity: 0.0" @endif>
+                <div class="col-12 text-center mb-1" @if ($HEADER) style="opacity: 0.0" @endif>
                     @if (empty($LOGO_FILE))
-                        <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
+                        <img class="print-logo" style="width:25px;" src="{{ asset('dist/logo/vida_logo.png') }}" />
                         <div class="text-center">
                             <b class="print-address1 text-center">
                                 {{ $REPORT_HEADER_1 }} <br />
@@ -13,19 +13,19 @@
                         </div>
                     @else
                         {{-- nothing customize --}}
-                        <img class="print-logo w-75" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
+                        <img class="w-50" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
                     @endif
                 </div>
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12 text-center">
-                            <h3>STATEMENT OF ACCOUNT</h3>
+                            <h5>STATEMENT OF ACCOUNT</h5>
                         </div>
                         <div class="col-6">
                             <b class="bottom-line"
                                 @if ($HEADER) style="opacity: 0.0" @endif>PHILHEALTH ACCREDITED
                                 :</b>
-                            <div class="row mt-4">
+                            <div class="row mt-2">
                                 <div class="col-12 text-right">
                                     <i>DOB</i>: {{ $DATE_BIRTH }}
                                 </div>
@@ -72,7 +72,7 @@
                                     <b>{{ $CODE }}</b>
                                 </div>
                             </div>
-                            <div class="row mt-4">
+                            <div class="row mt-2">
                                 <div class="col-12"> &nbsp;</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     PHILHEALTH No. :
@@ -111,19 +111,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 text-center mt-4" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
+                <div class="col-12 text-center" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <b class="text-lg">SUMMARY OF FEES</b>
                 </div>
-                <div class="col-12 mt-2" id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
+                <div class="col-12" id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <div class="row top-line right-line left-line">
                         <div class="col-4">
                         </div>
                         <div class="col-1 left-line">
                         </div>
-                        <div class="col-4 text-center  left-line bottom-line">
-                            AMOUNT OF <br /> DISCOUNTS
+                        <div class="col-4 text-center  left-line bottom-line text-sm">
+                            AMOUNT OF DISCOUNTS
                         </div>
-                        <div class="col-2  text-center left-line bottom-line">
+                        <div class="col-2  text-center left-line bottom-line text-sm">
                             PHILHEALTH BENEFITS
                         </div>
                         <div class="col-1  left-line">
@@ -131,20 +131,20 @@
                     </div>
 
                     <div class="row bottom-line right-line left-line">
-                        <div class="col-4 text-center ">
+                        <div class="col-4 text-center text-xs ">
                             PARTICULARS
                         </div>
-                        <div class="col-1 text-center left-line">
+                        <div class="col-1 text-center left-line text-xs">
                             ACTUAL <br /> CHARGES
                         </div>
-                        <div class="col-1 text-center left-line">
+                        <div class="col-1 text-center left-line text-xs">
                             VAT EXEMPT
                         </div>
-                        <div class="col-1 text-center left-line">
+                        <div class="col-1 text-center left-line text-xs">
                             SENIOR CITIZEN / PWD
                         </div>
                         <div class="col-1 text-center  left-line text-xs">
-                            <div class="row text-left">
+                            <div class="row text-left text-xs">
                                 <div class="col-12">___PCSO</div>
                                 <div class="col-12">___DSWD</div>
                                 <div class="col-12">___DOH(MAP)</div>
@@ -152,7 +152,7 @@
                                 <div class="col-12">___LINGAP</div>
                             </div>
                         </div>
-                        <div class="col-1 text-center left-line">
+                        <div class="col-1 text-center left-line text-xs">
                             AMOUNT AFTER DISCOUNT
                         </div>
                         <div class="col-1  left-line text-center ">
@@ -352,7 +352,7 @@
 
                         </div>
                     </div>
-                    <div class="row bottom-line right-line left-line">
+                    {{-- <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
                             Other:Pls.specify
                         </div>
@@ -380,7 +380,7 @@
                         <div id="p-first" class="col-1  left-line text-center "> </div>
                         <div id="p-second" class="col-1 left-line text-center "> </div>
                         <div id="p-pocket" class="col-1 text-center left-line"> </div>
-                    </div>
+                    </div> --}}
 
 
 
@@ -486,7 +486,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="row bottom-line right-line left-line">
+                        {{-- <div class="row bottom-line right-line left-line">
                             <div id="p-particular" class="col-4 text-left  ">
                                 <i>Acreditation No. <b>{{ $list->PIN }}</b></i>
                             </div>
@@ -512,10 +512,10 @@
                             <div id="p-pocket" class="col-1 text-center left-line">
                                 &nbsp;
                             </div>
-                        </div>
+                        </div> --}}
                     @endforeach
 
-                    @for ($n = 1; $n <= 5; $n++)
+                    {{-- @for ($n = 1; $n <= 5; $n++)
                         @if ($n > $i)
                             <div class="row bottom-line right-line left-line">
                                 <div id="p-particular" class="col-4 text-left ">
@@ -546,7 +546,8 @@
                                 </div>
                             </div>
                         @endif
-                    @endfor
+                    @endfor --}}
+
                     <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
                             <b>SUBTOTAL</b>
@@ -581,7 +582,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="row bottom-line right-line left-line">
+                    {{-- <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-right ">
                             &nbsp;
                         </div>
@@ -600,7 +601,7 @@
                         </div>
                         <div id="p-pocket" class="col-1 text-center left-line">
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
@@ -646,13 +647,15 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="col-12">
+                    @livewire('PhilHealth.PrintItemized', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED])
+                </div>
                 {{-- @if ($OUTPUT_SIGN) --}}
-                <div class="col-12 mt-4">
+                <div class="col-12 ">
                     <div class="row">
                         <div class="col-4">
                             <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Prepared by:</div>
-                            <div class="form-group row mt-4">
+                            <div class="form-group row ">
                                 <div class="col-7 text-center">
                                     <strong class="bottom-line"
                                         @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
@@ -675,7 +678,7 @@
                         <div class="col-4"></div>
                         <div class="col-4">
                             <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Conforme:</div>
-                            <div class="form-group row  mt-4">
+                            <div class="form-group row ">
                                 <div class="col-12 text-center bottom-line"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     <b>{{ $PATIENT_NAME }}</b>
@@ -690,7 +693,7 @@
                                 </div>
                                 <div class="col-12 bottom-line"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>&nbsp;</div>
-                                <div class="col-12 ">
+                                <div class="col-12  text-xs">
                                     <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         Date Signed:
                                     </span>
@@ -699,7 +702,7 @@
                                     </span>
 
                                 </div>
-                                <div class="col-12 " @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                <div class="col-12 text-xs" @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     CONTACT No. {{ $PATIENT_CONTACT }}</div>
                             </div>
                         </div>

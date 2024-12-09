@@ -44,6 +44,7 @@ class ItemsList extends Component
     {
 
         $items = $this->itemServices->Search($this->search, $this->perPage);
+        
         return view('livewire.item-page.items-list', ['items' => $items]);
     }
 }

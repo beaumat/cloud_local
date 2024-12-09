@@ -94,4 +94,23 @@ class ItemSoaServices
 
         return $result;
     }
+
+    public function GetList(int $LOCATION_ID) {
+        $result = ItemSoa::query()
+            ->select([
+                'soa_item.ID',
+                'soa_item.TYPE',
+                'soa_item_type.DESCRIPTION as TYPE_NAME',
+                'soa_item.ITEM_NAME',
+                'soa_item.UNIT_NAME',
+                'soa_item.RATE'
+            ])
+            ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->orderBy('TYPE', 'asc')
+            ->orderBy('LINE', 'asc')
+            ->get();
+
+        return $result;
+    }
 }
