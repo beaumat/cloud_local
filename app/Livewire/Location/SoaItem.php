@@ -70,14 +70,14 @@ class SoaItem extends Component
             [
                 'TYPE' => 'required|numeric|exists:soa_item_type,id',
                 'ITEM_NAME' => 'required|string',
-                'UNIT_NAME' => 'required|string',
+               
                 'RATE'      => 'required|numeric|not_in:0',
             ],
             [],
             [
                 'TYPE'      => 'Type',
                 'ITEM_NAME' => 'Item Name',
-                'UNIT_NAME' => 'Unit Name',
+    
                 'RATE'      => 'Rate'
             ]
         );
@@ -120,14 +120,12 @@ class SoaItem extends Component
             [
                 'editTYPE'      => 'required|numeric|exists:soa_item_type,id',
                 'editITEM_NAME' => 'required|string',
-                'editUNIT_NAME' => 'required|string',
                 'editRATE'      => 'required|numeric|not_in:0',
             ],
             [],
             [
                 'editTYPE'      => 'Type',
                 'editITEM_NAME' => 'Item Name',
-                'editUNIT_NAME' => 'Unit Name',
                 'editRATE'      => 'Rate'
             ]
         );
