@@ -64,7 +64,8 @@
                                         <th class="text-center bg-success col-1">
                                             @can('vendor.bill.create')
                                                 <a href="{{ route('vendorsbills_create') }}" class="text-white">
-                                                    <i class="fas fa-plus"></i></a>
+                                                    <i class="fas fa-plus"></i>
+                                                </a>
                                             @endcan
                                         </th>
                                     </tr>

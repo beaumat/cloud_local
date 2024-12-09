@@ -2,7 +2,9 @@
 
 namespace App\Livewire\FixedAssetItem;
 
-use App\Services\ItemServices;
+use App\Services\FixedAssetItemServices;
+use App\Services\LocationServices;
+use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -15,16 +17,32 @@ class FixedAssetItemList extends Component
     protected $paginationTheme = 'bootstrap';
     protected $queryString = ['search' => ['except' => '']];
     public $search = '';
+    public $LOCATION_ID;
+    public $locationList = [];
     public int $perPage = 40;
-    private $itemServices;
-    public function boot(ItemServices $itemServices)
+    private $locationServices;
+    private $userServices;
+    private $fixedAssetItemServices;
+    public function boot(LocationServices $locationServices, UserServices $userServices, FixedAssetItemServices $fixedAssetItemServices)
     {
-        $this->itemServices = $itemServices;
+
+        $this->locationServices = $locationServices;
+        $this->userServices = $userServices;
+        $this->fixedAssetItemServices = $fixedAssetItemServices;
+    }
+    public function mount()
+    {
+        $this->locationList = $this->locationServices->getList();
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+    }
+    public function edit(int $id)
+    {
+        $this->dispatch('open-asset-item', result: ['ID' => $id]);
     }
     public function delete($id)
     {
         try {
-            $this->itemServices->Delete($id);
+            $this->fixedAssetItemServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -39,9 +57,10 @@ class FixedAssetItemList extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    #[On('refresh-list')]
     public function render()
     {
-        $items = $this->itemServices->SearchFixedAsset($this->search, $this->perPage);
+        $items = $this->fixedAssetItemServices->Search($this->search, $this->LOCATION_ID, 50);
         return view('livewire.fixed-asset-item.fixed-asset-item-list', ['items' => $items]);
     }
 }

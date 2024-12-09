@@ -48,6 +48,42 @@ class ItemServices
             ->orderBy('DESCRIPTION', 'asc')
             ->get();
     }
+    public function InventoryItem()
+    {
+        return items::where('TYPE', 0)
+            ->where('INACTIVE', 0)
+            ->orderBy('DESCRIPTION', 'asc')
+            ->get();
+    }
+    public function InventoryItemToFixedAsset($search , int $LOCATION_ID)
+    {
+        $result = items::query()
+            ->select([
+                'item.ID',
+                'item.CODE',
+                'item.DESCRIPTION',
+                'item.ASSET_ACCOUNT_ID',
+                'a.NAME as ASSET_NAME',
+                'item.RATE',
+                'item.COST',
+                'u.NAME as UNIT_NAME'
+            ])
+            ->leftJoin('account as a', 'a.ID', 'item.ASSET_ACCOUNT_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'item.BASE_UNIT_ID')
+            ->where('item.TYPE', 0)
+            ->where('item.INACTIVE', 0)
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use (&$search) {
+                    $q->orWhere('item.DESCRIPTION', 'like', "%$search%")
+                        ->orWhere('item.CODE', 'like', "%$search%")
+                        ->orWhere('u.NAME', 'like', "%$search%");
+                });
+            })
+            ->orderBy('item.DESCRIPTION', 'asc')
+            ->get();
+
+        return $result;
+    }
     public function getInventoryItem(bool $isCode)
     {
         if ($isCode) {

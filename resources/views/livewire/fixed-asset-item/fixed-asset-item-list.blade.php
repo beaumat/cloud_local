@@ -1,9 +1,10 @@
 <div class="content-wrapper">
-   <div class="content-header">
+    <div class="content-header">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0">  <a href="{{ route('maintenanceinventoryfixed_asset_item') }}"> Fixed Asset Items </a></h5>
+                    <h5 class="m-0"> <a href="{{ route('maintenanceinventoryfixed_asset_item') }}"> Fixed Asset Items
+                        </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -23,37 +24,42 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-8">
                                     <input type="text" wire:model.live.debounce.150ms='search'
                                         class="form-control form-control-sm text-xs mb-1 bg-light"
                                         placeholder="Search" />
                                 </div>
-                                <div class="col-md-8 text-right">
-                                    <h5 class="m-0">
-                                    
-                                    </h5>
+                                <div class="col-md-4 text-right">
+                                    <div class="mt-0">
+
+                                        <select
+                                            @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                            name="location" wire:model.live='LOCATION_ID'
+                                            class="form-control form-control-sm">
+                                            <option value="0"> All Location</option>
+                                            @foreach ($locationList as $item)
+                                                <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover custom-table">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>Code</th>
-                                        <th>Description</th>
-                                        <th>Type</th>
-                                        <th>Class</th>
-                                        <th>Sub-Class</th>
-                                        <th>UOM</th>
-                                        <th class="text-right">Rate</th>
-                                        <th class="text-right">Cost</th>
-                                        <th class="text-center">N.H</th>
-                                        <th class="text-center">N.H.Inv</th>
-                                        <th class="text-center">Tax</th>
-                                        <th class="text-center">Inact.</th>
+                                        <th>CODE</th>
+                                        <th>DESCRIPTION</th>
+                                        <th>UNIT</th>
+                                        <th>CTRL#</th>
+                                        <th>ASSET ACCOUNT</th>
+                                        <th>DEPRECIATION ACCOUNT</th>
+                                        <th>ACCUMULATED ACCOUNT</th>
+                                        <th>P.O No.</th>
+                                        <th>Serial No.</th>
                                         <th class="text-center col-1 bg-success">
                                             @can('items.create')
-                                                <a href="{{ route('maintenanceinventoryfixed_asset_item_create') }}"
-                                                    class="text-white btn-sm"> <i class="fas fa-plus"></i> New
-                                                </a>
+                                                @livewire('FixedAssetItem.ItemRegisterModal', ['LOCATION_ID' => $LOCATION_ID])
                                             @endcan
                                         </th>
                                     </tr>
@@ -61,54 +67,31 @@
                                 <tbody class="text-xs">
                                     @foreach ($items as $list)
                                         <tr>
+                                            <td>{{ $list->ITEM_CODE }}</td>
+                                            <td>{{ $list->ITEM_NAME }}</td>
+                                            <td>{{ $list->UNIT_NAME }}</td>
+                                            <td>{{ sprintf('%05d', $list->ID) }}</td>
+                                            <td>{{ $list->ASSET_ACCOUNT }}</td>
+                                            <td>{{ $list->DEPRECIATION_ACCOUNT }}</td>
+                                            <td>{{ $list->ACCUMULATED_ACCOUNT }}</td>
+                                            <td>{{ $list->PO_NUMBER }}</td>
+                                            <td>{{ $list->SERIAL_NO }}</td>
                                             <td>
-                                                <a
-                                                    href="{{ route('maintenanceinventoryfixed_asset_item_edit', ['id' => $list->ID]) }}">
-                                                    {{ $list->CODE }}
-                                                </a>
-                                            </td>
-                                            <td> {{ $list->DESCRIPTION }}</td>
-                                            <td> {{ $list->ITEM_TYPE }} </td>
-                                            <td> {{ $list->CLASS }}</td>
-                                            <td> {{ $list->SUB_CLASS }}</td>
-                                            <td> {{ $list->UNIT_BASE }}</td>
-                                            <td class="text-right">
-                                                {{ $list->RATE ? number_format($list->RATE, 2) : '' }}</td>
-                                            <td class="text-right">
-                                                {{ $list->COST ? number_format($list->COST, 2) : '' }}</td>
-                                            <td class="text-center"> {{ $list->NON_HEMO ? 'Yes' : 'No' }} </td>
-                                            <td class="text-center"> {{ $list->HEMO_NON_INVENTORY ? 'Yes' : 'No' }}
-                                            </td>
-                                            <td class="text-center">
-                                                @if ($list->TAXABLE)
-                                                    <i class="fa fa-check text-success" aria-hidden="true"></i>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                @if ($list->INACTIVE)
-                                                    <i class="fa fa-times text-danger" aria-hidden="true"></i>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                <a title="View Details"
-                                                    href="{{ route('maintenanceinventoryitem_edit', ['id' => $list->ID]) }}"
-                                                    class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye" aria-hidden="true"></i>
-                                                </a>
-
-                                                @can('items.delete')
-                                                    <button type="button" wire:click='delete({{ $list->ID }})'
-                                                        wire:confirm="Are you sure you want to delete this?"
-                                                        class="btn btn-xs btn-danger">
-                                                        <i class="fas fa-trash" aria-hidden="true"></i>
-                                                    </button>
-                                                @else
-                                                    <button type="button" class="btn btn-xs btn-secondary">
-                                                        <i class="fas fa-trash" aria-hidden="true"></i>
-                                                    </button>
-                                                @endcan
-
-
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <button class="btn btn-primary btn-xs w-100"
+                                                            wire:click='edit({{ $list->ID }})'>
+                                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <button wire:confirm='Are you sure to delete?'
+                                                            class="btn btn-danger btn-xs w-100"
+                                                            wire:click='delete({{ $list->ID }})'>
+                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -123,8 +106,5 @@
             </div>
         </div>
     </section>
-
-
-
-
+    @livewire('FixedAssetItem.FixedAssetItemForm')
 </div>
