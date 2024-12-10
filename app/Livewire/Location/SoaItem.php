@@ -19,15 +19,11 @@ class SoaItem extends Component
     public string $ITEM_NAME;
     public string $UNIT_NAME;
     public float $RATE;
-
     public  $editid = null;
     public int $editTYPE;
     public string $editITEM_NAME;
     public string $editUNIT_NAME;
     public float $editRATE;
-
-
-
     public $dataList = [];
     public $search;
     public $typeList = [];
@@ -48,7 +44,6 @@ class SoaItem extends Component
             $this->LOCATION_ID = $id;
             $this->typeList = $this->itemSoaServices->TypeList();
             $this->CleanAdd();
-
             return;
         }
 
@@ -70,14 +65,12 @@ class SoaItem extends Component
             [
                 'TYPE' => 'required|numeric|exists:soa_item_type,id',
                 'ITEM_NAME' => 'required|string',
-               
                 'RATE'      => 'required|numeric|not_in:0',
             ],
             [],
             [
                 'TYPE'      => 'Type',
                 'ITEM_NAME' => 'Item Name',
-    
                 'RATE'      => 'Rate'
             ]
         );
@@ -146,9 +139,8 @@ class SoaItem extends Component
     }
     public function Delete(int $ID)
     {
-        dd('Stop');
-        // return;
-        // $this->itemSoaServices->Delete($ID);
+  
+     $this->itemSoaServices->Delete($ID);
     }
     public function Canceled()
     {
