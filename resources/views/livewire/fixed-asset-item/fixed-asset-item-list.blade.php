@@ -48,15 +48,18 @@
                             <table class="table table-sm table-bordered table-hover custom-table">
                                 <thead class="text-xs bg-sky">
                                     <tr>
+                                        <th>ASSET #</th>
                                         <th>CODE</th>
                                         <th>DESCRIPTION</th>
                                         <th>UNIT</th>
-                                        <th>CTRL#</th>
-                                        <th>ASSET ACCOUNT</th>
-                                        <th>DEPRECIATION ACCOUNT</th>
-                                        <th>ACCUMULATED ACCOUNT</th>
                                         <th>P.O No.</th>
-                                        <th>Serial No.</th>
+                                        <th>SERIAL No.</th>
+                                        <th class="text-center">YEAR PURCHASE</th>
+                                        <th class="text-center">YEAR MODEL</th>
+                                        <th class="text-center">QTY</th>
+                                        <th>ACQUISITION COST</th>
+                                        <th class="text-center">USEFUL LIFE</th>
+                                        <th>LOCATION</th>
                                         <th class="text-center col-1 bg-success">
                                             @can('items.create')
                                                 @livewire('FixedAssetItem.ItemRegisterModal', ['LOCATION_ID' => $LOCATION_ID])
@@ -67,15 +70,19 @@
                                 <tbody class="text-xs">
                                     @foreach ($items as $list)
                                         <tr>
+                                            <td>{{ sprintf('%05d', $list->ID) }}</td>
                                             <td>{{ $list->ITEM_CODE }}</td>
                                             <td>{{ $list->ITEM_NAME }}</td>
                                             <td>{{ $list->UNIT_NAME }}</td>
-                                            <td>{{ sprintf('%05d', $list->ID) }}</td>
-                                            <td>{{ $list->ASSET_ACCOUNT }}</td>
-                                            <td>{{ $list->DEPRECIATION_ACCOUNT }}</td>
-                                            <td>{{ $list->ACCUMULATED_ACCOUNT }}</td>
+
                                             <td>{{ $list->PO_NUMBER }}</td>
                                             <td>{{ $list->SERIAL_NO }}</td>
+                                            <td class="text-center">{{ $list->YEAR_PURCHASE }}</td>
+                                            <td class="text-center">{{ $list->YEAR_MODEL }}</td>
+                                            <td class="text-center">{{ $list->QUANTITY }}</td>
+                                            <td class="text-right">{{ number_format($list->AQ_COST, 2) }}</td>
+                                            <td class="text-center">{{ $list->USEFUL_LIFE }}</td>
+                                            <td>{{ $list->LOCATION_NAME }}</td>
                                             <td>
                                                 <div class="row">
                                                     <div class="col-6">

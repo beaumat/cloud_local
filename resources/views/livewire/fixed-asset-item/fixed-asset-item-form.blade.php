@@ -6,7 +6,7 @@
                 style="width: 90%; max-width: none; height: auto; margin: auto; top: 50%; transform: translateY(-50%);">
                 <div class="modal-content text-left">
                     <div class="modal-header">
-                        <h6 class="modal-title text-dark">Fixed Asset Item Details</h6>
+                        <h6 class="modal-title text-dark">Fixed Asset Item Details : {{ $ITEM_NAME }}</h6>
                         <button type="button" class="close" wire:click="closeModal">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -50,14 +50,40 @@
                                     <livewire:checkbox-input name="IS_NEW" titleName="Is New" wire:model='IS_NEW'
                                         :isDisabled="false" />
                                 </div>
+                                <div class="col-4"></div>
+                                <div class="col-1">
+                                    <livewire:number-input name="YEAR_PURCHASE" titleName="Year Purchase"
+                                        wire:model='YEAR_PURCHASE' :vertical="false" :isDisabled="false" />
+                                </div>
+                                <div class="col-1">
+                                    <livewire:number-input name="YEAR_MODEL" titleName="Year Modal"
+                                        wire:model='YEAR_MODEL' :vertical="false" :isDisabled="false" />
+                                </div>
+                                <div class="col-1">
+                                    <livewire:number-input name="QUANTITY" titleName="Quantity" wire:model='QUANTITY'
+                                        :vertical="false" :isDisabled="false" />
+                                </div>
+                                <div class="col-1">
+                                    <livewire:number-input name="AQ_COST" titleName="Aquisition Cost"
+                                        wire:model='AQ_COST' :vertical="false" :isDisabled="false" />
+                                </div>
+                                <div class="col-1">
+                                    <livewire:number-input name="USEFUL_LIFE" titleName="Useful Life"
+                                        wire:model='USEFUL_LIFE' :vertical="false" :isDisabled="false" />
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success btn-sm">
-                                Save
+                                @if ($ID > 0)
+                                    Update
+                                @else
+                                    Save
+                                @endif
                             </button>
-                            <button type="button" class="btn btn-secondary btn-sm"
-                                wire:click="closeModal">Close</button>
+                            <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">
+                                Close
+                            </button>
                         </div>
                     </form>
                 </div>

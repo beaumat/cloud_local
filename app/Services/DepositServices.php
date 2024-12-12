@@ -97,7 +97,7 @@ class DepositServices
 
     public function Search($search, int $locationId, int $perPage)
     {
-        return Deposit::query()
+        $result = Deposit::query()
             ->select([
                 'deposit.ID',
                 'deposit.CODE',
@@ -126,6 +126,8 @@ class DepositServices
             })
             ->orderBy('deposit.ID', 'desc')
             ->paginate($perPage);
+
+        return $result;
     }
     public function StoreFund(
         int $DEPOSIT_ID,
@@ -326,7 +328,7 @@ class DepositServices
                 'AMOUNT',
                 DB::raw('0 as ENTRY_TYPE')
             ])
-            ->where('ID','=', $DEPOSIT_ID)
+            ->where('ID', '=', $DEPOSIT_ID)
             ->get();
 
         return $result;

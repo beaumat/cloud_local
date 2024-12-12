@@ -54,10 +54,10 @@
 
         {{-- @can('company.asset-management.view') --}}
         <li class="nav-item">
-            <a href="{{ route('companyasset_management') }}"
-                class="nav-link  {{ request()->is('company/asset-management*') ? 'text-warning font-weight-bold' : '' }}">
+            <a href="{{ route('companydepreciation') }}"
+                class="nav-link  {{ request()->is('company/depreciation*') ? 'text-warning font-weight-bold' : '' }}">
                 <i class="fas fa-archive nav-icon" aria-hidden="true"></i>
-                <p>Asset Management</p>
+                <p>Depreciation</p>
             </a>
         </li>
         {{-- @endcan --}}

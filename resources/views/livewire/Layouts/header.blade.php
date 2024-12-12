@@ -31,7 +31,6 @@
                     @can('contact.employee.view')
                         <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
                     @endcan
-
                 </ul>
             </li>
         @endif
@@ -44,20 +43,28 @@
                 <ul aria-labelledby="dropdownSubMenu3" class="border-0 shadow dropdown-menu ">
                     @can('items.view')
                         <li>
-                            <a href="{{ route('maintenanceinventoryitem') }}" class="dropdown-item">Item Master List </a>
+                            <a href="{{ route('maintenanceinventoryitem') }}" class="dropdown-item">
+                                Item
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('maintenanceinventoryfixed_asset_item') }}" class="dropdown-item">
+                                Fixed Asset Item
+                            </a>
                         </li>
                     @endcan
                     @can('others.item-active-list.view')
                         <li>
-                            <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">Item Inventory
+                            <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">
+                                Item Inventory
                             </a>
                         </li>
                     @endcan
                     @can('price-location')
                         <li>
-                            <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">Price Adjust
-                                by
-                                Location </a>
+                            <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">
+                                Price Adjust by Location
+                            </a>
                         </li>
                     @endcan
                 </ul>
@@ -188,8 +195,8 @@
                 {{ auth()->user()->name }}</a>
             <ul aria-labelledby="dropdownSubMenu1" class="border-0 shadow dropdown-menu bg-dark">
                 <li>
-                    <a class="nav-link text-xs" wire:click="openChangePassword" title="Change Password" data-slide="true"
-                        href="#" role="button">
+                    <a class="nav-link text-xs" wire:click="openChangePassword" title="Change Password"
+                        data-slide="true" href="#" role="button">
                         <i class="fa fa-key"></i> Change-Password
                     </a>
                 </li>

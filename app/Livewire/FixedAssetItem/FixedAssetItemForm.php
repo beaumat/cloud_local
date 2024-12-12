@@ -22,6 +22,7 @@ use Livewire\Component;
 class FixedAssetItemForm extends Component
 {
 
+    public string $ITEM_NAME;
 
     public int $ID;
     public int $ITEM_ID;
@@ -34,15 +35,23 @@ class FixedAssetItemForm extends Component
     public bool $PERSONAL_PROPERTY_RETURN;
     public bool $IS_NEW;
     public string $OTHER_DESCRIPTION;
+
+    public int $YEAR_PURCHASE;
+    public int $YEAR_MODEL;
+    public  int $QUANTITY;
+    public  float $AQ_COST;
+    public int $USEFUL_LIFE;
     public bool $showModal = false;
 
     private $fixedAssetItemServices;
     private $accountServices;
+    private $itemServices;
     public $accountList = [];
-    public function boot(FixedAssetItemServices $fixedAssetItemServices, AccountServices $accountServices)
+    public function boot(FixedAssetItemServices $fixedAssetItemServices, AccountServices $accountServices, ItemServices $itemServices)
     {
         $this->fixedAssetItemServices = $fixedAssetItemServices;
         $this->accountServices = $accountServices;
+        $this->itemServices = $itemServices;
     }
 
 
@@ -50,8 +59,9 @@ class FixedAssetItemForm extends Component
     public function openModal($result)
     {
         $ID   = $result['ID'] ?? 0;
-        $data = $this->fixedAssetItemServices->Get($ID);
 
+        $this->accountList = $this->accountServices->getAccount(false);
+        $data = $this->fixedAssetItemServices->Get($ID);
         if ($data) {
             $this->ID = $data->ID;
             $this->ITEM_ID = $data->ITEM_ID ?? 0;
@@ -64,8 +74,46 @@ class FixedAssetItemForm extends Component
             $this->PERSONAL_PROPERTY_RETURN = $data->PERSONAL_PROPERTY_RETURN ?? false;
             $this->IS_NEW  = $data->IS_NEW ?? false;
             $this->OTHER_DESCRIPTION = $data->OTHER_DESCRIPTION ?? '';
-            $this->showModal = true;
-            $this->accountList = $this->accountServices->getAccount(false);
+
+            $this->YEAR_PURCHASE = $data->YEAR_PURCHASE ?? 0;
+            $this->YEAR_MODEL = $data->YEAR_MODEL ?? 0;
+            $this->QUANTITY = $data->QUANTITY ?? 0;
+            $this->AQ_COST = $data->AQ_COST ?? 0;
+
+            $this->USEFUL_LIFE = $data->USEFUL_LIFE ?? 0;
+            
+        } else {
+
+            $this->ITEM_ID =  $result['ITEM_ID'];
+            $this->LOCATION_ID =  $result['LOCATION_ID'];
+            $this->ID = 0;
+            $this->ACCUMULATED_ACCOUNT_ID =   0;
+            $this->DEPRECIATION_ACCOUNT_ID =  0;
+            $this->PO_NUMBER =  '';
+            $this->SERIAL_NO =  '';
+            $this->WARRANTIY_EXPIRED = false;
+            $this->PERSONAL_PROPERTY_RETURN =  false;
+            $this->IS_NEW  =  false;
+            $this->OTHER_DESCRIPTION =  '';
+
+            $this->YEAR_PURCHASE =  0;
+            $this->YEAR_MODEL = 0;
+            $this->QUANTITY =  0;
+            $this->AQ_COST = 0;
+            $this->USEFUL_LIFE = 1;
+        }
+
+        $this->getDisplay();
+
+        $this->showModal = true;
+    }
+
+    private function getDisplay()
+    {
+        $data =  $this->itemServices->get($this->ITEM_ID);
+
+        if ($data) {
+            $this->ITEM_NAME = $data->DESCRIPTION ?? '';
         }
     }
     public function closeModal()
@@ -73,21 +121,46 @@ class FixedAssetItemForm extends Component
         $this->showModal = false;
     }
 
-
     public function save()
     {
 
-        $this->fixedAssetItemServices->Update(
-            $this->ID,
-            $this->ACCUMULATED_ACCOUNT_ID,
-            $this->DEPRECIATION_ACCOUNT_ID,
-            $this->PO_NUMBER,
-            $this->SERIAL_NO,
-            $this->WARRANTIY_EXPIRED,
-            $this->PERSONAL_PROPERTY_RETURN,
-            $this->IS_NEW,
-            $this->OTHER_DESCRIPTION
-        );
+        if ($this->ID > 0) {
+            $this->fixedAssetItemServices->Update(
+                $this->ID,
+                $this->ACCUMULATED_ACCOUNT_ID,
+                $this->DEPRECIATION_ACCOUNT_ID,
+                $this->PO_NUMBER,
+                $this->SERIAL_NO,
+                $this->WARRANTIY_EXPIRED,
+                $this->PERSONAL_PROPERTY_RETURN,
+                $this->IS_NEW,
+                $this->OTHER_DESCRIPTION,
+                $this->YEAR_PURCHASE,
+                $this->YEAR_MODEL,
+                $this->QUANTITY,
+                $this->AQ_COST,
+                $this->USEFUL_LIFE
+            );
+        } else {
+            $this->fixedAssetItemServices->store(
+                $this->ITEM_ID,
+                $this->LOCATION_ID,
+                $this->ACCUMULATED_ACCOUNT_ID,
+                $this->DEPRECIATION_ACCOUNT_ID,
+                $this->PO_NUMBER,
+                $this->SERIAL_NO,
+                $this->WARRANTIY_EXPIRED,
+                $this->PERSONAL_PROPERTY_RETURN,
+                $this->IS_NEW,
+                $this->OTHER_DESCRIPTION,
+                $this->YEAR_PURCHASE,
+                $this->YEAR_MODEL,
+                $this->QUANTITY,
+                $this->AQ_COST,
+                $this->USEFUL_LIFE
+            );
+        }
+
         $this->dispatch('refresh-list');
         $this->closeModal();
     }

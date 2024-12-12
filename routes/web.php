@@ -27,6 +27,8 @@ use App\Livewire\Customer\CustomerList;
 use App\Livewire\DashboardPage\Dashboard;
 use App\Livewire\Deposit\DepositForm;
 use App\Livewire\Deposit\DepositList;
+use App\Livewire\Depreciation\DepreciationForm;
+use App\Livewire\Depreciation\DepreciationList;
 use App\Livewire\Doctor\DoctorForm;
 use App\Livewire\Doctor\DoctorList;
 use App\Livewire\DoctorFee\DoctorFeeList;
@@ -356,8 +358,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/print', PullOutPrint::class)->name('pull_out_print')->middleware(['permission:company.pull-out.print']);
         });
 
-        Route::prefix('/asset-management')->group(function () {
-            Route::get('/', AssetManagementList::class)->name('asset_management');
+        // Route::prefix('/asset-management')->group(function () {
+        //     Route::get('/', AssetManagementList::class)->name('asset_management');
+        // });
+
+        Route::prefix('/depreciation')->group(function () {
+            Route::get('/', DepreciationList::class)->name('depreciation');
+            Route::get('/create', DepreciationForm::class)->name('depreciation_create');
+            Route::get('/{id}/edit', DepreciationForm::class)->name('depreciation_edit');
         });
     });
 
@@ -571,8 +579,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/custom-soa', PhilCustomSoaList::class)->name('location_custom_soa')->middleware(['permission:location.view']);
                 Route::get('/{id}/custom-soa/create', PhilCustomSoaForm::class)->name('location_custom_soa_create')->middleware(['permission:location.view']);
                 Route::get('/{id}/custom-soa/{custom}/edit', PhilCustomSoaForm::class)->name('location_custom_soa_edit')->middleware(['permission:location.view']);
-
-
             });
             Route::prefix('/location-group')->group(function () {
                 Route::get('/', LocationGroupList::class)->name('location_group')->middleware(['permission:location-group.view']);

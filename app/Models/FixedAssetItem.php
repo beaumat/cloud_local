@@ -23,6 +23,11 @@ class FixedAssetItem extends Model
         'WARRANTIY_EXPIRED',
         'PERSONAL_PROPERTY_RETURN',
         'IS_NEW',
-        'OTHER_DESCRIPTION'
+        'OTHER_DESCRIPTION',
+        'YEAR_PURCHASE',
+        'YEAR_MODEL',
+        'QUANTITY',
+        'AQ_COST',
+        'USEFUL_LIFE'
     ];
 }
