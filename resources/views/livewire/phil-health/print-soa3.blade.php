@@ -265,6 +265,38 @@
 
                         </div>
                     </div>
+    <div class="row bottom-line right-line left-line">
+                        <div id="p-particular" class="col-4 text-left ">
+                            Supplies
+                        </div>
+                        <div id="p-charge" class="col-1 text-right  left-line">
+                            @if ($CHARGES_SUPPLIES > 0)
+                                {{ number_format($CHARGES_SUPPLIES, 2) }}
+                            @endif
+                        </div>
+                        <div id="p-vat" class="col-1 text-right  left-line">
+                            @if ($VAT_SUPPLIES > 0)
+                                {{ number_format($VAT_SUPPLIES, 2) }}
+                            @endif
+                        </div>
+                        <div id="p-sp" class="col-1 text-right   left-line">
+                            @if ($SP_SUPPLIES > 0)
+                                {{ number_format($SP_SUPPLIES, 2) }}
+                            @endif
+                        </div>
+                        <div id="p-gov" class="col-1 text-right  left-line text-xs">
+                            @if ($GOV_SUPPLIES > 0)
+                                {{ number_format($GOV_SUPPLIES, 2) }}
+                            @endif
+                        </div>
+                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
+                        <div id="p-first" class="col-1  left-line text-center ">
+                        </div>
+                        <div id="p-second" class="col-1 left-line text-center ">
+                        </div>
+                        <div id="p-pocket" class="col-1 text-center left-line">
+                        </div>
+                    </div>
                     <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
                             Laboratory & Diagnostics
@@ -333,39 +365,7 @@
 
                         </div>
                     </div>
-                    <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-left ">
-                            Supplies
-                        </div>
-                        <div id="p-charge" class="col-1 text-right  left-line">
-                            @if ($CHARGES_SUPPLIES > 0)
-                                {{ number_format($CHARGES_SUPPLIES, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-vat" class="col-1 text-right  left-line">
-                            @if ($VAT_SUPPLIES > 0)
-                                {{ number_format($VAT_SUPPLIES, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-sp" class="col-1 text-right   left-line">
-                            @if ($SP_SUPPLIES > 0)
-                                {{ number_format($SP_SUPPLIES, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-gov" class="col-1 text-right  left-line text-xs">
-                            @if ($GOV_SUPPLIES > 0)
-                                {{ number_format($GOV_SUPPLIES, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
-                        <div id="p-first" class="col-1  left-line text-center ">
-                        </div>
-                        <div id="p-second" class="col-1 left-line text-center ">
-                        </div>
-                        <div id="p-pocket" class="col-1 text-center left-line">
-
-                        </div>
-                    </div>
+                
                     {{-- <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
                             Other:Pls.specify
@@ -662,7 +662,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    @livewire('PhilHealth.PrintItemized', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED])
+                    @livewire('PhilHealth.PrintItemized', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED, 'breakDownDate' => $breakDownDate])
                 </div>
                 {{-- @if ($OUTPUT_SIGN) --}}
                 <div class="col-12 ">

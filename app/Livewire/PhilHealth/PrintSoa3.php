@@ -112,7 +112,7 @@ class PrintSoa3 extends Component
     public string $LOGO_FILE;
     private $patientDoctorServices;
     public $TIME_HIDE;
-
+    public $breakDownDate   = [];
     public bool $IS_HIDE = false;
     private $philHealthSoaCustomServices;
     public function boot(
@@ -341,7 +341,10 @@ class PrintSoa3 extends Component
                 $this->allDate == '';
 
                 $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
+                $this->breakDownDate = $dataList;
+                
                 $LastDate = '';
+
                 foreach ($dataList as $list) {
 
                     if ($this->allDate == '') {
@@ -351,6 +354,7 @@ class PrintSoa3 extends Component
                     }
                     $LastDate = $list->DATE;
                 }
+
                 if ($LastDate !== '') {
                     $this->allDate = $this->allDate . ', ' .  date('Y', strtotime($LastDate));
                 }

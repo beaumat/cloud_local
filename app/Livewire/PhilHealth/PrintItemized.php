@@ -3,10 +3,13 @@
 namespace App\Livewire\PhilHealth;
 
 use App\Services\ItemSoaServices;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class PrintItemized extends Component
 {
+    #[Reactive]
+    public $breakDownDate = [];
     public string $date;
     public $dataList = [];
     public int $qty = 1;
