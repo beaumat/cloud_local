@@ -2,7 +2,6 @@
 
 namespace App\Livewire\FixedAssetItem;
 
-use App\Services\FixedAssetItemServices;
 use App\Services\ItemServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -15,11 +14,10 @@ class ItemRegisterModal extends Component
     public  $dataList = [];
     public bool $showModal = false;
     private $itemServices;
-    private $fixedAssetItemServices;
-    public function boot(ItemServices $itemServices, FixedAssetItemServices $fixedAssetItemServices)
+
+    public function boot(ItemServices $itemServices)
     {
         $this->itemServices = $itemServices;
-        $this->fixedAssetItemServices = $fixedAssetItemServices;
     }
     public function openModal()
     {

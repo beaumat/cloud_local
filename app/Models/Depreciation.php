@@ -19,7 +19,8 @@ class Depreciation extends Model
         'DEPRECIATION_ACCOUNT_ID',
         'NOTES',
         'IS_AUTO',
-        'AMOUNT'
+        'AMOUNT',
+        'STATUS',
+        'STATUS_DATE'
     ];
-
 }

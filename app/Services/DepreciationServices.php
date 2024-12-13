@@ -16,7 +16,15 @@ class DepreciationServices
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
     }
+    public function Get($ID)
+    {
+        $data = Depreciation::where('ID', '=', $ID)->first();
 
+        if ($data) {
+            return $data;
+        }
+        return null;
+    }
     public function Store(string $CODE, string $DATE, int $LOCATION_ID, int $DEPRECIATION_ACCOUNT_ID, string $NOTES, bool $IS_AUTO): int
     {
         $ID = $this->object->ObjectNextID('DEPRECIATION');
@@ -43,7 +51,7 @@ class DepreciationServices
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
-        Depreciation::where('ID', $ID)
+        Depreciation::where('ID', '=', $ID)
             ->update([
                 'STATUS'        => $STATUS,
                 'STATUS_DATE'   => $this->dateServices->NowDate()
@@ -98,10 +106,16 @@ class DepreciationServices
 
         return $result;
     }
+    public function ItemGet(int $ID)
+    {
+        $data =  DepreciationItems::where('ID', '=', $ID)->first();
+
+        return $data;
+    }
     public function ItemStore(int $DEPRECIATION_ID, int $FIXED_ASSET_ITEM_ID, float $AMOUNT, int $ACCOUNT_ID)
     {
-        $ID = $this->object->ObjectNextID('DEPRECIATION_ITEMS');
-        
+        $ID = (int) $this->object->ObjectNextID('DEPRECIATION_ITEMS');
+
         DepreciationItems::create([
             'ID'                        => $ID,
             'DEPRECIATION_ID'           => $DEPRECIATION_ID,
@@ -109,6 +123,8 @@ class DepreciationServices
             'AMOUNT'                    => $AMOUNT,
             'ACCOUNT_ID'                => $ACCOUNT_ID
         ]);
+
+        return $ID;
     }
     public function ItemUpdate(int $ID, float $AMOUNT, int $ACCOUNT_ID)
     {

@@ -29,6 +29,7 @@ class DepositServices
     public function Get(int $ID)
     {
         $result = Deposit::where('ID', '=', $ID)->first();
+        
         if ($result) {
             return $result;
         }

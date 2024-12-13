@@ -54,13 +54,13 @@
                                     <tr>
                                         <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
-                                        <th class="col-2">Bank Account</th>
+                                        <th class="col-2">Account</th>
                                         <th class="col-1">Amount</th>
+                                        <th class="col-1">Is Auto</th>
                                         <th class="col-1">Location</th>
-                                        <th class="col-4">Notes</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center col-1">
-                                            <a href="{{ route('bankingdeposit_create') }}"
+                                            <a href="{{ route('companydepreciation_create') }}"
                                                 class="btn btn-xs btn-success w-100 text-xs">
                                                 <i class="fas fa-plus"></i> New
                                             </a>
@@ -69,6 +69,24 @@
                                 </thead>
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
+                                        <tr>
+                                            <td>{{ $list->CODE }}</td>
+                                            <td>{{ date('M/d/Y', strtotime($list->DATE)) }}</td>
+                                            <td>{{ $list->ACCOUNT_NAME }}</td>
+                                            <td>{{ number_format($list->AMOUNT, 2) }}</td>
+                                            <td class="text-center">
+                                                @if ($list->IS_AUTO)
+                                                    Yes
+                                                @else
+                                                    No
+                                                @endif
+                                            </td>
+                                            <td>{{ $list->LOCATION_NAME }}</td>
+                                            <td>{{ $list->STATUS }}</td>
+                                            <td>
+                                                {{-- EDIT --}}
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>

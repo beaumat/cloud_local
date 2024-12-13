@@ -16,6 +16,7 @@ class DepreciationList extends Component
     use WithPagination;
     public int $perPage = 30;
     protected $paginationTheme = 'bootstrap';
+    protected $queryString = ['search' => ['except' => '']];
     public $search = '';
     public int $locationid;
     public $locationList = [];
@@ -29,12 +30,20 @@ class DepreciationList extends Component
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
     }
-
     public function mount()
     {
-
         $this->locationList = $this->locationServices->getList();
+        
         $this->locationid = $this->userServices->getLocationDefault();
+    }
+    public function updatedlocationid()
+    {
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function render()
     {
