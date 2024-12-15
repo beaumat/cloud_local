@@ -24,6 +24,7 @@ class AccountJournalModal extends Component
     {   
         $this->TOTAL_DEBIT = 0;
         $this->TOTAL_CREDIT = 0;
+        
         $this->JOURNAL_NO = $result['JOURNAL_NO'];
         $this->showModal = true;
 

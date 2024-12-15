@@ -96,10 +96,10 @@
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
 
-                                                <button type="button" wire:click='openPayment()'
+                                                {{-- <button type="button" wire:click='openPayment()'
                                                     class="btn btn-sm btn-success">
                                                     <i class="fa fa-money" aria-hidden="true"></i> Payment
-                                                </button>
+                                                </button> --}}
 
                                                 <button type="button" wire:click='getPosted()'
                                                     class="btn btn-sm btn-warning">
@@ -178,7 +178,6 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-6">
-
                                     </div>
                                     <div class="col-6 text-right">
                                         <label>Total :
@@ -191,6 +190,7 @@
                     </div>
                 </div>
             </div>
+               @livewire('AccountJournal.AccountJournalModal')
         </section>
     @endif
 

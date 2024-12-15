@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Depreciation;
 
-use App\Services\AccountServices;
 use App\Services\DepreciationServices;
 use App\Services\FixedAssetItemServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -137,14 +137,18 @@ class DepreciationItems extends Component
         $this->editID = null;
         $this->editAmount = 0;
     }
-
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
+    }
     public function render()
     {
-
         $this->fixedAssetItemList =  $this->fixedAssetItemServices->getList($this->LOCATION_ID);
-
         $this->dataList  = $this->depreciationServices->ItemList($this->DEPRECIATION_ID);
-
         return view('livewire.depreciation.depreciation-items');
     }
 }

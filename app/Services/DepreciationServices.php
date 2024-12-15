@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class DepreciationServices
 {
+    public int $object_type_depreciation = 127;
+    public int $object_type_depreciation_item = 128;
+    public int $DEPRECIATION_ACCOUNT_ID  = 268;
     private $object;
     private $systemSettingServices;
     private $dateServices;
@@ -61,7 +64,7 @@ class DepreciationServices
 
     public function Recomputed(int $ID)
     {
-        $AMOUNT = (float)  DepreciationItems::where('DEPRECIATION_ID', '=', $ID)->sum('AMOUNT');
+        $AMOUNT = (float)  DepreciationItems::where('DEPRECIATION_ID', '=', $ID)->sum('AMOUNT') ;
 
         Depreciation::where('ID', '=', $ID)->update(['AMOUNT' => $AMOUNT]);
     }
@@ -164,6 +167,37 @@ class DepreciationServices
             ->where('depreciation_items.DEPRECIATION_ID', '=', $DEPRECIATION_ID)
             ->get();
 
+
+        return $result;
+    }
+    public function DepreciationJournal(int $DEPRECIATION_ID)
+    {
+
+        $result = Depreciation::query()
+            ->select([
+                'ID',
+                'DEPRECIATION_ACCOUNT_ID as ACCOUNT_ID',
+                DB::raw('0 as SUBSIDIARY_ID'),
+                'AMOUNT',
+                DB::raw('0 as ENTRY_TYPE')
+            ])
+            ->where('ID', '=', $DEPRECIATION_ID)
+            ->get();
+
+        return $result;
+    }
+    public function DepreciationItemJournal(int $DEPRECIATION_ID)
+    {
+        $result = DepreciationItems::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                'FIXED_ASSET_ITEM_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->where('DEPRECIATION_ID', '=', $DEPRECIATION_ID)
+            ->get();
 
         return $result;
     }

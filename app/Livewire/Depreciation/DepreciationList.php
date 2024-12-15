@@ -5,6 +5,7 @@ namespace App\Livewire\Depreciation;
 use App\Services\DepreciationServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -52,6 +53,15 @@ class DepreciationList extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        // Clear session message and error
+        session()->forget('message');
+        session()->forget('error');
     }
     public function render()
     {

@@ -42,7 +42,8 @@ class AccountJournalServices
         WHEN o.`ID` = 73    THEN ( select  0  as `CODE` from tax_credit_invoices join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 113    THEN ( select pull_out.`CUSTOM_FIELD1` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114    THEN ( select pull_out.`CUSTOM_FIELD1` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
-    END as TX_PO';
+ 
+        END as TX_PO';
 
     public string $TX_CODE = '
     CASE
@@ -77,9 +78,13 @@ class AccountJournalServices
         WHEN o.`ID` = 71    THEN ( select build_assembly.`CODE` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 72    THEN ( select tax_credit.`CODE` from tax_credit where tax_credit.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 73    THEN ( select tax_credit.`CODE` from tax_credit_invoices join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 113    THEN ( select pull_out.`CODE` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
-        WHEN o.`ID` = 114    THEN ( select pull_out.`CODE` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
-    END as TX_CODE';
+        WHEN o.`ID` = 113   THEN ( select pull_out.`CODE` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
+        WHEN o.`ID` = 114   THEN ( select pull_out.`CODE` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
+        
+        WHEN o.`ID` = 127   THEN ( select depreciation.`CODE` from depreciation where depreciation.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 128   THEN ( select depreciation.`CODE` from depreciation_items join depreciation on depreciation.ID = depreciation_items.DEPRECIATION_ID where depreciation_items.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID )
+     
+        END as TX_CODE';
 
     public string $TX_NOTES = '
     CASE
@@ -119,7 +124,11 @@ class AccountJournalServices
         WHEN o.`ID` = 113    THEN ( select pull_out.`NOTES` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114    THEN ( select pull_out.`NOTES` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
 
-    END as TX_NOTES';
+           WHEN o.`ID` = 127   THEN ( select depreciation.`NOTES` from depreciation where depreciation.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 128   THEN ( select depreciation.`NOTES` from depreciation_items join depreciation on depreciation.ID = depreciation_items.DEPRECIATION_ID where depreciation_items.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID )
+     
+    
+        END as TX_NOTES';
 
 
 
