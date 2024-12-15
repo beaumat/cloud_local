@@ -70,7 +70,10 @@
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td>{{ $list->CODE }}</td>
+                                            <td>
+                                                <a href ="{{ route('companydepreciation_edit', ['id' => $list->ID]) }}">
+                                                    {{ $list->CODE }}</a>
+                                            </td>
                                             <td>{{ date('M/d/Y', strtotime($list->DATE)) }}</td>
                                             <td>{{ $list->ACCOUNT_NAME }}</td>
                                             <td>{{ number_format($list->AMOUNT, 2) }}</td>
@@ -83,8 +86,16 @@
                                             </td>
                                             <td>{{ $list->LOCATION_NAME }}</td>
                                             <td>{{ $list->STATUS }}</td>
-                                            <td>
-                                                {{-- EDIT --}}
+                                            <td class="text-center">
+                                                <a href="{{ route('companydepreciation_edit', ['id' => $list->ID]) }}"
+                                                    class="btn btn-primary btn-xs">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                                </a>
+                                                <button wire:click='delete({{ $list->ID }})'
+                                                    wire:confirm="Are you sure you want to delete this?"
+                                                    class="btn btn-xs btn-danger">
+                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach

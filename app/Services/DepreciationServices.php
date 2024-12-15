@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Depreciation;
 use App\Models\DepreciationItems;
+use Illuminate\Support\Facades\DB;
 
 class DepreciationServices
 {
@@ -76,6 +77,7 @@ class DepreciationServices
     }
     public function Delete(int $ID)
     {
+        DepreciationItems::where('DEPRECIATION_ID', '=', $ID)->delete();
         Depreciation::where('ID', '=', $ID)->delete();
     }
     public function Search($search, int $LOCATION_ID, int $perPage)
@@ -112,6 +114,10 @@ class DepreciationServices
 
         return $data;
     }
+    public function ItemExistsAdded(int $DEPRECIATION_ID, int $FIXED_ASSET_ITEM_ID): bool
+    {
+        return (bool) DepreciationItems::where('DEPRECIATION_ID', '=', $DEPRECIATION_ID)->where('FIXED_ASSET_ITEM_ID', '=', $FIXED_ASSET_ITEM_ID)->exists();
+    }
     public function ItemStore(int $DEPRECIATION_ID, int $FIXED_ASSET_ITEM_ID, float $AMOUNT, int $ACCOUNT_ID)
     {
         $ID = (int) $this->object->ObjectNextID('DEPRECIATION_ITEMS');
@@ -126,13 +132,12 @@ class DepreciationServices
 
         return $ID;
     }
-    public function ItemUpdate(int $ID, float $AMOUNT, int $ACCOUNT_ID)
+    public function ItemUpdate(int $ID, float $AMOUNT)
     {
         DepreciationItems::where('ID', '=', $ID)
             ->update([
                 'ID'                        => $ID,
                 'AMOUNT'                    => $AMOUNT,
-                'ACCOUNT_ID'                => $ACCOUNT_ID
             ]);
     }
     public function ItemDelete(int $ID)
@@ -151,8 +156,9 @@ class DepreciationServices
                 'i.DESCRIPTION as ITEM_NAME',
                 'f.ID as ASSET_ITEM_ID',
                 'a.NAME as ACCOUNT_NAME'
+
             ])
-            ->join('fixed_asset_item as f', 'f.ID', '= depreciation_items.FIXED_ASSET_ITEM_ID')
+            ->join('fixed_asset_item as f', 'f.ID', '=', 'depreciation_items.FIXED_ASSET_ITEM_ID')
             ->join('item as i', 'i.ID', '=', 'f.ITEM_ID')
             ->join('account as a', 'a.ID', 'depreciation_items.ACCOUNT_ID')
             ->where('depreciation_items.DEPRECIATION_ID', '=', $DEPRECIATION_ID)

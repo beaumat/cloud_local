@@ -4,9 +4,11 @@ namespace App\Livewire\Depreciation;
 
 use App\Services\AccountServices;
 use App\Services\DepreciationServices;
+use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -23,6 +25,7 @@ class DepreciationForm extends Component
     public bool $IS_AUTO;
     public float $AMOUNT;
     public int $STATUS;
+    public string $STATUS_DESCRIPTION;
     public $accountList = [];
     public $locationList = [];
 
@@ -31,13 +34,20 @@ class DepreciationForm extends Component
     private $userServices;
     private $locationServices;
     private $accountServices;
-    public function boot(DepreciationServices $depreciationServices, UserServices $userServices, LocationServices $locationServices, AccountServices $accountServices)
-    {
+    private $documentStatusServices;
+    public function boot(
+        DepreciationServices $depreciationServices,
+        UserServices $userServices,
+        LocationServices $locationServices,
+        AccountServices $accountServices,
+        DocumentStatusServices $documentStatusServices
+    ) {
 
         $this->depreciationServices = $depreciationServices;
         $this->userServices = $userServices;
         $this->locationServices = $locationServices;
         $this->accountServices = $accountServices;
+        $this->documentStatusServices = $documentStatusServices;
     }
     public function mount($id = null)
     {
@@ -63,11 +73,13 @@ class DepreciationForm extends Component
         $this->AMOUNT =   0;
         $this->STATUS = 0;
         $this->Modify = true;
+        $this->STATUS_DESCRIPTION = "";
     }
     public function save()
     {
 
         $this->validate([
+            'CODE'                      =>  $this->ID > 0 ? 'required|max:20|unique:depreciation,code,' . $this->ID : 'nullable',
             'DATE'                      => 'required|date',
             'LOCATION_ID'               => 'required|exists:location,id',
             'DEPRECIATION_ACCOUNT_ID'   => 'required|numeric|exists:account,id'
@@ -76,7 +88,7 @@ class DepreciationForm extends Component
 
         try {
             if ($this->ID  == 0) {
-                $this->ID = $this->depreciationServices->Store(
+                $this->ID = (int) $this->depreciationServices->Store(
                     $this->CODE,
                     $this->DATE,
                     $this->LOCATION_ID,
@@ -111,6 +123,18 @@ class DepreciationForm extends Component
         $this->IS_AUTO = $data->IS_AUTO ?? false;
         $this->AMOUNT =  $data->AMOUNT ?? 0;
         $this->STATUS = $data->STATUS ?? 0;
+        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+    }
+    #[On('refresh-amount')]
+    public function getTotal()
+    {
+        $data = $this->depreciationServices->Get($this->ID);
+        if ($data) {
+            $this->AMOUNT = $data->AMOUNT ?? 0;
+            return;
+        }
+
+        $this->AMOUNT = 0;
     }
     public function render()
     {

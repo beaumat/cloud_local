@@ -19,10 +19,9 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-4">
-                            <b class="bottom-line2"
-                                @if ($HEADER) style="opacity: 0.0" @endif>
+                            <b class="bottom-line2" @if ($HEADER) style="opacity: 0.0" @endif>
                                 PHILHEALTH ACCREDITED :
-                                </b>
+                            </b>
                         </div>
                         <div class="col-4 text-center mb-1">
                             <h4>STATEMENT OF ACCOUNT</h4>
@@ -265,7 +264,7 @@
 
                         </div>
                     </div>
-    <div class="row bottom-line right-line left-line">
+                    <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
                             Supplies
                         </div>
@@ -365,7 +364,7 @@
 
                         </div>
                     </div>
-                
+
                     {{-- <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
                             Other:Pls.specify

@@ -35,12 +35,12 @@
                                                         <livewire:select-option name="DEPRECIATION_ACCOUNT_ID"
                                                             titleName="Depreciation Account" :options="$accountList"
                                                             :zero="true" :isDisabled="false"
-                                                            wire:model='BANK_ACCOUNT_ID' />
+                                                            wire:model='DEPRECIATION_ACCOUNT_ID' />
                                                     @else
                                                         <livewire:select-option name="DEPRECIATION_ACCOUNT_ID"
                                                             titleName="Depreciation Account" :options="$accountList"
                                                             :zero="true" :isDisabled="true"
-                                                            wire:model='BANK_ACCOUNT_ID' />
+                                                            wire:model='DEPRECIATION_ACCOUNT_ID' />
                                                     @endif
                                                 </div>
                                             </div>
@@ -157,7 +157,7 @@
                                         <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
                                             href="#custom-tabs-four-item" role="tab"
                                             aria-controls="custom-tabs-four-item" aria-selected="true">
-                                            Funds To Deposit
+                                            Asset Details
                                         </a>
                                     </li>
                                 </ul>
@@ -168,7 +168,7 @@
                                         role="tabpanel" aria-labelledby="custom-tabs-four-item-tab">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                @livewire('Deposit.DepositFormDetail', ['DEPOSIT_ID' => $ID, 'STATUS' => $STATUS])
+                                                @livewire('Depreciation.DepreciationItems', ['DEPRECIATION_ID' => $ID, 'STATUS' => $STATUS, 'LOCATION_ID' => $LOCATION_ID])
                                             </div>
                                         </div>
                                     </div>
@@ -181,7 +181,7 @@
 
                                     </div>
                                     <div class="col-6 text-right">
-                                        <label>Total Fund :
+                                        <label>Total :
                                             <b class="text-primary">{{ number_format($AMOUNT, 2) }}</b>
                                         </label>
                                     </div>

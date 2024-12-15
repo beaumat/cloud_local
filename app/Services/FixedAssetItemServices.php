@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\FixedAssetItem;
+use Illuminate\Support\Facades\DB;
 
 class FixedAssetItemServices
 {
@@ -92,7 +93,19 @@ class FixedAssetItemServices
     {
         FixedAssetItem::where('ID', '=', $ID)->delete();
     }
+    public function getList(int $LOCATION_ID)
+    {
+        $result =   FixedAssetItem::query()
+            ->select([
+                'fixed_asset_item.ID',
+                DB::raw("concat(i.DESCRIPTION ,' (#', fixed_asset_item.ID,')' ) as DESCRIPTION")
+            ])
+            ->join('item as i', 'i.ID', '=', 'fixed_asset_item.ITEM_ID')
+            ->where("fixed_asset_item.LOCATION_ID", '=', $LOCATION_ID)
+            ->get();
 
+        return $result;
+    }
     public function Search($search, int $LOCATION_ID, int $perPage)
     {
         $result = FixedAssetItem::query()

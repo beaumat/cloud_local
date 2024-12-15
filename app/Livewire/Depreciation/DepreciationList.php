@@ -20,7 +20,6 @@ class DepreciationList extends Component
     public $search = '';
     public int $locationid;
     public $locationList = [];
-    private $depositServices;
     private $userServices;
     private $depreciationServices;
     private $locationServices;
@@ -33,8 +32,17 @@ class DepreciationList extends Component
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-        
+
         $this->locationid = $this->userServices->getLocationDefault();
+    }
+    public function delete(int $ID) {
+            try {
+                $this->depreciationServices->Delete($ID);
+            } catch (\Exception $e) {
+                $errorMessage = 'Error occurred: ' . $e->getMessage();
+                session()->flash('error', $errorMessage);
+            }
+       
     }
     public function updatedlocationid()
     {
