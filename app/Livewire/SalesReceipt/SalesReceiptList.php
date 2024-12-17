@@ -131,7 +131,6 @@ class SalesReceiptList extends Component
             $data = $this->salesReceiptServices->get($SR_ID);
             if ($data) {
                 if ($data->STATUS == 15) {
-
                     $JOURNAL_NO = $this->accountJournalServices->getRecord(
                         $this->salesReceiptServices->object_type_sales_receipt,
                         $SR_ID

@@ -13,6 +13,7 @@ use App\Models\RateType;
 use App\Models\StockType;
 use App\Models\UnitOfMeasures;
 use App\Services\AccountServices;
+use App\Services\DepreciationServices;
 use App\Services\FixedAssetItemServices;
 use App\Services\ItemServices;
 use Illuminate\Support\Facades\Redirect;
@@ -47,11 +48,15 @@ class FixedAssetItemForm extends Component
     private $accountServices;
     private $itemServices;
     public $accountList = [];
-    public function boot(FixedAssetItemServices $fixedAssetItemServices, AccountServices $accountServices, ItemServices $itemServices)
+
+    public bool $INACTIVE;
+    private $depreciationServices;
+    public function boot(FixedAssetItemServices $fixedAssetItemServices, AccountServices $accountServices, ItemServices $itemServices, DepreciationServices $depreciationServices)
     {
         $this->fixedAssetItemServices = $fixedAssetItemServices;
         $this->accountServices = $accountServices;
         $this->itemServices = $itemServices;
+        $this->depreciationServices = $depreciationServices;
     }
 
 
@@ -59,7 +64,6 @@ class FixedAssetItemForm extends Component
     public function openModal($result)
     {
         $ID   = $result['ID'] ?? 0;
-
         $this->accountList = $this->accountServices->getAccount(false);
         $data = $this->fixedAssetItemServices->Get($ID);
         if ($data) {
@@ -81,14 +85,14 @@ class FixedAssetItemForm extends Component
             $this->AQ_COST = $data->AQ_COST ?? 0;
 
             $this->USEFUL_LIFE = $data->USEFUL_LIFE ?? 0;
-            
+            $this->INACTIVE = $data->INACTIVE ?? false;
         } else {
 
             $this->ITEM_ID =  $result['ITEM_ID'];
             $this->LOCATION_ID =  $result['LOCATION_ID'];
             $this->ID = 0;
-            $this->ACCUMULATED_ACCOUNT_ID =   0;
-            $this->DEPRECIATION_ACCOUNT_ID =  0;
+            $this->ACCUMULATED_ACCOUNT_ID =   $this->depreciationServices->ACCUMULATED_ACCOUNT_ID;
+            $this->DEPRECIATION_ACCOUNT_ID =  $this->depreciationServices->DEPRECIATION_ACCOUNT_ID;
             $this->PO_NUMBER =  '';
             $this->SERIAL_NO =  '';
             $this->WARRANTIY_EXPIRED = false;
@@ -101,6 +105,7 @@ class FixedAssetItemForm extends Component
             $this->QUANTITY =  0;
             $this->AQ_COST = 0;
             $this->USEFUL_LIFE = 1;
+            $this->INACTIVE = false;
         }
 
         $this->getDisplay();
@@ -124,6 +129,22 @@ class FixedAssetItemForm extends Component
     public function save()
     {
 
+
+        $this->validate([
+            'ACCUMULATED_ACCOUNT_ID'   => 'required|numeric|exists:account,id',
+            'QUANTITY'                  => 'required|numeric|not_in:0',
+            'AQ_COST'                   => 'required|numeric|not_in:0',
+            'USEFUL_LIFE'               => 'required|numeric|not_in:0',
+
+        ], [], [
+            'ACCUMULATED_ACCOUNT_ID'   => 'Accumulated Account',
+            'QUANTITY'                  => 'Quantity',
+            'AQ_COST'                   => 'Aquisition Cost',
+            'USEFUL_LIFE'               => 'Usefull life',
+        ]);
+
+
+
         if ($this->ID > 0) {
             $this->fixedAssetItemServices->Update(
                 $this->ID,
@@ -139,7 +160,8 @@ class FixedAssetItemForm extends Component
                 $this->YEAR_MODEL,
                 $this->QUANTITY,
                 $this->AQ_COST,
-                $this->USEFUL_LIFE
+                $this->USEFUL_LIFE,
+                $this->INACTIVE
             );
         } else {
             $this->fixedAssetItemServices->store(

@@ -57,6 +57,7 @@ class FixedAssetItemList extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    
     #[On('refresh-list')]
     public function render()
     {

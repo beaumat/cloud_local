@@ -69,7 +69,8 @@ class FixedAssetItemServices
         int $YEAR_MODEL,
         int $QUANTITY,
         float $AQ_COST,
-        int $USEFUL_LIFE
+        int $USEFUL_LIFE,
+        bool $INACTIVE
     ) {
         FixedAssetItem::where('ID', '=', $ID)
             ->update([
@@ -85,7 +86,8 @@ class FixedAssetItemServices
                 'YEAR_MODEL'                => $YEAR_MODEL,
                 'QUANTITY'                  => $QUANTITY,
                 'AQ_COST'                   => $AQ_COST,
-                'USEFUL_LIFE'               => $USEFUL_LIFE
+                'USEFUL_LIFE'               => $USEFUL_LIFE,
+                'INACTIVE'                  => $INACTIVE
             ]);
     }
 
@@ -102,7 +104,40 @@ class FixedAssetItemServices
             ])
             ->join('item as i', 'i.ID', '=', 'fixed_asset_item.ITEM_ID')
             ->where("fixed_asset_item.LOCATION_ID", '=', $LOCATION_ID)
+            ->where("fixed_asset_item.INACTIVE", '=', false)
             ->get();
+
+        return $result;
+    }
+
+    public function List(int $LOCATION_ID)
+    {
+        $result =   FixedAssetItem::query()
+            ->select([
+                'ID',
+                'ACCUMULATED_ACCOUNT_ID',
+                'AQ_COST',
+                'USEFUL_LIFE'
+            ])
+            ->where("LOCATION_ID", '=', $LOCATION_ID)
+            ->where("INACTIVE", '=', false)
+            ->get();
+
+        return $result;
+    }
+    public function AutoInactive(int $ID)
+    {
+        FixedAssetItem::where("ID", '=', $ID)
+            ->where("INACTIVE", '=', false)
+            ->update([
+                'INACTIVE' => true
+            ]);
+    }
+    public function GetCount(int $LOCATION_ID): int
+    {
+        $result = (int)  FixedAssetItem::where("LOCATION_ID", '=', $LOCATION_ID)
+            ->where("INACTIVE", '=', false)
+            ->count();
 
         return $result;
     }
@@ -118,6 +153,7 @@ class FixedAssetItemServices
                 'fixed_asset_item.QUANTITY',
                 'fixed_asset_item.AQ_COST',
                 'fixed_asset_item.USEFUL_LIFE',
+                'fixed_asset_item.INACTIVE',
                 'a.NAME as ASSET_ACCOUNT',
                 'aa.NAME as ACCUMULATED_ACCOUNT',
                 'da.NAME as DEPRECIATION_ACCOUNT',

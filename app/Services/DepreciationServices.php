@@ -4,22 +4,113 @@ namespace App\Services;
 
 use App\Models\Depreciation;
 use App\Models\DepreciationItems;
+use App\Models\FixedAssetItem;
+use App\Models\Locations;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DepreciationServices
 {
     public int $object_type_depreciation = 127;
     public int $object_type_depreciation_item = 128;
     public int $DEPRECIATION_ACCOUNT_ID  = 268;
+    public int $ACCUMULATED_ACCOUNT_ID = 19;
     private $object;
     private $systemSettingServices;
     private $dateServices;
-    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, DateServices $dateServices)
+    private $fixedAssetItemServices;
+    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, DateServices $dateServices, FixedAssetItemServices $fixedAssetItemServices)
     {
         $this->object = $objectServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
+        $this->fixedAssetItemServices = $fixedAssetItemServices;
     }
+    public function monthlyExecute()
+    {
+        $dayIsNextMonth =  $this->dateServices->isNextMonthIsChange();
+        if (!$dayIsNextMonth) {
+            DB::beginTransaction();
+
+            try {
+
+
+
+                $locationList = Locations::where('INACTIVE', '=', false)->get();
+                foreach ($locationList as $list) {
+                    $this->AutoMakeDeprecation($list->ID);
+                }
+
+                DB::commit();
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                Log::error('Error executing Depreciation : ' . $th->getMessage());
+            }
+            return;
+        }
+        Log::error('Error dayIsNextMonth is fales');
+    }
+    private function AutoMakeDeprecation(int $location_id)
+    {
+        // check if already added this month.
+        $count  =  $this->fixedAssetItemServices->GetCount($location_id);
+        if ($count > 0) {
+            if (!$this->IsExist($location_id)) {    
+
+                $DEPRECATION_ID = (int) $this->Store(
+                    '',
+                    $this->dateServices->NowDate(),
+                    $location_id,
+                    $this->DEPRECIATION_ACCOUNT_ID,
+                    '',
+                    true
+                );
+                $this->AutoMakeItem($DEPRECATION_ID, $location_id);
+                $this->Recomputed($DEPRECATION_ID);
+
+                // make journal
+
+                    
+                return;
+            }
+            Log::error('Error : file already exists ');
+            return;
+        }
+    }
+    private function AutoMakeItem(int $DEP_ID, int $LOC_ID)
+    {
+        $data = $this->fixedAssetItemServices->List($LOC_ID);
+        foreach ($data as $list) {
+            $AMT = (float) $list->AQ_COST / $list->USEFUL_LIFE;
+            $this->ItemStore(
+                $DEP_ID,
+                $list->ID,
+                $AMT,
+                $list->ACCUMULATED_ACCOUNT_ID ?? 0
+            );
+            // checking if max
+            $itemCount = (int)  $this->GetCount($list->ID, $LOC_ID);
+            if ($itemCount >= $list->USEFUL_LIFE) {
+                $this->fixedAssetItemServices->AutoInactive($list->ID);
+            }
+        }
+    }
+    private function GetCount(int $FIXED_ASSET_ITEM_ID, $LOC_ID): int
+    {
+        $itemCount = (int) DepreciationItems::query()->join('depreciation as d', 'd.ID', '=', 'DEPRECIATION_ID')
+            ->where('d.LOCATION_ID', '=', $LOC_ID)
+            ->where('FIXED_ASSET_ITEM_ID', '=', $FIXED_ASSET_ITEM_ID)
+            ->count();
+
+        return $itemCount;
+    }
+    private function IsExist(int $location_id): bool
+    {
+        return (bool)  Depreciation::where('DATE', '=', $this->dateServices->NowDate())
+            ->where('LOCATION_ID', '=', $location_id)
+            ->exists();
+    }
+
     public function Get($ID)
     {
         $data = Depreciation::where('ID', '=', $ID)->first();
@@ -64,7 +155,7 @@ class DepreciationServices
 
     public function Recomputed(int $ID)
     {
-        $AMOUNT = (float)  DepreciationItems::where('DEPRECIATION_ID', '=', $ID)->sum('AMOUNT') ;
+        $AMOUNT = (float)  DepreciationItems::where('DEPRECIATION_ID', '=', $ID)->sum('AMOUNT');
 
         Depreciation::where('ID', '=', $ID)->update(['AMOUNT' => $AMOUNT]);
     }

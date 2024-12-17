@@ -71,7 +71,13 @@
                                     <livewire:number-input name="USEFUL_LIFE" titleName="Useful Life"
                                         wire:model='USEFUL_LIFE' :vertical="false" :isDisabled="false" />
                                 </div>
+
+                                <div class="col-2">
+                                    <livewire:checkbox-input name="INACTIVE" titleName="Inactive" wire:model='INACTIVE'
+                                        :isDisabled="false" />
+                                </div>
                             </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success btn-sm">

@@ -40,6 +40,10 @@ class DateServices
         // '2024-10-29'
         return Carbon::now()->format('Y-m-d');
     }
+    public function NextDate()
+    {
+        return Carbon::now()->addDay()->format('Y-m-d'); // Tomorrow's date
+    }
     public function Now()
     {
         return Carbon::now();
@@ -76,7 +80,7 @@ class DateServices
 
         ];
     }
-    function Get7Days(int $yr, int $m, int $wk_selected)
+    public  function Get7Days(int $yr, int $m, int $wk_selected)
     {
         $month = $m;
         $year = $yr;
@@ -215,5 +219,20 @@ class DateServices
             ['ID' => 12, 'NAME' => 'Dec'],
 
         ];
+    }
+
+    public function isNextMonthIsChange()
+    {
+        $todayDate = $this->NowDate();
+        $nextDate = $this->NextDate();
+
+        $currentMonth = date('M', strtotime($todayDate));
+        $nextMonth = date('M', strtotime($nextDate));
+
+        if ($currentMonth != $nextMonth) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -108,7 +108,7 @@
                                             @endif
                                         @endif
                                         @if ($STATUS == 15)
-                                            @can('banking.deposit.update')
+                                            @can('company.depreciation.update')
                                                 <button type="button" wire:click='getUnposted()'
                                                     class="btn btn-sm btn-secondary"
                                                     wire:confirm="Are you sure you want to unpost?">
@@ -119,19 +119,14 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS == 15)
-                                            @can('banking.deposit.print')
-                                                {{-- <a target='_BLANK'
-                                                    href="{{ route('companypull_out_print', ['id' => $ID]) }}"
-                                                    type="button" class="btn btn-sm btn-dark">
-                                                    <i class="fa fa-print" aria-hidden="true"></i> Print
-                                                </a> --}}
+                                            @can('company.depreciation.print')
                                                 <button type="button" wire:click='OpenJournal()'
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                                 </button>
                                             @endcan
 
-                                            @can('banking.deposit.create')
+                                            @can('company.depreciation.create')
                                                 <a id="new" title="Create" href="{{ route('bankingdeposit_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endcan

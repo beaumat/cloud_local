@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('sql:treatment')->dailyAt('23:00');
+        $schedule->command('sql:depreciation')->dailyAt('23:10');
     }
 
     /**

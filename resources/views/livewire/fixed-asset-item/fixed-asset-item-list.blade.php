@@ -51,7 +51,7 @@
                             <table class="table table-sm table-bordered table-hover custom-table">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>ASSET #</th>
+                                        <th>ASSET No.</th>
                                         <th>CODE</th>
                                         <th>DESCRIPTION</th>
                                         <th>UNIT</th>
@@ -63,11 +63,14 @@
                                         <th>ACQUISITION COST</th>
                                         <th class="text-center">USEFUL LIFE</th>
                                         <th>LOCATION</th>
+                                        <th class="text-center">Inactive</th>
                                         <th class="text-center col-1 bg-success">
                                             @can('items.create')
                                                 @livewire('FixedAssetItem.ItemRegisterModal', ['LOCATION_ID' => $LOCATION_ID])
                                             @endcan
                                         </th>
+
+
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -86,6 +89,13 @@
                                             <td class="text-right">{{ number_format($list->AQ_COST, 2) }}</td>
                                             <td class="text-center">{{ $list->USEFUL_LIFE }}</td>
                                             <td>{{ $list->LOCATION_NAME }}</td>
+                                            <td class="text-center">
+                                                @if ($list->INACTIVE)
+                                                    Yes
+                                                @else
+                                                    No
+                                                @endif
+                                            </td>
                                             <td>
                                                 <div class="row">
                                                     <div class="col-6">
