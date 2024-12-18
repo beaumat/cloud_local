@@ -119,12 +119,12 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS == 15)
-                                            @can('company.depreciation.print')
+                                            {{-- @can('company.depreciation.print') --}}
                                                 <button type="button" wire:click='OpenJournal()'
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                                 </button>
-                                            @endcan
+                                            {{-- @endcan --}}
 
                                             @can('company.depreciation.create')
                                                 <a id="new" title="Create" href="{{ route('bankingdeposit_create') }}"

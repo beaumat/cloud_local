@@ -31,7 +31,9 @@ class DepreciationItems extends Component
         $this->depreciationServices = $depreciationServices;
         $this->fixedAssetItemServices = $fixedAssetItemServices;
     }
-    public function mount() {}
+    public function mount() {
+        
+    }
     public function add()
     {
 

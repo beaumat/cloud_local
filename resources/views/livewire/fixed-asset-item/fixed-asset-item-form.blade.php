@@ -23,11 +23,11 @@
                                     <livewire:text-input name="SERIAL_NO" titleName="Serial No." wire:model='SERIAL_NO'
                                         :vertical="false" :isDisabled="false" />
                                 </div>
-                                <div class="col-3">
+                                {{-- <div class="col-3">
                                     <livewire:select-option name="ACCOUNT_ID2" titleName="Depreciation Account"
                                         :options="$accountList" :zero="true" :isDisabled="false"
                                         wire:model='DEPRECIATION_ACCOUNT_ID' />
-                                </div>
+                                </div> --}}
                                 <div class="col-3">
                                     <livewire:select-option name="ACCOUNT_ID1" titleName="Accumulated Account"
                                         :options="$accountList" :zero="true" :isDisabled="false"
@@ -64,12 +64,17 @@
                                         :vertical="false" :isDisabled="false" />
                                 </div>
                                 <div class="col-1">
-                                    <livewire:number-input name="AQ_COST" titleName="Aquisition Cost"
-                                        wire:model='AQ_COST' :vertical="false" :isDisabled="false" />
+
+                                    <label for="AQ_COST" class="text-xs">Aquisition Cost </label>
+
+                                    <input type="number" step="0.01" class="form-control form-control-sm text-right"
+                                        name="AQ_COST" wire:model.live.debounce.1000ms='AQ_COST' />
                                 </div>
                                 <div class="col-1">
-                                    <livewire:number-input name="USEFUL_LIFE" titleName="Useful Life"
-                                        wire:model='USEFUL_LIFE' :vertical="false" :isDisabled="false" />
+                                    <label for="Usefulllife" class="text-xs">Useful life</label>
+
+                                    <input type="number" step="0.01" class="form-control form-control-sm text-right"
+                                        name="USEFUL_LIFE" wire:model.live.debounce.1000ms='USEFUL_LIFE' />
                                 </div>
 
                                 <div class="col-2">
@@ -80,16 +85,35 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success btn-sm">
-                                @if ($ID > 0)
-                                    Update
-                                @else
-                                    Save
-                                @endif
-                            </button>
-                            <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">
-                                Close
-                            </button>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="row ">
+                                            <div class="col-6">
+                                                <label>Per Year</label> : {{ number_format($PER_YEAR, 2) }}
+
+                                            </div>
+                                            <div class="col-6">
+                                                <label>Per Month</label> : {{ number_format($PER_MONTH, 2) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            @if ($ID > 0)
+                                                Update
+                                            @else
+                                                Save
+                                            @endif
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </form>
                 </div>

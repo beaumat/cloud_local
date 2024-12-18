@@ -36,29 +36,33 @@ class FixedAssetItemForm extends Component
     public bool $PERSONAL_PROPERTY_RETURN;
     public bool $IS_NEW;
     public string $OTHER_DESCRIPTION;
-
     public int $YEAR_PURCHASE;
     public int $YEAR_MODEL;
     public  int $QUANTITY;
-    public  float $AQ_COST;
-    public int $USEFUL_LIFE;
+    public  float $AQ_COST = 0 ;
+    public int $USEFUL_LIFE = 1;
     public bool $showModal = false;
-
     private $fixedAssetItemServices;
     private $accountServices;
     private $itemServices;
     public $accountList = [];
-
     public bool $INACTIVE;
     private $depreciationServices;
-    public function boot(FixedAssetItemServices $fixedAssetItemServices, AccountServices $accountServices, ItemServices $itemServices, DepreciationServices $depreciationServices)
-    {
+
+    public float $PER_YEAR;
+    public float $PER_MONTH;
+
+    public function boot(
+        FixedAssetItemServices $fixedAssetItemServices,
+        AccountServices $accountServices,
+        ItemServices $itemServices,
+        DepreciationServices $depreciationServices
+    ) {
         $this->fixedAssetItemServices = $fixedAssetItemServices;
         $this->accountServices = $accountServices;
         $this->itemServices = $itemServices;
         $this->depreciationServices = $depreciationServices;
     }
-
 
     #[On('open-asset-item')]
     public function openModal($result)
@@ -113,6 +117,15 @@ class FixedAssetItemForm extends Component
         $this->showModal = true;
     }
 
+    public function Recomputed()
+    {
+        $cost = $this->AQ_COST > 0 ? $this->AQ_COST : 0;
+        $use = $this->USEFUL_LIFE > 0 ? $this->USEFUL_LIFE : 1;
+
+        $this->PER_YEAR = $cost /  $use;
+
+        $this->PER_MONTH = $this->PER_YEAR / 12;
+    }
     private function getDisplay()
     {
         $data =  $this->itemServices->get($this->ITEM_ID);
@@ -197,6 +210,7 @@ class FixedAssetItemForm extends Component
 
     public function render()
     {
+        $this->Recomputed();
         return view('livewire.fixed-asset-item.fixed-asset-item-form');
     }
 }

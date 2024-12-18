@@ -19,28 +19,28 @@ class DepreciationServices
     private $systemSettingServices;
     private $dateServices;
     private $fixedAssetItemServices;
-    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, DateServices $dateServices, FixedAssetItemServices $fixedAssetItemServices)
+    private $accountJournalServices;
+    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, DateServices $dateServices, FixedAssetItemServices $fixedAssetItemServices, AccountJournalServices $accountJournalServices)
     {
         $this->object = $objectServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
         $this->fixedAssetItemServices = $fixedAssetItemServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function monthlyExecute()
     {
+
+        // get the requirements
         $dayIsNextMonth =  $this->dateServices->isNextMonthIsChange();
-        if (!$dayIsNextMonth) {
+        // !  true or false
+        if ($dayIsNextMonth) {
             DB::beginTransaction();
-
             try {
-
-
-
                 $locationList = Locations::where('INACTIVE', '=', false)->get();
                 foreach ($locationList as $list) {
                     $this->AutoMakeDeprecation($list->ID);
                 }
-
                 DB::commit();
             } catch (\Throwable $th) {
                 DB::rollBack();
@@ -55,22 +55,12 @@ class DepreciationServices
         // check if already added this month.
         $count  =  $this->fixedAssetItemServices->GetCount($location_id);
         if ($count > 0) {
-            if (!$this->IsExist($location_id)) {    
-
-                $DEPRECATION_ID = (int) $this->Store(
-                    '',
-                    $this->dateServices->NowDate(),
-                    $location_id,
-                    $this->DEPRECIATION_ACCOUNT_ID,
-                    '',
-                    true
-                );
-                $this->AutoMakeItem($DEPRECATION_ID, $location_id);
-                $this->Recomputed($DEPRECATION_ID);
-
-                // make journal
-
-                    
+            if (!$this->IsExist($location_id)) {
+                $DEPRECATION_ID = (int) $this->Store('', $this->dateServices->NowDate(), $location_id, $this->DEPRECIATION_ACCOUNT_ID, '', true);
+                $this->AutoMakeItem($DEPRECATION_ID, $location_id); // add item automatic
+                $this->Recomputed($DEPRECATION_ID); // update total
+                $this->autoJournal($DEPRECATION_ID, $location_id, $this->dateServices->NowDate()); // create journal
+                $this->StatusUpdate($DEPRECATION_ID, 15); // make posted
                 return;
             }
             Log::error('Error : file already exists ');
@@ -82,10 +72,11 @@ class DepreciationServices
         $data = $this->fixedAssetItemServices->List($LOC_ID);
         foreach ($data as $list) {
             $AMT = (float) $list->AQ_COST / $list->USEFUL_LIFE;
+            $PER_MONTH  = $AMT / 12;
             $this->ItemStore(
                 $DEP_ID,
                 $list->ID,
-                $AMT,
+                $PER_MONTH,
                 $list->ACCUMULATED_ACCOUNT_ID ?? 0
             );
             // checking if max
@@ -94,6 +85,30 @@ class DepreciationServices
                 $this->fixedAssetItemServices->AutoInactive($list->ID);
             }
         }
+    }
+    private function autoJournal(int $ID, int $LOCATION_ID, string $DATE)
+    {
+        $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->object_type_depreciation, $ID) + 1;
+        $depreciationData = $this->DepreciationJournal($ID);
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $depreciationData,
+            $LOCATION_ID,
+            $this->object_type_depreciation,
+            $DATE,
+            ""
+        );
+
+        $depreciationItemData = $this->DepreciationItemJournal($ID);
+
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $depreciationItemData,
+            $LOCATION_ID,
+            $this->object_type_depreciation_item,
+            $DATE,
+            "ASSET"
+        );
     }
     private function GetCount(int $FIXED_ASSET_ITEM_ID, $LOC_ID): int
     {

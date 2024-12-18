@@ -186,7 +186,7 @@ class DepreciationForm extends Component
             $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->depreciationServices->object_type_depreciation, $this->ID);
          
             if ($JOURNAL_NO  == 0) {
-                $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->depreciationServices->object_type_depreciation_item, $this->ID) + 1;
+                $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->depreciationServices->object_type_depreciation, $this->ID) + 1;
             }
 
             $depreciationData = $this->depreciationServices->DepreciationJournal($this->ID);

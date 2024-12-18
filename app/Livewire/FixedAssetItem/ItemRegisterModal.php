@@ -34,26 +34,8 @@ class ItemRegisterModal extends Component
     {
 
         $this->dispatch('open-asset-item', result: ['ID' => 0, 'ITEM_ID' => $ITEM_ID, 'LOCATION_ID' => $this->LOCATION_ID]);
-
-        // $this->fixedAssetItemServices->Store(
-        //     $ITEM_ID,
-        //     $this->LOCATION_ID,
-        //     0,
-        //     0,
-        //     '',
-        //     '',
-        //     '',
-        //     false,
-        //     false,
-        //     '',
-        //     0,
-        //     0,
-        //     1,
-        //     0,
-        //     1
-        // );
-
         $this->dispatch('refresh-list');
+        
     }
     public function render()
     {
