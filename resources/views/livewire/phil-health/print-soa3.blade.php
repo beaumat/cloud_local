@@ -556,7 +556,7 @@
                     @livewire('PhilHealth.PrintItemized', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED, 'breakDownDate' => $breakDownDate])
                 </div>
                 {{-- @if ($OUTPUT_SIGN) --}}
-                <div class="col-12 ">
+                <div class="col-12  pt-1">
                     <div class="row">
                         <div class="col-5">
                             <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Prepared by:</div>
