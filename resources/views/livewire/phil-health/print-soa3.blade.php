@@ -668,15 +668,14 @@
                     <div class="row">
                         <div class="col-4">
                             <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Prepared by:</div>
-                            <div class="form-group row ">
-                                <div class="col-7 text-center">
-                                    <strong class="bottom-line"
-                                        @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                            <div class="form-group row  mt-4">
+                                <div class="col-7 text-center bottom-line2">
+                                    <strong @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         {{ $USER_NAME }}</strong>
                                 </div>
                                 <div class="col-7 text-center"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>PHIC IN-Charge</div>
-                                <div class="col-12">
+                                <div class="col-12 mt-4">
                                     <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         Date Signed:
                                     </span>
@@ -688,37 +687,37 @@
                                     CONTACT No. {{ $USER_CONTACT }}</div>
                             </div>
                         </div>
-                        <div class="col-4"></div>
-                        <div class="col-4">
+                        <div class="col-3"></div>
+                        <div class="col-5">
                             <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Conforme:</div>
                             <div class="form-group row ">
-                                <div class="col-12 text-center bottom-line"
+                                <div class="col-12 text-center bottom-line2"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     <b>{{ $PATIENT_NAME }}</b>
                                 </div>
-                                <div class="col-12 text-sm"
+                                <div class="col-12 text-center"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     Member/Patient/Authorized Representative</div>
-                                <div class="col-12 " @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                <div class="col-12  text-center"
+                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     (Signature over printed name)</div>
-                                <div class="col-12 text-xs"
+                                <div class="col-12 text-sm text-center"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Relationship of
                                     member of authorized representative
                                 </div>
-                                <div class="col-12 bottom-line"
+                                <div class="col-12 mt-4 bottom-line2"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>&nbsp;</div>
-                                <div class="col-12  text-xs">
+
+                                <div class="col-12 ">
                                     <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         Date Signed:
                                     </span>
-                                    <span>
-                                        {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
-                                    </span>
+                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
 
                                 </div>
-                                <div class="col-12 text-xs"
-                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
-                                    CONTACT No. {{ $PATIENT_CONTACT }}</div>
+                                <div class="col-12" @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    CONTACT No. {{ $PATIENT_CONTACT }}
+                                </div>
                             </div>
                         </div>
                     </div>

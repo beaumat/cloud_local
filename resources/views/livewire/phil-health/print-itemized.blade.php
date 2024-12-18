@@ -24,7 +24,7 @@
                     @if ($TYPE == '')
                     @elseif ($TYPE != $list->TYPE_NAME)
                         <tr class="font-weight-bold">
-                            <td class="text-center">
+                            <td class="text-center text-sm">
                                 @if (isset($breakDownDate[$row]))
                                     {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
                                 @endif
@@ -33,11 +33,11 @@
                                     $row++;
                                 @endphp
                             </td>
-                            <td>{{ $TYPE }} TOTAL</td>
+                            <td class="text-sm">{{ $TYPE }} TOTAL</td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td class="text-right">{{ number_format($TOTAL, 2) }}</td>
+                            <td class="text-right text-sm">{{ number_format($TOTAL, 2) }}</td>
                         </tr>
                         @php
                             $TOTAL = 0;
@@ -46,8 +46,8 @@
                     @php
                         $TYPE = $list->TYPE_NAME;
                     @endphp
-                    <tr>
-                        <td class="text-center font-weight-bold">
+                    <tr >
+                        <td class="text-center font-weight-bold text-sm">
                             @if (isset($breakDownDate[$row]))
                                 {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
                             @endif
@@ -57,109 +57,109 @@
                             @endphp
 
                         </td>
-                        <td>{{ $list->ITEM_NAME }}</td>
-                        <td>{{ $list->UNIT_NAME }}</td>
-                        <td class=" text-right">{{ number_format($list->RATE, 2) }}</td>
-                        <td class="text-center"> {{ $qty }}</td>
+                        <td class="text-sm">{{ $list->ITEM_NAME }}</td>
+                        <td class="text-sm">{{ $list->UNIT_NAME }}</td>
+                        <td class=" text-right text-sm">{{ number_format($list->RATE, 2) }}</td>
+                        <td class="text-center text-sm"> {{ $qty }}</td>
                         @php
                             $AMOUNT = $qty * $list->RATE ?? 0;
                             $TOTAL = $TOTAL + $AMOUNT;
                         @endphp
-                        <td class="text-right">{{ number_format($AMOUNT, 2) }}</td>
+                        <td class="text-right text-sm">{{ number_format($AMOUNT, 2) }}</td>
                     </tr>
                 @endforeach
 
                 <tr class="font-weight-bold">
                     <td></td>
-                    <td>{{ $TYPE }} TOTAL</td>
+                    <td class="text-sm">{{ $TYPE }} TOTAL</td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="text-right">{{ number_format($TOTAL, 2) }}</td>
+                    <td class="text-right text-sm">{{ number_format($TOTAL, 2) }}</td>
                 </tr>
             </tbody>
         </table>
 
     </div>
     <div class="col-3">
-        <table class="w-100 table text-xs" border="2">
+        <table class="w-100 table" border="2">
             <thead>
                 <tr class="text-center">
-                    <th>ROUTINE MONTHLY LABORATORIES</th>
+                    <th class="text-sm">ROUTINE MONTHLY LABORATORIES</th>
                 </tr>
             </thead>
 
-            <tbody class=''>
+            <tbody class='text-sm'>
                 <tr>
-                    <th class="text-center">(CLINICAL CHEMISTRY)</th>
+                    <th class="text-center text-sm">(CLINICAL CHEMISTRY)</th>
                 </tr>
                 <tr>
-                    <td class="text-center">PRE AND POST DIALYSIS BUN</td>
+                    <td class="text-center text-sm">PRE AND POST DIALYSIS BUN</td>
                 </tr>
                 <tr>
-                    <td class="text-center"> SERUM CREATININE </td>
+                    <td class="text-center text-sm"> SERUM CREATININE </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> POTASSIUM </td>
+                    <td class="text-center text-sm"> POTASSIUM </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> PHOSPHORUS </td>
+                    <td class="text-center text-sm"> PHOSPHORUS </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> CALCIUM </td>
+                    <td class="text-center text-sm"> CALCIUM </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> SERUM SODIUM </td>
+                    <td class="text-center text-sm"> SERUM SODIUM </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> KT/V </td>
+                    <td class="text-center text-sm"> KT/V </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> URR </td>
+                    <td class="text-center text-sm"> URR </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> URIC ACID </td>
-                </tr>
-
-                <tr>
-                    <th class="text-center">(HEMATOLOGY) COMPLETE BLOOD COUNT</th>
+                    <td class="text-center text-sm"> URIC ACID </td>
                 </tr>
 
                 <tr>
-                    <td class="text-center">HEMOGLOBIN</td>
+                    <th class="text-center text-sm" >(HEMATOLOGY) COMPLETE BLOOD COUNT</th>
+                </tr>
+
+                <tr>
+                    <td class="text-center text-sm">HEMOGLOBIN</td>
                 </tr>
                 <tr>
-                    <td class="text-center"> HEMATOCRIT</td>
+                    <td class="text-center text-sm"> HEMATOCRIT</td>
                 </tr>
                 <tr>
-                    <td class="text-center"> RED BLOOD CELLS </td>
+                    <td class="text-center text-sm"> RED BLOOD CELLS </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> MCV </td>
+                    <td class="text-center text-sm"> MCV </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> MCH </td>
+                    <td class="text-center text-sm"> MCH </td>
                 </tr>
                 <tr>
                     <td class="text-center"> MCHC</td>
                 </tr>
                 <tr>
-                    <td class="text-center"> WHTE BLOODCELLS </td>
+                    <td class="text-center text-sm"> WHTE BLOODCELLS </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> NEUTROPHILS </td>
+                    <td class="text-center text-sm"> NEUTROPHILS </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> LYMPHOCYTES </td>
+                    <td class="text-center text-sm"> LYMPHOCYTES </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> EOSINOPHILS </td>
+                    <td class="text-center text-sm"> EOSINOPHILS </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> BASOPHILS </td>
+                    <td class="text-center text-sm"> BASOPHILS </td>
                 </tr>
                 <tr>
-                    <td class="text-center"> PLATELET COUNT </td>
+                    <td class="text-center text-sm"> PLATELET COUNT </td>
                 </tr>
             </tbody>
         </table>
