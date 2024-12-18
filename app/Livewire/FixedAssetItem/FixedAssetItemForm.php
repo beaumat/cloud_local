@@ -90,6 +90,7 @@ class FixedAssetItemForm extends Component
 
             $this->USEFUL_LIFE = $data->USEFUL_LIFE ?? 0;
             $this->INACTIVE = $data->INACTIVE ?? false;
+            
         } else {
 
             $this->ITEM_ID =  $result['ITEM_ID'];
@@ -113,10 +114,8 @@ class FixedAssetItemForm extends Component
         }
 
         $this->getDisplay();
-
         $this->showModal = true;
     }
-
     public function Recomputed()
     {
         $cost = $this->AQ_COST > 0 ? $this->AQ_COST : 0;
@@ -138,7 +137,6 @@ class FixedAssetItemForm extends Component
     {
         $this->showModal = false;
     }
-
     public function save()
     {
 
