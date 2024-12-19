@@ -224,28 +224,30 @@ class ServiceChargeForm extends Component
     }
     public function save()
     {
+
+
+        $this->validate(
+            [
+                'PATIENT_ID'            => 'required|numeric|not_in:0|exists:contact,id',
+                'CODE'                  => $this->ID > 0 ? 'required|max:20|unique:invoice,code,' . $this->ID : 'nullable',
+                'OUTPUT_TAX_ID'         => 'required|numeric|not_in:0',
+                'DATE'                  => 'required|date',
+                'LOCATION_ID'           => 'required|numeric|exists:location,id',
+                'PAYMENT_TERMS_ID'      => 'required|numeric'
+            ],
+            [],
+            [
+                'PATIENT_ID'            => 'Petient',
+                'CODE'                  => 'Reference No.',
+                'OUTPUT_TAX_ID'         => 'Tax',
+                'DATE'                  => 'Date',
+                'LOCATION_ID'           => 'Location',
+                'PAYMENT_TERMS_ID'      => 'Payment Terms'
+            ]
+        );
+
         try {
             if ($this->ID == 0) {
-
-                $this->validate(
-                    [
-                        'PATIENT_ID' => 'required|not_in:0',
-                        'OUTPUT_TAX_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'PAYMENT_TERMS_ID' => 'required'
-                    ],
-                    [],
-                    [
-                        'PATIENT_ID' => 'Patient',
-                        'OUTPUT_TAX_ID' => 'Tax',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'PAYMENT_TERMS_ID' => 'Payment Terms'
-                    ]
-                );
-
-
                 if ($this->serviceChargeServices->ServicesChargesExists($this->DATE, $this->PATIENT_ID, $this->LOCATION_ID)) {
                     session()->flash('error', 'A service charge for this patient already exists for the date ' . date('M/d/Y', strtotime($this->DATE)) . '.');
                     return;
@@ -309,31 +311,11 @@ class ServiceChargeForm extends Component
                     $this->hemoServices->ItemUpdateSC_ITEM_ID($list->ID, $list->HEMO_ID, $list->ITEM_ID, $SC_ITEM_ID);
                 }
                 $this->serviceChargeServices->ReComputed($this->ID);
-
                 DB::commit();
-
                 return Redirect::route('patientsservice_charges_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+          
             } else {
 
-                $this->validate(
-                    [
-                        'PATIENT_ID' => 'required|not_in:0',
-                        'CODE' => 'required|max:20|unique:invoice,code,' . $this->ID,
-                        'OUTPUT_TAX_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'PAYMENT_TERMS_ID' => 'required'
-                    ],
-                    [],
-                    [
-                        'PATIENT_ID' => 'Petient',
-                        'CODE' => 'Reference No.',
-                        'OUTPUT_TAX_ID' => 'Tax',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'PAYMENT_TERMS_ID' => 'Payment Terms'
-                    ]
-                );
                 DB::beginTransaction();
                 $this->getTax();
                 $this->serviceChargeServices->Update(
@@ -350,23 +332,19 @@ class ServiceChargeForm extends Component
                     $this->OUTPUT_TAX_VAT_METHOD,
                     $this->OUTPUT_TAX_ACCOUNT_ID
                 );
-
                 $this->serviceChargeServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
-
                 $getResult = $this->serviceChargeServices->ReComputed($this->ID);
-
                 $this->getUpdateAmount($getResult);
                 DB::commit();
                 session()->flash('message', 'Successfully updated');
             }
 
             $data = $this->serviceChargeServices->get($this->ID);
-
             if ($data) {
                 $this->getInfo($data);
             }
-
             $this->Modify = false;
+            
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();

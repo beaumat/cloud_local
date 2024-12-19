@@ -48,13 +48,17 @@ class CashPayment extends Component
     }
     public function save()
     {
-        $this->validate([
-            'AMOUNT' => 'required|not_in:0',
-            'RECEIPT_REF_NO' => 'required'
-        ], [], [
-            'AMOUNT' => 'Payment Amount',
-            'RECEIPT_REF_NO' => 'SL No.'
-        ]);
+        $this->validate(
+            [
+                'AMOUNT'            => 'required|not_in:0',
+                'RECEIPT_REF_NO'    => 'required'
+            ],
+            [],
+            [
+                'AMOUNT'            => 'Payment Amount',
+                'RECEIPT_REF_NO'    => 'SL No.'
+            ]
+        );
 
         if ($this->AMOUNT > $this->ITEM_AMOUNT) {
             session()->flash('error', 'Invalid Amount.');
@@ -66,32 +70,13 @@ class CashPayment extends Component
             return;
         }
 
-
         $PATIENT_PAYMENT_ID = 0;
         $data = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
         if ($data) {
             DB::beginTransaction();
             try {
 
-                $PATIENT_PAYMENT_ID =  $this->patientPaymentServices->Store(
-                    "",
-                    $this->userServices->getTransactionDateDefault(),
-                    $data->PATIENT_ID,
-                    $data->LOCATION_ID,
-                    $this->AMOUNT,
-                    $this->AMOUNT,
-                    1,
-                    "",
-                    null,
-                    $this->RECEIPT_REF_NO,
-                    null,
-                    "",
-                    1,
-                    0,
-                    0,
-                    4
-                );
-
+                $PATIENT_PAYMENT_ID =  $this->patientPaymentServices->Store("", $this->userServices->getTransactionDateDefault(), $data->PATIENT_ID, $data->LOCATION_ID, $this->AMOUNT, $this->AMOUNT, 1, "", null, $this->RECEIPT_REF_NO, null, "", 1, 0, 0, 4);
                 $PC_ID    = (int) $this->patientPaymentServices->PaymentChargeStore($PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $this->AMOUNT, 0, 4);
                 $this->patientPaymentServices->PaymentChargesUpdate($PC_ID, $PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $this->AMOUNT);
                 $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ITEM_ID);
@@ -104,8 +89,6 @@ class CashPayment extends Component
                 $this->closeModal();
             } catch (\Throwable $th) {
                 DB::rollBack();
-                //throw $th;
-
                 session()->flash('error', $th->getMessage());
             }
         }

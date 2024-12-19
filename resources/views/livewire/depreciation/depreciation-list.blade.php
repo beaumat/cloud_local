@@ -72,7 +72,8 @@
                                         <tr>
                                             <td>
                                                 <a href ="{{ route('companydepreciation_edit', ['id' => $list->ID]) }}">
-                                                    {{ $list->CODE }}</a>
+                                                    {{ $list->CODE }}
+                                                </a>
                                             </td>
                                             <td>{{ date('M/d/Y', strtotime($list->DATE)) }}</td>
                                             <td>{{ $list->ACCOUNT_NAME }}</td>

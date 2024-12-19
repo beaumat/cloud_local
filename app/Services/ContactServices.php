@@ -112,11 +112,14 @@ class ContactServices
     {
         $result = Contacts::query()
             ->select([
-                'ID',
-                DB::raw("PRINT_NAME_AS as NAME")
-            ])->whereIn('TYPE', [1, 3])
-            ->where('INACTIVE', '=', '0')
-            ->orderBy('LAST_NAME', 'asc')
+                'contact.ID',
+                DB::raw("contact.PRINT_NAME_AS as NAME"),
+                'contact_type_map.DESCRIPTION as TYPE'
+            ])
+            ->join('contact_type_map', 'contact_type_map.ID', '=', 'contact.TYPE')
+            ->whereIn('contact.TYPE', [1, 3])
+            ->where('contact.INACTIVE', '=', '0')
+            ->orderBy('contact.LAST_NAME', 'asc')
             ->get();
 
         return $result;

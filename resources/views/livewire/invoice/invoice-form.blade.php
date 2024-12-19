@@ -32,11 +32,11 @@
                                                 @if ($PATIENT_PAYMENT_ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                 <div class='col-12'>
                                                     @if ($Modify && $STATUS == 0)
-                                                        <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                        <livewire:select-option-type name="CUSTOMER_ID1" titleName="Customer"
                                                             :options="$contactList" :zero="true" :isDisabled="false"
                                                             wire:model='CUSTOMER_ID' />
                                                     @else
-                                                        <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                        <livewire:select-option-type name="CUSTOMER_ID2" titleName="Customer"
                                                             :options="$contactList" :zero="true" :isDisabled="true"
                                                             wire:model='CUSTOMER_ID' />
                                                     @endif

@@ -31,7 +31,7 @@
                 </a>
             </li>
         @endif
-        @can('company.pull-out.view')
+        {{-- @can('company.pull-out.view')
             <li class="nav-item">
                 <a href="{{ route('companypull_out') }}"
                     class="nav-link {{ request()->is('company/pull-out*') ? 'text-warning font-weight-bold' : '' }}">
@@ -39,7 +39,7 @@
                     <p>Pull Out</p>
                 </a>
             </li>
-        @endcan
+        @endcan --}}
 
         @can('company.general-journal.view')
             <li class="nav-item">
@@ -52,15 +52,15 @@
         @endcan
 
 
-        {{-- @can('company.asset-management.view') --}}
-        <li class="nav-item">
-            <a href="{{ route('companydepreciation') }}"
-                class="nav-link  {{ request()->is('company/depreciation*') ? 'text-warning font-weight-bold' : '' }}">
-                <i class="fas fa-archive nav-icon" aria-hidden="true"></i>
-                <p>Depreciation</p>
-            </a>
-        </li>
-        {{-- @endcan --}}
+        @can('company.depreciation.view')
+            <li class="nav-item">
+                <a href="{{ route('companydepreciation') }}"
+                    class="nav-link  {{ request()->is('company/depreciation*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fas fa-archive nav-icon" aria-hidden="true"></i>
+                    <p>Depreciation</p>
+                </a>
+            </li>
+        @endcan
 
 
 

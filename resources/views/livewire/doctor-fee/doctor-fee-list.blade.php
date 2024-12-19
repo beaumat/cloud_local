@@ -96,7 +96,6 @@
                         <thead>
                             @if ($headerList)
                                 <tr class="bg-sky">
-
                                     <th class="col-3"></th>
                                     @foreach ($headerList as $list)
                                         <th class="text-white">
