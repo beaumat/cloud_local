@@ -29,16 +29,36 @@
                                     <div class="col-md-3">
                                         <button class="btn btn-sm btn-danger" wire:click='Generate()'>Generate</button>
                                     </div>
-                                    <div class="col-md-3 text-md-right">
+                                    {{-- <div class="col-md-3 text-md-right">
                                         <label class="text-sm text-primary">Year </label>
                                     </div>
                                     <div class="col-md-6">
                                         <input type="number" class="form-control form-control-sm" wire:model='YEAR' />
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="row">
+                                    <div class="col-2  text-right">
+                                        <label class="text-sm">From</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <div>
+                                            <input type="date" class="form-control form-control-sm" name="DATE_FROM"
+                                                wire:model='DATE_FROM' />
+                                        </div>
+                                    </div>
+                                    <div class="col-2 text-right">
+                                        <label class="text-sm">To</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <div>
+                                            <input type="date" class="form-control form-control-sm" name="DATE_TO"
+                                                wire:model='DATE_TO' />
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- <div class="row">
                                     <div class="col-12">
                                         @if ($refreshComponent)
                                             <livewire:select-checkbox name="FilterPP1" titleName="Period"
@@ -50,12 +70,8 @@
                                                 wire:model='SelectedPaymentPeriod' />
                                         @endif
                                     </div>
-                                    {{-- <div class="col-1 ">
-                                        <button class="btn btn-primary btn-sm" wire:click='filterPeriod()'>
-                                            Filter
-                                        </button>
-                                    </div> --}}
-                                </div>
+                                
+                                </div> --}}
                             </div>
                             <div class="col-md-2">
                                 <div class="row">
@@ -85,7 +101,7 @@
                             <div class="col-6">
                             </div>
                             <div class="col-6 text-right">
-                                {{-- <button class="btn btn-sm btn-success " wire:click='export()'> Export </button> --}}
+
                             </div>
                         </div>
                     </div>
@@ -98,26 +114,26 @@
                                 <tr class="bg-sky">
                                     <th class="col-3"></th>
                                     @foreach ($headerList as $list)
-                                        <th class="text-white">
+                                        <th class="text-white text-center">
                                             {{ date('M/d', strtotime($list['DATE_FROM'])) }}&nbsp;-&nbsp;{{ date('M/d', strtotime($list['DATE_TO'])) }}
                                         </th>
                                     @endforeach
                                     <th class=""></th>
                                 </tr>
-                                <tr  class="bg-info">
+                                <tr class="bg-info">
 
                                     <th class="col-3"></th>
                                     @foreach ($headerList as $list)
-                                        <th class="">
+                                        <th class=" text-center">
                                             {{ date('m/d/Y', strtotime($list['DATE'])) }}
                                         </th>
                                     @endforeach
                                     <th class=""></th>
                                 </tr>
-                                <tr class="bg-warning">
+                                <tr class="bg-secondary">
                                     <th class="col-3">Nephro Name</th>
                                     @foreach ($headerList as $list)
-                                        <th class="font-weight-bold">
+                                        <th class="font-weight-bold text-center">
                                             {{ $list['RECEIPT_NO'] }}
                                         </th>
                                     @endforeach
@@ -153,7 +169,9 @@
                                 <td class="font-weight-bold text-primary">TOTAL</td>
                                 @for ($n = 1; $n <= $row; $n++)
                                     <td class='text-right font-weight-bold text-primary'>
-                                        {{ number_format($totalList[$n], 2) }}
+                                        @if ( isset($totalList[$n]))
+                                            {{ number_format($totalList[$n], 2) }}
+                                        @endif
                                     </td>
                                 @endfor
                                 <td class="text-right font-weight-bold text-primary">

@@ -41,13 +41,13 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     @if ($Modify && $AMOUNT_APPLIED == 0)
-                                                        <livewire:select-option name="PAY_TO_ID" titleName="Pay To"
-                                                            :options="$contactList" :zero="true" :isDisabled=false
-                                                            wire:model='PAY_TO_ID' />
+                                                        <livewire:select-option-type name="PAY_TO_ID1"
+                                                            titleName="Pay To" :options="$contactList" :zero="true"
+                                                            :isDisabled=false wire:model='PAY_TO_ID' />
                                                     @else
-                                                        <livewire:select-option name="PAY_TO_ID" titleName="Pay To"
-                                                            :options="$contactList" :zero="true" :isDisabled=true
-                                                            wire:model='PAY_TO_ID' />
+                                                        <livewire:select-option-type name="PAY_TO_ID2"
+                                                            titleName="Pay To" :options="$contactList" :zero="true"
+                                                            :isDisabled=true wire:model='PAY_TO_ID' />
                                                     @endif
                                                 </div>
                                                 <div class="col-md-4">
@@ -78,6 +78,7 @@
                                                 </div>
                                                 <div class="col-md-4"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+
                                                     @if ($Modify && $AMOUNT == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
@@ -109,8 +110,8 @@
                                             @if ($Modify)
                                                 <button type="submit" class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
-
+                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}
+                                                </button>
                                                 @if ($ID > 0)
                                                     <button type="button" wire:click='updateCancel'
                                                         class="btn btn-sm btn-danger"><i class="fa fa-ban"
@@ -126,7 +127,6 @@
                                                     wire:confirm="Are you sure you want to post?">
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
-
                                             @endif
                                         @endif
                                         @if ($STATUS == 15)

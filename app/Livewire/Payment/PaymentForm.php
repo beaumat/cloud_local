@@ -166,8 +166,9 @@ class PaymentForm extends Component
         $this->validate(
             [
                 'CUSTOMER_ID'                       => 'required|integer|exists:contact,id',
+                'CODE'                              => $this->ID > 0 ? 'required|unique:payment,code,' . $this->ID  : 'nullable',
                 'PAYMENT_METHOD_ID'                 => 'required|integer|exists:payment_method,id',
-                'DATE'                              => 'required|string|date_format:Y-m-d',
+                'DATE'                              => 'required|date',
                 'LOCATION_ID'                       => 'required|integer|exists:location,id',
                 'AMOUNT'                            => 'required|not_in:0',
                 'ACCOUNTS_RECEIVABLE_ID'            => 'required|integer|exists:account,id',
@@ -176,6 +177,7 @@ class PaymentForm extends Component
             [],
             [
                 'CUSTOMER_ID'                       => 'Customer',
+                'CODE'                              => 'Reference No.',
                 'PAYMENT_METHOD_ID'                 => 'Payment Method',
                 'DATE'                              => 'Date',
                 'LOCATION_ID'                       => 'Location',

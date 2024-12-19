@@ -54,9 +54,8 @@
                                     <tr>
                                         <th>Ref No.</th>
                                         <th>Date</th>
-                                        <th>Contact Name</th>
-
-                                        <th class="col-4">Notes</th>
+                                        <th class="col-2">Contact Name</th>
+                                        <th class="col-3">Notes</th>
                                         <th class="col-1 text-center">Adjustment Entry</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Status</th>

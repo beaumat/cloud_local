@@ -81,7 +81,7 @@ class CreditMemoForm extends Component
 
     public function LoadDropdown()
     {
-        $this->contactList = $this->contactServices->getList(1);
+        $this->contactList = $this->contactServices->getCustoPatientList();
         $this->locationList = $this->locationServices->getList();
         $this->taxList = $this->taxServices->getList();
     }

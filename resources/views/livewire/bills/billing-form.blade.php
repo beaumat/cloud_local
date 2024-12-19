@@ -27,7 +27,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <livewire:select-option name="VENDOR_ID" titleName="Vendor"
+                                            <livewire:select-option-type name="VENDOR_ID" titleName="Vendor"
                                                 :options="$vendorList" :zero="true" isDisabled="{{ !$Modify }}"
                                                 wire:model='VENDOR_ID' />
                                             <div class="row">

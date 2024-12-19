@@ -137,6 +137,7 @@ class GeneralJournalForm extends Component
     public function getModify()
     {
         $this->Modify = true;
+        $this->contactList = $this->contactServices->getListAllType();
     }
     public function save()
     {
@@ -193,11 +194,7 @@ class GeneralJournalForm extends Component
 
     public function updateCancel()
     {
-        $BA = $this->generalJournalServices->get($this->ID);
-        if ($BA) {
-            $this->getInfo($BA);
-        }
-        $this->Modify = false;
+        return Redirect::route('companygeneral_journal_edit', ['id' => $this->ID]);
     }
 
     #[On('clear-alert')]
@@ -210,14 +207,9 @@ class GeneralJournalForm extends Component
     public function posted()
     {
         try {
-
-
             $total_result = $this->generalJournalServices->GetTotal($this->ID);
-
             $total_debit = (float) $total_result['TOTAL_DEBIT'];
-
             $total_credit = (float) $total_result['TOTAL_CREDIT'];
-
             if ($total_debit == 0) {
                 Session()->flash('error', 'No debit entry');
                 return;
@@ -253,10 +245,7 @@ class GeneralJournalForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function print() 
-    {
-        
-    }
+    public function print() {}
     public function OpenJournal()
     {
         $FirstID = $this->generalJournalServices->getFirstDetailsID($this->ID);

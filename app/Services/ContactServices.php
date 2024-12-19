@@ -77,7 +77,7 @@ class ContactServices
     public function getList(int $Type): object
     {
         if ($Type == 3) {
-            return Contacts::query()
+            $result = Contacts::query()
                 ->select([
                     'ID',
                     DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME")
@@ -86,8 +86,20 @@ class ContactServices
                 ->where('INACTIVE', '=', '0')
                 ->orderBy('LAST_NAME', 'asc')
                 ->get();
+
+            return $result;
         }
-        return Contacts::query()->select(['ID', 'NAME'])->where('TYPE', $Type)->where('INACTIVE', '0')->get();
+
+        $result = Contacts::query()
+            ->select([
+                'contact.ID',
+                'contact.NAME'
+            ])
+            ->join('contact_type_map as t', 't.ID', '=', 'contact.TYPE')
+            ->where('contact.TYPE', '=', $Type)
+            ->where('contact.INACTIVE', '=', false)->get();
+
+        return $result;
     }
     public function getVendorDoc()
     {
@@ -99,14 +111,24 @@ class ContactServices
             ])
             ->join('contact_type_map as t', 't.ID', '=', 'contact.TYPE')
             ->whereIn('contact.TYPE', [0, 4])
-            ->where('INACTIVE', '0')
+            ->where('contact.INACTIVE', '=', false)
             ->get();
 
         return $result;
     }
     public function getListAllType()
     {
-        return Contacts::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
+        $result = Contacts::query()
+            ->select([
+                'contact.ID',
+                'contact.NAME',
+                't.DESCRIPTION as TYPE'
+            ])
+            ->join('contact_type_map as t', 't.ID', '=', 'contact.TYPE')
+            ->where('contact.INACTIVE', '=', false)
+            ->get();
+
+        return $result;
     }
     public function getCustoPatientList(): object
     {

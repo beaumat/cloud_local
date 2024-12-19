@@ -29,11 +29,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             @if ($Modify)
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                <livewire:select-option-type name="CUSTOMER_ID1" titleName="Customer"
                                                     :options="$contactList" :zero="true" :isDisabled=false
                                                     wire:model='CUSTOMER_ID' />
                                             @else
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                <livewire:select-option-type name="CUSTOMER_ID2" titleName="Customer"
                                                     :options="$contactList" :zero="true" :isDisabled=true
                                                     wire:model='CUSTOMER_ID' />
                                             @endif
@@ -71,7 +71,8 @@
                                                     @endif
 
                                                 </div>
-                                                <div class="col-md-4" @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="col-md-4"
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($Modify && $AMOUNT == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
@@ -160,7 +161,7 @@
                                             data-toggle="pill" href="#custom-tabs-four-item" role="tab"
                                             aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
                                     </li>
-                              
+
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -176,7 +177,7 @@
                                             </div>
                                         </div>
                                     </div>
-                               
+
                                 </div>
                             </div>
                             <div class="card-footer">

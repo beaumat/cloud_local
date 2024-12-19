@@ -42,11 +42,9 @@ class BillPaymentList extends Component
 
         $data = $this->billPaymentServices->Get($id);
         if ($data) {
-
             if ($data->STATUS == 0) {
-
+                DB::beginTransaction();
                 try {
-                    DB::beginTransaction();
                     $this->billPaymentServices->Delete($id);
                     session()->flash('message', 'Successfully deleted.');
                     DB::commit();
@@ -55,10 +53,8 @@ class BillPaymentList extends Component
                     $errorMessage = 'Error occurred: ' . $e->getMessage();
                     session()->flash('error', $errorMessage);
                 }
-
                 return;
             }
-
             session()->flash('error', 'Invalid. this file cannot be deleted.');
         }
     }
@@ -69,15 +65,8 @@ class BillPaymentList extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function render()
-    {
-        $dataList = $this->billPaymentServices->Search($this->search, $this->locationid, $this->perPage);
-
-        return view('livewire.bill-payments.bill-payment-list', ['dataList' => $dataList]);
-    }
     public function updatedlocationid()
     {
-
         try {
             $this->userServices->SwapLocation($this->locationid);
         } catch (\Exception $e) {
@@ -85,4 +74,10 @@ class BillPaymentList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public function render()
+    {
+        $dataList = $this->billPaymentServices->Search($this->search, $this->locationid, $this->perPage);
+        return view('livewire.bill-payments.bill-payment-list', ['dataList' => $dataList]);
+    }
+   
 }

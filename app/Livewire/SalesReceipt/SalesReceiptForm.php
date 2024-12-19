@@ -80,7 +80,6 @@ class SalesReceiptForm extends Component
     public string $TITLE_REF;
     public string $TITLE_DATE;
 
-
     public function boot(
         SalesReceiptServices $salesReceiptServices,
         LocationServices $locationServices,
@@ -216,7 +215,11 @@ class SalesReceiptForm extends Component
             $this->NOTES = '';
         }
 
-
+        $this->DefaultForm();
+     
+    }
+    public function DefaultForm()
+    {
         $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
@@ -238,7 +241,8 @@ class SalesReceiptForm extends Component
         $this->STATUS_DESCRIPTION = "";
         $this->updatedpaymentmethodid();
         $this->getTax();
-    }    public function getModify()
+    }
+    public function getModify()
     {
         $this->Modify = true;
     }
@@ -255,7 +259,7 @@ class SalesReceiptForm extends Component
                     $list->UNIT_BASE_QUANTITY ?? 1,
                     $list->RATE,
                     $list->RATE_TYPE,
-                    $list->ITEM_AMOUNT,
+                    $list->AMOUNT_APPLIED,
                     $list->TAXABLE,
                     $list->TAXABLE_AMOUNT,
                     $list->TAX_AMOUNT,
@@ -330,11 +334,7 @@ class SalesReceiptForm extends Component
                     $getResult = $this->salesReceiptServices->ReComputed($this->ID);
                     $this->getPosted();
                 }
-
-
                 DB::commit();
-
-
                 if ($this->IS_MODAL) {
                     $data = $this->salesReceiptServices->get($this->ID);
                     if ($data) {
@@ -345,6 +345,7 @@ class SalesReceiptForm extends Component
                     return;
                 }
                 return Redirect::route('customerssales_receipt_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+          
             } else {
 
                 $this->validate(

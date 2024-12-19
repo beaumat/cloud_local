@@ -128,27 +128,30 @@ class BillPaymentForm extends Component
     public function save()
     {
 
+        $this->validate(
+            [
+                'BANK_ACCOUNT_ID'   => 'required|not_in:0|exists:account,id',
+                'PAY_TO_ID'         => 'required|not_in:0|exists:contact,id',
+                'CODE'              =>  $this->ID > 0 ? 'required|max:20|unique:bill_payment,code,' . $this->ID  : 'nullable',
+                'DATE'              => 'required',
+                'LOCATION_ID'       => 'required',
+                'AMOUNT'            => ''
+
+            ],
+            [],
+            [
+                'PAY_TO_ID'         => 'Pay To',
+                'BANK_ACCOUNT_ID'   => 'Bank Account',
+                'DATE'              => 'Date',
+                'LOCATION_ID'       => 'Location',
+                'CODE'              => 'Reference No.',
+                'AMOUNT'            => 'Amount'
+            ]
+        );
 
         try {
             if ($this->ID == 0) {
-                $this->validate(
-                    [
-                        'BANK_ACCOUNT_ID'   => 'required|not_in:0|exists:account,id',
-                        'PAY_TO_ID'         => 'required|not_in:0|exists:contact,id',
-                        'AMOUNT'            => 'required|not_in:0',
-                        'DATE'              => 'required',
-                        'LOCATION_ID'       => 'required'
-
-                    ],
-                    [],
-                    [
-                        'PAY_TO_ID'         => 'Pay To',
-                        'BANK_ACCOUNT_ID'   => 'Bank Account',
-                        'DATE'              => 'Date',
-                        'LOCATION_ID'       => 'Location',
-                        'AMOUNT'            => 'Amount'
-                    ]
-                );
+                
 
                 DB::beginTransaction();
                 $this->ID = $this->billPaymentServices->Store(
@@ -224,11 +227,9 @@ class BillPaymentForm extends Component
                         $this->LOCATION_ID,
                         $this->AMOUNT,
                         $this->NOTES
-
                     );
 
                     DB::commit();
-
                     session()->flash('message', 'Successfully updated');
                 }
             }

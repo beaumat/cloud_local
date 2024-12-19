@@ -51,19 +51,7 @@
                         @endif
 
                     </td>
-                    {{-- <td>
-                        @if ($editId === $list->ID)
-                            <select wire:model='editNotes' name="editNotes"
-                                class="text-sm form-control form-control-sm">
-                                <option value="0"></option>
-                                @foreach ($classList as $listitem)
-                                    <option value="{{ $listitem->ID }}">{{ $listitem->NAME }}</option>
-                                @endforeach
-                            </select>
-                        @else
-                            {{ $list->CLASS_NAME }}
-                        @endif
-                    </td> --}}
+          
                     @if ($STATUS == 0 || $STATUS == 16)
                         <td class="text-center">
                             @if ($editId === $list->ID)
@@ -116,7 +104,7 @@
                         <td>
                             @if ($saveSuccess)
                                 @if (!$codeBase)
-                                    <livewire:select-option name="ACCOUNT_ID3" titleName="Account Description"
+                                    <livewire:select-option-type name="ACCOUNT_ID3" titleName="Account Description"
                                         :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID'
                                         :isDisabled=false :vertical="false" :withLabel="false" />
                                 @else
@@ -124,7 +112,7 @@
                                 @endif
                             @else
                                 @if (!$codeBase)
-                                    <livewire:select-option name="ACCOUNT_ID4" titleName="Account Description"
+                                    <livewire:select-option-type name="ACCOUNT_ID4" titleName="Account Description"
                                         :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID'
                                         :isDisabled=false :vertical="false" :withLabel="false" />
                                 @else
@@ -134,34 +122,20 @@
                         </td>
 
                         <td>
-                            <input step="0.01" type="number" class="form-control form-control-sm mt-1 text-right" name="DEBIT"
+                            <input step="0.01" type="number" class="form-control form-control-sm  text-right" name="DEBIT"
                                 wire:model='DEBIT' />
                         </td>
                         <td>
-                            <input step="0.01" type="number" class="form-control form-control-sm mt-1 text-right" name="CREDIT"
+                            <input step="0.01" type="number" class="form-control form-control-sm  text-right" name="CREDIT"
                                 wire:model='CREDIT' />
                         </td>
                         <td class="text-left">
-                            <input type="text" class="form-control form-control-sm mt-1" wire:model='NOTES'
+                            <input type="text" class="form-control form-control-sm " wire:model='NOTES'
                                 name="NOTES" />
                         </td>
-                        {{-- <td>
-                            @if ($saveSuccess)
-                                @if (!$codeBase)
-                                    <livewire:select-option name="CLASS_ID1" titleName="" :options="$classList"
-                                        :zero="true" wire:model.live='CLASS_ID' :vertical="false"
-                                        :isDisabled=false :withLabel="false" />
-                                @endif
-                            @else
-                                @if (!$codeBase)
-                                    <livewire:select-option name="CLASS_ID2" titleName="" :options="$classList"
-                                        :zero="true" wire:model.live='CLASS_ID' :vertical="false"
-                                        :isDisabled=false :withLabel="false" />
-                                @endif
-                            @endif
-                        </td> --}}
+               
                         <td>
-                            <div class="mt-1">
+                            <div class="">
                                 <button type="submit" wire:loading.attr='hidden'
                                     @if ($ACCOUNT_ID == 0) disabled @endif
                                     class="text-white btn bg-sky btn-sm w-100">

@@ -30,11 +30,11 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             @if ($Modify)
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                <livewire:select-option-type name="CUSTOMER_ID1" titleName="Customer"
                                                     :options="$contactList" :zero="true" :isDisabled=false
                                                     wire:model='CUSTOMER_ID' />
                                             @else
-                                                <livewire:select-option name="CUSTOMER_ID" titleName="Customer"
+                                                <livewire:select-option-type name="CUSTOMER_ID2" titleName="Customer"
                                                     :options="$contactList" :zero="true" :isDisabled=true
                                                     wire:model='CUSTOMER_ID' />
                                             @endif

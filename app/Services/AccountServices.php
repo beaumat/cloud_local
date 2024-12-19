@@ -6,7 +6,8 @@ use App\Models\Accounts;
 use App\Models\AccountType;
 
 class AccountServices
-{
+{   
+    public int $UNDEPOSITED_ACCOUNT_ID = 5;
     private $object;
     public function __construct(ObjectServices $objectService)
     {
@@ -25,12 +26,12 @@ class AccountServices
             ->orderBy('NAME', 'asc')
             ->get();
     }
-    public int $UNDEPOSITED_ACCOUNT_ID = 5;
+   
     public function getBankAccountDeposit()
     {
         return Accounts::whereIn('TYPE', ['0', '6'])
             ->where('INACTIVE', '=', '0')
-            ->orWhere('ID','=',$this->UNDEPOSITED_ACCOUNT_ID)
+            ->orWhere('ID', '=', $this->UNDEPOSITED_ACCOUNT_ID)
             ->orderBy('NAME', 'asc')
             ->get();
     }
@@ -100,7 +101,12 @@ class AccountServices
         }
 
         $result = Accounts::query()
-            ->select(['ID', 'NAME as DESCRIPTION'])
+            ->select([
+                'account.ID',
+                'account.NAME as DESCRIPTION',
+                't.DESCRIPTION as TYPE'
+            ])
+            ->join('account_type_map as t', 't.ID', '=', 'account.TYPE')
             ->where('INACTIVE', '=', '0')
             ->orderBy('NAME', 'asc')
             ->get();

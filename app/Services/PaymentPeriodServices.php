@@ -22,6 +22,24 @@ class PaymentPeriodServices
 
         return $result;
     }
+    public function GetData(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO): object
+    {
+        $data = PaymentPeriod::query()
+            ->select([
+                'ID',
+                'RECEIPT_NO',
+                'DATE_FROM',
+                'DATE_TO',
+                'DATE'
+            ])
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('DATE_FROM', '>=', $DATE_FROM)
+            ->where('DATE_TO', '<=', $DATE_TO)
+            ->orderBy('ID', 'asc')
+            ->get();
+
+        return $data;
+    }
     public function GetYear(int $YEAR, int $LOCATION_ID, array $PAYMENT_PERIOD = []): object
     {
         $data = PaymentPeriod::query()
@@ -120,8 +138,8 @@ class PaymentPeriodServices
         $result = PaymentPeriod::query()
             ->select([
                 'ID',
-                DB::raw( "CONCAT('#',RECEIPT_NO,' Date:', DATE_FORMAT(DATE,'%b/%d/%Y')  ,'  period:[',DATE_FORMAT(DATE_FROM,'%b %d, %Y'),'-',DATE_FORMAT(DATE_TO,'%b %d, %Y'),'] ' ) as DESCRIPTION"),
-       
+                DB::raw("CONCAT('#',RECEIPT_NO,' Date:', DATE_FORMAT(DATE,'%b/%d/%Y')  ,'  period:[',DATE_FORMAT(DATE_FROM,'%b %d, %Y'),'-',DATE_FORMAT(DATE_TO,'%b %d, %Y'),'] ' ) as DESCRIPTION"),
+
             ])
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->orderBy('ID', 'desc')
@@ -148,6 +166,30 @@ class PaymentPeriodServices
             ->where('payment_period.LOCATION_ID', '=', $LOCATION_ID)
             ->whereYear('payment_period.DATE_FROM', '=', $YEAR)
             ->whereYear('payment_period.DATE_TO', '=', $YEAR)
+            ->groupBy('c.ID', 'c.NAME')
+            ->get();
+
+        return $result;
+    }
+    public function getDoctorByDatePeriod(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)
+    {
+        $result = PaymentPeriod::query()
+            ->select(
+                [
+                    'c.ID as DOCTOR_ID',
+                    'c.NAME as DOCTOR_NAME'
+                ]
+            )
+            ->join('payment as p', 'p.PAYMENT_PERIOD_ID', '=', 'payment_period.ID')
+            ->join('payment_invoices as pn', 'pn.PAYMENT_ID', '=', 'p.ID')
+            ->join('invoice as i', 'i.ID', '=', 'pn.INVOICE_ID')
+            ->join('philhealth as ph', 'ph.INVOICE_ID', '=', 'i.ID')
+            ->join('philhealth_prof_fee as pf', 'pf.PHIC_ID', '=', 'ph.ID')
+            ->join('bill as b', 'b.ID', '=', 'pf.BILL_ID')
+            ->join('contact as c', 'c.ID', '=', 'b.VENDOR_ID')
+            ->where('payment_period.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('payment_period.DATE_FROM', '>=', $DATE_FROM)
+            ->where('payment_period.DATE_TO', '<=', $DATE_TO)
             ->groupBy('c.ID', 'c.NAME')
             ->get();
 

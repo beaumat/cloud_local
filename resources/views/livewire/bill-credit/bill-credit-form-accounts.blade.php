@@ -180,7 +180,7 @@
 
     </table>
     @if ($STATUS == $openStatus)
-        <livewire:custom-check-box name="codeBaseAcct" titleName="Use choose account code"
-            wire:model.live='codeBase' />
+        <livewire:custom-check-box name="codeBaseAcct" titleName="Use choose account code" 
+            wire:model.live='codeBase' isDisabled=false />
     @endif
 </div>

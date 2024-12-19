@@ -167,7 +167,7 @@
                             <label class="mt-2">{{ number_format($AMOUNT, 2) }}</label>
                         </td>
                         <td class="text-center">
-                            <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
+                            <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable" 
                                 @if ($ITEM_ID == 0) disabled @endif />
                         </td>
                         <td>
@@ -192,6 +192,6 @@
 
     </table>
     @if ($STATUS == $openStatus)
-        <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase' />
+        <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase' isDisabled=false />
     @endif
 </div>

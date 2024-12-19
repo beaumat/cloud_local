@@ -29,7 +29,6 @@
                         @else
                             {{ $list->ACCOUNT_NAME }}
                         @endif
-
                     </td>
                     <td class="text-right">
                         @if ($editItemId === $list->ID)

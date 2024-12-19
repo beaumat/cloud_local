@@ -30,6 +30,10 @@ class DoctorFeeList extends Component
     public $headerList = [];
     public $totalList = [];
     private $dateServices;
+
+
+    public string $DATE_FROM;
+    public string $DATE_TO;
     public int $row;
     public function boot(DoctorPFServices $doctorPFServices, LocationServices $locationServices, UserServices $userServices, PaymentPeriodServices $paymentPeriodServices, DateServices $dateServices)
     {
@@ -45,6 +49,8 @@ class DoctorFeeList extends Component
         $this->YEAR  = $this->dateServices->NowYear();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
+        $this->DATE_TO = $this->dateServices->NowDate();
+        $this->DATE_FROM = $this->dateServices->GetFirstDay_Year($this->DATE_TO);
     }
     private function getPeriodList()
     {
@@ -88,8 +94,9 @@ class DoctorFeeList extends Component
 
     public function filterPeriod()
     {
+        
+        $dataHeader  = $this->paymentPeriodServices->GetData($this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
 
-        $dataHeader  = $this->paymentPeriodServices->GetYear($this->YEAR, $this->LOCATION_ID, $this->SelectedPaymentPeriod);
         $this->headerList = [];
         $this->doctorList = [];
         $this->totalList =  [];
@@ -107,7 +114,7 @@ class DoctorFeeList extends Component
             $this->headerList[] = $dataRow;
         }
 
-        $dataDoctorActive = $this->paymentPeriodServices->getDoctorByYearPeriod($this->LOCATION_ID, $this->YEAR);
+        $dataDoctorActive = $this->paymentPeriodServices->getDoctorByDatePeriod($this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
 
         $this->totalList = [];
         $daTotal = [];
@@ -140,9 +147,9 @@ class DoctorFeeList extends Component
             $row++;
             $this->totalList[$row] =     $daTotal[$row];
         }
-
- 
     }
+
+
     public function render()
     {
         return view('livewire.doctor-fee.doctor-fee-list');
