@@ -4,7 +4,8 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('reportspatient_sales_report') }}"> Doctor Professional Fee
+                        <a href="{{ route('reportspatient_sales_report') }}">
+                            Doctor Professional Fee
                         </a>
                     </h5>
                 </div>
@@ -169,7 +170,7 @@
                                 <td class="font-weight-bold text-primary">TOTAL</td>
                                 @for ($n = 1; $n <= $row; $n++)
                                     <td class='text-right font-weight-bold text-primary'>
-                                        @if ( isset($totalList[$n]))
+                                        @if (isset($totalList[$n]))
                                             {{ number_format($totalList[$n], 2) }}
                                         @endif
                                     </td>

@@ -17,6 +17,7 @@ class PatientPaymentServices
     public int $GL_ITEM = 242;
     public int $PHILHEALTH_ITEM = 2;
     public int $PHILHEALTH_METHOD_ID = 91;
+    public int $SALES_ON_CASH = 37;
     private $object;
     private $dateServices;
     private $systemSettingServices;

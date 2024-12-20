@@ -216,7 +216,6 @@ class SalesReceiptForm extends Component
         }
 
         $this->DefaultForm();
-     
     }
     public function DefaultForm()
     {
@@ -263,9 +262,9 @@ class SalesReceiptForm extends Component
                     $list->TAXABLE,
                     $list->TAXABLE_AMOUNT,
                     $list->TAX_AMOUNT,
-                    $list->COGS_ACCOUNT_ID ?? 0,
-                    $list->ASSET_ACCOUNT_ID ?? 0,
-                    $list->INCOME_ACCOUNT_ID ?? 0,
+                    0,
+                    0,
+                    $this->patientPaymentServices->SALES_ON_CASH,
                     0,
                     0,
                     0,
@@ -284,7 +283,7 @@ class SalesReceiptForm extends Component
                     [
                         'CUSTOMER_ID'                           => 'required|not_in:0|exists:contact,id',
                         'OUTPUT_TAX_ID'                         => 'required|not_in:0',
-                        'DATE'                                  => 'required|date_format:Y-m-d',
+                        'DATE'                                  => 'required|date|date_format:Y-m-d',
                         'LOCATION_ID'                           => 'required|not_in:0|exists:location,id',
                         'PAYMENT_METHOD_ID'                     => 'required|exists:payment_method,id',
                         'UNDEPOSITED_FUNDS_ACCOUNT_ID'          => 'required|exists:account,id',
@@ -345,7 +344,6 @@ class SalesReceiptForm extends Component
                     return;
                 }
                 return Redirect::route('customerssales_receipt_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-          
             } else {
 
                 $this->validate(
