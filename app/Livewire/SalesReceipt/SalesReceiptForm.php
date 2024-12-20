@@ -339,7 +339,6 @@ class SalesReceiptForm extends Component
                     if ($data) {
                         $this->getInfo($data);
                     }
-
                     $this->Modify = false;
                     return;
                 }
@@ -371,9 +370,7 @@ class SalesReceiptForm extends Component
                 );
 
                 DB::beginTransaction();
-
                 $data =  $this->salesReceiptServices->Get($this->ID);
-
                 if ($data) {
                     if ($this->STATUS == 16) {
                         $JNO = $this->accountJournalServices->getRecord($this->salesReceiptServices->object_type_sales_receipt, $this->ID);

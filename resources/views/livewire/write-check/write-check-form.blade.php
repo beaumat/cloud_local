@@ -41,11 +41,11 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     @if ($Modify && $AMOUNT_APPLIED == 0)
-                                                        <livewire:select-option name="PAY_TO_ID" titleName="Pay To"
+                                                        <livewire:select-option-type name="PAY_TO_ID" titleName="Pay To"
                                                             :options="$contactList" :zero="true" :isDisabled=false
                                                             wire:model='PAY_TO_ID' />
                                                     @else
-                                                        <livewire:select-option name="PAY_TO_ID" titleName="Pay To"
+                                                        <livewire:select-option-type name="PAY_TO_ID" titleName="Pay To"
                                                             :options="$contactList" :zero="true" :isDisabled=true
                                                             wire:model='PAY_TO_ID' />
                                                     @endif
