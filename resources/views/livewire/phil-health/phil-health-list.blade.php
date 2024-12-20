@@ -24,14 +24,33 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-9">
+                                        <div class="col-md-6">
                                             <div class="mt-0">
                                                 <label class="text-sm">Search:</label>
-                                                <input type="text" wire:model.live.debounce.150ms='search'
+                                                <input type="text" wire:model.live.debounce='search'
                                                     class="w-100 form-control form-control-sm" placeholder="Search" />
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="mt-0">
+                                                        <label class="text-sm">From :</label>
+                                                        <input type="date" wire:model.live.debounce.150ms='ADMITTED'
+                                                            class="w-100 form-control form-control-sm" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="mt-0">
+                                                        <label class="text-sm">To :</label>
+                                                        <input type="date"
+                                                            wire:model.live.debounce='DISCHARGED'
+                                                            class="w-100 form-control form-control-sm" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
                                                 <select
@@ -66,13 +85,8 @@
                                         <th class="text-right">Paid Amt.</th>
                                         <th>Status</th>
                                         <th>Location</th>
-                                        <th class="text-center col-2 bg-success">
-                                            @can('patient.philhealth.create')
-                                                <a href="{{ route('patientsphic_create') }}"
-                                                    class="text-white btn btn-xs w-100">
-                                                    <i class="fas fa-plus"></i> New
-                                                </a>
-                                            @endcan
+                                        <th class="text-center col-2">
+                                            Action
                                         </th>
                                     </tr>
                                 </thead>
@@ -93,7 +107,7 @@
                                                 @endif
                                             </td>
                                             <td class="text-left">
-                                                {{ $list->AR_NO }}  
+                                                {{ $list->AR_NO }}
                                             </td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td class="text-center">

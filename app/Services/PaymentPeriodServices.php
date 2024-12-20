@@ -22,7 +22,7 @@ class PaymentPeriodServices
 
         return $result;
     }
-    public function GetData(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO): object
+    public function GetData(int $LOCATION_ID,  $DATE_FROM,  $DATE_TO): object
     {
         $data = PaymentPeriod::query()
             ->select([
@@ -33,8 +33,12 @@ class PaymentPeriodServices
                 'DATE'
             ])
             ->where('LOCATION_ID', '=', $LOCATION_ID)
-            ->where('DATE_FROM', '>=', $DATE_FROM)
-            ->where('DATE_TO', '<=', $DATE_TO)
+            ->when($DATE_FROM, function ($query) use (&$DATE_FROM) {
+                $query->where('DATE_FROM', '>=', $DATE_FROM);
+            })
+            ->when($DATE_TO, function ($query) use (&$DATE_TO) {
+                $query->where('DATE_TO', '<=', $DATE_TO);
+            })
             ->orderBy('ID', 'asc')
             ->get();
 
@@ -171,7 +175,7 @@ class PaymentPeriodServices
 
         return $result;
     }
-    public function getDoctorByDatePeriod(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)
+    public function getDoctorByDatePeriod(int $LOCATION_ID,  $DATE_FROM,  $DATE_TO): object
     {
         $result = PaymentPeriod::query()
             ->select(
@@ -188,8 +192,12 @@ class PaymentPeriodServices
             ->join('bill as b', 'b.ID', '=', 'pf.BILL_ID')
             ->join('contact as c', 'c.ID', '=', 'b.VENDOR_ID')
             ->where('payment_period.LOCATION_ID', '=', $LOCATION_ID)
-            ->where('payment_period.DATE_FROM', '>=', $DATE_FROM)
-            ->where('payment_period.DATE_TO', '<=', $DATE_TO)
+            ->when($DATE_FROM, function ($query) use (&$DATE_FROM) {
+                $query->where('payment_period.DATE_FROM', '>=', $DATE_FROM);
+            })
+            ->when($DATE_TO, function ($query) use (&$DATE_TO) {
+                $query->where('payment_period.DATE_TO', '<=', $DATE_TO);
+            })
             ->groupBy('c.ID', 'c.NAME')
             ->get();
 

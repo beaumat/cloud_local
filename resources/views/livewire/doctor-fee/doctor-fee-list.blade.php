@@ -59,20 +59,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="row">
-                                    <div class="col-12">
-                                        @if ($refreshComponent)
-                                            <livewire:select-checkbox name="FilterPP1" titleName="Period"
-                                                :options="$filterPaymentPeriod" :zero="true" :isDisabled=false :vertical=true
-                                                wire:model='SelectedPaymentPeriod' />
-                                        @else
-                                            <livewire:select-checkbox name="FilterPP2" titleName="Period"
-                                                :options="$filterPaymentPeriod" :zero="true" :isDisabled=false :vertical=true
-                                                wire:model='SelectedPaymentPeriod' />
-                                        @endif
-                                    </div>
-                                
-                                </div> --}}
+
                             </div>
                             <div class="col-md-2">
                                 <div class="row">
@@ -97,23 +84,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-6">
-                            </div>
-                            <div class="col-6 text-right">
 
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="col-12" style="max-height: 80vh; overflow-y: auto;">
-
                     <table class="table table-sm table-bordered table-hover">
                         <thead>
                             @if ($headerList)
                                 <tr class="bg-sky">
-                                    <th class="col-3"></th>
+                                    <th class="col-3">Date Period </th>
                                     @foreach ($headerList as $list)
                                         <th class="text-white text-center">
                                             {{ date('M/d', strtotime($list['DATE_FROM'])) }}&nbsp;-&nbsp;{{ date('M/d', strtotime($list['DATE_TO'])) }}
@@ -123,7 +101,7 @@
                                 </tr>
                                 <tr class="bg-info">
 
-                                    <th class="col-3"></th>
+                                    <th class="col-3">Date O.R</th>
                                     @foreach ($headerList as $list)
                                         <th class=" text-center">
                                             {{ date('m/d/Y', strtotime($list['DATE'])) }}
@@ -132,7 +110,7 @@
                                     <th class=""></th>
                                 </tr>
                                 <tr class="bg-secondary">
-                                    <th class="col-3">Nephro Name</th>
+                                    <th class="col-3">O.R Number</th>
                                     @foreach ($headerList as $list)
                                         <th class="font-weight-bold text-center">
                                             {{ $list['RECEIPT_NO'] }}

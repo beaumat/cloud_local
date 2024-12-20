@@ -75,7 +75,6 @@ class CashPayment extends Component
         if ($data) {
             DB::beginTransaction();
             try {
-
                 $PATIENT_PAYMENT_ID =  $this->patientPaymentServices->Store("", $this->userServices->getTransactionDateDefault(), $data->PATIENT_ID, $data->LOCATION_ID, $this->AMOUNT, $this->AMOUNT, 1, "", null, $this->RECEIPT_REF_NO, null, "", 1, 0, 0, 4);
                 $PC_ID    = (int) $this->patientPaymentServices->PaymentChargeStore($PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $this->AMOUNT, 0, 4);
                 $this->patientPaymentServices->PaymentChargesUpdate($PC_ID, $PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $this->AMOUNT);

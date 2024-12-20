@@ -8,11 +8,12 @@ use App\Services\LocationServices;
 use App\Services\PaymentPeriodServices;
 use App\Services\UserServices;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Doctor Professional Fee')]
 class DoctorFeeList extends Component
 {
-
 
     public int $LOCATION_ID;
     public int $YEAR;
@@ -32,8 +33,8 @@ class DoctorFeeList extends Component
     private $dateServices;
 
 
-    public string $DATE_FROM;
-    public string $DATE_TO;
+    public $DATE_FROM;
+    public $DATE_TO;
     public int $row;
     public function boot(DoctorPFServices $doctorPFServices, LocationServices $locationServices, UserServices $userServices, PaymentPeriodServices $paymentPeriodServices, DateServices $dateServices)
     {
@@ -94,7 +95,7 @@ class DoctorFeeList extends Component
 
     public function filterPeriod()
     {
-        
+
         $dataHeader  = $this->paymentPeriodServices->GetData($this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
 
         $this->headerList = [];

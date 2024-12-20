@@ -19,6 +19,8 @@ class PhilHealthList extends Component
     public int $perPage = 20;
     public int $locationid;
     public $locationList = [];
+    public  $ADMITTED;
+    public $DISCHARGED;
     private $philHealthServices;
     private $locationServices;
     private $userServices;
@@ -70,14 +72,14 @@ class PhilHealthList extends Component
         $data = [
             'PHILHEALTH_ID' => $ID
         ];
-        
+
         $this->dispatch('philhealth-print-data', result: $data);
     }
 
     #[On('reload-list')]
     public function render()
     {
-        $dataList = $this->philHealthServices->Search($this->search, $this->locationid, $this->perPage);
+        $dataList = $this->philHealthServices->Search($this->search, $this->locationid, $this->perPage, $this->ADMITTED, $this->DISCHARGED);
         return view('livewire.phil-health.phil-health-list', ['dataList' => $dataList]);
     }
 }

@@ -540,7 +540,7 @@ class PhilHealthServices
         PhilHealthProfFee::where('PHIC_ID', $ID)->delete();
         PhilHealth::where('ID', $ID)->delete();
     }
-    public function Search($search, int $locationId, int $perPage)
+    public function Search($search, int $locationId, int $perPage, $ADMITTED, $DISCHARGED)
     {
         $result = PhilHealth::query()
             ->select([
@@ -578,6 +578,12 @@ class PhilHealthServices
                         ->orWhere('c.FIRST_NAME', 'like', '%' . $search . '%')
                         ->orWhere('philhealth.AR_NO', 'like', '%' . $search . '%');
                 });
+            })
+            ->when($ADMITTED, function($query) use(&$ADMITTED) {
+                $query->where('philhealth.DATE_ADMITTED','>=', $ADMITTED);
+            })
+            ->when($DISCHARGED, function($query) use(&$DISCHARGED) {
+                $query->where('philhealth.DATE_DISCHARGED','<=', $DISCHARGED);
             })
             ->where('IS_TEMP', '0')
             ->orderBy('philhealth.ID', 'desc')
