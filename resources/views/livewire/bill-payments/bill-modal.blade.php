@@ -48,8 +48,20 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success btn-sm" wire:click="save">Add</button>
-                        <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">Close</button>
+                        <div class="container-fluid">
+                            <div class='row'>
+                                <div class="col-6">
+                                    {{-- <label class="text-sm text-primary"> Payment Applied same as Deposit Amount</label>
+                                    <input type="checkbox" name="SAME_AMOUNT" class="text-lg"
+                                        wire:model='SAME_AMOUNT' /> --}}
+                                </div>
+                                <div class="col-6 text-right">
+                                    <button type="button" class="btn btn-success btn-sm" wire:click="save">Add</button>
+                                    <button type="button" class="btn btn-secondary btn-sm"
+                                        wire:click="closeModal">Close</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

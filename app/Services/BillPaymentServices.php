@@ -75,6 +75,14 @@ class BillPaymentServices
                 'STATUS_DATE'   => $this->dateServices->NowDate()
             ]);
     }
+    public function UpdateAmount(int $ID, float $AMOUNT)
+    {
+        Check::where('ID', $ID)
+            ->where('TYPE', '=', $this->CHECK_TYPE_ID)
+            ->update([
+                'AMOUNT'    => $AMOUNT
+            ]);
+    }
     public function Update(
         int $ID,
         string $CODE,
@@ -111,7 +119,7 @@ class BillPaymentServices
     {
         CheckBills::where('CHECK_ID', '=', $ID)
             ->delete();
-            
+
         Check::where('ID', $ID)
             ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->delete();

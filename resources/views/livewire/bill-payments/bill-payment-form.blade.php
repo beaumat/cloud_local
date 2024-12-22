@@ -140,7 +140,7 @@
                                         @endif
                                     </div>
                                     <div class="text-right col-6 col-md-6">
-                                        @if ($STATUS != 16)
+                                        @if ($STATUS == 15)
                                             @if ($ID > 0)
                                                 @can('vendor.bill-payment.print')
                                                     <button type="button" wire:click='OpenJournal()'
@@ -196,7 +196,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED])
+                                            @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'SAME_AMOUNT' => $SAME_AMOUNT])
                                         </div>
                                     </div>
                                 </div>

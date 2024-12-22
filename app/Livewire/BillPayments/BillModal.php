@@ -21,6 +21,9 @@ class BillModal extends Component
     public float $AMOUNT;
     #[Reactive]
     public float $AMOUNT_APPLIED;
+    #[Reactive]
+    public bool $SAME_AMOUNT;
+
     public $invoiceList = [];
     public $selectedCharges = [];
     public $paymentAmounts = [];
@@ -42,6 +45,8 @@ class BillModal extends Component
         $this->AMOUNT = $AMOUNT;
         $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
     }
+
+
     public function updatedSelectedCharges(bool $value, $id)
     {
         if (!$value) {
@@ -49,24 +54,35 @@ class BillModal extends Component
             return;
         }
 
-        $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
-        $CollectAmount = 0;
-        foreach ($this->selectedCharges as $chargeId => $isSelected) {
-            if ($isSelected) {
-                try {
-                    $CollectAmount = $CollectAmount + $this->paymentAmounts[$chargeId] ?? 0;
-                } catch (\Throwable $th) {
-                    $CollectAmount = $CollectAmount + 0;
+        if (!$this->SAME_AMOUNT) {
+            $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
+
+            $CollectAmount = 0;
+            foreach ($this->selectedCharges as $chargeId => $isSelected) {
+                if ($isSelected) {
+                    try {
+                        $CollectAmount = $CollectAmount + $this->paymentAmounts[$chargeId] ?? 0;
+                    } catch (\Throwable $th) {
+                        $CollectAmount = $CollectAmount + 0;
+                    }
                 }
             }
-        }
-        $newPay = $CurrentAmount - $CollectAmount;
-        $balance = $this->billingServices->getBalance($id);
-        if ($balance <= $newPay) {
-            $mustPay = $balance;
+
+
+            $newPay = $CurrentAmount - $CollectAmount;
+            $balance = $this->billingServices->getBalance($id);
+
+            if ($balance <= $newPay) {
+                $mustPay = $balance;
+            } else {
+                $mustPay = $newPay;
+            }
         } else {
-            $mustPay = $newPay;
+            $mustPay = $this->billingServices->getBalance($id);
         }
+
+
+
         $this->paymentAmounts[$id] = $mustPay;
     }
     public function openModal()
@@ -81,6 +97,7 @@ class BillModal extends Component
     {
         $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
         $CollectAmount = 0;
+
         foreach ($this->selectedCharges as $chargeId => $isSelected) {
             if ($isSelected) {
                 try {
@@ -91,16 +108,20 @@ class BillModal extends Component
             }
         }
 
+
+        if (!$this->SAME_AMOUNT) {
+            if ($CollectAmount > $CurrentAmount) {
+                session()->flash('error', 'Invalid amount');
+                return;
+            }
+        }
+
         if ($CollectAmount == 0) {
             session()->flash('error', 'bill payment selected not found.');
             return;
         }
 
-        if ($CollectAmount > $CurrentAmount) {
-            session()->flash('error', 'Invalid amount');
-            return;
-        }
-        
+
         foreach ($this->selectedCharges as $chargeId => $isSelected) {
             if ($isSelected) {
                 try {
@@ -108,6 +129,7 @@ class BillModal extends Component
                 } catch (\Throwable $th) {
                     $chargeAmount = 0;
                 }
+
                 if ($chargeAmount) {
                     $ID = (int) $this->billPaymentServices->BillPaymentBillsExist($this->CHECK_ID, $chargeId); // if already added
                     if ($ID > 0) {
@@ -121,16 +143,22 @@ class BillModal extends Component
                     $this->billingServices->UpdateBalance($chargeId);
                     $this->dispatch('reset-payment');
                 }
-
             }
         }
 
         $this->showModal = false;
         $this->selectedCharges = [];
         $this->paymentAmounts = [];
+
+        $this->SetAmount();
+
         $this->dispatch('reload_bill_list');
     }
-
+    private function SetAmount()
+    {
+        $AMOUNT = (float) $this->billPaymentServices->getTotalApplied($this->CHECK_ID);
+        $this->billPaymentServices->UpdateAmount($this->CHECK_ID, $AMOUNT);
+    }
     #[On('clear-alert')]
     public function clearAlert()
     {

@@ -33,6 +33,7 @@ class BillPaymentForm extends Component
     public int $STATUS = 0;
     public string $STATUS_DESCRIPTION;
     public int $ACCOUNTS_PAYABLE_ID = 21;
+    public bool $SAME_AMOUNT  = true;
     public $locationList = [];
     public bool $Modify;
     public $contactList = [];
@@ -67,6 +68,7 @@ class BillPaymentForm extends Component
     public function ResetPaymentApplied()
     {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->UpdateBillPaymentApplied($this->ID);
+        $this->getNewAmount();
     }
     private function LoadDropDown()
     {
@@ -151,7 +153,7 @@ class BillPaymentForm extends Component
 
         try {
             if ($this->ID == 0) {
-                
+
 
                 DB::beginTransaction();
                 $this->ID = $this->billPaymentServices->Store(
@@ -333,6 +335,14 @@ class BillPaymentForm extends Component
         if ($JOURNAL_NO > 0) {
             $data = ['JOURNAL_NO' => $JOURNAL_NO];
             $this->dispatch('open-journal', result: $data);
+        }
+    }
+    #[On('reload_bill_list')]
+    public function getNewAmount()
+    {
+        $data = $this->billPaymentServices->Get($this->ID);
+        if ($data) {
+            $this->AMOUNT = $data->AMOUNT ?? 0;
         }
     }
     public function render()

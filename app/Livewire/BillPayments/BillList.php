@@ -27,6 +27,9 @@ class BillList extends Component
     public float $AMOUNT_APPLIED;
     #[Reactive]
     public int $STATUS;
+    #[Reactive]
+     public bool $SAME_AMOUNT;
+
     public float $prevAmount;
     public float $orgAmount;
     public $editPaymentId = null;
@@ -110,12 +113,21 @@ class BillList extends Component
             $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
             $this->billingServices->UpdateBalance($BILL_ID);
             DB::commit();
+
+
+            $this->SetAmount();
             $this->dispatch('reset-payment');
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+
+    private function SetAmount()
+    {
+        $AMOUNT = (float) $this->billPaymentServices->getTotalApplied($this->CHECK_ID);
+        $this->billPaymentServices->UpdateAmount($this->CHECK_ID, $AMOUNT);
     }
     public function mount(int $CHECK_ID, int $VENDOR_ID, int $LOCATION_ID, float $AMOUNT, float $AMOUNT_APPLIED)
     {

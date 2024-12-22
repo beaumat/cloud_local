@@ -6,8 +6,11 @@ use App\Services\BillPaymentServices;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+
+#[Title('Bill Payments')]
 class BillPaymentPrint extends Component
 {
     public int $ID;
@@ -20,6 +23,7 @@ class BillPaymentPrint extends Component
     public string $NOTES;
     public int $ACCOUNTS_PAYABLE_ID;
 
+    public int $CONTACT_TYPE;
     public string $CONTACT_NAME;
     public string $REPORT_HEADER_1;
     public string $REPORT_HEADER_2;
@@ -42,7 +46,7 @@ class BillPaymentPrint extends Component
         $data = $this->billPaymentServices->get($id);
         if ($data) {
             $this->ID = $data->ID;
-            $this->PAY_TO_ID = $data->VENDOR_ID;
+            $this->PAY_TO_ID = $data->PAY_TO_ID;
             $this->LOCATION_ID = $data->LOCATION_ID;
             $this->CODE = $data->CODE;
             $this->DATE = $data->DATE;
@@ -51,8 +55,8 @@ class BillPaymentPrint extends Component
             $con = $this->contactServices->getSingleData($this->PAY_TO_ID);
             if ($con) {
                 $this->CONTACT_NAME = $con->PRINT_NAME_AS;
+                $this->CONTACT_TYPE = $con->TYPE ?? 0;
             }
-            
             $locData = $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
