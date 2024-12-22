@@ -27,7 +27,6 @@
                                     <th class="col-2">Payment Initial</th>
                                 </tr>
                             </thead>
-
                             <tbody class="text-xs">
                                 @foreach ($invoiceList as $list)
                                     <tr>
@@ -39,9 +38,10 @@
                                         <td>{{ $list->CODE }}</td>
                                         <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                                         <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
-                                        <th>
-                                        <input type="number" wire:model="paymentAmounts.{{ $list->ID }}"
-                                                class="form-control form-control-sm text-xs w-100" /></th>
+                                        <td>
+                                            <input type="number" wire:model="paymentAmounts.{{ $list->ID }}"
+                                                class="form-control form-control-sm text-xs w-100" />
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

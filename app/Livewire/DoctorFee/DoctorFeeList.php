@@ -81,6 +81,7 @@ class DoctorFeeList extends Component
             'DOCTOR_ID' => $DOCTOR_ID,
             'LOCATION_ID' => $this->LOCATION_ID
         ];
+        
         $this->dispatch('pf-open-list', result: $data);
     }
     public function openRemarks(int $DOCTOR_ID)

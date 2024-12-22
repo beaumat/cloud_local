@@ -13,6 +13,7 @@ use App\Livewire\BillCredit\BillCreditForm;
 use App\Livewire\BillCredit\BillCreditList;
 use App\Livewire\BillPayments\BillPaymentForm;
 use App\Livewire\BillPayments\BillPaymentList;
+use App\Livewire\BillPayments\BillPaymentPrint;
 use App\Livewire\Bills\BillingForm;
 use App\Livewire\Bills\BillingList;
 use App\Livewire\Bills\BillingPrint;
@@ -313,6 +314,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', BillPaymentList::class)->name('bill_payment')->middleware(['permission:vendor.bill-payment.view']);
             Route::get('/create', BillPaymentForm::class)->name('bill_payment_create')->middleware(['permission:vendor.bill-payment.create']);
             Route::get('/{id}/edit', BillPaymentForm::class)->name('bill_payment_edit')->middleware(['permission:vendor.bill-payment.view']);
+            Route::get('/{id}/print', BillPaymentPrint::class)->name('bill_payment_print')->middleware(['permission:vendor.bill-payment.print']);
+
         });
 
         Route::prefix('/bill-credits')->group(function () {

@@ -142,10 +142,18 @@
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS != 16)
                                             @if ($ID > 0)
-                                                <button type="button" wire:click='OpenJournal()'
-                                                    class="btn btn-sm btn-warning">
-                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
-                                                </button>
+                                                @can('vendor.bill-payment.print')
+                                                    <button type="button" wire:click='OpenJournal()'
+                                                        class="btn btn-sm btn-warning">
+                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                                    </button>
+
+                                                    <a target="_BLANK"
+                                                        href="{{ route('vendorsbill_payment_print', ['id' => $ID]) }}"
+                                                        type="button" class="btn btn-sm btn-dark">
+                                                        <i class="fa fa-print" aria-hidden="true"></i> Print
+                                                    </a>
+                                                @endcan
 
                                                 @can('vendor.bill-payment.create')
                                                     <a id="new" title="Create"
