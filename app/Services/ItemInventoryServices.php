@@ -35,8 +35,8 @@ class ItemInventoryServices
             'QUANTITY'              => $QUANTITY,
             'COST'                  => $COST,
             'ENDING_QUANTITY'       => $ENDING_QUANTITY,
-            'ENDING_UNIT_COST'      => $ENDING_UNIT_COST,
-            'ENDING_COST'           => $ENDING_COST
+            'ENDING_UNIT_COST'      => number_format($ENDING_UNIT_COST, 2),
+            'ENDING_COST'           => number_format($ENDING_COST, 2)
         ]);
 
 
@@ -160,8 +160,9 @@ class ItemInventoryServices
             ->where('SOURCE_REF_DATE', $SOURCE_REF_DATE)
             ->update([
                 'ENDING_QUANTITY' => $ENDING_QUANTITY,
-                'ENDING_COST'     => $ENDING_COST
+                'ENDING_COST'     => number_format($ENDING_COST, 2)
             ]);
+            
     }
     private function getPreviousEnding(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $ID): array
     {
@@ -184,7 +185,7 @@ class ItemInventoryServices
 
                 return  [
                     'ENDING_QUANTITY' => $prevData->ENDING_QUANTITY ?? 0,
-                    'ENDING_COST' => $prevData->ENDING_COST ?? 0
+                    'ENDING_COST' => number_format($prevData->ENDING_COST ?? 0, 2)
                 ];
             }
             return  [
@@ -239,7 +240,7 @@ class ItemInventoryServices
                 'SEQUENCE_NO'       => $data->SEQUENCE_NO,
                 'ENDING_QUANTITY'   => $data->ENDING_QUANTITY,
                 'ENDING_UNIT_COST'  => $data->ENDING_UNIT_COST,
-                'ENDING_COST'       => $data->ENDING_COST,
+                'ENDING_COST'       => number_format($data->ENDING_COST, 2),
             ];
         }
 
@@ -308,10 +309,24 @@ class ItemInventoryServices
             $ENDING_ARRAY        = $this->getEndingLastOutPut($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
             $SEQUENCE_NO        = (int) $ENDING_ARRAY['SEQUENCE_NO'];
             $ENDING_QUANTITY    = (float) $ENDING_ARRAY['ENDING_QUANTITY'] + $QTY;
-            $ENDING_UNIT_COST   = (float) $COST;
+            $ENDING_UNIT_COST   = (float) number_format($COST, 2) ?? 0;
             $ENDING_COST        = $ENDING_UNIT_COST * $ENDING_QUANTITY;
 
-            $this->Store($PREVIOUS_ID, $SEQUENCE_NO + 1, $ITEM_ID, $LOCATION_ID, $BATCH_ID, $SOURCE_REF_TYPE, $SOURCE_REF_ID, $SOURCE_REF_DATE, $QTY, $COST, $ENDING_QUANTITY, $ENDING_UNIT_COST, $ENDING_COST);
+            $this->Store(
+                $PREVIOUS_ID,
+                $SEQUENCE_NO + 1,
+                $ITEM_ID,
+                $LOCATION_ID,
+                $BATCH_ID,
+                $SOURCE_REF_TYPE,
+                $SOURCE_REF_ID,
+                $SOURCE_REF_DATE,
+                $QTY,
+                $COST,
+                $ENDING_QUANTITY,
+                $ENDING_UNIT_COST,
+                $ENDING_COST
+            );
             return;
         }
         // update 

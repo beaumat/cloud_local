@@ -59,7 +59,7 @@ class TimerServices
                     $list->DATE,
                     0,
                     $QTY,
-                    $list->COST ?? 0
+                    number_format($list->COST ?? 0, 2)
                 );
             }
             $this->hemoServices->CallOutItemToBePosted($transDate); // to update update
@@ -71,7 +71,7 @@ class TimerServices
     }
 
     private function GenerateItemServiceCharges()
-    {   
+    {
         $transDate =  $this->dateServices->NowDate();
 
         DB::beginTransaction();
@@ -98,7 +98,6 @@ class TimerServices
             DB::rollBack();
             Log::error('Error executing SC generateItem() : ' . $th->getMessage());
         }
-
     }
     public function getExecute()
     {
@@ -170,7 +169,4 @@ class TimerServices
             Log::error('Error executing Schedule executed in getPosted: ' . $e->getMessage() . '[' . $CONTACT_ID . ',' . $LOCATION_ID . ', ' . $DATE . ']');
         }
     }
-
-
-
 }

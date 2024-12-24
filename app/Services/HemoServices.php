@@ -1454,7 +1454,7 @@ class HemoServices
                 'u.NAME as UNIT_NAME',
                 'u.SYMBOL',
                 't.NO_OF_USED',
-                'c.DESCRIPTION as CLASS_NAME',                
+                'c.DESCRIPTION as CLASS_NAME',
 
             ])
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
@@ -1621,7 +1621,8 @@ class HemoServices
             'TIME_START'             => '',
             'TIME_END'               => '',
             'STATUS_ID'              => 0,
-            'IS_INCOMPLETE'          => false
+            'IS_INCOMPLETE'          => false,
+            'IS_PF'                  => false
         ];
     }
 

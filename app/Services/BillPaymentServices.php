@@ -29,9 +29,11 @@ class BillPaymentServices
     }
     public function Get(int $ID)
     {
-        return Check::where('ID', $ID)
+        $result = Check::where('ID', $ID)
             ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->first();
+
+        return $result;
     }
     public function Store(
         string $CODE,
@@ -43,6 +45,7 @@ class BillPaymentServices
         string $NOTES,
         int $ACCOUNTS_PAYABLE_ID
     ): int {
+
         $ID = (int) $this->object->ObjectNextID('CHECK');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('CHECK');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
@@ -58,10 +61,10 @@ class BillPaymentServices
             'LOCATION_ID'       => $LOCATION_ID,
             'AMOUNT'            => $AMOUNT,
             'NOTES'             => $NOTES,
-            'PRINTED'           => false,
-            'STATUS'            => 0,
-            'STATUS_DATE'       => $this->dateServices->NowDate(),
-            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID ?? null
+            'PRINTED'               => false,
+            'STATUS'                => 0,
+            'STATUS_DATE'           => $this->dateServices->NowDate(),
+            'ACCOUNTS_PAYABLE_ID'   => $ACCOUNTS_PAYABLE_ID ?? null
 
         ]);
 
