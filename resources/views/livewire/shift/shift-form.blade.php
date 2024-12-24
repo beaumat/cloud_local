@@ -23,11 +23,11 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <livewire:text-input name="NAME" titleName="Name"
-                                                        wire:model='NAME' />
+                                                        wire:model='NAME' :isDisabled='false' />
                                                 </div>
                                                 <div class="col-md-6">
                                                     <livewire:number-input name="LINE_NO" titleName="Line number"
-                                                        wire:model='LINE_NO' />
+                                                        wire:model='LINE_NO'  :isDisabled='false'  />
                                                 </div>
                                             </div>
                                         </div>
