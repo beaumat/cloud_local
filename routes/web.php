@@ -527,7 +527,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('/others')->name('others')->group(function () {
             Route::prefix('/shift')->group(function () {
-                Route::get('/', ShiftList::class)->name('shift')->middleware(['permission:others.shift.view']);
+                Route::get('/', ShiftList::class)->name('shift')->middleware(['permission:other.shift.view']);
                 Route::get('/create', ShiftForm::class)->name('shift_create')->middleware(['permission:other.shift.create']);
                 Route::get('/{id}/edit', ShiftForm::class)->name('shift_edit')->middleware(['permission:other.shift.view']);
             });
