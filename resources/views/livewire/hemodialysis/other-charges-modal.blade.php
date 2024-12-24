@@ -14,16 +14,25 @@
                         <div class="modal-body">
                             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                             <div class="row">
-                                <div class="col-md-4 text-right text-sm text-primary">
-                                    Item
+                                <div class="col-4 text-right text-sm text-primary">
+                                    Item :
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-8">
                                     <label class="text-xs">{{ $ITEM_NAME }}</label>
                                 </div>
-                                <div class="col-md-4 text-right text-sm text-primary">
+                                <div class="col-4 text-right text-sm text-primary">
+                                    Unit of Measure :
+                                </div>
+                                <div class="col-8">
+                                    <select class="form-control form-control-sm">
+                                        @foreach ($unitList as $list)
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-4 text-right text-sm text-primary">
                                     Quantity
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-8">
                                     <input type="number" class="form-control form-control-sm" wire:model='QUANTITY' />
                                 </div>
                                 @if ($J_QTY > 0)

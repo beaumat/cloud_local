@@ -30,6 +30,7 @@ class OtherChargesModal extends Component
     public int $J_QTY;
     public string $J_ITEM_NAME;
     public $dataList = [];
+    public $unitList = [];
     public bool $IS_JUSTIFY = false;
     public string $JUSTIFY_NOTES;
     private $serviceChargeServices;
