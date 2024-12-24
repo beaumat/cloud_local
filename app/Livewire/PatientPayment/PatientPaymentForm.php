@@ -218,7 +218,6 @@ class PatientPaymentForm extends Component
                 [
                     'PATIENT_ID'                        => 'required|not_in:0',
                     'DATE'                              => 'required',
-                    // 'PDF' => 'required',
                     'LOCATION_ID'                       => 'required',
                     'AMOUNT'                            => 'required|not_in:0',
                     'RECEIPT_REF_NO'                    => 'required',
@@ -229,7 +228,6 @@ class PatientPaymentForm extends Component
                 [
                     'PATIENT_ID'                    => 'Patient',
                     'DATE'                          => 'Date',
-                    // 'PDF' => 'Pdf document file',
                     'LOCATION_ID'                   => 'Location',
                     'AMOUNT'                        => 'Amount',
                     'RECEIPT_REF_NO'                => 'GL Reference No.',
@@ -287,7 +285,9 @@ class PatientPaymentForm extends Component
                         $this->getDocumentProccess();
                     }
                 }
+
                 return Redirect::route('patientspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+            
             } else {
 
                 $this->patientPaymentServices->Update(
@@ -378,9 +378,13 @@ class PatientPaymentForm extends Component
     {
 
         $dataItemCheck = $this->patientPaymentServices->PaymentChargesList($this->ID, 0);
+
         foreach ($dataItemCheck as $list) {
+        
             if (empty($list->INCOME_ACCOUNT_ID)) {
+        
                 session()->flash('error', 'Invalid. Some items do not have associated revenue accounts. Please set them up first before proceeding.');
+        
                 return;
             }
         }

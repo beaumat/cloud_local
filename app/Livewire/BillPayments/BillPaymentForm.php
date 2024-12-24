@@ -44,7 +44,6 @@ class BillPaymentForm extends Component
     private $userServices;
     private $accountServices;
     private $documentStatusServices;
-
     private $accountJournalServices;
     public function boot(
         BillPaymentServices $billPaymentServices,
@@ -63,7 +62,6 @@ class BillPaymentForm extends Component
         $this->documentStatusServices = $documentStatusServices;
         $this->accountJournalServices = $accountJournalServices;
     }
-
     #[On('reset-payment')]
     public function ResetPaymentApplied()
     {

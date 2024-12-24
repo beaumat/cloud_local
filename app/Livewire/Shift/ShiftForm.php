@@ -57,9 +57,6 @@ class ShiftForm extends Component
         );
 
         try {
-
-
-
             if ($this->ID == 0) {
                 $this->ID = $this->shiftServices->Store($this->NAME, $this->LINE_NO);
                 return Redirect::route('maintenanceothersshift')->with('message', 'Successfully created');

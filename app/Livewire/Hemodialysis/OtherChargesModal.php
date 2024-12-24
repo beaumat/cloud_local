@@ -17,7 +17,6 @@ use Livewire\Component;
 class OtherChargesModal extends Component
 {
     public bool $INCOME_ACCOUNT_IS_LOCK = false;
-
     public int $ITEM_TREATMENT_ID;
     public int $LOCATION_ID;
     public int $ITEM_ID;
@@ -26,7 +25,6 @@ class OtherChargesModal extends Component
     public bool $haveTrigger = false;
     public float $QUANTITY;
     public bool $showModal;
-
     public int $J_QTY;
     public string $J_ITEM_NAME;
     public $dataList = [];

@@ -1447,13 +1447,14 @@ class HemoServices
                 'hemodialysis_items.IS_CASHIER',
                 'hemodialysis_items.IS_JUSTIFY',
                 'hemodialysis_items.JUSTIFY_NOTES',
+                'hemodialysis_items.IS_POST',
                 DB::raw('IFNULL(hemodialysis_items.SK_LINE_ID,0) as SK_LINE_ID'),
                 'item.CODE',
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
                 'u.SYMBOL',
                 't.NO_OF_USED',
-                'c.DESCRIPTION as CLASS_NAME'
+                'c.DESCRIPTION as CLASS_NAME',                
 
             ])
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')

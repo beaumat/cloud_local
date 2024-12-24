@@ -14,6 +14,7 @@
                                     <th>Category</th>
                                     <th class="col-1 text-center">Qty</th>
                                     <th class="col-1 text-center">Unit</th>
+                                    <th class="col-1 text-center">Post</th>
                                     {{-- <th class="col-1 text-center">Justify <br/> Notes</th> --}}
                                     @if ($STATUS == $openStatus || Auth::user()->can('patient.treatment.update'))
                                         <th class="col-2 text-center">Action</th>
@@ -45,6 +46,11 @@
                                         </td>
                                         <td class="text-center">
                                             {{ $list->SYMBOL }}
+                                        </td>
+                                        <td class="text-center">
+                                            @if ($list->IS_POST)
+                                                <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                            @endif
                                         </td>
                                         {{-- <td class="text-center">
                                             @if ($list->IS_JUSTIFY)
@@ -109,7 +115,7 @@
                     </div>
                     <div class="col-md-12">
                         @if ($ActiveRequired)
-         
+
                             @if ($STATUS == $openStatus || $STATUS == 4)
 
 
