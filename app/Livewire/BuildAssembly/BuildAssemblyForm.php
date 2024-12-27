@@ -86,7 +86,6 @@ class BuildAssemblyForm extends Component
 
     public function updatedASSEMBLYITEMID()
     {
-
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ASSEMBLY_ITEM_ID);
         $dataItem = $this->itemServices->get($this->ASSEMBLY_ITEM_ID);
         if ($dataItem) {

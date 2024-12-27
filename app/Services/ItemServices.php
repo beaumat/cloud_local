@@ -165,7 +165,8 @@ class ItemServices
         bool $PRINT_INDIVIDUAL_ITEMS,
         bool $INACTIVE,
         bool $NON_HEMO,
-        bool $HEMO_NON_INVENTORY
+        bool $HEMO_NON_INVENTORY,
+        bool $IS_KIT
     ): int {
 
         $ID = $this->object->ObjectNextID('ITEM');
@@ -197,7 +198,8 @@ class ItemServices
             'PRINT_INDIVIDUAL_ITEMS'    => $PRINT_INDIVIDUAL_ITEMS,
             'INACTIVE'                  => $INACTIVE,
             'NON_HEMO'                  => $NON_HEMO,
-            'HEMO_NON_INVENTORY'        => $HEMO_NON_INVENTORY
+            'HEMO_NON_INVENTORY'        => $HEMO_NON_INVENTORY,
+            'IS_KIT'                    => $IS_KIT
         ]);
 
         return $ID;
@@ -230,7 +232,8 @@ class ItemServices
         bool $PRINT_INDIVIDUAL_ITEMS,
         bool $INACTIVE,
         bool $NON_HEMO,
-        bool $HEMO_NON_INVENTORY
+        bool $HEMO_NON_INVENTORY,
+        bool $IS_KIT
     ): void {
 
         Items::where('ID', $ID)
@@ -260,7 +263,8 @@ class ItemServices
                 'PRINT_INDIVIDUAL_ITEMS'    => $PRINT_INDIVIDUAL_ITEMS,
                 'INACTIVE'                  => $INACTIVE,
                 'NON_HEMO'                  => $NON_HEMO,
-                'HEMO_NON_INVENTORY'        => $HEMO_NON_INVENTORY
+                'HEMO_NON_INVENTORY'        => $HEMO_NON_INVENTORY,
+                'IS_KIT'                    => $IS_KIT
             ]);
     }
 

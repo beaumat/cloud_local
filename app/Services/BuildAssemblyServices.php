@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\BuildAssembly;
 use App\Models\BuildAssemblyItems;
 use App\Models\ItemComponents;
+use App\Models\ItemKits;
 use Illuminate\Support\Facades\DB;
 
 class BuildAssemblyServices
@@ -17,17 +18,19 @@ class BuildAssemblyServices
     private $systemSettingServices;
     private $dateServices;
     private $locationServices;
+    private $itemServices;
     public function __construct(
         ObjectServices $objectService,
         SystemSettingServices $systemSettingServices,
         DateServices $dateServices,
         LocationServices $locationServices,
-      
+        ItemServices $itemServices
     ) {
         $this->object = $objectService;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
         $this->locationServices = $locationServices;
+        $this->itemServices = $itemServices;
     }
     public function Get(int $ID)
     {
@@ -144,6 +147,12 @@ class BuildAssemblyServices
     }
     public function AutoCreateComponent(int $ASSEMBLY_ITEM_ID, int $BUILD_ASSEMBLY_ID, float $QUANTITY, int $LOCATION_ID): float
     {
+        $IS_KIT = false;
+        $data = $this->itemServices->get($ASSEMBLY_ITEM_ID);
+        if ($data) {
+            $IS_KIT = $data->IS_KIT ?? false;
+        }
+
         $PRICE_LEVEL_ID = 0;
         $locData =  $this->locationServices->get($LOCATION_ID);
         if ($locData) {
@@ -151,20 +160,40 @@ class BuildAssemblyServices
         }
 
         $TOTAL = 0;
-        $result = ItemComponents::query()
-            ->select([
-                'item_components.COMPONENT_ID',
-                'item_components.QUANTITY',
-                'item.ASSET_ACCOUNT_ID',
-                DB::raw(" (if
+
+        if ($IS_KIT) {
+
+            $result = ItemKits::query()
+                ->select([
+                    'item_kits.COMPONENT_ID',
+                    'item_kits.QUANTITY',
+                    'item.ASSET_ACCOUNT_ID',
+                    DB::raw(" (select  IFNULL(price_level_lines.CUSTOM_COST,0) from price_level_lines join price_level on price_level.ID = price_level_lines.PRICE_LEVEL_ID where price_level.ID = ' . $PRICE_LEVEL_ID . ' and price_level_lines.ITEM_ID = item_kits.COMPONENT_ID ) as RATE ")
+                ])
+                ->join('item', 'item.ID', '=', 'item_kits.COMPONENT_ID')
+                ->where('item_kits.ITEM_ID', '=', $ASSEMBLY_ITEM_ID)
+                ->where('item.INACTIVE', '=', 0)
+                ->where('item_kits.LOCATION_ID', '=', $LOCATION_ID)
+                ->get();
+        } else {
+
+            $result = ItemComponents::query()
+                ->select([
+                    'item_components.COMPONENT_ID',
+                    'item_components.QUANTITY',
+                    'item.ASSET_ACCOUNT_ID',
+                    DB::raw(" (if
                 (item_components.RATE > 0, item_components.RATE,
                     (select  IFNULL(price_level_lines.CUSTOM_COST,0) from price_level_lines join price_level on price_level.ID = price_level_lines.PRICE_LEVEL_ID where price_level.ID = ' . $PRICE_LEVEL_ID . ' and price_level_lines.ITEM_ID = item_components.COMPONENT_ID )
                 )) as RATE")
-            ])
-            ->join('item', 'item.ID', '=', 'item_components.COMPONENT_ID')
-            ->where('item_components.ITEM_ID', $ASSEMBLY_ITEM_ID)
-            ->where('item.INACTIVE', 0)
-            ->get();
+                ])
+                ->join('item', 'item.ID', '=', 'item_components.COMPONENT_ID')
+                ->where('item_components.ITEM_ID', '=', $ASSEMBLY_ITEM_ID)
+                ->where('item.INACTIVE', 0)
+                ->get();
+        }
+
+
 
         foreach ($result as $item) {
             $QTY = (float) $item->QUANTITY * $QUANTITY;
@@ -178,6 +207,14 @@ class BuildAssemblyServices
     }
     public function AutoUpdateComponent(int $ASSEMBLY_ITEM_ID, int $BUILD_ASSEMBLY_ID, float $QUANTITY, int $LOCATION_ID): float
     {
+
+        $IS_KIT = false;
+        $data = $this->itemServices->get($ASSEMBLY_ITEM_ID);
+        if ($data) {
+            $IS_KIT = $data->IS_KIT ?? false;
+        }
+
+
         $PRICE_LEVEL_ID = 0;
         $locData =  $this->locationServices->get($LOCATION_ID);
         if ($locData) {
@@ -185,18 +222,34 @@ class BuildAssemblyServices
         }
 
         $TOTAL = 0;
-        $result = BuildAssemblyItems::query()
-            ->select([
-                'build_assembly_items.ID',
-                'build_assembly_items.ITEM_ID',
-                DB::raw('(select QUANTITY from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ') as QUANTITY'),
-                DB::raw('(select if (RATE > 0, RATE,
+
+        if ($IS_KIT) {
+            $result = BuildAssemblyItems::query()
+                ->select([
+                    'build_assembly_items.ID',
+                    'build_assembly_items.ITEM_ID',
+                    DB::raw('(select QUANTITY from  item_kits where item_kits.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_kits.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ') as QUANTITY'),
+                    DB::raw('(select  IFNull(price_level_lines.CUSTOM_COST,0) from price_level_lines join price_level on price_level.ID = price_level_lines.PRICE_LEVEL_ID where price_level.ID = ' . $PRICE_LEVEL_ID . ' and price_level_lines.ITEM_ID = build_assembly_items.ITEM_ID ) as RATE'),
+                ])
+                ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
+                ->where('build_assembly_items.BUILD_ASSEMBLY_ID', '=', $BUILD_ASSEMBLY_ID)
+                ->get();
+        } else {
+            $result = BuildAssemblyItems::query()
+                ->select([
+                    'build_assembly_items.ID',
+                    'build_assembly_items.ITEM_ID',
+                    DB::raw('(select QUANTITY from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ') as QUANTITY'),
+                    DB::raw('(select if (RATE > 0, RATE,
                 (select  IFNull(price_level_lines.CUSTOM_COST,0) from price_level_lines join price_level on price_level.ID = price_level_lines.PRICE_LEVEL_ID where price_level.ID = ' . $PRICE_LEVEL_ID . ' and price_level_lines.ITEM_ID = build_assembly_items.ITEM_ID )
                 ) from  item_components where item_components.COMPONENT_ID =  build_assembly_items.ITEM_ID and item_components.ITEM_ID = ' . $ASSEMBLY_ITEM_ID . ') as RATE'),
-            ])
-            ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
-            ->where('build_assembly_items.BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
-            ->get();
+                ])
+                ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
+                ->where('build_assembly_items.BUILD_ASSEMBLY_ID', '=', $BUILD_ASSEMBLY_ID)
+                ->get();
+        }
+
+
 
         foreach ($result as $item) {
 

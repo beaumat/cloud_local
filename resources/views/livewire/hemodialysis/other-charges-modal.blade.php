@@ -24,8 +24,10 @@
                                     Unit of Measure :
                                 </div>
                                 <div class="col-8">
-                                    <select class="form-control form-control-sm">
+                                    <select wire:model='UNIT_ID' name="UNIT_ID" class="text-sm form-control form-control-sm" >
+                                        <option value="0"></option>
                                         @foreach ($unitList as $list)
+                                            <option value="{{ $list->ID }}">{{ $list->SYMBOL}}</option>
                                         @endforeach
                                     </select>
                                 </div>

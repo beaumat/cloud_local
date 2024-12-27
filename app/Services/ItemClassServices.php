@@ -17,6 +17,7 @@ class ItemClassServices
         if ($ID) {
             return ItemClass::where('ID', $ID)->first()->DESCRIPTION;
         }
+        
         return '';
     }
     public function Store(string $CODE, string $DESCRIPTION): int

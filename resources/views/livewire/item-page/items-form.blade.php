@@ -215,6 +215,13 @@
                                                                                                 wire:model='COGS_ACCOUNT_ID'
                                                                                                 :vertical="true" />
                                                                                         </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <livewire:custom-check-box
+                                                                                                name="IS_KIT"
+                                                                                                titleName="Kits"
+                                                                                                isDisabled="{{ false }}"
+                                                                                                wire:model='IS_KIT' />
+                                                                                        </div>
                                                                                     @endif
                                                                                 </div>
                                                                             </div>
@@ -378,7 +385,6 @@
                                                                                     wire:model='INACTIVE' />
                                                                             </div>
                                                                         </div>
-
                                                                     @endif
                                                                     @if ($TYPE < 2)
                                                                         <div class="col-md-6">
@@ -462,7 +468,11 @@
                                                 @if ($ID > 0)
                                                     <div class="row">
                                                         @if ($TYPE === 1)
-                                                            @livewire('ItemPage.ItemComponentPanel', ['itemId' => $ID, 'itemTypeName' => 'Component List'])
+                                                            @if ($IS_KIT)
+                                                                @livewire('ItemPage.ItemKitPanel', ['itemId' => $ID, 'itemTypeName' => 'Kit List'])
+                                                            @else
+                                                                @livewire('ItemPage.ItemComponentPanel', ['itemId' => $ID, 'itemTypeName' => 'Component List'])
+                                                            @endif
                                                         @elseif ($TYPE === 6)
                                                             @livewire('ItemPage.ItemComponentPanel', ['itemId' => $ID, 'itemTypeName' => 'Group List'])
                                                         @endif

@@ -20,6 +20,7 @@ class OtherChargesModal extends Component
     public int $ITEM_TREATMENT_ID;
     public int $LOCATION_ID;
     public int $ITEM_ID;
+    public int $ITEM_TYPE = 0;
     public string $ITEM_NAME;
     public int $HEMO_ID;
     public bool $haveTrigger = false;
@@ -29,6 +30,7 @@ class OtherChargesModal extends Component
     public string $J_ITEM_NAME;
     public $dataList = [];
     public $unitList = [];
+    public int $UNIT_ID = 0;
     public bool $IS_JUSTIFY = false;
     public string $JUSTIFY_NOTES;
     private $serviceChargeServices;
@@ -63,6 +65,7 @@ class OtherChargesModal extends Component
     {
         $this->dataList = [];
         $this->QUANTITY = 0;
+        $this->UNIT_ID = 0;
         $this->HEMO_ID = $result['HEMO_ID'];
         $this->ITEM_ID = $result['ITEM_ID'];
         $this->ITEM_NAME = $result['ITEM_NAME'];
@@ -72,17 +75,21 @@ class OtherChargesModal extends Component
         $this->J_QTY = 0;
         $this->J_ITEM_NAME = '';
 
-        $dataHemo =   $this->hemoServices->Get($this->HEMO_ID);
+        $dataHemo =  $this->hemoServices->Get($this->HEMO_ID);
         $dataItem = $this->itemServices->get($this->ITEM_ID);
 
         if ($dataHemo && $dataItem) {
             $this->LOCATION_ID  = $dataHemo->LOCATION_ID;
+            $this->ITEM_TYPE = $dataItem->TYPE ?? 0;
             $this->ITEM_TREATMENT_ID =  $this->itemTreatmentServices->getItemTreatmentID(
                 $this->ITEM_ID,
                 $this->LOCATION_ID,
                 $dataItem->BASE_UNIT_ID ?? 0
             );
+
             $this->dataList = $this->itemTreatmentServices->listItemTrigger($this->ITEM_TREATMENT_ID);
+            $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
+
             foreach ($this->dataList as $list) {
                 $this->J_QTY = $list->QUANTITY;
                 $this->J_ITEM_NAME = $list->ITEM_NAME;
@@ -103,20 +110,25 @@ class OtherChargesModal extends Component
             [
                 'QUANTITY' => 'required|int|min:1',
                 'JUSTIFY_NOTES' => $this->IS_JUSTIFY ? 'required|string|min:4' : 'nullable',
+                'UNIT_ID'       => $this->ITEM_TYPE < 2 ? 'required|numeric|exists:unit_of_measure,id' : 'nullable'
             ],
             [],
             [
                 'QUANTITY'  => 'Quantity',
                 'JUSTIFY_NOTES' => 'Justification Notes',
+                'UNIT_ID'       => 'Unit of measure'
             ]
         );
 
 
+        $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
+
+
         $data = $this->itemServices->get($this->ITEM_ID);
         if ($data) {
-            $QTY_BASED = 1;
+            $QTY_BASED = (float) $unitRelated['QUANTITY'] ?? 1;
             $PRICE_LEVEL_ID  = 0;
-            $UNIT_ID  = $data->BASE_UNIT_ID ?? 0;
+            $UNIT_ID  = $this->UNIT_ID; //$data->BASE_UNIT_ID ?? 0;
             $RATE = $data->RATE ?? 0;
             $TAX = $data->TAXABLE ?? 0;
             $SK_LINE_ID = null;
@@ -147,12 +159,13 @@ class OtherChargesModal extends Component
                             }
                         }
                     }
+
                     $SC_ITEM_ID =   $this->serviceChargeServices->ItemStore(
                         $scData->ID,
                         $this->ITEM_ID,
                         $this->QUANTITY,
                         $UNIT_ID,
-                        $QTY_BASED,
+                        $QTY_BASED > 0 ? $QTY_BASED : 1,
                         $RATE,
                         0,
                         $this->QUANTITY * $RATE,
@@ -166,12 +179,13 @@ class OtherChargesModal extends Component
                         false,
                         $PRICE_LEVEL_ID
                     );
+
                     $SK_LINE_ID =  $this->hemoServices->ItemStore(
                         $this->HEMO_ID,
                         $this->ITEM_ID,
                         $this->QUANTITY,
                         $UNIT_ID,
-                        $QTY_BASED,
+                        $QTY_BASED > 0 ? $QTY_BASED : 1,
                         true,
                         false,
                         true,

@@ -2,35 +2,44 @@
 
 namespace App\Livewire\ItemPage;
 
-use Illuminate\Validation\Rule;
 use App\Models\Items;
-use App\Services\ItemComponentServices;
+use App\Services\ItemKitServices;
+use App\Services\LocationServices;
+use App\Services\UserServices;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
-class ItemComponentPanel extends Component
+class ItemKitPanel extends Component
 {
-    #[Reactive]
+
+    #[Reactive()]
     public int $itemId = 0;
+
+    public int $LOCATION_ID;
     public string $itemTypeName;
     public bool $saveSuccess = false;
     public bool $codeBase = false;
     public int $COMPONENT_ID;
     public float $QUANTITY = 1;
-    public float $RATE = 0;
     public $itemDescList = [];
     public $itemCodeList = [];
     public string $search = '';
     public $componentList = [];
+    public $locationList = [];
     public $editItemId = null;
     public float $newQty;
-    public float $newRate;
-    private $itemComponentServices;
-    public function boot(ItemComponentServices $itemComponentServices)
+    private $itemKitServices;
+    private $locationServices;
+    private $userServices;
+    public function boot(ItemKitServices $itemKitServices, LocationServices $locationServices, UserServices $userServices)
     {
-        $this->itemComponentServices = $itemComponentServices;
+        $this->itemKitServices = $itemKitServices;
+        $this->locationServices = $locationServices;
+        $this->userServices = $userServices;
     }
+
     public function updatedcodeBase()
     {
         if ($this->codeBase) {
@@ -49,7 +58,7 @@ class ItemComponentPanel extends Component
                 'COMPONENT_ID' => [
                     'required',
                     'not_in:0',
-                    Rule::unique('item_components', 'component_id')->where(function ($query) {
+                    Rule::unique('item_kits', 'component_id')->where(function ($query) {
                         return $query->where('item_id', $this->itemId);
                     }),
                 ],
@@ -62,15 +71,15 @@ class ItemComponentPanel extends Component
         );
 
         try {
-            $this->itemComponentServices->Store(
-                $this->COMPONENT_ID,
+            $this->itemKitServices->Store(
                 $this->itemId,
-                $this->QUANTITY ? $this->QUANTITY : 0,
-                $this->RATE ? $this->RATE : 0
+                $this->COMPONENT_ID,
+                $this->LOCATION_ID,
+                $this->QUANTITY ? $this->QUANTITY : 0
+
             );
-            $this->componentList = $this->itemComponentServices->Search($this->search, $this->itemId);
+
             $this->COMPONENT_ID = 0;
-            $this->RATE = 0;
             $this->QUANTITY = 1;
             $this->updatedcodeBase();
             $this->saveSuccess = $this->saveSuccess ? false : true;
@@ -84,11 +93,12 @@ class ItemComponentPanel extends Component
         $this->itemId = intval($itemId);
         $this->itemTypeName = $itemTypeName;
         $this->updatedcodeBase();
+        $this->locationList = $this->locationServices->getList();
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
     }
-    public function editItem($id, $newQty, $newRate)
+    public function editItem($id, $newQty)
     {
         $this->newQty = $newQty;
-        $this->newRate = $newRate;
         $this->editItemId = $id;
     }
     public function updateItem($id)
@@ -103,9 +113,9 @@ class ItemComponentPanel extends Component
             ]
         );
 
-        $this->itemComponentServices->Update($id, $this->newQty, $this->newRate);
+        $this->itemKitServices->Update($id, $this->newQty);
         $this->editItemId = null;
-        $this->componentList = $this->itemComponentServices->Search($this->search, $this->itemId);
+
     }
     public function cancelItem()
     {
@@ -113,8 +123,8 @@ class ItemComponentPanel extends Component
     }
     public function deleteItem($id)
     {
-        $this->itemComponentServices->Delete($id);
-        $this->componentList = $this->itemComponentServices->Search($this->search, $this->itemId);
+        $this->itemKitServices->Delete($id);
+    
     }
     #[On('clear-alert')]
     public function clearAlert()
@@ -124,9 +134,8 @@ class ItemComponentPanel extends Component
         session()->forget('error');
     }
     public function render()
-    {
-        $this->componentList = $this->itemComponentServices->Search($this->search, $this->itemId);
-        return view('livewire.item-page.item-component-panel');
+    {   
+        $this->componentList = $this->itemKitServices->List($this->itemId, $this->LOCATION_ID);
+        return view('livewire.item-page.item-kit-panel');
     }
-    
 }
