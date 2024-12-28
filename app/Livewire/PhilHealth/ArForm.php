@@ -11,10 +11,8 @@ class ArForm extends Component
 {
     public bool $showModal = false;
     public int $PHILHEALTH_ID;
-
     public string $AR_DATE;
     public string $AR_NO;
-
     public string $CODE;
     public string $DATE;
 
@@ -27,7 +25,7 @@ class ArForm extends Component
     {
 
         if ($this->AR_DATE == '' && $this->AR_NO <> '') {
-            session()->flash('error', 'LHIO Date Requred');
+            session()->flash('error', 'Date Transmit Requred');
             return;
         }
 

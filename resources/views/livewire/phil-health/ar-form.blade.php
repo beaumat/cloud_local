@@ -19,11 +19,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-
-
-
                             <div class="col-md-6">
-                                <livewire:date-input name="AR_DATE" titleName="LHIO Date" wire:model='AR_DATE'
+                                <livewire:date-input name="AR_DATE" titleName="Date Transmit" wire:model='AR_DATE'
                                     :isDisabled="false" />
                             </div>
 
