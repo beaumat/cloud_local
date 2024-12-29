@@ -232,6 +232,7 @@ class InvoiceServices
                 'invoice.BALANCE_DUE',
                 'invoice.OUTPUT_TAX_RATE',
                 'invoice.NOTES',
+                'invoice.PO_NUMBER',
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',

@@ -31,7 +31,8 @@
                 </a>
             </li>
         @endif
-        {{-- @can('company.pull-out.view')
+        
+        @can('company.pull-out.view')
             <li class="nav-item">
                 <a href="{{ route('companypull_out') }}"
                     class="nav-link {{ request()->is('company/pull-out*') ? 'text-warning font-weight-bold' : '' }}">
@@ -39,7 +40,7 @@
                     <p>Pull Out</p>
                 </a>
             </li>
-        @endcan --}}
+        @endcan
 
         @can('company.general-journal.view')
             <li class="nav-item">

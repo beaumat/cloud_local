@@ -46,11 +46,8 @@ class InvoiceList extends Component
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
-
-
     private function deleteItem(int $Id, $INVOICE_ID, $JOURNAL_NO)
     {
-
         $invoiceDate = $this->invoiceServices->get($INVOICE_ID);
         if ($invoiceDate) {
             $invoiceItemData = $this->invoiceServices->ItemGet($Id, $INVOICE_ID);
@@ -139,6 +136,7 @@ class InvoiceList extends Component
 
                     );
                     $dataitem = $this->invoiceServices->ItemView($INVOICE_ID);
+
                     foreach ($dataitem as $list) {
                         // delete Item
                         $this->deleteItem($list->ID, $INVOICE_ID, $JOURNAL_NO);

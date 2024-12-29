@@ -353,13 +353,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', StockTransferForm::class)->name('stock_transfer_create')->middleware(['permission:company.stock-transfer.create']);
             Route::get('/{id}/edit', StockTransferForm::class)->name('stock_transfer_edit')->middleware(['permission:company.stock-transfer.view']);
         });
-        // 
-        // Route::prefix('/pull-out')->group(function () {
-        //     Route::get('/', PullOutList::class)->name('pull_out')->middleware(['permission:company.pull-out.view']);
-        //     Route::get('/create', PullOutForm::class)->name('pull_out_create')->middleware(['permission:company.pull-out.create']);
-        //     Route::get('/{id}/edit', PullOutForm::class)->name('pull_out_edit')->middleware(['permission:company.pull-out.view']);
-        //     Route::get('/{id}/print', PullOutPrint::class)->name('pull_out_print')->middleware(['permission:company.pull-out.print']);
-        // });
+        // temporary
+        Route::prefix('/pull-out')->group(function () {
+            Route::get('/', PullOutList::class)->name('pull_out')->middleware(['permission:company.pull-out.view']);
+            Route::get('/create', PullOutForm::class)->name('pull_out_create')->middleware(['permission:company.pull-out.create']);
+            Route::get('/{id}/edit', PullOutForm::class)->name('pull_out_edit')->middleware(['permission:company.pull-out.view']);
+            Route::get('/{id}/print', PullOutPrint::class)->name('pull_out_print')->middleware(['permission:company.pull-out.print']);
+        });
 
 
         Route::prefix('/depreciation')->group(function () {
