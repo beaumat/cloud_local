@@ -220,7 +220,17 @@ class DateServices
 
         ];
     }
-
+    public function YearList(): array
+    {
+        $currentYear = (int)date('Y');
+        $years = [];
+    
+        for ($year = 2022; $year <= $currentYear; $year++) {
+            $years[] = ['ID' => $year, 'NAME' => (string)$year];
+        }
+    
+        return $years;
+    }
     public function isNextMonthIsChange()
     {
         $todayDate = $this->NowDate();

@@ -115,6 +115,7 @@ use App\Livewire\PatientReport\PatientMonthlyTreatmentReport;
 use App\Livewire\PatientReport\PatientSalesReport;
 use App\Livewire\PatientReport\PatientSalesReportPrint;
 use App\Livewire\PatientReport\PatientTreatmentReport;
+use App\Livewire\PatientReport\PhilHealthMonitoringReport;
 use App\Livewire\PayableReport\AccountPayableAging;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
 use App\Livewire\PaymentMethod\PaymentMethodList;
@@ -591,6 +592,8 @@ Route::middleware(['auth'])->group(function () {
             });
         });
     });
+
+
     Route::prefix('/reports')->name('reports')->group(function () {
         Route::prefix('/patients')->group(function () {
             Route::prefix('/sales')->group(function () {
@@ -603,7 +606,12 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/balance')->group(function () {
                 Route::get('/', PatientBalanceReport::class)->name('patient_balance_report')->middleware(['permission:report.patient.balance']);
             });
+            Route::prefix('/philhealth-monitoring')->group(function () {
+                Route::get('/', PhilHealthMonitoringReport::class)->name('philhealth_monitoring')->middleware(['permission:report.philhealth.monitoring']);
+            });
         });
+
+        
         Route::prefix('/accounting')->name('accounting')->group(function () {
             Route::prefix('/general-ledger')->middleware(['permission:report.accounting.general-ledger'])->group(function () {
                 Route::get('/', GeneralLedgerReport::class)->name('general_ledeger_report');

@@ -29,6 +29,15 @@
                 </a>
             </li>
         @endif
+        @if (Auth::user()->can('report.philhealth.monitoring'))
+            <li class="nav-item ">
+                <a href="{{ route('reportsphilhealth_monitoring') }}"
+                    class="nav-link {{ request()->is('reports/patients/philhealth-monitoring*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print nav-icon"></i>
+                    <p>Philhealth Monitoring</p>
+                </a>
+            </li>
+        @endif
         {{-- @if (Auth::user()->can('report.patient.doctor-pf'))
             <li class="nav-item ">
                 <a href="{{ route('reportspatient_doctor_fee_report') }}"

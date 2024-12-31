@@ -579,11 +579,11 @@ class PhilHealthServices
                         ->orWhere('philhealth.AR_NO', 'like', '%' . $search . '%');
                 });
             })
-            ->when($ADMITTED, function($query) use(&$ADMITTED) {
-                $query->where('philhealth.DATE_ADMITTED','>=', $ADMITTED);
+            ->when($ADMITTED, function ($query) use (&$ADMITTED) {
+                $query->where('philhealth.DATE_ADMITTED', '>=', $ADMITTED);
             })
-            ->when($DISCHARGED, function($query) use(&$DISCHARGED) {
-                $query->where('philhealth.DATE_DISCHARGED','<=', $DISCHARGED);
+            ->when($DISCHARGED, function ($query) use (&$DISCHARGED) {
+                $query->where('philhealth.DATE_DISCHARGED', '<=', $DISCHARGED);
             })
             ->where('IS_TEMP', '0')
             ->orderBy('philhealth.ID', 'desc')
@@ -1073,13 +1073,11 @@ class PhilHealthServices
 
     public function makeReceivableForCustomer(int $PHILHEALTH_ID): array
     {
-
         $exists =  PhilHealth::where('ID', '=', $PHILHEALTH_ID)
             ->whereNotNull('AR_NO')
             ->exists();
 
         if (!$exists) {
-            //
             return [
                 'STATUS'        => false,
                 'MESSAGE'      => 'AR No. not found.',
@@ -1093,7 +1091,7 @@ class PhilHealthServices
 
         if ($invoiceExists) {
             // invoice already created
-            
+
             return [
                 'STATUS'        => false,
                 'MESSAGE'      => 'Successfully save but invoice already created',
@@ -1208,5 +1206,87 @@ class PhilHealthServices
             'MESSAGE'       => 'Successfully save & invoice created',
             'INVOICE_ID'    => $INVOICE_ID
         ];
+    }
+
+
+    public function getMonitor(int $YEAR, int $MONTH, int $locationId)
+    {
+
+        $result = PhilHealth::query()
+            ->select([
+                'philhealth.ID',
+                'philhealth.RECORDED_ON',
+                'philhealth.CODE',
+                'philhealth.DATE',
+                'philhealth.DATE_ADMITTED',
+                'philhealth.DATE_DISCHARGED',
+                'philhealth.CHARGE_TOTAL',
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
+                'philhealth.P1_TOTAL',
+                'philhealth.PAYMENT_AMOUNT',
+                'philhealth.AR_NO',
+                'philhealth.AR_DATE',
+                DB::raw('if(ISNULL(philhealth.AR_DATE),false,true)  as IN_PROGRESS'),
+                DB::raw(" (select  GROUP_CONCAT(hemodialysis.DATE ORDER BY hemodialysis.DATE ASC SEPARATOR ', ') from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as CONFINE_PERIOD "),
+                DB::raw(" (select payment.DATE from payment_invoices 
+                inner join payment on payment.ID = payment_invoices.PAYMENT_ID 
+                inner join invoice on invoice.ID = payment_invoices.INVOICE_ID 
+                inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
+                 where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
+                ) as PAID_DATE 
+                 "),
+                DB::raw("  (select payment.AMOUNT from payment_invoices 
+                inner join payment on payment.ID = payment_invoices.PAYMENT_ID 
+                inner join invoice on invoice.ID = payment_invoices.INVOICE_ID 
+                inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
+                 where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
+                ) as PAID_AMOUNT 
+                 "),
+                DB::raw("  (select payment.RECEIPT_REF_NO from payment_invoices 
+                inner join payment on payment.ID = payment_invoices.PAYMENT_ID 
+                inner join invoice on invoice.ID = payment_invoices.INVOICE_ID 
+                inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
+                 where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
+                ) as OR_NUMBER 
+                 "),
+
+                DB::raw(" (select tax_credit.AMOUNT from tax_credit_invoices 
+                inner join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID 
+                inner join invoice on invoice.ID = tax_credit_invoices.INVOICE_ID 
+                inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
+                 where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
+                )  as TAX_AMOUNT
+                  "),
+                DB::raw(" (select bill.AMOUNT from philhealth_prof_fee inner join bill on bill.ID = philhealth_prof_fee.BILL_ID  where philhealth_prof_fee.PHIC_ID =  philhealth.ID ) as DOCTOR_PF"),
+                DB::raw(" (select bill.BALANCE_DUE from philhealth_prof_fee inner join bill on bill.ID = philhealth_prof_fee.BILL_ID  where philhealth_prof_fee.PHIC_ID =  philhealth.ID ) as DOCTOR_PF_BALANCE"),
+
+            ])
+            ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
+            ->join('location as l', function ($join) use (&$locationId) {
+                $join->on('l.ID', '=', 'philhealth.LOCATION_ID');
+                if ($locationId > 0) {
+                    $join->where('l.ID', $locationId);
+                }
+            })
+            ->join('document_status_map as s', 's.ID', '=', 'philhealth.STATUS_ID')
+            ->where('IS_TEMP', '0')
+            ->whereNotNull('philhealth.AR_DATE')
+            ->when($YEAR > 0, function ($query) use (&$YEAR) {
+                $query->whereYear('DATE_ADMITTED', '=', $YEAR)
+                    ->whereYear('DATE_DISCHARGED', '=', $YEAR);
+            })
+
+            ->when($MONTH > 0, function ($query) use (&$MONTH) {
+                $query->whereMonth('DATE_ADMITTED', '=', $MONTH)
+                    ->whereMonth('DATE_DISCHARGED', '=', $MONTH);
+            })
+            ->orderBy('philhealth.AR_DATE', 'asc')
+            ->orderBy('philhealth.LOCATION_ID', 'asc')
+            ->get();
+
+        return $result;
     }
 }
