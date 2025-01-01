@@ -1,11 +1,13 @@
  <div class="row">
      @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+
      <div class="col-12">
+
          <div class="card">
              <div class="card-body">
                  <div class="row">
 
-                     <div class="col-md-12 mb-2">
+                     <div class="col-md-6 mb-2">
                          <div class="row">
                              <div class="col-md-12">
                                  <div class="mt-0">
@@ -17,6 +19,9 @@
                              </div>
 
                          </div>
+                     </div>
+                     <div class="col-md-6 mb-2 text-right">
+
                      </div>
                  </div>
                  <table class="table table-sm table-bordered table-hover">
@@ -121,6 +126,12 @@
                              class="btn btn-info btn-sm"> <i class="fa fa-print" aria-hidden="true"></i>
                              CSF (Pre-sign)
                          </a>
+                         <a href="{{ route('maintenancecontactprint_availment', ['id' => $CONTACT_ID, 'locationid' => $LOCATION_ID, 'year' => $YEAR]) }}"
+                             target="_BLANK" class="btn btn-sm btn-success">
+                             <i class="fa fa-print" aria-hidden="true"></i>
+                             Print Availment
+                         </a>
+                         <input type="number" class="w-25" wire:model.live='YEAR' />
                      @endcan
                  </div>
              </div>

@@ -5,7 +5,6 @@ use App\Livewire\AccountingReport\GeneralLedgerReport;
 use App\Livewire\AccountingReport\TransactionDetailsReport;
 use App\Livewire\AccountingReport\TransactionJournalReport;
 use App\Livewire\AccountingReport\TrialBalanceReport;
-use App\Livewire\AssetManagement\AssetManagementList;
 use App\Livewire\BankRecon\BankReconForm;
 use App\Livewire\BankRecon\BankReconFormPrint;
 use App\Livewire\BankRecon\BankReconList;
@@ -66,7 +65,6 @@ use App\Livewire\Payment\PaymentForm;
 use App\Livewire\Payment\PaymentList;
 use App\Livewire\PhilHealth\PhilHealthForm;
 use App\Livewire\PhilHealth\PhilHealthList;
-use App\Livewire\PhilHealthPayment\PhilHealthPaymentList;
 use App\Livewire\PhilhealthPrint\PrintOutCf2;
 use App\Livewire\Requirement\RequirementForm;
 use App\Livewire\Requirement\RequirementList;
@@ -108,6 +106,8 @@ use App\Livewire\ManufacturerPage\ManufacturerForm;
 use App\Livewire\ManufacturerPage\ManufacturerList;
 use App\Livewire\Patient\PatientForm;
 use App\Livewire\Patient\PatientList;
+use App\Livewire\Patient\PhilhealthAvailment;
+use App\Livewire\Patient\PrintAvailment;
 use App\Livewire\PatientReport\DoctorProFeeReport;
 use App\Livewire\PatientReport\DoctorsFeeReportPrint;
 use App\Livewire\PatientReport\PatientBalanceReport;
@@ -423,6 +423,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', PatientList::class)->name('patients')->middleware(['permission:contact.patient.view']);
                 Route::get('/create', PatientForm::class)->name('patients_create')->middleware(['permission:contact.patient.create']);
                 Route::get('/{id}/edit', PatientForm::class)->name('patients_edit')->middleware(['permission:contact.patient.view']);
+                Route::get('/{id}/{year}/{locationid}', PrintAvailment::class)->name('print_availment');
             });
 
             Route::prefix('/doctors')->group(function () {

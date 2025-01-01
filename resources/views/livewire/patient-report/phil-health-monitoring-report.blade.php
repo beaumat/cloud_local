@@ -111,7 +111,7 @@ use App\Services\OtherServices;
                                 <th class="bg-success">Net <br /> Amount.</th>
                                 <th class="text-center bg-orange">Status</th>
                             </tr>
-                        </thead>
+                        </thead>    
                         <tbody class="text-xs">
                             @foreach ($dataList as $list)
                                 <tr>

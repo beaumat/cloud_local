@@ -62,7 +62,7 @@ class LocationServices
     }
     public function IsExist(int $ID): bool
     {
-        return Locations::where('ID', '=', $ID)->exists();
+        return (bool) Locations::where('ID', '=', $ID)->exists();
     }
     public function Store(
         string $NAME,

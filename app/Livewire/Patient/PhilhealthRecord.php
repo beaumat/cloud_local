@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Patient;
 
+use App\Services\DateServices;
 use App\Services\PhilHealthServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -10,6 +11,7 @@ use Livewire\WithPagination;
 class PhilhealthRecord extends Component
 {
 
+  
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
@@ -21,11 +23,16 @@ class PhilhealthRecord extends Component
     public int $LOCK_LOCATION_ID;
 
     public $search = "";
-
+    public int $YEAR;
     private $philHealthServices;
-    public function boot(PhilHealthServices $philHealthServices)
+    private $dateServices;
+    public function boot(PhilHealthServices $philHealthServices, DateServices $dateServices)
     {
         $this->philHealthServices = $philHealthServices;
+        $this->dateServices = $dateServices;
+    }
+    public function mount() {
+        $this->YEAR = $this->dateServices->NowYear();
     }
     public function AddTemp()
     {

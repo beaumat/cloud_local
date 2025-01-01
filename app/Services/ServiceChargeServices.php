@@ -782,4 +782,80 @@ class ServiceChargeServices
 
         return $result->toArray();
     }
+    public function getAvailmentTotal(int $PATIENT_ID, int $YEAR, int $LOCATION_ID): int
+    {
+        $result = ServiceCharges::query()
+            ->join('service_charges_items', 'service_charges_items.SERVICE_CHARGES_ID', '=', 'service_charges.ID')
+            ->where('service_charges_items.ITEM_ID', '=', 2)
+            ->where('service_charges.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('service_charges.PATIENT_ID', '=', $PATIENT_ID)
+            ->whereYear('service_charges.DATE', '=', $YEAR)
+            ->count();
+
+        return (int) $result;
+    }
+    public function getLastAvailment(int $PATIENT_ID, int $YEAR, int $LOCATION_ID)
+    {
+        $result = ServiceCharges::query()
+            ->select(['service_charges.DATE'])
+            ->join('service_charges_items', 'service_charges_items.SERVICE_CHARGES_ID', '=', 'service_charges.ID')
+            ->where('service_charges_items.ITEM_ID', '=', 2)
+            ->where('service_charges.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('service_charges.PATIENT_ID', '=', $PATIENT_ID)
+            ->whereYear('service_charges.DATE', '=', $YEAR)
+            ->orderBy('service_charges.DATE', 'desc')
+            ->first();
+
+        if ($result) {
+            return $result;
+        }
+
+        return null;
+    }
+
+    private function getAvailmentsByMonth(int $PATIENT_ID, int $YEAR, int $LOCATION_ID)
+    {
+        $result = ServiceCharges::query()
+            ->select([
+                DB::raw('MONTH(service_charges.DATE) as month'),
+                DB::raw("GROUP_CONCAT(service_charges.DATE ORDER BY service_charges.DATE ASC SEPARATOR ', ') as dates")
+            ])
+            ->join('service_charges_items', 'service_charges_items.SERVICE_CHARGES_ID', '=', 'service_charges.ID')
+            ->where('service_charges_items.ITEM_ID', 2)
+            ->where('service_charges.LOCATION_ID', $LOCATION_ID)
+            ->where('service_charges.PATIENT_ID', $PATIENT_ID)
+            ->whereYear('service_charges.DATE', $YEAR)
+            ->groupBy(DB::raw('MONTH(service_charges.DATE)'))
+            ->pluck('dates', 'month');
+
+
+        return $result;
+    }
+
+    public function getAvailList(int $PATIENT_ID, int $YEAR, int $LOCATION_ID): array
+    {
+        $months = [
+            1 => 'JAN',
+            2 => 'FEB',
+            3 => 'MAR',
+            4 => 'APR',
+            5 => 'MAY',
+            6 => 'JUN',
+            7 => 'JUL',
+            8 => 'AUG',
+            9 => 'SEPT',
+            10 => 'OCT',
+            11 => 'NOV',
+            12 => 'DEC'
+        ];
+
+        $availments = $this->getAvailmentsByMonth($PATIENT_ID, $YEAR, $LOCATION_ID);
+
+        return array_map(function ($monthNumber, $monthName) use ($availments) {
+            return [
+                'ID' => $monthName,
+                'DATES' => $availments[$monthNumber] ?? ''
+            ];
+        }, array_keys($months), $months);
+    }
 }

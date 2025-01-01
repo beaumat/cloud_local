@@ -640,6 +640,7 @@ class PatientForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
+
     public function render()
     {
         return view('livewire.patient.patient-form');
