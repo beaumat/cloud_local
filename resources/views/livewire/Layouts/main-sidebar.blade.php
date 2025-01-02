@@ -72,7 +72,7 @@
                                 @livewire('Layouts.ReportsPatients')
                             @endif
 
-                            @if (Auth::use()->can('report.customer.sales'))
+                            @if (Auth::user()->can('report.customer.sales'))
                                 @livewire('Layouts.ReportsSales')
                             @endif
 
