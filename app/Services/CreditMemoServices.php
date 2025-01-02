@@ -272,6 +272,7 @@ class CreditMemoServices
             ->join('contact as c', 'c.ID', '=', 'credit_memo.CUSTOMER_ID')
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'credit_memo.LOCATION_ID');
+                
                 if ($locationId > 0) {
                     $join->where('l.ID', $locationId);
                 }

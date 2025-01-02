@@ -62,7 +62,6 @@ class PhilHealthAvailmentList extends Component
     }
     public function printAll()
     {
-
         $this->ids = "";
         foreach ($this->selectPatient as $pid => $isSelect) {
             if ($isSelect) {
@@ -79,7 +78,6 @@ class PhilHealthAvailmentList extends Component
         }
 
         $url = route('reportsphilhealth_availment_list_print', ['id' => $this->ids, 'locationid' => $this->LOCATION_ID, 'year' => $this->YEAR]);
-
         $this->dispatch('OpenNewTab', data: $url);
     }
     public function updatedLocationId()

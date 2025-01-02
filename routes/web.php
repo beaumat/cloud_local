@@ -24,6 +24,7 @@ use App\Livewire\CreditMemo\CreditMemoForm;
 use App\Livewire\CreditMemo\CreditMemoList;
 use App\Livewire\Customer\CustomerForm;
 use App\Livewire\Customer\CustomerList;
+use App\Livewire\CustomerReport\CustomerSalesReport;
 use App\Livewire\DashboardPage\Dashboard;
 use App\Livewire\Deposit\DepositForm;
 use App\Livewire\Deposit\DepositList;
@@ -617,7 +618,6 @@ Route::middleware(['auth'])->group(function () {
             });
         });
 
-
         Route::prefix('/accounting')->name('accounting')->group(function () {
             Route::prefix('/general-ledger')->middleware(['permission:report.accounting.general-ledger'])->group(function () {
                 Route::get('/', GeneralLedgerReport::class)->name('general_ledeger_report');
@@ -648,7 +648,9 @@ Route::middleware(['auth'])->group(function () {
             });
         });
 
-        Route::prefix('/sales')->group(function () {});
+        Route::prefix('/customer')->group(function () {
+            Route::get('/sales', CustomerSalesReport::class)->name('customer_sales_report');//->middleware(['permission:report.customer.sales']);
+        });
         Route::prefix('/receivables')->group(function () {
             Route::get('/ar-aging', AccountReceivableAging::class)->name('ar_aging')->middleware(['permission:report.receivables.ar-aging']);
             Route::get('/customer-balance', CustomerBalance::class)->name('customer_balance')->middleware(['permission:report.receivables.customer-balance']);

@@ -69,6 +69,7 @@
                                     Auth::user()->can('report.patient.doctor-pf'))
                                 @livewire('Layouts.ReportsPatients')
                             @endif
+                            @livewire('Layouts.ReportsSales')
 
                             @if (Auth::user()->can('report.accounting.general-ledger') ||
                                     Auth::user()->can('report.accounting.trial-balance') ||
