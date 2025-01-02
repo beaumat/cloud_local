@@ -176,7 +176,13 @@ class ContactServices
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('LOCATION_ID', $LOCATION_ID);
             })
-            ->when($search, function ($query) {})
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use (&$search) {
+                    $q->where('LAST_NAME', 'like', "%" . $search . "%")
+                        ->where('FIRST_NAME', 'like', "%" . $search . "%")
+                        ->where('MIDDLE_NAME', 'like', "%" . $search . "%");
+                });
+            })
 
             ->orderBy('LAST_NAME', 'asc')
             ->get();

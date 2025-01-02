@@ -52,9 +52,13 @@ class PhilHealthAvailmentList extends Component
                 $this->selectPatient[$list->ID] = true;
             }
         } else {
-
-            $this->reset('selectPatient');
+            $this->ResetData();
         }
+    }
+    private function ResetData()
+    {
+        $this->SelectAll = false;
+        $this->reset('selectPatient');
     }
     public function printAll()
     {
@@ -77,6 +81,14 @@ class PhilHealthAvailmentList extends Component
         $url = route('reportsphilhealth_availment_list_print', ['id' => $this->ids, 'locationid' => $this->LOCATION_ID, 'year' => $this->YEAR]);
 
         $this->dispatch('OpenNewTab', data: $url);
+    }
+    public function updatedLocationId()
+    {
+        $this->ResetData();
+    }
+    public function updatedYear()
+    {
+        $this->ResetData();
     }
     public function render()
     {
