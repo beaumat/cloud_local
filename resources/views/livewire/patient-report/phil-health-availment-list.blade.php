@@ -1,0 +1,138 @@
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h5 class="m-0">
+                        <a href="{{ route('reportsphilhealth_availment_list') }}">
+                            Philhealth Availment Report
+                        </a>
+                    </h5>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item active">
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid bg-light">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group bg-light p-2 border border-secondary">
+                        <div class="row">
+                            <div class="col-12 col-md-2">
+                                <div class="row">
+                                    <div class="col-12 col-md-5">
+                                        <label class="text-xs ">Year:</label>
+                                        <select class="form-control form-control-sm" wire:model.live='YEAR'>
+                                            @foreach ($yearList as $list)
+                                                <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-5">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            {{-- <div wire:loading.delay>
+                                                <span class="spinner"></span>
+                                            </div>
+                                            <button class="btn btn-sm btn-primary" wire:click='generate()'
+                                                wire:loading.attr='disabled'>Filter</button>
+                                           --}}
+                                        </div>
+                                        <div class="col-6">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="text-xs ">Location:</label>
+                                        <select
+                                            @if (Auth::user()->locked_location) style="opacity:
+                                                0.5;pointer-events: none;" @endif
+                                            name="location" wire:model.live='LOCATION_ID'
+                                            class="form-control form-control-sm text-xs ">
+                                            <option value="0"> All Location</option>
+                                            @foreach ($locationList as $item)
+                                                <option value="{{ $item->ID }}">{{ $item->NAME }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-1">
+                            <button class="btn btn-sm btn-success w-100" wire:click='printAll()'>Print All</button>
+                        </div>
+                        <div class="col-11">
+                            <input type="text" wire:model.live.debounce.150ms='search' name="search"
+                                class="form-control form-control-sm mb-1" placeholder="Search.." />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="max-height: 80vh; overflow-y: auto;">
+                    <table class="table table-sm table-bordered table-hover">
+                        <thead class="text-xs bg-sky sticky-header">
+                            <tr>
+                                <th class="text-center">
+                                    <input class="text-lg" type="checkbox" wire:model.live="SelectAll" />
+                                </th>
+                                <th>Name</th>
+                                <th class="col-1 text-center">Total Days</th>
+                                <th class="col-1">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs">
+                            @foreach ($patientList as $list)
+                                <tr>
+                                    <td class="text-center">
+                                        <input type="checkbox" name="patientID{{ $list->ID }}"
+                                            wire:model.live="selectPatient.{{ $list->ID }}" />
+                                    </td>
+                                    <td>{{ $list->NAME }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_DAYS }}</td>
+                                    <td>
+                                        <a target="_BLANK"
+                                            href="{{ route('maintenancecontactprint_availment', ['id' => $list->ID, 'locationid' => $LOCATION_ID, 'year' => $YEAR]) }}"
+                                            class="btn btn-primary btn-xs">
+                                            <i class="fa fa-print" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@script
+    <script>
+        $wire.on('OpenNewTab', (eventData) => {
+            window.open(eventData.data, '_blank');
+        });
+    </script>
+@endscript

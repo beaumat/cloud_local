@@ -12,7 +12,7 @@
                                             class="w-100 form-control form-control-sm" placeholder="Search" />
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -31,19 +31,19 @@
                             @foreach ($dataList as $list)
                                 <tr>
                                     <td>
-                                        <a target="_BLANK" href="{{ route('patientsservice_charges_edit', ['id' => $list->ID]) }}"
+                                        <a target="_BLANK"
+                                            href="{{ route('patientsservice_charges_edit', ['id' => $list->ID]) }}"
                                             class="text-primary">
                                             {{ $list->CODE }}
                                         </a>
 
                                     </td>
                                     <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                 
                                     <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                     <td class="text-right"> {{ number_format($list->BALANCE_DUE, 2) }}</td>
                                     <td> {{ $list->TAX_NAME }}</td>
                                     <td> {{ $list->STATUS }}</td>
-                           
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -53,5 +53,19 @@
         </div>
         <div class="col-6 col-md-6">
             {{ $dataList->links() }}
+        </div>
+        <div class="col-6 col-md-6 text-right">
+            Year : <select wire:model.live='YEAR' class="text-md">
+                @foreach ($yearList as $list)
+                    <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
+                @endforeach
+            </select>
+            <a href="{{ route('maintenancecontactprint_availment', ['id' => $CONTACT_ID, 'locationid' => $LOCATION_ID, 'year' => $YEAR]) }}"
+                target="_BLANK" class="btn btn-sm btn-success">
+                <i class="fa fa-print" aria-hidden="true"></i>
+                Print Availment
+            </a>
+            {{-- <input type="number" wire:model.live='YEAR' /> --}}
+
         </div>
     </div>

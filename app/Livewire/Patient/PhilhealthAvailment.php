@@ -45,7 +45,10 @@ class PhilhealthAvailment extends Component
             $this->id = $contact->ID;
             $extend = $contact->SALUTATION != '' ?  $contact->SALUTATION . ', ' : ', ';
             $this->CONTACT_NAME = $contact->LAST_NAME . ' ' .  $extend .  $contact->FIRST_NAME . ' ' .  $contact->MIDDLE_NAME;
-            $this->PHIC_NO = $this->otherServices->PhilHlealthDigitFormat($contact->PIN ?? '');
+            if ($contact->PIN) {
+                $this->PHIC_NO = $this->otherServices->PhilHlealthDigitFormat($contact->PIN);
+            }
+
             $this->FINAL_DIAGNOSIS = $contact->FINAL_DIAGNOSIS ?? '';
             $this->YEAR = $year;
             $this->TOTAL_DAYS = (int) $this->serviceChargeServices->getAvailmentTotal($contact->ID, $year, $locationid);
@@ -53,12 +56,10 @@ class PhilhealthAvailment extends Component
             if ($lastData) {
                 $this->DONE_DATE = $this->otherServices->formatSpecialDate($lastData->DATE);
             } else {
-
                 $this->DONE_DATE = '';
             }
-
-
             $locData =  $this->locationServices->get($locationid);
+        
             if ($locData) {
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
@@ -68,7 +69,6 @@ class PhilhealthAvailment extends Component
                     $this->USER_NAME = $user->PRINT_NAME_AS ?? ' ';
                 }
             }
-
             $this->dataList = $this->serviceChargeServices->getAvailList($contact->ID, $year, $locationid);
         }
     }

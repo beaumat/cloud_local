@@ -21,7 +21,7 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12 text-center">
-                            <b class="h4">SUMMARY OF PHILHEALTH AVAILMENT</b>
+                            <b class="h3">SUMMARY OF PHILHEALTH AVAILMENT</b>
                         </div>
                         <div class="col-6">
 
@@ -82,7 +82,7 @@
                                             <td class="text-lg">{{ $list['ID'] }}</td>
                                             <td class="text-lg">
                                                 @if ($list['DATES'])
-                                                    {{ OtherServices::formatDays($list['DATES']) }}
+                                                    {{ OtherServices::formatDays($list['DATES']) }},  {{ $YEAR }}
                                                 @endif
                                             </td>
                                         </tr>

@@ -709,7 +709,7 @@
                                                     aria-labelledby="custom-content-below-charges-info-tab">
                                                     <div class="container-fluid"
                                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                        @livewire('Patient.ChargesRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                        @livewire('Patient.ChargesRecord', ['CONTACT_ID' => $ID,'LOCATION_ID' => $LOCATION_ID,  'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
 
                                                     </div>
                                                 </div>

@@ -60,6 +60,7 @@ use App\Livewire\Location\LocationDoctors;
 use App\Livewire\Option\OptionSettings;
 use App\Livewire\PatientPayment\PatientPaymentForm;
 use App\Livewire\PatientPayment\PatientPaymentList;
+use App\Livewire\PatientReport\PhilHealthAvailmentListPrint;
 use App\Livewire\PayableReport\VendorBalance;
 use App\Livewire\Payment\PaymentForm;
 use App\Livewire\Payment\PaymentList;
@@ -115,6 +116,7 @@ use App\Livewire\PatientReport\PatientMonthlyTreatmentReport;
 use App\Livewire\PatientReport\PatientSalesReport;
 use App\Livewire\PatientReport\PatientSalesReportPrint;
 use App\Livewire\PatientReport\PatientTreatmentReport;
+use App\Livewire\PatientReport\PhilHealthAvailmentList;
 use App\Livewire\PatientReport\PhilHealthMonitoringReport;
 use App\Livewire\PayableReport\AccountPayableAging;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
@@ -316,7 +318,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', BillPaymentForm::class)->name('bill_payment_create')->middleware(['permission:vendor.bill-payment.create']);
             Route::get('/{id}/edit', BillPaymentForm::class)->name('bill_payment_edit')->middleware(['permission:vendor.bill-payment.view']);
             Route::get('/{id}/print', BillPaymentPrint::class)->name('bill_payment_print')->middleware(['permission:vendor.bill-payment.print']);
-
         });
 
         Route::prefix('/bill-credits')->group(function () {
@@ -610,9 +611,13 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/philhealth-monitoring')->group(function () {
                 Route::get('/', PhilHealthMonitoringReport::class)->name('philhealth_monitoring')->middleware(['permission:report.philhealth.monitoring']);
             });
+            Route::prefix('/philhealth-availment-list')->group(function () {
+                Route::get('/', PhilHealthAvailmentList::class)->name('philhealth_availment_list')->middleware(['permission:report.philhealth.availment']);
+                Route::get('/{id}/{locationid}/{year}', PhilHealthAvailmentListPrint::class)->name('philhealth_availment_list_print')->middleware(['permission:report.philhealth.availment']);
+            });
         });
 
-        
+
         Route::prefix('/accounting')->name('accounting')->group(function () {
             Route::prefix('/general-ledger')->middleware(['permission:report.accounting.general-ledger'])->group(function () {
                 Route::get('/', GeneralLedgerReport::class)->name('general_ledeger_report');

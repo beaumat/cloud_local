@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Patient;
 
+use App\Services\DateServices;
 use App\Services\ServiceChargeServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class ChargesRecord extends Component
-{   
+{
 
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
@@ -17,15 +18,27 @@ class ChargesRecord extends Component
     public int $CONTACT_ID;
     #[Reactive]
     public int $LOCK_LOCATION_ID;
+
+    #[Reactive()]
+    public int $LOCATION_ID;
+    public $yearList = [];
+    public int $YEAR;
     public $search = "";
     private $serviceChargeServices;
-    public function boot(ServiceChargeServices $serviceChargeServices)
+    private $dateServices;
+    public function boot(ServiceChargeServices $serviceChargeServices, DateServices $dateServices)
     {
         $this->serviceChargeServices = $serviceChargeServices;
+        $this->dateServices =  $dateServices;
+    }
+    public function mount()
+    {
+        $this->YEAR = $this->dateServices->NowYear();
+        $this->yearList = $this->dateServices->YearList();
     }
     public function render()
     {
-        $dataList = $this->serviceChargeServices->PatientRecord($this->search, $this->CONTACT_ID, 15, $this->LOCK_LOCATION_ID);
+        $dataList = $this->serviceChargeServices->PatientRecord($this->search, $this->CONTACT_ID, 15, $this->LOCATION_ID);
         return view('livewire.patient.charges-record', ['dataList' => $dataList]);
     }
 }

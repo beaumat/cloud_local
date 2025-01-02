@@ -15,7 +15,7 @@ class AddDefaultModal extends Component
     public int $LOCATION_ID;
 
     public bool $showModal = false;
-        public function closeModal()
+    public function closeModal()
     {
         $this->showModal = false;
     }

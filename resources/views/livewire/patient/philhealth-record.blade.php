@@ -126,12 +126,7 @@
                              class="btn btn-info btn-sm"> <i class="fa fa-print" aria-hidden="true"></i>
                              CSF (Pre-sign)
                          </a>
-                         <a href="{{ route('maintenancecontactprint_availment', ['id' => $CONTACT_ID, 'locationid' => $LOCATION_ID, 'year' => $YEAR]) }}"
-                             target="_BLANK" class="btn btn-sm btn-success">
-                             <i class="fa fa-print" aria-hidden="true"></i>
-                             Print Availment
-                         </a>
-                         <input type="number" class="w-25" wire:model.live='YEAR' />
+                      
                      @endcan
                  </div>
              </div>
