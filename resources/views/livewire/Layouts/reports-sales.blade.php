@@ -7,7 +7,7 @@
                 </p>
             </a>
             <ul class="nav nav-treeview">
-                {{-- @can('report.customer.sales') --}}
+                @can('report.customer.sales')
                     <li class="nav-item">
                         <a href="{{ route('reportscustomer_sales_report') }}"
                             class="nav-link {{ request()->is('reports/customer/sales') ? 'text-warning font-weight-bold' : '' }}">
@@ -15,7 +15,7 @@
                             <p>Sales</p>
                         </a>
                     </li>
-                {{-- @endcan --}}
+                @endcan
 
             </ul>
         </li>

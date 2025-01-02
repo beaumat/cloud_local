@@ -56,7 +56,9 @@
                         Auth::user()->can('report.accounting.general-ledger') ||
                         Auth::user()->can('report.accounting.trial-balance') ||
                         Auth::user()->can('report.accounting.transaction-details') ||
-                        Auth::user()->can('report.accounting.transaction-journal'))
+                        Auth::user()->can('report.accounting.transaction-journal') ||
+                        Auth::user()->can('report.customer.sales'))
+
 
                     <li class="nav-item {{ request()->is('reports*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}">
@@ -69,7 +71,10 @@
                                     Auth::user()->can('report.patient.doctor-pf'))
                                 @livewire('Layouts.ReportsPatients')
                             @endif
-                            @livewire('Layouts.ReportsSales')
+
+                            @if (Auth::use()->can('report.customer.sales'))
+                                @livewire('Layouts.ReportsSales')
+                            @endif
 
                             @if (Auth::user()->can('report.accounting.general-ledger') ||
                                     Auth::user()->can('report.accounting.trial-balance') ||

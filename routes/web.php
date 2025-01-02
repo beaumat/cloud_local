@@ -649,7 +649,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('/customer')->group(function () {
-            Route::get('/sales', CustomerSalesReport::class)->name('customer_sales_report');//->middleware(['permission:report.customer.sales']);
+            Route::get('/sales', CustomerSalesReport::class)->name('customer_sales_report')->middleware(['permission:report.customer.sales']);
         });
         Route::prefix('/receivables')->group(function () {
             Route::get('/ar-aging', AccountReceivableAging::class)->name('ar_aging')->middleware(['permission:report.receivables.ar-aging']);
