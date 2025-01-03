@@ -115,11 +115,11 @@ class QuickCreate extends Component
         if ($this->isDaily) {
             $data = $this->hemoServices->getDateTimeByDaily($CONTACT_ID, $this->LOCATION_ID, $this->DATE_FROM);
             if ($data) {
-             
+
                 $this->DATE_ADMITTED = $data['FIRST_DATE'];
                 $this->TIME_ADMITTED = $data['FIRST_TIME'];
                 $this->DATE_DISCHARGED = $data['LAST_DATE'];
-                $this->TIME_DISCHARGED = $data['LAST_TIME'];
+                $this->TIME_DISCHARGED = $data['LAST_TIME'] ;
                 return true;
             }
         } else {
@@ -193,7 +193,7 @@ class QuickCreate extends Component
                             );
 
                             $this->philHealthServices->DefaultEntry($ID);
-                          
+
                             if ($this->DATE_ADMITTED == $this->DATE_DISCHARGED && $this->PHIC_FORM_MODIFY == true) {
                                 $HEMO_ID = (int)  $this->hemoServices->GetHemoID(
                                     $this->DATE_DISCHARGED,

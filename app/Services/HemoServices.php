@@ -137,8 +137,11 @@ class HemoServices
                     ->TIME_START;
             }
 
-            return Hemodialysis::query()
-                ->select('hemodialysis.TIME_END')
+            $result =  Hemodialysis::query()
+                ->select([
+                    'hemodialysis.TIME_START',
+                    'hemodialysis.TIME_END'
+                ])
                 ->where('CUSTOMER_ID', $CONTACT_ID)
                 ->where('LOCATION_ID', $LOCATION_ID)
                 ->where('DATE', $DATE)
@@ -152,8 +155,12 @@ class HemoServices
                         ->where('sc.LOCATION_ID',  $LOCATION_ID)
                         ->where('sci.ITEM_ID', 2);
                 })
-                ->first()
-                ->TIME_END;
+                ->first();
+                
+            if ($result) {
+                return $result->TIME_END ?? $result->TIME_START;
+            }
+            return '';
         } catch (\Throwable $th) {
             return '';
         }

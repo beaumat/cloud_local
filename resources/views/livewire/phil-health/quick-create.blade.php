@@ -72,10 +72,15 @@
                                 <div class="col-6 text-left">
                                 </div>
                                 <div class="col-6 text-right">
-                                    <button type="button" wire:click='create()' class="btn btn-success btn-sm">
-                                        Create
-                                    </button>
-                                    <button type="button" wire:click='closeModal()' class="btn btn-danger btn-sm">
+
+
+                                    <div wire:loading.delay>
+                                        <span class="spinner"></span>
+                                    </div>
+                                    <button class="btn btn-success btn-sm" wire:click='create()'
+                                        wire:loading.attr='disabled'>Create</button>
+                                    <button type="button" wire:click='closeModal()' class="btn btn-danger btn-sm"
+                                        wire:loading.attr='disabled'>
                                         Close
                                     </button>
                                 </div>
