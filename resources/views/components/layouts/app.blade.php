@@ -36,7 +36,9 @@
 {{--  <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed"> --}}
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
-    <div class="wrapper hide-on-small">
+
+    <div class="wrapper   @if (Auth::user()->can('show-on-small-device')) @else
+        hide-on-small @endif">
         <!-- Preloader -->
         {{-- <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__wobble" src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo"

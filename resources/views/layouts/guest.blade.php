@@ -20,11 +20,12 @@
 </head>
 
 <body class="hold-transition login-page">
-    <div class="login-box hide-on-small">
+    {{-- hide-on-small deactive --}}
+    <div class="login-box ">
         <div class="login-logo">
             <img src="{{ asset('dist/img/cloud_128.png') }}" alt="" class="brand-image elevation-0"
                 style="opacity: .8">
-            
+
             <a href="#" class="text-lg text-info"><b>Cloud</b> System.</a>
         </div>
         <div class="card ">
