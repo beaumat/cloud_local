@@ -53,7 +53,7 @@
                                 @foreach ($dataList as $list)
                                     <tr>
                                         <td class="text-center">
-                                            <input type="checkbox"
+                                            <input type="checkbox" name="patientList{{ $list->ID }}"
                                                 wire:model.live='patientSelected.{{ $list->ID }}' />
                                         </td>
                                         <td>{{ $list->PATIENT }}</td>
@@ -72,8 +72,6 @@
                                 <div class="col-6 text-left">
                                 </div>
                                 <div class="col-6 text-right">
-
-
                                     <div wire:loading.delay>
                                         <span class="spinner"></span>
                                     </div>

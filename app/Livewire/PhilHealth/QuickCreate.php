@@ -67,8 +67,9 @@ class QuickCreate extends Component
     }
     public function ResetValue()
     {
+
         $this->SelectAll = false;
-        $this->patientSelected = [];
+        $this->reset('patientSelected');
     }
     public function updatedDateFrom()
     {
