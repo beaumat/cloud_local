@@ -100,7 +100,7 @@ class TimerServices
     }
     public function getExecute()
     {
-        $transDate =  '2025-1-3'; //$this->dateServices->NowDate();
+        $transDate = $this->dateServices->NowDate();
 
         $this->generateUnposted();
         $this->generateWaitingList($transDate);
