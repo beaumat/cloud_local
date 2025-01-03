@@ -29,7 +29,14 @@ class AccountServices
    
     public function getBankAccountDeposit()
     {
-        return Accounts::whereIn('TYPE', ['0', '6'])
+        return Accounts::whereIn('TYPE', ['0'])
+            ->where('INACTIVE', '=', '0')
+            ->orderBy('NAME', 'asc')
+            ->get();
+    }
+    public function getUndepositedList()
+    {
+        return Accounts::whereIn('TYPE', ['6'])
             ->where('INACTIVE', '=', '0')
             ->orWhere('ID', '=', $this->UNDEPOSITED_ACCOUNT_ID)
             ->orderBy('NAME', 'asc')

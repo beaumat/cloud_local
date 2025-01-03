@@ -26,6 +26,7 @@ use Livewire\Component;
 class SalesReceiptForm extends Component
 {
 
+
     public bool $BANK_MODE = true;
     public bool $IS_MODAL = false;
     public int $PATIENT_PAYMENT_ID;
@@ -113,7 +114,12 @@ class SalesReceiptForm extends Component
         $this->locationList = $this->locationServices->getList();
         $this->paymentMethodList = $this->paymentMethodServices->getListNonPatient();
         $this->taxList = $this->taxServices->getList();
-        $this->accountList = $this->accountServices->getBankAccountDeposit();
+        if ($this->BANK_MODE) {
+            $this->accountList =   $this->accountServices->getBankAccountDeposit();
+            return;
+        }
+
+        $this->accountList =  $this->accountServices->getUndepositedList();
     }
 
     public string $tab = "item";
@@ -228,7 +234,7 @@ class SalesReceiptForm extends Component
         $this->CLASS_ID = 0;
         $this->PAYMENT_METHOD_ID = 1;
         $this->AMOUNT = 0;
-        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $this->BANK_MODE ? 0 : $this->accountServices->getByName('Undeposited Funds');
+        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID =  $this->BANK_MODE ? 0 : $this->accountServices->UNDEPOSITED_ACCOUNT_ID;
         $this->STATUS = 0;
         $this->OUTPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('OutputTaxId');
         $this->OUTPUT_TAX_RATE = 0;
@@ -520,6 +526,7 @@ class SalesReceiptForm extends Component
         try {
 
             $salesReceiptId = (int) $this->salesReceiptServices->object_type_sales_receipt;
+
             $salesReceiptItemsId = (int) $this->salesReceiptServices->object_type_sales_receipt_items;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($salesReceiptId, $this->ID);

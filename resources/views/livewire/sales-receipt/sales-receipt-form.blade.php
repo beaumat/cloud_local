@@ -93,19 +93,21 @@
                                                             wire:model.live='LOCATION_ID' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-4">
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="ACCOUNT_ID1"
-                                                            titleName="Deposit to Bank Account" :options="$accountList"
-                                                            :zero="true" :isDisabled="false"
-                                                            wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID' />
-                                                    @else
-                                                        <livewire:select-option name="ACCOUNT_ID2"
-                                                            titleName="Deposit to Bank Account" :options="$accountList"
-                                                            :zero="true" :isDisabled="true"
-                                                            wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID' />
-                                                    @endif
-                                                </div>
+                                                @if ($BANK_MODE)
+                                                    <div class="col-md-4">
+                                                        @if ($Modify)
+                                                            <livewire:select-option name="ACCOUNT_ID1"
+                                                                titleName="Deposit to Bank Account" :options="$accountList"
+                                                                :zero="true" :isDisabled="false"
+                                                                wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID' />
+                                                        @else
+                                                            <livewire:select-option name="ACCOUNT_ID2"
+                                                                titleName="Deposit to Bank Account" :options="$accountList"
+                                                                :zero="true" :isDisabled="true"
+                                                                wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID' />
+                                                        @endif
+                                                    </div>
+                                                @endif
                                                 <div class="col-md-3">
                                                     @if ($Modify)
                                                         <livewire:select-option name="OUTPUT_TAX_ID" titleName="Tax"
