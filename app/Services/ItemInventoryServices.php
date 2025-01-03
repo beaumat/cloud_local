@@ -151,7 +151,8 @@ class ItemInventoryServices
     }
     private function getNextUpdate(int $ID, int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $ENDING_QUANTITY, float $ENDING_COST)
     {
-
+        $numericAmount = (float) str_replace(',', '', $ENDING_COST);
+        
         ItemInventory::where('ID', $ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
@@ -160,10 +161,11 @@ class ItemInventoryServices
             ->where('SOURCE_REF_DATE', $SOURCE_REF_DATE)
             ->update([
                 'ENDING_QUANTITY' => $ENDING_QUANTITY,
-                'ENDING_COST'     => number_format($ENDING_COST, 2)
+                'ENDING_COST'     => $numericAmount
             ]);
-            
     }
+
+
     private function getPreviousEnding(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $ID): array
     {
         try {
@@ -276,8 +278,16 @@ class ItemInventoryServices
         return $result;
     }
 
-    public function InventoryModify(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_ID, int $SOURCE_REF_TYPE, string $SOURCE_REF_DATE, int $BATCH_ID, float $QTY, float $COST)
-    {
+    public function InventoryModify(
+        int $ITEM_ID,
+        int $LOCATION_ID,
+        int $SOURCE_REF_ID,
+        int $SOURCE_REF_TYPE,
+        string $SOURCE_REF_DATE,
+        int $BATCH_ID,
+        float $QTY,
+        float $COST
+    ) {
 
         $isInventoryExists = (bool) DB::table('item')
             ->where('ID', $ITEM_ID)

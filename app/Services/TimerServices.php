@@ -34,17 +34,17 @@ class TimerServices
             $this->getPosted($list->CUSTOMER_ID, $list->DATE, $list->LOCATION_ID);
         }
     }
-    private function generateWaitingList()
+    private function generateWaitingList($transDate)
     {
-        $transDate =  $this->dateServices->NowDate();
+
         $schedlist = $this->scheduleServices->getWaitingList($transDate);
         foreach ($schedlist as $sched) {
             $this->getPosted($sched->CONTACT_ID, $sched->SCHED_DATE, $sched->LOCATION_ID);
         }
     }
-    private function generateItemHemo()
+    private function generateItemHemo($transDate)
     {
-        $transDate =  $this->dateServices->NowDate();
+
         DB::beginTransaction();
         try {
             $SOURCE_REF_TYPE = 27;
@@ -70,9 +70,8 @@ class TimerServices
         }
     }
 
-    private function GenerateItemServiceCharges()
+    private function GenerateItemServiceCharges($transDate)
     {
-        $transDate =  $this->dateServices->NowDate();
 
         DB::beginTransaction();
         try {
@@ -101,11 +100,12 @@ class TimerServices
     }
     public function getExecute()
     {
+        $transDate =  '2025-1-3'; //$this->dateServices->NowDate();
 
         $this->generateUnposted();
-        $this->generateWaitingList();
-        $this->generateItemHemo();
-        $this->GenerateItemServiceCharges();
+        $this->generateWaitingList($transDate);
+        $this->generateItemHemo($transDate);
+        $this->GenerateItemServiceCharges($transDate);
     }
     private function getPosted(int $CONTACT_ID, string $DATE, int  $LOCATION_ID)
     {

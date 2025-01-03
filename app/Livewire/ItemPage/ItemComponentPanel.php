@@ -34,11 +34,17 @@ class ItemComponentPanel extends Component
     public function updatedcodeBase()
     {
         if ($this->codeBase) {
-            $this->itemCodeList = Items::query()->select(['ID', 'CODE'])->where('INACTIVE', '0')->whereIn('TYPE', ['0', '2', '3', '4', '7'])
+            $this->itemCodeList = Items::query()->select(['ID', 'CODE'])
+                ->where('INACTIVE', '0')
+                ->whereIn('TYPE', ['0', '2', '3', '4', '7'])
                 ->get();
             return;
         }
-        $this->itemDescList = Items::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->whereIn('TYPE', ['0', '2', '3', '4', '7'])
+        
+        $this->itemDescList = Items::query()
+            ->select(['ID', 'DESCRIPTION'])
+            ->where('INACTIVE', '0')
+            ->whereIn('TYPE', ['0', '2', '3', '4', '7'])
             ->get();
     }
 
@@ -128,5 +134,4 @@ class ItemComponentPanel extends Component
         $this->componentList = $this->itemComponentServices->Search($this->search, $this->itemId);
         return view('livewire.item-page.item-component-panel');
     }
-    
 }
