@@ -15,7 +15,7 @@ class EmployeeList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public int $perPage = 25;
+    public int $perPage = 50;
     public int $locationid = 0;
     private $contactServices;
 
@@ -33,7 +33,9 @@ class EmployeeList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public function export() {
 
+    }
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -43,7 +45,7 @@ class EmployeeList extends Component
     }
     public function render()
     {
-        $dataList = $this->contactServices->Search($this->search, 2, 15, $this->locationid);
+        $dataList = $this->contactServices->Search($this->search, 2, $this->perPage, $this->locationid);
         return view('livewire.employees.employee-list', ['dataList' => $dataList]);
     }
 }

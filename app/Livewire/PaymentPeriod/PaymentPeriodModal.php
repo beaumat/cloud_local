@@ -50,7 +50,7 @@ class PaymentPeriodModal extends Component
                 'DATE_TO'           => 'required|date',
                 'LOCATION_ID'       => 'required|numeric|exists:location,id',
                 'TOTAL_PAYMENT'     => 'required|numeric',
-                'TOTAL_WTAX'        => 'required|numeric',
+                // 'TOTAL_WTAX'        => 'required|numeric',
                 'BANK_ACCOUNT_ID'   => 'required|numeric|exists:account,id'
             ],
             [],
@@ -61,7 +61,7 @@ class PaymentPeriodModal extends Component
                 'DATE_TO'           => 'Date To',
                 'LOCATION_ID'       => 'Location',
                 'TOTAL_PAYMENT'     => 'Total Payment',
-                'TOTAL_WTAX'        => 'Total Wtax',
+                // 'TOTAL_WTAX'        => 'Total Wtax',
                 'BANK_ACCOUNT_ID'   => 'Bank Account'
 
             ]
@@ -76,7 +76,7 @@ class PaymentPeriodModal extends Component
                 $this->DATE_FROM,
                 $this->DATE_TO,
                 $this->TOTAL_PAYMENT,
-                $this->TOTAL_WTAX,
+                0,
                 $this->BANK_ACCOUNT_ID,
                 $this->DATE
             );

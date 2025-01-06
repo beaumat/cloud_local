@@ -35,7 +35,7 @@
                                             <livewire:text-input name="ACCOUNT_NO" titleName="Employee ID"
                                                 wire:model='ACCOUNT_NO' isDisabled="{{ false }}" />
                                         </div>
-                                        <div class="col-nd-2">
+                                        <div class="col-md-2">
                                             <div class="row">
                                                 <div class="col-md-12"><br /></div>
                                                 <div class="col-md-12 text-right">
@@ -44,7 +44,24 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-2">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="text-sm">Branch/Location</label>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <select wire:model='LOCATION_ID'
+                                                        class="form-control form-control-sm">
+                                                        <option value='0'>&nbsp;</option>
+                                                        @foreach ($locationList as $list)
+                                                            <option value='{{ $list->ID }}'>{{ $list->NAME }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
 
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card  card-tabs mt-1">

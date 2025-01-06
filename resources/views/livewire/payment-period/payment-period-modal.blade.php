@@ -44,13 +44,13 @@
                                     <input type="number" class="form-control form-control-sm"
                                         wire:model='TOTAL_PAYMENT' />
                                 </div>
-                                <div class="col-4 text-right">
+                                {{-- <div class="col-4 text-right">
                                     <label class="text-sm"> Total WTax :</label>
                                 </div>
                                 <div class="col-8">
                                     <input type="number" class="form-control form-control-sm"
                                         wire:model='TOTAL_WTAX' />
-                                </div>
+                                </div> --}}
                                 <div class="col-4 text-right">
                                     <label class="text-sm"> Deposit to Bank :</label>
                                 </div>

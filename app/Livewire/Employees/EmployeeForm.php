@@ -5,6 +5,7 @@ namespace App\Livewire\Employees;
 use App\Models\Contacts;
 use App\Models\Gender;
 use App\Services\ContactServices;
+use App\Services\LocationServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -13,6 +14,7 @@ use Livewire\Component;
 #[Title('Employees')]
 class EmployeeForm extends Component
 {
+    public int $LOCATION_ID;
     public int $ID;
     public int $TYPE = 2;
     public string $NAME;
@@ -51,14 +53,16 @@ class EmployeeForm extends Component
     public string $PIN;
     public $taxList = [];
     public $genders = [];
+    public $locationList = [];
     public string $selectTab = 'gen';
     private $contactServices;
-    private $userServices;
-
+    private $locationServices;
     public function boot(
-        ContactServices $contactServices
+        ContactServices $contactServices,
+        LocationServices $locationServices
     ) {
         $this->contactServices = $contactServices;
+        $this->locationServices = $locationServices;
     }
     public function SelectTab($tab)
     {
@@ -68,6 +72,7 @@ class EmployeeForm extends Component
     public function mount($id = null)
     {
         $this->genders = Gender::all();
+        $this->locationList = $this->locationServices->getList();
 
         if (is_numeric($id)) {
 
@@ -109,7 +114,7 @@ class EmployeeForm extends Component
                 $this->NICKNAME = $contact->NICKNAME ? $contact->NICKNAME : '';
                 $this->HIRE_DATE = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
                 $this->PIN = $contact->PIN ?  $contact->PIN : '';
-
+                $this->LOCATION_ID = $contact->LOCATION_ID ?? 0;
                 return;
             }
 
@@ -152,6 +157,7 @@ class EmployeeForm extends Component
         $this->NICKNAME = '';
         $this->HIRE_DATE = '';
         $this->PIN = '';
+        $this->LOCATION_ID = 0;
     }
 
     public function save()
@@ -159,12 +165,14 @@ class EmployeeForm extends Component
         $this->validate(
             [
                 'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
+                'LOCATION_ID' => 'required|exists:location,id',
                 'PRINT_NAME_AS' => 'required|max:100',
 
             ],
             [],
             [
                 'NAME' => 'Name',
+                'LOCATION_ID' => 'Location',
                 'PRINT_NAME_AS' => 'Print As',
             ]
         );
@@ -207,6 +215,8 @@ class EmployeeForm extends Component
                     $this->NICKNAME,
                     $this->HIRE_DATE
                 );
+
+                $this->UpdateLocation($this->ID, $this->LOCATION_ID);
                 $this->contactServices->UpdatePin($this->ID, $this->PIN);
                 Redirect::route('maintenancecontactemployees_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
@@ -247,6 +257,7 @@ class EmployeeForm extends Component
                     $this->NICKNAME,
                     $this->HIRE_DATE
                 );
+                $this->UpdateLocation($this->ID, $this->LOCATION_ID);
                 $this->contactServices->UpdatePin($this->ID, $this->PIN);
                 session()->flash('message', 'Successfully updated');
             }
@@ -256,6 +267,10 @@ class EmployeeForm extends Component
         }
     }
 
+    public function UpdateLocation(int $ID, int $LOCATION_ID)
+    {
+        Contacts::where('ID', '=', $ID)->update(['LOCATION_ID' => $LOCATION_ID]);
+    }
     #[On('clear-alert')]
     public function clearAlert()
     {
