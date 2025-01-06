@@ -8,6 +8,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
+                            <button wire:click='export' class="btn btn-success btn-sm"> Export</button>
                         </li>
                     </ol>
                 </div>
@@ -32,9 +33,7 @@
                                 <div class="col-md-4">
                                     <div class="mt-0">
                                         <label class="text-xs">Location:</label>
-                                        <select
-                                            
-                                            name="location" wire:model.live='locationid'
+                                        <select name="location" wire:model.live='locationid'
                                             class="form-control form-control-sm text-xs">
                                             <option value="0"> All Location</option>
                                             @foreach ($locationList as $item)
@@ -59,7 +58,7 @@
                                         <th class="text-center">Inactive</th>
                                         <th class="text-center bg-success col-1">
                                             <a href="{{ route('maintenancecontactemployees_create') }}"
-                                                class="text-white">
+                                                class="text-white w-100 btn btn-xs btn-success">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
@@ -70,7 +69,6 @@
                                             <td> {{ $list->ACCOUNT_NO }}</td>
                                             <td> {{ $list->NAME }}</td>
                                             <td> {{ $list->POSTAL_ADDRESS }}</td>
-
                                             <td> {{ $list->MOBILE_NO }}</td>
                                             <td> {{ $list->EMAIL }}</td>
                                             <td>{{ $list->PIN }}</td>

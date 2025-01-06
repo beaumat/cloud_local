@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Employees;
 
+use App\Exports\EmployeeListExport;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Employees')]
 class EmployeeList extends Component
@@ -39,7 +41,13 @@ class EmployeeList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function export() {}
+    public function export()
+    {
+
+        $dataList = $this->contactServices->Search($this->search, 2, 9999999, $this->locationid);
+
+        return Excel::download(new EmployeeListExport($dataList), 'employee-list.xlsx');
+    }
     #[On('clear-alert')]
     public function clearAlert()
     {
