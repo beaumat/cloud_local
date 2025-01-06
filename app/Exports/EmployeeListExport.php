@@ -32,18 +32,20 @@ class EmployeeListExport implements FromCollection, ShouldAutoSize
             'INACTIVE'            => 'STATUS',
 
         ];
+
         $finalData[] = array_values($headers);
 
         foreach ($this->dataList as $list) {
+
             $rowData = [
-                'ACCOUNT_NO'        => $list['ACCOUNT_NO'],
-                'NAME'              => $list['NAME'],
-                'POSTAL_ADDRESS'    => $list['POSTAL_ADDRESS'],
-                'MOBILE_NO'         => $list['MOBILE_NO'],
-                'EMAIL'             => $list['EMAIL'],
-                'PIN'               => $list['PIN'],
-                'LOCATION'          => $list['LOCATION'],
-                'INACTIVE'          => $list['INACTIVE'] ? 'IN-ACTIVE' : 'ACTIVE'
+                'ACCOUNT_NO'        => $list->ACCOUNT_NO,
+                'NAME'              => $list->NAME,
+                'POSTAL_ADDRESS'    => $list->POSTAL_ADDRESS,
+                'MOBILE_NO'         => $list->MOBILE_NO,
+                'EMAIL'             => $list->EMAIL,
+                'PIN'               => $list->PIN,
+                'LOCATION'          => $list->LOCATION,
+                'INACTIVE'          => $list->INACTIVE ? 'IN-ACTIVE' : 'ACTIVE'
             ];
 
             $finalData[] = array_values($rowData);

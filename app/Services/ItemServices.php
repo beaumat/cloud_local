@@ -55,7 +55,7 @@ class ItemServices
             ->orderBy('DESCRIPTION', 'asc')
             ->get();
     }
-    public function InventoryItemToFixedAsset($search , int $LOCATION_ID)
+    public function InventoryItemToFixedAsset($search, int $LOCATION_ID)
     {
         $result = items::query()
             ->select([
@@ -272,7 +272,7 @@ class ItemServices
     {
         Items::where('ID', $ID)->delete();
     }
-    public function Search($search, int $perPage)
+    public function Search($search, int $perPage, int $LOCATION_ID)
     {
         return Items::query()
             ->select([
@@ -280,10 +280,8 @@ class ItemServices
                 'item.CODE',
                 'item.DESCRIPTION',
                 'item.TAXABLE',
-                DB::raw('(CASE WHEN item.TYPE = 6 THEN (SELECT sum(c.RATE * c.QUANTITY) FROM item_components as c WHERE c.ITEM_ID = item.ID) ELSE item.RATE END) as RATE'),
-                'item.COST',
-                'item.INACTIVE',
-                'item.COST',
+                DB::raw(' (select IFNULL(pll.CUSTOM_PRICE,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as RATE'),
+                DB::raw(' (select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as COST'),
                 'item.INACTIVE',
                 'item_type_map.DESCRIPTION as ITEM_TYPE',
                 'item_sub_class.DESCRIPTION as SUB_CLASS',
@@ -487,7 +485,7 @@ class ItemServices
 
         return $items;
     }
-    public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc, bool $showOutofStock = false): object
+    public function getActiveItems($search, int $locationId, string $sortby, bool $isDesc, bool $showOutofStock = false, string $dateAsof): object
     {
         $items = DB::table('item')
             ->select(
@@ -504,12 +502,14 @@ class ItemServices
                     'u.SYMBOL'
                 ]
             )
-            ->selectSub(function ($query) use (&$locationId) {
+            ->selectSub(function ($query) use (&$locationId, &$dateAsof) {
                 $query->from('item_inventory')->select('item_inventory.ENDING_QUANTITY')
                     ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
                     ->where('item_inventory.LOCATION_ID', $locationId)
+                    ->where('item_inventory.SOURCE_REF_DATE', '<=', $dateAsof)
                     ->orderBy('item_inventory.SOURCE_REF_DATE', 'DESC')
-                    ->orderBy('item_inventory.ID', 'DESC')->limit(1);
+                    ->orderBy('item_inventory.ID', 'DESC')
+                    ->limit(1);
             }, 'QTY_ON_HAND')
             ->leftJoin('item_type_map as t', 't.ID', '=', 'item.TYPE')
             ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')

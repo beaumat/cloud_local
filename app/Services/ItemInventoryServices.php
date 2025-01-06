@@ -10,11 +10,13 @@ class ItemInventoryServices
     private $object;
     private $itemServices;
     private $priceLevelLineServices;
-    public function __construct(ObjectServices $objectService, ItemServices $itemServices, PriceLevelLineServices $priceLevelLineServices)
+    private  $numberServices;
+    public function __construct(ObjectServices $objectService, ItemServices $itemServices, PriceLevelLineServices $priceLevelLineServices, NumberServices $numberServices)
     {
         $this->object = $objectService;
         $this->itemServices = $itemServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
+        $this->numberServices = $numberServices;
     }
 
     private function Store(int $PREVIOUS_ID, int $SEQUENCE_NO, int $ITEM_ID, int $LOCATION_ID, int $BATCH_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $QUANTITY, float $COST = 0, float $ENDING_QUANTITY = 0, float $ENDING_UNIT_COST = 0, float $ENDING_COST = 0)
@@ -35,8 +37,8 @@ class ItemInventoryServices
             'QUANTITY'              => $QUANTITY,
             'COST'                  => $COST,
             'ENDING_QUANTITY'       => $ENDING_QUANTITY,
-            'ENDING_UNIT_COST'      => number_format($ENDING_UNIT_COST, 2),
-            'ENDING_COST'           => number_format($ENDING_COST, 2)
+            'ENDING_UNIT_COST'      => $this->numberServices->doubleNumber($ENDING_UNIT_COST),
+            'ENDING_COST'           => $this->numberServices->doubleNumber($ENDING_COST)
         ]);
 
 
@@ -70,7 +72,7 @@ class ItemInventoryServices
 
             $ENDING_QUANTITY = $PREV_END_QTY +  $QUANTITY;
             $ENDING_COST = $PREV_END_COST * $ENDING_QUANTITY;
-            $data->update(['QUANTITY' => $QUANTITY, 'ENDING_QUANTITY' => $ENDING_QUANTITY, 'ENDING_COST' => $ENDING_COST]);
+            $data->update(['QUANTITY' => $QUANTITY, 'ENDING_QUANTITY' => $ENDING_QUANTITY, 'ENDING_COST' => $this->numberServices->doubleNumber($ENDING_COST)]);
 
             $nextData = $this->getNextEndingUpdate(
                 $ITEM_ID,
@@ -151,8 +153,6 @@ class ItemInventoryServices
     }
     private function getNextUpdate(int $ID, int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $ENDING_QUANTITY, float $ENDING_COST)
     {
-        $numericAmount = (float) str_replace(',', '', $ENDING_COST);
-        
         ItemInventory::where('ID', $ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
@@ -161,7 +161,7 @@ class ItemInventoryServices
             ->where('SOURCE_REF_DATE', $SOURCE_REF_DATE)
             ->update([
                 'ENDING_QUANTITY' => $ENDING_QUANTITY,
-                'ENDING_COST'     => $numericAmount
+                'ENDING_COST'     => $this->numberServices->doubleNumber($ENDING_COST)
             ]);
     }
 
@@ -187,7 +187,7 @@ class ItemInventoryServices
 
                 return  [
                     'ENDING_QUANTITY' => $prevData->ENDING_QUANTITY ?? 0,
-                    'ENDING_COST' => number_format($prevData->ENDING_COST ?? 0, 2)
+                    'ENDING_COST' => $this->numberServices->doubleNumber($prevData->ENDING_COST ?? 0)
                 ];
             }
             return  [
@@ -242,7 +242,7 @@ class ItemInventoryServices
                 'SEQUENCE_NO'       => $data->SEQUENCE_NO,
                 'ENDING_QUANTITY'   => $data->ENDING_QUANTITY,
                 'ENDING_UNIT_COST'  => $data->ENDING_UNIT_COST,
-                'ENDING_COST'       => number_format($data->ENDING_COST, 2),
+                'ENDING_COST'       => $this->numberServices->doubleNumber($data->ENDING_COST),
             ];
         }
 
@@ -412,7 +412,9 @@ class ItemInventoryServices
                 $SEQUENCE_NO = (int) $ending['SEQUENCE_NO'];
                 $QTY = (float) $ENDING_QUANTITY - (float) $ending['ENDING_QUANTITY'];
                 $ENDING_UNIT_COST = (float) $COST;
-                $ENDING_COST = $ENDING_UNIT_COST * $ENDING_QUANTITY;
+                $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
+
+
                 $this->Store(
                     $PREVIOUS_ID,
                     $SEQUENCE_NO + 1,
@@ -500,7 +502,7 @@ class ItemInventoryServices
         WHEN document_type_map.`ID` = 31 THEN  (SELECT pull_out.`NOTES` FROM pull_out_items  JOIN  pull_out ON pull_out.`ID` =  pull_out_items.`PULL_OUT_ID`  WHERE pull_out_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND `pull_out`.`DATE` = item_inventory.`SOURCE_REF_DATE` AND `pull_out`.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND pull_out_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )
 	END AS TX_NOTES';
 
-    public function getDetails(int $ITEM_ID, int $LOCATION_ID)
+    public function getDetails(int $ITEM_ID, int $LOCATION_ID, string $DATE)
     {
         $result = ItemInventory::query()
             ->select([
@@ -518,6 +520,7 @@ class ItemInventoryServices
             ->join('document_type_map', 'document_type_map.ID', '=', 'item_inventory.SOURCE_REF_TYPE')
             ->where('ITEM_ID', '=', $ITEM_ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('item_inventory.SOURCE_REF_DATE', '<=', $DATE)
             ->orderBy('item_inventory.SOURCE_REF_DATE', 'asc')
             ->orderBy('item_inventory.ID', 'asc')
             ->get();

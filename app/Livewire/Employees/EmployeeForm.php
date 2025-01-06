@@ -159,7 +159,15 @@ class EmployeeForm extends Component
         $this->PIN = '';
         $this->LOCATION_ID = 0;
     }
+    public function updatedName()
+    {
+        if ($this->ID > 0) {
 
+            return;
+        }
+
+        $this->PRINT_NAME_AS = $this->NAME;
+    }
     public function save()
     {
         $this->validate(

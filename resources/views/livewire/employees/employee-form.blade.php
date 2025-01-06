@@ -28,7 +28,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <livewire:text-input name="NAME" titleName="Name" wire:model='NAME'
+                                            <livewire:text-input name="NAME" titleName="Name" wire:model.live.lazy.150ms='NAME'
                                                 maxlength='60' isDisabled="{{ false }}" />
                                         </div>
                                         <div class="col-md-2">

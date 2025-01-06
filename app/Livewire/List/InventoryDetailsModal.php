@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class InventoryDetailsModal extends Component
 {
+    public string $DATE;
     public int $ITEM_ID;
     public int $LOCATION_ID;
     public string $ITEM_NAME;
@@ -24,8 +25,8 @@ class InventoryDetailsModal extends Component
         $this->itemServices = $itemServices;
     }
     public function closeModal()
-    {   
-        
+    {
+
         $this->showModal = false;
     }
     #[On("open-modal")]
@@ -34,6 +35,7 @@ class InventoryDetailsModal extends Component
         $this->ITEM_ID = $result['ITEM_ID'];
         $data = $this->itemServices->get($this->ITEM_ID);
         if ($data) {
+            $this->DATE = $result['DATE'];
             $this->LOCATION_ID = $result['LOCATION_ID'];
             $this->showModal = $result['showModal'];
             $this->ITEM_NAME = $data->DESCRIPTION;
@@ -44,7 +46,7 @@ class InventoryDetailsModal extends Component
     {
         $dataName = str_replace(' ', '', $this->ITEM_NAME);
 
-        $newData = $this->itemInventoryServices->getDetails($this->ITEM_ID, $this->LOCATION_ID);
+        $newData = $this->itemInventoryServices->getDetails($this->ITEM_ID, $this->LOCATION_ID, $this->DATE);
         return Excel::download(new InventoryReportExport(
             $newData
         ), "Inventory-Ending-$dataName.xlsx");
@@ -61,7 +63,7 @@ class InventoryDetailsModal extends Component
     public function render()
     {
         if ($this->showModal) {
-            $this->dataList = $this->itemInventoryServices->getDetails($this->ITEM_ID, $this->LOCATION_ID);
+            $this->dataList = $this->itemInventoryServices->getDetails($this->ITEM_ID, $this->LOCATION_ID, $this->DATE);
         }
 
         return view('livewire.list.inventory-details-modal');

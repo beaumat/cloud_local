@@ -1,9 +1,9 @@
 <div class="content-wrapper">
-   <div class="content-header">
+    <div class="content-header">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0">  <a href="{{ route('maintenanceinventoryitem') }}"> Item Master List </a></h5>
+                    <h5 class="m-0"> <a href="{{ route('maintenanceinventoryitem') }}"> Item Master List </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -23,15 +23,28 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <input type="text" wire:model.live.debounce.150ms='search'
-                                        class="form-control form-control-sm text-xs mb-1 bg-light"
-                                        placeholder="Search" />
+                                <div class="col-md-8">
+                                    <div class="mt-0">
+                                        <label class="text-xs">Search:</label>
+                                        <input type="text" wire:model.live.debounce.150ms='search'
+                                            class="form-control form-control-sm text-xs mb-1 bg-light"
+                                            placeholder="Search" />
+                                    </div>
+
                                 </div>
-                                <div class="col-md-8 text-right">
-                                    <h5 class="m-0">
-                                      
-                                    </h5>
+                                <div class="col-md-4">
+                                    <div class="mt-0">
+                                        <label class="text-xs">Location:</label>
+                                        <select name="location" wire:model.live='locationId'
+                                            @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                            class="form-control form-control-sm text-xs">
+                                            <option value="0">&nbsp;</option>
+                                            @foreach ($locationList as $item)
+                                                <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover custom-table">

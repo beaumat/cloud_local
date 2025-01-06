@@ -4,6 +4,8 @@ namespace App\Livewire\ItemPage;
 
 
 use App\Services\ItemServices;
+use App\Services\LocationServices;
+use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -16,11 +18,32 @@ class ItemsList extends Component
     protected $paginationTheme = 'bootstrap';
     protected $queryString = ['search' => ['except' => '']];
     public $search = '';
+    public  $locationId;
+    public $locationList = [];
     public int $perPage = 40;
     private $itemServices;
-    public function boot(ItemServices $itemServices)
+    private $locationServices;
+    private $userServices;
+    public function boot(ItemServices $itemServices, LocationServices $locationServices, UserServices $userServices)
     {
         $this->itemServices = $itemServices;
+        $this->locationServices = $locationServices;
+        $this->userServices = $userServices;
+    }
+    public function mount()
+    {
+        $this->locationId = $this->userServices->getLocationDefault();
+
+        $this->locationList = $this->locationServices->getList();
+    }
+    public function updatedlocationid()
+    {
+        try {
+            $this->userServices->SwapLocation($this->locationId);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function delete($id)
     {
@@ -43,8 +66,8 @@ class ItemsList extends Component
     public function render()
     {
 
-        $items = $this->itemServices->Search($this->search, $this->perPage);
-        
+        $items = $this->itemServices->Search($this->search, $this->perPage, $this->locationId);
+
         return view('livewire.item-page.items-list', ['items' => $items]);
     }
 }

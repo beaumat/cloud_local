@@ -35,7 +35,7 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-5">
+                                        <div class="col-md-4">
                                             <div class="mt-0">
                                                 <label class="text-xs">Search:</label>
                                                 <input type="text" wire:model.live.debounce.120ms='search'
@@ -70,16 +70,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-1">
-                                            <div class="text-center mt-4 pt-2">
-                                                {{-- <div class="form-check">
-                                                    <label class="form-check-label">
-                                                      
-                                                        <span
-                                                            class="text-xs text-primary font-weight-bold">CONTROL</span>
-                                                    </label>
+                                        <div class="col-md-2">
+                                            <div class="mt-0">
 
-                                                </div> --}}
+                                                <label class="text-xs">As of Date:</label>
+                                                <input type="DATE" wire:model.live='DATE'
+                                                    class="form-control form-control-sm" />
+
                                             </div>
                                         </div>
                                         <div class="col-md-1">

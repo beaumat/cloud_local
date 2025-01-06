@@ -59,7 +59,6 @@
                         Auth::user()->can('report.accounting.transaction-journal') ||
                         Auth::user()->can('report.customer.sales'))
 
-
                     <li class="nav-item {{ request()->is('reports*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}">
                             <i class="nav-icon fa fa-line-chart"></i>
@@ -97,6 +96,10 @@
                             @if (Auth::user()->can('report.payables.ap-aging') || Auth::user()->can('report.payables.vendor-balance'))
                                 @livewire('Layouts.ReportsPayables')
                             @endif
+                            {{-- not now --}}
+                            {{-- @if (Auth::user()->can('report.inventory.validation-summary'))
+                                @livewire('Layouts.ReportsInventory')
+                            @endif --}}
 
                         </ul>
                     </li>

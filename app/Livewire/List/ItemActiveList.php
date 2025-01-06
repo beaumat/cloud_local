@@ -39,7 +39,8 @@ class ItemActiveList extends Component
     $data = [
       'ITEM_ID'     => $ID,
       'LOCATION_ID' => $this->LOCATION_ID,
-      'showModal'   => true
+      'showModal'   => true,
+      'DATE'        => $this->DATE
     ];
 
     $this->dispatch('open-modal', result: $data);
@@ -82,7 +83,8 @@ class ItemActiveList extends Component
       $this->LOCATION_ID,
       $this->sortby,
       $this->isDesc,
-      $this->showOutofStock
+      $this->showOutofStock,
+      $this->DATE
     );
   }
   public function getPriceLevel()
@@ -107,6 +109,10 @@ class ItemActiveList extends Component
   {
     $this->refreshItem();
   }
+  public function updatedDate()
+  {
+    $this->refreshItem();
+  }
   public function updatedLocationId()
   {
     $this->getPriceLevel();
@@ -124,7 +130,8 @@ class ItemActiveList extends Component
       $this->LOCATION_ID,
       $this->sortby,
       $this->isDesc,
-      $this->showOutofStock
+      $this->showOutofStock,
+      $this->DATE
     );
   }
   public function exportData()
@@ -134,7 +141,8 @@ class ItemActiveList extends Component
       $this->LOCATION_ID,
       $this->sortby,
       $this->isDesc,
-      $this->showOutofStock
+      $this->showOutofStock,
+      $this->DATE
     );
     return Excel::download(new InventoryListItemExport(
       $newData

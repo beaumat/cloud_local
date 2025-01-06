@@ -88,6 +88,7 @@ use App\Livewire\TaxCredit\TaxCreditList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
+use App\Livewire\InventoryReport\ValidationSummaryReport;
 use App\Livewire\Invoice\PrintInvoice;
 use App\Livewire\ItemClassPage\ItemClassForm;
 use App\Livewire\ItemClassPage\ItemClassList;
@@ -319,6 +320,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', BillPaymentForm::class)->name('bill_payment_create')->middleware(['permission:vendor.bill-payment.create']);
             Route::get('/{id}/edit', BillPaymentForm::class)->name('bill_payment_edit')->middleware(['permission:vendor.bill-payment.view']);
             Route::get('/{id}/print', BillPaymentPrint::class)->name('bill_payment_print')->middleware(['permission:vendor.bill-payment.print']);
+     
         });
 
         Route::prefix('/bill-credits')->group(function () {
@@ -662,7 +664,9 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/purchases')->group(function () {});
         Route::prefix('/expenses')->group(function () {});
 
-        Route::prefix('/inventory')->group(function () {});
+        Route::prefix('/inventory')->group(function () {
+            Route::get('/validation-summary', ValidationSummaryReport::class)->name('validation_summry')->middleware(['permission:report.inventory.validation-summary']);
+        });
         Route::prefix('/documents')->group(function () {});
     });
 });

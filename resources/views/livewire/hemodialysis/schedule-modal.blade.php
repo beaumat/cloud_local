@@ -15,7 +15,6 @@
                     </div>
                     <div class="modal-body">
                         @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-
                         <div class="form-group row">
                             <div class="col-3 text-left">
                                 <label class="text-xs">Select :</label>

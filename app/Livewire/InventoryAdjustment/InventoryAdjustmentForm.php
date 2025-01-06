@@ -247,17 +247,17 @@ class InventoryAdjustmentForm extends Component
             } else {
                 $this->validate(
                     [
-                        'CODE' => 'required|max:20|unique:stock_transfer,code,' . $this->ID,
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'ADJUSTMENT_TYPE_ID' => 'required|not_in:0'
+                        'CODE'                  => 'required|max:20|unique:stock_transfer,code,' . $this->ID,
+                        'DATE'                  => 'required',
+                        'LOCATION_ID'           => 'required',
+                        'ADJUSTMENT_TYPE_ID'    => 'required|not_in:0'
                     ],
                     [],
                     [
-                        'CODE' => 'Reference No.',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'ADJUSTMENT_TYPE_ID' => 'Adjustment Type'
+                        'CODE'                  => 'Reference No.',
+                        'DATE'                  => 'Date',
+                        'LOCATION_ID'           => 'Location',
+                        'ADJUSTMENT_TYPE_ID'    => 'Adjustment Type'
                     ]
                 );
 
