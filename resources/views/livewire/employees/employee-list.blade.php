@@ -22,14 +22,28 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-1">
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     <div class="mt-0">
                                         <label class="text-sm">Search:</label>
                                         <input type="text" wire:model.live.debounce.150ms='search'
                                             class="w-100 form-control form-control-sm" placeholder="Search" />
                                     </div>
                                 </div>
-
+                                <div class="col-md-4">
+                                    <div class="mt-0">
+                                        <label class="text-xs">Location:</label>
+                                        <select
+                                            
+                                            name="location" wire:model.live='locationid'
+                                            class="form-control form-control-sm text-xs">
+                                            <option value="0"> All Location</option>
+                                            @foreach ($locationList as $item)
+                                                <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">

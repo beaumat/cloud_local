@@ -17,11 +17,17 @@ class EmployeeList extends Component
     public $search = '';
     public int $perPage = 50;
     public int $locationid = 0;
+    public  $locationList = [];
     private $contactServices;
-
-    public function boot(ContactServices $contactServices)
+    private $locationServices;
+    public function boot(ContactServices $contactServices, LocationServices $locationServices)
     {
         $this->contactServices = $contactServices;
+        $this->locationServices = $locationServices;
+    }
+    public function mount()
+    {
+        $this->locationList = $this->locationServices->getList();
     }
     public function delete($id)
     {
@@ -33,9 +39,7 @@ class EmployeeList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function export() {
-
-    }
+    public function export() {}
     #[On('clear-alert')]
     public function clearAlert()
     {
