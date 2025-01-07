@@ -2,11 +2,13 @@
 
 namespace App\Livewire\Hemodialysis;
 
+use App\Services\AccountJournalServices;
 use App\Services\HemoServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
 use App\Services\ItemTreatmentServices;
 use App\Services\ServiceChargeServices;
+use App\Services\TimerServices;
 use App\Services\UnitOfMeasureServices;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,14 +37,27 @@ class InventoryTreatment extends Component
     private $itemTreatmentServices;
     private $itemSubClassServices;
     private $serviceChargeServices;
-    public function boot(HemoServices $hemoServices, ItemServices $itemServices, UnitOfMeasureServices $unitOfMeasureServices, ItemTreatmentServices $itemTreatmentServices, ItemSubClassServices $itemSubClassServices, ServiceChargeServices $serviceChargeServices)
-    {
+    private $timerServices;
+    private $accountJournalServices;
+    public function boot(
+        HemoServices $hemoServices,
+        ItemServices $itemServices,
+        UnitOfMeasureServices $unitOfMeasureServices,
+        ItemTreatmentServices $itemTreatmentServices,
+        ItemSubClassServices $itemSubClassServices,
+        ServiceChargeServices $serviceChargeServices,
+        TimerServices $timerServices,
+        AccountJournalServices $accountJournalServices
+
+    ) {
         $this->hemoServices = $hemoServices;
         $this->itemServices = $itemServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->itemSubClassServices = $itemSubClassServices;
         $this->serviceChargeServices = $serviceChargeServices;
+        $this->timerServices = $timerServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
 
     public string $ITEM_CODE;
@@ -278,7 +293,7 @@ class InventoryTreatment extends Component
         if ($data) {
             $result = [
                 'DATE'          => $data->DATE,
-                'LOCATION_ID'   => $data->LOCATION_ID,  
+                'LOCATION_ID'   => $data->LOCATION_ID,
                 'ITEM_ID'       => $ITEM_ID,
                 'CONTACT_ID'    => $data->CUSTOMER_ID
             ];
@@ -292,7 +307,6 @@ class InventoryTreatment extends Component
     }
     public function openSubClass(int $SUB_ID)
     {
-
         $isRequiredItemAdded = $this->itemTreatmentServices->getRequiredSuccess($this->LOCATION_ID, $this->HEMO_ID);
         if (!$isRequiredItemAdded) {
             session()->flash('error', ' You must select either a CVC Kit or an AVF Kit before adding other charges.');
@@ -301,6 +315,21 @@ class InventoryTreatment extends Component
 
         $data = ['SUB_CLASS_ID' => $SUB_ID];
         $this->dispatch('open-list-sub-item', result: $data);
+    }
+    public function gotJournal()
+    {
+
+        $this->timerServices->getJournal($this->HEMO_ID);
+        session()->flash('message', 'Successfully Make Journal');
+    }
+    public function OpenJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->hemoServices->object_type_hemo_item, $this->HEMO_ID);
+        dd($JOURNAL_NO);
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+        }
     }
     #[On('clear-alert')]
     public function clearAlert()

@@ -9,7 +9,7 @@
                         <table class="table table-sm table-bordered table-hover">
                             <thead class="text-xs bg-info ">
                                 <tr>
-                                    <th class="col-1">Code</th>
+                                    <th class="col-1" wire:click='OpenJournal()'>Code</th>
                                     <th>Description</th>
                                     <th>Category</th>
                                     <th class="col-1 text-center">Qty</th>
@@ -17,7 +17,8 @@
                                     <th class="col-1 text-center">Post</th>
                                     {{-- <th class="col-1 text-center">Justify <br/> Notes</th> --}}
                                     @if ($STATUS == $openStatus || Auth::user()->can('patient.treatment.update'))
-                                        <th class="col-2 text-center">Action</th>
+                                        <th class="col-2 text-center" wire:click='gotJournal'
+                                            wire:confirm="Make Journal ?">Action</th>
                                     @endif
                                 </tr>
                             </thead>
@@ -140,4 +141,5 @@
         </div>
     @endif
     @livewire('Hemodialysis.OtherCharges', ['HEMO_ID' => $HEMO_ID])
+    @livewire('AccountJournal.AccountJournalModal')
 </section>

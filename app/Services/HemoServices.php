@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 class HemoServices
 {
+
+    public $object_type_hemo_item = 109;
     public $dialyMode  = false;
     private $object;
     private $user;
@@ -156,7 +158,7 @@ class HemoServices
                         ->where('sci.ITEM_ID', 2);
                 })
                 ->first();
-                
+
             if ($result) {
                 return $result->TIME_END ?? $result->TIME_START;
             }
@@ -1436,8 +1438,62 @@ class HemoServices
     }
     public function ItemGet(int $ID)
     {
-        $result = HemodialysisItems::where('ID', $ID)->first();
+        $result = HemodialysisItems::where('ID', '=', $ID)->first();
+        return $result;
+    }
+    public function ItemToJournalAsset(int $HEMO_ID)
+    {
+        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hemodialysis_items.ITEM_ID and l.ID = h.LOCATION_ID";
+        $result = HemodialysisItems::query()
+            ->select([
+                'hemodialysis_items.ID',
+                'hemodialysis_items.ITEM_ID as SUBSIDIARY_ID',
+                'item.ASSET_ACCOUNT_ID as ACCOUNT_ID',
+                DB::raw("((($exSQL) * hemodialysis_items.UNIT_BASE_QUANTITY ) *  hemodialysis_items.QUANTITY ) as AMOUNT"),
+                DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')
+            ->leftJoin('item_sub_class as s', 's.ID', '=', 'item.SUB_CLASS_ID')
+            ->leftJoin('item_class as c', 'c.ID', '=', 's.CLASS_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'hemodialysis_items.UNIT_ID')
+            ->leftJoin('item_treatment as t', function ($q) {
+                $q->on('t.ITEM_ID', '=', 'hemodialysis_items.ITEM_ID');
+                $q->on('t.LOCATION_ID', '=', 'h.LOCATION_ID');
+            })
+            ->whereBetween('item.TYPE', ['0', '1'])
+            ->where('hemodialysis_items.HEMO_ID', '=', $HEMO_ID)
+            ->get();
 
+        return $result;
+    }
+    public function ItemToJournalCogs(int $HEMO_ID)
+    {
+        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hemodialysis_items.ITEM_ID and l.ID = h.LOCATION_ID";
+        $result = HemodialysisItems::query()
+            ->select([
+                'hemodialysis_items.ID',
+                'hemodialysis_items.ITEM_ID as SUBSIDIARY_ID',
+                'item.COGS_ACCOUNT_ID as ACCOUNT_ID',
+                DB::raw("((($exSQL) * hemodialysis_items.UNIT_BASE_QUANTITY ) *  hemodialysis_items.QUANTITY ) as AMOUNT"),
+                DB::raw('0 as ENTRY_TYPE')
+            ])
+            ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')
+            ->leftJoin('item_sub_class as s', 's.ID', '=', 'item.SUB_CLASS_ID')
+            ->leftJoin('item_class as c', 'c.ID', '=', 's.CLASS_ID')
+            ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'hemodialysis_items.UNIT_ID')
+            ->leftJoin('item_treatment as t', function ($q) {
+                $q->on('t.ITEM_ID', '=', 'hemodialysis_items.ITEM_ID');
+                $q->on('t.LOCATION_ID', '=', 'h.LOCATION_ID');
+            })
+          
+            ->whereBetween('item.TYPE', ['0', '1'])
+            ->where('hemodialysis_items.HEMO_ID', '=', $HEMO_ID)
+            ->get();
+    
         return $result;
     }
     public function ItemView(int $HEMO_ID)
@@ -1632,8 +1688,6 @@ class HemoServices
             'IS_PF'                  => false
         ];
     }
-
-
     public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
     {
         return (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)

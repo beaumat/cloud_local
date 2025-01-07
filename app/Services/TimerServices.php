@@ -12,12 +12,14 @@ class TimerServices
     private $dateServices;
     private $itemInventoryServices;
     private $serviceChargeServices;
+    private $accountJournalServices;
     function __construct(
         ScheduleServices $scheduleServices,
         HemoServices $hemoServices,
         DateServices $dateServices,
         ItemInventoryServices $itemInventoryServices,
-        ServiceChargeServices $serviceChargeServices
+        ServiceChargeServices $serviceChargeServices,
+        AccountJournalServices $accountJournalServices
 
     ) {
         $this->scheduleServices = $scheduleServices;
@@ -25,6 +27,7 @@ class TimerServices
         $this->dateServices = $dateServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->serviceChargeServices = $serviceChargeServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     private function generateUnposted()
     {
@@ -79,7 +82,6 @@ class TimerServices
             $itemData = $this->serviceChargeServices->GetWalkInServiceChargeTransaction($transDate);
             foreach ($itemData as $list) {
                 $QTY = (float)  ($list->QUANTITY * $list->UNIT_BASE_QUANTITY ?? 1) * -1;
-
                 $this->itemInventoryServices->InventoryModify(
                     $list->ITEM_ID,
                     $list->LOCATION_ID,
@@ -106,6 +108,48 @@ class TimerServices
         $this->generateWaitingList($transDate);
         $this->generateItemHemo($transDate);
         $this->GenerateItemServiceCharges($transDate);
+    }
+    public function getJournal($HEMO_ID)
+    {
+        DB::beginTransaction();
+        try {
+            $dataHemo  = $this->hemoServices->get($HEMO_ID);
+            if ($dataHemo) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->hemoServices->object_type_hemo_item, $HEMO_ID);
+                if ($JOURNAL_NO  ==  0) {
+                    $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->hemoServices->object_type_hemo_item, $HEMO_ID) + 1;
+                }
+
+                // COGS
+                $itemCogs = $this->hemoServices->ItemToJournalCogs($HEMO_ID);
+                $this->accountJournalServices->JournalExecute($JOURNAL_NO, $itemCogs, $dataHemo->LOCATION_ID, $this->hemoServices->object_type_hemo_item, $dataHemo->DATE);
+            
+                // ASSET
+                $itemAsset = $this->hemoServices->ItemToJournalAsset($HEMO_ID);
+                $this->accountJournalServices->JournalExecute($JOURNAL_NO, $itemAsset, $dataHemo->LOCATION_ID, $this->hemoServices->object_type_hemo_item, $dataHemo->DATE);
+
+                
+                $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+                $debit_sum = (float) $data['DEBIT'];
+                $credit_sum = (float) $data['CREDIT'];
+         
+
+                if ($debit_sum == $credit_sum) {
+                    DB::commit();
+                    return;
+                }
+                
+                DB::rollBack();
+            }
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            // dd($e->getMessage());
+        }
+
+
+
+        // 
     }
     private function getPosted(int $CONTACT_ID, string $DATE, int  $LOCATION_ID)
     {
@@ -153,6 +197,9 @@ class TimerServices
                 if ($POST_WEIGHT == 0 || $POST_BLOOD_PRESSURE == 0 || $POST_BLOOD_PRESSURE2 == 0 || $POST_HEART_RATE == 0 || $POST_O2_SATURATION == 0 || empty($TIME_START) == true ||  empty($TIME_END) == true) {
                     if ($IS_INCOMPLETE == true || $IS_PF == true) {
                         $this->hemoServices->StatusUpdate($ID, 2); // POSTED
+
+
+
                     } else {
                         $this->hemoServices->StatusUpdate($ID, 4); // UNPOSTED
                     }
