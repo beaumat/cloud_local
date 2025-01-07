@@ -42,10 +42,13 @@
                                         <div class="col-12 col-md-6">
                                             <div class="row">
                                                 <div class="col-6 col-md-4">
-
-                                                    <livewire:date-input name="DATE" titleName="Date"
-                                                        isDisabled="{{ $ID > 0 ? true : false }}" wire:model='DATE'
-                                                        :isDisabled="true" />
+                                                    @if ($ID == 0 && auth()->user()->date_enabled)
+                                                        <livewire:date-input name="DATE" titleName="Date"
+                                                            wire:model.live='DATE' :isDisabled="false" />
+                                                    @else
+                                                        <livewire:date-input name="DATE" titleName="Date"
+                                                            wire:model.live='DATE' :isDisabled="true" />
+                                                    @endif
                                                 </div>
                                                 <div class="col-6 col-md-4">
                                                     <livewire:text-input name="Code" titleName="Reference No."
@@ -102,7 +105,7 @@
                                                 class="btn btn-sm btn-warning">
                                                 <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                             </button>
-                                            
+
                                             <a id="new" title="Create"
                                                 href="{{ route('companyinventory_adjustment_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
