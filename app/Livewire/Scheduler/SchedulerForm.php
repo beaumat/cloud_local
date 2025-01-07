@@ -105,12 +105,14 @@ class SchedulerForm extends Component
     {
         $this->month = $this->month == 12 ? 1 : $this->month + 1;
         $this->year = $this->month == 1 ? $this->year + 1 : $this->year;
+        
         $this->reloadComponent();
     }
     public function previousMonth()
     {
         $this->month = $this->month == 1 ? 12 : $this->month - 1;
         $this->year = $this->month == 12 ? $this->year - 1 : $this->year;
+
         $this->reloadComponent();
     }
     public function openMonitor(string $SHIFT_ID, string $DATE)
@@ -124,6 +126,7 @@ class SchedulerForm extends Component
         $this->contactList = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->locationList = $this->locationServices->getList();
         $scheduleList = $this->scheduleServices->ContactSchedule($this->CONTACT_ID ?? 0, $this->LOCATION_ID ?? 0, $this->scheduleStatusId, 10);
+       
         return view('livewire.scheduler.scheduler-form', ['scheduleList' => $scheduleList]);
     }
 }

@@ -218,7 +218,7 @@ class ItemInventoryServices
         return 0;
     }
 
-    private function getEndingLastOutPut(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE)
+    private function getEndingLastOutPut(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE): array
     {
         $data = DB::table('item_inventory')
             ->select([

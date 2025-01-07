@@ -13,7 +13,6 @@ class NumberServices
             return  (string) "(" . number_format($newText, 2) . ")";
         }
     }
-
     public function Fixed(float $AMOUNT)
     {
 

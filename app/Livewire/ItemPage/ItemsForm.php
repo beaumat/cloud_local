@@ -322,6 +322,7 @@ class ItemsForm extends Component
 
                 $Message = 'Successfully created.';
                 return Redirect::route('maintenanceinventoryitem_edit', ['id' => $this->ID])->with('message', $Message);
+                
             } else {
 
                 $this->itemServices->Update(

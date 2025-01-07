@@ -85,7 +85,6 @@
                                                         <livewire:date-input name="DATE" titleName="Date"
                                                             wire:model.live='DATE' :isDisabled="true" />
                                                     @endif
-
                                                 </div>
                                                 <div class="col-md-4">
                                                     <livewire:text-input name="Code" titleName="Reference No."

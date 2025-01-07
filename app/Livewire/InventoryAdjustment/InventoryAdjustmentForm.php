@@ -289,7 +289,6 @@ class InventoryAdjustmentForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
     public function updateCancel()
     {
         $BA = $this->inventoryAdjustmentServices->get($this->ID);

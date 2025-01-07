@@ -1,5 +1,5 @@
 <div class="row" id='{{ $ID }}'
-    @if ($CONTACT_ID === 0 || $STATUS_ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+    @if ($CONTACT_ID === 0 || $STATUS_ID > 0 || $EXIST_HEMO > 0) style="opacity: 0.5;pointer-events: none;" @endif>
     <div class="col-md-6">
         <div class="form-group">
             <div class="form-check">

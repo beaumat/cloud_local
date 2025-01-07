@@ -90,17 +90,53 @@ class ScheduleServices
             ->orderBy('c.LAST_NAME')
             ->get();
     }
-    public function get($ContactId, $Date, int $LOCATION_ID)
+    public function getSchedHemo($ContactId, $Date, int $LOCATION_ID)
     {
         try {
-            return Schedules::where('CONTACT_ID', $ContactId)
-                ->where('SCHED_DATE', $Date)
-                ->where('LOCATION_ID', $LOCATION_ID)
+            $result = Schedules::query()
+                ->select([
+                    'ID',
+                    'SHIFT_ID',
+                    'CONTACT_ID',
+                    'SCHED_DATE',
+                    'SCHED_STATUS',
+                    'STATUS_LOG',
+                    'LOCATION_ID',
+                    'HEMO_MACHINE_ID',
+                    DB::raw("(select count(hemodialysis.ID) from hemodialysis where hemodialysis.CUSTOMER_ID = schedules.CONTACT_ID and hemodialysis.DATE = schedules.SCHED_DATE and hemodialysis.LOCATION_ID = schedules.LOCATION_ID ) as  EXIST_HEMO")
+                ])
+                ->where('CONTACT_ID', '=', $ContactId)
+                ->where('SCHED_DATE', '=', $Date)
+                ->where('LOCATION_ID', '=', $LOCATION_ID)
                 ->first();
+
+            if ($result) {
+                return $result;
+            }
+
+            return null;
         } catch (\Throwable $th) {
             return null;
         }
     }
+    public function get($ContactId, $Date, int $LOCATION_ID)
+    {
+        try {
+            $result = Schedules::where('CONTACT_ID', '=', $ContactId)
+                ->where('SCHED_DATE', '=', $Date)
+                ->where('LOCATION_ID', '=', $LOCATION_ID)
+                ->first();
+
+            if ($result) {
+                return $result;
+            }
+
+            return null;
+        } catch (\Throwable $th) {
+            return null;
+        }
+    }
+
     public function Delete(int $ID, int $LOCATION_ID)
     {
         Schedules::where('ID', $ID)

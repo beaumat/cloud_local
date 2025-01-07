@@ -12,8 +12,8 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-8 col-sm-6">
-                                    <a class="text-white" href="{{ route('companyinventory_adjustment') }}"> Inventory
-                                        Adjustment
+                                    <a class="text-white" href="{{ route('companyinventory_adjustment') }}">
+                                        Inventory Adjustment
                                     </a>
                                 </div>
                                 <div class="col-4 col-sm-6 text-right">
@@ -34,9 +34,7 @@
                                                         isDisabled="{{ !$Modify }}" titleName="Adjustment Type"
                                                         :options="$adjustmentTypeList" :zero="true"
                                                         wire:model='ADJUSTMENT_TYPE_ID' />
-
                                                 </div>
-
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6">

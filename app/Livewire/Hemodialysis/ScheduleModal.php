@@ -60,9 +60,8 @@ class ScheduleModal extends Component
             if ($isSelect) {
                 $data = $this->scheduleServices->getInfo($scheId);
                 if ($data) {
-                    try {
 
-                        // make if already exists
+                    try {
 
                         if (!$this->hemoServices->CheckingExistsThatDay($this->DATE, $data->CONTACT_ID, $this->LOCATION_ID)) {
                             DB::beginTransaction();
@@ -93,7 +92,9 @@ class ScheduleModal extends Component
         }
 
         if ($this->withBack) {
+            
             $url = route('patientshemo_print_front_back', ['id' => $this->ids]);
+
         } else {
 
             $url = route('patientshemo_print', ['id' => $this->ids]);
@@ -137,7 +138,9 @@ class ScheduleModal extends Component
     public function render()
     {
         $this->shiftList = $this->shiftServices->List();
+        
         $this->dataList = $this->scheduleServices->GetScheduleList($this->DATE, $this->LOCATION_ID, $this->SHIFT_ID);
+
         return view('livewire.hemodialysis.schedule-modal');
     }
 }

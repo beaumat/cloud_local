@@ -18,6 +18,7 @@
                     $isCurrentMonth = $currentDay >= 1 && $currentDay <= $daysInMonth;
                     $isExtraDay = !$isCurrentMonth && (($i == 0 && $j < $startDayOfWeek) || $currentDay > $daysInMonth);
                 @endphp
+                
                 @if ($isCurrentMonth)
                     <td>
                         <b class="@if ($today == $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-' . str_pad($currentDay, 2, '0', STR_PAD_LEFT)) text-primary @endif text-sm">
