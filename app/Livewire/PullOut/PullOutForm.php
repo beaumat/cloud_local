@@ -97,9 +97,9 @@ class PullOutForm extends Component
         }
     }
     private function AccountJournal(): bool
-    {   
+    {
 
- 
+
         try {
             $pullOut = $this->pullOutServices->object_type_map_pull_out;
             $pullOutItems = $this->pullOutServices->object_type_map_pull_out_items;
@@ -209,7 +209,7 @@ class PullOutForm extends Component
         $this->AMOUNT = 0;
         $this->PREPARED_BY_ID = 0;
         $this->NOTES = '';
-        $this->ACCOUNT_ID = 284; // office supply expenses
+        $this->ACCOUNT_ID = $this->accountServices->EXPENSE_ACCOUNT_ID; // office supply expenses
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = '';
     }
@@ -224,16 +224,16 @@ class PullOutForm extends Component
 
             $this->validate(
                 [
-                    'DATE' => 'required',
-                    'LOCATION_ID' => 'required',
-                    'PREPARED_BY_ID' => 'required|not_in:0'
+                    'DATE'              => 'required',
+                    'LOCATION_ID'       => 'required',
+                    'PREPARED_BY_ID'    => 'required|not_in:0'
 
                 ],
                 [],
                 [
-                    'DATE' => 'Date',
-                    'LOCATION_ID' => 'Location',
-                    'PREPARED_BY_ID' => 'Prepared by'
+                    'DATE'              => 'Date',
+                    'LOCATION_ID'       => 'Location',
+                    'PREPARED_BY_ID'    => 'Prepared by'
                 ]
             );
         } else {

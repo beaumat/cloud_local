@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 class HemoServices
 {
 
+    public $object_type_hemo = 95;
     public $object_type_hemo_item = 109;
     public $dialyMode  = false;
     private $object;
@@ -22,6 +23,8 @@ class HemoServices
     private $unitOfMeasureServices;
     private $itemServices;
     private $itemInventoryServices;
+    private $accountJournalServices;
+    private $accountServices;
     public function __construct(
         ObjectServices $objectService,
         UserServices $userServices,
@@ -30,7 +33,9 @@ class HemoServices
         ItemTreatmentServices $itemTreatmentServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         ItemServices $itemServices,
-        ItemInventoryServices $itemInventoryServices
+        ItemInventoryServices $itemInventoryServices,
+        AccountJournalServices $accountJournalServices,
+        AccountServices $accountServices
     ) {
         $this->object = $objectService;
         $this->user = $userServices;
@@ -40,6 +45,8 @@ class HemoServices
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemServices = $itemServices;
         $this->itemInventoryServices = $itemInventoryServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->accountServices =  $accountServices;
     }
 
     public function Get(int $ID)
@@ -1416,6 +1423,7 @@ class HemoServices
                 }
             }
         }
+
         HemodialysisItems::where('SK_LINE_ID', '=', $ID)
             ->where('HEMO_ID', '=', $HEMO_ID)
             ->delete();
@@ -1438,8 +1446,42 @@ class HemoServices
     }
     public function ItemGet(int $ID)
     {
-        $result = HemodialysisItems::where('ID', '=', $ID)->first();
+        $result = HemodialysisItems::where('ID', '=', $ID)
+            ->first();
         return $result;
+    }
+    public function MainToJournalExpense(int $HEMO_ID)
+    {
+        try {
+            $acctID = $this->accountServices->EXPENSE_ACCOUNT_ID;
+            $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hemodialysis_items.ITEM_ID and l.ID = h.LOCATION_ID";
+            $result = HemodialysisItems::query()
+                ->select([
+                    'h.ID',
+                    'h.CUSTOMER_ID as SUBSIDIARY_ID',
+                    DB::raw("$acctID as ACCOUNT_ID"),
+                    DB::raw("sum(((($exSQL) * hemodialysis_items.UNIT_BASE_QUANTITY ) *  hemodialysis_items.QUANTITY )) as AMOUNT"),
+                    DB::raw('0 as ENTRY_TYPE')
+                ])
+                ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+                ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
+                ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')
+                ->leftJoin('item_sub_class as s', 's.ID', '=', 'item.SUB_CLASS_ID')
+                ->leftJoin('item_class as c', 'c.ID', '=', 's.CLASS_ID')
+                ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'hemodialysis_items.UNIT_ID')
+                ->leftJoin('item_treatment as t', function ($q) {
+                    $q->on('t.ITEM_ID', '=', 'hemodialysis_items.ITEM_ID');
+                    $q->on('t.LOCATION_ID', '=', 'h.LOCATION_ID');
+                })
+                ->whereBetween('item.TYPE', ['0', '1'])
+                ->where('hemodialysis_items.HEMO_ID', '=', $HEMO_ID)
+                ->groupBy(['ID', 'SUBSIDIARY_ID', 'ACCOUNT_ID'])
+                ->get();
+
+            return $result;
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+        }
     }
     public function ItemToJournalAsset(int $HEMO_ID)
     {
@@ -1468,34 +1510,7 @@ class HemoServices
 
         return $result;
     }
-    public function ItemToJournalCogs(int $HEMO_ID)
-    {
-        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hemodialysis_items.ITEM_ID and l.ID = h.LOCATION_ID";
-        $result = HemodialysisItems::query()
-            ->select([
-                'hemodialysis_items.ID',
-                'hemodialysis_items.ITEM_ID as SUBSIDIARY_ID',
-                'item.COGS_ACCOUNT_ID as ACCOUNT_ID',
-                DB::raw("((($exSQL) * hemodialysis_items.UNIT_BASE_QUANTITY ) *  hemodialysis_items.QUANTITY ) as AMOUNT"),
-                DB::raw('0 as ENTRY_TYPE')
-            ])
-            ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
-            ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
-            ->leftJoin('item_group as g', 'g.ID', '=', 'item.GROUP_ID')
-            ->leftJoin('item_sub_class as s', 's.ID', '=', 'item.SUB_CLASS_ID')
-            ->leftJoin('item_class as c', 'c.ID', '=', 's.CLASS_ID')
-            ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'hemodialysis_items.UNIT_ID')
-            ->leftJoin('item_treatment as t', function ($q) {
-                $q->on('t.ITEM_ID', '=', 'hemodialysis_items.ITEM_ID');
-                $q->on('t.LOCATION_ID', '=', 'h.LOCATION_ID');
-            })
-          
-            ->whereBetween('item.TYPE', ['0', '1'])
-            ->where('hemodialysis_items.HEMO_ID', '=', $HEMO_ID)
-            ->get();
-    
-        return $result;
-    }
+
     public function ItemView(int $HEMO_ID)
     {
         $result = HemodialysisItems::query()
@@ -1938,21 +1953,8 @@ class HemoServices
             }
         }
     }
-    public function StoreNotes(
-        int $HEMO_ID,
-        string $TIME,
-        string $BP_1,
-        string $BP_2,
-        string $HR,
-        string $BFR,
-        string $AP,
-        string $VP,
-        string $TFP,
-        string $TMP,
-        string $HEPARIN,
-        string $FLUSHING,
-        string $NOTES
-    ) {
+    public function StoreNotes(int $HEMO_ID, string $TIME, string $BP_1, string $BP_2, string $HR, string $BFR, string $AP, string $VP, string $TFP, string $TMP, string $HEPARIN, string $FLUSHING, string $NOTES)
+    {
         $ID = $this->object->ObjectNextID('HEMO_NURSE_NOTES');
 
         HemoNurseNotes::create([
@@ -1973,22 +1975,8 @@ class HemoServices
         ]);
     }
 
-    public function UpdateNotes(
-        int $ID,
-        int $HEMO_ID,
-        string $TIME,
-        string $BP_1,
-        string $BP_2,
-        string $HR,
-        string $BFR,
-        string $AP,
-        string $VP,
-        string $TFP,
-        string $TMP,
-        string $HEPARIN,
-        string $FLUSHING,
-        string $NOTES
-    ) {
+    public function UpdateNotes(int $ID, int $HEMO_ID, string $TIME, string $BP_1, string $BP_2, string $HR, string $BFR, string $AP, string $VP, string $TFP, string $TMP, string $HEPARIN, string $FLUSHING, string $NOTES)
+    {
 
         HemoNurseNotes::where('ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
@@ -2007,10 +1995,8 @@ class HemoServices
                 'NOTES'     => $NOTES
             ]);
     }
-    public function DeleteNotes(
-        int $ID,
-        int $HEMO_ID
-    ) {
+    public function DeleteNotes(int $ID, int $HEMO_ID)
+    {
         HemoNurseNotes::where('ID', '=', $ID)
             ->where('HEMO_ID', '=', $HEMO_ID)
             ->delete();
@@ -2041,13 +2027,85 @@ class HemoServices
     }
     public function GetNotes(int $ID)
     {
-        $result =   HemoNurseNotes::where('ID', '=', $ID)
-            ->first();
+        $result =  HemoNurseNotes::where('ID', '=', $ID)->first();
 
         if ($result) {
             return $result;
         }
-
         return [];
+    }
+
+    public function makeJournal(int $HEMO_ID)
+    {
+
+        $dataHemo  = $this->get($HEMO_ID);
+        if ($dataHemo) {
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($this->object_type_hemo, $HEMO_ID);
+            if ($JOURNAL_NO  ==  0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->object_type_hemo, $HEMO_ID) + 1;
+            }
+            // Main Expenses
+            $mainHemo = $this->MainToJournalExpense($HEMO_ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $mainHemo, $dataHemo->LOCATION_ID, $this->object_type_hemo, $dataHemo->DATE);
+            // ASSET
+            $itemAsset = $this->ItemToJournalAsset($HEMO_ID);
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $itemAsset, $dataHemo->LOCATION_ID, $this->object_type_hemo_item, $dataHemo->DATE);
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+            if ($debit_sum == $credit_sum) {
+
+                return;
+            }
+        }
+    }
+    private function getItemInventory(int $HEMO_ID)
+    {
+        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hemodialysis_items.ITEM_ID and l.ID = h.LOCATION_ID";
+        $result = HemodialysisItems::query()
+            ->select([
+                'hemodialysis_items.ID',
+                'hemodialysis_items.ITEM_ID',
+                'hemodialysis_items.QUANTITY',
+                'hemodialysis_items.UNIT_BASE_QUANTITY',
+                DB::raw("((($exSQL) * hemodialysis_items.UNIT_BASE_QUANTITY ) *  hemodialysis_items.QUANTITY ) as COST"),
+            ])
+            ->join('hemodialysis as h', 'h.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('hemodialysis_items.HEMO_ID', '=', $HEMO_ID)
+            ->get();
+
+        return $result;
+    }
+    public function makeItemInventory(int $HEMO_ID)
+    {
+        $SOURCE_REF_TYPE = 27;
+        $hemoData = $this->get($HEMO_ID);
+        if ($hemoData) {
+            $itemList = $this->getItemInventory($HEMO_ID);       
+            if ($itemList) {
+                $this->itemInventoryServices->InventoryExecute(
+                    $itemList,
+                    $hemoData->LOCATION_ID,
+                    $SOURCE_REF_TYPE,
+                    $hemoData->DATE,
+                    false
+                );
+                $this->ItemfollowUpdateToBePosted($HEMO_ID);
+            }
+        }
+    }
+    private function ItemfollowUpdateToBePosted(int $HEMO_ID)
+    {
+        HemodialysisItems::join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->join('hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->whereIn('hemodialysis.STATUS_ID', ['2', '4'])
+            ->where('hemodialysis_items.IS_POST','=', false)
+            ->where('hemodialysis.ID', '=', $HEMO_ID)
+            ->update([
+                'hemodialysis_items.IS_POST' => true
+            ]);
     }
 }

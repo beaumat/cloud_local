@@ -298,7 +298,7 @@ class AccountJournalServices
             ->where('OBJECT_TYPE', $OBJECT_TYPE)
             ->where('OBJECT_ID', $OBJECT_ID)
             ->first();
-
+      
         if ($data) { // if exists
             return (int) $data->JOURNAL_NO;
         }

@@ -45,33 +45,20 @@ class TimerServices
             $this->getPosted($sched->CONTACT_ID, $sched->SCHED_DATE, $sched->LOCATION_ID);
         }
     }
-    private function generateItemHemo($transDate)
-    {
+    // private function generateItemHemo($transDate)
+    // {
 
-        DB::beginTransaction();
-        try {
-            $SOURCE_REF_TYPE = 27;
-            $itemData = $this->hemoServices->CallOutItemUnPosted($transDate);
-            foreach ($itemData as $list) {
-                $QTY = (float)  ($list->QUANTITY * $list->UNIT_BASE_QUANTITY ?? 1) * -1;
-                $this->itemInventoryServices->InventoryModify(
-                    $list->ITEM_ID,
-                    $list->LOCATION_ID,
-                    $list->ID,
-                    $SOURCE_REF_TYPE,
-                    $list->DATE,
-                    0,
-                    $QTY,
-                    number_format($list->COST ?? 0, 2)
-                );
-            }
-            $this->hemoServices->CallOutItemToBePosted($transDate); // to update update
-            DB::commit();
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            Log::error('Error executing generateItem() : ' . $th->getMessage());
-        }
-    }
+    //     DB::beginTransaction();
+    //     try {
+    //         // $SOURCE_REF_TYPE = 27;
+    //         // $itemData = $this->hemoServices->CallOutItemUnPosted($transDate);
+    //         $this->hemoServices->CallOutItemToBePosted($transDate); // to update update
+    //         DB::commit();
+    //     } catch (\Throwable $th) {
+    //         DB::rollBack();
+    //         Log::error('Error executing generateItem() : ' . $th->getMessage());
+    //     }
+    // }
 
     private function GenerateItemServiceCharges($transDate)
     {
@@ -106,51 +93,10 @@ class TimerServices
 
         $this->generateUnposted();
         $this->generateWaitingList($transDate);
-        $this->generateItemHemo($transDate);
+   
         $this->GenerateItemServiceCharges($transDate);
     }
-    public function getJournal($HEMO_ID)
-    {
-        DB::beginTransaction();
-        try {
-            $dataHemo  = $this->hemoServices->get($HEMO_ID);
-            if ($dataHemo) {
-                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->hemoServices->object_type_hemo_item, $HEMO_ID);
-                if ($JOURNAL_NO  ==  0) {
-                    $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->hemoServices->object_type_hemo_item, $HEMO_ID) + 1;
-                }
 
-                // COGS
-                $itemCogs = $this->hemoServices->ItemToJournalCogs($HEMO_ID);
-                $this->accountJournalServices->JournalExecute($JOURNAL_NO, $itemCogs, $dataHemo->LOCATION_ID, $this->hemoServices->object_type_hemo_item, $dataHemo->DATE);
-            
-                // ASSET
-                $itemAsset = $this->hemoServices->ItemToJournalAsset($HEMO_ID);
-                $this->accountJournalServices->JournalExecute($JOURNAL_NO, $itemAsset, $dataHemo->LOCATION_ID, $this->hemoServices->object_type_hemo_item, $dataHemo->DATE);
-
-                
-                $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-                $debit_sum = (float) $data['DEBIT'];
-                $credit_sum = (float) $data['CREDIT'];
-         
-
-                if ($debit_sum == $credit_sum) {
-                    DB::commit();
-                    return;
-                }
-                
-                DB::rollBack();
-            }
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-            // dd($e->getMessage());
-        }
-
-
-
-        // 
-    }
     private function getPosted(int $CONTACT_ID, string $DATE, int  $LOCATION_ID)
     {
         try {
@@ -197,14 +143,15 @@ class TimerServices
                 if ($POST_WEIGHT == 0 || $POST_BLOOD_PRESSURE == 0 || $POST_BLOOD_PRESSURE2 == 0 || $POST_HEART_RATE == 0 || $POST_O2_SATURATION == 0 || empty($TIME_START) == true ||  empty($TIME_END) == true) {
                     if ($IS_INCOMPLETE == true || $IS_PF == true) {
                         $this->hemoServices->StatusUpdate($ID, 2); // POSTED
-
-
-
+                        $this->hemoServices->makeJournal($ID); // to journal
+                        $this->hemoServices->makeItemInventory($ID); // item inventory
                     } else {
                         $this->hemoServices->StatusUpdate($ID, 4); // UNPOSTED
                     }
                 } else {
                     $this->hemoServices->StatusUpdate($ID, 2); // POSTED
+                    $this->hemoServices->makeJournal($ID); // to journal
+                    $this->hemoServices->makeItemInventory($ID); // item inventory
                 }
                 DB::commit();
             } else {

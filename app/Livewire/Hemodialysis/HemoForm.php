@@ -474,21 +474,11 @@ class HemoForm extends Component
         ]);
     }
 
-    private function ItemInventory(): bool
+    private function executePosted(): bool
     {
         try {
-            $SOURCE_REF_TYPE = 27; // always hemo;
-
-            $data = $this->hemoServices->ItemInventory($this->ID);
-            if ($data) {
-                $this->itemInventoryServices->InventoryExecute(
-                    $data,
-                    $this->LOCATION_ID,
-                    $SOURCE_REF_TYPE,
-                    $this->DATE,
-                    false
-                );
-            }
+            $this->hemoServices->makeJournal($this->ID);
+            $this->hemoServices->makeItemInventory($this->ID);
             return true;
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -559,23 +549,21 @@ class HemoForm extends Component
             $ITEM_COUNT = (int) $this->hemoServices->CountItems($this->ID);
 
             DB::beginTransaction();
-            if ($this->STATUS == 1) {
+            if ($ITEM_COUNT == 0) {
+                DB::rollBack();
+                session()->flash('error', 'Item not found.');
+                return;
+            }
 
-                if ($ITEM_COUNT == 0) {
-                    DB::rollBack();
-                    session()->flash('error', 'Item not found.');
-                    return;
-                }
 
-                if (!$this->ItemInventory()) {
-                    DB::rollBack();
-                    return;
-                }
+            if (!$this->executePosted()) {
+                DB::rollBack();
+                return;
             }
 
             $this->hemoServices->StatusUpdate($this->ID, 2);
             $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 1); //PRESENT
-            $this->hemoServices->ItemUnposted($this->ID);
+
 
             DB::commit();
 
@@ -591,9 +579,7 @@ class HemoForm extends Component
             session()->flash("error", $message);
         }
     }
-    public function InventoryUnposted() {
-        
-    }
+    public function InventoryUnposted() {}
     public function showNotes()
     {
         $contact = $this->contactServices->get($this->CUSTOMER_ID, 3);

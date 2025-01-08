@@ -8,6 +8,7 @@ use App\Models\AccountType;
 class AccountServices
 {   
     public int $UNDEPOSITED_ACCOUNT_ID = 5;
+    public int $EXPENSE_ACCOUNT_ID = 284;
     private $object;
     public function __construct(ObjectServices $objectService)
     {

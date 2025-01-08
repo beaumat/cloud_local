@@ -8,7 +8,6 @@ use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
 use App\Services\ItemTreatmentServices;
 use App\Services\ServiceChargeServices;
-use App\Services\TimerServices;
 use App\Services\UnitOfMeasureServices;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +45,6 @@ class InventoryTreatment extends Component
         ItemTreatmentServices $itemTreatmentServices,
         ItemSubClassServices $itemSubClassServices,
         ServiceChargeServices $serviceChargeServices,
-        TimerServices $timerServices,
         AccountJournalServices $accountJournalServices
 
     ) {
@@ -56,7 +54,7 @@ class InventoryTreatment extends Component
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->itemSubClassServices = $itemSubClassServices;
         $this->serviceChargeServices = $serviceChargeServices;
-        $this->timerServices = $timerServices;
+
         $this->accountJournalServices = $accountJournalServices;
     }
 
@@ -319,13 +317,19 @@ class InventoryTreatment extends Component
     public function gotJournal()
     {
 
-        $this->timerServices->getJournal($this->HEMO_ID);
-        session()->flash('message', 'Successfully Make Journal');
+        $this->hemoServices->makeJournal($this->HEMO_ID);
+        $this->gotInventory();
+        
     }
+    public function gotInventory()
+    {
+            $this->hemoServices->makeItemInventory($this->HEMO_ID);
+    }   
     public function OpenJournal()
     {
-        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->hemoServices->object_type_hemo_item, $this->HEMO_ID);
-        dd($JOURNAL_NO);
+
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->hemoServices->object_type_hemo, $this->HEMO_ID);
+
         if ($JOURNAL_NO > 0) {
             $data = ['JOURNAL_NO' => $JOURNAL_NO];
             $this->dispatch('open-journal', result: $data);
