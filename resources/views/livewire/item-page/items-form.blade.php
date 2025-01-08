@@ -215,12 +215,19 @@
                                                                                                 wire:model='COGS_ACCOUNT_ID'
                                                                                                 :vertical="true" />
                                                                                         </div>
-                                                                                        <div class="col-md-12">
+                                                                                        <div class="col-md-6">
                                                                                             <livewire:custom-check-box
                                                                                                 name="IS_KIT"
                                                                                                 titleName="Kits"
                                                                                                 isDisabled="{{ false }}"
                                                                                                 wire:model='IS_KIT' />
+                                                                                        </div>
+                                                                                             <div class="col-md-6">
+                                                                                            <livewire:custom-check-box
+                                                                                                name="NON_PULL_OUT"
+                                                                                                titleName="Non-Pullout"
+                                                                                                isDisabled="{{ false }}"
+                                                                                                wire:model='NON_PULL_OUT' />
                                                                                         </div>
                                                                                     @endif
                                                                                 </div>

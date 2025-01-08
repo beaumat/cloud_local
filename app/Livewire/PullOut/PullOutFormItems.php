@@ -73,10 +73,10 @@ class PullOutFormItems extends Component
     public function updatedcodeBase()
     {
         if ($this->codeBase) {
-            $this->itemCodeList = $this->itemServices->getInventoryItem(true);
+            $this->itemCodeList = $this->itemServices->getInventoryItemPullOut(true);
             return;
         }
-        $this->itemDescList = $this->itemServices->getInventoryItem(false);
+        $this->itemDescList = $this->itemServices->getInventoryItemPullOut(false);
     }
     public function getAmount(): void
     {

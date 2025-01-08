@@ -103,6 +103,27 @@ class ItemServices
             ->orderBy('DESCRIPTION', 'asc')
             ->get();
     }
+    public function getInventoryItemPullOut(bool $isCode)
+    {
+        if ($isCode) {
+            // Code
+            return Items::query()
+                ->select(['ID', 'CODE'])
+                ->where('INACTIVE', '0')
+                ->whereIn('TYPE', ['0', '1'])
+                ->where('NON_PULL_OUT', '=', false)
+                ->orderBy('CODE', 'asc')
+                ->get();
+        }
+        // Descripton
+        return Items::query()
+            ->select(['ID', 'DESCRIPTION'])
+            ->where('INACTIVE', '0')
+            ->whereIn('TYPE', ['0', '1'])
+            ->where('NON_PULL_OUT', '=', false)
+            ->orderBy('DESCRIPTION', 'asc')
+            ->get();
+    }
     public function getByVendor(bool $isCode)
     {
         if ($isCode) {
@@ -166,7 +187,8 @@ class ItemServices
         bool $INACTIVE,
         bool $NON_HEMO,
         bool $HEMO_NON_INVENTORY,
-        bool $IS_KIT
+        bool $IS_KIT,
+        bool $NON_PULL_OUT
     ): int {
 
         $ID = $this->object->ObjectNextID('ITEM');
@@ -199,7 +221,8 @@ class ItemServices
             'INACTIVE'                  => $INACTIVE,
             'NON_HEMO'                  => $NON_HEMO,
             'HEMO_NON_INVENTORY'        => $HEMO_NON_INVENTORY,
-            'IS_KIT'                    => $IS_KIT
+            'IS_KIT'                    => $IS_KIT,
+            'NON_PULL_OUT'              => $NON_PULL_OUT
         ]);
 
         return $ID;
@@ -233,7 +256,8 @@ class ItemServices
         bool $INACTIVE,
         bool $NON_HEMO,
         bool $HEMO_NON_INVENTORY,
-        bool $IS_KIT
+        bool $IS_KIT,
+        bool $NON_PULL_OUT
     ): void {
 
         Items::where('ID', $ID)
@@ -264,7 +288,8 @@ class ItemServices
                 'INACTIVE'                  => $INACTIVE,
                 'NON_HEMO'                  => $NON_HEMO,
                 'HEMO_NON_INVENTORY'        => $HEMO_NON_INVENTORY,
-                'IS_KIT'                    => $IS_KIT
+                'IS_KIT'                    => $IS_KIT,
+                'NON_PULL_OUT'              => $NON_PULL_OUT
             ]);
     }
 

@@ -47,6 +47,7 @@ class Items extends Model
         'CUSTOM_FIELD5',
         'NON_HEMO',
         'HEMO_NON_INVENTORY',
-        'IS_KIT'
+        'IS_KIT',
+        'NON_PULL_OUT'
     ];
 }

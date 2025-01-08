@@ -53,6 +53,7 @@ class ItemsForm extends Component
     public bool $NON_HEMO;
     public bool $HEMO_NON_INVENTORY;
     public bool $IS_KIT;
+    public bool $NON_PULL_OUT;
     public $itemType = [];
     public $stockType = [];
     public $itemGroup = [];
@@ -119,6 +120,7 @@ class ItemsForm extends Component
         $this->NON_HEMO =  false;
         $this->HEMO_NON_INVENTORY = false;
         $this->IS_KIT = false;
+        $this->NON_PULL_OUT = false;
         $this->AccountInsert();
     }
     public function mount($id = null)
@@ -159,6 +161,8 @@ class ItemsForm extends Component
                 $this->NON_HEMO = $item->NON_HEMO ?? false;
                 $this->HEMO_NON_INVENTORY = $item->HEMO_NON_INVENTORY ?? false;
                 $this->IS_KIT = $item->IS_KIT ?? false;
+                $this->NON_PULL_OUT = $item->NON_PULL_OUT ?? false;
+
                 $getSubClass = ItemSubClass::where('ID', $this->SUB_CLASS_ID)->first();
 
                 if ($getSubClass) {
@@ -317,7 +321,8 @@ class ItemsForm extends Component
                     $this->INACTIVE,
                     $this->NON_HEMO,
                     $this->HEMO_NON_INVENTORY,
-                    $this->IS_KIT
+                    $this->IS_KIT,
+                    $this->NON_PULL_OUT
                 );
 
                 $Message = 'Successfully created.';
@@ -353,7 +358,8 @@ class ItemsForm extends Component
                     $this->INACTIVE,
                     $this->NON_HEMO,
                     $this->HEMO_NON_INVENTORY,
-                    $this->IS_KIT
+                    $this->IS_KIT,
+                     $this->NON_PULL_OUT
 
                 );
                 $Message = 'Successfully updated.';

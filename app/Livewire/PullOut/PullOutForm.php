@@ -54,7 +54,6 @@ class PullOutForm extends Component
         ContactServices $contactServices,
         UserServices  $userServices,
         AccountJournalServices $accountJournalServices,
-
     ) {
         $this->pullOutServices = $pullOutServices;
         $this->locationServices = $locationServices;
