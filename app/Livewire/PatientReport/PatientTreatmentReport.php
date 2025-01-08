@@ -40,6 +40,10 @@ class PatientTreatmentReport extends Component
     public $storeTotal = [];
     public $phicTotal = [];
     public $premTotal = [];
+    public $regularTotal = [];
+
+
+
     private $locationServices;
     private $userServices;
     public function boot(PatientReportServices $patientReportServices, DateServices $dateServices, LocationServices $locationServices, UserServices $userServices)
@@ -62,6 +66,7 @@ class PatientTreatmentReport extends Component
         $this->storeTotal = [];
         $this->phicTotal = [];
         $this->premTotal =  [];
+        $this->regularTotal = [];
 
         $this->startDate = Carbon::create($this->YEAR,  $this->MONTH, 1); // August 1st of the current year
         $this->endDate = $this->startDate->copy()->endOfMonth(); // End of August
@@ -72,6 +77,7 @@ class PatientTreatmentReport extends Component
             $this->storeTotal[] = 0;
             $this->phicTotal[]  = 0;
             $this->premTotal[] = 0;
+            $this->regularTotal[] = 0;
         }
     }
     public function generate()

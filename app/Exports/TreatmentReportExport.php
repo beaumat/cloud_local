@@ -26,7 +26,7 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
     public $storeTotal = [];
     public $phicTotal = [];
     public $premTotal = [];
-
+    public $regularTotal = [];
     protected $patientSelected = [];
     protected $LOCATION_ID;
     protected $patientReportServices;
@@ -46,6 +46,7 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
         $this->storeTotal = [];
         $this->phicTotal = [];
         $this->premTotal =  [];
+        $this->regularTotal = [];
 
         $this->startDate = Carbon::create($this->YEAR,  $this->MONTH, 1); // August 1st of the current year
         $this->endDate = $this->startDate->copy()->endOfMonth(); // End of August
@@ -56,6 +57,7 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
             $this->storeTotal[] = 0;
             $this->phicTotal[]  = 0;
             $this->premTotal[] = 0;
+            $this->regularTotal[] = 0;
         }
     }
 
@@ -113,12 +115,18 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
                 if ($list[date('d', strtotime($day))] == 2) {
                     $this->premTotal[$index] = $this->premTotal[$index] + 1;
                 }
+                if ($list[date('d', strtotime($day))] == 3) {
+                    $this->regularTotal[$index] = $this->regularTotal[$index] + 1;
+                }
+
                 if ($list[date('d', strtotime($day))]) {
 
                     if ($list[date('d', strtotime($day))] == 1) {
                         $row[] = 'G';
                     } elseif ($list[date('d', strtotime($day))] == 2) {
                         $row[] = 'P';
+                    } elseif ($list[date('d', strtotime($day))] == 3) {
+                        $row[] = 'R';
                     } else {
                         $row[] = '';
                     }
@@ -145,8 +153,6 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
         $row = [];
         $row[] = '';
         $row[] = 'No. of Treatment W/ PHIC';
-
-
         foreach ($this->dailyList as $day) {
             $row[] = $this->phicTotal[$index];
             $sum = $sum + $this->phicTotal[$index];
@@ -156,6 +162,8 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
         $finalData[] = array_values($row);
         $row = [];
 
+
+        // PRIMING
         $index = 0;
         $sum = 0;
         $row[] = '';
@@ -170,9 +178,28 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
         $finalData[] = array_values($row);
         $row = [];
 
+
+        // REGULAR
+        $index = 0;
+        $sum = 0;
+        $row[] = '';
+        $row[] = 'No. of Treatment Regular Rate';
+
+        foreach ($this->dailyList as $day) {
+            $row[] = $this->regularTotal[$index];
+            $sum = $sum + $this->regularTotal[$index];
+            $index++;
+        }
+        $row[] = $sum;
+        $finalData[] = array_values($row);
+        $row = [];
+
+
+
+        // TOTAL
         $index = 0;
         $row[] = '';
-        $row[] = 'No. of Treatment';
+        $row[] = 'Total of Treatment';
 
         foreach ($this->dailyList as $day) {
             $row[] = $this->storeTotal[$index];
@@ -201,7 +228,7 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
-                        ->setARGB('FF00FF00'); // Green
+                        ->setARGB('90ee90'); // Green
                 }
 
                 if ($cellValue === 'P') {
@@ -209,7 +236,14 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
-                        ->setARGB('#FF9D00'); // ORANGE
+                        ->setARGB('FFA500'); // ORANGE
+                }
+                if ($cellValue === 'R') {
+                    $sheet->getStyle($cellCoordinate)
+                        ->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('00FFFF'); // CRYAN
                 }
             }
         }

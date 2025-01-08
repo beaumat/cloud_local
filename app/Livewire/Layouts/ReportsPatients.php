@@ -7,7 +7,7 @@ use Livewire\Component;
 class ReportsPatients extends Component
 {   
     
-
+    
     public function render()
     {
         return view('livewire.layouts.reports-patients');

@@ -23,7 +23,7 @@ class PullOutForm extends Component
 {
     public int $ID;
     public int $openStatus = 0;
-    public  $accountList = [];
+    public $accountList = [];
     public string $DATE;
     public string $CODE;
     public int $LOCATION_ID;
@@ -44,7 +44,6 @@ class PullOutForm extends Component
     private $contactServices;
     private $itemInventoryServices;
     private $accountJournalServices;
-
     private $accountServices;
     public function boot(
         PullOutServices $pullOutServices,

@@ -130,10 +130,12 @@
                                                 if ($list[date('d', strtotime($day))] == 2) {
                                                     $premTotal[$index] = $premTotal[$index] + 1;
                                                 }
-
+                                                if ($list[date('d', strtotime($day))] == 3) {
+                                                    $regularTotal[$index] = $regularTotal[$index] + 1;
+                                                }
                                             @endphp
                                             <td
-                                                class="text-center   @if ($list[date('d', strtotime($day))] == 1) bg-success  @elseif ($list[date('d', strtotime($day))] == 2) bg-orange @endif">
+                                                class="text-center   @if ($list[date('d', strtotime($day))] == 1) bg-success  @elseif ($list[date('d', strtotime($day))] == 2) bg-orange @elseif ($list[date('d', strtotime($day))] == 3) bg-info @endif">
                                                 @if ($list[date('d', strtotime($day))])
                                                     <i class="fa fa-check" aria-hidden="true"></i>
                                                     @php
@@ -204,7 +206,29 @@
                                     @endforeach
                                     <td class="text-center font-weight-bold text-sm ">{{ $sum }}</td>
                                 </tr>
-
+                                <tr class="bg-info text-white">
+                                    @php
+                                        $index = 0;
+                                        $sum = 0;
+                                    @endphp
+                                    <td>
+                                    </td>
+                                    <td class="font-weight-bold text-center">
+                                        <span>No. of Treatment Regular Rate</span>
+                                    </td>
+                                    @foreach ($dailyList as $day)
+                                        <td class="text-center font-weight-bold ">
+                                            {{ $regularTotal[$index] }}
+                                            @php
+                                                $sum = $sum + $regularTotal[$index];
+                                            @endphp
+                                        </td>
+                                        @php
+                                            $index++;
+                                        @endphp
+                                    @endforeach
+                                    <td class="text-center font-weight-bold text-sm ">{{ $sum }}</td>
+                                </tr>
 
                                 <tr class="bg-dark text-white">
                                     @php
@@ -213,7 +237,7 @@
                                     <td>
                                     </td>
                                     <td class="font-weight-bold text-center">
-                                        <span>No. of Treatment</span>
+                                        <span>Total of Treatment</span>
                                     </td>
                                     @foreach ($dailyList as $day)
                                         <td class="text-center font-weight-bold ">

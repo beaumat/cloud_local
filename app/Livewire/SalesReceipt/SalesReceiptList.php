@@ -31,9 +31,7 @@ class SalesReceiptList extends Component
     private $userServices;
     private $accountJournalServices;
     private $itemInventoryServices;
-
     private $patientPaymentServices;
-
 
     public function boot(
         SalesReceiptServices $salesReceiptServices,
