@@ -7,6 +7,7 @@ use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -32,14 +33,17 @@ class HemoList extends Component
     public string $DATE_FROM;
     public string $DATE_TO;
     private $dateServices;
-    public function boot(HemoServices $hemoServices, LocationServices $locationServices, UserServices $userServices, DateServices $dateServices)
-    {
+    public function boot(
+        HemoServices $hemoServices,
+        LocationServices $locationServices,
+        UserServices $userServices,
+        DateServices $dateServices
+    ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->dateServices = $dateServices;
     }
-
     #[On('upload-alert')]
     public function AlertMsg($data)
     {
@@ -47,10 +51,13 @@ class HemoList extends Component
     }
     public function delete($id)
     {
+        DB::beginTransaction();
         try {
             $this->hemoServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
+            DB::commit();
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
@@ -85,11 +92,20 @@ class HemoList extends Component
         );
         return Excel::download(new TreatmentListExport($dataList), 'hemo-treatment-.xlsx');
     }
+    public function updatedlocationid()
+    {
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     #[On('refresh-list')]
     public function render()
     {
         $this->pendingList = $this->hemoServices->UnpostedTratment($this->locationid, $this->search);
-        
+
         $dataList = $this->hemoServices->Search(
             $this->search,
             $this->locationid,
@@ -100,16 +116,4 @@ class HemoList extends Component
         );
         return view('livewire.hemodialysis.hemo-list', ['dataList' => $dataList]);
     }
-
-    public function updatedlocationid()
-    {   
-        try {
-            $this->userServices->SwapLocation($this->locationid );
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-        }
- 
-    }
-    
 }

@@ -94,6 +94,7 @@
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Edit
                                                 </button>
+                                                
                                                 @if (($ID > 0 && $STATUS == 1) || ($ID > 0 && $STATUS == 4))
                                                     @if (auth()->user()->can('patient.treatment.update'))
                                                         <button name="btnPosted" type='button' wire:click='getPosted()'
@@ -107,7 +108,7 @@
 
                                             @endif
 
-                                            @if ($STATUS == 4 || $STATUS == 3)
+                                            @if ($STATUS == 3)
                                                 @can('patient.treatment.update')
                                                     <button name="btnUnposted" type='button'
                                                         class="btn btn-sm btn-secondary"
@@ -117,6 +118,7 @@
                                                         Unposted
                                                     </button>
                                                 @endcan
+
                                             @endif
 
                                             @if ($STATUS != 3)
