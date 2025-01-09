@@ -337,9 +337,23 @@
                 </div>
                 <div class="col-md-8">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-4 text-right">
+                            <div class="row">
+                                <div class="col-12 text-xs">
+                                    <label class="text-xs">OP Paid : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($OP_AMOUNT, 2) }}
+                                    </span>
+                                </div>
+                                <div class="col-12 text-xs">
+                                    <label class="text-xs">OVP Paid : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($OVP_AMOUNT, 2) }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 text-right">
                             <div class="row">
                                 <div class=" col-12 text-xs"> <label class="text-xs">Cash Paid : </label>
                                     <span
@@ -370,13 +384,15 @@
                                     <span
                                         class="text-success active font-weight-bold text-xs">{{ number_format($PCSO_AMOUNT, 2) }}</span>
                                 </div>
-                                <div class="col-12 text-xs"> <label class="text-xs">OTHER GL Paid : </label>
+                                <div class="col-12 text-xs">
+                                    <label class="text-xs">OTHER GL Paid : </label>
                                     <span
-                                        class="text-success font-weight-bold text-xs">{{ number_format($OTHER_GL_AMOUNT, 2) }}</span>
+                                        class="text-success font-weight-bold text-xs">{{ number_format($OTHER_GL_AMOUNT, 2) }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 text-right">
                             <h6 class="text-xs"> <label class="text-xs">TOTAL (SC) : </label>
                                 <span
                                     class="text-primary font-weight-bold h6">{{ number_format($TOTAL_CHARGE, 2) }}</span>

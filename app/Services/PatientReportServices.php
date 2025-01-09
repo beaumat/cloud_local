@@ -36,7 +36,7 @@ class PatientReportServices
                 DB::raw('IFNULL(pp.RECEIPT_REF_NO,pp.CODE) as PP_CODE'),
                 'pm.DESCRIPTION as PAYMENT_METHOD',
                 DB::raw('IFNULL(pp.AMOUNT, 0) as PP_DEPOSIT'),
-                DB::raw('IFNULL(ppc.AMOUNT_APPLIED, 0) as PP_PAID'),
+                DB::raw(' IF(ISNULL(pp.AMOUNT),0, IFNULL(ppc.AMOUNT_APPLIED, 0))  as PP_PAID'),
                 'l.NAME as LOCATION_NAME',
                 DB::raw('(select d.PRINT_NAME_AS  from patient_doctor  as pd join contact as d on d.ID = pd.DOCTOR_ID where pd.PATIENT_ID = c.ID limit 1) as DOCTOR_NAME '),
                 'pp.PAYMENT_METHOD_ID'

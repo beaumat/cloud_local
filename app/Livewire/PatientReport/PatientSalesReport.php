@@ -123,7 +123,6 @@ class PatientSalesReport extends Component
 
         $this->refreshComponent = $this->refreshComponent ? false : true;
     }
-
     public function shortFilter()
     {
         $this->NO_OF_PATIENT  = 0;
@@ -165,19 +164,16 @@ class PatientSalesReport extends Component
     }
     public function  print()
     {
-
         return redirect()->away(route('reportspatient_sales_report_print', []));
     }
     public function resetFilter()
     {
         $this->DATE_COLLECTION_FROM = '';
         $this->DATE_COLLECTION_TO = '';
-
         $this->DATE_TRANSACTION_FROM = $this->userServices->getTransactionDateDefault();
         $this->DATE_TRANSACTION_TO = $this->userServices->getTransactionDateDefault();
         $this->PATIENT_ID = 0;
     }
-
     public function render()
     {
         return view('livewire.patient-report.patient-sales-report');
