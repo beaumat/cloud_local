@@ -864,7 +864,7 @@ class HemoServices
     public function Delete(int $id)
     {
         HemoNurseNotes::where('HEMO_ID', '=', $id)->delete();
-        HemodialysisItems::where('HEMO_ID', '', $id)->delete();
+        HemodialysisItems::where('HEMO_ID', '=', $id)->delete();
         Hemodialysis::where('ID', '=', $id)->delete();
     }
     public function SearchList($search, int $LOCATION_ID)

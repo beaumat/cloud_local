@@ -198,6 +198,7 @@ class PullOutForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('companypull_out')->with('error', $errorMessage);
         }
+        
         $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
