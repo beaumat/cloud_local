@@ -105,7 +105,7 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
             $count = 0;
             $index = 0;
             $patient = $patient + 1;
-            $row[] = $patient;
+            $row[] = $patient . '.';
             $row[] = $list->PATIENT_NAME;
 
             foreach ($this->dailyList as $day) {
@@ -122,7 +122,7 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
                 if ($list[date('d', strtotime($day))]) {
 
                     if ($list[date('d', strtotime($day))] == 1) {
-                        $row[] = 'G';
+                        $row[] = '1';
                     } elseif ($list[date('d', strtotime($day))] == 2) {
                         $row[] = 'P';
                     } elseif ($list[date('d', strtotime($day))] == 3) {
@@ -139,9 +139,8 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
                 $index++;
             }
 
-            $row[] = $count;
+            $row[] = $count . '.';
             $total = $total + $count;
-
             $finalData[] = array_values($row);
         }
 
@@ -154,11 +153,11 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
         $row[] = '';
         $row[] = 'No. of Treatment W/ PHIC';
         foreach ($this->dailyList as $day) {
-            $row[] = $this->phicTotal[$index];
+            $row[] =  $this->phicTotal[$index] . '.';
             $sum = $sum + $this->phicTotal[$index];
             $index++;
         }
-        $row[] = $sum;
+        $row[] = $sum . '.';
         $finalData[] = array_values($row);
         $row = [];
 
@@ -170,11 +169,11 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
         $row[] = 'No. of Treatment Priming';
 
         foreach ($this->dailyList as $day) {
-            $row[] = $this->premTotal[$index];
+            $row[] =  $this->premTotal[$index] . '.';
             $sum = $sum + $this->premTotal[$index];
             $index++;
         }
-        $row[] = $sum;
+        $row[] = $sum . '.';
         $finalData[] = array_values($row);
         $row = [];
 
@@ -186,11 +185,11 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
         $row[] = 'No. of Treatment Regular Rate';
 
         foreach ($this->dailyList as $day) {
-            $row[] = $this->regularTotal[$index];
+            $row[] =  $this->regularTotal[$index] . '.';
             $sum = $sum + $this->regularTotal[$index];
             $index++;
         }
-        $row[] = $sum;
+        $row[] = $sum . '.';
         $finalData[] = array_values($row);
         $row = [];
 
@@ -202,10 +201,10 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
         $row[] = 'Total of Treatment';
 
         foreach ($this->dailyList as $day) {
-            $row[] = $this->storeTotal[$index];
+            $row[] = $this->storeTotal[$index] . '.';
             $index++;
         }
-        $row[] = $total;
+        $row[] = $total . '.';
         $finalData[] = array_values($row);
 
         return collect($finalData);
@@ -223,7 +222,7 @@ class TreatmentReportExport implements FromCollection, ShouldAutoSize, WithStyle
             for ($col = 1; $col <= $highestColumnIndex; $col++) {
                 $cellCoordinate = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col) . $row;
                 $cellValue = $sheet->getCell($cellCoordinate)->getValue();
-                if ($cellValue === 'G') {
+                if ($cellValue === 1) {
                     $sheet->getStyle($cellCoordinate)
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
