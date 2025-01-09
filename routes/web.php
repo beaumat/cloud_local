@@ -373,10 +373,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', DepreciationForm::class)->name('depreciation_edit');
         });
     });
-
-
-
-
+    
     Route::prefix('/banking')->name('banking')->group(function () {
         Route::prefix('/deposit')->group(function () {
             Route::get('/', DepositList::class)->name('deposit')->middleware(['permission:banking.deposit.view']);
@@ -597,7 +594,6 @@ Route::middleware(['auth'])->group(function () {
             });
         });
     });
-
 
     Route::prefix('/reports')->name('reports')->group(function () {
         Route::prefix('/patients')->group(function () {

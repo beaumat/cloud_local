@@ -286,7 +286,15 @@
                                                     //Other GL
                                                     $OTHER_GL_AMOUNT = $OTHER_GL_AMOUNT + $list->PP_PAID ?? 0;
                                                 }
+                                                if ($list->PAYMENT_METHOD_ID == 97) {
+                                                    //OVP
+                                                    $OVP_AMOUNT = $OVP_AMOUNT + $list->PP_PAID ?? 0;
+                                                }
 
+                                                if ($list->PAYMENT_METHOD_ID == 98) {
+                                                    //OP
+                                                    $OP_AMOUNT = $OP_AMOUNT + $list->PP_PAID ?? 0;
+                                                }
                                             @endphp
                                         @endif
                                     </td>
@@ -337,37 +345,8 @@
                 </div>
                 <div class="col-md-8">
                     <div class="row">
-                        <div class="col-md-4 text-right">
+                        <div class="col-md-3 text-right">
                             <div class="row">
-                                <div class="col-12 text-xs">
-                                    <label class="text-xs">OP Paid : </label>
-                                    <span
-                                        class="text-success font-weight-bold text-xs">{{ number_format($OP_AMOUNT, 2) }}
-                                    </span>
-                                </div>
-                                <div class="col-12 text-xs">
-                                    <label class="text-xs">OVP Paid : </label>
-                                    <span
-                                        class="text-success font-weight-bold text-xs">{{ number_format($OVP_AMOUNT, 2) }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <div class="row">
-                                <div class=" col-12 text-xs"> <label class="text-xs">Cash Paid : </label>
-                                    <span
-                                        class="text-success font-weight-bold text-xs">{{ number_format($CASH_AMOUNT, 2) }}</span>
-                                </div>
-                                <div class="col-12  text-xs"> <label class="text-xs">Previous Cash Collection :
-                                    </label>
-                                    <span
-                                        class="text-success font-weight-bold text-xs">{{ number_format($PRE_COLLECTION, 2) }}</span>
-                                </div>
-                                <div class="col-12  text-xs"> <label class="text-xs ">Net Cash Sales : </label>
-                                    <span
-                                        class="text-info font-weight-bold text-xs">{{ number_format($CASH_AMOUNT + $PRE_COLLECTION, 2) }}</span>
-                                </div>
                                 <div class="col-12  text-xs"> <label class="text-xs">Philhealth Paid : </label>
                                     <span
                                         class="text-success font-weight-bold text-xs">{{ number_format($PHILHEALTH_AMOUNT, 2) }}</span>
@@ -384,6 +363,23 @@
                                     <span
                                         class="text-success active font-weight-bold text-xs">{{ number_format($PCSO_AMOUNT, 2) }}</span>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <div class="row">
+
+                                <div class="col-12 text-xs">
+                                    <label class="text-xs">OP Paid : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($OP_AMOUNT, 2) }}
+                                    </span>
+                                </div>
+                                <div class="col-12 text-xs">
+                                    <label class="text-xs">OVP Paid : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($OVP_AMOUNT, 2) }}
+                                    </span>
+                                </div>
                                 <div class="col-12 text-xs">
                                     <label class="text-xs">OTHER GL Paid : </label>
                                     <span
@@ -392,7 +388,26 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 text-right">
+                        <div class="col-md-3 text-right">
+                            <div class="row">
+                                <div class=" col-12 text-xs"> <label class="text-xs">Cash Paid : </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($CASH_AMOUNT, 2) }}</span>
+                                </div>
+                                <div class="col-12  text-xs"> <label class="text-xs">Previous Cash Collection :
+                                    </label>
+                                    <span
+                                        class="text-success font-weight-bold text-xs">{{ number_format($PRE_COLLECTION, 2) }}</span>
+                                </div>
+                                <div class="col-12  text-xs"> <label class="text-xs ">Net Cash Sales : </label>
+                                    <span
+                                        class="text-info font-weight-bold text-xs">{{ number_format($CASH_AMOUNT + $PRE_COLLECTION, 2) }}</span>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-right">
                             <h6 class="text-xs"> <label class="text-xs">TOTAL (SC) : </label>
                                 <span
                                     class="text-primary font-weight-bold h6">{{ number_format($TOTAL_CHARGE, 2) }}</span>
