@@ -297,8 +297,6 @@ Route::middleware(['auth'])->group(function () {
         });
     });
     // Customer End Category
-
-
     // Vendor Start Category
 
     Route::prefix('/vendors')->name('vendors')->group(function () {
@@ -373,7 +371,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', DepreciationForm::class)->name('depreciation_edit');
         });
     });
-    
+
     Route::prefix('/banking')->name('banking')->group(function () {
         Route::prefix('/deposit')->group(function () {
             Route::get('/', DepositList::class)->name('deposit')->middleware(['permission:banking.deposit.view']);

@@ -22,7 +22,6 @@ class CashPayment extends Component
     public bool $showModal = false;
     private $serviceChargeServices;
     private $patientPaymentServices;
-
     private $userServices;
     public function boot(
         ServiceChargeServices $serviceChargeServices,

@@ -177,9 +177,8 @@
                         @endif
                     </td>
                     <td>
-                        <input type="number" step="0.01"
-                            class="form-control form-control-sm text-xs text-right" name="Qty"
-                            wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
+                        <input type="number" step="0.01" class="form-control form-control-sm text-xs text-right"
+                            name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
                             @if ($ITEM_ID == 0) readonly @endif />
                     </td>
                     <td>
@@ -191,8 +190,7 @@
                         </select>
                     </td>
                     <td>
-                        <input type="number" step="0.01"
-                            class="form-control form-control-sm text-xs text-right"
+                        <input type="number" step="0.01" class="form-control form-control-sm text-xs text-right"
                             @if ($editPrice == false) readonly @endif name="rate"
                             wire:model.live.debounce.1000ms='RATE' wire:blur="getAmount" />
                     </td>
@@ -219,9 +217,14 @@
             </form>
         </tbody>
     </table>
+    <div class="form-group">
+        <button class="btn btn-xs btn-primary">
+            <i class="fa fa-money" aria-hidden="true"></i> Make Cash Payment
+        </button>
+    </div>
     {{-- @if ($STATUS == $openStatus) --}}
-    <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase'
-        isDisabled="{{ false }}" />
+    {{-- <livewire:custom-check-box name="codeBase" titleName="Use item code" wire:model.live='codeBase'
+        isDisabled="{{ false }}" /> --}}
     {{-- @endif --}}
 
     @livewire('ServiceCharge.PaymentAvailable', ['SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID])
