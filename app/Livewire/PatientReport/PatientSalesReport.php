@@ -168,7 +168,7 @@ class PatientSalesReport extends Component
 
         $this->DATE_TRANSACTION_FROM = $this->userServices->getTransactionDateDefault();
         $this->DATE_TRANSACTION_TO = $this->userServices->getTransactionDateDefault();
-        $this->PATIENT_ID = 0;
+    $this->PATIENT_ID = 0;
     }
     public function render()
     {

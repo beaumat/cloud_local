@@ -861,7 +861,7 @@ class HemoServices
             ]);
     }
     public function Delete(int $id)
-    {   
+    {
         HemoNurseNotes::where('HEMO_ID', '=', $id)->delete();
         HemodialysisItems::where('HEMO_ID', '=', $id)->delete();
         Hemodialysis::where('ID', '=', $id)->delete();
@@ -1704,9 +1704,18 @@ class HemoServices
     }
     public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
     {
+        // return (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
+        //     ->where('LOCATION_ID', '=', $LOCATION_ID)
+        //     ->where('DATE', '<=', $DATE)
+        //     ->whereBetween('STATUS_ID', [1, 2])
+        //     ->count();
+
+
+        $year = date('Y', strtotime($DATE)); // Extract the year from the provided date
+
         return (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
-            ->where('DATE', '<=', $DATE)
+            ->whereYear('DATE', '=', $year) // Add a condition to filter by year
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
     }
@@ -2082,7 +2091,7 @@ class HemoServices
         $SOURCE_REF_TYPE = 27;
         $hemoData = $this->get($HEMO_ID);
         if ($hemoData) {
-            $itemList = $this->getItemInventory($HEMO_ID);       
+            $itemList = $this->getItemInventory($HEMO_ID);
             if ($itemList) {
                 $this->itemInventoryServices->InventoryExecute(
                     $itemList,
@@ -2101,7 +2110,7 @@ class HemoServices
             ->join('hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
             ->whereIn('item.TYPE', ['0', '1'])
             ->whereIn('hemodialysis.STATUS_ID', ['2', '4'])
-            ->where('hemodialysis_items.IS_POST','=', false)
+            ->where('hemodialysis_items.IS_POST', '=', false)
             ->where('hemodialysis.ID', '=', $HEMO_ID)
             ->update([
                 'hemodialysis_items.IS_POST' => true
