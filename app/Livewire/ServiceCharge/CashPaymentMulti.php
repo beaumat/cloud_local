@@ -12,7 +12,6 @@ class CashPaymentMulti extends Component
 {
 
     public bool $showModal = false;
-
     private $serviceChargeServices;
     private $patientPaymentServices;
     private $userServices;
