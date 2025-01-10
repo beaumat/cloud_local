@@ -51,8 +51,6 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
     public function collection()
     {
         $data =  $this->patientReportServices->generateSalesReportData(
-            $this->pFrom,
-            $this->pTo,
             $this->scFrom,
             $this->scTo,
             $this->locationId,
