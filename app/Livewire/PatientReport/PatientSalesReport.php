@@ -23,8 +23,7 @@ class PatientSalesReport extends Component
     public int $LOCATION_ID;
     public $locationList = [];
     public $patientList = [];
-    public string $DATE_COLLECTION_FROM;
-    public string $DATE_COLLECTION_TO;
+
     public string $DATE_TRANSACTION_FROM;
     public string $DATE_TRANSACTION_TO;
     public string $tempName;
@@ -105,8 +104,8 @@ class PatientSalesReport extends Component
             $this->patientReportServices,
             $this->DATE_TRANSACTION_FROM,
             $this->DATE_TRANSACTION_TO,
-            $this->DATE_COLLECTION_FROM,
-            $this->DATE_COLLECTION_TO,
+            $this->DATE_TRANSACTION_FROM,
+            $this->DATE_TRANSACTION_TO,
             $this->LOCATION_ID,
             $this->selectedPatient,
             $this->selectedItem
@@ -141,8 +140,6 @@ class PatientSalesReport extends Component
         $this->NO_OF_TREATMENT = 0;
 
         $this->dataList = $this->patientReportServices->generateSalesReportData(
-            $this->DATE_COLLECTION_FROM,
-            $this->DATE_COLLECTION_TO,
             $this->DATE_TRANSACTION_FROM,
             $this->DATE_TRANSACTION_TO,
             $this->LOCATION_ID,
@@ -168,8 +165,7 @@ class PatientSalesReport extends Component
     }
     public function resetFilter()
     {
-        $this->DATE_COLLECTION_FROM = '';
-        $this->DATE_COLLECTION_TO = '';
+
         $this->DATE_TRANSACTION_FROM = $this->userServices->getTransactionDateDefault();
         $this->DATE_TRANSACTION_TO = $this->userServices->getTransactionDateDefault();
         $this->PATIENT_ID = 0;

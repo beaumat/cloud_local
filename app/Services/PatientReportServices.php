@@ -18,7 +18,7 @@ class PatientReportServices
      * @param array $patientData
      */
 
-    public function generateSalesReportData(string $ppFrom, string $ppTo, string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = []): object
+    public function generateSalesReportData( string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = []): object
     {
 
         $results = DB::table('service_charges_items as sci')
@@ -52,7 +52,7 @@ class PatientReportServices
                     ->on('pp.DATE', '<=', 'sc.DATE');
             })
             ->leftJoin('payment_method as pm', 'pm.ID', '=', 'pp.PAYMENT_METHOD_ID')
-            ->whereBetween('sc.DATE', [$scFrom, $scFrom])
+            ->whereBetween('sc.DATE', [$scFrom, $scTo])
             ->when($locatoinId > 0, function ($query) use (&$locatoinId) {
                 $query->where('sc.LOCATION_ID', $locatoinId);
             })
