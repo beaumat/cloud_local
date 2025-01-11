@@ -218,7 +218,7 @@
         </tbody>
     </table>
     <div class="form-group">
-        <button class="btn btn-xs btn-primary">
+        <button class="btn btn-xs btn-primary" wire:click='OpenMultiPayment'>
             <i class="fa fa-money" aria-hidden="true"></i> Make Cash Payment
         </button>
     </div>
@@ -229,4 +229,5 @@
 
     @livewire('ServiceCharge.PaymentAvailable', ['SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID])
     @livewire('ServiceCharge.CashPayment', ['SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID])
+    @livewire('ServiceCharge.CashPaymentMulti', ['SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID])
 </div>

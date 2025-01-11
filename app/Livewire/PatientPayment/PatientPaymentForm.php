@@ -87,7 +87,7 @@ class PatientPaymentForm extends Component
         InvoiceServices $invoiceServices
 
     ) {
-        
+
         $this->patientPaymentServices = $patientPaymentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -150,7 +150,7 @@ class PatientPaymentForm extends Component
     {
         if (is_numeric($id)) {
             $data = $this->patientPaymentServices->getPatientPayment($id);
-            
+
             if ($data) {
                 $this->getInfo($data);
                 $this->LoadDropDown();
@@ -287,7 +287,6 @@ class PatientPaymentForm extends Component
                 }
 
                 return Redirect::route('patientspayment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-            
             } else {
 
                 $this->patientPaymentServices->Update(
@@ -379,22 +378,25 @@ class PatientPaymentForm extends Component
 
         $dataItemCheck = $this->patientPaymentServices->PaymentChargesList($this->ID, 0);
 
-        foreach ($dataItemCheck as $list) {
-        
-            if (empty($list->INCOME_ACCOUNT_ID)) {
-        
-                session()->flash('error', 'Invalid. Some items do not have associated revenue accounts. Please set them up first before proceeding.');
-        
-                return;
-            }
+        if ($dataItemCheck) {
+            $data = [
+                'PAYMENT_METHOD_ID' => $this->PAYMENT_METHOD_ID,
+                'PATIENT_PAYMENT_ID' => $this->ID
+            ];
+
+            $this->dispatch('make-sales-receipt-show', result: $data);
         }
+        // foreach ($dataItemCheck as $list) {
 
-        $data = [
-            'PAYMENT_METHOD_ID' => $this->PAYMENT_METHOD_ID,
-            'PATIENT_PAYMENT_ID' => $this->ID
-        ];
+        //     if (empty($list->INCOME_ACCOUNT_ID)) {
 
-        $this->dispatch('make-sales-receipt-show', result: $data);
+        //         session()->flash('error', 'Invalid. Some items do not have associated revenue accounts. Please set them up first before proceeding.');
+
+        //         return;
+        //     }
+        // }
+
+
     }
     public function render()
     {

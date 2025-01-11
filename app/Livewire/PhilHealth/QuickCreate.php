@@ -91,7 +91,8 @@ class QuickCreate extends Component
                 $this->patientSelected[$list->ID] = true;
             }
         } else {
-            $this->patientSelected = [];
+     
+            $this->reset('patientSelected');
         }
     }
 

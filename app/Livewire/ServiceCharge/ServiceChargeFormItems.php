@@ -554,6 +554,11 @@ class ServiceChargeFormItems extends Component
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
         $this->itemList = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID);
     }
+    public function OpenMultiPayment()
+    {
+        $this->dispatch('cash-payment-prompt-multi');
+
+    }
     public function render()
     {
 

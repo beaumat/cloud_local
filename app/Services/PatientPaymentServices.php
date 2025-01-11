@@ -203,8 +203,8 @@ class PatientPaymentServices
     }
     public function Delete(int $ID)
     {
-        PatientPaymentCharges::where('PATIENT_PAYMENT_ID','=', $ID)->delete();
-        PatientPayments::where('ID','=', $ID)->delete();
+        PatientPaymentCharges::where('PATIENT_PAYMENT_ID', '=', $ID)->delete();
+        PatientPayments::where('ID', '=', $ID)->delete();
     }
     public function getSumOnPhilHealth(int $PATIENT_ID, float $LOCATION_ID, int $PHILHEALTH_ID): float
     {
@@ -300,7 +300,9 @@ class PatientPaymentServices
                     'patient_payment.IS_CONFIRM',
                     'patient_payment.RECEIPT_REF_NO',
                     'patient_payment.RECEIPT_DATE',
-                    'patient_payment.PATIENT_ID'
+                    'patient_payment.PATIENT_ID',
+                    'patient_payment.IS_INVOICE',
+                    'patient_payment.REF_ID'
                 ])
                 ->join('contact as c', 'c.ID', '=', 'patient_payment.PATIENT_ID')
                 ->join('location as l', function ($join) use (&$locationId) {

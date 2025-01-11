@@ -15,21 +15,21 @@
                             <div class="card-body bg-light">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <livewire:number-input name="AMOUNT" titleName="Amount" :isDisabled=false
-                                                wire:model='AMOUNT' />
+                                    <div class="col-md-4">
+                                            <livewire:date-input name="DATE" titleName="SL Date" :isDisabled=true
+                                                wire:model='DATE' />
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <livewire:text-input name="RECEIPT_REF_NO" titleName="SL NO."
                                                 :isDisabled=false wire:model='RECEIPT_REF_NO' />
                                         </div>
+                                        <div class="col-md-4">
+                                            <livewire:number-input name="AMOUNT" titleName="Amount" :isDisabled=false
+                                                wire:model='AMOUNT' />
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="row">
-            
-                                    </div>
-                                </div>
+                            
                             </div>
                             <div class="card-footer text-right">
                                 <button type="submit" class="btn btn-success btn-sm m-1">Save</button>

@@ -482,7 +482,7 @@ class ServiceChargeServices
         }
         return 0;
     }
-    public function ItemView(int $SERVICE_CHARGES_ID)
+    public function ItemView(int $SERVICE_CHARGES_ID, bool $isNotZero = false)
     {
         return ServiceChargesItems::query()
             ->select([
@@ -495,6 +495,8 @@ class ServiceChargeServices
                 'service_charges_items.AMOUNT',
                 'service_charges_items.TAXABLE',
                 'service_charges_items.TAXABLE_AMOUNT',
+                'service_charges_items.PAID_AMOUNT',
+                DB::raw('(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) as BALANCE '),
                 'i.CODE',
                 'i.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
@@ -513,8 +515,51 @@ class ServiceChargeServices
             ->leftJoin('item_class as c', 'c.ID', '=', 'sl.CLASS_ID')
             ->leftJoin('account as a', 'a.ID', '=', 'service_charges_items.INCOME_ACCOUNT_ID')
             ->where('service_charges_items.SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)
+            ->when($isNotZero == true, function ($query) {
+                $query->whereRaw('(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) > 0');
+            })
             ->orderBy('service_charges_items.LINE_NO', 'asc')
             ->get();
+    }
+    public function getItemListSum($SERVICE_CHARGES_ID, $arrayID = []): float
+    {
+        if ($arrayID == []) {
+
+            return 0.00;
+        }
+
+        $result =  ServiceChargesItems::query()
+            ->select([
+                DB::raw('sum(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) as AMOUNT '),
+            ])
+
+            ->where('service_charges_items.SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)
+            ->whereIn('service_charges_items.ID', $arrayID)
+            ->first();
+
+        if ($result) {
+            return (float) $result->AMOUNT ?? 0.00;
+        }
+
+        return 0.00;
+    }
+    public function getItemSum(int $SERVICE_CHARGES_ID, int $ID)
+    {
+
+        $result =  ServiceChargesItems::query()
+            ->select([
+                DB::raw('sum(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) as AMOUNT '),
+            ])
+
+            ->where('service_charges_items.SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)
+            ->where('service_charges_items.ID', '=', $ID)
+            ->first();
+
+        if ($result) {
+            return (float) $result->AMOUNT ?? 0.00;
+        }
+
+        return 0.00;
     }
     public function ReComputed(int $ID): array
     {

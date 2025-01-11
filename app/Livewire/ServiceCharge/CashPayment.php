@@ -19,6 +19,7 @@ class CashPayment extends Component
     public float $AMOUNT;
     public float $ITEM_AMOUNT;
     public string $RECEIPT_REF_NO;
+    public string $DATE;
     public bool $showModal = false;
     private $serviceChargeServices;
     private $patientPaymentServices;
@@ -39,6 +40,7 @@ class CashPayment extends Component
         $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ITEM_ID);
         $this->ITEM_AMOUNT = (float) $itemdata['SERVICE_CHARGES_ITEM_AMOUNT'];
         $this->AMOUNT = $this->ITEM_AMOUNT;
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->showModal = true;
     }
     public function closeModal()
@@ -74,7 +76,7 @@ class CashPayment extends Component
         if ($data) {
             DB::beginTransaction();
             try {
-                $PATIENT_PAYMENT_ID =  $this->patientPaymentServices->Store("", $this->userServices->getTransactionDateDefault(), $data->PATIENT_ID, $data->LOCATION_ID, $this->AMOUNT, $this->AMOUNT, 1, "", null, $this->RECEIPT_REF_NO, null, "", 1, 0, 0, 4);
+                $PATIENT_PAYMENT_ID =  $this->patientPaymentServices->Store("", $this->DATE, $data->PATIENT_ID, $data->LOCATION_ID, $this->AMOUNT, $this->AMOUNT, 1, "", null, $this->RECEIPT_REF_NO, null, "", 1, 0, 0, 4);
                 $PC_ID    = (int) $this->patientPaymentServices->PaymentChargeStore($PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $this->AMOUNT, 0, 4);
                 $this->patientPaymentServices->PaymentChargesUpdate($PC_ID, $PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $this->AMOUNT);
                 $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ITEM_ID);

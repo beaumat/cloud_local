@@ -177,7 +177,6 @@ class InvoiceList extends Component
     public function render()
     {
         $dataList = $this->invoiceServices->Search($this->search, $this->locationid, $this->perPage);
-
         return view('livewire.invoice.invoice-list', ['dataList' => $dataList]);
     }
    

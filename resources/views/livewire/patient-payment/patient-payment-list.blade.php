@@ -67,7 +67,7 @@
 
                                         <div class="col-md-1">
                                             <div class="mt-0">
-                                               
+
                                                 <label class="text-sm"><br /></label>
                                                 <button class="btn btn-sm btn-secondary w-100"
                                                     wire:click='reloadList()'>
@@ -78,15 +78,20 @@
                                         <div class="col-md-3">
                                             <div class="row">
                                                 <div class ="col-md-6">
-                                                    <label class="text-sm"> 
-                                                    <span>itemized :</span>
-                                                <input type="checkbox" wire:model.live='itemized' /> Date From:</label>
-                                                    <input type="date" @if(!$itemized) disabled @endif class="form-control form-control-sm"
+                                                    <label class="text-sm">
+                                                        <span>itemized :</span>
+                                                        <input type="checkbox" wire:model.live='itemized' /> Date
+                                                        From:</label>
+                                                    <input type="date"
+                                                        @if (!$itemized) disabled @endif
+                                                        class="form-control form-control-sm"
                                                         wire:model.live='DATE_FROM' />
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="text-sm">Date To:</label>
-                                                    <input type="date" @if(!$itemized) disabled @endif class="form-control form-control-sm"
+                                                    <input type="date"
+                                                        @if (!$itemized) disabled @endif
+                                                        class="form-control form-control-sm"
                                                         wire:model.live='DATE_TO' />
                                                 </div>
                                             </div>
@@ -118,7 +123,7 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        <th >
+                                        <th>
                                             <span type='button' wire:click="sorting('c.LAST_NAME')">Lastname</span>
                                             @if ($sortby == 'c.LAST_NAME')
                                                 @if ($isDesc)
@@ -128,7 +133,7 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        <th >
+                                        <th>
                                             <span type='button' wire:click="sorting('c.FIRST_NAME')">Firstname</span>
                                             @if ($sortby == 'c.FIRST_NAME')
                                                 @if ($isDesc)
@@ -221,7 +226,7 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        <th >
+                                        <th>
                                             <span type='button' wire:click="sorting('l.NAME')">
                                                 Location
                                             </span>
@@ -303,7 +308,25 @@
                                                 @endif
                                             </td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
-                                            <td class="text-center"> {{ $list->STATUS }}</td>
+                                            <td class="text-center">
+                                                @if ($list->REF_ID > 0)
+                                                    @if ($list->IS_INVOICE)
+                                                        <a target="_BLANK"
+                                                            href="{{ route('customersinvoice_edit', ['id' => $list->REF_ID]) }}">
+                                                            Invoice
+
+                                                        </a>
+                                                    @else
+                                                        <a target="_BLANK"
+                                                            href="{{ route('customerssales_receipt_edit', ['id' => $list->REF_ID]) }}">
+                                                            Sales Receipt
+
+                                                        </a>
+                                                    @endif
+                                                @else
+                                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                                @endif
+                                            </td>
                                             @if ($itemized)
                                                 <td>
                                                     {{ $list->ITEM_NAME }}
