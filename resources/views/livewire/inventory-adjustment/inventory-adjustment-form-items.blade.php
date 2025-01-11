@@ -49,7 +49,7 @@
                                     <input type="number" step="0.01"
                                         class="form-control form-control-sm mt-1 text-right" name="lineUnitCost"
                                         wire:model.live.debounce.1000ms='lineUnitCost' wire:blur="getEditAmount"
-                                        readonly />
+                                         />
                                 @else
                                     {{ number_format($list->UNIT_COST, 2) }}
                                 @endif

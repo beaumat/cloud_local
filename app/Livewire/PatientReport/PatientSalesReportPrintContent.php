@@ -103,6 +103,7 @@ class PatientSalesReportPrintContent extends Component
         $this->DATE_COLLECTION_TO = '';
 
         $this->dataList = $this->patientReportServices->generateSalesReportData(
+
             $this->DATE_TRANSACTION_FROM,
             $this->DATE_TRANSACTION_TO,
             $this->LOCATION_ID,
