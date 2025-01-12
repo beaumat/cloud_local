@@ -59,9 +59,10 @@
                                         <th class="col-1 text-center">Adjustment Entry</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Status</th>
-                                        <th class="text-center bg-success col-2">
+                                        <th class="text-center bg-success col-1">
                                             @can('company.general-journal.create')
-                                                <a href="{{ route('companygeneral_journal_create') }}" class="text-white">
+                                                <a href="{{ route('companygeneral_journal_create') }}"
+                                                    class="text-white btn btn-xs btn-success w-100">
                                                     <i class="fas fa-plus"></i></a>
                                             @endcan
                                         </th>
@@ -95,7 +96,7 @@
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
 
-                                                @if (auth()->user()->can('company.general-journal.delete') && $list->STATUS_ID == 0)
+                                                @if (auth()->user()->can('company.general-journal.delete'))
                                                     <button title="delete" wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-danger btn-xs">

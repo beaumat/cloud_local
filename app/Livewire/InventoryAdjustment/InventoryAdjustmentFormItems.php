@@ -2,10 +2,13 @@
 
 namespace App\Livewire\InventoryAdjustment;
 
+use App\Services\AccountJournalServices;
 use App\Services\InventoryAdjustmentServices;
+use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use App\Services\PriceLevelLineServices;
 use App\Services\UnitOfMeasureServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -51,16 +54,22 @@ class InventoryAdjustmentFormItems extends Component
     private $unitOfMeasureServices;
     private $itemServices;
     private $priceLevelLineServices;
+    private $itemInventoryServices;
+    private $accountJournalServices;
     public function boot(
         InventoryAdjustmentServices $inventoryAdjustmentServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         ItemServices $itemServices,
-        PriceLevelLineServices $priceLevelLineServices
+        PriceLevelLineServices $priceLevelLineServices,
+        ItemInventoryServices $itemInventoryServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->inventoryAdjustmentServices = $inventoryAdjustmentServices;
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->itemServices = $itemServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
+        $this->itemInventoryServices = $itemInventoryServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
 
     public function updatedcodeBase()
@@ -71,7 +80,10 @@ class InventoryAdjustmentFormItems extends Component
         }
         $this->itemDescList = $this->itemServices->getByVendor(false);
     }
-    public function updatedquantity() {}
+    public function updatedquantity() {
+
+        
+    }
     public function updateditemid()
     {
         $this->UNIT_ID = 0;
@@ -106,7 +118,7 @@ class InventoryAdjustmentFormItems extends Component
     {
         $this->validate(
             [
-                'ITEM_ID' => 'required|not_in:0',
+                'ITEM_ID' => 'required|not_in:0|exists:item,id',
                 'QUANTITY' => 'required|numeric',
             ],
             [],
@@ -128,7 +140,7 @@ class InventoryAdjustmentFormItems extends Component
                 session()->flash('error', 'Item already added.');
                 return;
             }
-
+            
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
 
             $this->inventoryAdjustmentServices->ItemStore(
@@ -192,8 +204,6 @@ class InventoryAdjustmentFormItems extends Component
 
     public function updateItem()
     {
-
-
         $this->validate(
             [
                 'lineQty' => 'required|numeric',
@@ -206,8 +216,6 @@ class InventoryAdjustmentFormItems extends Component
 
 
         try {
-
-
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
             $this->inventoryAdjustmentServices->ItemUpdate(
                 $this->editItemId,
@@ -237,16 +245,71 @@ class InventoryAdjustmentFormItems extends Component
 
     public function deleteItem($Id)
     {
+        // try {
+        //     $this->inventoryAdjustmentServices->ItemDelete(
+        //         $Id,
+        //         $this->INVENTORY_ADJUSTMENT_ID
+        //     );
+        //     $this->dispatch('update-amount');
+        // } catch (\Exception $e) {
+        //     $errorMessage = 'Error occurred: ' . $e->getMessage();
+        //     session()->flash('error', $errorMessage);
+        // }
+
+
+        DB::beginTransaction();
         try {
-            $this->inventoryAdjustmentServices->ItemDelete(
-                $Id,
-                $this->INVENTORY_ADJUSTMENT_ID
-            );
+
+            if ($this->STATUS == 16) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->inventoryAdjustmentServices->object_type_map_inventory_adjustment, $this->INVENTORY_ADJUSTMENT_ID);
+                if ($JOURNAL_NO  ==  0) {
+                    session()->flash('message', 'journal not found');
+                    return;
+                }
+                $adjustmentData = $this->inventoryAdjustmentServices->Get($this->INVENTORY_ADJUSTMENT_ID);
+                if ($adjustmentData) {
+                    $adjustmentItemData = $this->inventoryAdjustmentServices->GetItem($Id, $this->INVENTORY_ADJUSTMENT_ID,);
+                    if ($adjustmentItemData) {
+                        // Inventory
+                        $this->itemInventoryServices->InventoryModify(
+                            $adjustmentItemData->ITEM_ID,
+                            $adjustmentData->LOCATION_ID,
+                            $Id,
+                            $this->inventoryAdjustmentServices->documentTypeMapId,
+                            $adjustmentData->DATE,
+                            0,
+                            0,
+                            0
+                        );
+
+                        // Journal
+                        $this->accountJournalServices->DeleteJournal(
+                            $adjustmentItemData->ASSET_ACCOUNT_ID,
+                            $adjustmentData->LOCATION_ID,
+                            $JOURNAL_NO,
+                            $adjustmentItemData->ITEM_ID,
+                            $Id,
+                            $this->inventoryAdjustmentServices->object_type_map_inventory_adjustmentItems,
+                            $adjustmentData->DATE,
+                            1,
+
+                        );
+                    
+                    }
+                }
+            }
+
+
+            $this->inventoryAdjustmentServices->ItemDelete($Id, $this->INVENTORY_ADJUSTMENT_ID);        
+            DB::commit();
             $this->dispatch('update-amount');
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+
+
     }
     #[On('clear-alert')]
     public function clearAlert()

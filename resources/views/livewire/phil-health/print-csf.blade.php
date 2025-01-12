@@ -171,28 +171,24 @@
                             <label> 2. Name of Member:</label>
                             <div class="row">
                                 <div class="col-3 text-center">
-                                    <b
-                                        class="  font-weight-bold h6">{{ $MEMBER_LAST_NAME }}&nbsp;</b>
+                                    <b class="  font-weight-bold h6">{{ $MEMBER_LAST_NAME }}&nbsp;</b>
                                     <div class="w-100 top-line2 "></div>
                                     Last Name
                                 </div>
                                 <div class="col-3 text-center">
-                                    <b
-                                        class="  font-weight-bold h6">{{ $MEMBER_FIRST_NAME }}&nbsp;</b>
+                                    <b class="  font-weight-bold h6">{{ $MEMBER_FIRST_NAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     First Name
                                 </div>
                                 <div class="col-2 text-center">
-                                    <b
-                                        class="  font-weight-bold h6">{{ $MEMBER_EXTENSION }}&nbsp;</b>
+                                    <b class="  font-weight-bold h6">{{ $MEMBER_EXTENSION }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Name Extension <br />
                                     (JR/SR/III)
 
                                 </div>
                                 <div class="col-4 text-center">
-                                    <b
-                                        class="  font-weight-bold h6">{{ $MEMBER_MIDDLE_NAME }}&nbsp;</b>
+                                    <b class="  font-weight-bold h6">{{ $MEMBER_MIDDLE_NAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Middle Name<br />
                                     (ex: DELA CRUZ JUAN JR SIPAG)
@@ -338,28 +334,24 @@
                             <label> 5. Name of Patient:</label>
                             <div class="row">
                                 <div class="col-3 text-center">
-                                    <b
-                                        class="  font-weight-bold h6">{{ $PATIENT_LASTNAME }}&nbsp;</b>
+                                    <b class="  font-weight-bold h6">{{ $PATIENT_LASTNAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Last Name
                                 </div>
                                 <div class="col-3 text-center">
-                                    <b
-                                        class="  font-weight-bold h6">{{ $PATIENT_FIRSTNAME }}&nbsp;</b>
+                                    <b class="  font-weight-bold h6">{{ $PATIENT_FIRSTNAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     First Name
                                 </div>
                                 <div class="col-2 text-center">
-                                    <b
-                                        class="  font-weight-bold h6">{{ $PATIENT_EXTENSION }}&nbsp;</b>
+                                    <b class="  font-weight-bold h6">{{ $PATIENT_EXTENSION }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Name Extension </br>
                                     (JR/SR/III)
 
                                 </div>
                                 <div class="col-4 text-center">
-                                    <b
-                                        class="  font-weight-bold h6">{{ $PATIENT_MIDDLENAME }}&nbsp;</b>
+                                    <b class="  font-weight-bold h6">{{ $PATIENT_MIDDLENAME }}&nbsp;</b>
                                     <div class="w-100 top-line2"></div>
                                     Middle Name<br />
                                     (ex: DELA CRUZ JUAN JR SIPAG)
@@ -702,8 +694,8 @@
                                         &nbsp;&nbsp;Parent<br />
                                         <div class="box   font-weight-bold">&nbsp;</div>
                                         &nbsp;&nbsp;Sibling&nbsp;&nbsp;
-                                        <div class="box   font-weight-bold"
-                                            style="margin-left:1px;">&nbsp;</div>&nbsp;&nbsp;Others,
+                                        <div class="box   font-weight-bold" style="margin-left:1px;">&nbsp;</div>
+                                        &nbsp;&nbsp;Others,
                                         Specify&nbsp;&nbsp;<br />
                                         <div class="box   font-weight-bold">&nbsp;</div>
                                         &nbsp;&nbsp;Member is
@@ -865,8 +857,8 @@
                                     <div class="row">
                                         <div class="col-5 text-sm text-center">
                                             <b class="h5   font-weight-bold "> &nbsp;
-                                                @if ($PEN)
-
+                                                {{-- under employer officer only  --}}
+                                                {{-- @if ($PEN)
                                                     @if (!empty($AUTORIZE_REP_NAME2))
                                                         {{ $AUTORIZE_REP_NAME2 }}
                                                     @else
@@ -875,18 +867,14 @@
                                                             @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
                                                                 {{ $MEMBER_EXTENSION . '.' }}
                                                             @endif
-
                                                         @endif
-
-
-                                                    @endif
+                                                    @endif --}}
                                             </b>
                                             <div class="top-line2"></div>
                                             Signature Over Printed Name of Employer/Authorized Representative
                                         </div>
                                         <div class="col-3 text-xs text-center">
-                                            <b style="width:300px;"
-                                                class="h5   font-weight-bold ">
+                                            <b style="width:300px;" class="h5   font-weight-bold ">
                                                 &nbsp;<span class="text-md">
                                                     @if ($PEN)
                                                         {{ $MEMBER_POSITION }}
@@ -1010,18 +998,17 @@
                         <div class="col-1"></div>
                         <div class="col-6 text-center text-sm">
                             <b class="h5   font-weight-bold ">
-                                @if(!empty($AUTORIZE_REP_NAME1))
+                                @if (!empty($AUTORIZE_REP_NAME1))
                                     {{ $AUTORIZE_REP_NAME1 }} &nbsp;
                                 @else
- 
-                                {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
-                                    {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
-                                    @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
-                                        {{ $MEMBER_EXTENSION . '.' }}
-                                    @endif
-                                    &nbsp;
+                                    {{ $MEMBER_FIRST_NAME }} @if ($MEMBER_MIDDLE_NAME)
+                                        {{ substr($MEMBER_MIDDLE_NAME, 0, 1) }}.
+                                        @endif {{ $MEMBER_LAST_NAME }} @if ($MEMBER_EXTENSION)
+                                            {{ $MEMBER_EXTENSION . '.' }}
+                                        @endif
+                                        &nbsp;
 
-                                @endif
+                                    @endif
                             </b>
                             <div class="top-line2">
                             </div>
@@ -1127,8 +1114,8 @@
                                         &nbsp;&nbsp;Parent<br />
                                         <div class="box   font-weight-bold">&nbsp;</div>
                                         &nbsp;&nbsp;Sibling&nbsp;&nbsp;
-                                        <div class="box   font-weight-bold"
-                                            style="margin-left:1px;">&nbsp;</div>&nbsp;&nbsp;Others,
+                                        <div class="box   font-weight-bold" style="margin-left:1px;">&nbsp;</div>
+                                        &nbsp;&nbsp;Others,
                                         Specify&nbsp;&nbsp;<br />
                                         <div class="box   font-weight-bold">&nbsp;</div>
                                         &nbsp;&nbsp;Member is
@@ -1618,8 +1605,7 @@
                                     Signature Over Printed Name of Authorized HCI Representative
                                 </div>
                                 <div class="col-3 text-sm text-center">
-                                    <b
-                                        class="h5   font-weight-bold">{{ $HCI_POSITION }}&nbsp;</b>
+                                    <b class="h5   font-weight-bold">{{ $HCI_POSITION }}&nbsp;</b>
                                     <div class="top-line2"></div>
                                     Official Capacity/Designation
                                 </div>

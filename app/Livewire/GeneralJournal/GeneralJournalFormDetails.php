@@ -233,7 +233,10 @@ class GeneralJournalFormDetails extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
+    public function OpenTemp()
+    {
+        $this->dispatch('open-templete');
+    }
     public function render()
     {
 

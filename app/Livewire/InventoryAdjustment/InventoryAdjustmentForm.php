@@ -4,12 +4,11 @@ namespace App\Livewire\InventoryAdjustment;
 
 use App\Services\AccountJournalServices;
 use App\Services\DocumentStatusServices;
-use App\Services\DocumentTypeServices;
+
 use App\Services\InventoryAdjustmentServices;
 use App\Services\InventoryAdjustmentTypeServices;
 use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
-use App\Services\ObjectServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -20,7 +19,6 @@ use Livewire\Component;
 #[Title('Inventory Adjustment')]
 class InventoryAdjustmentForm extends Component
 {
-
 
     public int $openStatus = 0;
     public int $ID;
@@ -40,11 +38,8 @@ class InventoryAdjustmentForm extends Component
     public int $STATUS;
     public string $STATUS_DESCRIPTION;
     private $documentStatusServices;
-    private $contactServices;
     private $inventoryAdjustmentTypeServices;
     private $itemInventoryServices;
-    private $documentTypeServices;
-    private $objectServices;
     private $accountJournalServices;
 
     public function boot(
@@ -54,8 +49,6 @@ class InventoryAdjustmentForm extends Component
         DocumentStatusServices $documentStatusServices,
         InventoryAdjustmentTypeServices $inventoryAdjustmentTypeServices,
         ItemInventoryServices $itemInventoryServices,
-        DocumentTypeServices $documentTypeServices,
-        ObjectServices $objectServices,
         AccountJournalServices $accountJournalServices
     ) {
         $this->inventoryAdjustmentServices = $inventoryAdjustmentServices;
@@ -64,8 +57,6 @@ class InventoryAdjustmentForm extends Component
         $this->documentStatusServices = $documentStatusServices;
         $this->inventoryAdjustmentTypeServices = $inventoryAdjustmentTypeServices;
         $this->itemInventoryServices = $itemInventoryServices;
-        $this->documentTypeServices = $documentTypeServices;
-        $this->objectServices = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
     }
     public function LoadDropdown()
@@ -77,16 +68,14 @@ class InventoryAdjustmentForm extends Component
     private function ItemInventory(): bool
     {
         try {
-            $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Inventory Adjustment');
-
+            $SOURCE_REF_TYPE = (int) $this->inventoryAdjustmentServices->documentTypeMapId;
             $dataItem = $this->inventoryAdjustmentServices->ItemInventory($this->ID);
-
             if ($dataItem) {
                 $this->itemInventoryServices->InventoryExecuteAdjustment($dataItem, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE);
             }
             return true;
         } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            $errorMessage = 'Error occurred Inv: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
             return false;
         }
@@ -94,20 +83,16 @@ class InventoryAdjustmentForm extends Component
     private function AccountJournal(): bool
     {
         try {
-
-            $invAdjustment = (int) $this->objectServices->ObjectTypeID('INVENTORY_ADJUSTMENT');
-
-            $invAdjustmentItems = (int) $this->objectServices->ObjectTypeID('INVENTORY_ADJUSTMENT_ITEMS');
+            $invAdjustment = (int) $this->inventoryAdjustmentServices->object_type_map_inventory_adjustment;
+            $invAdjustmentItems = (int) $this->inventoryAdjustmentServices->object_type_map_inventory_adjustmentItems;
 
             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($invAdjustment, $this->ID) + 1;
             //Main
             $inventoryAdjustmentData = $this->inventoryAdjustmentServices->getInventoryAdjustmentJournal($this->ID);
-
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $inventoryAdjustmentData, $this->LOCATION_ID, $invAdjustment, $this->DATE);
 
             //Item
             $inventoryAdjustmentItemData = $this->inventoryAdjustmentServices->getInventoryAdjustmentItemsJournal($this->ID);
-
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $inventoryAdjustmentItemData, $this->LOCATION_ID, $invAdjustmentItems, $this->DATE);
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
@@ -121,7 +106,7 @@ class InventoryAdjustmentForm extends Component
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
         } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            $errorMessage = 'Error occurred: [jd]' . $e->getMessage();
             session()->flash('error', $errorMessage);
             return false;
         }
@@ -136,7 +121,6 @@ class InventoryAdjustmentForm extends Component
             }
 
             DB::beginTransaction();
-
             if (!$this->ItemInventory()) {
                 DB::rollBack();
                 return;
@@ -184,6 +168,7 @@ class InventoryAdjustmentForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('companyinventory_adjustment')->with('error', $errorMessage);
         }
+
         $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
@@ -200,28 +185,40 @@ class InventoryAdjustmentForm extends Component
     {
         $this->Modify = true;
     }
+    public function getUnposted()
+    {
+        try {
+            DB::beginTransaction();
+            $this->inventoryAdjustmentServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            return Redirect::route('companyinventory_adjustment_edit', ['id' => $this->ID]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function save()
     {
         try {
 
+            $this->validate(
+                [
+                    'CODE'                  =>  $this->ID > 0 ? 'required|max:20|unique:inventory_adjustment,code,' . $this->ID : 'nullable',
+                    'DATE'                  => 'required|date_format:Y-m-d',
+                    'LOCATION_ID'           => 'required|not_in:0|exists:location,id',
+                    'ADJUSTMENT_TYPE_ID'    => 'required|not_in:0|exists:inventory_adjustment_type,id'
+                ],
+                [],
+                [
+                    'CODE'                  => 'Reference No.',
+                    'DATE'                  => 'Date',
+                    'LOCATION_ID'           => 'Location',
+                    'ADJUSTMENT_TYPE_ID'    => 'Adjustment Type'
+                ]
+            );
+
             if ($this->ID == 0) {
-                $this->validate(
-                    [
-
-                        'DATE'                  => 'required',
-                        'LOCATION_ID'           => 'required',
-                        'ADJUSTMENT_TYPE_ID'    => 'required|not_in:0'
-
-                    ],
-                    [],
-                    [
-
-                        'DATE'                  => 'Date',
-                        'LOCATION_ID'           => 'Location',
-                        'ADJUSTMENT_TYPE_ID'    => 'Adjustment Type'
-
-                    ]
-                );
 
                 $this->ACCOUNT_ID = $this->inventoryAdjustmentTypeServices->getAccountId($this->ADJUSTMENT_TYPE_ID);
                 if ($this->ACCOUNT_ID == 0) {
@@ -230,7 +227,6 @@ class InventoryAdjustmentForm extends Component
                 }
 
                 DB::beginTransaction();
-
                 $this->ID = $this->inventoryAdjustmentServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -240,34 +236,14 @@ class InventoryAdjustmentForm extends Component
                     $this->NOTES
                 );
 
-
-
                 DB::commit();
                 return Redirect::route('companyinventory_adjustment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
-                $this->validate(
-                    [
-                        'CODE'                  => 'required|max:20|unique:stock_transfer,code,' . $this->ID,
-                        'DATE'                  => 'required',
-                        'LOCATION_ID'           => 'required',
-                        'ADJUSTMENT_TYPE_ID'    => 'required|not_in:0'
-                    ],
-                    [],
-                    [
-                        'CODE'                  => 'Reference No.',
-                        'DATE'                  => 'Date',
-                        'LOCATION_ID'           => 'Location',
-                        'ADJUSTMENT_TYPE_ID'    => 'Adjustment Type'
-                    ]
-                );
-
                 $this->ACCOUNT_ID = $this->inventoryAdjustmentTypeServices->getAccountId($this->ADJUSTMENT_TYPE_ID);
-
                 if ($this->ACCOUNT_ID == 0) {
                     session()->flash('error', 'Adjustment type account not found.');
                     return;
                 }
-
 
                 DB::beginTransaction();
                 $this->inventoryAdjustmentServices->Update(

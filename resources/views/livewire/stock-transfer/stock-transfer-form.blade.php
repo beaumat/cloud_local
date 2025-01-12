@@ -159,7 +159,7 @@
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                                 </button>
 
-                                                @can('company.stock-transfer.new')
+                                                @can('company.stock-transfer.create')
                                                     <a id="new" title="Create"
                                                         href="{{ route('companystock_transfer_create') }}"
                                                         class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New

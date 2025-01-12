@@ -51,14 +51,13 @@ class CashPaymentMulti extends Component
     }
     private function CheckIsItemSelected(): bool
     {
-        $gotSelected = false;
+
         foreach ($this->itemSelected as $id => $isSelected) {
             if ($isSelected) {
-                $gotSelected = true;
+                return true;
             }
         }
-
-        return $gotSelected;
+        return false;
     }
     private function Recomputed()
     {
@@ -68,11 +67,8 @@ class CashPaymentMulti extends Component
                 $arrayItem[] =  $id;
             }
         }
-
         $this->AMOUNT = $this->serviceChargeServices->getItemListSum($this->SERVICE_CHARGES_ID, $arrayItem);
     }
-
-
     public function updatedSelectAll($value)
     {
         if ($value) {

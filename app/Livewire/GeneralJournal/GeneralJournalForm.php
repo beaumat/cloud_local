@@ -249,7 +249,6 @@ class GeneralJournalForm extends Component
     public function OpenJournal()
     {
         $FirstID = $this->generalJournalServices->getFirstDetailsID($this->ID);
-
         $JOURNAL_NO = $this->accountJournalServices->getRecord(
             $this->generalJournalServices->object_type_general_journal_details_id,
             $FirstID

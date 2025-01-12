@@ -157,7 +157,7 @@ class StockTransferFormItems extends Component
     {
         $this->validate(
             [
-                'ITEM_ID' => 'required|not_in:0',
+                'ITEM_ID' => 'required|not_in:0|exists:item,id',
                 'QUANTITY' => 'required|not_in:0',
 
             ],
@@ -246,7 +246,7 @@ class StockTransferFormItems extends Component
     {
         $this->validate(
             [
-                'lineQty' => 'required|not_in:0',
+                'lineQty' => 'required|not_in:0|numeric',
             ],
             [],
             [

@@ -1480,6 +1480,7 @@ class HemoServices
             return $result;
         } catch (\Throwable $th) {
             dd($th->getMessage());
+            return null;
         }
     }
     public function ItemToJournalAsset(int $HEMO_ID)

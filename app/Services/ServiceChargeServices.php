@@ -460,10 +460,7 @@ class ServiceChargeServices
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
             ->where('service_charges_items.ITEM_ID', $ITEM_ID)
             ->count();
-
-
-
-
+            
         return $count;
     }
     public function getPhilHealthItem(string $DATE, int $LOCATION_ID, int $PATIENT_ID): float

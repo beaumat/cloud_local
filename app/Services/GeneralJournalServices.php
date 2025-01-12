@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\GeneralJournal;
 use App\Models\GeneralJournalDetails;
+use App\Models\GeneralJournalDetailsTemp;
 use Illuminate\Support\Facades\DB;
 
 class GeneralJournalServices
@@ -52,8 +53,8 @@ class GeneralJournalServices
     }
     public function Update(int $ID, string $CODE, int $LOCATION_ID, bool $ADJUSTING_ENTRY, string $NOTES, int $CONTACT_ID = 0)
     {
-        GeneralJournal::where('ID','=', $ID)
-            ->where('LOCATION_ID','=', $LOCATION_ID)
+        GeneralJournal::where('ID', '=', $ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->update([
                 'CODE'              => $CODE,
                 'ADJUSTING_ENTRY'   => $ADJUSTING_ENTRY,
@@ -139,7 +140,7 @@ class GeneralJournalServices
         if ($CREDIT != 0) {
             $ENTRY_TYPE = 1;
         }
-        
+
         GeneralJournalDetails::where('ID', $ID)
             ->where('GENERAL_JOURNAL_ID', $GENERAL_JOURNAL_ID)
             ->where('ACCOUNT_ID', $ACCOUNT_ID)
@@ -170,6 +171,7 @@ class GeneralJournalServices
                 'general_journal_details.ACCOUNT_ID',
                 'general_journal_details.DEBIT',
                 'general_journal_details.CREDIT',
+                'general_journal_details.ENTRY_TYPE',
                 'general_journal_details.NOTES',
                 'general_journal_details.CLASS_ID',
                 'account.NAME as ACCOUNT_DESCRIPTION',
@@ -238,5 +240,33 @@ class GeneralJournalServices
             ->get();
 
         return $result;
+    }
+    public function getListTemplete()
+    {
+        $result =  GeneralJournalDetailsTemp::query()
+            ->select([
+                'general_journal_details_temp.ID',
+                'general_journal_details_temp.ACCOUNT_ID',
+                'general_journal_details_temp.NOTES',
+                'account.NAME as ACCOUNT_NAME'
+            ])
+            ->join('account', 'account.ID', '=', 'general_journal_details_temp.ACCOUNT_ID')
+            ->get();
+
+        return $result;
+    }
+
+    public function setToDetails(int $GENERAL_JOURNAL_ID, array $array)
+    {
+        foreach ($array as $list) {
+            $this->StoreDetails(
+                $GENERAL_JOURNAL_ID,
+                $list['ACCOUNT_ID'],
+                (float) $list['DEBIT'],
+                (float)$list['CREDIT'],
+                $list['NOTES'],
+                0
+            );
+        }
     }
 }

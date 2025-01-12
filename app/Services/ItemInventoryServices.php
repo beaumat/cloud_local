@@ -41,17 +41,29 @@ class ItemInventoryServices
             'ENDING_COST'           => $this->numberServices->doubleNumber($ENDING_COST)
         ]);
 
-
-
         $nextData =  $this->getNextEndingStore($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
 
         foreach ($nextData as $list) {
+            // if ($SOURCE_REF_TYPE == 6) {
+            //     return;
+            // }
+
             $ENDING_QUANTITY = $ENDING_QUANTITY + (float) $list->QUANTITY ?? 0;
             $NEW_ENDING_COST = $ENDING_QUANTITY + (float) $list->ENDING_UNIT_COST ?? 0;
-            $this->getNextUpdate($list->ID, $ITEM_ID, $LOCATION_ID, $list->SOURCE_REF_TYPE, $list->SOURCE_REF_ID, $list->SOURCE_REF_DATE, $ENDING_QUANTITY, $NEW_ENDING_COST);
+
+            $this->getNextUpdate(
+                $list->ID,
+                $ITEM_ID,
+                $LOCATION_ID,
+                $list->SOURCE_REF_TYPE,
+                $list->SOURCE_REF_ID,
+                $list->SOURCE_REF_DATE,
+                $ENDING_QUANTITY,
+                $NEW_ENDING_COST
+            );
         }
     }
-    private function Update(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $QUANTITY)
+    private function Update(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $QUANTITY, float $COST = 0)
     {
         $data = ItemInventory::where('ITEM_ID', '=', $ITEM_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
@@ -73,28 +85,38 @@ class ItemInventoryServices
             $ENDING_QUANTITY = $PREV_END_QTY +  $QUANTITY;
             $ENDING_COST = $PREV_END_COST * $ENDING_QUANTITY;
             $data->update(['QUANTITY' => $QUANTITY, 'ENDING_QUANTITY' => $ENDING_QUANTITY, 'ENDING_COST' => $this->numberServices->doubleNumber($ENDING_COST)]);
+            $this->fixList($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE, $ID, $ENDING_QUANTITY);
+        }
+    }
+    private function fixList(int $ITEM_ID, int  $LOCATION_ID, string $SOURCE_REF_DATE, int  $ID, float $ENDING_QUANTITY)
+    {
+        $nextData = $this->getNextEndingUpdate(
+            $ITEM_ID,
+            $LOCATION_ID,
+            $SOURCE_REF_DATE,
+             $ID
+        );
 
-            $nextData = $this->getNextEndingUpdate(
+        foreach ($nextData as $list) {
+            
+            if ($list->SOURCE_REF_TYPE == 6) {
+                // make it update
+                return;
+            }
+
+            $ENDING_QUANTITY = $ENDING_QUANTITY + (float) $list->QUANTITY ?? 0;
+            $NEW_ENDING_COST = $ENDING_QUANTITY + (float) $list->ENDING_UNIT_COST ?? 0;
+
+            $this->getNextUpdate(
+                $list->ID,
                 $ITEM_ID,
                 $LOCATION_ID,
-                $SOURCE_REF_DATE,
-                $ID
+                $list->SOURCE_REF_TYPE,
+                $list->SOURCE_REF_ID,
+                $list->SOURCE_REF_DATE,
+                $ENDING_QUANTITY,
+                $NEW_ENDING_COST
             );
-
-            foreach ($nextData as $list) {
-                $ENDING_QUANTITY = $ENDING_QUANTITY + (float) $list->QUANTITY ?? 0;
-                $NEW_ENDING_COST = $ENDING_QUANTITY + (float) $list->ENDING_UNIT_COST ?? 0;
-                $this->getNextUpdate(
-                    $list->ID,
-                    $ITEM_ID,
-                    $LOCATION_ID,
-                    $list->SOURCE_REF_TYPE,
-                    $list->SOURCE_REF_ID,
-                    $list->SOURCE_REF_DATE,
-                    $ENDING_QUANTITY,
-                    $NEW_ENDING_COST
-                );
-            }
         }
     }
     public function DeleteInv(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE)
@@ -110,23 +132,27 @@ class ItemInventoryServices
     }
     private function getNextEndingUpdate(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $ID)
     {
-
         $result = DB::table('item_inventory')
             ->select([
                 'ID',
                 'QUANTITY',
+                'COST',
                 'ENDING_UNIT_COST',
+                'ENDING_COST',
                 'SOURCE_REF_TYPE',
                 'SOURCE_REF_ID',
                 'SOURCE_REF_DATE'
             ])
-            ->where('ITEM_ID', $ITEM_ID)
-            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->whereNotIn('ID', [$ID])
             ->where('SOURCE_REF_DATE', '>=', $SOURCE_REF_DATE)
-            ->where('ID', '>', $ID)
             ->orderBy('SOURCE_REF_DATE', 'asc')
             ->orderBy('ID', 'asc')
             ->get();
+
+   
+
 
         return $result;
     }
@@ -140,14 +166,16 @@ class ItemInventoryServices
                 'ENDING_UNIT_COST',
                 'SOURCE_REF_TYPE',
                 'SOURCE_REF_ID',
-                'SOURCE_REF_DATE'
+                'SOURCE_REF_DATE',
+                'ENDING_COST'
             ])
-            ->where('ITEM_ID', $ITEM_ID)
-            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->where('SOURCE_REF_DATE', '>', $SOURCE_REF_DATE)
             ->orderBy('SOURCE_REF_DATE', 'asc')
             ->orderBy('ID', 'asc')
             ->get();
+
 
         return $result;
     }
@@ -160,8 +188,9 @@ class ItemInventoryServices
             ->where('SOURCE_REF_ID', $SOURCE_REF_ID)
             ->where('SOURCE_REF_DATE', $SOURCE_REF_DATE)
             ->update([
-                'ENDING_QUANTITY' => $ENDING_QUANTITY,
-                'ENDING_COST'     => $this->numberServices->doubleNumber($ENDING_COST)
+                'ENDING_QUANTITY'   => $ENDING_QUANTITY,
+                'ENDING_UNIT_COST'  => $this->numberServices->doubleNumber($ENDING_COST / $ENDING_QUANTITY),
+                'ENDING_COST'       => $this->numberServices->doubleNumber($ENDING_COST)
             ]);
     }
 
@@ -177,7 +206,7 @@ class ItemInventoryServices
                 ->where('ITEM_ID', '=', $ITEM_ID)
                 ->where('LOCATION_ID', '=', $LOCATION_ID)
                 ->where('SOURCE_REF_DATE', '<=', $SOURCE_REF_DATE)
-                ->where('ID', '<', $ID)
+                ->where('ID', '<>', $ID)
                 ->orderBy('SOURCE_REF_DATE', 'desc')
                 ->orderBy('ID', 'desc')
                 ->limit(1)
@@ -218,7 +247,7 @@ class ItemInventoryServices
         return 0;
     }
 
-    private function getEndingLastOutPut(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE): array
+    public function getEndingLastOutPut(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE): array
     {
         $data = DB::table('item_inventory')
             ->select([
@@ -254,7 +283,46 @@ class ItemInventoryServices
             'ENDING_COST'       => 0,
         ];
     }
+    public function getEndingLastOutPutAdjustment(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $REF_ID): array
+    {
+        $data = DB::table('item_inventory')
+            ->select([
+                'ID',
+                'SEQUENCE_NO',
+                'ENDING_QUANTITY',
+                'ENDING_UNIT_COST',
+                'ENDING_COST'
+            ])
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('SOURCE_REF_DATE', '<=', $SOURCE_REF_DATE)
+            ->whereNotExists(function ($query) use (&$REF_ID) {
+                $query->where('SOURCE_REF_TYPE', '=', '6')
+                    ->where('SOURCE_REF_ID', '=', $REF_ID);
+            })
+            ->orderBy('SOURCE_REF_DATE', 'desc')
+            ->orderBy('ID', 'desc')
+            ->limit(1)
+            ->first();
 
+        if ($data) {
+            return [
+                'ID'                => $data->ID,
+                'SEQUENCE_NO'       => $data->SEQUENCE_NO,
+                'ENDING_QUANTITY'   => $data->ENDING_QUANTITY,
+                'ENDING_UNIT_COST'  => $data->ENDING_UNIT_COST,
+                'ENDING_COST'       => $this->numberServices->doubleNumber($data->ENDING_COST),
+            ];
+        }
+
+        return [
+            'ID'                => 0,
+            'SEQUENCE_NO'       => -1,
+            'ENDING_QUANTITY'   => 0,
+            'ENDING_UNIT_COST'  => 0,
+            'ENDING_COST'       => 0,
+        ];
+    }
     private function InvItemExists(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_ID, int $SOURCE_REF_TYPE, string $SOURCE_REF_DATE): bool
     {
         return (bool) ItemInventory::query()
@@ -278,16 +346,8 @@ class ItemInventoryServices
         return $result;
     }
 
-    public function InventoryModify(
-        int $ITEM_ID,
-        int $LOCATION_ID,
-        int $SOURCE_REF_ID,
-        int $SOURCE_REF_TYPE,
-        string $SOURCE_REF_DATE,
-        int $BATCH_ID,
-        float $QTY,
-        float $COST
-    ) {
+    public function InventoryModify(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_ID, int $SOURCE_REF_TYPE, string $SOURCE_REF_DATE, int $BATCH_ID, float $QTY, float $COST)
+    {
 
         $isInventoryExists = (bool) DB::table('item')
             ->where('ID', $ITEM_ID)
@@ -319,7 +379,7 @@ class ItemInventoryServices
             $ENDING_ARRAY        = $this->getEndingLastOutPut($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
             $SEQUENCE_NO        = (int) $ENDING_ARRAY['SEQUENCE_NO'];
             $ENDING_QUANTITY    = (float) $ENDING_ARRAY['ENDING_QUANTITY'] + $QTY;
-            $ENDING_UNIT_COST   = (float) number_format($COST, 2) ?? 0;
+            $ENDING_UNIT_COST   = (float)  $this->numberServices->doubleNumber($COST ?? 0);
             $ENDING_COST        = $ENDING_UNIT_COST * $ENDING_QUANTITY;
 
             $this->Store(
@@ -337,6 +397,7 @@ class ItemInventoryServices
                 $ENDING_UNIT_COST,
                 $ENDING_COST
             );
+
             return;
         }
         // update 
@@ -398,23 +459,31 @@ class ItemInventoryServices
             $BATCH_ID = $list->BATCH_ID ?? 0;
             $UNIT_BASE_QUANTITY = (float) $list->UNIT_BASE_QUANTITY ?? 1;
             $ENDING_QUANTITY = (float) $QUANTITY * $UNIT_BASE_QUANTITY;
+            $QTY_DIFFERENCE = (float) $list->QTY_DIFFERENCE ?? 0;
+
+            $gotCOST = false;
+
             if (isset($list->COST)) {
                 $COST = (float) $list->COST ?? 0;
+                $gotCOST = true;
             } else {
-                $COST = (float) $this->itemServices->getCost($ITEM_ID);
+                $COST = 0;
+                $gotCOST = false;
             }
 
             $isExists = (bool) $this->InvItemExists($ITEM_ID, $LOCATION_ID, $SOURCE_REF_ID, $SOURCE_REF_TYPE, $SOURCE_REF_DATE);
 
             if (!$isExists) {
                 $PREVIOUS_ID = $this->getPreviousID($LOCATION_ID, $ITEM_ID);
-                $ending = $this->getEndingLastOutPut($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
-                $SEQUENCE_NO = (int) $ending['SEQUENCE_NO'];
-                $QTY = (float) $ENDING_QUANTITY - (float) $ending['ENDING_QUANTITY'];
+                $endingData = $this->getEndingLastOutPutAdjustment($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE, $SOURCE_REF_ID);
+                $SEQUENCE_NO = (int) $endingData['SEQUENCE_NO'];
                 $ENDING_UNIT_COST = (float) $COST;
-                $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
 
-
+                if ($gotCOST) {
+                    $ENDING_COST = (float) $COST * $ENDING_QUANTITY;
+                } else {
+                    $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
+                }
                 $this->Store(
                     $PREVIOUS_ID,
                     $SEQUENCE_NO + 1,
@@ -424,15 +493,55 @@ class ItemInventoryServices
                     $SOURCE_REF_TYPE,
                     $SOURCE_REF_ID,
                     $SOURCE_REF_DATE,
-                    $QTY,
+                    $QTY_DIFFERENCE,
                     $COST,
                     $ENDING_QUANTITY,
-                    $ENDING_UNIT_COST,
+                    $gotCOST == false ? $ENDING_UNIT_COST : $ENDING_COST / $ENDING_QUANTITY,
                     $ENDING_COST
                 );
+
+                return;
             }
+
+            $ENDING_UNIT_COST = (float) $COST;
+            // set update
+            if ($gotCOST) {
+                $ENDING_COST = (float) $COST * $ENDING_QUANTITY;
+            } else {
+                $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
+            }
+
+            $data =   ItemInventory::where('ITEM_ID', '=', $ITEM_ID)
+                ->where('LOCATION_ID', '=', $LOCATION_ID)
+                ->where('SOURCE_REF_TYPE', '=', $SOURCE_REF_TYPE)
+                ->where('SOURCE_REF_ID', '=', $SOURCE_REF_ID)
+                ->where('SOURCE_REF_DATE', '=', $SOURCE_REF_DATE);
+
+            $PK_ID = $data->first()->ID;
+
+            $data->update([
+                'QUANTITY'          => $QTY_DIFFERENCE,
+                'ENDING_QUANTITY'   => $ENDING_QUANTITY,
+                'COST'              => $COST,
+                'ENDING_UNIT_COST'  => $gotCOST == false ? $ENDING_UNIT_COST : $ENDING_COST / $ENDING_QUANTITY,
+                'ENDING_COST'       => $this->numberServices->doubleNumber($ENDING_COST)
+            ]);
+
+            $this->fixList(
+                $ITEM_ID,
+                $LOCATION_ID,
+                $SOURCE_REF_DATE,
+                $PK_ID,
+                $ENDING_QUANTITY
+            );
         }
     }
+
+    // data
+
+
+
+
     private string $TX_ID = '
      CASE 
 		WHEN document_type_map.`ID` = 1 THEN  (SELECT bill.`ID` FROM bill_items  JOIN bill ON bill.`ID` =  bill_items.`BILL_ID` WHERE bill_items.`ID` =  item_inventory.`SOURCE_REF_ID` AND bill.`DATE` = item_inventory.`SOURCE_REF_DATE` AND bill.`LOCATION_ID` = item_inventory.`LOCATION_ID` AND bill_items.`ITEM_ID` =  item_inventory.`ITEM_ID` )

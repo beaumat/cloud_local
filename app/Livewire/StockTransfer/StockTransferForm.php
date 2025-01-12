@@ -276,7 +276,6 @@ class StockTransferForm extends Component
 
                 $this->validate(
                     [
-
                         'DATE'                  => 'required',
                         'LOCATION_ID'           => 'required|exists:location,id',
                         'TRANSFER_TO_ID'        => 'required|not_in:0|exists:location,id',

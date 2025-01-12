@@ -2,6 +2,7 @@
 
 namespace App\Livewire\GeneralJournal;
 
+use App\Services\AccountJournalServices;
 use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
@@ -22,14 +23,17 @@ class GeneralJournalList extends Component
     private $generalJournalServices;
     private $locationServices;
     private $userServices;
+    private $accountJournalServices;
     public function boot(
         GeneralJournalServices $generalJournalServices,
         LocationServices $locationServices,
-        UserServices $userServices
+        UserServices $userServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->generalJournalServices = $generalJournalServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
 
     public function mount()
@@ -53,21 +57,40 @@ class GeneralJournalList extends Component
 
         if ($data) {
 
-            if ($data->STATUS == 0) {
-                try {
-                    DB::beginTransaction();
-                    $this->generalJournalServices->Delete($id);
-                    DB::commit();
-                    session()->flash('message', 'Successfully deleted.');
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                    $errorMessage = 'Error occurred: ' . $e->getMessage();
-                    session()->flash('error', $errorMessage);
-                }
-                return;
-            }
 
-            session()->flash('error', 'Invalid. this file cannot be deleted.');
+            try {
+                DB::beginTransaction();
+
+                $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                    $this->generalJournalServices->object_type_general_journal_details_id,
+                    $id
+                );
+
+                if ($JOURNAL_NO  >  0) {
+                    $dataList = $this->generalJournalServices->ListDetails($id);
+                    foreach ($dataList as $list) {
+                        $this->accountJournalServices->DeleteJournal(
+                            $list->ACCOUNT_ID,
+                            $data->LOCATION_ID,
+                            $JOURNAL_NO,
+                            0,
+                            $list->ID,
+                            $this->generalJournalServices->object_type_general_journal_details_id,
+                            $data->DATE,
+                            $list->ENTRY_TYPE
+                        );
+                    }
+                }
+
+                $this->generalJournalServices->Delete($id);
+                DB::commit();
+                session()->flash('message', 'Successfully deleted.');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                $errorMessage = 'Error occurred: ' . $e->getMessage();
+                session()->flash('error', $errorMessage);
+            }
+            return;
         }
     }
     public function render()

@@ -4,11 +4,13 @@
         <thead class="text-xs bg-sky">
             <tr>
                 <th class="col-1">Code</th>
-                <th class="col-5">Description</th>
+                <th class="col-4">Description</th>
                 <th class="col-1">Qty</th>
                 <th class="col-1">U/M</th>
-                <th class="col-1">Unit Price</th>
-                <th class="col-1">Amount</th>
+                <th class="col-1 text-right">Unit Price</th>
+                <th class="col-1 text-right">Retail Amount</th>
+                <th class="col-1 text-right">Unit Cost</th>
+                <th class="col-1 text-right">Amount</th>
                 @if ($STATUS == $openStatus || $STATUS == 16)
                     <th class="text-center col-1">Action</th>
                 @endif
@@ -19,20 +21,18 @@
                 <tr>
                     <td>{{ $list->CODE }}</td>
                     <td>{{ $list->DESCRIPTION }}</td>
-
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-1 text-right"
+                            <input type="number" step="0.01" class="form-control form-control-sm text-right"
                                 name="lineQty" wire:model.live.debounce.1000ms='lineQty' wire:blur="getEditAmount" />
                         @else
                             {{ number_format($list->QUANTITY, 0) }}
                         @endif
-
                     </td>
                     <td class="text-sm">
                         @if ($editItemId === $list->ID)
                             <select wire:model.live='lineUnitId' name="lineUnitId"
-                                class="text-sm form-control form-control-sm mt-1">
+                                class="text-sm form-control form-control-sm">
                                 @foreach ($editUnitList as $listitem)
                                     <option value="{{ $listitem->ID }}">{{ $listitem->SYMBOL }}</option>
                                 @endforeach
@@ -40,24 +40,43 @@
                         @else
                             {{ $list->SYMBOL }}
                         @endif
-
                     </td>
+                    {{-- Unit Price --}}
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-1 text-right"
+                            <input type="number" step="0.01" class="form-control form-control-sm  text-right"
                                 name="lineUnitPrice" wire:model.live.debounce.1000ms='lineUnitPrice'
-                                wire:blur="getEditAmount" readonly />
+                                wire:blur="getEditAmount" />
                         @else
                             {{ number_format($list->UNIT_PRICE, 2) }}
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
-                            <label class="mt-1">{{ number_format($lineRetailValue, 2) }}</label>
+                            <label class="">{{ number_format($lineRetailValue, 2) }}</label>
                         @else
                             {{ number_format($list->RETAIL_VALUE, 2) }}
                         @endif
                     </td>
+                    {{-- Unit Cost --}}
+                    <td class="text-right">
+                        @if ($editItemId === $list->ID)
+                            <input type="number" step="0.01" class="form-control form-control-sm  text-right"
+                                name="lineUnitCost" wire:model.live.debounce.1000ms='lineUnitCost'
+                                wire:blur="getEditAmount" />
+                        @else
+                            {{ number_format($list->UNIT_COST, 2) }}
+                        @endif
+                    </td>
+                    <td class="text-right">
+                        @if ($editItemId === $list->ID)
+                            <label class="">{{ number_format($lineAmount, 2) }}</label>
+                        @else
+                            {{ number_format($list->AMOUNT, 2) }}
+                        @endif
+                    </td>
+
+
                     @if ($STATUS == $openStatus || $STATUS == 16)
                         <td class="text-center">
                             @if ($editItemId === $list->ID)
@@ -96,7 +115,7 @@
                                         :zero="true" wire:model.live='ITEM_ID' :vertical="false" :isDisabled=false
                                         :withLabel="false" />
                                 @else
-                                    <label class="mt-2 text-xs"> {{ $ITEM_CODE }}</label>
+                                    <label class="text-xs"> {{ $ITEM_CODE }}</label>
                                 @endif
                             @else
                                 @if ($codeBase)
@@ -104,7 +123,7 @@
                                         :zero="true" wire:model.live='ITEM_ID' :vertical="false" :isDisabled=false
                                         :withLabel="false" />
                                 @else
-                                    <label class="mt-2 text-xs"> {{ $ITEM_CODE }}</label>
+                                    <label class=" text-xs"> {{ $ITEM_CODE }}</label>
                                 @endif
                             @endif
                         </td>
@@ -115,7 +134,7 @@
                                         :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID' :vertical="false"
                                         :isDisabled=false :withLabel="false" />
                                 @else
-                                    <label class="mt-2 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
+                                    <label class=" text-xs"> {{ $ITEM_DESCRIPTION }}</label>
                                 @endif
                             @else
                                 @if (!$codeBase)
@@ -123,19 +142,18 @@
                                         :options="$itemDescList" :zero="true" wire:model.live='ITEM_ID'
                                         :isDisabled=false :vertical="false" :withLabel="false" />
                                 @else
-                                    <label class="mt-2 text-xs"> {{ $ITEM_DESCRIPTION }}</label>
+                                    <label class=" text-xs"> {{ $ITEM_DESCRIPTION }}</label>
                                 @endif
                             @endif
                         </td>
 
                         <td>
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
+                            <input type="number" step="0.01" class="form-control form-control-sm text-right"
                                 name="Qty" wire:model.live.debounce.1000ms='QUANTITY' wire:blur="getAmount"
                                 @if ($ITEM_ID == 0) readonly @endif />
                         </td>
                         <td>
-                            <select wire:model='UNIT_ID' name="UNIT_ID"
-                                class="text-sm form-control form-control-sm mt-2"
+                            <select wire:model='UNIT_ID' name="UNIT_ID" class="text-sm form-control form-control-sm"
                                 @if ($ITEM_ID == 0) readonly @endif>
                                 @foreach ($unitList as $list)
                                     <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
@@ -143,16 +161,25 @@
                             </select>
                         </td>
                         <td>
-
-                            <input type="number" step="0.01" class="form-control form-control-sm mt-2 text-right"
-                                name="UNIT_PRICE" wire:model.live.debounce.1000ms='UNIT_PRICE' wire:blur="getAmount" />
+                            <input type="number" step="0.01" class="form-control form-control-sm text-right"
+                                name="UNIT_PRICE" wire:model.live.debounce.1000ms='UNIT_PRICE'
+                                wire:blur="getAmount" />
                         </td>
                         <td class="text-right">
-                            <label class="mt-2 text-sm">{{ number_format($RETAIL_VALUE, 2) }}</label>
+                            <label class=" text-sm">{{ number_format($RETAIL_VALUE, 2) }}</label>
+                        </td>
+                        <td>
+                            <input type="number" step="0.01" class="form-control form-control-sm text-right"
+                                name="UNIT_PRICE" wire:model.live.debounce.1000ms='UNIT_COST'
+                                wire:blur="getAmount" />
+                        </td>
+                        <td class="text-right">
+                            <label class=" text-sm">{{ number_format($AMOUNT, 2) }}</label>
                         </td>
 
+
                         <td>
-                            <div class="mt-2">
+                            <div class="">
                                 <button type="submit" wire:loading.attr='hidden'
                                     @if ($ITEM_ID == 0) disabled @endif
                                     class="text-white btn bg-sky btn-sm w-100">
