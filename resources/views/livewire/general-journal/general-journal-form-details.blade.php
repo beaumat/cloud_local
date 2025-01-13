@@ -176,5 +176,5 @@
     @endif
 
 
-    @livewire('GeneralJournal.GeneralJournalTempleteModal', ['GENERAL_JOURNAL_ID' => $GENERAL_JOURNAL_ID])
+    {{-- @livewire('GeneralJournal.GeneralJournalTempleteModal', ['GENERAL_JOURNAL_ID' => $GENERAL_JOURNAL_ID]) --}}
 </div>
