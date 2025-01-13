@@ -165,8 +165,6 @@
                     <td></td>
                 @endif
             </tr>
-
-
         </tbody>
 
     </table>
