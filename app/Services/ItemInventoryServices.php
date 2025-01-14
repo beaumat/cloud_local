@@ -152,8 +152,6 @@ class ItemInventoryServices
             ->get();
 
 
-
-
         return $result;
     }
     private function getNextEndingStore(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE)
