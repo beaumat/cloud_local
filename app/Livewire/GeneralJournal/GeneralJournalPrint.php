@@ -26,7 +26,7 @@ class GeneralJournalPrint extends Component
     public string $REPORT_HEADER_1;
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
-    public string $LOGO_FILE;
+    public  $LOGO_FILE = null;
 
     public $listDetails = [];
 
@@ -56,6 +56,7 @@ class GeneralJournalPrint extends Component
                 }
                 $locData = $this->locationServices->get($data->LOCATION_ID);
                 if ($locData) {
+    
                     $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                     $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                     $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
