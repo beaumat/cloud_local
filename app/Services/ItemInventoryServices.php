@@ -94,11 +94,11 @@ class ItemInventoryServices
             $ITEM_ID,
             $LOCATION_ID,
             $SOURCE_REF_DATE,
-             $ID
+            $ID
         );
 
         foreach ($nextData as $list) {
-            
+
             if ($list->SOURCE_REF_TYPE == 6) {
                 // make it update
                 return;
@@ -151,7 +151,7 @@ class ItemInventoryServices
             ->orderBy('ID', 'asc')
             ->get();
 
-   
+
 
 
         return $result;
@@ -181,6 +181,11 @@ class ItemInventoryServices
     }
     private function getNextUpdate(int $ID, int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $ENDING_QUANTITY, float $ENDING_COST)
     {
+        $U_COST  = 0;
+        if ($ENDING_COST > 0) {
+            $U_COST = $ENDING_COST / $ENDING_QUANTITY;
+        }
+
         ItemInventory::where('ID', $ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
@@ -189,7 +194,7 @@ class ItemInventoryServices
             ->where('SOURCE_REF_DATE', $SOURCE_REF_DATE)
             ->update([
                 'ENDING_QUANTITY'   => $ENDING_QUANTITY,
-                'ENDING_UNIT_COST'  => $this->numberServices->doubleNumber($ENDING_COST / $ENDING_QUANTITY),
+                'ENDING_UNIT_COST'  => $this->numberServices->doubleNumber($U_COST),
                 'ENDING_COST'       => $this->numberServices->doubleNumber($ENDING_COST)
             ]);
     }
