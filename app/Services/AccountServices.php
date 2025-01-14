@@ -6,7 +6,7 @@ use App\Models\Accounts;
 use App\Models\AccountType;
 
 class AccountServices
-{   
+{
     public int $UNDEPOSITED_ACCOUNT_ID = 5;
     public int $EXPENSE_ACCOUNT_ID = 284;
     private $object;
@@ -27,11 +27,12 @@ class AccountServices
             ->orderBy('NAME', 'asc')
             ->get();
     }
-   
+
     public function getBankAccountDeposit()
     {
-        return Accounts::whereIn('TYPE', ['0'])
+        return Accounts::whereIn('TYPE', ['0', '6'])
             ->where('INACTIVE', '=', '0')
+            ->orWhere('ID', '=', $this->UNDEPOSITED_ACCOUNT_ID)
             ->orderBy('NAME', 'asc')
             ->get();
     }
