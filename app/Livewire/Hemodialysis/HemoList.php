@@ -101,9 +101,11 @@ class HemoList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public int $count = 0;
     #[On('refresh-list')]
     public function render()
     {
+        $this->count = 0;
         $this->pendingList = $this->hemoServices->UnpostedTratment($this->locationid, $this->search);
 
         $dataList = $this->hemoServices->Search(
