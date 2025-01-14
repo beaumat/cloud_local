@@ -27,7 +27,7 @@ class SalesReceiptForm extends Component
 {
 
 
-    public bool $BANK_MODE = true;
+    public bool $BANK_MODE = false;
     public bool $IS_MODAL = false;
     public int $PATIENT_PAYMENT_ID;
     public int $ID;
