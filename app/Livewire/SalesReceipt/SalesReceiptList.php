@@ -55,14 +55,13 @@ class SalesReceiptList extends Component
         $this->dateFrom = $this->userServices->getTransactionDateDefault();
         $this->dateTo = $this->userServices->getTransactionDateDefault();
     }
-    public function deleteItem(int $Id, int $SALES_RECEIPT_ID, $JOURNAL_NO)
+    public function deleteItem(int $Id, int $SALES_RECEIPT_ID, int $JOURNAL_NO)
     {
 
         $sr = $this->salesReceiptServices->get($SALES_RECEIPT_ID);
         if ($sr) {
             $srItem = $this->salesReceiptServices->ItemGet($Id, $SALES_RECEIPT_ID,);
             if ($srItem) {
-
                 // Inventory
                 $this->itemInventoryServices->InventoryModify(
                     $srItem->ITEM_ID,
@@ -163,8 +162,6 @@ class SalesReceiptList extends Component
                     foreach ($dataItem as $list) {
                         $this->deleteItem($list->ID, $SR_ID, $JOURNAL_NO);
                     }
-
-
                     $PP_ID = $this->patientPaymentServices->GetCustomerRef(false, $SR_ID);
                     if ($PP_ID > 0) {
                         $this->patientPaymentServices->CustomerRef($PP_ID, false, 0);
