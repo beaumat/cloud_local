@@ -1599,8 +1599,6 @@ class HemoServices
         //     ->where('DATE', '<=', $DATE)
         //     ->whereBetween('STATUS_ID', [1, 2])
         //     ->count();
-
-
         $year = date('Y', strtotime($DATE)); // Extract the year from the provided date
 
         $trtNo = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)

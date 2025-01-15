@@ -127,7 +127,6 @@ class BillPaymentForm extends Component
     }
     public function save()
     {
-
         $this->validate(
             [
                 'BANK_ACCOUNT_ID'   => 'required|not_in:0|exists:account,id',
@@ -255,6 +254,7 @@ class BillPaymentForm extends Component
             $check = $this->billPaymentServices->object_type_check;
             $checkbills = $this->billPaymentServices->object_type_check_bills;
             $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($check, $this->ID);
+            
             if ($JOURNAL_NO  == 0) {
                 $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($check, $this->ID) + 1;
             }
@@ -268,7 +268,9 @@ class BillPaymentForm extends Component
                 $this->DATE,
                 "AP"
             );
+
             $checkData = $this->billPaymentServices->billPaymentJournalRemaining($this->ID);
+            
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
                 $checkData,
@@ -291,6 +293,7 @@ class BillPaymentForm extends Component
             );
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+            
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 

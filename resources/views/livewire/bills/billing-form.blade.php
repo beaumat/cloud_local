@@ -175,33 +175,34 @@
                                             @endcan
                                         @endif
                                     </div>
-
                                     <div class="text-right col-md-6 col-6">
                                         @if ($showFileName)
-                                            @can('vendor.bill.print')
-                                                <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
-                                                    class="btn btn-sm btn-warning">
-                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Preview
-                                                </a>
-                                            @endcan
-                                            @can('vendor.bill.update')
-                                                @if (!$IS_CONFIRM)
-                                                    <button type="button" wire:click='getConfirm()'
-                                                        wire:confirm="Are you sure this guaranteed letter is confirm?"
-                                                        class="btn btn-sm btn-info">
-                                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                                        Confirm
-                                                    </button>
-                                                @else
-                                                    <label class="text-xs text-primary px-3">
-                                                        <i>
-                                                            File Confirm on
-                                                            <b class="text-info">{{ \Carbon\Carbon::parse($DATE_CONFIRM)->format('m/d/Y') }}
-                                                            </b>
-                                                        </i>
-                                                    </label>
-                                                @endif
-                                            @endcan
+                                            @if ($ID > 0)
+                                                @can('vendor.bill.print')
+                                                    <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
+                                                        class="btn btn-sm btn-warning">
+                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Preview
+                                                    </a>
+                                                @endcan
+                                                @can('vendor.bill.update')
+                                                    @if (!$IS_CONFIRM)
+                                                        <button type="button" wire:click='getConfirm()'
+                                                            wire:confirm="Are you sure this guaranteed letter is confirm?"
+                                                            class="btn btn-sm btn-info">
+                                                            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                                            Confirm
+                                                        </button>
+                                                    @else
+                                                        <label class="text-xs text-primary px-3">
+                                                            <i>
+                                                                File Confirm on
+                                                                <b class="text-info">{{ \Carbon\Carbon::parse($DATE_CONFIRM)->format('m/d/Y') }}
+                                                                </b>
+                                                            </i>
+                                                        </label>
+                                                    @endif
+                                                @endcan
+                                            @endif
                                         @endif
                                         @if ($STATUS > 0)
                                             @if ($STATUS != 16 && $ID > 0)
