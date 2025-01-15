@@ -1603,11 +1603,15 @@ class HemoServices
 
         $year = date('Y', strtotime($DATE)); // Extract the year from the provided date
 
-        return (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
+        $trtNo = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->whereYear('DATE', '=', $year) // Add a condition to filter by year
+            ->where('DATE', '<=', $DATE) // Add a condition to filter by year
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
+
+     
+            return $trtNo;
     }
     public function codeIfExist(string $CODE): bool
     {
@@ -2008,25 +2012,46 @@ class HemoServices
     }
     public function FixTreatmentNumberFromStart(int $LOCATION_ID)
     {
-        $NowYear = $this->dateServices->NowYear();
 
-        $dataList =  Hemodialysis::query()
-            ->where('LOCATION_ID', '=', $LOCATION_ID)
-            ->whereYear('DATE', '=', $NowYear)
-            ->orderBy('DATE', 'asc')
-            ->whereBetween('STATUS_ID', [1, 2])
-            ->get();
+        try {
+            $NowYear = $this->dateServices->NowYear();
 
-        foreach ($dataList as $list) {
-          $No =  $this->getFixTreatmentNumberOnly($list->CUSTOMER_ID, $LOCATION_ID, $list->DATE);
+            $dataList =  Hemodialysis::query()
+                ->select([
+                    'ID',
+                    'CUSTOMER_ID',
+                    'DATE',
+                ])
+                ->where('LOCATION_ID', '=', $LOCATION_ID)
+                ->whereYear('DATE', '=', $NowYear)
+                ->orderBy('DATE', 'asc')
+                ->whereBetween('STATUS_ID', [1, 2, 4])
+                ->get();
+
+
+
+            foreach ($dataList as $list) {
+                $NO_OF_TREATMENT =  $this->getFixTreatmentNumberOnly($list->CUSTOMER_ID, $LOCATION_ID, $list->DATE);
+
+                Hemodialysis::where('ID', '=', $list->ID)
+                    ->where('LOCATION_ID', '=', $LOCATION_ID)
+                    ->where('DATE', '=', $list->DATE)
+                    ->where('CUSTOMER_ID', '=', $list->CUSTOMER_ID)
+                    ->update([
+                        'NO_OF_TREATMENT' => $NO_OF_TREATMENT
+                    ]);
+            }
+            session()->flash('message', 'Successfully update treatment no.');
+        } catch (\Throwable $th) {
+            session()->flash('error', $th->getMessage());
         }
     }
-    private function getFixTreatmentNumberOnly(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE):int
+    private function getFixTreatmentNumberOnly(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
     {
 
         $NowYear = $this->dateServices->GetFirstDay_Year($DATE);
-        
-        $result =   (int) Hemodialysis::where('CUSTOMER_ID',  '=', $CUSTOMER_ID)
+
+        $result = (int) Hemodialysis::where('CUSTOMER_ID',  '=', $CUSTOMER_ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->whereYear('DATE', '=', $NowYear)
             ->where('DATE', '<=', $DATE) // Add a condition to filter by year

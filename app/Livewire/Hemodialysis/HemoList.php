@@ -80,6 +80,10 @@ class HemoList extends Component
     {
         $this->dispatch('refresh-list');
     }
+    public function clickOn()
+    {
+        $this->hemoServices->FixTreatmentNumberFromStart($this->locationid);
+    }
     public function exportData()
     {
         $dataList = $this->hemoServices->Search(
