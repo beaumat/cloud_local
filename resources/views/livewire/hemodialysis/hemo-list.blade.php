@@ -80,7 +80,8 @@
                                         </div>
                                         <div class="col-8 col-md-2">
                                             <div class="mt-0">
-                                                <label class="text-xs">Location:</label>
+                                                <label class="text-xs" wire:click='clickOn'
+                                                    wire:confirm='Please ask the developer before click yes'>Location:</label>
                                                 <select
                                                     @if (Auth::user()->locked_location) style="opacity:
                                                     0.5;pointer-events: none;" @endif

@@ -31,9 +31,8 @@
                                  <th class="text-center ">Start</th>
                                  <th class="text-center ">End</th>
                                  <th class="col-1">Location</th>
-                                 <th> Status</th>
-                                 <th>Action</th>
-
+                                 <th>Status</th>
+                                 <th>Sevice Charge</th>
                              </tr>
                          </thead>
                          <tbody class="text-xs">
