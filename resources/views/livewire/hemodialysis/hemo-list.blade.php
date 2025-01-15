@@ -103,7 +103,8 @@
                                     <table class="table table-sm table-bordered table-hover">
                                         <thead class="text-xs bg-sky sticky-header">
                                             <tr>
-                                                <th>Ref No.</th>
+                                                <th> No. </th>
+                                                <th>Ref #.</th>
                                                 <th>Date</th>
                                                 <th class="col-2">Patient</th>
                                                 <th class="text-center ">W</th>
@@ -113,8 +114,8 @@
                                                 <th class="text-center ">TMP</th>
                                                 <th class="text-center ">Start</th>
                                                 <th class="text-center ">End</th>
-                                                <th class="text-center">IC</th>
-                                                <th class="text-center">ACCESS</th>
+                                                <th class="text-center ">IC</th>
+                                                <th class="text-center ">ACCESS</th>
                                                 <th class="col-2">Nurse Encoded</th>
                                                 {{-- <th class="text-center">JTF</th> --}}
                                                 <th>Location</th>
@@ -134,6 +135,10 @@
                                         <tbody class="text-xs bg-light">
                                             @foreach ($pendingList as $list)
                                                 <tr>
+                                                    @php
+                                                        $count++;
+                                                    @endphp
+                                                    <td>{{ $count }}</td>
                                                     <td>
                                                         <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
                                                             class="text-primary">
@@ -240,6 +245,10 @@
                                         <tbody class="text-xs">
                                             @foreach ($dataList as $list)
                                                 <tr>
+                                                    @php
+                                                        $count++;
+                                                    @endphp
+                                                    <td>{{ $count }}</td>
                                                     <td>
                                                         <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
                                                             class="text-primary">
