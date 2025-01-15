@@ -72,7 +72,7 @@
                                      <td> {{ $list->LOCATION_NAME }} </td>
                                      <td> {{ $list->STATUS }} </td>
                                      <td><button type="button" class="btn btn-xs btn-success w-100"
-                                             wire:click='CreateServiceCharge({{ $list->DATE }})'
+                                             wire:click="CreateServiceCharge('{{ $list->DATE }}')"
                                              wire:confirm='Are you sure?'><i class="fa fa-plus"
                                                  aria-hidden="true"></i></button></td>
                                  </tr>
