@@ -17,6 +17,8 @@
                          </div>
                      </div>
                      <table class="table table-sm table-bordered table-hover">
+                         @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+
                          <thead class="text-xs bg-sky">
                              <tr>
                                  <th class="col-1">No.</th>
@@ -30,6 +32,7 @@
                                  <th class="text-center ">End</th>
                                  <th class="col-1">Location</th>
                                  <th> Status</th>
+                                 <th>Action</th>
 
                              </tr>
                          </thead>
@@ -68,7 +71,10 @@
                                      </td>
                                      <td> {{ $list->LOCATION_NAME }} </td>
                                      <td> {{ $list->STATUS }} </td>
-
+                                     <td><button type="button" class="btn btn-xs btn-success w-100"
+                                             wire:click='CreateServiceCharge({{ $list->DATE }})'
+                                             wire:confirm='Are you sure?'><i class="fa fa-plus"
+                                                 aria-hidden="true"></i></button></td>
                                  </tr>
                              @endforeach
                          </tbody>
