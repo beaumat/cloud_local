@@ -22,7 +22,7 @@
                     <td>{{ $list->NAME }}</td>
                     <td class="text-right">
                         @if ($editExpensesId === $list->ID)
-                            <input type="number" class="form-control form-control-sm" wire:model='lineAmount'
+                            <input step="0.01" type="number" class="form-control form-control-sm" wire:model='lineAmount'
                                 name="lineAmount" />
                         @else
                             {{ number_format($list->AMOUNT, 2) }}
@@ -129,7 +129,7 @@
                             @endif
                         </td>
                         <td>
-                            <input type="number" class="form-control form-control-sm mt-1 text-right" name="AMOUNT"
+                            <input step="0.01" type="number" class="form-control form-control-sm mt-1 text-right" name="AMOUNT"
                                 wire:model='AMOUNT' />
                         </td>
                         <td class="text-center">
