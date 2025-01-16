@@ -50,7 +50,7 @@
                                                             :isDisabled=true wire:model='PAY_TO_ID' />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-4">
+                                                {{-- <div class="col-md-4">
                                                     @if ($Modify && $AMOUNT_APPLIED == 0)
                                                         <livewire:number-input name="AMOUNT" titleName="Amount"
                                                             :isDisabled=false wire:model='AMOUNT' />
@@ -58,7 +58,7 @@
                                                         <livewire:number-input name="AMOUNT" titleName="Amount"
                                                             :isDisabled=true wire:model='AMOUNT' />
                                                     @endif
-                                                </div>
+                                                </div> --}}
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -153,6 +153,15 @@
                                                         type="button" class="btn btn-sm btn-dark">
                                                         <i class="fa fa-print" aria-hidden="true"></i> Print
                                                     </a>
+
+
+                                                    @if ($IS_DOCTOR)
+                                                        <a target="_BLANK"
+                                                            href="{{ route('vendorsbill_payment_doctor', ['id' => $ID]) }}"
+                                                            type="button" class="btn btn-sm btn-secondary">
+                                                            <i class="fa fa-print" aria-hidden="true"></i> Print
+                                                        </a>
+                                                    @endif
                                                 @endcan
 
                                                 @can('vendor.bill-payment.create')

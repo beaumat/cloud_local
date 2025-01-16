@@ -63,7 +63,11 @@ class BillPaymentPrint extends Component
                 $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                 $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
                 $this->LOCATION_NAME  = $locData->NAME;
-                $this->LOGO_FILE = $locData->LOGO_FILE ?? null;
+                $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
+
+                
+
+
             }
             $this->billList = $this->billPaymentServices->billPaymentBills($this->ID);
 
