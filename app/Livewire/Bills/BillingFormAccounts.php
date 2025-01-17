@@ -32,7 +32,7 @@ class BillingFormAccounts extends Component
     public int $LINE_NO;
     public int $ACCOUNT_ID;
     public int $AMOUNT;
-    public int $TAXABLE;
+    public bool $TAXABLE;
     public float $TAXABLE_AMOUNT;
     public float $TAX_AMOUNT;
     public string $PARTICULARS;
@@ -83,7 +83,7 @@ class BillingFormAccounts extends Component
         if ($acct) {
             $this->ACCOUNT_CODE = $acct->TAG ? $acct->TAG : '';
             $this->ACCOUNT_DESCRIPTION = $acct->NAME;
-            $this->TAXABLE = true;
+            $this->TAXABLE = false;
             $this->PARTICULARS = '';
         }
     }
@@ -101,7 +101,7 @@ class BillingFormAccounts extends Component
         $this->ACCOUNT_ID = 0;
         $this->AMOUNT = 0;
         $this->PARTICULARS = '';
-        $this->TAXABLE = true;
+        $this->TAXABLE = false;
         $this->updatedcodeBase();
         $this->CLASS_ID = 0;
         $this->classList = $this->classServices->GetList();
