@@ -59,21 +59,14 @@ class DoctorFeePrint extends Component
                 }
 
                 $this->billList = $this->billPaymentServices->billPaymentBIllsPatientList($id);
-
-
                 $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
                 if ($conUser) {
-
                     $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
                 }
-
                 $conAdmin = $this->contactServices->get($locData->HCI_MANAGER_ID ?? 0, 2); // Employee
                 if ($conAdmin) {
-
                     $this->ADMINISTRATOR_NAME = $conAdmin->PRINT_NAME_AS ?? '';
                 }
-
-
                 $this->dispatch('preview_print');
             }
         } catch (\Exception $ex) {
