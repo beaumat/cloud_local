@@ -151,7 +151,7 @@
                                                     <a target="_BLANK"
                                                         href="{{ route('vendorsbill_payment_print', ['id' => $ID]) }}"
                                                         type="button" class="btn btn-sm btn-dark">
-                                                        <i class="fa fa-print" aria-hidden="true"></i> Print
+                                                        <i class="fa fa-print" aria-hidden="true"></i> Print Form
                                                     </a>
 
 
@@ -159,7 +159,7 @@
                                                         <a target="_BLANK"
                                                             href="{{ route('vendorsbill_payment_doctor', ['id' => $ID]) }}"
                                                             type="button" class="btn btn-sm btn-secondary">
-                                                            <i class="fa fa-print" aria-hidden="true"></i> Print
+                                                            <i class="fa fa-print" aria-hidden="true"></i> Print Doctor Form
                                                         </a>
                                                     @endif
                                                 @endcan

@@ -22,7 +22,6 @@ class BillPaymentPrint extends Component
     public float $AMOUNT;
     public string $NOTES;
     public int $ACCOUNTS_PAYABLE_ID;
-
     public int $CONTACT_TYPE;
     public string $CONTACT_NAME;
     public string $REPORT_HEADER_1;
@@ -64,13 +63,9 @@ class BillPaymentPrint extends Component
                 $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
                 $this->LOCATION_NAME  = $locData->NAME;
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
-
-                
-
-
             }
+            
             $this->billList = $this->billPaymentServices->billPaymentBills($this->ID);
-
             $this->dispatch('preview_print');
             return;
         }

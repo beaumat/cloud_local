@@ -16,13 +16,12 @@ class DoctorFeeList extends Component
 {
 
     public int $LOCATION_ID;
-    public int $YEAR;
-    public array $SelectedPaymentPeriod = [];
-    public $filterPaymentPeriod = [];
-    public bool $refreshComponent = false;
+
+
+
     public $locationList = [];
     public $doctorList = [];
-    private $doctorPFServices;
+
     private $locationServices;
     private $userServices;
     private $paymentPeriodServices;
@@ -36,9 +35,9 @@ class DoctorFeeList extends Component
     public $DATE_FROM;
     public $DATE_TO;
     public int $row;
-    public function boot(DoctorPFServices $doctorPFServices, LocationServices $locationServices, UserServices $userServices, PaymentPeriodServices $paymentPeriodServices, DateServices $dateServices)
+    public function boot( LocationServices $locationServices, UserServices $userServices, PaymentPeriodServices $paymentPeriodServices, DateServices $dateServices)
     {
-        $this->doctorPFServices = $doctorPFServices;
+
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->paymentPeriodServices = $paymentPeriodServices;
@@ -47,24 +46,22 @@ class DoctorFeeList extends Component
 
     public function mount()
     {
-        $this->YEAR  = $this->dateServices->NowYear();
+ 
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
         $this->DATE_TO = $this->dateServices->NowDate();
         $this->DATE_FROM = $this->dateServices->GetFirstDay_Year($this->DATE_TO);
     }
-    private function getPeriodList()
-    {
-        $this->filterPaymentPeriod = $this->paymentPeriodServices->getPeriodbyYear($this->LOCATION_ID, $this->YEAR);
-        $this->refreshComponent =  $this->refreshComponent ? false : true;
-    }
+
     #[On('doctor-fee-list-reload')]
     public function Generate()
     {
-        $this->getPeriodList();
+   
         $this->filterPeriod();
     }
-
+    public function Export() {
+            
+    }
     public function updatedlocationid()
     {
         $this->doctorList  = [];
@@ -74,24 +71,6 @@ class DoctorFeeList extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-    }
-    public function openList(int $DOCTOR_ID)
-    {
-        $data = [
-            'DOCTOR_ID' => $DOCTOR_ID,
-            'LOCATION_ID' => $this->LOCATION_ID
-        ];
-        
-        $this->dispatch('pf-open-list', result: $data);
-    }
-    public function openRemarks(int $DOCTOR_ID)
-    {
-        $data = [
-            'DOCTOR_ID' => $DOCTOR_ID,
-            'LOCATION_ID' => $this->LOCATION_ID
-        ];
-
-        $this->dispatch('remarks-open-list', result: $data);
     }
 
     public function filterPeriod()

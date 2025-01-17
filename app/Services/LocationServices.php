@@ -17,7 +17,7 @@ class LocationServices
     }
     public function SOA_FORMAT(int $LOCATION_ID)
     {
-        $data =  Locations::where('ID', $LOCATION_ID)->first();
+        $data =  Locations::where('ID','=', $LOCATION_ID)->first();
 
         if ($data->PHIC_SOA_FORMAT) {
 

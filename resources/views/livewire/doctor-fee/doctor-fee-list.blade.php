@@ -26,17 +26,8 @@
                     <div class="form-group bg-light p-2 border border-secondary">
                         <div class="row">
                             <div class="col-md-2">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <button class="btn btn-sm btn-danger" wire:click='Generate()'>Generate</button>
-                                    </div>
-                                    {{-- <div class="col-md-3 text-md-right">
-                                        <label class="text-sm text-primary">Year </label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="number" class="form-control form-control-sm" wire:model='YEAR' />
-                                    </div> --}}
-                                </div>
+                                <button class="btn btn-sm btn-danger" wire:click='Generate()'>Generate</button>
+                                <button class="btn btn-sm btn-success" wire:click='Export()'>Export</button>
                             </div>
                             <div class="col-md-8">
                                 <div class="row">
@@ -59,11 +50,9 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="col-md-2">
                                 <div class="row">
-
                                     <div class='col-4  text-md-right'>
                                         <label class="text-xs pt-2">Location:</label>
                                     </div>
@@ -72,7 +61,6 @@
                                             @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
                                             name="location" wire:model.live='LOCATION_ID'
                                             class="form-control form-control-sm text-xs mt-1">
-                                            <option value="0"> All Location</option>
                                             @foreach ($locationList as $item)
                                                 <option value="{{ $item->ID }}"> {{ $item->NAME }}
                                                 </option>
@@ -163,6 +151,4 @@
         </div>
     </section>
 
-    @livewire('DoctorFee.DoctorFeeForm')
-    @livewire('DoctorFee.DoctorFeeReceivedModal')
 </div>
