@@ -31,7 +31,7 @@ class BillingFormAccounts extends Component
     public int $ID;
     public int $LINE_NO;
     public int $ACCOUNT_ID;
-    public int $AMOUNT;
+    public float $AMOUNT;
     public bool $TAXABLE;
     public float $TAXABLE_AMOUNT;
     public float $TAX_AMOUNT;
