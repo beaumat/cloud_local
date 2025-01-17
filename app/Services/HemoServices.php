@@ -1985,6 +1985,7 @@ class HemoServices
         if ($hemoData) {
             $itemList = $this->getItemInventory($HEMO_ID);
             if ($itemList) {
+               
                 $this->itemInventoryServices->InventoryExecute(
                     $itemList,
                     $hemoData->LOCATION_ID,
@@ -1992,6 +1993,7 @@ class HemoServices
                     $hemoData->DATE,
                     false
                 );
+                
                 $this->ItemfollowUpdateToBePosted($HEMO_ID);
             }
         }

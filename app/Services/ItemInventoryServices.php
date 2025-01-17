@@ -180,7 +180,8 @@ class ItemInventoryServices
     private function getNextUpdate(int $ID, int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $ENDING_QUANTITY, float $ENDING_COST)
     {
         $U_COST  = 0;
-        if ($ENDING_COST > 0) {
+        if ((float) $ENDING_COST > 0 && (float) $ENDING_QUANTITY > 0) {
+
             $U_COST = $ENDING_COST / $ENDING_QUANTITY;
         }
 
