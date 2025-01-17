@@ -111,7 +111,7 @@
                                         @php
                                             $billExpenseAmt = $billExpenseAmt + $list->AMOUNT ?? 0;
                                         @endphp
-                                        <td class="text-right">{{ number_format($list->AMOUNT, 1) }}&nbsp;</td>
+                                        <td class="text-right">{{ number_format($list->AMOUNT, 2) }}&nbsp;</td>
                                     </tr>
                                 @endforeach
                                 <tr class=" border-white border-top border-left border-right ">
