@@ -27,6 +27,12 @@ class ContactServices
 
         return true;
     }
+    public function isDoctor(int $CONTACT_ID): bool
+    {
+        return (bool) Contacts::where('ID', '=', $CONTACT_ID)
+            ->where('TYPE', '=', 4)
+            ->exists();
+    }
     public function get(int $ID, int $TYPE)
     {
         $result = contacts::where('ID', '=', $ID)

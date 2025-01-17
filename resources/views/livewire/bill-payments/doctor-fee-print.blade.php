@@ -1,22 +1,29 @@
-<div>
+<div id="printableContent">
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 text-center mb-4">
-                    <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
-                    <div class="text-center">
-                        <b class="print-address1 text-center">
-                            RDL Building F. Torres Street, Davao City <br />
-                            Telephone #:285-2403; Mobile #: 09258678600/9175041322 <br />
-                            Email:avidadavao.torres@yahoo.com.ph</b>
-                    </div>
+
+                    @if (empty($LOGO_FILE))
+                        <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
+                        <div class="text-center">
+                            <b class="print-address1 text-center">
+                                {{ $REPORT_HEADER_1 }} <br />
+                                {{ $REPORT_HEADER_2 }}<br />
+                                {{ $REPORT_HEADER_3 }}</b>
+                        </div>
+                    @else
+                        {{-- nothing customize --}}
+                        <img class="print-logo" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
+                    @endif
+
                 </div>
                 <div class="col-md-12">
                     <table class="w-100 " border="1">
                         <thead class="">
 
 
-                        
+
                             <tr>
                                 <th class="col-1 h5 text-center">#</th>
                                 <th class="col-3 h5">PATIENT NAME</th>
@@ -27,11 +34,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($dataList as $list)
+                            @foreach ($billList as $list)
                                 @php
                                     $n = $n + 1;
-                                    $TOTAL_TREATMENT = $TOTAL_TREATMENT + $list->NO_TREAT;
-                                    $TOTAL_AMOUNT = $TOTAL_AMOUNT + $list->TOTAL;
+                                    $TOTAL_TREATMENT = $TOTAL_TREATMENT + $list->NO_TREATMENT;
+                                    $TOTAL_AMOUNT = $TOTAL_AMOUNT + $list->AMOUNT_PAID;
                                 @endphp
                                 <tr>
                                     <th class="text-center h5 font-weight-normalf">{{ $n }}</th>
@@ -41,9 +48,9 @@
                                     </td>
                                     <td class="text-center h5 font-weight-normal">
                                         &nbsp;{{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
-                                    <td class="text-center h5 font-weight-normal">{{ $list->NO_TREAT }}</td>
+                                    <td class="text-center h5 font-weight-normal">{{ $list->NO_TREATMENT }}</td>
                                     <td class="text-right h5 font-weight-normal">
-                                        {{ number_format($list->TOTAL, 2) }} &nbsp;</td>
+                                        {{ number_format($list->AMOUNT_PAID, 2) }} &nbsp;</td>
                                 </tr>
                             @endforeach
 
@@ -112,3 +119,26 @@
     </section>
 
 </div>
+
+@script
+    <script>
+        $wire.on('print', () => {
+            var printContents = document.getElementById('printableContent').innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        });
+
+        function printPageAndClose() {
+            window.print();
+            setTimeout(function() {
+                window.close();
+            }, 100);
+        }
+
+        window.addEventListener('beforeprint', function() {
+            printPageAndClose();
+        });
+    </script>
+@endscript

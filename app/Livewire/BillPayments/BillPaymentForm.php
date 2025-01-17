@@ -19,6 +19,8 @@ use Livewire\Component;
 #[Title('Bill Payments')]
 class BillPaymentForm extends Component
 {
+
+    public bool $IS_DOCTOR = false;
     public int $ID;
     public string $CODE;
     public bool $UNPOSTED = true;
@@ -113,6 +115,9 @@ class BillPaymentForm extends Component
         $this->STATUS = $data->STATUS;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
         $this->Modify = false;
+
+
+        $this->IS_DOCTOR =  $this->contactServices->isDoctor($this->PAY_TO_ID);
     }
     public function getModify()
     {
@@ -131,9 +136,9 @@ class BillPaymentForm extends Component
             [
                 'BANK_ACCOUNT_ID'   => 'required|not_in:0|exists:account,id',
                 'PAY_TO_ID'         => 'required|not_in:0|exists:contact,id',
-                'CODE'              =>  $this->ID > 0 ? 'required|max:20|unique:bill_payment,code,' . $this->ID  : 'nullable',
-                'DATE'              => 'required',
-                'LOCATION_ID'       => 'required',
+                'CODE'              =>  $this->ID > 0 ? 'required|max:20|unique:check,code,' . $this->ID  : 'nullable',
+                'DATE'              => 'required|date',
+                'LOCATION_ID'       => 'required|exists:location,id',
                 'AMOUNT'            => ''
 
             ],
@@ -150,8 +155,6 @@ class BillPaymentForm extends Component
 
         try {
             if ($this->ID == 0) {
-
-
                 DB::beginTransaction();
                 $this->ID = $this->billPaymentServices->Store(
                     $this->CODE,
@@ -166,25 +169,7 @@ class BillPaymentForm extends Component
                 DB::commit();
                 return Redirect::route('vendorsbill_payment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
-                $this->validate(
-                    [
-                        'PAY_TO_ID'             => 'required|not_in:0|exists:contact,id',
-                        'BANK_ACCOUNT_ID'       => 'required|not_in:0|exists:account,id',
-                        'CODE'                  => 'required|max:20|unique:bill,code,' . $this->ID,
-                        'DATE'                  => 'required',
-                        'LOCATION_ID'           => 'required',
-                        'AMOUNT'                => 'required|not_in:0'
-                    ],
-                    [],
-                    [
-                        'PAY_TO_ID'             => 'Pay To',
-                        'BANK_ACCOUNT_ID'       => 'Bank Account',
-                        'CODE'                  => 'Reference No.',
-                        'DATE'                  => 'Date',
-                        'LOCATION_ID'           => 'Location',
-                        'AMOUNT'                => 'Amount'
-                    ]
-                );
+
                 DB::beginTransaction();
                 $data =  $this->billPaymentServices->Get($this->ID);
                 if ($data) {
@@ -192,41 +177,13 @@ class BillPaymentForm extends Component
                         $JNO = $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $this->ID);
                         if ($JNO > 0) {
                             // BANK_ACCOUNT_ID on CREDIT 
-                            $this->accountJournalServices->AccountSwitch(
-                                $this->BANK_ACCOUNT_ID,
-                                $data->BANK_ACCOUNT_ID,
-                                $this->LOCATION_ID,
-                                $JNO,
-                                $data->PAY_TO_ID,
-                                $this->ID,
-                                $this->billPaymentServices->object_type_check,
-                                $this->DATE,
-                                1
-                            );
+                            $this->accountJournalServices->AccountSwitch($this->BANK_ACCOUNT_ID, $data->BANK_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->PAY_TO_ID, $this->ID, $this->billPaymentServices->object_type_check, $this->DATE, 1);
                             // BANK_ACCOUNT_ID on DEBIT 
-                            $this->accountJournalServices->AccountSwitch(
-                                $this->BANK_ACCOUNT_ID,
-                                $data->BANK_ACCOUNT_ID,
-                                $this->LOCATION_ID,
-                                $JNO,
-                                $data->PAY_TO_ID,
-                                $this->ID,
-                                $this->billPaymentServices->object_type_check,
-                                $this->DATE,
-                                0
-                            );
+                            $this->accountJournalServices->AccountSwitch($this->BANK_ACCOUNT_ID, $data->BANK_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->PAY_TO_ID, $this->ID, $this->billPaymentServices->object_type_check, $this->DATE, 0);
                         }
                     }
 
-                    $this->billPaymentServices->Update(
-                        $this->ID,
-                        $this->CODE,
-                        $this->BANK_ACCOUNT_ID,
-                        $this->PAY_TO_ID,
-                        $this->LOCATION_ID,
-                        $this->AMOUNT,
-                        $this->NOTES
-                    );
+                    $this->billPaymentServices->Update($this->ID, $this->CODE, $this->BANK_ACCOUNT_ID, $this->PAY_TO_ID, $this->LOCATION_ID, $this->AMOUNT, $this->NOTES);
 
                     DB::commit();
                     session()->flash('message', 'Successfully updated');
@@ -254,46 +211,18 @@ class BillPaymentForm extends Component
             $check = $this->billPaymentServices->object_type_check;
             $checkbills = $this->billPaymentServices->object_type_check_bills;
             $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($check, $this->ID);
-            
             if ($JOURNAL_NO  == 0) {
                 $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($check, $this->ID) + 1;
             }
 
             $checkDataBills = $this->billPaymentServices->billPaymentBillsJournal($this->ID);
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $checkDataBills,
-                $this->LOCATION_ID,
-                $checkbills,
-                $this->DATE,
-                "AP"
-            );
-
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkDataBills, $this->LOCATION_ID, $checkbills, $this->DATE, "AP");
             $checkData = $this->billPaymentServices->billPaymentJournalRemaining($this->ID);
-            
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $checkData,
-                $this->LOCATION_ID,
-                $check,
-                $this->DATE,
-                "BILL"
-            );
-
-
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkData, $this->LOCATION_ID, $check, $this->DATE, "BILL");
             $checkData = $this->billPaymentServices->billPaymentJournal($this->ID);
-
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $checkData,
-                $this->LOCATION_ID,
-                $check,
-                $this->DATE,
-                "BILL"
-            );
-
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkData, $this->LOCATION_ID, $check, $this->DATE, "BILL");
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-            
+
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
@@ -338,6 +267,7 @@ class BillPaymentForm extends Component
             $this->dispatch('open-journal', result: $data);
         }
     }
+    public function DoctorPrint() {}
     #[On('reload_bill_list')]
     public function getNewAmount()
     {
@@ -346,10 +276,10 @@ class BillPaymentForm extends Component
             $this->AMOUNT = $data->AMOUNT ?? 0;
         }
     }
+
     public function render()
     {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->getTotalApplied($this->ID);
-
         return view('livewire.bill-payments.bill-payment-form');
     }
 }

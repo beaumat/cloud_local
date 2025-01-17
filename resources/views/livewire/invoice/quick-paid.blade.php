@@ -23,10 +23,8 @@
                                     class="form-control form-control-sm" />
                             </div>
                             <div class="col-4">
-
                             </div>
                             <div class="col-4">
-
                             </div>
                             <div class="col-12">
                                 <div style="max-height: 73vh; overflow-y: auto;" class="border">
@@ -39,7 +37,8 @@
                                             <th class="text-center">No. Treatment</th>
                                             <th>Admitted</th>
                                             <th>Discharged</th>
-                                            <th>Patient Name</th>
+                                            <th>Patient</th>
+                                            <th>Nephro</th>
                                             <th>Amount</th>
                                             <th>Balance</th>
                                             <th>Action</th>
@@ -55,10 +54,12 @@
                                                     <td>{{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
                                                     <td>{{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
                                                     <td>{{ $list->CUSTOMER_NAME }}</td>
+                                                    <td>{{ $list->DOCTOR_NAME }}</td>
                                                     <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                                                     <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}
                                                     </td>
-                                                    <td><button class="btn btn-xs btn-success w-100"
+                                                    <td>
+                                                        <button class="btn btn-xs btn-success w-100"
                                                             wire:click='makePaid({{ $list->ID }})'>Paid</button>
                                                     </td>
                                                 </tr>

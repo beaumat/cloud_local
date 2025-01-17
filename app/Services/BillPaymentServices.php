@@ -173,10 +173,35 @@ class BillPaymentServices
         }
         return 0;
     }
-
-    public function billPaymentBills(int $CHECK_ID)
+    public function billPaymentBIllsPatientList($CHECK_ID): object
     {
-        return CheckBills::query()
+        $result = CheckBills::query()
+            ->select([
+                'check_bills.ID',
+                'check_bills.BILL_ID',
+                'check_bills.DISCOUNT',
+                'check_bills.AMOUNT_PAID',
+                'bill.CODE',
+                'bill.DATE',
+                'bill.AMOUNT',
+                'bill.BALANCE_DUE',
+                'contact.NAME as PATIENT_NAME',
+                'philhealth.DATE_ADMITTED',
+                'philhealth.DATE_DISCHARGED',
+                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as NO_TREATMENT '),
+            ])
+            ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
+            ->join('philhealth_prof_fee', 'philhealth_prof_fee.BILL_ID', '=', 'check_bills.BILL_ID')
+            ->join('philhealth', 'philhealth.ID', '=', 'philhealth_prof_fee.PHIC_ID')
+            ->join('contact', 'contact.ID', '=', 'philhealth.CONTACT_ID')
+            ->where('check_bills.CHECK_ID', '=', $CHECK_ID)
+            ->get();
+
+        return $result;
+    }
+    public function billPaymentBills(int $CHECK_ID): object
+    {
+        $result = CheckBills::query()
             ->select([
                 'check_bills.ID',
                 'check_bills.BILL_ID',
@@ -188,8 +213,10 @@ class BillPaymentServices
                 'bill.BALANCE_DUE'
             ])
             ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
-            ->where('check_bills.CHECK_ID', $CHECK_ID)
+            ->where('check_bills.CHECK_ID', '=', $CHECK_ID)
             ->get();
+
+        return $result;
     }
     public function getTotalApplied(int $CHECK_ID): float
     {
