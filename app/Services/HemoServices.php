@@ -2031,6 +2031,7 @@ class HemoServices
 
 
             foreach ($dataList as $list) {
+                
                 $NO_OF_TREATMENT =  $this->getFixTreatmentNumberOnly($list->CUSTOMER_ID, $LOCATION_ID, $list->DATE);
 
                 Hemodialysis::where('ID', '=', $list->ID)

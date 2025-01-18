@@ -64,11 +64,12 @@ class OtherChargesModal extends Component
     public function openModal($result)
     {
         $this->dataList = [];
+        $this->unitList = [];
         $this->QUANTITY = 0;
         $this->UNIT_ID = 0;
         $this->HEMO_ID = $result['HEMO_ID'];
-        $this->ITEM_ID = $result['ITEM_ID'];
-        $this->ITEM_NAME = $result['ITEM_NAME'];
+        $this->ITEM_ID = $result['ITEM_ID'] ?? 0;
+        $this->ITEM_NAME = $result['ITEM_NAME'] ?? '';
         $this->haveTrigger = false;
         $this->IS_JUSTIFY = false;
         $this->JUSTIFY_NOTES = '';
@@ -88,7 +89,7 @@ class OtherChargesModal extends Component
             );
 
             $this->dataList = $this->itemTreatmentServices->listItemTrigger($this->ITEM_TREATMENT_ID);
-            $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
+
 
             foreach ($this->dataList as $list) {
                 $this->J_QTY = $list->QUANTITY;
@@ -122,7 +123,6 @@ class OtherChargesModal extends Component
 
 
         $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
-
 
         $data = $this->itemServices->get($this->ITEM_ID);
         if ($data) {
@@ -257,8 +257,9 @@ class OtherChargesModal extends Component
                 DB::commit();
                 $this->closeModal();
             } catch (\Throwable $th) {
-                session()->flash('error', $th->getMessage());
                 DB::rollBack();
+                session()->flash('error', $th->getMessage());
+            
                 return;
             }
 
@@ -275,6 +276,11 @@ class OtherChargesModal extends Component
     }
     public function render()
     {
+
+        if (isset($this->ITEM_ID) && $this->ITEM_ID > 0) {
+            $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
+
+        }
         return view('livewire.hemodialysis.other-charges-modal');
     }
 }

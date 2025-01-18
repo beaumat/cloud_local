@@ -20,17 +20,20 @@
                                 <div class="col-8">
                                     <label class="text-xs">{{ $ITEM_NAME }}</label>
                                 </div>
-                                <div class="col-4 text-right text-sm text-primary">
-                                    Unit of Measure :
-                                </div>
-                                <div class="col-8">
-                                    <select wire:model='UNIT_ID' name="UNIT_ID" class="text-sm form-control form-control-sm" >
-                                        <option value="0"></option>
-                                        @foreach ($unitList as $list)
-                                            <option value="{{ $list->ID }}">{{ $list->SYMBOL}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                @if (count($unitList) > 0)
+                                    <div class="col-4 text-right text-sm text-primary">
+                                        Unit of Measure :
+                                    </div>
+                                    <div class="col-8">
+                                        <select wire:model='UNIT_ID' name="UNIT_ID"
+                                            class="text-sm form-control form-control-sm">
+                                            <option value="0"></option>
+                                            @foreach ($unitList as $list)
+                                                <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
                                 <div class="col-4 text-right text-sm text-primary">
                                     Quantity
                                 </div>

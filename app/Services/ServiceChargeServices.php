@@ -368,6 +368,9 @@ class ServiceChargeServices
     {
         return (int) ServiceChargesItems::where('SERVICE_CHARGES_ID', $Id)->max('LINE_NO');
     }
+    public function AutoUpdateNextID() {
+        
+    }
     public function ItemStore(
         int $SERVICE_CHARGES_ID,
         int $ITEM_ID,

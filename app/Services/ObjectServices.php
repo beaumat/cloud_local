@@ -13,7 +13,9 @@ class ObjectServices
 
         try {
 
-            return ObjectTypeMap::where('TABLE_NAME', '=', $TABLE_NAME)->first()->ID;
+            return ObjectTypeMap::where('TABLE_NAME', '=', $TABLE_NAME)
+                ->first()
+                ->ID;
         } catch (\Exception $e) {
             //throw $th;
             dd("$TABLE_NAME :" . $e->getMessage());
@@ -41,21 +43,28 @@ class ObjectServices
             'INCREMENT'     => 1
         ]);
     }
+    public function UpdateObject(string $TABLE_NAME, int $NEXT_ID_MUST)
+    {
+        ObjectTypeMap::where('TABLE_NAME', '=', $TABLE_NAME)
+            ->update([
+                'NEXT_ID' => $NEXT_ID_MUST
+            ]);
+    }
     public function ObjectNextID(string $TABLE_NAME): int
     {
         $Nxt_ID = 0;
-        $result = ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->first();
+        $result = ObjectTypeMap::where('TABLE_NAME', '=', $TABLE_NAME)->first();
+
         if ($result) {
             $Nxt_ID = $result->NEXT_ID;
-            ObjectTypeMap::where('TABLE_NAME', $TABLE_NAME)->update([
-                'NEXT_ID' => ($Nxt_ID + 1)
-            ]);
+
+            $this->UpdateObject($TABLE_NAME, $Nxt_ID + 1);
+            
             return $Nxt_ID;
         } else {
 
             dd("$TABLE_NAME table not found . please try again");
             // Auto Create
-
             return 1;
         }
     }

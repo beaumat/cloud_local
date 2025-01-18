@@ -65,16 +65,19 @@ class UnitOfMeasureServices
         $result = Items::query()
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'item.BASE_UNIT_ID')
             ->select(['u.ID', 'u.SYMBOL'])
-            ->where('item.ID', $ITEM_ID)
+            ->where('item.ID', '=', $ITEM_ID)
+            ->whereNotNull('u.ID') // Add condition to check if ID is not null
             ->unionAll(
                 ItemUnits::query()
                     ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'item_units.UNIT_ID')
                     ->select(['u.ID', 'u.SYMBOL'])
-                    ->where('item_units.ITEM_ID', $ITEM_ID)
+                    ->where('item_units.ITEM_ID', '=', $ITEM_ID)
+                    ->whereNotNull('u.ID') // Add condition to check if ID is not null
             )
             ->get();
 
-        return $result;
+            return $result;
+    
     }
     public function GetItemUnitDetails(int $ITEM_ID, int $UNIT_ID)
     {
