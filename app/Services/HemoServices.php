@@ -1599,6 +1599,7 @@ class HemoServices
         //     ->where('DATE', '<=', $DATE)
         //     ->whereBetween('STATUS_ID', [1, 2])
         //     ->count();
+
         $year = date('Y', strtotime($DATE)); // Extract the year from the provided date
 
         $trtNo = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
@@ -1608,8 +1609,8 @@ class HemoServices
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
 
-     
-            return $trtNo;
+
+        return $trtNo;
     }
     public function codeIfExist(string $CODE): bool
     {
@@ -1985,7 +1986,7 @@ class HemoServices
         if ($hemoData) {
             $itemList = $this->getItemInventory($HEMO_ID);
             if ($itemList) {
-               
+
                 $this->itemInventoryServices->InventoryExecute(
                     $itemList,
                     $hemoData->LOCATION_ID,
@@ -1993,7 +1994,7 @@ class HemoServices
                     $hemoData->DATE,
                     false
                 );
-                
+
                 $this->ItemfollowUpdateToBePosted($HEMO_ID);
             }
         }
@@ -2031,7 +2032,7 @@ class HemoServices
 
 
             foreach ($dataList as $list) {
-                
+
                 $NO_OF_TREATMENT =  $this->getFixTreatmentNumberOnly($list->CUSTOMER_ID, $LOCATION_ID, $list->DATE);
 
                 Hemodialysis::where('ID', '=', $list->ID)
@@ -2060,5 +2061,12 @@ class HemoServices
             ->count();
 
         return $result;
+    }
+    public function ChangePatient(int $HEMO_ID, int $TRANSFER_CONTACT_ID)
+    {
+        Hemodialysis::where('ID', '=', $HEMO_ID)
+            ->update([
+                'CUSTOMER_ID'  => $TRANSFER_CONTACT_ID
+            ]);
     }
 }

@@ -368,9 +368,7 @@ class ServiceChargeServices
     {
         return (int) ServiceChargesItems::where('SERVICE_CHARGES_ID', $Id)->max('LINE_NO');
     }
-    public function AutoUpdateNextID() {
-        
-    }
+    public function AutoUpdateNextID() {}
     public function ItemStore(
         int $SERVICE_CHARGES_ID,
         int $ITEM_ID,
@@ -463,7 +461,7 @@ class ServiceChargeServices
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
             ->where('service_charges_items.ITEM_ID', $ITEM_ID)
             ->count();
-            
+
         return $count;
     }
     public function getPhilHealthItem(string $DATE, int $LOCATION_ID, int $PATIENT_ID): float
@@ -812,7 +810,13 @@ class ServiceChargeServices
                 'service_charges_items.IS_POSTED' => true
             ]);
     }
-
+    public function ChangePatient(int $SERVICE_CHARGES_ID, int $TRANSFER_CONTACT_ID)
+    {
+        ServiceCharges::where('ID', '=', $SERVICE_CHARGES_ID)
+            ->update([
+                'PATIENT_ID'  => $TRANSFER_CONTACT_ID
+            ]);
+    }
     public function GetItemForCustomSoa(string $DATE, int $PATIENT_ID, int $LOCATION_ID)
     {
         $result = ServiceChargesItems::select(['service_charges_items.ITEM_ID'])

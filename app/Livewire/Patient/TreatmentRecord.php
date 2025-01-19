@@ -7,6 +7,7 @@ use App\Services\LocationServices;
 use App\Services\PriceLevelLineServices;
 use App\Services\ServiceChargeServices;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -105,11 +106,19 @@ class TreatmentRecord extends Component
             DB::commit();
             session()->flash('message', 'Successfully created');
         } catch (\Throwable $th) {
-
             DB::rollBack();
             session()->flash("error", $th->getMessage());
         }
     }
+    public function TransferRecordTo(int $HEMO_ID)
+    {
+        $this->dispatch('open-transfer-contact', result: [
+            'TRANSACTION_ID' => $HEMO_ID,
+            'LOCATION_ID'   => $this->LOCK_LOCATION_ID,
+            'IS_TREATMENT'  => true
+        ]);
+    }
+    #[On('refresh-treatment-record')]
     public function render()
     {
         $dataList = $this->hemoServices->PatientRecord($this->search, $this->CONTACT_ID, 15, $this->LOCK_LOCATION_ID);

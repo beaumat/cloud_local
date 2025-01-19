@@ -4,6 +4,7 @@ namespace App\Livewire\Patient;
 
 use App\Services\DateServices;
 use App\Services\ServiceChargeServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -36,6 +37,15 @@ class ChargesRecord extends Component
         $this->YEAR = $this->dateServices->NowYear();
         $this->yearList = $this->dateServices->YearList();
     }
+    public function TransferRecordTo(int $ID)
+    {
+        $this->dispatch('open-transfer-contact', result: [
+            'TRANSACTION_ID' => $ID,
+            'LOCATION_ID'   => $this->LOCATION_ID,
+            'IS_TREATMENT'  => false
+        ]);
+    }
+    #[On('refresh-service-charge-record')]
     public function render()
     {
         $dataList = $this->serviceChargeServices->PatientRecord($this->search, $this->CONTACT_ID, 15, $this->LOCATION_ID);

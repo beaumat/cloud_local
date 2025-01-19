@@ -32,7 +32,8 @@
                                  <th class="text-center ">End</th>
                                  <th class="col-1">Location</th>
                                  <th>Status</th>
-                                 <th>Sevice Charge</th>
+                                 <th class="text-center col-1">Sevice Charge</th>
+                                 <th class="text-center col-1">Action</th>
                              </tr>
                          </thead>
                          <tbody class="text-xs">
@@ -74,6 +75,11 @@
                                              wire:click="CreateServiceCharge('{{ $list->DATE }}')"
                                              wire:confirm='Are you sure?'><i class="fa fa-plus"
                                                  aria-hidden="true"></i></button></td>
+                                     <td>
+                                         <button type="button" class="btn btn-xs btn-warning w-100"
+                                             wire:click='TransferRecordTo({{ $list->ID }})'><i
+                                                 class="fa fa-exchange" aria-hidden="true"></i></button>
+                                     </td>
                                  </tr>
                              @endforeach
                          </tbody>

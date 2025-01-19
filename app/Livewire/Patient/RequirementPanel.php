@@ -14,7 +14,6 @@ class RequirementPanel extends Component
     public int $CONTACT_ID;
     public $dataList = [];
     private $contactRequirementServices;
-    
     private $contactServices;
     public function boot(ContactRequirementServices $contactRequirementServices, ContactServices $contactServices)
     {

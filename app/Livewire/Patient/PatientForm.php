@@ -636,7 +636,6 @@ class PatientForm extends Component
     public function clearAlert()
     {
         $this->resetErrorBag();
-        // Clear session message and error
         session()->forget('message');
         session()->forget('error');
     }

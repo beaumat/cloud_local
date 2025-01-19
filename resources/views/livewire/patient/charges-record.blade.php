@@ -23,8 +23,8 @@
                                 <th class="col-1">Date</th>
                                 <th class="col-1">Amount</th>
                                 <th class="col-1">Balance</th>
-                                <th class="col-1">Tax</th>
-                                <th class="col-1">Status</th>
+                                <th class="col-1 text-center">Status</th>
+                                <th class="col-1 text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody class="text-xs">
@@ -41,9 +41,13 @@
                                     <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                     <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                     <td class="text-right"> {{ number_format($list->BALANCE_DUE, 2) }}</td>
-                                    <td> {{ $list->TAX_NAME }}</td>
-                                    <td> {{ $list->STATUS }}</td>
 
+                                    <td class="text-center"> {{ $list->STATUS }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-xs btn-warning w-100"
+                                            wire:click='TransferRecordTo({{ $list->ID }})'><i class="fa fa-exchange"
+                                                aria-hidden="true"></i></button>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
