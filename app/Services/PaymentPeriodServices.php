@@ -248,4 +248,34 @@ class PaymentPeriodServices
 
         return 0.00;
     }
+
+
+    public function getDoctorFeeRemainingBalance(int $LOCATION_ID, string $DATE, int $DOCTOR_ID): float
+    {
+        $result = PaymentPeriod::query()
+            ->select(
+                [
+                    DB::raw('IFNULL(SUM(b.AMOUNT),0) as TOTAL')
+                ]
+            )
+            ->join('payment as p', 'p.PAYMENT_PERIOD_ID', '=', 'payment_period.ID')
+            ->join('payment_invoices as pn', 'pn.PAYMENT_ID', '=', 'p.ID')
+            ->join('invoice as i', 'i.ID', '=', 'pn.INVOICE_ID')
+            ->join('philhealth as ph', 'ph.INVOICE_ID', '=', 'i.ID')
+            ->join('philhealth_prof_fee as pf', 'pf.PHIC_ID', '=', 'ph.ID')
+            ->join('bill as b', 'b.ID', '=', 'pf.BILL_ID')
+            ->join('contact as c', 'c.ID', '=', 'b.VENDOR_ID')
+            ->where('payment_period.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('payment_period.DATE_TO', '<', $DATE)
+            ->where('b.VENDOR_ID', '=', $DOCTOR_ID)
+            ->where('b.STATUS', '=', 15)
+            ->where('p.STATUS', '=', 15)
+            ->first();
+
+        if ($result) {
+            return (float) $result->TOTAL ?? 0.00;
+        }
+
+        return 0.00;
+    }
 }

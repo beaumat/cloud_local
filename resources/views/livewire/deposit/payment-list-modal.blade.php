@@ -31,37 +31,39 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table table-sm table-hover table-bordered">
-                            <thead class="text-xs bg-sky">
-                                <tr>
-                                    <th class="text-center"></th>
-                                    <th class="col-1">Date</th>
-                                    <th class="col-1">Type</th>
-                                    <th class="col-1">Ref No.</th>
-                                    <th class="col-1">Payment Method</th>
-                                    <th class="col-7">Received From</th>
-                                    <th class="col-1 text-right">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm">
-                                @foreach ($dataList as $list)
+                        <div style="max-height: 73vh; overflow-y: auto;" class="border">
+                            <table class="table table-sm table-bordered table-hover mt-1">
+                                <thead class="text-xs bg-sky">
                                     <tr>
-                                        <td>
-                                            <button class="btn btn-success btn-xs"
-                                                wire:click='AddFund({{ $list->ID }},{{ $list->OBJECT_TYPE }})'>
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </td>
-                                        <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                        <td>{{ $list->TYPE }}</td>
-                                        <td>{{ $list->CODE }}</td>
-                                        <td>{{ $list->PAYMENT_METHOD }}</td>
-                                        <td>{{ $list->RECEIVED_FROM_NAME }}</td>
-                                        <td class='text-right'>{{ number_format($list->AMOUNT, 2) }}</td>
+                                        <th class="text-center"></th>
+                                        <th class="col-1">Date</th>
+                                        <th class="col-1">Type</th>
+                                        <th class="col-1">Ref No.</th>
+                                        <th class="col-1">Payment Method</th>
+                                        <th class="col-7">Received From</th>
+                                        <th class="col-1 text-right">Amount</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="text-sm">
+                                    @foreach ($dataList as $list)
+                                        <tr>
+                                            <td>
+                                                <button class="btn btn-success btn-xs"
+                                                    wire:click='AddFund({{ $list->ID }},{{ $list->OBJECT_TYPE }})'>
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
+                                            <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
+                                            <td>{{ $list->TYPE }}</td>
+                                            <td>{{ $list->CODE }}</td>
+                                            <td>{{ $list->PAYMENT_METHOD }}</td>
+                                            <td>{{ $list->RECEIVED_FROM_NAME }}</td>
+                                            <td class='text-right'>{{ number_format($list->AMOUNT, 2) }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" wire:click="closeModal">Close</button>

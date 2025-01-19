@@ -46,7 +46,7 @@
                                             @if (Auth::user()->locked_location) style="opacity:
                                             0.5;pointer-events: none;" @endif>
                                             <livewire:select-option name="LOCATION_ID" :options="$locationList"
-                                                isDisabled="{{ $modify }}" :zero="false" titleName="Branch" 
+                                                isDisabled="{{ $modify }}" :zero="false" titleName="Branch"
                                                 wire:model='LOCATION_ID' />
                                         </div>
                                         <div class="col-md-1">
@@ -693,17 +693,14 @@
                                                     id="custom-content-below-requirements-info" role="tabpanel"
                                                     aria-labelledby="custom-content-below-requirements-info-tab">
                                                     <div class="container-fluid"
-                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-
+                                                        @if ($ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                         @if ($refreshToggle)
-                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key('p1'))
+                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key(['p1']))
                                                         @else
-                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key('p2'))
+                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key(['p2']));
                                                         @endif
-
                                                     </div>
                                                 </div>
-
                                                 <div class="tab-pane fade @if ($selectTab == 'charges') show active @endif"
                                                     id="custom-content-below-charges-info" role="tabpanel"
                                                     aria-labelledby="custom-content-below-charges-info-tab">

@@ -302,9 +302,7 @@ class PrintSoa extends Component
                 }
                 $this->NO_OF_TREATMENT = (int) $this->philHealthServices->getNumberOfTreatment($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
                 $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
-
                 $this->allDate == '';
-
                 $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
                 $LastDate = '';
                 foreach ($dataList as $list) {
