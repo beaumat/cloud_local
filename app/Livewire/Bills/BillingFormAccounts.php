@@ -113,11 +113,8 @@ class BillingFormAccounts extends Component
 
         $this->validate(
             [
-                'ACCOUNT_ID' => [
-                    'required',
-                    'not_in:0'
-                ],
-                'AMOUNT'        => 'required|not_in:0'
+                'ACCOUNT_ID' => 'required|numeric|exists:account,id',
+                'AMOUNT'      => 'required|numeric|not_in:0'
             ],
             [],
             [
@@ -126,13 +123,13 @@ class BillingFormAccounts extends Component
             ]
         );
 
-        $recordExists = (bool) DB::table('bill_expenses')
-            ->where('BILL_ID', $this->BILL_ID,)->where('ACCOUNT_ID', $this->ACCOUNT_ID)->exists();
+        // $recordExists = (bool) DB::table('bill_expenses')
+        //     ->where('BILL_ID', $this->BILL_ID,)->where('ACCOUNT_ID', $this->ACCOUNT_ID)->exists();
 
-        if ($recordExists) {
-            session()->flash('error', 'Account already exists');
-            return;
-        }
+        // if ($recordExists) {
+        //     session()->flash('error', 'Account already exists');
+        //     return;
+        // }
 
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
@@ -251,7 +248,7 @@ class BillingFormAccounts extends Component
                 }
 
                 $billData = $this->billingServices->get($this->BILL_ID);
-             
+
                 if ($billData) {
                     $billDataExpenses = $this->billingServices->ExpenseGet($Id, $this->BILL_ID,);
                     if ($billDataExpenses) {
