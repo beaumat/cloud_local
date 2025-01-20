@@ -3,6 +3,7 @@
 namespace App\Livewire\Patient;
 
 use App\Services\ContactServices;
+use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\OtherServices;
 use App\Services\ServiceChargeServices;
@@ -26,17 +27,20 @@ class PhilhealthAvailment extends Component
     private $serviceChargeServices;
     private $locationServices;
     private $otherServices;
+    private $dateServices;
     public function boot(
         ContactServices $contactServices,
         ServiceChargeServices $serviceChargeServices,
         LocationServices $locationServices,
-        OtherServices $otherServices
+        OtherServices $otherServices,
+        DateServices $dateServices
     ) {
 
         $this->contactServices = $contactServices;
         $this->serviceChargeServices = $serviceChargeServices;
         $this->locationServices = $locationServices;
         $this->otherServices = $otherServices;
+        $this->dateServices = $dateServices;
     }
     public function mount($id = null, int $year, int $locationid)
     {
@@ -53,13 +57,14 @@ class PhilhealthAvailment extends Component
             $this->YEAR = $year;
             $this->TOTAL_DAYS = (int) $this->serviceChargeServices->getAvailmentTotal($contact->ID, $year, $locationid);
             $lastData = $this->serviceChargeServices->getLastAvailment($id, $year, $locationid);
-            if ($lastData) {
-                $this->DONE_DATE = $this->otherServices->formatSpecialDate($lastData->DATE);
-            } else {
-                $this->DONE_DATE = '';
-            }
+            // if ($lastData) {
+            //     $this->DONE_DATE = $this->otherServices->formatSpecialDate($lastData->DATE);
+            // } else {
+            //     $this->DONE_DATE = '';
+            // }
             $locData =  $this->locationServices->get($locationid);
-        
+ 
+            $this->DONE_DATE = $this->otherServices->formatSpecialDate($this->dateServices->NowDate());
             if ($locData) {
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
