@@ -104,7 +104,7 @@
                                                         :vertical="false" />
 
                                                 </div>
-                                                @if ($showFileName && $Modify)
+                                                @if ($Modify)
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label for="fileUpload" class="text-xs">PDF/Image document
