@@ -695,9 +695,9 @@
                                                     <div class="container-fluid"
                                                         @if ($ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                         @if ($refreshToggle)
-                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key(['p1']))
+                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], 'p1')
                                                         @else
-                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], key(['p2']));
+                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], 'p2');
                                                         @endif
                                                     </div>
                                                 </div>
