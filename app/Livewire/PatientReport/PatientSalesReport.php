@@ -4,7 +4,6 @@ namespace App\Livewire\PatientReport;
 
 use App\Exports\PatientSalesReportExport;
 use App\Services\ContactServices;
-use App\Services\ItemServices;
 use App\Services\PatientReportServices;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Services\LocationServices;
@@ -23,7 +22,6 @@ class PatientSalesReport extends Component
     public int $LOCATION_ID;
     public $locationList = [];
     public $patientList = [];
-
     public string $DATE_TRANSACTION_FROM;
     public string $DATE_TRANSACTION_TO;
     public string $tempName;
@@ -54,25 +52,24 @@ class PatientSalesReport extends Component
     public int $NO_OF_TREATMENT = 0;
     private $contactServices;
     private $patientReportServices;
-    private $itemServices;
+
     public $filterPatient = [];
     public $selectedPatient = [];
     public $filterItem = [];
     public $selectedItem = [];
-
-
+    public $filterMethod = [];
+    public $selectedMethod = [];
     public function boot(
         LocationServices $locationServices,
         UserServices $userServices,
         ContactServices $contactServices,
         PatientReportServices $patientReportServices,
-        ItemServices $itemServices
+
     ) {
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->contactServices = $contactServices;
         $this->patientReportServices = $patientReportServices;
-        $this->itemServices = $itemServices;
     }
     public function updatedselectedPatient()
     {
@@ -82,10 +79,13 @@ class PatientSalesReport extends Component
     {
         $this->shortFilter();
     }
+    public function updatedselectedMethod()
+    {
+        $this->shortFilter();
+    }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
 
         $this->updatedLocationId();
@@ -116,10 +116,11 @@ class PatientSalesReport extends Component
 
         $this->selectedItem = [];
         $this->selectedPatient = [];
+        $this->selectedMethod = [];
         $this->shortFilter();
         $this->filterPatient  = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
         $this->filterItem =  $this->patientReportServices->getItemListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-
+        $this->filterMethod = $this->patientReportServices->getMethodListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
         $this->refreshComponent = $this->refreshComponent ? false : true;
     }
     public function shortFilter()
@@ -136,7 +137,6 @@ class PatientSalesReport extends Component
         $this->OTHER_GL_AMOUNT = 0;
         $this->OP_AMOUNT = 0;
         $this->OVP_AMOUNT = 0;
-        
         $this->NO_OF_TREATMENT = 0;
 
         $this->dataList = $this->patientReportServices->generateSalesReportData(
@@ -144,7 +144,8 @@ class PatientSalesReport extends Component
             $this->DATE_TRANSACTION_TO,
             $this->LOCATION_ID,
             $this->selectedPatient,
-            $this->selectedItem
+            $this->selectedItem,
+            $this->selectedMethod
         );
 
         $this->preDataList = $this->patientReportServices->generatePrevCollection(
@@ -152,7 +153,8 @@ class PatientSalesReport extends Component
             $this->DATE_TRANSACTION_TO,
             $this->LOCATION_ID,
             $this->selectedPatient,
-            $this->selectedItem
+            $this->selectedItem,
+            $this->selectedMethod
         );
 
         foreach ($this->preDataList as $data) {
@@ -168,7 +170,7 @@ class PatientSalesReport extends Component
 
         $this->DATE_TRANSACTION_FROM = $this->userServices->getTransactionDateDefault();
         $this->DATE_TRANSACTION_TO = $this->userServices->getTransactionDateDefault();
-    $this->PATIENT_ID = 0;
+        $this->PATIENT_ID = 0;
     }
     public function render()
     {

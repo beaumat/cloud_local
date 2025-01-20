@@ -73,13 +73,10 @@
                                                         <livewire:date-input name="DATE" titleName="Date"
                                                             wire:model.live='DATE' :isDisabled="true" />
                                                     @endif
-
                                                 </div>
                                                 <div class="col-md-4">
                                                     <livewire:text-input name="Code" titleName="Reference No."
                                                         isDisabled="{{ !$Modify }}" wire:model='CODE' />
-
-
                                                 </div>
                                                 <div class="col-md-4"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
@@ -102,7 +99,6 @@
                                                     <livewire:text-input name="NOTES" titleName="Notes"
                                                         isDisabled="{{ !$Modify }}" wire:model='NOTES'
                                                         :vertical="false" />
-
                                                 </div>
                                                 @if ($Modify)
                                                     <div class="col-md-12">

@@ -126,6 +126,17 @@
                                         :zero="true" :isDisabled=false wire:model='selectedItem' />
                                 @endif
                             </div>
+                            <div class="col-4">
+                                @if ($refreshComponent)
+                                    <livewire:select-checkbox name="METHOD1" titleName="Filter method"
+                                        :options="$filterMethod" :zero="true" :isDisabled=false
+                                        wire:model='selectedMethod' />
+                                @else
+                                    <livewire:select-checkbox name="METHOD2" titleName="Filter method"
+                                        :options="$filterMethod" :zero="true" :isDisabled=false
+                                        wire:model='selectedMethod' />
+                                @endif
+                            </div>
                             <div class="col-6 p-1">
                                 <button class="btn btn-xs btn-info w-25" wire:click='shortFilter()'
                                     wire:loading.attr='disabled'>Filter</button>

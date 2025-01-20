@@ -58,8 +58,6 @@ class PatientBalanceReport extends Component
     public function mount()
     {
         $this->locationList  = $this->locationServices->getList();
-
-
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->DATE_FROM = $this->dateServices->NowDate();
         $this->DATE_TO = $this->dateServices->NowDate();
@@ -82,4 +80,4 @@ class PatientBalanceReport extends Component
     {
         return view('livewire.patient-report.patient-balance-report');
     }
-}
+}   

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Contacts;
 use App\Models\Items;
+use App\Models\PaymentMethods;
 use Illuminate\Support\Facades\DB;
 
 class PatientReportServices
@@ -18,7 +19,7 @@ class PatientReportServices
      * @param array $patientData
      */
 
-    public function generateSalesReportData( string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = []): object
+    public function generateSalesReportData(string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [], array $methodData = []): object
     {
 
         $results = DB::table('service_charges_items as sci')
@@ -64,6 +65,10 @@ class PatientReportServices
                 $array = $itemData;
                 $query->whereIn('sci.ITEM_ID', $array);
             })
+            ->when($methodData, function ($query) use (&$methodData) {
+                $array = $methodData;
+                $query->whereIn('pp.PAYMENT_METHOD_ID', $array);
+            })
             ->orderBy('c.LAST_NAME')
             ->orderBy('sc.CODE')
             ->orderBy('sci.ID')
@@ -71,13 +76,8 @@ class PatientReportServices
 
         return $results;
     }
-    public function generatePrevCollection(
-        string $scFrom,
-        string $scTo,
-        int  $locatoinId,
-        array  $patientData = [],
-        array $itemData = []
-    ): object {
+    public function generatePrevCollection(string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [], array $methodData = []): object
+    {
         $results = DB::table('service_charges_items as sci')
             ->select([
                 'sc.ID as SC_ID',
@@ -124,6 +124,10 @@ class PatientReportServices
                 $array = $itemData;
                 $query->whereIn('sci.ITEM_ID', $array);
             })
+            ->when($methodData, function ($query) use (&$methodData) {
+                $array = $methodData;
+                $query->whereIn('pp.PAYMENT_METHOD_ID', $array);
+            })
             ->orderBy('c.LAST_NAME')
             ->orderBy('sc.CODE')
             ->orderBy('sci.ID')
@@ -131,11 +135,8 @@ class PatientReportServices
 
         return $results;
     }
-    public function getItemListViaReport(
-        int $LOCATION_ID,
-        string $DATE_FROM,
-        string $DATE_TO
-    ): object {
+    public function getItemListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO): object
+    {
 
         $result = Items::query()
             ->select(['ID', 'DESCRIPTION'])
@@ -154,7 +155,29 @@ class PatientReportServices
 
         return $result;
     }
+    public function getMethodListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO): object
+    {
 
+        $result = PaymentMethods::query()
+            ->select(['payment_method.ID', 'payment_method.DESCRIPTION'])
+            ->join('patient_payment as pp', 'pp.PAYMENT_METHOD_ID', '=', 'payment_method.ID')
+            ->join('patient_payment_charges as ppc', 'ppc.PATIENT_PAYMENT_ID', '=', 'pp.ID')
+            ->whereExists(function ($query) use (&$LOCATION_ID, &$DATE_FROM, &$DATE_TO) {
+                $query->select(DB::raw(1))
+                    ->from('service_charges as s')
+                    ->join('service_charges_items as ci', function ($join) {
+                        $join->on('ci.SERVICE_CHARGES_ID', '=', 's.ID')
+                            ->on('ci.ID', '=', 'ppc.SERVICE_CHARGES_ITEM_ID');
+                    })
+                    ->where('s.LOCATION_ID', '=', $LOCATION_ID)
+                    ->whereBetween('s.DATE', [$DATE_FROM, $DATE_TO]);
+            })
+            ->orderBy('DESCRIPTION', 'asc')
+            ->groupBy(['payment_method.ID', 'payment_method.DESCRIPTION'])
+            ->get();
+
+        return $result;
+    }
     public function getMonthlyTreatment(int $year, int $month, array  $dayList = [], array $patient = [], int $LocationId): object
     {
         $PHIC_ITEM_ID = $this->itemServices->PHIC_ITEM_ID;

@@ -69,8 +69,8 @@
                                                     id="custom-content-below-tax-info-tab" data-toggle="pill"
                                                     href="#custom-content-below-tax-info" role="tab"
                                                     aria-controls="custom-content-below-tax-info"
-                                                    aria-selected="false">Tax
-                                                    Info</a>
+                                                    aria-selected="false">Billing Info
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a wire:click="SelectTab('add')"
@@ -78,8 +78,8 @@
                                                     id="custom-content-below-add-info-tab" data-toggle="pill"
                                                     href="#custom-content-below-add-info" role="tab"
                                                     aria-controls="custom-content-below-add-info"
-                                                    aria-selected="false">Employment
-                                                    Info</a>
+                                                    aria-selected="false">Bill Paid Info
+                                                </a>
                                             </li>
 
                                         </ul>
@@ -92,17 +92,16 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-md-2">
-                                                                <label for="title" class="text-sm">Title</label>
-                                                                <select wire:model='SALUTATION'
-                                                                    class="form-control form-control-sm"
-                                                                    name="SALUTATION">
-                                                                    <option value=""></option>
-                                                                    <option value="Dr">Dr</option>
-                                                                    <option value="Miss">Miss</option>
-                                                                    <option value="Mr.">Mr.</option>
-                                                                    <option value="Mr.">Ms.</option>
-                                                                    <option value="Mr.">Prof</option>
-                                                                </select>
+                                                            <label for="title" class="text-sm">Title</label>
+                                                            <select wire:model='SALUTATION'
+                                                                class="form-control form-control-sm" name="SALUTATION">
+                                                                <option value=""></option>
+                                                                <option value="Dr">Dr</option>
+                                                                <option value="Miss">Miss</option>
+                                                                <option value="Mr.">Mr.</option>
+                                                                <option value="Mr.">Ms.</option>
+                                                                <option value="Mr.">Prof</option>
+                                                            </select>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <livewire:text-input name="FIRST_NAME"
@@ -211,11 +210,9 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
                                             <div class="tab-pane fade @if ($selectTab == 'tax') show active @endif"
                                                 id="custom-content-below-tax-info" role="tabpanel"
@@ -232,7 +229,6 @@
 
 
                                                         </div>
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -243,11 +239,11 @@
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <div class="mt-2">
-                                                                <label for="dob" class="text-sm">Hire Date
+                                                                {{-- <label for="dob" class="text-sm">Hire Date
                                                                 </label>
                                                                 <input type="date" name="hireDate"
                                                                     class="form-control form-control-sm"
-                                                                    wire:model='HIRE_DATE' />
+                                                                    wire:model='HIRE_DATE' /> --}}
                                                             </div>
                                                         </div>
 
