@@ -74,9 +74,9 @@
                                         @if ($Modify)
                                             @if ($STATUS == 4)
                                                 <button name="btnSavePosted" type="submit"
-                                                    class="btn btn-sm btn-primary"> <i class="fa fa-floppy-o"
-                                                        aria-hidden="true"></i> Save &
-                                                    Posted</button>
+                                                    class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Save & Posted
+                                                </button>
                                                 <button name="btnCanceled" type='button' wire:click='updateCancel'
                                                     class="btn btn-sm btn-secondary"><i class="fa fa-ban"
                                                         aria-hidden="true"></i> Cancel</button>
@@ -94,7 +94,7 @@
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Edit
                                                 </button>
-                                                
+
                                                 @if (($ID > 0 && $STATUS == 1) || ($ID > 0 && $STATUS == 4))
                                                     @if (auth()->user()->can('patient.treatment.update'))
                                                         <button name="btnPosted" type='button' wire:click='getPosted()'
@@ -118,7 +118,6 @@
                                                         Unposted
                                                     </button>
                                                 @endcan
-
                                             @endif
 
                                             @if ($STATUS != 3)

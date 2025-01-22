@@ -10,6 +10,7 @@ use App\Services\ItemTreatmentServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
 use App\Services\ScheduleServices;
+use App\Services\ServiceChargeServices;
 use App\Services\UnitOfMeasureServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
@@ -98,6 +99,7 @@ class HemoForm extends Component
     private $unitOfMeasureServices;
     private $scheduleServices;
     private $patientDoctorServices;
+    private $serviceChargeServices;
     public function boot(
         HemoServices $hemoServices,
         ContactServices $contactServices,
@@ -109,7 +111,8 @@ class HemoForm extends Component
         ItemTreatmentServices $itemTreatmentServices,
         UnitOfMeasureServices $unitOfMeasureServices,
         ScheduleServices $scheduleServices,
-        PatientDoctorServices $patientDoctorServices
+        PatientDoctorServices $patientDoctorServices,
+        ServiceChargeServices $serviceChargeServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
@@ -122,6 +125,7 @@ class HemoForm extends Component
         $this->unitOfMeasureServices = $unitOfMeasureServices;
         $this->scheduleServices = $scheduleServices;
         $this->patientDoctorServices = $patientDoctorServices;
+        $this->serviceChargeServices = $serviceChargeServices;
     }
     public function getEmpName()
     {
@@ -371,11 +375,17 @@ class HemoForm extends Component
         );
 
         if ($this->ID > 0) {
+
+                //checking if got priming.
+
+
+
+            
+
+
             //Make it restricted
-            if (
-                empty($this->PRE_WEIGHT)  && empty($this->PRE_BLOOD_PRESSURE) && empty($this->PRE_BLOOD_PRESSURE2) && empty($this->PRE_HEART_RATE) && empty($this->PRE_O2_SATURATION) && empty($this->PRE_TEMPERATURE) && empty($this->TIME_START) &&
-                empty($this->POST_WEIGHT) && empty($this->POST_BLOOD_PRESSURE) && empty($this->POST_BLOOD_PRESSURE2) && empty($this->POST_HEART_RATE) && empty($this->POST_O2_SATURATION) && empty($this->POST_TEMPERATURE) && empty($this->TIME_END)
-            ) {
+            if ( empty($this->PRE_WEIGHT)  && empty($this->PRE_BLOOD_PRESSURE) && empty($this->PRE_BLOOD_PRESSURE2) && empty($this->PRE_HEART_RATE) && empty($this->PRE_O2_SATURATION) && empty($this->PRE_TEMPERATURE) && empty($this->TIME_START) && empty($this->POST_WEIGHT) && empty($this->POST_BLOOD_PRESSURE) && empty($this->POST_BLOOD_PRESSURE2) && empty($this->POST_HEART_RATE) && empty($this->POST_O2_SATURATION) && empty($this->POST_TEMPERATURE) && empty($this->TIME_END) ) {
+        
             } else {
 
                 $this->validate(
