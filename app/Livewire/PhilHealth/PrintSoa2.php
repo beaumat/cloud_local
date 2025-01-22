@@ -174,7 +174,7 @@ class PrintSoa2 extends Component
                 $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                 $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
                 $this->CENTER_ACCREDITED_NO = $locData->ACCREDITATION_NO ?? '';
-                $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? Auth()->user()->contact_id, 2); // Employee
                 if ($conUser) {
                     $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
                     $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
@@ -300,7 +300,7 @@ class PrintSoa2 extends Component
                     $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                     $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
                     $this->CENTER_ACCREDITED_NO = $locData->ACCREDITATION_NO ?? '';
-                    $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                    $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? Auth()->user()->contact_id, 2); // Employee
                     if ($conUser) {
                         $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
                         $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';

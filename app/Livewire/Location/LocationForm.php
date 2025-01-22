@@ -39,7 +39,6 @@ class LocationForm extends Component
     public bool $IS_DAILY = false;
     public bool $USED_DRY_WEIGHT = false;
     public string $LOGO_FILE = '';
-
     public  string $DOCTOR_ORDER_DEFAULT;
     public bool $OTHER_SIGN;
     public  int $PREPARED_BY_ID;

@@ -177,7 +177,7 @@ class LocationServices
                 'USED_DRY_WEIGHT'       => $USED_DRY_WEIGHT,
                 'DOCTOR_ORDER_DEFAULT'  => $DOCTOR_ORDER_DEFAULT,
                 'OTHER_SIGN'            => $OTHER_SIGN,
-                'PREPARED_BY_ID'        => $PREPARED_BY_ID
+                'PREPARED_BY_ID'        => $PREPARED_BY_ID >  0  ? $PREPARED_BY_ID : null
 
             ]);
     }
@@ -188,7 +188,7 @@ class LocationServices
     }
     public function Search($search)
     {
-        return Locations::query()
+        $result = Locations::query()
             ->select(
                 [
                     'location.ID',
@@ -196,7 +196,7 @@ class LocationServices
                     'location.INACTIVE',
                     'location.PRICE_LEVEL_ID',
                     'location.GROUP_ID',
-                    'price_level.DESCRIPTION as PRICEL_LEVEL',
+                    'price_level.DESCRIPTION as PRICE_LEVEL',
                     'item_group.DESCRIPTION as ITEM_GROUP'
                 ]
             )
@@ -207,5 +207,7 @@ class LocationServices
             })
             ->orderBy('location.ID', 'desc')
             ->get();
+
+            return $result;
     }
 }

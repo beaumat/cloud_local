@@ -169,7 +169,8 @@ class PrintSoa extends Component
                 $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                 $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
-                $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? Auth()->user()->contact_id, 2); // Employee
+     
                 if ($conUser) {
                     $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
                     $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
@@ -268,7 +269,6 @@ class PrintSoa extends Component
                 $this->OTHER_NAME = $data->OTHER_NAME ?? '';
 
                 $contact = $this->contactServices->get($this->CONTACT_ID, 3);
-
                 if ($contact) {
                     $MI = substr($contact->MIDDLE_NAME, 0, 1);
                     $MI_COUNT  = strlen($contact->MIDDLE_NAME);
@@ -294,7 +294,8 @@ class PrintSoa extends Component
                     $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                     $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
                     $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
-                    $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+                    $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID  ??  Auth()->user()->contact_id, 2); // Employee
+             
                     if ($conUser) {
                         $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
                         $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
@@ -306,7 +307,6 @@ class PrintSoa extends Component
                 $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
                 $LastDate = '';
                 foreach ($dataList as $list) {
-
                     if ($this->allDate == '') {
                         $this->allDate =  date('F d', strtotime($list->DATE));
                     } else {

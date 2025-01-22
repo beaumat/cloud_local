@@ -34,7 +34,8 @@ class ContactServices
             ->exists();
     }
     public function get(int $ID, int $TYPE)
-    {
+    {   
+    
         $result = contacts::where('ID', '=', $ID)
             ->where('TYPE', '=', $TYPE)
             ->first();
