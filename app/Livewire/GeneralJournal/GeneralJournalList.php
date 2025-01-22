@@ -96,6 +96,7 @@ class GeneralJournalList extends Component
     public function render()
     {
         $dataList = $this->generalJournalServices->Search($this->search, $this->locationid, $this->perPage);
+        
         return view('livewire.general-journal.general-journal-list', ['dataList' => $dataList]);
     }
 }

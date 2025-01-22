@@ -97,7 +97,8 @@ class GeneralJournalServices
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
                     $q->where('general_journal.CODE', 'like', '%' . $search . '%')
-                        ->orWhere('general_journal.NOTES', 'like', '%' . $search . '%');
+                        ->orWhere('general_journal.NOTES', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%');
                 });
             })
             ->orderBy('general_journal.ID', 'desc')
