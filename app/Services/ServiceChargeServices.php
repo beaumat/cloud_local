@@ -11,6 +11,7 @@ use Livewire\WithPagination;
 
 class ServiceChargeServices
 {
+    private int $PRIMING_FEE_ID = 176;
     use WithPagination;
     private $object;
     private $compute;
@@ -906,5 +907,16 @@ class ServiceChargeServices
                 'DATES' => $availments[$monthNumber] ?? ''
             ];
         }, array_keys($months), $months);
+    }
+
+    public function isHavePriming(string $DATE, int $LOCATION_ID, int $PATIENT_ID): bool
+    {
+        return ServiceCharges::query()
+            ->join('service_charges_items', 'service_charges_items.SERVICE_CHARGES_ID', '=', 'service_charges.ID')
+            ->where('service_charges_items.ITEM_ID', '=', $this->PRIMING_FEE_ID)
+            ->where('service_charges.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('service_charges.PATIENT_ID', '=', $PATIENT_ID)
+            ->where('service_charges.DATE', '=', $DATE)
+            ->exists();
     }
 }

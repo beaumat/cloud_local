@@ -376,16 +376,9 @@ class HemoForm extends Component
 
         if ($this->ID > 0) {
 
-                //checking if got priming.
-
-
-
-            
-
-
+          
             //Make it restricted
-            if ( empty($this->PRE_WEIGHT)  && empty($this->PRE_BLOOD_PRESSURE) && empty($this->PRE_BLOOD_PRESSURE2) && empty($this->PRE_HEART_RATE) && empty($this->PRE_O2_SATURATION) && empty($this->PRE_TEMPERATURE) && empty($this->TIME_START) && empty($this->POST_WEIGHT) && empty($this->POST_BLOOD_PRESSURE) && empty($this->POST_BLOOD_PRESSURE2) && empty($this->POST_HEART_RATE) && empty($this->POST_O2_SATURATION) && empty($this->POST_TEMPERATURE) && empty($this->TIME_END) ) {
-        
+            if (empty($this->PRE_WEIGHT)  && empty($this->PRE_BLOOD_PRESSURE) && empty($this->PRE_BLOOD_PRESSURE2) && empty($this->PRE_HEART_RATE) && empty($this->PRE_O2_SATURATION) && empty($this->PRE_TEMPERATURE) && empty($this->TIME_START) && empty($this->POST_WEIGHT) && empty($this->POST_BLOOD_PRESSURE) && empty($this->POST_BLOOD_PRESSURE2) && empty($this->POST_HEART_RATE) && empty($this->POST_O2_SATURATION) && empty($this->POST_TEMPERATURE) && empty($this->TIME_END)) {
             } else {
 
                 $this->validate(
@@ -516,6 +509,17 @@ class HemoForm extends Component
     }
     public function getPosted()
     {
+
+
+          //checking if got priming.
+
+          $isHavePriming = (bool) $this->serviceChargeServices->isHavePriming($this->DATE, $this->LOCATION_ID, $this->CUSTOMER_ID);
+          if ($isHavePriming) {
+              $this->PostStatus();
+              return;
+          }
+
+
         $this->validate(
             [
                 'PRE_WEIGHT'            => 'required|not_in:0',
@@ -553,18 +557,21 @@ class HemoForm extends Component
             ]
         );
 
+        $this->PostStatus();
+    }
+    private function PostStatus()
+    {
+
+        DB::beginTransaction();
 
         try {
 
             $ITEM_COUNT = (int) $this->hemoServices->CountItems($this->ID);
-
-            DB::beginTransaction();
             if ($ITEM_COUNT == 0) {
                 DB::rollBack();
                 session()->flash('error', 'Item not found.');
                 return;
             }
-
 
             if (!$this->executePosted()) {
                 DB::rollBack();
@@ -574,9 +581,7 @@ class HemoForm extends Component
             $this->hemoServices->StatusUpdate($this->ID, 2);
             $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 1); //PRESENT
 
-
             DB::commit();
-
             session()->flash("message", 'Successfully posted');
             if ($this->STATUS == 4) {
                 return Redirect::route('patientshemo');

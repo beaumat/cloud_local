@@ -51,16 +51,16 @@ class BillPaymentServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Check::create([
-            'ID'                => $ID,
-            'RECORDED_ON'       => $this->dateServices->Now(),
-            'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'              => $DATE,
-            'TYPE'              => $this->CHECK_TYPE_ID,
-            'BANK_ACCOUNT_ID'   => $BANK_ACCOUNT_ID,
-            'PAY_TO_ID'         => $PAY_TO_ID,
-            'LOCATION_ID'       => $LOCATION_ID,
-            'AMOUNT'            => $AMOUNT,
-            'NOTES'             => $NOTES,
+            'ID'                    => $ID,
+            'RECORDED_ON'           => $this->dateServices->Now(),
+            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                  => $DATE,
+            'TYPE'                  => $this->CHECK_TYPE_ID,
+            'BANK_ACCOUNT_ID'       => $BANK_ACCOUNT_ID,
+            'PAY_TO_ID'             => $PAY_TO_ID,
+            'LOCATION_ID'           => $LOCATION_ID,
+            'AMOUNT'                => $AMOUNT,
+            'NOTES'                 => $NOTES,
             'PRINTED'               => false,
             'STATUS'                => 0,
             'STATUS_DATE'           => $this->dateServices->NowDate(),
@@ -335,6 +335,29 @@ class BillPaymentServices
                 DB::raw(' 0 as ENTRY_TYPE')
             ])->join('CHECK', 'CHECK.ID', '=', 'CHECK_BILLS.CHECK_ID')
             ->where('CHECK_BILLS.CHECK_ID', '=', $CHECK_ID)
+            ->get();
+
+        return $result;
+    }
+
+    public function getContactRecord(int $PAY_TO_ID): object
+    {
+
+        $result = Check::query()
+            ->select([,
+                'check.ID',
+                'check.DATE',
+                'check.CODE',
+                'check.NOTES',
+                'check.AMOUNT',
+                'ct.NAME as TYPE',
+                'a.NAME as BANK_NAME',
+                'l.NAME as LOCATION_NAME'
+            ])
+            ->join('check_type_map as ct', '=', 'check.TYPE')
+            ->join('account as a', 'a.ID', '=', 'check.BANK_ACCOUNT_ID')
+            ->join('location as l', '=', 'check.LOCATION_ID')
+            ->where('PAY_TO_ID', '=', $PAY_TO_ID)
             ->get();
 
         return $result;
