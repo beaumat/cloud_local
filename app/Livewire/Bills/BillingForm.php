@@ -411,7 +411,7 @@ class BillingForm extends Component
                 if ($this->PDF) {
                     $this->uploadServices->RemoveIfExists($this->FILE_PATH);
                     $this->getDocumentProccess();
-                    $data = $this->patientPaymentServices->get($this->ID);
+                    $data = $this->billingServices->get($this->ID);
                     if ($data) {
                         $this->getInfo($data);
                     }
