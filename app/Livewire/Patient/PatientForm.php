@@ -127,6 +127,8 @@ class PatientForm extends Component
     public string $CUSTOM_FIELD3;
     public string $CUSTOM_FIELD4;
     public string $CUSTOM_FIELD5;
+    public  $DATE_EXPIRED;
+
     public function updateddateofbirth()
     {
         $this->age = $this->contactServices->calculateUserAge($this->DATE_OF_BIRTH);
@@ -194,7 +196,7 @@ class PatientForm extends Component
         if (is_numeric($id)) {
             $contact = $this->contactServices->get($id, $this->TYPE);
             if ($contact) {
-
+                $this->TYPE = $contact->TYPE ?? 3;
                 $this->ID = $contact->ID;
                 $this->NAME = $contact->NAME;
                 $this->COMPANY_NAME = $contact->COMPANY_NAME ? $contact->COMPANY_NAME : '';
@@ -231,12 +233,12 @@ class PatientForm extends Component
                 $this->HIRE_DATE = $contact->HIRE_DATE ? $contact->HIRE_DATE : '';
 
                 $this->LOCATION_ID = $contact->LOCATION_ID ?? 0;
-                $this->PATIENT_TYPE_ID = $contact->PATIENT_TYPE_ID ?? 0;
+                $this->PATIENT_TYPE_ID = 1; // $contact->PATIENT_TYPE_ID ?? 1;
                 $this->PATIENT_STATUS_ID = $contact->PATIENT_STATUS_ID ?? 0;
                 $this->ADMITTED = $contact->ADMITTED ? $contact->ADMITTED : false;
                 $this->LONG_HRS_DURATION = $contact->LONG_HRS_DURATION ? $contact->LONG_HRS_DURATION : false;
                 $this->DATE_ADMISSION = $contact->DATE_ADMISSION ? $contact->DATE_ADMISSION : '';
-
+                $this->DATE_EXPIRED  = $contact->DATE_EXPIRED ? $contact->DATE_EXPIRED : null;
                 $this->ADDRESS_UNIT_ROOM_FLOOR = $contact->ADDRESS_UNIT_ROOM_FLOOR ?? '';
                 $this->ADDRESS_BUILDING_NAME = $contact->ADDRESS_BUILDING_NAME ?? '';
                 $this->ADDRESS_LOT_BLK_HOUSE_BLDG = $contact->ADDRESS_LOT_BLK_HOUSE_BLDG ?? '';
@@ -288,7 +290,7 @@ class PatientForm extends Component
                 $this->CUSTOM_FIELD3 = $contact->CUSTOM_FIELD3 ?? '';
                 $this->CUSTOM_FIELD4 = $contact->CUSTOM_FIELD4 ?? '';
                 $this->CUSTOM_FIELD5 = $contact->CUSTOM_FIELD5 ?? '';
-     
+
                 $this->HEIGHT = $contact->HEIGHT ?? 0;
                 $this->updateddateofbirth();
                 $this->updatedMEMBERBIRTHDATE();
@@ -341,6 +343,7 @@ class PatientForm extends Component
         $this->ADMITTED = false;
         $this->LONG_HRS_DURATION = false;
         $this->DATE_ADMISSION = $this->dateServices->NowDate();
+        $this->DATE_EXPIRED = null;
         $this->ADDRESS_UNIT_ROOM_FLOOR = '';
         $this->ADDRESS_BUILDING_NAME = '';
         $this->ADDRESS_LOT_BLK_HOUSE_BLDG = '';
@@ -436,55 +439,58 @@ class PatientForm extends Component
     }
     private function FollowUpUpdate()
     {
-        Contacts::where('ID', $this->ID)->where('TYPE', $this->TYPE)->update([
-            'LOCATION_ID' => $this->LOCATION_ID,
-            'ADDRESS_UNIT_ROOM_FLOOR' => $this->ADDRESS_UNIT_ROOM_FLOOR,
-            'ADDRESS_BUILDING_NAME' => $this->ADDRESS_BUILDING_NAME,
-            'ADDRESS_LOT_BLK_HOUSE_BLDG' => $this->ADDRESS_LOT_BLK_HOUSE_BLDG,
-            'ADDRESS_STREET' => $this->ADDRESS_STREET,
-            'ADDRESS_SUB_VALL' => $this->ADDRESS_SUB_VALL,
-            'ADDRESS_BRGY' => $this->ADDRESS_BRGY,
-            'ADDRESS_CITY_MUNI' => $this->ADDRESS_CITY_MUNI,
-            'ADDRESS_PROVINCE' => $this->ADDRESS_PROVINCE,
-            'ADDRESS_COUNTRY' => $this->ADDRESS_COUNTRY,
-            'ADDRESS_ZIP_CODE' => $this->ADDRESS_ZIP_CODE,
-            'MEMBER_TEL_NO' => $this->MEMBER_TEL_NO,
-            'MEMBER_MOBILE' => $this->MEMBER_MOBILE,
-            'MEMBER_EMAIL' => $this->MEMBER_EMAIL,
-            'IS_PATIENT' => $this->IS_PATIENT,
-            'MEMBER_IS_CHILD' => $this->MEMBER_IS_CHILD,
-            'MEMBER_IS_PARENT' => $this->MEMBER_IS_PARENT,
-            'MEMBER_IS_SPOUSE' => $this->MEMBER_IS_SPOUSE,
-            'IS_REPRESENTATIVE' => $this->IS_REPRESENTATIVE,
-            'MEMBER_FIRST_NAME' => $this->MEMBER_FIRST_NAME,
-            'MEMBER_LAST_NAME' => $this->MEMBER_LAST_NAME,
-            'MEMBER_MIDDLE_NAME' => $this->MEMBER_MIDDLE_NAME,
-            'MEMBER_EXTENSION' => $this->MEMBER_EXTENSION,
-            'MEMBER_BIRTH_DATE' => $this->MEMBER_BIRTH_DATE ?? null,
-            'MEMBER_GENDER' => $this->MEMBER_GENDER,
-            'PIN' => $this->PIN,
-            'PEN' => $this->PEN,
-            'PEN_CONTACT' => $this->PEN_CONTACT,
-            'FIRST_CASE_RATE' => $this->FIRST_CASE_RATE,
-            'SECOND_CASE_RATE' => $this->SECOND_CASE_RATE,
-            'FINAL_DIAGNOSIS' => $this->FINAL_DIAGNOSIS,
-            'OTHER_DIAGNOSIS' => $this->OTHER_DIAGNOSIS,
-            'MEMBER_UNIT_ROOM_FLOOR' => $this->MEMBER_UNIT_ROOM_FLOOR,
-            'MEMBER_BUILDING_NAME' => $this->MEMBER_BUILDING_NAME,
-            'MEMBER_LOT_BLK_HOUSE_BLDG' => $this->MEMBER_LOT_BLK_HOUSE_BLDG,
-            'MEMBER_STREET' => $this->MEMBER_STREET,
-            'MEMBER_SUB_VALL' => $this->MEMBER_SUB_VALL,
-            'MEMBER_BRGY' => $this->MEMBER_BRGY,
-            'MEMBER_CITY_MUNI' => $this->MEMBER_CITY_MUNI,
-            'MEMBER_PROVINCE' => $this->MEMBER_PROVINCE,
-            'MEMBER_COUNTRY' => $this->MEMBER_COUNTRY,
-            'MEMBER_ZIP_CODE' => $this->MEMBER_ZIP_CODE,
-            'PIN_DEPENDENT' => $this->PIN_DEPENDENT,
-            'IS_DEPENDENT' => $this->IS_DEPENDENT,
-            'HEIGHT' => $this->HEIGHT,
-            'PATIENT_TYPE_ID' => $this->PATIENT_TYPE_ID,
-            'DATE_ADMISSION' => $this->DATE_ADMISSION
-        ]);
+        Contacts::where('ID', '=', $this->ID)
+            ->where('TYPE', '=', $this->TYPE)
+            ->update([
+                'LOCATION_ID' => $this->LOCATION_ID,
+                'ADDRESS_UNIT_ROOM_FLOOR' => $this->ADDRESS_UNIT_ROOM_FLOOR,
+                'ADDRESS_BUILDING_NAME' => $this->ADDRESS_BUILDING_NAME,
+                'ADDRESS_LOT_BLK_HOUSE_BLDG' => $this->ADDRESS_LOT_BLK_HOUSE_BLDG,
+                'ADDRESS_STREET' => $this->ADDRESS_STREET,
+                'ADDRESS_SUB_VALL' => $this->ADDRESS_SUB_VALL,
+                'ADDRESS_BRGY' => $this->ADDRESS_BRGY,
+                'ADDRESS_CITY_MUNI' => $this->ADDRESS_CITY_MUNI,
+                'ADDRESS_PROVINCE' => $this->ADDRESS_PROVINCE,
+                'ADDRESS_COUNTRY' => $this->ADDRESS_COUNTRY,
+                'ADDRESS_ZIP_CODE' => $this->ADDRESS_ZIP_CODE,
+                'MEMBER_TEL_NO' => $this->MEMBER_TEL_NO,
+                'MEMBER_MOBILE' => $this->MEMBER_MOBILE,
+                'MEMBER_EMAIL' => $this->MEMBER_EMAIL,
+                'IS_PATIENT' => $this->IS_PATIENT,
+                'MEMBER_IS_CHILD' => $this->MEMBER_IS_CHILD,
+                'MEMBER_IS_PARENT' => $this->MEMBER_IS_PARENT,
+                'MEMBER_IS_SPOUSE' => $this->MEMBER_IS_SPOUSE,
+                'IS_REPRESENTATIVE' => $this->IS_REPRESENTATIVE,
+                'MEMBER_FIRST_NAME' => $this->MEMBER_FIRST_NAME,
+                'MEMBER_LAST_NAME' => $this->MEMBER_LAST_NAME,
+                'MEMBER_MIDDLE_NAME' => $this->MEMBER_MIDDLE_NAME,
+                'MEMBER_EXTENSION' => $this->MEMBER_EXTENSION,
+                'MEMBER_BIRTH_DATE' => $this->MEMBER_BIRTH_DATE ?? null,
+                'MEMBER_GENDER' => $this->MEMBER_GENDER,
+                'PIN' => $this->PIN,
+                'PEN' => $this->PEN,
+                'PEN_CONTACT' => $this->PEN_CONTACT,
+                'FIRST_CASE_RATE' => $this->FIRST_CASE_RATE,
+                'SECOND_CASE_RATE' => $this->SECOND_CASE_RATE,
+                'FINAL_DIAGNOSIS' => $this->FINAL_DIAGNOSIS,
+                'OTHER_DIAGNOSIS' => $this->OTHER_DIAGNOSIS,
+                'MEMBER_UNIT_ROOM_FLOOR' => $this->MEMBER_UNIT_ROOM_FLOOR,
+                'MEMBER_BUILDING_NAME' => $this->MEMBER_BUILDING_NAME,
+                'MEMBER_LOT_BLK_HOUSE_BLDG' => $this->MEMBER_LOT_BLK_HOUSE_BLDG,
+                'MEMBER_STREET' => $this->MEMBER_STREET,
+                'MEMBER_SUB_VALL' => $this->MEMBER_SUB_VALL,
+                'MEMBER_BRGY' => $this->MEMBER_BRGY,
+                'MEMBER_CITY_MUNI' => $this->MEMBER_CITY_MUNI,
+                'MEMBER_PROVINCE' => $this->MEMBER_PROVINCE,
+                'MEMBER_COUNTRY' => $this->MEMBER_COUNTRY,
+                'MEMBER_ZIP_CODE' => $this->MEMBER_ZIP_CODE,
+                'PIN_DEPENDENT' => $this->PIN_DEPENDENT,
+                'IS_DEPENDENT' => $this->IS_DEPENDENT,
+                'HEIGHT' => $this->HEIGHT,
+                'PATIENT_TYPE_ID' => $this->PATIENT_TYPE_ID,
+                'DATE_ADMISSION' => $this->DATE_ADMISSION,
+                'DATE_EXPIRED' =>  $this->DATE_EXPIRED ? $this->DATE_EXPIRED : null
+            ]);
     }
     public function save()
     {
