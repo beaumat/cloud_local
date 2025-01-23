@@ -324,6 +324,7 @@ class ServiceChargeServices
                     ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
             })
             ->whereBetween('service_charges.DATE', [$dateFrom, $dateTo])
+            ->where('service_charges.USE_PHIC', '=', 0)
             ->orderBy('service_charges.DATE', 'desc')
             ->paginate($perPage);
 
@@ -357,6 +358,7 @@ class ServiceChargeServices
             ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
                 $query->where('service_charges.LOCATION_ID', $LOCK_LOCATION_ID);
             })
+            ->where('service_charges.USE_PHIC', '=', 0)
             ->orderBy('service_charges.ID', 'desc')
             ->paginate($perPage);
         return $result;
@@ -461,6 +463,7 @@ class ServiceChargeServices
             ->whereYear('service_charges.DATE', $YEAR)
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
             ->where('service_charges_items.ITEM_ID', $ITEM_ID)
+            ->where('service_charges.USE_PHIC', '=', 0)
             ->count();
 
         return $count;
@@ -712,6 +715,7 @@ class ServiceChargeServices
             ->when($patientId > 0, function ($query) use (&$patientId) {
                 $query->where('PATIENT_ID', $patientId);
             })
+            ->where('USE_PHIC', '=', 0)
             ->sum('AMOUNT');
 
         return $result;
@@ -735,6 +739,7 @@ class ServiceChargeServices
             ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
                 $query->where('sc.LOCATION_ID', $LOCK_LOCATION_ID);
             })
+            ->where('sc.USE_PHIC','=',0)
             ->having('BALANCE', '>', 0)
             ->orderBy('sc.DATE')
             ->get();
@@ -766,6 +771,7 @@ class ServiceChargeServices
                 $query->where('sc.LOCATION_ID', $LOCATION_ID);
             })
             ->whereNotIn('service_charges_items.ITEM_ID', [2])
+            ->where('sc.USE_PHIC','=',0)
             ->having('BALANCE', '>', 0)
             ->orderBy('sc.DATE')
             ->get();
@@ -794,6 +800,7 @@ class ServiceChargeServices
             ->where('service_charges.DATE', '<=', $DATE)
             ->where('service_charges.WALK_IN', true)
             ->where('service_charges_items.IS_POSTED', false)
+            ->where('service_charges.USE_PHIC','=',0)
             ->orderBy('service_charges.DATE', 'asc')
             ->get();
 
@@ -807,6 +814,7 @@ class ServiceChargeServices
             ->where('service_charges.DATE', '<=', $DATE)
             ->where('service_charges.WALK_IN', true)
             ->where('service_charges_items.IS_POSTED', false)
+            ->where('service_charges.USE_PHIC','=',0)
             ->update([
                 'service_charges_items.IS_POSTED' => true
             ]);
@@ -827,6 +835,7 @@ class ServiceChargeServices
             ->where('service_charges.DATE', $DATE)
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
             ->where('service_charges.PATIENT_ID', $PATIENT_ID)
+            ->where('service_charges.USE_PHIC','=',0)
             ->get();
 
 

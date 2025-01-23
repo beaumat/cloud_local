@@ -216,6 +216,7 @@ class PhilHealthServices
             })
             ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
             ->where('sci.ITEM_ID', 2)
+            ->where('s.USE_PHIC','=',0)
             ->where('hemodialysis.CUSTOMER_ID', $CONTACT_ID)
             ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
             ->where('hemodialysis.STATUS_ID', '2')

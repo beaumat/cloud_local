@@ -31,7 +31,8 @@ class ServiceCharges extends Model
         'NONTAXABLE_AMOUNT',
         'STATUS',
         'STATUS_DATE',
-        'WALK_IN'
+        'WALK_IN',
+        'USE_PHIC'
     ];
 
    
