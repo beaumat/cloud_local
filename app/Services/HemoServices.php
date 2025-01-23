@@ -140,6 +140,7 @@ class HemoServices
                             ->where('sc.DATE', $DATE)
                             ->where('sc.PATIENT_ID', $CONTACT_ID)
                             ->where('sc.LOCATION_ID',  $LOCATION_ID)
+                            ->where('sc.USE_PHIC', '=', 0)
                             ->where('sci.ITEM_ID', 2);
                     })
                     ->first()
@@ -162,6 +163,7 @@ class HemoServices
                         ->where('sc.DATE', $DATE)
                         ->where('sc.PATIENT_ID', $CONTACT_ID)
                         ->where('sc.LOCATION_ID',  $LOCATION_ID)
+                        ->where('sc.USE_PHIC', '=', 0)
                         ->where('sci.ITEM_ID', 2);
                 })
                 ->first();
@@ -196,6 +198,7 @@ class HemoServices
             })
             ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
             ->where('sci.ITEM_ID', '=', 2)
+            ->where('s.USE_PHIC','=',0)
             ->where('hemodialysis.CUSTOMER_ID', $CONTACT_ID)
             ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
             ->where('hemodialysis.STATUS_ID', '2')
@@ -275,6 +278,7 @@ class HemoServices
                     ->whereBetween('sc.DATE', [$DT_FROM, $DT_TO])
                     ->where('sc.PATIENT_ID', '=', $CONTACT_ID)
                     ->where('sc.LOCATION_ID', '=', $LOCATION_ID)
+                    ->where('sc.USE_PHIC', '=', 0)
                     ->where('sci.ITEM_ID', '=', 2);
             })
             ->whereNotExists(function ($query) {
@@ -335,6 +339,7 @@ class HemoServices
                     ->where('sc.DATE', $DT_FROM)
                     ->where('sc.PATIENT_ID', '=', $CONTACT_ID)
                     ->where('sc.LOCATION_ID', '=', $LOCATION_ID)
+                    ->where('sc.USE_PHIC', '=', 0)
                     ->where('sci.ITEM_ID', '=', 2);
             })
             ->whereNotExists(function ($query) {
@@ -1016,6 +1021,7 @@ class HemoServices
             })
             ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
             ->where('sci.ITEM_ID', 2)
+            ->where('s.USE_PHIC', '=', 0)
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.STATUS_ID', 2)
             ->where('h.DATE',  $DATE)
@@ -1057,6 +1063,7 @@ class HemoServices
             })
             ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
             ->where('sci.ITEM_ID', 2)
+            ->where('s.USE_PHIC', '=', 0)
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.STATUS_ID', 2)
 
