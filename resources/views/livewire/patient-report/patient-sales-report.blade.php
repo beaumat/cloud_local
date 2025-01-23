@@ -87,8 +87,6 @@
                                     wire:loading.attr='disabled'>Generate</button>
                                 <button class="btn btn-xs btn-success w-25" wire:click='export()'
                                     wire:loading.attr='disabled'>Export</button>
-
-
                                 <a type="button" class="btn btn-xs btn-warning w-25"
                                     href="{{ route('reportspatient_sales_report_print', ['date_from' => $DATE_TRANSACTION_FROM, 'date_to' => $DATE_TRANSACTION_TO, 'location_id' => $LOCATION_ID]) }}"
                                     target="_BLANK">
@@ -342,7 +340,7 @@
                             <label class="h6">Previous Cash Collection </label>
                             <ol>
                                 @foreach ($preDataList as $list)
-                                    <li> <b>{{ $list->PATIENT_NAME }}</b>/ <i>{{ $list->PAYMENT_METHOD }}</i> / Paid:
+                                    <li><strong class="text-purple"> {{ date('m/d/Y',strtotime($list->SC_DATE))  }} </strong>/ pt:<b>{{ $list->PATIENT_NAME }}</b>/<i class="text-orange">{{ $list->PAYMENT_METHOD }}</i> / Paid:
                                         <span class="text-success">{{ number_format($list->PP_PAID, 2) }}</span> on
                                         <span class="text-primary">{{ $list->ITEM_NAME }}</span>
                                     </li>

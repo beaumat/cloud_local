@@ -344,7 +344,7 @@ class BillPaymentServices
     {
 
         $result = Check::query()
-            ->select([,
+            ->select([
                 'check.ID',
                 'check.DATE',
                 'check.CODE',
