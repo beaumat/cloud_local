@@ -123,14 +123,14 @@ class PhilHealthServices
                 'philhealth.P1_TOTAL'
             ])
             ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
-            ->where('philhealth.ID', $ID)
+            ->where('philhealth.ID','=', $ID)
             ->first();
 
         return $result;
     }
     public function setCF4Update(int $ID, string $RR_NO, string $CF4_AD_NOTES = '', string $CF4_DD_NOTES = '', string  $CF4_COMPLAINT = '', string  $CF4_HPI = '', string $CF4_PPMH = '')
     {
-        PhilHealth::where('ID', $ID)
+        PhilHealth::where('ID','=', $ID)
             ->update([
                 'RR_NO'         => $RR_NO,
                 'CF4_AD_NOTES'  => $CF4_AD_NOTES == '' ? null : $CF4_AD_NOTES,
@@ -170,9 +170,6 @@ class PhilHealthServices
 
                 $DISCOUNT = $AMOUNT * ($this->DISCOUNT_PERCENT / 100);
 
-
-
-
                 if (!$isDataExists) {
 
                     // clean
@@ -198,9 +195,9 @@ class PhilHealthServices
             }
         }
         $dataReturn = [
-            'TOTAL_FEE' => $TOTAL_FEE,
-            'TOTAL_DISCOUNT' => $TOTAL_DISC,
-            'TOTAL_FIRST_CASE' => $TOTAL_FIRST_CASE
+            'TOTAL_FEE'         => $TOTAL_FEE,
+            'TOTAL_DISCOUNT'    => $TOTAL_DISC,
+            'TOTAL_FIRST_CASE'  => $TOTAL_FIRST_CASE
         ];
 
 

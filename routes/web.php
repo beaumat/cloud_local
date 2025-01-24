@@ -108,9 +108,11 @@ use App\Livewire\LocationGroup\LocationGroupForm;
 use App\Livewire\LocationGroup\LocationGroupList;
 use App\Livewire\ManufacturerPage\ManufacturerForm;
 use App\Livewire\ManufacturerPage\ManufacturerList;
+use App\Livewire\Patient\MedcertPrint;
 use App\Livewire\Patient\PatientForm;
 use App\Livewire\Patient\PatientList;
 use App\Livewire\Patient\PhilhealthAvailment;
+use App\Livewire\Patient\PhilhealthModify;
 use App\Livewire\Patient\PrintAvailment;
 use App\Livewire\PatientReport\DoctorProFeeReport;
 use App\Livewire\PatientReport\DoctorsFeeReportPrint;
@@ -424,6 +426,9 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/create', PatientForm::class)->name('patients_create')->middleware(['permission:contact.patient.create']);
                 Route::get('/{id}/edit', PatientForm::class)->name('patients_edit')->middleware(['permission:contact.patient.view']);
                 Route::get('/{id}/{year}/{locationid}', PrintAvailment::class)->name('print_availment');
+                // Route::get('/{id}/{year}',PhilhealthModify::class)->name('philhealth_modify');
+                Route::get('/{id}/medical-certificate', MedcertPrint::class)->name('print_medical_cert');
+
             });
 
             Route::prefix('/doctors')->group(function () {

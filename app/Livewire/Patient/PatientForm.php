@@ -182,7 +182,7 @@ class PatientForm extends Component
         }
 
 
-        $this->taxList = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', 3)->orderBy('ID', 'desc')->get();
+        $this->taxList = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', '=', 3)->orderBy('ID', 'desc')->get();
         $this->salesMan = Contacts::query()->select('ID', 'NAME')->where('INACTIVE', '0')->where('TYPE', '2')->get();
         $this->contactGroup = ContactGroup::query()->where('TYPE', $this->TYPE)->get();
         $this->paymentTermList = PaymentTerms::query()->select('ID', 'DESCRIPTION')->where('INACTIVE', '0')->get();
@@ -497,27 +497,25 @@ class PatientForm extends Component
 
         $this->validate(
             [
-                'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
-                'FIRST_NAME' => 'required',
-                'LAST_NAME' => 'required',
-                'DATE_OF_BIRTH' => 'required',
-                'HEIGHT' => 'required|not_in:0',
-                'LOCATION_ID' =>  'required|not_in:0',
-                'DATE_ADMISSION' => 'required',
-                'PATIENT_TYPE_ID' => 'required|not_in:0'
+                'NAME'              => 'required|max:100|unique:contact,name,' . $this->ID,
+                'FIRST_NAME'        => 'required',
+                'LAST_NAME'         => 'required',
+                'DATE_OF_BIRTH'     => 'required',
+                'HEIGHT'            => 'required|not_in:0',
+                'LOCATION_ID'       => 'required|not_in:0',
+                'DATE_ADMISSION'    => 'required',
+                'PATIENT_TYPE_ID'   => 'required|not_in:0'
             ],
+            [],
             [
-                'HEIGHT' => 'Height is required'
-            ],
-            [
-                'NAME' => 'Name',
-                'FIRST_NAME' => 'Firstname',
-                'LAST_NAME' => 'Lastname',
-                'DATE_OF_BIRTH' => 'Date of Birth',
-                'HEIGHT' => 'Height',
-                'LOCATION_ID' => 'Branch',
-                'DATE_ADMISSION' => 'Date Admission',
-                'PATIENT_TYPE_ID' => 'Type'
+                'NAME'              => 'Name',
+                'FIRST_NAME'        => 'Firstname',
+                'LAST_NAME'         => 'Lastname',
+                'DATE_OF_BIRTH'     => 'Date of Birth',
+                'HEIGHT'            => 'Height',
+                'LOCATION_ID'       => 'Branch',
+                'DATE_ADMISSION'    => 'Date Admission',
+                'PATIENT_TYPE_ID'   => 'Type'
             ]
         );
 
