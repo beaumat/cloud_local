@@ -63,10 +63,7 @@
                                 </div>
                                 <div class="">Duty Physician</div>
                                 <div class="">LIC No. {{ $LIC_NO }}</div>
-
-
                             </div>
-
                             <br />
                             <br />
                             <br />
