@@ -33,9 +33,19 @@ class ContactServices
             ->where('TYPE', '=', 4)
             ->exists();
     }
+    public function getPatientByMed($ID)
+    {
+        $result = contacts::query()
+            ->select(['MED_CERT_SCHED_ID', 'MED_CERT_NURSE_ID'])
+            ->where('ID', '=', $ID)
+            ->where('TYPE', '=', 3)
+            ->first();
+
+        return $result;
+    }
     public function get(int $ID, int $TYPE)
-    {   
-    
+    {
+
         $result = contacts::where('ID', '=', $ID)
             ->where('TYPE', '=', $TYPE)
             ->first();

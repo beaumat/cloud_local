@@ -114,5 +114,7 @@ class Contacts extends Model
         'HEIGHT',
         'IS_COMPLETE',
         'DATE_EXPIRED',
+        'MED_CERT_SCHED_ID',
+        'MED_CERT_NURSE_ID'
     ];
 }

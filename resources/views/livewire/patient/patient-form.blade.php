@@ -684,7 +684,7 @@
                                                                 wire:model='OTHER_DIAGNOSIS' maxlength='60' />
                                                         </div>
                                                         <div class="col-md-2">
-                                                            {{-- CUSTOM_FIELD2 --}}
+                                                            {{-- Addition Treatment No. --}}
                                                             <livewire:number-input name="CUSTOM_FIELD2"
                                                                 titleName="Additional No. of Treatment"
                                                                 isDisabled="{{ $modify }}"
@@ -692,7 +692,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
                                             @can('contact.patient.update')
                                                 <div class="tab-pane fade @if ($selectTab == 'requirements') show active @endif"
@@ -760,9 +759,9 @@
                                         </div>
                                         <div class="text-right col-6 col-md-6">
                                             @if ($ID > 0)
-                                                {{-- <a target="_BLANK" type="button" href="{{ route('maintenancecontactprint_medical_cert', ['id' => $ID]) }}"
-                                                    class="btn btn-sm  btn-warning"><i class="fa fa-print"
-                                                        aria-hidden="true"></i> Medical Certificate </a> --}}
+                                                <button type="button" wire:click='öpenMedCert()'
+                                                    class="btn btn-sm btn-warning"> <i class="fa fa-print"
+                                                        aria-hidden="true"></i>Medical Certificate</button>
                                                 @can('contact.patient.create')
                                                     <a id="new" title="Create"
                                                         href="{{ route('maintenancecontactpatients_create') }}"
@@ -781,6 +780,6 @@
             </div>
         </div>
     </section>
-
-    @livewire('Patient.TransferRecordModal');
+    @livewire('Patient.MedcertModal', ['PATIENT_ID' => $ID])
+    @livewire('Patient.TransferRecordModal')
 </div>

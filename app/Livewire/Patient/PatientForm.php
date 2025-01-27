@@ -643,7 +643,9 @@ class PatientForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-
+    public function öpenMedCert() {
+        $this->dispatch('open-med-cert');
+    }
     public function render()
     {
         return view('livewire.patient.patient-form');

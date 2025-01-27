@@ -26,7 +26,6 @@
                         <div class="col-12 mt-4">
                             <b class="h1">MEDICAL CERTIFICATE</b>
                         </div>
-
                     </div>
                 </div>
                 <div class="form-group" style="position:fixed;top:300px;left:100px;margin-right:130px;">

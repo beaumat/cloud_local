@@ -34,15 +34,6 @@ class MedcertPrint extends Component
 
         if($data) {
 
-
-
-
-
-
-
-
-
-
             $locData =  $this->locationServices->get($data->LOCATION_ID);
 
             if ($locData) {
