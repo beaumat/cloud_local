@@ -35,9 +35,14 @@
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
                                             <button class="btn btn-primary btn-xs w-25"
-                                                wire:click='summary()'>Summary</button>
+                                                wire:click='summary()'  wire:loading.attr='disabled' wire:loading.attr='hidden'>Summary</button>
                                             <button class="btn btn-info btn-xs w-25"
-                                                wire:click='details()'>Details</button>
+                                                wire:click='details()'  wire:loading.attr='disabled' wire:loading.attr='hidden'>Details</button>
+                                            <button class="btn btn-success btn-xs w-25" wire:click='export()'
+                                                wire:loading.attr='disabled' wire:loading.attr='hidden'>Export</button>
+                                            <div wire:loading.delay>
+                                                <span class="spinner"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -69,7 +74,6 @@
                     </div>
                 </div>
                 <div class=" col-12 col-sm-12 col-md-12  col-lg-8" style="max-height: 80vh; overflow-y: auto;">
-
                     @if ($isSummary)
                         @php
                             $DUE_CURRENT = 0;

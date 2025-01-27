@@ -260,7 +260,6 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-6 text-left">
-
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">

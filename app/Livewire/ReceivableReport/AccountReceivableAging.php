@@ -2,11 +2,13 @@
 
 namespace App\Livewire\ReceivableReport;
 
+use App\Exports\ARAgingExportReport;
 use App\Services\AgingServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title("Accounts Receivable Aging Reports")]
 class AccountReceivableAging extends Component
@@ -56,6 +58,36 @@ class AccountReceivableAging extends Component
         $this->D_91_OVER = false;
         $this->isSummary = false;
         $this->detailList =  $this->agingServices->ARAgingDetais($this->DATE, $this->LOCATION_ID, []);
+    }
+
+    public function export()
+    {
+        if ($this->isSummary) {
+            if (!$this->summaryList) {
+                return;
+            }
+            return Excel::download(new ARAgingExportReport(
+                $this->summaryList,
+                $this->isSummary
+            ), 'ar-report-summary-export.xlsx');
+        }
+        if (!$this->detailList) {
+            return;
+        }
+        return Excel::download(new ARAgingExportReport(
+            $this->detailList,
+            $this->isSummary
+        ), 'ar-report-details-export.xlsx');
+    }
+    public function updatedlocationid()
+    {
+
+        try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function render()
     {

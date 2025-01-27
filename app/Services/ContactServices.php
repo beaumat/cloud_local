@@ -33,16 +33,42 @@ class ContactServices
             ->where('TYPE', '=', 4)
             ->exists();
     }
+
     public function getPatientByMed($ID)
     {
         $result = contacts::query()
-            ->select(['MED_CERT_SCHED_ID', 'MED_CERT_NURSE_ID'])
-            ->where('ID', '=', $ID)
-            ->where('TYPE', '=', 3)
+            ->select([
+                'contact.MED_CERT_SCHED_ID',
+                'contact.MED_CERT_NURSE_ID',
+                DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ', ', LEFT(contact.MIDDLE_NAME, 1)) as NAME"),
+                'contact.LAST_NAME',
+                'contact.DATE_OF_BIRTH',
+                'contact.ADDRESS_UNIT_ROOM_FLOOR',
+                'contact.ADDRESS_BUILDING_NAME',
+                'contact.ADDRESS_LOT_BLK_HOUSE_BLDG',
+                'contact.ADDRESS_STREET',
+                'contact.ADDRESS_SUB_VALL',
+                'contact.ADDRESS_BRGY',
+                'contact.ADDRESS_CITY_MUNI',
+                'contact.ADDRESS_PROVINCE',
+                'gender_map.DESCRIPTION as GENDER',
+                'contact.FINAL_DIAGNOSIS',
+                'ms.DESCRIPTION as FULL_DESCRIPTION',
+                'ms.SHORT_DESCRIPTION',
+                'nurse.NAME as NURSE_NAME',
+                'nurse.TAXPAYER_ID as LIC_NUMBER',
+                'contact.LOCATION_ID'
+            ])
+            ->leftJoin('contact as nurse','nurse.ID','=','contact.MED_CERT_NURSE_ID')
+            ->leftJoin('medcert_sched as ms','ms.ID','=','contact.MED_CERT_SCHED_ID')
+            ->leftJoin('gender_map', 'gender_map.ID', '=', 'contact.GENDER')
+            ->where('contact.ID', '=', $ID)
+            ->where('contact.TYPE', '=', 3)
             ->first();
 
         return $result;
     }
+
     public function get(int $ID, int $TYPE)
     {
 
@@ -593,4 +619,5 @@ class ContactServices
                 ]
             );
     }
+
 }

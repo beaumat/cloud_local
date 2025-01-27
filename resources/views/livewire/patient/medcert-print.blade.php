@@ -1,8 +1,6 @@
 <div id="printableContent">
     {{-- Start Content --}}
 
-
-
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -16,59 +14,69 @@
                             <b>{{ $REPORT_HEADER_3 }}</b>
                         </div>
                     @else
-                        {{-- nothing customize --}}
                         <img class="print-logo" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
                     @endif
 
                 </div>
                 <div class="col-12">
-                    <div class="row" style="position:fixed;left:30%; top:170px;">
+                    <div class="row" style="position:fixed;left:35%; top:170px;">
                         <div class="col-12 mt-4">
-                            <b class="h1">MEDICAL CERTIFICATE</b>
+                            <b class="text-xl times-new-roman"><u>MEDICAL CERTIFICATE</u></b>
                         </div>
                     </div>
                 </div>
-                <div class="form-group" style="position:fixed;top:300px;left:100px;margin-right:130px;">
+                <div class="form-group times-new-roman"
+                    style="position:fixed;top:300px;left:100px;margin-right:130px;font-size:23px;">
                     <div class="row">
-                        <div class="col-12 text-left h4">
-                            <b>January 6 2025</b>
-                        </div>
-                        <div class="col-12 text-left h4">
-                            <b>To whom it may concern:</b>
+                        <div class="col-12 text-left ">
+                            <p>{{ $DATE }}</p> <br />
                         </div>
                         <div class="col-12 text-left">
-                            <b class="text-justify h4">
+                            <p>To whom it may concern:</p> <br />
+                        </div>
+                        <div class="col-12 text-left">
+                            <p class="text-justify">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is to certify
-                                that patient MENDEZ, RYAN S., 47 years old, male, resident of Purok 3
-                                Daisy St., Mintal, Davao City was diagnosed with End Stage Renal Disease secondary to
-                                Diabetic Nephropathy and is enrolled/scheduled for Hemodialysis at Vida Dialysis Center,
-                                trice a week, every Monday, Wednesday & Friday.
-                            </b>
+                                that patient <b>{{ $FULLNAME }}</b>., {{ $AGE }} years old,
+                                {{ $GENDER }},
+                                resident of {{ $ADDRESS }} was diagnosed with End Stage Renal Disease secondary to
+                                {{ $FINAL_DIAGNOSIS }} and is enrolled/scheduled for Hemodialysis at
+                                {{ $BRANCH_NAME }},
+                                {{ $SCHED_SHORT_DESC }} a week, every {{ $SCHED_FULL_DESC }}.
+                            </p>
                         </div>
 
                         <div class="col-12 text-left">
-                            <br /> <br /> <br /> <br />
-                            <b class="text-justify h4">
+                            <br /> <br /> <br />
+                            <p class="text-justify">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This certification is
-                                issued to Mr. Mendez for whatever reason it may serve his purpose.
-                            </b>
+                                issued to {{ $PX_LASTNAME }} for whatever reason it may serve his purpose.
+                            </p>
                         </div>
-
-                        <div class="col-12 text-right">
+                        <div class="col-7">
+                        </div>
+                        <div class="col-5 text-center">
                             <br /> <br /> <br /> <br />
                             <div class="center">
-                                <b class="text-justify h4">
-                                    LOUISE MARIE C. BASA, RN, MD
+                                <div class="font-weight-bold ">
+                                    {{ $NURSE_NAME }}, RN, MD
+                                </div>
+                                <div class="">Duty Physician</div>
+                                <div class="">LIC No. {{ $LIC_NO }}</div>
 
-
-                                </b>
-                                <br />Duty Physician
-                                <br /> LIC No. 0167802
 
                             </div>
 
                             <br />
-
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            {{-- --}}
+                            <div class="font-weight-bold ">
+                                NOT VALID WITHOUT SEAL
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -77,39 +85,6 @@
             </div>
         </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     {{-- End Content --}}
 </div>

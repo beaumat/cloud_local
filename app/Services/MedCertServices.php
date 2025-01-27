@@ -10,7 +10,6 @@ class MedCertServices
 
     public function GetList(): object
     {
-
         $result = MedcertSchedule::get();
 
         return $result;
