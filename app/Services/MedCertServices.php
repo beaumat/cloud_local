@@ -15,6 +15,11 @@ class MedCertServices
 
         return $result;
     }
+    public function GetMedcertSchedule(string $id): object
+    {
+        $result =  MedcertSchedule::where("ID", '=', $id)->first();
+        return $result;
+    }
     public function UpdatePatientMedCert(int $CONTACT_ID, int  $MED_CERT_SCHED_ID, int $MED_CERT_NURSE_ID)
     {
 

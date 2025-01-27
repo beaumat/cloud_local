@@ -5,6 +5,7 @@ namespace App\Livewire\Patient;
 use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\LocationServices;
+use App\Services\MedCertServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -19,16 +20,26 @@ class MedcertPrint extends Component
     public string $REPORT_HEADER_3;
     public $BRANCH_NAME;
     public $LOGO_FILE;
+
+
+    public $dateNow;
+
     private $contactServices;
     private $dateServices;
+    
     private $locationServices;
-    public function boot(ContactServices $contactServices,DateServices $dateServices, LocationServices $locationServices) {
+    private $medCertServices;
+    public function boot(ContactServices $contactServices,DateServices $dateServices, LocationServices $locationServices,MedCertServices $medCertServices) {
         $this->contactServices = $contactServices;
         $this->dateServices = $dateServices;
         $this->locationServices = $locationServices;
+        $this->medCertServices = $medCertServices;
     }
     public function mount($id = null)
-    {   
+    {       
+
+        $this->dateNow = $this->dateServices->NowDate();
+
         $this->id = $id;
         $data = $this->contactServices->get($id,3);
 

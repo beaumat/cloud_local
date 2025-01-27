@@ -643,7 +643,7 @@ class PatientForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function öpenMedCert() {
+    public function openMedCert() {
         $this->dispatch('open-med-cert');
     }
     public function render()
