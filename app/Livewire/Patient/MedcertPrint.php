@@ -71,7 +71,7 @@ class MedcertPrint extends Component
 
             $this->ADDRESS =  implode(', ', array_filter($address));
 
-            if ($this->GENDER == "Male") {
+            if ($this->GENDER == "M") {
                 $this->PX_LASTNAME = 'Mr. ' . $data->LAST_NAME;
             } else {
                 $this->PX_LASTNAME = 'Ms. ' . $data->LAST_NAME;
