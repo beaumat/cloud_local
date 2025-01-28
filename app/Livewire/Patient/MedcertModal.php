@@ -38,7 +38,7 @@ class MedcertModal extends Component
 
             $this->MED_CERT_SCHED_ID = $data->MED_CERT_SCHED_ID ?? 0;
             $this->MED_CERT_NURSE_ID = $data->MED_CERT_NURSE_ID ?? 0;
-            $this->contactList = $this->contactServices->getList(2);
+            $this->contactList = $this->contactServices->getList(4);
             $this->medCertScheduleList = $this->medCertServices->GetList();
             $this->showModal = true;
         }

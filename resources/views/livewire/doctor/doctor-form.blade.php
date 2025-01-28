@@ -171,10 +171,10 @@
                                                                                 isDisabled="{{ false }}" />
                                                                         </div>
                                                                         <div class="col-md-12">
-                                                                            <livewire:text-input name="FAX_NO"
-                                                                                titleName="Fax Number"
-                                                                                wire:model='FAX_NO'
-                                                                                isDisabled="{{ false }}" />
+                                                                                   <livewire:text-input name="TAXPAYER_ID"
+                                                                titleName="License No."
+                                                                isDisabled="{{ false }}"
+                                                                wire:model='TAXPAYER_ID' />
 
                                                                         </div>
                                                                         <div class="col-md-12">
@@ -220,10 +220,7 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-md-3">
-                                                            <livewire:text-input name="TAXPAYER_ID"
-                                                                titleName="Taxpayer ID No."
-                                                                isDisabled="{{ false }}"
-                                                                wire:model='TAXPAYER_ID' />
+                                                   
                                                         </div>
                                                         <div class="col-md-4">
 
