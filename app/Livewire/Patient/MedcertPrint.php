@@ -55,7 +55,7 @@ class MedcertPrint extends Component
 
             $this->FULLNAME = $data->NAME ?? '';
             $this->AGE = $this->contactServices->calculateUserAge($data->DATE_OF_BIRTH);
-            $this->GENDER =  $data->GENDER == 'M' ? 'Male' : 'Female';
+            $this->GENDER =  $data->GENDER == 'Male' ? 'Male' : 'Female';
 
 
             $address = [
@@ -71,7 +71,7 @@ class MedcertPrint extends Component
 
             $this->ADDRESS =  implode(', ', array_filter($address));
 
-            if ($this->GENDER == "M") {
+            if ($this->GENDER == "Male") {
                 $this->PX_LASTNAME = 'Mr. ' . $data->LAST_NAME;
             } else {
                 $this->PX_LASTNAME = 'Ms. ' . $data->LAST_NAME;
@@ -93,11 +93,6 @@ class MedcertPrint extends Component
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                 $this->BRANCH_NAME = $locData->NAME_OF_BUSINESS ?? '';
             }
-
-
-
-
-
 
 
             $this->dispatch('preview_print');
