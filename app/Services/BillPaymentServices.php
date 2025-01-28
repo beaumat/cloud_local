@@ -120,6 +120,12 @@ class BillPaymentServices
     }
     public function Delete(int $ID)
     {
+
+
+
+
+
+
         CheckBills::where('CHECK_ID', '=', $ID)
             ->delete();
 
@@ -139,7 +145,8 @@ class BillPaymentServices
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                'a.NAME as BANK_ACCOUNT_NAME'
+                'a.NAME as BANK_ACCOUNT_NAME',
+                'check.STATUS as STATUS_ID'
             ])
             ->join('contact as c', 'c.ID', '=', 'check.PAY_TO_ID')
             ->join('account as a', 'a.ID', '=', 'check.BANK_ACCOUNT_ID')
@@ -210,7 +217,8 @@ class BillPaymentServices
                 'bill.CODE',
                 'bill.DATE',
                 'bill.AMOUNT',
-                'bill.BALANCE_DUE'
+                'bill.BALANCE_DUE',
+                'bill.ACCOUNTS_PAYABLE_ID'
             ])
             ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
             ->where('check_bills.CHECK_ID', '=', $CHECK_ID)
@@ -292,7 +300,7 @@ class BillPaymentServices
             ]);
     }
 
-    public function billPaymentJournal(int $CHECK_ID)
+    public function billPaymentJournal(int $CHECK_ID): object
     {
         $result = Check::query()
             ->select([

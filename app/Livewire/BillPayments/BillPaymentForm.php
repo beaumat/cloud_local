@@ -216,11 +216,35 @@ class BillPaymentForm extends Component
             }
 
             $checkDataBills = $this->billPaymentServices->billPaymentBillsJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkDataBills, $this->LOCATION_ID, $checkbills, $this->DATE, "AP");
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $checkDataBills,
+                $this->LOCATION_ID,
+                $checkbills,
+                $this->DATE,
+                "AP"
+            );
+
             $checkData = $this->billPaymentServices->billPaymentJournalRemaining($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkData, $this->LOCATION_ID, $check, $this->DATE, "BILL");
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $checkData,
+                $this->LOCATION_ID,
+                $check,
+                $this->DATE,
+                "BILL"
+            );
+
             $checkData = $this->billPaymentServices->billPaymentJournal($this->ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkData, $this->LOCATION_ID, $check, $this->DATE, "BILL");
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $checkData,
+                $this->LOCATION_ID,
+                $check,
+                $this->DATE,
+                "BILL"
+            );
+
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
             $debit_sum = (float) $data['DEBIT'];

@@ -42,10 +42,10 @@ class BillingServices
     public function UpdateFile(int $ID, $FILE_NAME, $FILE_PATH)
     {
         Bill::where('ID', $ID)
-        ->update([
-            'FILE_NAME' => $FILE_NAME,
-            'FILE_PATH' => $FILE_PATH
-        ]);
+            ->update([
+                'FILE_NAME' => $FILE_NAME,
+                'FILE_PATH' => $FILE_PATH
+            ]);
     }
     public function get(int $ID)
     {
@@ -529,24 +529,10 @@ class BillingServices
         if ($data) {
             $AMOUNT = (float) $data->AMOUNT;
             $BALANCE = $AMOUNT - $PAY;
-            $STATUS = 0;
-
-            if ($PAY == 0) {
-                // poste 
-                $STATUS = 0;
-            } elseif ($BALANCE <= 0) {
-                //paid
-                $STATUS = 11;
-            } else {
-                // Unpaid
-                $STATUS = 2;
-            }
 
             Bill::where('ID', $BILL_ID)
                 ->update([
                     'BALANCE_DUE'   => $BALANCE,
-                    'STATUS'        => $STATUS,
-                    'STATUS_DATE'   => $this->dateServices->NowDate()
                 ]);
         }
     }
@@ -703,8 +689,4 @@ class BillingServices
 
         return $result;
     }
-
-
-
-
 }
