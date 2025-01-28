@@ -59,7 +59,7 @@
                             <br /> <br /> <br /> <br />
                             <div class="center">
                                 <div class="font-weight-bold ">
-                                    {{ $NURSE_NAME }}, RN, MD
+                                    {{ $NURSE_NAME }}
                                 </div>
                                 <div class="">Duty Physician</div>
                                 <div class="">LIC No. {{ $LIC_NO }}</div>
