@@ -143,7 +143,7 @@ class BillingServices
     public function Delete(int $ID)
     {
         $data = $this->get($ID);
-        if ($data->STATUS ==  0) {
+        if ($data->STATUS == 0 || $data->STATUS == 16) {
             BillItems::where('BILL_ID', $ID)->delete();
             BillExpenses::where('BILL_ID', $ID)->delete();
             Bill::where('ID', $ID)->delete();
@@ -538,7 +538,7 @@ class BillingServices
     }
     public function getBalance(int $BILL_ID): float
     {
-        $data = Bill::where('ID', $BILL_ID)->first();
+        $data = Bill::where('ID', '=', $BILL_ID)->first();
         if ($data) {
             return (float) $data->BALANCE_DUE;
         }

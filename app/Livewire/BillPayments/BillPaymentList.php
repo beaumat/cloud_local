@@ -60,7 +60,7 @@ class BillPaymentList extends Component
                 $data->PAY_TO_ID,
                 $list->ID,
                 $this->billPaymentServices->object_type_check_bills,
-                $list->DATE,
+                $data->DATE,
                 0
             );
         }

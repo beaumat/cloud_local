@@ -508,28 +508,13 @@ class InvoiceServices
         if ($data) {
             $AMOUNT = (float) $data->AMOUNT;
             $BALANCE = $AMOUNT - $PAY;
-            $STATUS = 0;
-
-            if ($PAY == 0) {
-                // DRAFT 
-                $STATUS = 0;
-            } elseif ($BALANCE <= 0) {
-                // PAID
-                $STATUS = 11;
-            } else {
-                // UNPAID
-                $STATUS = 2;
-            }
 
             Invoice::where('ID', '=', $INVOICE_ID)
                 ->update([
-                    'BALANCE_DUE'       => $BALANCE,
-                    'STATUS'            => $STATUS,
-                    'STATUS_DATE'       => $this->dateServices->NowDate()
+                    'BALANCE_DUE'  => $BALANCE,
                 ]);
         }
-
-        $phData = PhilHealth::where('INVOICE_ID', $INVOICE_ID);
+        $phData = PhilHealth::where('INVOICE_ID','=', $INVOICE_ID);
         if ($phData->exists()) {
             $phData->update([
                 'PAYMENT_AMOUNT' => $PAY,

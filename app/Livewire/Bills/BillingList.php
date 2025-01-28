@@ -64,12 +64,86 @@ class BillingList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    private function DeleteJournal(int $BILL_ID)
+    {
+        $billData =   $this->billingServices->get($BILL_ID);
+        if ($billData) {
+            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $BILL_ID);
+
+            $billItem = $this->billingServices->ItemView($BILL_ID);
+            foreach ($billItem as $list) {
+                //GetJournal
+                $this->accountJournalServices->DeleteJournal(
+                    $list->ACCOUNT_ID,
+                    $billData->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $list->ITEM_ID,
+                    $list->ID,
+                    $this->billingServices->object_type_map_bill_item,
+                    $billData->DATE,
+                    $list->AMOUNT >= 0 ? 0 : 1
+                );
+                //Inventory
+
+
+                $this->itemInventoryServices->DeleteInv(
+                    $list->ITEM_ID,
+                    $billData->LOCATION_ID,
+                    $this->billingServices->document_type_id,
+                    $list->ID,
+                    $billData->DATE
+                );
+            }
+
+            $billExpense = $this->billingServices->ExpenseView($BILL_ID);
+            foreach ($billExpense as $list) {
+                $this->accountJournalServices->DeleteJournal(
+                    $list->ACCOUNT_ID,
+                    $billData->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $list->ACCOUNT_ID,
+                    $list->ID,
+                    $this->billingServices->object_type_map_bill_expenses,
+                    $billData->DATE,
+                    $list->AMOUNT >= 0 ?  0 : 1
+                );
+            }
+
+            $this->accountJournalServices->DeleteJournal(
+                $billData->ACCOUNTS_PAYABLE_ID,
+                $billData->LOCATION_ID,
+                $JOURNAL_NO,
+                $billData->VENDOR_ID,
+                $billData->ID,
+                $this->billingServices->object_type_map_bill,
+                $billData->DATE,
+                1
+            );
+
+            $this->accountJournalServices->DeleteJournal(
+                $billData->INPUT_TAX_ACCOUNT_ID,
+                $billData->LOCATION_ID,
+                $JOURNAL_NO,
+                $billData->VENDOR_ID,
+                $billData->ID,
+                $this->billingServices->object_type_map_bill,
+                $billData->DATE,
+                0
+            );
+        }
+    }
     public function delete(int $BILL_ID)
     {
         DB::beginTransaction();
         try {
+
+            $this->DeleteJournal($BILL_ID);
+
             $isDelete = (bool) $this->billingServices->Delete($BILL_ID);
             if ($isDelete) {
+
+
+
                 DB::commit();
                 session()->flash('message', 'Successfully deleted.');
             }

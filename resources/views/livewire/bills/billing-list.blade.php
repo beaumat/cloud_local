@@ -91,7 +91,9 @@
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
 
-                                                @if ($list->STATUS_ID == 0 && auth()->user()->can('vendor.bill.delete'))
+                                                @if (
+                                                    ($list->STATUS_ID == 0 && auth()->user()->can('vendor.bill.delete')) ||
+                                                        ($list->STATUS_ID == 16 && auth()->user()->can('vendor.bill.delete')))
                                                     <button type="button" wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-xs btn-danger">
