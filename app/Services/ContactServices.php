@@ -59,8 +59,8 @@ class ContactServices
                 'nurse.TAXPAYER_ID as LIC_NUMBER',
                 'contact.LOCATION_ID'
             ])
-            ->leftJoin('contact as nurse','nurse.ID','=','contact.MED_CERT_NURSE_ID')
-            ->leftJoin('medcert_sched as ms','ms.ID','=','contact.MED_CERT_SCHED_ID')
+            ->leftJoin('contact as nurse', 'nurse.ID', '=', 'contact.MED_CERT_NURSE_ID')
+            ->leftJoin('medcert_sched as ms', 'ms.ID', '=', 'contact.MED_CERT_SCHED_ID')
             ->leftJoin('gender_map', 'gender_map.ID', '=', 'contact.GENDER')
             ->where('contact.ID', '=', $ID)
             ->where('contact.TYPE', '=', 3)
@@ -563,10 +563,13 @@ class ContactServices
                     'contact.IS_COMPLETE',
                     'gender_map.DESCRIPTION as GENDER',
                     'contact.DATE_OF_BIRTH',
+                    'contact.DATE_EXPIRED',
                     'contact.DATE_ADMISSION',
-                    DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH, CURDATE()) AS AGE'),
+                    DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH ,if( isnull(contact.DATE_EXPIRED) = false, contact.DATE_EXPIRED, CURDATE() )) AS AGE'),
                     'l.NAME as LOCATION_NAME',
-                    'd.PRINT_NAME_AS as DOCTOR_NAME'
+                    'd.PRINT_NAME_AS as DOCTOR_NAME',
+                    'pc.DESCRIPTION as CLASS'
+                 
                 ]
             )
             ->join('contact_type_map as t', function ($join) use (&$TYPE) {
@@ -577,6 +580,7 @@ class ContactServices
             ->leftJoin('location as l', 'l.ID', '=', 'contact.LOCATION_ID')
             ->leftJoin('patient_doctor as pd', 'pd.PATIENT_ID', '=', 'contact.ID')
             ->leftJoin('contact as d', 'd.ID', '=', 'pd.DOCTOR_ID')
+            ->leftJoin('patient_class as pc', 'pc.ID', '=', 'contact.CLASS_ID')
             ->when($doctorId > 0, function ($query) use (&$doctorId) {
                 $query->where('pd.DOCTOR_ID', $doctorId);
             })
@@ -619,5 +623,4 @@ class ContactServices
                 ]
             );
     }
-
 }

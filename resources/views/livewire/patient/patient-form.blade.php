@@ -38,7 +38,7 @@
                                                 isDisabled="{{ $modify }}" wire:model='ACCOUNT_NO' isDisabled=true
                                                 maxlength='20' />
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-1">
                                             <livewire:date-input name="DATE_ADMISSION" titleName="Date Diagnosis"
                                                 isDisabled="{{ $modify }}" wire:model='DATE_ADMISSION' />
                                         </div>
@@ -50,14 +50,18 @@
                                                 isDisabled="{{ $modify }}" :zero="false" titleName="Branch"
                                                 wire:model='LOCATION_ID' />
                                         </div>
-
-                                        <div class="col-md-1">
-
-                                            <livewire:text-input name="NICKNAME" titleName="Account No."
-                                                isDisabled="{{ $modify }}" wire:model='NICKNAME' maxlength='20' />
-
+                                        
+                                        <div class="col-md-2">
+                              
+                                                      <livewire:select-option name="CLASS_ID" :options="$patientClassList"
+                                                isDisabled="{{ $modify }}" :zero="true" titleName="Classification"
+                                                wire:model='CLASS_ID' />
                                         </div>
-                                        <div class="col-md-2 ">
+                                        <div class="col-md-1">
+                                                        <livewire:text-input name="NICKNAME" titleName="Account No."
+                                                isDisabled="{{ $modify }}" wire:model='NICKNAME' maxlength='20' />
+                                        </div>
+                                        <div class="col-md-1 ">
 
                                             <livewire:date-input name="DATE_EXPIRED" titleName="Date Expired"
                                                 isDisabled="{{ $modify }}" wire:model='DATE_EXPIRED' />

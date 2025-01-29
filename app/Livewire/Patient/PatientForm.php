@@ -15,6 +15,7 @@ use App\Services\ContactRequirementServices;
 use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\LocationServices;
+use App\Services\PatientClassServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
@@ -128,7 +129,8 @@ class PatientForm extends Component
     public string $CUSTOM_FIELD4;
     public string $CUSTOM_FIELD5;
     public  $DATE_EXPIRED;
-
+    public int $CLASS_ID;
+    public $patientClassList = [];
     public function updateddateofbirth()
     {
         $this->age = $this->contactServices->calculateUserAge($this->DATE_OF_BIRTH);
@@ -153,19 +155,21 @@ class PatientForm extends Component
     public string $DATE_ADMISSION;
 
     public int $LOCK_LOCATION_ID = 0;
-
+    private $patientClassServices;
     public function boot(
         ContactServices $contactServices,
         LocationServices $locationServices,
         UserServices $userServices,
         ContactRequirementServices $contactRequirementServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        PatientClassServices $patientClassServices
     ) {
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->contactRequirementServices = $contactRequirementServices;
         $this->dateServices = $dateServices;
+        $this->patientClassServices = $patientClassServices;
     }
 
     public $refreshToggle = false;
@@ -181,7 +185,7 @@ class PatientForm extends Component
             $this->LOCK_LOCATION_ID = $this->userServices->getLocationDefault();
         }
 
-
+        $this->patientClassList = $this->patientClassServices->getList();
         $this->taxList = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', '=', 3)->orderBy('ID', 'desc')->get();
         $this->salesMan = Contacts::query()->select('ID', 'NAME')->where('INACTIVE', '0')->where('TYPE', '2')->get();
         $this->contactGroup = ContactGroup::query()->where('TYPE', $this->TYPE)->get();
@@ -239,6 +243,7 @@ class PatientForm extends Component
                 $this->LONG_HRS_DURATION = $contact->LONG_HRS_DURATION ? $contact->LONG_HRS_DURATION : false;
                 $this->DATE_ADMISSION = $contact->DATE_ADMISSION ? $contact->DATE_ADMISSION : '';
                 $this->DATE_EXPIRED  = $contact->DATE_EXPIRED ? $contact->DATE_EXPIRED : null;
+                $this->CLASS_ID = $contact->CLASS_ID ? $contact->CLASS_ID : 0;
                 $this->ADDRESS_UNIT_ROOM_FLOOR = $contact->ADDRESS_UNIT_ROOM_FLOOR ?? '';
                 $this->ADDRESS_BUILDING_NAME = $contact->ADDRESS_BUILDING_NAME ?? '';
                 $this->ADDRESS_LOT_BLK_HOUSE_BLDG = $contact->ADDRESS_LOT_BLK_HOUSE_BLDG ?? '';
@@ -344,6 +349,7 @@ class PatientForm extends Component
         $this->LONG_HRS_DURATION = false;
         $this->DATE_ADMISSION = $this->dateServices->NowDate();
         $this->DATE_EXPIRED = null;
+        $this->CLASS_ID = 0;
         $this->ADDRESS_UNIT_ROOM_FLOOR = '';
         $this->ADDRESS_BUILDING_NAME = '';
         $this->ADDRESS_LOT_BLK_HOUSE_BLDG = '';
@@ -489,7 +495,8 @@ class PatientForm extends Component
                 'HEIGHT' => $this->HEIGHT,
                 'PATIENT_TYPE_ID' => $this->PATIENT_TYPE_ID,
                 'DATE_ADMISSION' => $this->DATE_ADMISSION,
-                'DATE_EXPIRED' =>  $this->DATE_EXPIRED ? $this->DATE_EXPIRED : null
+                'DATE_EXPIRED' =>  $this->DATE_EXPIRED ? $this->DATE_EXPIRED : null,
+                'CLASS_ID'      => $this->CLASS_ID > 0 ? $this->CLASS_ID : 0
             ]);
     }
     public function save()
@@ -503,8 +510,9 @@ class PatientForm extends Component
                 'DATE_OF_BIRTH'     => 'required',
                 'HEIGHT'            => 'required|not_in:0',
                 'LOCATION_ID'       => 'required|not_in:0',
-                'DATE_ADMISSION'    => 'required',
-                'PATIENT_TYPE_ID'   => 'required|not_in:0'
+                'DATE_ADMISSION'    => 'required|date',
+                'PATIENT_TYPE_ID'   => 'required|not_in:0',
+                'CLASS_ID'          => 'required|exists:patient_class,id'
             ],
             [],
             [
@@ -515,7 +523,8 @@ class PatientForm extends Component
                 'HEIGHT'            => 'Height',
                 'LOCATION_ID'       => 'Branch',
                 'DATE_ADMISSION'    => 'Date Admission',
-                'PATIENT_TYPE_ID'   => 'Type'
+                'PATIENT_TYPE_ID'   => 'Type',
+                'CLASS_ID'          => 'Classification'
             ]
         );
 
@@ -643,7 +652,8 @@ class PatientForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function openMedCert() {
+    public function openMedCert()
+    {
         $this->dispatch('open-med-cert');
     }
     public function render()

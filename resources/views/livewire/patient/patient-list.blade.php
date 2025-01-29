@@ -138,8 +138,10 @@
                                                 @endif
                                             @endif
                                         </th>
+                                        
                                         <th>
-                                            <span name="ageSort" type="button" wire:click="sorting('AGE')">Age</span>
+                                            <span name="ageSort" type="button"
+                                                wire:click="sorting('AGE')">Age</span>
                                             @if ($sortby == 'AGE')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -149,6 +151,19 @@
                                             @endif
 
                                         </th>
+                                        <th class="text-center">
+                                            <span name="dateExpired" type="button"
+                                                wire:click="sorting('contact.DATE_EXPIRED')">Date Expired
+                                            </span>
+                                            @if ($sortby == 'contact.DATE_EXPIRED')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
+                                    
                                         <th class="col-1">
                                             <span name="philhealthSort" type="button"
                                                 wire:click="sorting('contact.PIN')">Philhealth
@@ -206,6 +221,19 @@
                                                 @endif
                                             @endif
                                         </th>
+
+
+                                        <th>
+                                            <span name="class" type="button"
+                                                wire:click="sorting('pc.DESCRIPTION')">Classification</span>
+                                            @if ($sortby == 'pc.DESCRIPTION')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
                                         <th class="text-center">
                                             <span name="isInactive" type="button"
                                                 wire:click="sorting('contact.INACTIVE')">Inactive</span>
@@ -243,6 +271,9 @@
                                             <td class="text-center">
                                                 {{ date('m/d/Y', strtotime($list->DATE_OF_BIRTH)) }}</td>
                                             <td> {{ $list->AGE }}</td>
+                                            <td class="text-center">
+                                                {{ $list->DATE_EXPIRED ? date('m/d/Y', strtotime($list->DATE_EXPIRED)) : '' }}
+                                            </td>
                                             <td> {{ $list->PIN }}</td>
                                             <td> {{ $list->DOCTOR_NAME }}</td>
                                             <td class="text-center">
@@ -256,6 +287,7 @@
                                                     No
                                                 @endif
                                             </td>
+                                            <td>{{ $list->CLASS }}</td>
                                             <td class="text-center font-weight-bold">
                                                 @if ($list->INACTIVE)
                                                     Yes
