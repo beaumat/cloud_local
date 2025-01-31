@@ -5,9 +5,13 @@ namespace App\Livewire\Patient;
 use App\Services\PatientTransferServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class TransferRecord extends Component
 {
+
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     #[Reactive]
     public int $PATIENT_ID;
 
@@ -16,8 +20,6 @@ class TransferRecord extends Component
 
     public string $E_NOTES;
     public int $E_ID;
-
-    public $dataList = [];
     private $patientTransferServices;
     public function boot(PatientTransferServices $patientTransferServices)
     {
@@ -48,8 +50,7 @@ class TransferRecord extends Component
 
     public function render()
     {
-        $this->dataList = $this->patientTransferServices->list($this->PATIENT_ID);
-
-        return view('livewire.patient.transfer-record');
+        $dataList = $this->patientTransferServices->list($this->PATIENT_ID,25);
+        return view('livewire.patient.transfer-record',['dataList' => $dataList]);
     }
 }

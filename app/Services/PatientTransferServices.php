@@ -33,16 +33,18 @@ class PatientTransferServices
         PatientTransfer::where('ID', '=', $ID)->delete();
     }
 
-    public function list(int $PATIENT_ID)
+    public function list(int $PATIENT_ID, int $perPage)
     {
         $result = PatientTransfer::query()
             ->select([
+                'ID',
                 'DATE_TRANSFER',
                 'NOTES'
             ])
             ->where('PATIENT_ID', '=', $PATIENT_ID)
-            ->orderBy('DATE_TRANSFER', 'asc')
-            ->get();
+            ->orderBy('DATE_TRANSFER', 'desc')
+            ->paginate($perPage);
+
 
         return $result;
     }
