@@ -71,8 +71,8 @@
                                     <i class="fas fa-ban" aria-hidden="true"></i>
                                 </button>
                             @else
-                                <button title="Edit" id="editbtn"
-                                    wire:click="editExpenses( {{ $list->ID }}, {{ $list->AMOUNT }} ,{{ $list->TAXABLE }},'{{ $list->PARTICULARS }}',{{ $list->CLASS_ID > 0 ? $list->CLASS_ID : 0 }})"
+                                <button title="Edit" id="editbtn{{ $list->ID }}" type="button"
+                                    wire:click="editExpenses( {{ $list->ID }})"
                                     class="btn btn-xs btn-info">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>

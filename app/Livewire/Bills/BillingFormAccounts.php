@@ -178,13 +178,16 @@ class BillingFormAccounts extends Component
         $this->ACCOUNT_CODE = '';
         $this->ACCOUNT_DESCRIPTION = '';
     }
-    public function editExpenses(int $lineId, float $amount, bool $tax, string $particulars, int $Class_id)
+    public function editExpenses(int $lineId)
     {
-        $this->lineAmount = $amount;
-        $this->lineTaxable = $tax;
-        $this->lineParticulars = $particulars;
-        $this->lineClassId = $Class_id;
-        $this->editExpensesId = $lineId;
+        $data = $this->billingServices->ExpenseGet($lineId, $this->BILL_ID);
+        if ($data) {
+            $this->lineAmount = $data->AMOUNT;
+            $this->lineTaxable = $data->TAXABLE;
+            $this->lineParticulars = $data->PARTICULARS;
+            $this->lineClassId = $data->CLASS_ID ?? 0;
+            $this->editExpensesId = $data->ID;
+        }
     }
     public function cancelExpenses()
     {
