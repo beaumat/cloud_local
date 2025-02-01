@@ -95,7 +95,8 @@ class ItemSoaServices
         return $result;
     }
 
-    public function GetList(int $LOCATION_ID) {
+    public function GetList(int $LOCATION_ID)
+    {
         $result = ItemSoa::query()
             ->select([
                 'soa_item.ID',
@@ -110,6 +111,28 @@ class ItemSoaServices
             ->orderBy('TYPE', 'asc')
             ->orderBy('LINE', 'asc')
             ->get();
+
+        return $result;
+    }
+    public function getItemByCategory(int $LOCATION_ID, int $TYPE)
+    {
+        $result =   ItemSoa::where('TYPE', '=', $TYPE)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->get();
+
+
+        return $result;
+    }
+    public function getItemBySingleCategoryWithSum(int $LOCATION_ID, int $TYPE)
+    {
+        $result =   ItemSoa::where('TYPE', '=', $TYPE)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->sum('RATE');
+       
+            if ($result > 0) {
+            return (float) $result;
+        }
+        return 0.00;
 
         return $result;
     }

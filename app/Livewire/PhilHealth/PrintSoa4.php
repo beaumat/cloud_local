@@ -4,6 +4,7 @@ namespace App\Livewire\PhilHealth;
 
 use App\Services\ContactServices;
 use App\Services\HemoServices;
+use App\Services\ItemSoaServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
 use App\Services\PhilHealthServices;
@@ -108,17 +109,35 @@ class PrintSoa4 extends Component
     public string $REPORT_HEADER_3;
     public string $LOGO_FILE;
     private $patientDoctorServices;
+    private $itemSoaServices;
 
-
-    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, LocationServices $locationServices, HemoServices $hemoServices, PatientDoctorServices $patientDoctorServices)
+    public $drugMedList = [];
+    public $suppliesList = [];
+    public $adminFeeList = [];
+    public $totalLab = 0;
+    public function boot(PhilHealthServices $philHealthServices,
+     ContactServices $contactServices, 
+     LocationServices $locationServices,
+      HemoServices $hemoServices, 
+      PatientDoctorServices $patientDoctorServices,
+       ItemSoaServices $itemSoaServices)
     {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
         $this->patientDoctorServices = $patientDoctorServices;
-    }
+        $this->itemSoaServices = $itemSoaServices;
 
+    }
+    public function loadListItem() {
+        $this->drugMedList = $this->itemSoaServices->getItemByCategory($this->LOCATION_ID,1);
+        $this->suppliesList = $this->itemSoaServices->getItemByCategory($this->LOCATION_ID,2);
+        $this->adminFeeList = $this->itemSoaServices->getItemByCategory($this->LOCATION_ID,4);
+        $this->totalLab = $this->itemSoaServices->getItemBySingleCategoryWithSum($this->LOCATION_ID,3 );
+
+    
+    }
     public function profFeeList($PHIC_ID)
     {
         $this->i = 0;
@@ -159,6 +178,8 @@ class PrintSoa4 extends Component
                 $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                 $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
+
+                $this->loadListItem();
             }
             $this->i = 0;
             $this->feeList  = $this->patientDoctorServices->GetbyTemp($PATIENT_ID);
@@ -184,6 +205,7 @@ class PrintSoa4 extends Component
             $data = $this->philHealthServices->get($ID);
             if ($data) {
                 $this->LOCATION_ID =        $data->LOCATION_ID;
+                $this->loadListItem();
                 $this->CONTACT_ID =         $data->CONTACT_ID;
                 $this->CODE =               $data->CODE;
                 $this->DATE_ADMITTED =      $data->DATE_ADMITTED;
