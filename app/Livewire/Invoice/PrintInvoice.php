@@ -15,7 +15,7 @@ use Livewire\Component;
 class PrintInvoice extends Component
 {
 
-    public int $rows =0;
+    public int $rows = 0;
     public string $LOGO_FILE = '';
     public int $INVOICE_ID;
     public string $CODE;
@@ -28,8 +28,10 @@ class PrintInvoice extends Component
     public float $AMOUNT;
     public string $NOTES;
     public string $PO_NUMBER;
+    public string $DR_NAME;
+    public string $ADDRESS;
+    public string $CONTACT_NO;
     public $itemList = [];
-
     private $invoiceServices;
     private $contactServices;
     private $locationServices;
@@ -37,8 +39,12 @@ class PrintInvoice extends Component
     public string $REPORT_HEADER_1;
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
-    public function boot(InvoiceServices $invoiceServices, ContactServices $contactServices, LocationServices $locationServices, PaymentTermServices $paymentTermServices)
-    {
+    public function boot(
+        InvoiceServices $invoiceServices,
+        ContactServices $contactServices,
+        LocationServices $locationServices,
+        PaymentTermServices $paymentTermServices
+    ) {
         $this->invoiceServices = $invoiceServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
@@ -58,10 +64,14 @@ class PrintInvoice extends Component
             $this->AMOUNT = $data->AMOUNT;
             $this->PO_NUMBER = $data->PO_NUMBER ?? '';
             $this->TERMS = $this->paymentTermServices->get($data->PAYMENT_TERMS_ID ?? 0);
-            $con = $this->contactServices->getSingleData($this->CUSTOMER_ID);
 
+
+            $con = $this->contactServices->getSingleData($this->CUSTOMER_ID);
             if ($con) {
                 $this->CONTACT_NAME = $con->PRINT_NAME_AS;
+                $this->CONTACT_NO = $con->TELEPHONE_NO ?? ' ' .  $con->MOBILE_NO ?? ' ';
+                $this->ADDRESS = $con->POSTAL_ADDRESS ?? '';
+                $this->DR_NAME = "";
             }
             $locData = $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {

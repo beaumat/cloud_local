@@ -25,21 +25,21 @@
                 <div class="col-8  text-left">
                     <div class="row">
                         <div class="col-2"> Client Name : </div>
-                        <div class="col-10 bottom-line2"> {{ $CONTACT_NAME }}</div>
+                        <div class="col-10 bottom-line2"> &nbsp;{{ $CONTACT_NAME }}</div>
                     </div>
                     <div class="row">
                         <div class="col-2"> Delivery : </div>
-                        <div class="col-10 bottom-line"> &nbsp; </div>
+                        <div class="col-10 bottom-line2"> &nbsp; {{ $DR_NAME }} </div>
                     </div>
 
                     <div class="row">
                         <div class="col-2"> Address : </div>
-                        <div class="col-10 bottom-line"> &nbsp; </div>
+                        <div class="col-10 bottom-line2"> &nbsp; {{ $ADDRESS }} </div>
                     </div>
 
                     <div class="row">
                         <div class="col-2"> Phone : </div>
-                        <div class="col-10 bottom-line"> &nbsp; </div>
+                        <div class="col-10 bottom-line2"> &nbsp; {{ $CONTACT_NO }} </div>
                     </div>
                     {{-- <div class="row">
                         <div class="col-2"> Location : </div>
@@ -50,21 +50,21 @@
                 <div class="col-4 ">
                     <div class="row ">
                         <div class="col-4 text-right"> DR No. : </div>
-                        <div class="col-6 bottom-line"> {{ $CODE }}</div>
+                        <div class="col-6 bottom-line2"> {{ $CODE }}</div>
                     </div>
                     <div class="row ">
                         <div class="col-4 text-right"> PO No. : </div>
-                        <div class="col-6 bottom-line"> {{ $PO_NUMBER }}</div>
+                        <div class="col-6 bottom-line2"> {{ $PO_NUMBER }}</div>
                     </div>
                     <div class="row">
                         <div class="col-4 text-right">Date :</div>
-                        <div class="col-6 bottom-line">
+                        <div class="col-6 bottom-line2">
                             {{ date('m/d/Y', strtotime($DATE)) }}
                         </div>
                     </div>
                     <div class="row ">
                         <div class="col-4 text-right"> Terms. : </div>
-                        <div class="col-6 bottom-line"> {{ $TERMS }}</div>
+                        <div class="col-6 bottom-line2"> {{ $TERMS }}</div>
                     </div>
                 </div>
                 <div class="col-12 text-center mt-4 ">
@@ -72,11 +72,11 @@
                         <thead>
                             <tr class="bgBlack text-white">
                                 <th class="text-left">&nbsp;No.</th>
-                                <th class="col-7 text-left">Item Description</th>
+                                <th class="col-10 text-left">Item Description</th>
                                 <th class="col-1 text-right">QTY</th>
                                 <th class="col-1">UOM</th>
-                                <th class="col-1 text-right">Rate</th>
-                                <th class="col-2 text-right">Total</th>
+                                {{-- <th class="col-1 text-right">Rate</th>
+                                <th class="col-2 text-right">Total</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -89,11 +89,11 @@
                                     <td class="text-left p-1">{{ $list->DESCRIPTION }}</td>
                                     <td class="text-right">{{ number_format($list->QUANTITY, 1) }}&nbsp;</td>
                                     <td>{{ $list->UNIT_NAME }}</td>
-                                    <td class="text-right">{{ number_format($list->RATE, 2) }}&nbsp;</td>
-                                    <td class="text-right">{{ number_format($list->AMOUNT, 2) }}&nbsp;</td>
+                                    {{-- <td class="text-right">{{ number_format($list->RATE, 2) }}&nbsp;</td>
+                                    <td class="text-right">{{ number_format($list->AMOUNT, 2) }}&nbsp;</td> --}}
                                 </tr>
                             @endforeach
-                            <tr class=" border-white border-top border-left border-right ">
+                            {{-- <tr class=" border-white border-top border-left border-right ">
                                 <td class="text-left p-1"></td>
                                 <td class="text-left p-1"></td>
                                 <td></td>
@@ -101,7 +101,7 @@
                                 <td></td>
                                 <td class="text-right"><b class="text-lg text-danger">{{ number_format($AMOUNT, 2) }}
                                         &nbsp;</b></td>
-                            </tr>
+                            </tr> --}}
                         </tbody>
                     </table>
                 </div>
@@ -111,7 +111,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <div class="row mt-4">
+                    <div class="row mt-2">
                         <div class="col-1">
                         </div>
                         <div class="col-3 text-left">
@@ -131,7 +131,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <div class="row mt-4">
+                    <div class="row mt-2">
                         <div class="col-1">
                         </div>
                         <div class="col-3 text-left">
