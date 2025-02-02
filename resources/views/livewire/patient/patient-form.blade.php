@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-<section class="content">
+    <section class="content">
         <div class="container-fluid">
             <div class="row">
                 @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
@@ -50,15 +50,15 @@
                                                 isDisabled="{{ $modify }}" :zero="false" titleName="Branch"
                                                 wire:model='LOCATION_ID' />
                                         </div>
-                                        
+
                                         <div class="col-md-2">
-                              
-                                                      <livewire:select-option name="CLASS_ID" :options="$patientClassList"
-                                                isDisabled="{{ $modify }}" :zero="true" titleName="Classification"
-                                                wire:model='CLASS_ID' />
+
+                                            <livewire:select-option name="CLASS_ID" :options="$patientClassList"
+                                                isDisabled="{{ $modify }}" :zero="true"
+                                                titleName="Classification" wire:model='CLASS_ID' />
                                         </div>
                                         <div class="col-md-1">
-                                                        <livewire:text-input name="NICKNAME" titleName="Account No."
+                                            <livewire:text-input name="NICKNAME" titleName="Account No."
                                                 isDisabled="{{ $modify }}" wire:model='NICKNAME' maxlength='20' />
                                         </div>
                                         <div class="col-md-1 ">
@@ -159,6 +159,27 @@
                                                         aria-controls="custom-content-below-philhealth-info"
                                                         aria-selected="false">
                                                         Philhealth Record
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('confinement')"
+                                                        class="nav-link @if ($selectTab == 'confinement') active @endif"
+                                                        id="custom-content-below-confinement-info-tab" data-toggle="pill"
+                                                        href="#custom-content-below-confinement-info" role="tab"
+                                                        aria-controls="custom-content-below-confinement-info"
+                                                        aria-selected="false">
+                                                        Confinement
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('transfer')"
+                                                        class="nav-link @if ($selectTab == 'transfer') active @endif"
+                                                        id="custom-content-below-transfer-info-tab" data-toggle="pill"
+                                                        href="#custom-content-below-transfer-info" role="tab"
+                                                        aria-controls="custom-content-below-transfer-info"
+                                                        aria-selected="false">
+                                                        Transfer
                                                     </a>
                                                 </li>
                                             @endcan
@@ -745,6 +766,24 @@
                                                     <div class="container-fluid"
                                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                         @livewire('Patient.PhilhealthRecord', ['CONTACT_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane fade @if ($selectTab == 'confinement') show active @endif"
+                                                    id="custom-content-below-confinement-info" role="tabpanel"
+                                                    aria-labelledby="custom-content-below-confinement-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        @livewire('Patient.ConfinementRecord', ['PATIENT_ID' => $ID])
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane fade @if ($selectTab == 'transfer') show active @endif"
+                                                    id="custom-content-below-transfer-info" role="tabpanel"
+                                                    aria-labelledby="custom-transfer-below-transfer-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        @livewire('Patient.TransferRecord', ['PATIENT_ID' => $ID])
                                                     </div>
                                                 </div>
                                             @endcan
