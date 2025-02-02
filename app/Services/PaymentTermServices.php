@@ -26,6 +26,9 @@ class PaymentTermServices
 
         return $netDueDate->format('Y-m-d');
     }
+    public function get(int $ID) {
+       return (string) PaymentTerms::where('INACTIVE', '0')->where('ID', $ID)->first()->DESCRIPTION ?? '';
+    }
     public function getList()
     {
         $result = PaymentTerms::query()->select(['ID', 'DESCRIPTION'])->where('INACTIVE', '0')->get();

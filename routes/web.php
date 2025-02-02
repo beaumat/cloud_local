@@ -271,6 +271,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', InvoiceForm::class)->name('invoice_create')->middleware(['permission:customer.invoice.create']);
             Route::get('/{id}/edit', InvoiceForm::class)->name('invoice_edit')->middleware(['permission:customer.invoice.view']);
             Route::get('/{id}/print', PrintInvoice::class)->name('invoice_print')->middleware(['permission:customer.invoice.print']);
+       
         });
 
         Route::prefix('/sales-receipt')->group(function () {

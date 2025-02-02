@@ -13,27 +13,48 @@
                         </div>
                     @else
                         {{-- nothing customize --}}
-                        <img class="print-logo" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
+                        <img class="print-logo" style="top:0px; width: 700px;"
+                            src="{{ asset("dist/logo/$LOGO_FILE") }}" />
                     @endif
                 </div>
-                 <div class="col-12 text-center">
+                <div class="col-12 text-center">
                     <b class="h3">Delivery Receipt</b>
+                    <br />
+                    <br />
                 </div>
                 <div class="col-8  text-left">
                     <div class="row">
-                        <div class="col-2"> Customer : </div>
-                        <div class="col-10 bottom-line"> {{ $CONTACT_NAME }}</div>
+                        <div class="col-2"> Client Name : </div>
+                        <div class="col-10 bottom-line2"> {{ $CONTACT_NAME }}</div>
                     </div>
                     <div class="row">
+                        <div class="col-2"> Delivery : </div>
+                        <div class="col-10 bottom-line"> &nbsp; </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2"> Address : </div>
+                        <div class="col-10 bottom-line"> &nbsp; </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2"> Phone : </div>
+                        <div class="col-10 bottom-line"> &nbsp; </div>
+                    </div>
+                    {{-- <div class="row">
                         <div class="col-2"> Location : </div>
                         <div class="col-10 bottom-line"> {{ $LOCATION_NAME }}</div>
-                    </div>
+                    </div> --}}
                 </div>
-               
+
                 <div class="col-4 ">
                     <div class="row ">
-                        <div class="col-4 text-right"> Reference No. : </div>
+                        <div class="col-4 text-right"> DR No. : </div>
                         <div class="col-6 bottom-line"> {{ $CODE }}</div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-4 text-right"> PO No. : </div>
+                        <div class="col-6 bottom-line"> {{ $PO_NUMBER }}</div>
                     </div>
                     <div class="row">
                         <div class="col-4 text-right">Date :</div>
@@ -41,26 +62,30 @@
                             {{ date('m/d/Y', strtotime($DATE)) }}
                         </div>
                     </div>
+                    <div class="row ">
+                        <div class="col-4 text-right"> Terms. : </div>
+                        <div class="col-6 bottom-line"> {{ $TERMS }}</div>
+                    </div>
                 </div>
                 <div class="col-12 text-center mt-4 ">
                     <table class="w-100" border="1">
                         <thead>
                             <tr class="bgBlack text-white">
-                                <th class="col-1 text-left">No.</th>
-                                <th class="col-6 text-left">Item Description</th>
+                                <th class="text-left">&nbsp;No.</th>
+                                <th class="col-7 text-left">Item Description</th>
                                 <th class="col-1 text-right">QTY</th>
                                 <th class="col-1">UOM</th>
                                 <th class="col-1 text-right">Rate</th>
-                                <th class="col-2 text-right">TOTAL</th>
+                                <th class="col-2 text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($itemList as $list)
-                                <tr  class="border-dark border-bottom">
+                                <tr class="border-dark border-bottom">
                                     @php
                                         $rows = $rows + 1;
                                     @endphp
-                                    <td class="text-left p-1">{{ $rows }}</td>
+                                    <td class="text-left p-1">&nbsp;{{ $rows }}</td>
                                     <td class="text-left p-1">{{ $list->DESCRIPTION }}</td>
                                     <td class="text-right">{{ number_format($list->QUANTITY, 1) }}&nbsp;</td>
                                     <td>{{ $list->UNIT_NAME }}</td>
@@ -74,7 +99,8 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td class="text-right"><b>{{ number_format($AMOUNT, 2) }} &nbsp;</b></td>
+                                <td class="text-right"><b class="text-lg text-danger">{{ number_format($AMOUNT, 2) }}
+                                        &nbsp;</b></td>
                             </tr>
                         </tbody>
                     </table>
@@ -86,19 +112,41 @@
                 </div>
                 <div class="col-12">
                     <div class="row mt-4">
+                        <div class="col-1">
+                        </div>
                         <div class="col-3 text-left">
                             <div class="form-group row  mt-4">
                                 <div class="col-12 text-center bottom-line"> <b>&nbsp; </b> </div>
-                                <div class="col-12 text-center"><i>Encoded by</i></div>
+                                <div class="col-12 text-center"><i>Checked by</i></div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
                         </div>
                         <div class="col-3 text-right">
-                            {{-- <div class="form-group row  mt-4">
-                                <div class="col-12 text-center bottom-line"><b>&nbsp;</b></div>
-                                <div class="col-12 text-center"><i>Received By</i></div>
-                            </div> --}}
+                            <div class="form-group row  mt-4">
+                                <div class="col-12 text-center bottom-line"> <b>&nbsp; </b> </div>
+                                <div class="col-12 text-center"><i>Delivered by</i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row mt-4">
+                        <div class="col-1">
+                        </div>
+                        <div class="col-3 text-left">
+                            <div class="form-group row  mt-4">
+                                <div class="col-12 text-center bottom-line"> <b>&nbsp; </b> </div>
+                                <div class="col-12 text-center"><i>Approved by</i></div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                        </div>
+                        <div class="col-3 text-right">
+                            <div class="form-group row  mt-4">
+                                <div class="col-12 text-center bottom-line"> <b>&nbsp; </b> </div>
+                                <div class="col-12 text-center"><i>Received by</i></div>
+                            </div>
                         </div>
                     </div>
                 </div>

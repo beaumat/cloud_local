@@ -5,6 +5,7 @@ namespace App\Livewire\Invoice;
 use App\Services\ContactServices;
 use App\Services\InvoiceServices;
 use App\Services\LocationServices;
+use App\Services\PaymentTermServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -19,26 +20,29 @@ class PrintInvoice extends Component
     public int $INVOICE_ID;
     public string $CODE;
     public string $DATE;
+    public string $TERMS;
     public  int $CUSTOMER_ID;
     public string $CONTACT_NAME;
     public int $LOCATION_ID;
     public string $LOCATION_NAME;
     public float $AMOUNT;
     public string $NOTES;
+    public string $PO_NUMBER;
     public $itemList = [];
 
     private $invoiceServices;
     private $contactServices;
     private $locationServices;
-
+    private $paymentTermServices;
     public string $REPORT_HEADER_1;
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
-    public function boot(InvoiceServices $invoiceServices, ContactServices $contactServices, LocationServices $locationServices)
+    public function boot(InvoiceServices $invoiceServices, ContactServices $contactServices, LocationServices $locationServices, PaymentTermServices $paymentTermServices)
     {
         $this->invoiceServices = $invoiceServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
+        $this->paymentTermServices = $paymentTermServices;
     }
     public function mount($id = null)
     {
@@ -52,6 +56,8 @@ class PrintInvoice extends Component
             $this->DATE = $data->DATE;
             $this->NOTES = $data->NOTES;
             $this->AMOUNT = $data->AMOUNT;
+            $this->PO_NUMBER = $data->PO_NUMBER ?? '';
+            $this->TERMS = $this->paymentTermServices->get($data->PAYMENT_TERMS_ID ?? 0);
             $con = $this->contactServices->getSingleData($this->CUSTOMER_ID);
 
             if ($con) {
