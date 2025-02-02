@@ -150,6 +150,7 @@
                                                     @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
+
                                                 @if ($STATUS == 0)
                                                     <button type="button" wire:click='getPosted()'
                                                         class="btn btn-sm btn-warning"
@@ -170,6 +171,11 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 0)
+                                            <button type="button" class="btn btn-sm btn-success"
+                                                wire:click='makeBill()'>
+                                                Make Bill
+                                            </button>
+
                                             <a id="new" title="Create"
                                                 href="{{ route('vendorspurchase_order_create') }}"
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
@@ -242,4 +248,6 @@
             </div>
         </section>
     @endif
+
+    @livewire('PurchaseOrder.MakeBill')
 </div>

@@ -27,7 +27,7 @@ class PurchaseOrderFormItems extends Component
     public string $ITEM_DESCRIPTION;
     public float $QUANTITY;
     public int $UNIT_ID;
-    public int $BASE_UNIT_ID;
+
     public float $RATE;
     public int $RATE_TYPE;
     public float $AMOUNT;
@@ -122,7 +122,7 @@ class PurchaseOrderFormItems extends Component
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->PURCHASE_DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
-                $this->BASE_UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
+                $this->UNIT_ID = $item->BASE_UNIT_ID > 0 ? $item->BASE_UNIT_ID : 1;
                 $this->getAmount();
             }
         }
@@ -220,22 +220,24 @@ class PurchaseOrderFormItems extends Component
         } catch (\Throwable $th) {
         }
     }
-    public function editItem(int $lineId, float $lineQty, int $lineUnitId, float $lineRate, float $lineAmount, bool $lineTax, int $itemId)
+    public function editItem(int $lineId)
     {
-        $this->editItemId = $lineId;
-        $this->lineQty = $lineQty;
-        $this->lineUnitId = $lineUnitId;
-        $this->lineRate = $lineRate;
-        $this->lineAmount = $lineAmount;
-        $this->lineTax = $lineTax;
-        $this->lineItemId = $itemId;
+        $data = $this->purchaseOrderServices->ItemGet($lineId, $this->PO_ID);
+
+        if ($data) {
+            $this->editItemId = $data->ID;
+            $this->lineQty = $data->QUANTITY;
+            $this->lineUnitId = $data->UNIT_ID  ?? 0;
+            $this->lineRate = $data->RATE ?? 0;
+            $this->lineAmount = $data->AMOUNT ?? 0;
+            $this->lineTax = $data->TAXABLE ?? 0;
+            $this->lineItemId = $data->ITEM_ID;
+        }
     }
-    public function updateItem(int $Id)
+    public function updateItem()
     {
-
-
         $this->validate(
-            [    
+            [
                 'lineQty' => 'required|not_in:0',
             ],
             [],
@@ -243,7 +245,7 @@ class PurchaseOrderFormItems extends Component
                 'lineQty' => 'Quantity',
             ]
         );
-        
+
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
 
@@ -256,7 +258,7 @@ class PurchaseOrderFormItems extends Component
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->lineItemId, $this->lineUnitId ?? 0);
 
             $this->purchaseOrderServices->ItemUpdate(
-                $Id,
+                $this->editItemId,
                 $this->PO_ID,
                 $this->lineItemId,
                 $this->lineQty,

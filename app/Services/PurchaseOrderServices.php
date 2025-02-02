@@ -11,15 +11,18 @@ class PurchaseOrderServices
 {
     private $object;
     private $compute;
-    private $locationReference;
+    private $dateServices;
+    private $systemSettingServices;
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
-        LocationReferenceServices $locationReferenceServices
+        DateServices $dateServices,
+        SystemSettingServices $systemSettingServices
     ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
-        $this->locationReference = $locationReferenceServices;
+        $this->dateServices = $dateServices;
+        $this->systemSettingServices = $systemSettingServices;
     }
     public function get(int $ID): object
     {
@@ -43,26 +46,29 @@ class PurchaseOrderServices
         int $INPUT_TAX_ACCOUNT_ID
 
     ): int {
+
+
         $ID = (int) $this->object->ObjectNextID('PURCHASE_ORDER');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PURCHASE_ORDER');
+        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         PurchaseOrder::create([
-            'ID' => $ID,
-            'RECORDED_ON' => Carbon::now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
-            'DATE' => $DATE,
-            'VENDOR_ID' => $VENDOR_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
-            'DATE_EXPECTED' => $DATE_EXPECTED ? $DATE_EXPECTED : null,
-            'SHIP_TO' => $SHIP_TO ? $SHIP_TO : null,
-            'SHIP_VIA_ID' => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
-            'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
-            'NOTES' => $NOTES,
-            'AMOUNT' => 0,
-            'STATUS' => $STATUS,
-            'INPUT_TAX_ID' => $INPUT_TAX_ID ? $INPUT_TAX_ID : null,
-            'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
+            'ID'                => $ID,
+            'RECORDED_ON'       => $this->dateServices->Now(),
+            'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'              => $DATE,
+            'VENDOR_ID'         => $VENDOR_ID,
+            'LOCATION_ID'       => $LOCATION_ID,
+            'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null,
+            'DATE_EXPECTED'     => $DATE_EXPECTED ? $DATE_EXPECTED : null,
+            'SHIP_TO'           => $SHIP_TO ? $SHIP_TO : null,
+            'SHIP_VIA_ID'       => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
+            'PAYMENT_TERMS_ID'  => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
+            'NOTES'             => $NOTES,
+            'AMOUNT'            => 0,
+            'STATUS'            => $STATUS,
+            'INPUT_TAX_ID'      => $INPUT_TAX_ID ? $INPUT_TAX_ID : null,
+            'INPUT_TAX_RATE'    => $INPUT_TAX_RATE,
             'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
             'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID > 0 ? $INPUT_TAX_ACCOUNT_ID : null,
         ]);
@@ -95,21 +101,21 @@ class PurchaseOrderServices
 
         PurchaseOrder::where('ID', $ID)
             ->update([
-                'CODE' => $CODE,
-                'DATE' => $DATE,
-                'VENDOR_ID' => $VENDOR_ID,
-                'LOCATION_ID' => $LOCATION_ID,
-                'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
-                'DATE_EXPECTED' => $DATE_EXPECTED ? $DATE_EXPECTED : null,
-                'SHIP_TO' => $SHIP_TO ? $SHIP_TO : null,
-                'SHIP_VIA_ID' => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
-                'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
-                'NOTES' => $NOTES,
-                'STATUS' => $STATUS,
-                'INPUT_TAX_ID' => $INPUT_TAX_ID ? $INPUT_TAX_ID : null,
-                'INPUT_TAX_RATE' => $INPUT_TAX_RATE,
-                'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
-                'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID > 0 ? $INPUT_TAX_ACCOUNT_ID : null,
+                'CODE'                  => $CODE,
+                'DATE'                  => $DATE,
+                'VENDOR_ID'             => $VENDOR_ID,
+                'LOCATION_ID'           => $LOCATION_ID,
+                'CLASS_ID'              => $CLASS_ID > 0 ? $CLASS_ID : null,
+                'DATE_EXPECTED'         => $DATE_EXPECTED ? $DATE_EXPECTED : null,
+                'SHIP_TO'               => $SHIP_TO ? $SHIP_TO : null,
+                'SHIP_VIA_ID'           => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
+                'PAYMENT_TERMS_ID'      => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
+                'NOTES'                 => $NOTES,
+                'STATUS'                => $STATUS,
+                'INPUT_TAX_ID'          => $INPUT_TAX_ID ? $INPUT_TAX_ID : null,
+                'INPUT_TAX_RATE'        => $INPUT_TAX_RATE,
+                'INPUT_TAX_VAT_METHOD'  => $INPUT_TAX_VAT_METHOD,
+                'INPUT_TAX_ACCOUNT_ID'  => $INPUT_TAX_ACCOUNT_ID > 0 ? $INPUT_TAX_ACCOUNT_ID : null,
             ]);
     }
 
@@ -238,6 +244,15 @@ class PurchaseOrderServices
     public function ItemDelete(int $ID, int $PO_ID)
     {
         PurchaseOrderItems::where('ID', $ID)->where('PO_ID', $PO_ID)->delete();
+    }
+
+    public function ItemGet(int $ID, int $PO_ID)
+    {
+        $result =  PurchaseOrderItems::where('ID', $ID)->where('PO_ID', $PO_ID)->first();
+        if ($result) {
+            return $result;
+        }
+        return null;
     }
     public function ItemView(int $PO_ID)
     {

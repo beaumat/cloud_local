@@ -61,7 +61,8 @@
                                         <th class="col-1">Tax</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center col-1 bg-success">
-                                            <a href="{{ route('vendorspurchase_order_create') }}" class="text-white">
+                                            <a type="button" href="{{ route('vendorspurchase_order_create') }}"
+                                                class="w-100 btn btn-xs btn-success text-white">
                                                 <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
@@ -69,7 +70,10 @@
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ $list->CODE }}</td>
+                                            <td>
+                                                <a
+                                                    href="{{ route('vendorspurchase_order_edit', ['id' => $list->ID]) }}">{{ $list->CODE }}</a>
+                                            </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
@@ -78,14 +82,14 @@
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('vendorspurchase_order_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
+                                                <button type="button" wire:click='delete({{ $list->ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+                                                    class="btn btn-xs btn-danger">
+                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach

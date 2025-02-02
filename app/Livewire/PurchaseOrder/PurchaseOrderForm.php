@@ -121,8 +121,6 @@ class PurchaseOrderForm extends Component
     }
     public function mount($id = null)
     {
-
-
         if (is_numeric($id)) {
             $PO = $this->purchaseOrderServices->get($id);
             if ($PO) {
@@ -162,60 +160,78 @@ class PurchaseOrderForm extends Component
     {
         $this->Modify = true;
     }
+    public function makeBill()
+    {
+        $this->dispatch('open-make-bill',  purchase: ['PO_ID' => $this->ID]);
+    }
     public function save()
     {
+
+
+        $this->validate(
+            [
+                'VENDOR_ID'         => 'required|not_in:0|exists:contact,id',
+                'CODE'              =>  $this->ID > 'required|max:20|unique:purchase_order,code,' . $this->ID ?? 'nullable',
+                'INPUT_TAX_ID'      => 'required|not_in:0',
+                'DATE'              => 'required|date',
+                'LOCATION_ID'       => 'required',
+                'PAYMENT_TERMS_ID'  => 'required'
+            ],
+            [],
+            [
+                'VENDOR_ID'         => 'Vendor',
+                'CODE'              => 'Reference No.',
+                'INPUT_TAX_ID'      => 'Tax',
+                'DATE'              => 'Date',
+                'LOCATION_ID'       => 'Location',
+                'PAYMENT_TERMS_ID'  => 'Payment Terms'
+            ]
+        );
+
+
+
         try {
+            $this->getTax();
             if ($this->ID == 0) {
 
-                $this->validate(
-                    [
-                        'VENDOR_ID' => 'required|not_in:0',
-                        'INPUT_TAX_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'PAYMENT_TERMS_ID' => 'required'
-                    ],
-                    [],
-                    [
-                        'VENDOR_ID' => 'Vendor',
-                        'INPUT_TAX_ID' => 'Tax',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'PAYMENT_TERMS_ID' => 'Payment Terms'
-                    ]
+                $this->ID = $this->purchaseOrderServices->Store(
+                    $this->CODE,
+                    $this->DATE,
+                    $this->VENDOR_ID,
+                    $this->LOCATION_ID,
+                    $this->CLASS_ID,
+                    $this->DATE_EXPECTED,
+                    '',
+                    $this->SHIP_VIA_ID,
+                    $this->PAYMENT_TERMS_ID,
+                    $this->NOTES,
+                    $this->STATUS,
+                    $this->INPUT_TAX_ID,
+                    $this->INPUT_TAX_RATE,
+                    $this->INPUT_TAX_VAT_METHOD,
+                    $this->INPUT_TAX_ACCOUNT_ID
                 );
-
-
-
-                $this->getTax();
-                $this->ID = $this->purchaseOrderServices->Store($this->CODE, $this->DATE, $this->VENDOR_ID, $this->LOCATION_ID, $this->CLASS_ID, $this->DATE_EXPECTED, '', $this->SHIP_VIA_ID, $this->PAYMENT_TERMS_ID, $this->NOTES, $this->STATUS, $this->INPUT_TAX_ID, $this->INPUT_TAX_RATE, $this->INPUT_TAX_VAT_METHOD, $this->INPUT_TAX_ACCOUNT_ID);
-
                 return Redirect::route('vendorspurchase_order_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
-                $this->validate(
-                    [
-                        'VENDOR_ID' => 'required|not_in:0',
-                        'CODE' => 'required|max:20|unique:purchase_order,code,' . $this->ID,
-                        'INPUT_TAX_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'PAYMENT_TERMS_ID' => 'required'
-                    ],
-                    [],
-                    [
-                        'VENDOR_ID' => 'Vendor',
-                        'CODE' => 'Reference No.',
-                        'INPUT_TAX_ID' => 'Tax',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'PAYMENT_TERMS_ID' => 'Payment Terms'
-                    ]
+                $this->purchaseOrderServices->Update(
+                    $this->ID,
+                    $this->CODE,
+                    $this->DATE,
+                    $this->VENDOR_ID,
+                    $this->LOCATION_ID,
+                    $this->CLASS_ID,
+                    $this->DATE_EXPECTED,
+                    '',
+                    $this->SHIP_VIA_ID,
+                    $this->PAYMENT_TERMS_ID,
+                    $this->NOTES,
+                    $this->STATUS,
+                    $this->INPUT_TAX_ID,
+                    $this->INPUT_TAX_RATE,
+                    $this->INPUT_TAX_VAT_METHOD,
+                    $this->INPUT_TAX_ACCOUNT_ID
                 );
-
-
-                $this->getTax();
-                $this->purchaseOrderServices->Update($this->ID, $this->CODE, $this->DATE, $this->VENDOR_ID, $this->LOCATION_ID, $this->CLASS_ID, $this->DATE_EXPECTED, '', $this->SHIP_VIA_ID, $this->PAYMENT_TERMS_ID, $this->NOTES, $this->STATUS, $this->INPUT_TAX_ID, $this->INPUT_TAX_RATE, $this->INPUT_TAX_VAT_METHOD, $this->INPUT_TAX_ACCOUNT_ID);
                 $this->purchaseOrderServices->getUpdateTaxItem($this->ID, $this->INPUT_TAX_ID);
                 $getResult = $this->purchaseOrderServices->ReComputed($this->ID);
                 $this->getUpdateAmount($getResult);
