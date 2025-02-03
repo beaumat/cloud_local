@@ -271,7 +271,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', InvoiceForm::class)->name('invoice_create')->middleware(['permission:customer.invoice.create']);
             Route::get('/{id}/edit', InvoiceForm::class)->name('invoice_edit')->middleware(['permission:customer.invoice.view']);
             Route::get('/{id}/print', PrintInvoice::class)->name('invoice_print')->middleware(['permission:customer.invoice.print']);
-       
         });
 
         Route::prefix('/sales-receipt')->group(function () {
@@ -429,7 +428,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/{year}/{locationid}', PrintAvailment::class)->name('print_availment');
                 // Route::get('/{id}/{year}',PhilhealthModify::class)->name('philhealth_modify');
                 Route::get('/{id}/medical-certificate', MedcertPrint::class)->name('print_medical_cert');
-
             });
 
             Route::prefix('/doctors')->group(function () {
@@ -607,7 +605,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{date_from}/{date_to}/{location_id}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
             });
             Route::prefix('/treatment')->group(function () {
-                Route::get('/', PatientTreatmentReport::class)->name('patient_treatment_report')->middleware(['permission:report.patient.treatment']);
+                Route::get('/', PatientTreatmentReport::class)->name('patient_treatment_report')
+                    ->middleware(['permission:report.patient.treatment']);
             });
             Route::prefix('/balance')->group(function () {
                 Route::get('/', PatientBalanceReport::class)->name('patient_balance_report')->middleware(['permission:report.patient.balance']);
