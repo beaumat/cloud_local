@@ -185,7 +185,7 @@ class PatientReportServices
 
         foreach ($dayList as $day) {
             $coldate = date('d', strtotime($day));
-            $sql = "(select if( i.ITEM_ID  = $PHIC_ITEM_ID , 1, if(i.ITEM_ID = $PRIMING_ITEM_ID , 2 , if(i.ITEM_ID <> $PHIC_ITEM_ID and i.ITEM_ID <> $PRIMING_ITEM_ID, 3, 0) ) ) from hemodialysis as d  join service_charges as s on (s.DATE = d.DATE and s.LOCATION_ID = d.LOCATION_ID and s.PATIENT_ID = d.CUSTOMER_ID)  inner join service_charges_items as i on i.SERVICE_CHARGES_ID = s.ID where d.LOCATION_ID ='$LocationId' and d.DATE = '$day' and d.CUSTOMER_ID = contact.ID and d.STATUS_ID = 2   order by i.ITEM_ID asc limit 1 ) as '$coldate'";
+            $sql = "(select if( i.ITEM_ID  = $PHIC_ITEM_ID , 1, if(i.ITEM_ID = $PRIMING_ITEM_ID , 2 , if(i.ITEM_ID <> $PHIC_ITEM_ID and i.ITEM_ID <> $PRIMING_ITEM_ID, 3, 0) ) ) from hemodialysis as d  join service_charges as s on (s.DATE = d.DATE and s.LOCATION_ID = d.LOCATION_ID and s.PATIENT_ID = d.CUSTOMER_ID)  inner join service_charges_items as i on i.SERVICE_CHARGES_ID = s.ID inner join item as t on t.ID = i.ITEM_ID where d.LOCATION_ID ='$LocationId' and d.DATE = '$day' and d.CUSTOMER_ID = contact.ID and d.STATUS_ID = 2  order by t.TYPE desc limit 1 ) as '$coldate'";
             $selectArrayTR[] = DB::raw($sql);
         }
 
