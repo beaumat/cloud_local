@@ -607,7 +607,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{date_from}/{date_to}/{location_id}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
             });
             Route::prefix('/treatment')->group(function () {
-                Route::get('/', PatientTreatmentReport::class)->name('patient_treatment_report')->middleware(['permission:report.patient.sales']);
+                Route::get('/', PatientTreatmentReport::class)->name('patient_treatment_report')->middleware(['permission:report.patient.treatment']);
             });
             Route::prefix('/balance')->group(function () {
                 Route::get('/', PatientBalanceReport::class)->name('patient_balance_report')->middleware(['permission:report.patient.balance']);
