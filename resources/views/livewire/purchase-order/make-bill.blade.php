@@ -20,19 +20,24 @@
                                                 :isDisabled=false wire:model='DATE' />
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:text-input name="RECEIPT_REF_NO"
+                                            <livewire:text-input name="CODE"
                                                 titleName="Billing No. (leave empty to auto generate)" :isDisabled=false
-                                                wire:model='RECEIPT_REF_NO' />
+                                                :maxlength="20" wire:model='CODE' />
                                         </div>
                                         <div class="col-md-4">
 
+                                        </div>
+                                        <div class="col-md-12">
+                                            <livewire:text-input name="NOTES" titleName="Notes" :isDisabled=false
+                                                :maxlength="1000" wire:model='NOTES' />
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
                             <div class="card-footer text-right">
-                                <button type="submit" class="btn btn-success btn-sm m-1">Make</button>
+                                <button type="submit" class="btn btn-success btn-sm m-1"
+                                    wire:confirm='Are you sure to make bill?'>Make</button>
                                 <button type="button" class="btn btn-secondary btn-sm m-1"
                                     wire:click="closeModal">Close</button>
                             </div>
