@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-12 text-center mb-1" @if ($HEADER) style="opacity: 0.0" @endif>
                     @if (empty($LOGO_FILE))
-                        <img class="print-logo" style="width:25px;" src="{{ asset('dist/logo/vida_logo.png') }}" />
+                        <img class="print-logo" style="width:500px;" src="{{ asset('dist/logo/vida_logo.png') }}" />
                         <div class="text-center">
                             <b class="print-address1 text-center">
                                 {{ $REPORT_HEADER_1 }} <br />
