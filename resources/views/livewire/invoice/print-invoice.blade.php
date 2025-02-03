@@ -28,11 +28,6 @@
                         <div class="col-10 bottom-line2"> &nbsp;{{ $CONTACT_NAME }}</div>
                     </div>
                     <div class="row">
-                        <div class="col-2"> Delivery : </div>
-                        <div class="col-10 bottom-line2"> &nbsp; {{ $DR_NAME }} </div>
-                    </div>
-
-                    <div class="row">
                         <div class="col-2"> Address : </div>
                         <div class="col-10 bottom-line2"> &nbsp; {{ $ADDRESS }} </div>
                     </div>
