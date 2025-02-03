@@ -48,6 +48,7 @@
                     @livewire('Layouts.BankingMenu')
                 @endif
                 @if (Auth::user()->can('report.patient.sales') ||
+                        Auth::user()->can('report.patient.treatment') ||
                         Auth::user()->can('report.patient.balance') ||
                         Auth::user()->can('report.patient.doctor-pf') ||
                         Auth::user()->can('report.financial.income-statement') ||
@@ -66,6 +67,7 @@
                         </a>
                         <ul class="nav nav-treeview bg-blue-dark">
                             @if (Auth::user()->can('report.patient.sales') ||
+                                    Auth::user()->can('report.patient.treatment') ||
                                     Auth::user()->can('report.patient.balance') ||
                                     Auth::user()->can('report.patient.doctor-pf'))
                                 @livewire('Layouts.ReportsPatients')

@@ -12,6 +12,8 @@
                     <p>Sales</p>
                 </a>
             </li>
+        @endif
+        @if (Auth::user()->can('report.patient.treatment'))
             <li class="nav-item ">
                 <a href="{{ route('reportspatient_treatment_report') }}"
                     class="nav-link {{ request()->is('reports/patients/treatment*') ? 'text-warning font-weight-bold' : '' }}">
@@ -29,7 +31,7 @@
                 </a>
             </li>
         @endif
-        
+
         @if (Auth::user()->can('report.philhealth.monitoring'))
             <li class="nav-item ">
                 <a href="{{ route('reportsphilhealth_monitoring') }}"
