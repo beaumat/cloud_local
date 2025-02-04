@@ -6,6 +6,7 @@ use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItems;
 use App\Models\Tax;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderServices
 {
@@ -382,6 +383,23 @@ class PurchaseOrderServices
             ->orderBy('ID', 'asc')
             ->get();
 
+        return $result;
+    }
+
+    public function isPOAlreadyBill(int $PO_ID): bool
+    {
+
+        $result =  DB::table('purchase_order as po')
+            ->join('purchase_order_items as po_item', 'po_item.PO_ID', '=', 'po.ID')
+            ->where('po.ID', '=', $PO_ID)
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('bill as b')
+                    ->join('bill_items as b_item', 'b_item.BILL_ID', '=', 'b.ID')
+                    ->whereColumn('b_item.PO_ITEM_ID', '=', 'po_item.ID');
+            })
+            ->exists();
+            
         return $result;
     }
 }

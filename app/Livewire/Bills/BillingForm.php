@@ -27,7 +27,7 @@ use Livewire\WithFileUploads;
 class BillingForm extends Component
 {
 
-    
+
     use WithFileUploads;
     public bool $showFileName = true;
     public $PDF = null;
@@ -118,7 +118,8 @@ class BillingForm extends Component
             'CUSTOM_FIELD1' => 'Files'
         ]);
     }
-    public function updatedInputTaxId(){
+    public function updatedInputTaxId()
+    {
         $this->getTax();
     }
     public function getConfirm()
@@ -203,14 +204,11 @@ class BillingForm extends Component
         } else {
             $this->IS_CONFIRM = false;
         }
-
-
-            if ($this->billingServices->isItemTab($data->ID)) {
-                $this->tab = "item";
-                return;
-            }
-            $this->tab = "account";
-        
+        if ($this->billingServices->isItemTab($data->ID)) {
+            $this->tab = "item";
+            return;
+        }
+        $this->tab = "account";
     }
 
     public function mount($id = null)
@@ -301,8 +299,6 @@ class BillingForm extends Component
 
                 $this->getTax();
                 DB::beginTransaction();
-
-
                 $this->ID = $this->billingServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -325,8 +321,6 @@ class BillingForm extends Component
                 if ($this->PDF) {
                     $this->getDocumentProccess();
                 }
-
-
                 DB::commit();
                 return Redirect::route('vendorsbills_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {

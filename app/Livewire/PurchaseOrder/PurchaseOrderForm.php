@@ -21,6 +21,8 @@ use Livewire\Component;
 #[Title('Purchase Order')]
 class PurchaseOrderForm extends Component
 {
+
+    public bool $PO_ALREADY_BILL;
     public int $ID;
     public int $VENDOR_ID;
     public  $DATE;
@@ -118,6 +120,7 @@ class PurchaseOrderForm extends Component
         $this->TAXABLE_AMOUNT = $PO->TAXABLE_AMOUNT ? $PO->TAXABLE_AMOUNT : 0;
         $this->NONTAXABLE_AMOUNT = $PO->NONTAXABLE_AMOUNT ? $PO->NONTAXABLE_AMOUNT : 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+        $this->PO_ALREADY_BILL = $this->purchaseOrderServices->isPOAlreadyBill($this->ID);
     }
     public function mount($id = null)
     {
@@ -170,12 +173,12 @@ class PurchaseOrderForm extends Component
 
         $this->validate(
             [
-                'VENDOR_ID'         => 'required|not_in:0|exists:contact,id',
-                'CODE'              =>  $this->ID > 0 ? 'required|max:20|unique:purchase_order,code,' . $this->ID : 'nullable',
-                'INPUT_TAX_ID'      => 'required|not_in:0',
+                'VENDOR_ID'         => 'required|numeric|exists:contact,id',
+                'CODE'              => 'nullable|max:20|unique:purchase_order,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'INPUT_TAX_ID'      => 'required|numeric|exists:tax,id',
                 'DATE'              => 'required|date',
-                'LOCATION_ID'       => 'required',
-                'PAYMENT_TERMS_ID'  => 'required'
+                'LOCATION_ID'       => 'required|numeric|exists:location,id',
+                'PAYMENT_TERMS_ID'  => 'required|numeric|exists:payment_terms,id'
             ],
             [],
             [
@@ -187,8 +190,6 @@ class PurchaseOrderForm extends Component
                 'PAYMENT_TERMS_ID'  => 'Payment Terms'
             ]
         );
-
-
 
         try {
             $this->getTax();
@@ -237,6 +238,7 @@ class PurchaseOrderForm extends Component
                 $this->getUpdateAmount($getResult);
                 session()->flash('message', 'Successfully updated');
             }
+
             $PO = $this->purchaseOrderServices->get($this->ID);
             if ($PO) {
                 $this->getInfo($PO);

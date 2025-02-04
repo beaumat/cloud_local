@@ -153,6 +153,7 @@ class BillingList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    
     public function render()
     {
         $dataList = $this->billingServices->Search($this->search, $this->locationid, $this->perPage);

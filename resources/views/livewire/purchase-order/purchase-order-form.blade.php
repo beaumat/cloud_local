@@ -135,7 +135,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
+                            <div class="card-footer"
+                                @if ($PO_ALREADY_BILL) style="opacity: 0.5;pointer-events: none;" @endif>
                                 <div class="row">
                                     <div class="col-md-6 col-6">
                                         @if ($STATUS == 0)
@@ -226,7 +227,9 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-6 text-left">
-
+                                        @if ($PO_ALREADY_BILL)
+                                            <label class="text-sm text-primary">Already make bill</label>
+                                        @endif
                                     </div>
                                     <div class="col-md-6">
                                         <div class="row">

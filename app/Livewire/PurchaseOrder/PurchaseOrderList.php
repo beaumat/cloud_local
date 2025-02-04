@@ -59,6 +59,16 @@ class PurchaseOrderList extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    public function updatedlocationid()
+    {
+
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function render()
     {
         $dataList = $this->purchaseOrderServices->Search($this->search, $this->locationid, $this->perPage);
