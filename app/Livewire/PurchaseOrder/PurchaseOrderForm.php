@@ -23,7 +23,7 @@ class PurchaseOrderForm extends Component
 {
     public int $ID;
     public int $VENDOR_ID;
-    public string $DATE;
+    public  $DATE;
     public string $CODE;
     public int $LOCATION_ID;
     public int $CLASS_ID;
@@ -171,7 +171,7 @@ class PurchaseOrderForm extends Component
         $this->validate(
             [
                 'VENDOR_ID'         => 'required|not_in:0|exists:contact,id',
-                'CODE'              =>  $this->ID > 'required|max:20|unique:purchase_order,code,' . $this->ID ?? 'nullable',
+                'CODE'              =>  $this->ID > 0 ? 'required|max:20|unique:purchase_order,code,' . $this->ID : 'nullable',
                 'INPUT_TAX_ID'      => 'required|not_in:0',
                 'DATE'              => 'required|date',
                 'LOCATION_ID'       => 'required',
