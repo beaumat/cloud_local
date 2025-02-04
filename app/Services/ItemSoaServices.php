@@ -133,7 +133,5 @@ class ItemSoaServices
             return (float) $result;
         }
         return 0.00;
-
-        return $result;
     }
 }
