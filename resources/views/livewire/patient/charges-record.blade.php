@@ -36,7 +36,6 @@
                                             class="text-primary">
                                             {{ $list->CODE }}
                                         </a>
-
                                     </td>
                                     <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                     <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
@@ -69,7 +68,9 @@
                 <i class="fa fa-print" aria-hidden="true"></i>
                 Print Availment
             </a>
-            {{-- <input type="number" wire:model.live='YEAR' /> --}}
+            <button type="button" class="btn btn-danger btn-sm" wire:click='modifyPhilhealth()'><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modify</button>
 
         </div>
+
+        @livewire('Patient.PhilhealthModify', ['PATIENT_ID' => $CONTACT_ID])
     </div>

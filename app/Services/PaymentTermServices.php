@@ -18,16 +18,14 @@ class PaymentTermServices
     {
         // Set $currentDate as a Carbon object (use Carbon for date manipulation)
         $currentDate = $DATE ? Carbon::parse($DATE . " 00:00:00") : $this->dateServices->Now();
-
-
-        $NET_DUE = PaymentTerms::where('INACTIVE', '0')->where('ID', $ID)->first()->NET_DUE;
-
+        $NET_DUE = PaymentTerms::where('INACTIVE', '=', false)->where('ID', $ID)->first()->NET_DUE;
         $netDueDate = $currentDate->addDays($NET_DUE);
 
         return $netDueDate->format('Y-m-d');
     }
-    public function get(int $ID) {
-       return (string) PaymentTerms::where('INACTIVE', '0')->where('ID', $ID)->first()->DESCRIPTION ?? '';
+    public function get(int $ID)
+    {
+        return (string) PaymentTerms::where('INACTIVE', '0')->where('ID', $ID)->first()->DESCRIPTION ?? '';
     }
     public function getList()
     {

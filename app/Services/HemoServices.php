@@ -7,6 +7,7 @@ use App\Models\Hemodialysis;
 use App\Models\HemodialysisItems;
 use App\Models\HemoNurseNotes;
 use App\Models\ItemSubClass;
+use App\Models\ServiceCharges;
 use Illuminate\Support\Facades\DB;
 
 class HemoServices
@@ -198,7 +199,7 @@ class HemoServices
             })
             ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
             ->where('sci.ITEM_ID', '=', 2)
-            ->where('s.USE_PHIC','=',0)
+            ->where('s.USE_PHIC', '=', 0)
             ->where('hemodialysis.CUSTOMER_ID', $CONTACT_ID)
             ->where('hemodialysis.LOCATION_ID', $LOCATION_ID)
             ->where('hemodialysis.STATUS_ID', '2')
@@ -1615,9 +1616,15 @@ class HemoServices
             ->where('DATE', '<=', $DATE) // Add a condition to filter by year
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
+        $sc = (int) ServiceCharges::where('PATIENT_ID', $CUSTOMER_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->whereYear('DATE', $year)
+            ->where('USE_PHIC', '=', true)
+            ->count();
 
+        $number = $trtNo + $sc;
 
-        return $trtNo;
+        return $number;
     }
     public function codeIfExist(string $CODE): bool
     {

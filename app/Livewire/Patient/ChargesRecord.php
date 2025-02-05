@@ -37,6 +37,9 @@ class ChargesRecord extends Component
         $this->YEAR = $this->dateServices->NowYear();
         $this->yearList = $this->dateServices->YearList();
     }
+    public function modifyPhilhealth() {
+        $this->dispatch('open-philhealth-modifiy');
+    }
     public function TransferRecordTo(int $ID)
     {
         $this->dispatch('open-transfer-contact', result: [
@@ -51,4 +54,6 @@ class ChargesRecord extends Component
         $dataList = $this->serviceChargeServices->PatientRecord($this->search, $this->CONTACT_ID, 15, $this->LOCATION_ID);
         return view('livewire.patient.charges-record', ['dataList' => $dataList]);
     }
+
+
 }
