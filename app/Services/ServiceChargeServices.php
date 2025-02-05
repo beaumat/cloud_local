@@ -200,7 +200,9 @@ class ServiceChargeServices
         float $OUTPUT_TAX_RATE,
         int $OUTPUT_TAX_VAT_METHOD,
         int $OUTPUT_TAX_ACCOUNT_ID,
-        bool $WALK_IN = false
+        bool $WALK_IN = false,
+        bool $USE_PHIC = false
+
     ): int {
 
         $ID = (int) $this->object->ObjectNextID('SERVICE_CHARGES');
@@ -224,7 +226,8 @@ class ServiceChargeServices
             'OUTPUT_TAX_RATE'           => $OUTPUT_TAX_RATE,
             'OUTPUT_TAX_VAT_METHOD'     => $OUTPUT_TAX_VAT_METHOD,
             'OUTPUT_TAX_ACCOUNT_ID'     => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
-            'WALK_IN'                   => $WALK_IN
+            'WALK_IN'                   => $WALK_IN,
+            'USE_PHIC'                  => $USE_PHIC
         ]);
 
         return $ID;
@@ -739,7 +742,7 @@ class ServiceChargeServices
             ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
                 $query->where('sc.LOCATION_ID', $LOCK_LOCATION_ID);
             })
-            ->where('sc.USE_PHIC','=',0)
+            ->where('sc.USE_PHIC', '=', 0)
             ->having('BALANCE', '>', 0)
             ->orderBy('sc.DATE')
             ->get();
@@ -771,7 +774,7 @@ class ServiceChargeServices
                 $query->where('sc.LOCATION_ID', $LOCATION_ID);
             })
             ->whereNotIn('service_charges_items.ITEM_ID', [2])
-            ->where('sc.USE_PHIC','=',0)
+            ->where('sc.USE_PHIC', '=', 0)
             ->having('BALANCE', '>', 0)
             ->orderBy('sc.DATE')
             ->get();
@@ -800,7 +803,7 @@ class ServiceChargeServices
             ->where('service_charges.DATE', '<=', $DATE)
             ->where('service_charges.WALK_IN', true)
             ->where('service_charges_items.IS_POSTED', false)
-            ->where('service_charges.USE_PHIC','=',0)
+            ->where('service_charges.USE_PHIC', '=', 0)
             ->orderBy('service_charges.DATE', 'asc')
             ->get();
 
@@ -814,7 +817,7 @@ class ServiceChargeServices
             ->where('service_charges.DATE', '<=', $DATE)
             ->where('service_charges.WALK_IN', true)
             ->where('service_charges_items.IS_POSTED', false)
-            ->where('service_charges.USE_PHIC','=',0)
+            ->where('service_charges.USE_PHIC', '=', 0)
             ->update([
                 'service_charges_items.IS_POSTED' => true
             ]);
@@ -835,7 +838,7 @@ class ServiceChargeServices
             ->where('service_charges.DATE', $DATE)
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
             ->where('service_charges.PATIENT_ID', $PATIENT_ID)
-            ->where('service_charges.USE_PHIC','=',0)
+            ->where('service_charges.USE_PHIC', '=', 0)
             ->get();
 
 
@@ -920,12 +923,32 @@ class ServiceChargeServices
 
     public function isHavePriming(string $DATE, int $LOCATION_ID, int $PATIENT_ID): bool
     {
-        return ServiceCharges::query()
+        $result = (bool)  ServiceCharges::query()
             ->join('service_charges_items', 'service_charges_items.SERVICE_CHARGES_ID', '=', 'service_charges.ID')
             ->where('service_charges_items.ITEM_ID', '=', $this->PRIMING_FEE_ID)
             ->where('service_charges.LOCATION_ID', '=', $LOCATION_ID)
             ->where('service_charges.PATIENT_ID', '=', $PATIENT_ID)
             ->where('service_charges.DATE', '=', $DATE)
             ->exists();
+
+
+        return $result;
+    }
+
+
+    public function getListUsePhic(int $PATIENT_ID, int $LOCATION_ID, int $YEAR): object
+    {
+        $result = ServiceCharges::query()
+            ->select([
+                'ID',
+                'DATE'
+            ])
+            ->where('service_charges.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('service_charges.PATIENT_ID', '=', $PATIENT_ID)
+            ->whereYear('service_charges.DATE', '=', $YEAR)
+            ->where('USE_PHIC', '=', true)
+            ->get();
+
+        return $result;
     }
 }

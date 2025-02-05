@@ -44,8 +44,8 @@ class ChargesRecord extends Component
     {
         $this->dispatch('open-transfer-contact', result: [
             'TRANSACTION_ID' => $ID,
-            'LOCATION_ID'   => $this->LOCATION_ID,
-            'IS_TREATMENT'  => false
+            'LOCATION_ID'    => $this->LOCATION_ID,
+            'IS_TREATMENT'   => false
         ]);
     }
     #[On('refresh-service-charge-record')]

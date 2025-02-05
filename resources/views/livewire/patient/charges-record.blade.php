@@ -68,9 +68,10 @@
                 <i class="fa fa-print" aria-hidden="true"></i>
                 Print Availment
             </a>
-            <button type="button" class="btn btn-danger btn-sm" wire:click='modifyPhilhealth()'><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modify</button>
+            <button type="button" class="btn btn-danger btn-sm" wire:click='modifyPhilhealth()'><i
+                    class="fa fa-pencil-square-o" aria-hidden="true"></i> PHIC 156 Adjustment</button>
 
         </div>
 
-        @livewire('Patient.PhilhealthModify', ['PATIENT_ID' => $CONTACT_ID])
+        @livewire('Patient.PhilhealthModify', ['PATIENT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID])
     </div>

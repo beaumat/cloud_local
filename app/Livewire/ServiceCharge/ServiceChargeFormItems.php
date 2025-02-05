@@ -332,6 +332,7 @@ class ServiceChargeFormItems extends Component
             $this->accountList = [];
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
+            
             if ($this->philHealthServices->PHIL_HEALTH_ITEM_ID == $prime_item_id) {
                 $count = $this->serviceChargeServices->GetCountByYear(
                     $prime_item_id,

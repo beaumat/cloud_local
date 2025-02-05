@@ -7,6 +7,7 @@ use App\Models\Hemodialysis;
 use App\Models\HemodialysisItems;
 use App\Models\HemoNurseNotes;
 use App\Models\ItemSubClass;
+use App\Models\PhilhealthItemAdjustment;
 use App\Models\ServiceCharges;
 use Illuminate\Support\Facades\DB;
 
@@ -1616,11 +1617,11 @@ class HemoServices
             ->where('DATE', '<=', $DATE) // Add a condition to filter by year
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
-        $sc = (int) ServiceCharges::where('PATIENT_ID', $CUSTOMER_ID)
-            ->where('LOCATION_ID', '=', $LOCATION_ID)
-            ->whereYear('DATE', $year)
-            ->where('USE_PHIC', '=', true)
-            ->count();
+
+        $sc =  PhilhealthItemAdjustment::where('PATIENT_ID','=', $CUSTOMER_ID)
+            ->where('LOCATION_ID','=', $LOCATION_ID)
+            ->where('YEAR','=', $year)
+            ->sum('NO_OF_USED');
 
         $number = $trtNo + $sc;
 

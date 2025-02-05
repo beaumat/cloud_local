@@ -17,6 +17,7 @@ class PhilhealthItemAdjustment extends Model
         'PATIENT_ID',
         'LOCATION_ID',
         'NO_OF_USED',
-        'YEAR'
+        'YEAR',
+        'NOTES'
     ];
 }
