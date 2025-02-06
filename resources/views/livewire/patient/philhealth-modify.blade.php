@@ -123,8 +123,16 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-6 text-left">
-                                    PHIC 156 Current : <b class="text-danger">{{ $TOTAL }}</b>
-                                    PHIC 156 Balance : <b class="text-danger">{{ 156 - $TOTAL }}</b>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            Current : <b class="text-danger">{{ $TOTAL }}</b>
+                                        </div>
+                                        <div class="col-6">
+                                            Balance : <b class="text-danger">{{ 156 - $TOTAL }}</b>
+                                        </div>
+                                    </div>
+
+
                                 </div>
                                 <div class="col-6 text-right">
                                     <button type="button" class="btn btn-secondary btn-sm"
