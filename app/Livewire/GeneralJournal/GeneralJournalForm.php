@@ -145,7 +145,7 @@ class GeneralJournalForm extends Component
         // 'CODE'          =>  $this->ID > 0 ? 'required|max:20|unique:general_journal,code,' . $this->ID : 'nullable',
         $this->validate(
             [
-                'CODE'              => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'CODE'          => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
                 'DATE'          => 'required',
                 'LOCATION_ID'   => 'required|exists:location,id',
                 'CONTACT_ID'    =>  $this->CONTACT_ID  > 0 ? 'exists:contact,id' : 'nullable',
