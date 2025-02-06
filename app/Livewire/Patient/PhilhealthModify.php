@@ -25,15 +25,17 @@ class PhilhealthModify extends Component
     public $E_YEAR   = 0;
     public $E_NO_OF_USED;
     public $E_NOTES;
-
+    public int $TOTAL;
     public $dataList = [];
     private $philHealthServices;
 
     private $dateServices;
-    public function boot(PhilHealthServices $philHealthServices, DateServices $dateServices)
+    private $serviceChargeServices;
+    public function boot(PhilHealthServices $philHealthServices, DateServices $dateServices, ServiceChargeServices $serviceChargeServices)
     {
         $this->dateServices = $dateServices;
         $this->philHealthServices = $philHealthServices;
+        $this->serviceChargeServices = $serviceChargeServices;
     }
     public function Add()
     {
@@ -68,12 +70,28 @@ class PhilhealthModify extends Component
         }
     }
 
+    private function PhicCount(): int
+    {
+        $count = $this->serviceChargeServices->GetCountByYear(
+            $this->philHealthServices->PHIL_HEALTH_ITEM_ID,
+            $this->dateServices->NowYear(),
+            $this->PATIENT_ID,
+            $this->LOCATION_ID
+        );
+        $countAdjust = $this->philHealthServices->ItemAdjustGet(
+            $this->PATIENT_ID,
+            $this->LOCATION_ID,
+            $this->dateServices->NowYear()
+        );
+        return  $count + $countAdjust;
+    }
     public function Delete(int $ID)
     {
 
         $this->philHealthServices->ItemAdjustDelete($ID);
     }
-    public function Canceled() {
+    public function Canceled()
+    {
         $this->E_ID = null;
     }
     public function Edit(int $ID)
@@ -129,7 +147,9 @@ class PhilhealthModify extends Component
     {
 
         if ($this->showModal) {
+
             $this->dataList = $this->philHealthServices->ItemAdjustList($this->PATIENT_ID, $this->LOCATION_ID);
+            $this->TOTAL = $this->PhicCount();
         }
         return view('livewire.patient.philhealth-modify');
     }

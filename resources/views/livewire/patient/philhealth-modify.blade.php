@@ -122,11 +122,10 @@
                     <div class="modal-footer">
                         <div class="container">
                             <div class="row">
-                                <div class="col-6">
-
+                                <div class="col-6 text-right">
+                                    PHIC 156 remaining : <b class="text-danger">{{ $TOTAL }}</b>
                                 </div>
                                 <div class="col-6 text-right">
-
                                     <button type="button" class="btn btn-secondary btn-sm"
                                         wire:click="closeModal">Close</button>
                                 </div>
