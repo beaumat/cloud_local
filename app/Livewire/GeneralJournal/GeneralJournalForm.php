@@ -141,9 +141,11 @@ class GeneralJournalForm extends Component
     }
     public function save()
     {
+
+        // 'CODE'          =>  $this->ID > 0 ? 'required|max:20|unique:general_journal,code,' . $this->ID : 'nullable',
         $this->validate(
             [
-                'CODE'          =>  $this->ID > 0 ? 'required|max:20|unique:general_journal,code,' . $this->ID : 'nullable',
+                'CODE'              => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
                 'DATE'          => 'required',
                 'LOCATION_ID'   => 'required|exists:location,id',
                 'CONTACT_ID'    =>  $this->CONTACT_ID  > 0 ? 'exists:contact,id' : 'nullable',
@@ -245,10 +247,7 @@ class GeneralJournalForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function print() {
-
-        
-    }
+    public function print() {}
     public function OpenJournal()
     {
         $FirstID = $this->generalJournalServices->getFirstDetailsID($this->ID);
