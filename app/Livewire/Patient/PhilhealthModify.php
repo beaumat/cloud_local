@@ -3,15 +3,20 @@
 namespace App\Livewire\Patient;
 
 use App\Services\DateServices;
+use App\Services\PhilhealthItemAdjustmentServices;
 use App\Services\PhilHealthServices;
 use App\Services\ServiceChargeServices;
+use App\Services\UploadServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use PhpOffice\PhpSpreadsheet\Calculation\Web\Service;
 
 class PhilhealthModify extends Component
 {
+    use WithFileUploads;
+
     #[Reactive]
     public int $PATIENT_ID;
     #[Reactive]
@@ -22,20 +27,34 @@ class PhilhealthModify extends Component
     public string $NOTES;
 
     public $E_ID = null;
-    public $E_YEAR   = 0;
+    public $E_YEAR = 0;
     public $E_NO_OF_USED;
     public $E_NOTES;
     public int $TOTAL;
     public $dataList = [];
-    private $philHealthServices;
+
+
+    public $PDF = null;
+    public $NEW_PDF = null;
+
+    private $philhealthItemAdjustmentServices;
 
     private $dateServices;
     private $serviceChargeServices;
-    public function boot(PhilHealthServices $philHealthServices, DateServices $dateServices, ServiceChargeServices $serviceChargeServices)
-    {
+    private $philHealthServices;
+    private $uploadServices;
+    public function boot(
+        PhilhealthItemAdjustmentServices $philhealthItemAdjustmentServices,
+        PhilHealthServices $philHealthServices,
+        DateServices $dateServices,
+        ServiceChargeServices $serviceChargeServices,
+        UploadServices $uploadServices
+    ) {
         $this->dateServices = $dateServices;
-        $this->philHealthServices = $philHealthServices;
+        $this->philhealthItemAdjustmentServices = $philhealthItemAdjustmentServices;
         $this->serviceChargeServices = $serviceChargeServices;
+        $this->philHealthServices = $philHealthServices;
+        $this->uploadServices = $uploadServices;
     }
     public function Add()
     {
@@ -53,13 +72,19 @@ class PhilhealthModify extends Component
         );
 
         try {
-            $this->philHealthServices->ItemAdjustStore(
+            $ID = $this->philhealthItemAdjustmentServices->ItemAdjustStore(
                 $this->PATIENT_ID,
                 $this->LOCATION_ID,
                 $this->NO_OF_USED,
                 $this->YEAR,
                 $this->NOTES
             );
+
+
+            if ($this->NEW_PDF) {
+                $this->getDocumentProccess($ID, $this->NEW_PDF);
+                $this->NEW_PDF = null;
+            }
 
             $this->NO_OF_USED = 0;
             $this->YEAR = $this->dateServices->NowYear();
@@ -78,7 +103,8 @@ class PhilhealthModify extends Component
             $this->PATIENT_ID,
             $this->LOCATION_ID
         );
-        $countAdjust = $this->philHealthServices->ItemAdjustGet(
+
+        $countAdjust = $this->philhealthItemAdjustmentServices->ItemAdjustGet(
             $this->PATIENT_ID,
             $this->LOCATION_ID,
             $this->dateServices->NowYear()
@@ -88,23 +114,30 @@ class PhilhealthModify extends Component
     public function Delete(int $ID)
     {
 
-        $this->philHealthServices->ItemAdjustDelete($ID);
+        $this->philhealthItemAdjustmentServices->ItemAdjustDelete($ID);
     }
     public function Canceled()
     {
         $this->E_ID = null;
     }
+    public function getDocumentProccess(int $ID, $PDF)
+    {
+        $returnData = $this->uploadServices->Availment($PDF);
+        $this->philhealthItemAdjustmentServices->UpdateFile(
+            $ID,
+            $returnData['filename'] . '.' . $returnData['extension'],
+            $returnData['new_path']
+        );
+    }
     public function Edit(int $ID)
     {
-
-
-
-        $data = $this->philHealthServices->GetItemAdjust($ID);
+        $data = $this->philhealthItemAdjustmentServices->GetItemAdjust($ID);
         if ($data) {
             $this->E_ID = $data->ID;
             $this->E_YEAR = $data->YEAR;
             $this->E_NO_OF_USED = $data->NO_OF_USED ?? 0;
             $this->E_NOTES = $data->NOTES ?? '';
+            $this->PDF = null;
         }
     }
     public function Update()
@@ -123,7 +156,11 @@ class PhilhealthModify extends Component
 
 
         try {
-            $this->philHealthServices->ItemAdjustUpdate($this->E_ID, $this->E_YEAR, $this->E_NO_OF_USED, $this->E_NOTES);
+            $this->philhealthItemAdjustmentServices->ItemAdjustUpdate($this->E_ID, $this->E_YEAR, $this->E_NO_OF_USED, $this->E_NOTES);
+            if ($this->PDF) {
+                $this->getDocumentProccess($this->E_ID, $this->PDF);
+                $this->PDF = null;
+            }
             $this->E_ID = null;
             session()->flash('message', 'Successfully update');
         } catch (\Exception $e) {
@@ -148,7 +185,7 @@ class PhilhealthModify extends Component
 
         if ($this->showModal) {
 
-            $this->dataList = $this->philHealthServices->ItemAdjustList($this->PATIENT_ID, $this->LOCATION_ID);
+            $this->dataList = $this->philhealthItemAdjustmentServices->ItemAdjustList($this->PATIENT_ID, $this->LOCATION_ID);
             $this->TOTAL = $this->PhicCount();
         }
         return view('livewire.patient.philhealth-modify');

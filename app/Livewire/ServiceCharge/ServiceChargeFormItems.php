@@ -9,6 +9,7 @@ use App\Services\ItemAccountServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
 use App\Services\LocationServices;
+use App\Services\PhilhealthItemAdjustmentServices;
 use App\Services\PhilHealthServices;
 use App\Services\PriceLevelLineServices;
 use App\Services\ServiceChargeServices;
@@ -95,6 +96,7 @@ class ServiceChargeFormItems extends Component
     private $locationServices;
     private $priceLevelLineServices;
     private $itemAccountServices;
+    private $philhealthItemAdjustmentServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         ServiceChargeServices $serviceChargeServices,
@@ -107,7 +109,8 @@ class ServiceChargeFormItems extends Component
         DateServices $dateServices,
         LocationServices $locationServices,
         PriceLevelLineServices $priceLevelLineServices,
-        ItemAccountServices $itemAccountServices
+        ItemAccountServices $itemAccountServices,
+        PhilhealthItemAdjustmentServices $philhealthItemAdjustmentServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->serviceChargeServices = $serviceChargeServices;
@@ -121,6 +124,7 @@ class ServiceChargeFormItems extends Component
         $this->locationServices = $locationServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
         $this->itemAccountServices = $itemAccountServices;
+        $this->philhealthItemAdjustmentServices = $philhealthItemAdjustmentServices;
     }
     public function updatedcodeBase()
     {
@@ -332,7 +336,7 @@ class ServiceChargeFormItems extends Component
             $this->accountList = [];
             $this->saveSuccess = $this->saveSuccess ? false : true;
             $this->updatedcodeBase();
-            
+
             if ($this->philHealthServices->PHIL_HEALTH_ITEM_ID == $prime_item_id) {
                 $count = $this->serviceChargeServices->GetCountByYear(
                     $prime_item_id,
@@ -340,11 +344,12 @@ class ServiceChargeFormItems extends Component
                     $this->PATIENT_ID,
                     $this->LOCATION_ID
                 );
-                $countAdjust = $this->philHealthServices->ItemAdjustGet(
+                $countAdjust = $this->philhealthItemAdjustmentServices->ItemAdjustGet(
                     $this->PATIENT_ID,
                     $this->LOCATION_ID,
                     $this->dateServices->NowYear()
                 );
+
                 $totalCount = $count + $countAdjust;
                 $resultcount = ['count' => $totalCount];
                 $this->dispatch('phic-message', result: $resultcount);
@@ -558,7 +563,6 @@ class ServiceChargeFormItems extends Component
     public function OpenMultiPayment()
     {
         $this->dispatch('cash-payment-prompt-multi');
-
     }
     public function render()
     {

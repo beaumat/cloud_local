@@ -135,6 +135,7 @@ class BillingForm extends Component
             $returnData['filename'] . '.' . $returnData['extension'],
             $returnData['new_path']
         );
+        $this->PDF;
     }
     public string $tab = 'item';
     #[On('select-tab')]

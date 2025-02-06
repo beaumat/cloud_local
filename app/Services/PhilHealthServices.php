@@ -552,7 +552,7 @@ class PhilHealthServices
                 DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                DB::raw('(select count(*) from service_charges inner join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID where service_charges_items.ITEM_ID = '. $this->PHIL_HEALTH_ITEM_ID .' and service_charges.LOCATION_ID = philhealth.LOCATION_ID  and service_charges.PATIENT_ID = philhealth.CONTACT_ID and service_charges.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
+                DB::raw('(select count(*) from service_charges inner join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID where service_charges_items.ITEM_ID = ' . $this->PHIL_HEALTH_ITEM_ID . ' and service_charges.LOCATION_ID = philhealth.LOCATION_ID  and service_charges.PATIENT_ID = philhealth.CONTACT_ID and service_charges.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
                 'philhealth.P1_TOTAL',
                 'philhealth.PAYMENT_AMOUNT',
                 'philhealth.AR_NO',
@@ -810,78 +810,7 @@ class PhilHealthServices
                 ]);
         }
     }
-    public function ItemAdjustStore(int $PATIENT_ID, int $LOCATION_ID, int $NO_OF_USED, int $YEAR, string $NOTES)
-    {
-
-        $ID = $this->object->ObjectNextID('PHILHEALTH_ITEM_ADJUSTMENT');
-
-        PhilhealthItemAdjustment::create(
-            [
-                'ID'            => $ID,
-                'PATIENT_ID'    => $PATIENT_ID,
-                'LOCATION_ID'   => $LOCATION_ID,
-                'NO_OF_USED'    => $NO_OF_USED,
-                'YEAR'          => $YEAR,
-                'NOTES'         => $NOTES
-            ]
-        );
-    }
-    public function ItemAdjustUpdate(int $ID, int $YEAR, int $NO_OF_USED, string $NOTES)
-    {
-
-        PhilhealthItemAdjustment::where('ID', $ID)
-            ->update(
-                [
-                    'YEAR'       => $YEAR,
-                    'NO_OF_USED' => $NO_OF_USED,
-                    'NOTES'      => $NOTES
-                ]
-            );
-    }
-    public function ItemAdjustDelete(int $ID)
-    {
-
-        PhilhealthItemAdjustment::where('ID', '=', $ID)->delete();
-    }
-    public function GetItemAdjust(int $ID)
-    {
-
-        $result =   PhilhealthItemAdjustment::where('ID', '=', $ID)->first();
-        if ($result) {
-            return $result;
-        }
-
-        return null;
-    }
-    public function ItemAdjustList(int $PATIENT_ID, int $LOCATION_ID)
-    {
-
-        $result = PhilhealthItemAdjustment::query()
-            ->select(['ID', 'NO_OF_USED', 'YEAR', 'NOTES'])
-            ->where('PATIENT_ID', $PATIENT_ID)
-            ->where('LOCATION_ID', $LOCATION_ID)
-            ->get();
-
-        return $result;
-    }
-
-    public function ItemAdjustGet(int $PATIENT_ID, int $LOCATION_ID, int $YEAR): int
-    {
-        $result = PhilhealthItemAdjustment::query()
-            ->select(['NO_OF_USED'])
-            ->where('PATIENT_ID', $PATIENT_ID)
-            ->where('LOCATION_ID', $LOCATION_ID)
-            ->where('YEAR', $YEAR)
-            ->first();
-
-        if ($result) {
-
-            return $result->NO_OF_USED ?? 0;
-        }
-
-        return 0;
-    }
-
+   
     public function DoctorPinformat(string $input): string
     {
         // Format the string

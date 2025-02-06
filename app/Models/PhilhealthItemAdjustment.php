@@ -18,6 +18,8 @@ class PhilhealthItemAdjustment extends Model
         'LOCATION_ID',
         'NO_OF_USED',
         'YEAR',
-        'NOTES'
+        'NOTES',
+        'FILE_NAME',
+        'FILE_PATH'
     ];
 }

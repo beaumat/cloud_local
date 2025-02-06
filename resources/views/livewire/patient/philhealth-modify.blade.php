@@ -20,6 +20,7 @@
                                     <th class="col-1">Year</th>
                                     <th class="col-1">No of Used</th>
                                     <th>Notes</th>
+                                    <th class="col-2 text-center">Attachment</th>
                                     <th class="text-center col-1">
                                         Action
                                     </th>
@@ -61,11 +62,39 @@
                                         </td>
                                         <td>
                                             @if ($list->ID == $E_ID)
+                                                <div class="input-group input-group-xs">
+                                                    <div class="custom-file text-xs">
+                                                        <input type="file"
+                                                            class="custom-file-input custom-file-input-xs text-xs"
+                                                            id="fileUpload" wire:model='PDF'>
+                                                        <label class="custom-file-label custom-file-label-xs text-xs"
+                                                            for="fileUpload">
+                                                            @if ($PDF)
+                                                                {{ $PDF->getClientOriginalName() }}
+                                                            @else
+                                                                Choose file
+                                                            @endif
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                @if ($list->FILE_PATH)
+                                                    <a target="_blank" class="btn btn-primary btn-xs w-100"
+                                                        href="{{ asset('storage/' . $list->FILE_PATH) }}">
+                                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i> ViewFile
+
+                                                    </a>
+                                                @endif
+                                            @endif
+
+                                        </td>
+                                        <td>
+                                            @if ($list->ID == $E_ID)
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <button type="button" class="btn btn-xs btn-primary w-100"
                                                             wire:click='Update()'>
-                                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                          <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
                                                     <div class="col-6">
@@ -105,6 +134,24 @@
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm" wire:model='NOTES' />
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-xs">
+                                            <div class="custom-file text-xs">
+                                                <input type="file"
+                                                    class="custom-file-input custom-file-input-xs text-xs"
+                                                    id="fileUpload" wire:model='NEW_PDF'>
+                                                <label class="custom-file-label custom-file-label-xs text-xs"
+                                                    for="fileUpload">
+                                                    @if ($NEW_PDF)
+                                                        {{ $NEW_PDF->getClientOriginalName() }}
+                                                    @else
+                                                        Choose file
+                                                    @endif
+                                                </label>
+                                            </div>
+                                        </div>
+
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-xs btn-success w-100"

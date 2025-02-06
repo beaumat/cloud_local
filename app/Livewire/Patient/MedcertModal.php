@@ -64,12 +64,14 @@ class MedcertModal extends Component
         );
 
         try {
-            $this->medCertServices->UpdatePatientMedCert($this->PATIENT_ID, $this->MED_CERT_SCHED_ID, $this->MED_CERT_NURSE_ID);
+            $this->medCertServices->UpdatePatientMedCert(
+                $this->PATIENT_ID,
+                $this->MED_CERT_SCHED_ID,
+                $this->MED_CERT_NURSE_ID
+            );
             session()->flash('message', 'Successfully updated');
-      
         } catch (\Exception $th) {
             session()->flash('error', $th->getMessage());
-      
         }
     }
 

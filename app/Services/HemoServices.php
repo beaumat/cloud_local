@@ -1618,7 +1618,7 @@ class HemoServices
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
 
-        $sc =  PhilhealthItemAdjustment::where('PATIENT_ID','=', $CUSTOMER_ID)
+        $sc = (int) PhilhealthItemAdjustment::where('PATIENT_ID','=', $CUSTOMER_ID)
             ->where('LOCATION_ID','=', $LOCATION_ID)
             ->where('YEAR','=', $year)
             ->sum('NO_OF_USED');
