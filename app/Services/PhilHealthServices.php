@@ -552,7 +552,7 @@ class PhilHealthServices
                 DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
+                DB::raw('(select count(*) from service_charges inner join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID where service_charges_items.ITEM_ID = '. $this->PHIL_HEALTH_ITEM_ID .' and service_charges.LOCATION_ID = philhealth.LOCATION_ID  and service_charges.PATIENT_ID = philhealth.CONTACT_ID and service_charges.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
                 'philhealth.P1_TOTAL',
                 'philhealth.PAYMENT_AMOUNT',
                 'philhealth.AR_NO',
