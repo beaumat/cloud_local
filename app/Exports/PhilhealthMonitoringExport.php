@@ -67,13 +67,13 @@ class PhilhealthMonitoringExport implements FromCollection, ShouldAutoSize
                 'CON'           => OtherServices::formatDates($list->CONFINE_PERIOD),
                 'NOT'           => $list->HEMO_TOTAL,
                 'FIRST_CASE'    => number_format($list->P1_TOTAL, 2),
-                'D_PAID'        => date('M/d/Y', strtotime($list->PAID_DATE)),
+                'D_PAID'        => $list->PAID_DATE ? date('M/d/Y', strtotime($list->PAID_DATE)) : '',
                 'OR'            => $list->OR_NUMBER ?? '',
-                'WTAX'          => number_format($list->TAX_AMOUNT, 2),
-                'PAID'          => number_format($list->PAID_AMOUNT, 2),
-                'GROSS'         => number_format($list->PAID_AMOUNT + $list->TAX_AMOUNT, 2),
-                'PF'            => number_format($list->DOCTOR_PF, 2),
-                'NET'           => number_format($list->PAID_AMOUNT + $list->TAX_AMOUNT - $list->DOCTOR_PF, 2),
+                'WTAX'          => $list->TAX_AMOUNT > 0 ? number_format($list->TAX_AMOUNT, 2) : '',
+                'PAID'          => $list->PAID_AMOUNT > 0 ? number_format($list->PAID_AMOUNT, 2) : '',
+                'GROSS'         => $list->PAID_AMOUNT > 0 ?  number_format($list->PAID_AMOUNT + $list->TAX_AMOUNT, 2) : '',
+                'PF'            => $list->DOCTOR_PF > 0 ? number_format($list->DOCTOR_PF, 2) : '',
+                'NET'           => $list->DOCTOR_PF > 0 ?  number_format($list->PAID_AMOUNT + $list->TAX_AMOUNT - $list->DOCTOR_PF, 2) : ' ',
                 'STATUS'        => $list->DOCTOR_PF > 0 ? ($list->DOCTOR_PF_BALANCE > 0 ? 'Not Paid' : 'Paid') : ' '
             ];
 
@@ -100,7 +100,7 @@ class PhilhealthMonitoringExport implements FromCollection, ShouldAutoSize
             'STATUS'        => '',
         ];
         $finalData[] = array_values($rowData);
-        
+
         $rowData = [
             'NO'            => '',
             'DATE'          => '',
