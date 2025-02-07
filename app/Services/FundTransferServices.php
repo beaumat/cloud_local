@@ -47,16 +47,17 @@ class FundTransferServices
 
         return $ID;
     }
-    public function Update(int $ID, string $CODE, int $TO_ACCOUNT_ID, int $FROM_NAME_ID, int $TO_NAME_ID, int $FROM_LOCATION_ID, int $TO_LOCATION_ID, int $INTER_LOCATION_ACCOUNT_ID, string $NOTES, float $AMOUNT)
+    public function Update(int $ID, string $CODE, int $FROM_ACCOUNT_ID, int $TO_ACCOUNT_ID, int $FROM_NAME_ID, int $TO_NAME_ID, int $FROM_LOCATION_ID, int $TO_LOCATION_ID, int $INTER_LOCATION_ACCOUNT_ID, string $NOTES, float $AMOUNT)
     {
 
         FundTransfer::where('ID', '=', $ID)
             ->update([
                 'ID'                        => $ID,
                 'CODE'                      => $CODE,
+                'FROM_ACCOUNT_ID'           => $FROM_ACCOUNT_ID,
                 'TO_ACCOUNT_ID'             => $TO_ACCOUNT_ID,
-                'FROM_NAME_ID'              => $FROM_NAME_ID,
-                'TO_NAME_ID'                => $TO_NAME_ID,
+                'FROM_NAME_ID'              => $FROM_NAME_ID > 0 ? $FROM_NAME_ID : null,
+                'TO_NAME_ID'                => $TO_NAME_ID > 0 ? $TO_NAME_ID : null,
                 'FROM_LOCATION_ID'          => $FROM_LOCATION_ID,
                 'TO_LOCATION_ID'            => $TO_LOCATION_ID,
                 'INTER_LOCATION_ACCOUNT_ID' => $INTER_LOCATION_ACCOUNT_ID > 0 ? $INTER_LOCATION_ACCOUNT_ID : null,

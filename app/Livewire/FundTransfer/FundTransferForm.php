@@ -69,6 +69,7 @@ class FundTransferForm extends Component
 
 
     ) {
+
         $this->fundTransferServices = $fundTransferServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -146,13 +147,24 @@ class FundTransferForm extends Component
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('companygeneral_journal')->with('error', $errorMessage);
+            return Redirect::route('bankingfund_transfer')->with('error', $errorMessage);
         }
+
         $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
         $this->DATE = $this->userServices->getTransactionDateDefault();
+        $this->FROM_ACCOUNT_ID = 0;
+        $this->TO_ACCOUNT_ID = 0;
+
+        $this->FROM_LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->TO_LOCATION_ID = 0;
+
+        $this->FROM_NAME_ID = 0;
+        $this->TO_NAME_ID = 0;
+        $this->AMOUNT = 0;
+
 
         $this->NOTES = '';
 
@@ -169,12 +181,15 @@ class FundTransferForm extends Component
         // 'CODE'          =>  $this->ID > 0 ? 'required|max:20|unique:general_journal,code,' . $this->ID : 'nullable',
         $this->validate(
             [
-                'CODE'          => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'DATE'              => 'required',
-                'FROM_LOCATION_ID'   => 'required|exists:location,id',
-                'TO_LOCATION_ID'   => 'required|exists:location,id',
-                'FROM_NAME_ID'    =>  $this->CONTACT_ID  > 0 ? 'exists:contact,id' : 'nullable',
-
+                'CODE'                  => 'nullable|max:20|unique:fund_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'DATE'                  => 'required|date',
+                'FROM_LOCATION_ID'      => 'required|exists:location,id',
+                'TO_LOCATION_ID'        => 'required|exists:location,id',
+                'FROM_ACCOUNT_ID'       => 'required|exists:account,id',
+                'TO_ACCOUNT_ID'         => 'required|exists:account,id',
+                'FROM_NAME_ID'          =>  $this->FROM_NAME_ID  > 0 ? 'exists:contact,id' : 'nullable',
+                'TO_NAME_ID'            =>  $this->TO_NAME_ID  > 0 ? 'exists:contact,id' : 'nullable',
+                'AMOUNT'                => 'required|numeric|not_in:0'
             ],
             [],
             [
@@ -182,8 +197,11 @@ class FundTransferForm extends Component
                 'DATE'                  => 'Date',
                 'FROM_LOCATION_ID'      => 'From Location',
                 'TO_LOCATION_ID'        => 'To Location',
+                'FROM_ACCOUNT_ID'       => 'From Account',
+                'TO_ACCOUNT_ID'         => 'To Account',
                 'FROM_NAME_ID'          => 'From Name',
-                'TO_NAME_ID'            => 'To Name'
+                'TO_NAME_ID'            => 'To Name',
+                'AMOUNT'                => 'Amount Fund',  
             ]
         );
 
@@ -203,15 +221,15 @@ class FundTransferForm extends Component
                     0,
                     $this->NOTES,
                     $this->AMOUNT
-
                 );
 
-                return Redirect::route('companygeneral_journal_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+                return Redirect::route('bankingfund_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
                 $this->fundTransferServices->Update(
                     $this->ID,
                     $this->CODE,
+                    $this->FROM_ACCOUNT_ID,
                     $this->TO_ACCOUNT_ID,
                     $this->FROM_NAME_ID,
                     $this->TO_NAME_ID,
@@ -233,7 +251,7 @@ class FundTransferForm extends Component
 
     public function updateCancel()
     {
-        return Redirect::route('companygeneral_journal_edit', ['id' => $this->ID]);
+        return Redirect::route('bankingfund_transfer_edit', ['id' => $this->ID]);
     }
 
     #[On('clear-alert')]
@@ -265,7 +283,7 @@ class FundTransferForm extends Component
                     DB::rollBack();
                     return;
                 }
-                
+
                 DB::commit();
 
                 $data = $this->fundTransferServices->get($this->ID);
