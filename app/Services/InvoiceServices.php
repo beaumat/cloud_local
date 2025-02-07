@@ -254,7 +254,8 @@ class InvoiceServices
                         ->orWhere('invoice.AMOUNT', 'like', '%' . $search . '%')
                         ->orWhere('invoice.NOTES', 'like', '%' . $search . '%')
                         ->orWhere('c.NAME', 'like', '%' . $search . '%')
-                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                        ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%')
+                        ->orWhere('invoice.PO_NUMBER','like', '%' . $search . '%');
                 });
             })
             ->orderBy('invoice.ID', 'desc')
