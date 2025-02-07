@@ -76,7 +76,7 @@ use App\Services\OtherServices;
                                         <select
                                             @if (Auth::user()->locked_location) style="opacity:
                                                 0.5;pointer-events: none;" @endif
-                                            name="location" wire:model.live='LOCATION_ID'
+                                            name="location" wire:model='LOCATION_ID'
                                             class="form-control form-control-sm text-xs ">
                                             <option value="0"> All Location</option>
                                             @foreach ($locationList as $item)
