@@ -17,8 +17,7 @@
                                 </div>
                                 <div class="col-sm-6 text-right">
                                     @if ($ID > 0)
-                                    @else
-                                        Create
+                                        <i> {{ $STATUS_DESCRIPTION }}</i>
                                     @endif
                                 </div>
                             </div>
@@ -28,12 +27,9 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-
-
                                             <div class="card bg-light">
                                                 <div class="card-header card-primary text-primary text-sm">
                                                     Transfer
-
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="container">
@@ -107,13 +103,6 @@
                                             </div>
 
 
-
-
-
-
-
-
-
                                         </div>
                                         <div class="col-md-4">
                                             <div class="card bg-light">
@@ -184,18 +173,30 @@
                                                                         wire:model='FROM_NAME_ID' />
                                                                 @endif
                                                             </div>
-
+                                                            <div class="col-md-12">
+                                                                @if ($Modify)
+                                                                    <livewire:select-option
+                                                                        name="INTER_LOCATION_ACCOUNT_ID"
+                                                                        titleName="Inter Location Account"
+                                                                        :options="$interLocationAccountList" :zero="true"
+                                                                        :isDisabled=false
+                                                                        wire:model='INTER_LOCATION_ACCOUNT_ID' />
+                                                                @else
+                                                                    <livewire:select-option
+                                                                        name="INTER_LOCATION_ACCOUNT_ID"
+                                                                        titleName="Inter Location Account"
+                                                                        :options="$interLocationAccountList" :zero="true"
+                                                                        :isDisabled=true
+                                                                        wire:model='INTER_LOCATION_ACCOUNT_ID' />
+                                                                @endif
+                                                            </div>
                                                         </div>
 
                                                     </div>
                                                 </div>
                                             </div>
-                                            <label></label>
 
                                         </div>
-
-
-
                                     </div>
                                 </div>
                             </div>
@@ -226,7 +227,7 @@
                                         @endif
 
                                         @if ($STATUS == 15)
-                                            @can('company.general-journal.update')
+                                            @can('banking.fund-transfer.update')
                                                 <button type="button" wire:click='getUnposted()'
                                                     class="btn btn-sm btn-secondary"
                                                     wire:confirm="Are you sure you want to unpost?">
@@ -238,21 +239,21 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS == 15)
-                                            @can('company.general-journal.print')
-                                                <a type="button" target="_BLANK"
+                                            @can('banking.fund-transfer.print')
+                                                {{-- <a type="button" target="_BLANK"
                                                     href="{{ route('companygeneral_journal_print', ['id' => $ID]) }}"
                                                     class="btn btn-sm btn-dark">
                                                     <i class="fa fa-print" aria-hidden="true"></i> Print
-                                                </a>
+                                                </a> --}}
 
                                                 <button type="button" wire:click='OpenJournal()'
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                                 </button>
                                             @endcan
-                                            @can('company.general-journal.create')
+                                            @can('banking.fund-transfer.create')
                                                 <a id="new" title="Create"
-                                                    href="{{ route('companygeneral_journal_create') }}"
+                                                    href="{{ route('bankingfund_transfer_credit') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endcan
                                         @endif

@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\FundTransfer;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class FundTransferServices
 {
@@ -70,7 +72,7 @@ class FundTransferServices
     {
         FundTransfer::where('ID', '=', $ID)->delete();
     }
-    public function Search($search, int $locationId)
+    public function Search($search, int $locationId): LengthAwarePaginator
     {
 
         $result = FundTransfer::query()
@@ -79,10 +81,11 @@ class FundTransferServices
                 'fund_transfer.CODE',
                 'fund_transfer.DATE',
                 'l.NAME as LOCATION_FROM',
-                't.NAME as LOCATION_TO',
-                'c.NAME as FROM_NAME',
-                'ct.NAME as TO_NAME',
+                DB::raw("(select location.NAME from location where ID = fund_transfer.TO_LOCATION_ID ) as LOCATION_TO"),
+                DB::raw("(select contact.PRINT_NAME_AS from contact  where ID = fund_transfer.FROM_NAME_ID) as FROM_NAME"),
+                DB::raw("(select contact.PRINT_NAME_AS from contact  where ID = fund_transfer.TO_NAME_ID) as TO_NAME"),
                 'fund_transfer.NOTES',
+                'fund_transfer.AMOUNT'
             ])
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'fund_transfer.FROM_LOCATION_ID');
@@ -90,18 +93,53 @@ class FundTransferServices
                     $join->where('l.ID', $locationId);
                 }
             })
-            ->join('location as t', 't.ID', '=', 'fund_transfer.TO_LOCATION_ID')
-            ->leftJoin('contact as c', 'c.ID', '=', 'fund_transfer.FROM_NAME_ID')
-            ->leftJoin('contact as ct', 'c.ID', '=', 'fund_transfer.TO_NAME_ID')
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
                     $q->where('fund_transfer.CODE', 'like', '%' . $search . '%')
                         ->orWhere('fund_transfer.NOTES', 'like', '%' . $search . '%')
-                        ->orWhere('c.NAME', 'like', '%' . $search . '%');
+                        ->orWhere('l.NAME', 'like', '%' . $search . '%');
                 });
             })
             ->orderBy('fund_transfer.ID', 'desc')
             ->paginate(30);
+
+        return $result;
+    }
+    public function StatusUpdate(int $ID, int $STATUS)
+    {
+        FundTransfer::where('ID', $ID)
+            ->update([
+                'STATUS'        => $STATUS,
+                'STATUS_DATE'   => $this->dateServices->NowDate()
+            ]);
+    }
+    public function getJournalTo(int $ID, bool $isDebit, bool $useInter)
+    {
+        $result = FundTransfer::query()
+            ->select([
+                'ID',
+                ($useInter ? 'INTER_LOCATION_ACCOUNT_ID' : 'TO_ACCOUNT_ID') .  ' as ACCOUNT_ID',
+                DB::raw(' IFNULL(TO_NAME_ID,0) as SUBSIDIARY_ID'),
+                'AMOUNT',
+                DB::raw(($isDebit ? '0' : '1') . ' as ENTRY_TYPE')
+            ])
+            ->where('ID', '=', $ID)
+            ->get();
+
+        return $result;
+    }
+    public function getJournalFrom(int $ID, bool $isDebit, bool $useInter)
+    {
+        $result = FundTransfer::query()
+            ->select([
+                'ID',
+                ($useInter ? 'INTER_LOCATION_ACCOUNT_ID' : 'FROM_ACCOUNT_ID') . ' as ACCOUNT_ID',
+                DB::raw(' IFNULL(FROM_NAME_ID,0) as SUBSIDIARY_ID'),
+                'AMOUNT',
+                DB::raw(($isDebit ? '0' : '1') . ' as ENTRY_TYPE')
+            ])
+            ->where('ID', '=', $ID)
+            ->get();
 
         return $result;
     }

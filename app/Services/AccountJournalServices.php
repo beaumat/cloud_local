@@ -35,7 +35,7 @@ class AccountJournalServices
         WHEN o.`ID` = 81    THEN ( select deposit.`CASH_BACK_NOTES` from deposit where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 82    THEN ( select deposit.`CASH_BACK_NOTES` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 84    THEN ( select general_journal.`NOTES` from general_journal_details join general_journal on general_journal.ID = general_journal_details.GENERAL_JOURNAL_ID where general_journal_details.ID = aj.OBJECT_ID and general_journal.DATE = aj.OBJECT_DATE  and general_journal.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 93    THEN ( select fund_transfer.`CODE` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
+        WHEN o.`ID` = 93    THEN ( select fund_transfer.`CODE` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.TO_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
         WHEN o.`ID` = 70    THEN ( select build_assembly.`CUSTOM_FIELD1` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71    THEN ( select build_assembly.`CUSTOM_FIELD1` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 72    THEN ( select  0  as `CODE` from tax_credit where tax_credit.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
@@ -73,7 +73,7 @@ class AccountJournalServices
         WHEN o.`ID` = 81    THEN ( select deposit.`CODE` from deposit where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 82    THEN ( select deposit.`CODE` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 84    THEN ( select general_journal.`CODE` from general_journal_details join general_journal on general_journal.ID = general_journal_details.GENERAL_JOURNAL_ID where general_journal_details.ID = aj.OBJECT_ID and general_journal.DATE = aj.OBJECT_DATE  and general_journal.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 93    THEN ( select fund_transfer.`CODE` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
+        WHEN o.`ID` = 93    THEN ( select fund_transfer.`CODE` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.TO_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
         WHEN o.`ID` = 70    THEN ( select build_assembly.`CODE` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71    THEN ( select build_assembly.`CODE` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 72    THEN ( select tax_credit.`CODE` from tax_credit where tax_credit.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
@@ -114,7 +114,7 @@ class AccountJournalServices
         WHEN o.`ID` = 81    THEN ( select deposit.`NOTES` from deposit where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 82    THEN ( select deposit.`NOTES` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 84    THEN ( select general_journal.`NOTES` from general_journal_details join general_journal on general_journal.ID = general_journal_details.GENERAL_JOURNAL_ID where general_journal_details.ID = aj.OBJECT_ID and general_journal.DATE = aj.OBJECT_DATE  and general_journal.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 93    THEN ( select fund_transfer.`NOTES` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
+        WHEN o.`ID` = 93    THEN ( select fund_transfer.`NOTES` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.TO_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
         WHEN o.`ID` = 70    THEN ( select build_assembly.`NOTES` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71    THEN ( select build_assembly.`NOTES` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         
@@ -160,7 +160,7 @@ class AccountJournalServices
         WHEN o.`ID` = 81    THEN ( select deposit.`NOTES` from deposit where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 82    THEN ( select deposit.`NOTES` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 84    THEN ( select contact.PRINT_NAME_AS from general_journal_details join general_journal on general_journal.ID = general_journal_details.GENERAL_JOURNAL_ID left outer join contact on contact.ID = general_journal.CONTACT_ID where general_journal_details.ID = aj.OBJECT_ID and general_journal.DATE = aj.OBJECT_DATE  and general_journal.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 93    THEN ( select fund_transfer.`NOTES` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
+        WHEN o.`ID` = 93    THEN ( select if(aj.LOCATION_ID = fund_transfer.FROM_LOCATION_ID , ( select contact.PRINT_NAME_AS from contact where contact.ID = fund_transfer.FROM_NAME_ID   limit 1) , if(aj.LOCATION_ID = fund_transfer.TO_LOCATION_ID , ( select contact.PRINT_NAME_AS from contact where contact.ID = fund_transfer.TO_NAME_ID   limit 1) , null ) )   as PRIN_NAME_AS  from fund_transfer  where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.TO_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
         WHEN o.`ID` = 70    THEN ( select item.DESCRIPTION from build_assembly join item on item.ID = build_assembly.ASSEMBLY_ITEM_ID  where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71    THEN ( select item.DESCRIPTION from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  join  item on item.ID = build_assembly_items.ITEM_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )    
         WHEN o.`ID` = 72    THEN ( select contact.`PRINT_NAME_AS` from tax_credit left join contact on contact.ID = tax_credit.CUSTOMER_ID where tax_credit.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
@@ -298,7 +298,7 @@ class AccountJournalServices
             ->where('OBJECT_TYPE', $OBJECT_TYPE)
             ->where('OBJECT_ID', $OBJECT_ID)
             ->first();
-      
+
         if ($data) { // if exists
             return (int) $data->JOURNAL_NO;
         }

@@ -29,16 +29,14 @@ class FundTransferForm extends Component
     public int $FROM_ACCOUNT_ID;
     public int $TO_ACCOUNT_ID;
 
-
     public int $FROM_NAME_ID;
     public int $TO_NAME_ID;
 
-
     public float $AMOUNT;
-
-
     public string $NOTES;
 
+    public int $INTER_LOCATION_ACCOUNT_ID;
+    public $interLocationAccountList = [];
     public $fromLocationList = [];
     public $toLocationList = [];
 
@@ -66,8 +64,6 @@ class FundTransferForm extends Component
         AccountJournalServices $accountJournalServices,
         ContactServices $contactServices,
         AccountServices $accountServices
-
-
     ) {
 
         $this->fundTransferServices = $fundTransferServices;
@@ -80,59 +76,38 @@ class FundTransferForm extends Component
     }
     public function LoadDropdown()
     {
-        $this->fromLocationList = $this->locationServices->getList();
-        $this->toLocationList = $this->locationServices->getList();
+        $dataLocationList = $this->locationServices->getList();
+        $this->fromLocationList = $dataLocationList;
+        $this->toLocationList = $dataLocationList;
 
-        $this->fromContactList = $this->contactServices->getListAllType();
-        $this->toContactList = $this->contactServices->getListAllType();
 
-        $this->fromAccountList = $this->accountServices->getAccount(false);
-        $this->toAccountList = $this->accountServices->getAccount(false);
+        $dataContactList =  $this->contactServices->getListAllType();
+        $this->fromContactList = $dataContactList;
+        $this->toContactList = $dataContactList;
+
+        $acctList =  $this->accountServices->getAccount(false);
+        $this->fromAccountList =  $acctList;
+        $this->toAccountList = $acctList;
+        $this->interLocationAccountList = $acctList;
     }
-
-    // public function AccountJournal(): bool
-    // {
-    //     try {
-
-
-    //         $JOURNAL_NO = $this->accountJournalServices->getRecord($this->fundTransferServices->object_type_id, $this->ID);
-    //         if ($JOURNAL_NO  == 0) {
-    //             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->fundTransferServices->object_type_id, $this->ID) + 1;
-    //         }
-
-    //         //Main
-    //         $generalJournalData = $this->fundTransferServices->getGeneralJournalEntries($this->ID);
-
-    //         $this->accountJournalServices->JournalExecute(
-    //             $JOURNAL_NO,
-    //             $generalJournalData,
-    //             $this->LOCATION_ID,
-    //             $generaljournal,
-    //             $this->DATE
-    //         );
-
-    //         $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-
-    //         $debit_sum = (float) $data['DEBIT'];
-    //         $credit_sum = (float) $data['CREDIT'];
-
-    //         if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
-    //             return true;
-    //         }
-    //         session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
-    //         return false;
-    //     } catch (\Exception $e) {
-    //         $errorMessage = 'Error occurred: ' . $e->getMessage();
-    //         session()->flash('error', $errorMessage);
-    //         return false;
-    //     }
-    // }
 
     private function getInfo($data)
     {
         $this->ID = $data->ID;
         $this->CODE = $data->CODE;
         $this->DATE = $data->DATE;
+        $this->AMOUNT = $data->AMOUNT ?? 0;
+        $this->FROM_ACCOUNT_ID = $data->FROM_ACCOUNT_ID ?? 0;
+        $this->TO_ACCOUNT_ID = $data->TO_ACCOUNT_ID ?? 0;
+        $this->FROM_LOCATION_ID = $data->FROM_LOCATION_ID ?? 0;
+        $this->TO_LOCATION_ID = $data->TO_LOCATION_ID ?? 0;
+        $this->INTER_LOCATION_ACCOUNT_ID = $data->INTER_LOCATION_ACCOUNT_ID ?? 0;
+        $this->TO_NAME_ID = $data->TO_NAME_ID ?? 0;
+        $this->FROM_NAME_ID = $data->FROM_NAME_ID ?? 0;
+        $this->NOTES = $data->NOTES ?? '';
+        $this->STATUS = $data->STATUS ?? 0;
+
+        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
     {
@@ -158,6 +133,8 @@ class FundTransferForm extends Component
         $this->FROM_ACCOUNT_ID = 0;
         $this->TO_ACCOUNT_ID = 0;
 
+        $this->INTER_LOCATION_ACCOUNT_ID = 0;
+
         $this->FROM_LOCATION_ID = $this->userServices->getLocationDefault();
         $this->TO_LOCATION_ID = 0;
 
@@ -178,30 +155,32 @@ class FundTransferForm extends Component
     public function save()
     {
 
-        // 'CODE'          =>  $this->ID > 0 ? 'required|max:20|unique:general_journal,code,' . $this->ID : 'nullable',
+
         $this->validate(
             [
-                'CODE'                  => 'nullable|max:20|unique:fund_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'DATE'                  => 'required|date',
-                'FROM_LOCATION_ID'      => 'required|exists:location,id',
-                'TO_LOCATION_ID'        => 'required|exists:location,id',
-                'FROM_ACCOUNT_ID'       => 'required|exists:account,id',
-                'TO_ACCOUNT_ID'         => 'required|exists:account,id',
-                'FROM_NAME_ID'          =>  $this->FROM_NAME_ID  > 0 ? 'exists:contact,id' : 'nullable',
-                'TO_NAME_ID'            =>  $this->TO_NAME_ID  > 0 ? 'exists:contact,id' : 'nullable',
-                'AMOUNT'                => 'required|numeric|not_in:0'
+                'CODE'                      => 'nullable|max:20|unique:fund_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'DATE'                      => 'required|date',
+                'FROM_LOCATION_ID'          => 'required|exists:location,id',
+                'TO_LOCATION_ID'            => 'required|exists:location,id',
+                'FROM_ACCOUNT_ID'           => 'required|exists:account,id',
+                'TO_ACCOUNT_ID'             => 'required|exists:account,id',
+                'INTER_LOCATION_ACCOUNT_ID' => 'required|exists:account,id',
+                'FROM_NAME_ID'              =>  $this->FROM_NAME_ID  > 0 ? 'exists:contact,id' : 'nullable',
+                'TO_NAME_ID'                =>  $this->TO_NAME_ID  > 0 ? 'exists:contact,id' : 'nullable',
+                'AMOUNT'                    => 'required|numeric|not_in:0'
             ],
             [],
             [
-                'CODE'                  => 'Reference No.',
-                'DATE'                  => 'Date',
-                'FROM_LOCATION_ID'      => 'From Location',
-                'TO_LOCATION_ID'        => 'To Location',
-                'FROM_ACCOUNT_ID'       => 'From Account',
-                'TO_ACCOUNT_ID'         => 'To Account',
-                'FROM_NAME_ID'          => 'From Name',
-                'TO_NAME_ID'            => 'To Name',
-                'AMOUNT'                => 'Amount Fund',  
+                'CODE'                      => 'Reference No.',
+                'DATE'                      => 'Date',
+                'FROM_LOCATION_ID'          => 'From Location',
+                'TO_LOCATION_ID'            => 'To Location',
+                'FROM_ACCOUNT_ID'           => 'From Account',
+                'TO_ACCOUNT_ID'             => 'To Account',
+                'INTER_LOCATION_ACCOUNT_ID' => 'Inter Location Account',
+                'FROM_NAME_ID'              => 'From Name',
+                'TO_NAME_ID'                => 'To Name',
+                'AMOUNT'                    => 'Amount Fund',
             ]
         );
 
@@ -218,11 +197,13 @@ class FundTransferForm extends Component
                     $this->TO_NAME_ID,
                     $this->FROM_LOCATION_ID,
                     $this->TO_LOCATION_ID,
-                    0,
+                    $this->INTER_LOCATION_ACCOUNT_ID,
                     $this->NOTES,
                     $this->AMOUNT
                 );
 
+
+                $this->fundTransferServices->StatusUpdate($this->ID, 0);
                 return Redirect::route('bankingfund_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
@@ -235,11 +216,12 @@ class FundTransferForm extends Component
                     $this->TO_NAME_ID,
                     $this->FROM_LOCATION_ID,
                     $this->TO_LOCATION_ID,
-                    0,
+                    $this->INTER_LOCATION_ACCOUNT_ID,
                     $this->NOTES,
                     $this->AMOUNT
 
                 );
+                $this->fundTransferServices->StatusUpdate($this->ID, 0);
                 session()->flash('message', 'Successfully updated');
             }
             $this->updateCancel();
@@ -248,7 +230,73 @@ class FundTransferForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    private function AccountJournal(): bool
+    {
 
+
+        try {
+            $fundTransfer = $this->fundTransferServices->object_type_id;
+
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($fundTransfer, $this->ID);
+            if ($JOURNAL_NO  == 0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($fundTransfer, $this->ID) + 1;
+            }
+            // Inter From
+            $fundData = $this->fundTransferServices->getJournalFrom($this->ID, true, true);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $fundData,
+                $this->FROM_LOCATION_ID,
+                $fundTransfer,
+                $this->DATE
+            );
+
+            //From
+            $fundData = $this->fundTransferServices->getJournalFrom($this->ID, false, false);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $fundData,
+                $this->FROM_LOCATION_ID,
+                $fundTransfer,
+                $this->DATE
+            );
+
+            // Inter TO
+            $fundData = $this->fundTransferServices->getJournalTo($this->ID, false, true);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $fundData,
+                $this->TO_LOCATION_ID,
+                $fundTransfer,
+                $this->DATE
+            );
+
+            //TO
+            $fundData = $this->fundTransferServices->getJournalTo($this->ID, true, false);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $fundData,
+                $this->TO_LOCATION_ID,
+                $fundTransfer,
+                $this->DATE
+            );
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
     public function updateCancel()
     {
         return Redirect::route('bankingfund_transfer_edit', ['id' => $this->ID]);
@@ -264,39 +312,28 @@ class FundTransferForm extends Component
     public function posted()
     {
         try {
-            $total_result = $this->fundTransferServices->GetTotal($this->ID);
-            $total_debit = (float) $total_result['TOTAL_DEBIT'];
-            $total_credit = (float) $total_result['TOTAL_CREDIT'];
 
-            if ($total_debit == 0) {
-                Session()->flash('error', 'No debit entry');
+
+            if ($this->AMOUNT <= 0) {
+                Session()->flash('error', 'Invalid amount fund.');
                 return;
             }
-            if ($total_credit == 0) {
-                Session()->flash('error', 'No credit entry');
+            DB::beginTransaction();
+            if (!$this->AccountJournal()) {
+                DB::rollBack();
                 return;
             }
+            $this->fundTransferServices->StatusUpdate($this->ID, 15);
+            DB::commit();
 
-            if ($total_debit == $total_credit) {
-                DB::beginTransaction();
-                if (!$this->AccountJournal()) {
-                    DB::rollBack();
-                    return;
-                }
-
-                DB::commit();
-
-                $data = $this->fundTransferServices->get($this->ID);
-                if ($data) {
-                    $this->getInfo($data);
-                    $this->Modify = false;
-                }
-
-                Session()->flash('message', 'Successfully posted');
-                return;
+            $data = $this->fundTransferServices->get($this->ID);
+            if ($data) {
+                $this->getInfo($data);
+                $this->Modify = false;
             }
 
-            Session()->flash('error', 'Invalid disbalanced.');
+            Session()->flash('message', 'Successfully posted');
+            return;
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -306,10 +343,10 @@ class FundTransferForm extends Component
     public function print() {}
     public function OpenJournal()
     {
-        $FirstID = $this->fundTransferServices->getFirstDetailsID($this->ID);
+
         $JOURNAL_NO = $this->accountJournalServices->getRecord(
-            $this->fundTransferServices->object_type_general_journal_details_id,
-            $FirstID
+            $this->fundTransferServices->object_type_id,
+            $this->ID
         );
 
         if ($JOURNAL_NO > 0) {
@@ -327,7 +364,7 @@ class FundTransferForm extends Component
             DB::beginTransaction();
             $this->fundTransferServices->StatusUpdate($this->ID, 16);
             DB::commit();
-            Redirect::route('companygeneral_journal_edit', $this->ID);
+            Redirect::route('bankingfund_transfer_edit', $this->ID);
         } catch (\Throwable $th) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $th->getMessage();

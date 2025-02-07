@@ -386,7 +386,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/fund-transfer')->group(function () {
             Route::get('/', FundTransferList::class)->name('fund_transfer')->middleware(['permission:banking.fund-transfer.view']);
             Route::get('/create', FundTransferForm::class)->name('fund_transfer_credit')->middleware(['permission:banking.fund-transfer.create']);
-            Route::get('/{id}/edit', FundTransferForm::class)->name('fund_transfer_edit')->middleware(['permission:banking.fund-transfer.edit']);
+            Route::get('/{id}/edit', FundTransferForm::class)->name('fund_transfer_edit')->middleware(['permission:banking.fund-transfer.view']);
         });
 
         Route::prefix('/make-cheque')->group(function () {

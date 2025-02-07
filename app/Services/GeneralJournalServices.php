@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\GeneralJournal;
 use App\Models\GeneralJournalDetails;
 use App\Models\GeneralJournalDetailsTemp;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class GeneralJournalServices
@@ -71,7 +72,7 @@ class GeneralJournalServices
     {
         return GeneralJournal::where('ID', $ID)->first();
     }
-    public function Search($search, int $locationId, int $perPage)
+    public function Search($search, int $locationId, int $perPage): LengthAwarePaginator
     {
         $result = GeneralJournal::query()
             ->select([
