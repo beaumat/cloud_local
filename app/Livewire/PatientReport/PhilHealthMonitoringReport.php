@@ -47,10 +47,13 @@ class PhilHealthMonitoringReport extends Component
     }
     public function export()
     {
-       
+        $this->dataList = null;
+
+        $dataExport = $this->philHealthServices->getMonitor($this->YEAR, $this->MONTH, $this->LOCATION_ID);
         return Excel::download(new PhilhealthMonitoringExport(
-            $this->dataList,
+            $dataExport,
         ), 'philhealth-monitoring-export.xlsx');
+ 
     }
     public function render()
     {
