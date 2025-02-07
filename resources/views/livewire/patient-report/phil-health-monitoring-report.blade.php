@@ -59,6 +59,8 @@ use App\Services\OtherServices;
                                             </div>
                                             <button class="btn btn-sm btn-primary mt-4" wire:click='generate()'
                                                 wire:loading.attr='disabled'>Filter</button>
+                                            <button class="btn btn-sm btn-success mt-4" wire:click='export()'
+                                                wire:loading.attr='disabled'>Export</button>
                                             {{-- <button class="btn btn-sm btn-success" wire:click='export()'
                                                 wire:loading.attr='disabled'>Export</button> --}}
                                         </div>

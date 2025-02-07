@@ -2,12 +2,14 @@
 
 namespace App\Livewire\PatientReport;
 
+use App\Exports\PhilhealthMonitoringExport;
 use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Philhealth Monitorning Report')]
 class PhilHealthMonitoringReport extends Component
@@ -24,13 +26,14 @@ class PhilHealthMonitoringReport extends Component
     private $userServices;
     private $dateServices;
     public  function boot(PhilHealthServices $philHealthServices, LocationServices $locationServices, UserServices $userServices, DateServices $dateServices)
-    {   
+    {
         $this->philHealthServices = $philHealthServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->dateServices = $dateServices;
     }
-    public function mount() {
+    public function mount()
+    {
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList  = $this->locationServices->getList();
         $this->YEAR = $this->dateServices->NowYear();
@@ -41,10 +44,13 @@ class PhilHealthMonitoringReport extends Component
     public function generate()
     {
         $this->dataList = $this->philHealthServices->getMonitor($this->YEAR, $this->MONTH, $this->LOCATION_ID);
-    }   
+    }
     public function export()
     {
-
+        $dataExport = $this->philHealthServices->getMonitor($this->YEAR, $this->MONTH, $this->LOCATION_ID);
+        return Excel::download(new PhilhealthMonitoringExport(
+            $dataExport,
+        ), 'philhealth-monitoring-export.xlsx');
     }
     public function render()
     {
