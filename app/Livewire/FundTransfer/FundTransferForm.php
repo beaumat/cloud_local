@@ -170,7 +170,7 @@ class FundTransferForm extends Component
         $this->validate(
             [
                 'CODE'          => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'DATE'          => 'required',
+                'DATE'              => 'required',
                 'FROM_LOCATION_ID'   => 'required|exists:location,id',
                 'TO_LOCATION_ID'   => 'required|exists:location,id',
                 'FROM_NAME_ID'    =>  $this->CONTACT_ID  > 0 ? 'exists:contact,id' : 'nullable',
