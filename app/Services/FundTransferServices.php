@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\FundTransfer;
 
 class FundTransferServices
-{   
+{
     public int $object_type_id = 93; // 
     private $object;
     private $dateServices;
@@ -21,7 +21,7 @@ class FundTransferServices
         $result = FundTransfer::where('ID', '=', $ID)->first();
         return $result;
     }
-    public function Store($DATE, string $CODE, int $FROM_ACCOUNT_ID, int $TO_ACCOUNT_ID, int $FROM_NAME_ID, int $TO_NAME_ID, int $FROM_LOCATION_ID, int $TO_LOCATION_ID, int $INTER_LOCATION_ACCOUNT_ID, string $NOTES, float $AMOUNT)
+    public function Store($DATE, string $CODE, int $FROM_ACCOUNT_ID, int $TO_ACCOUNT_ID, int $FROM_NAME_ID, int $TO_NAME_ID, int $FROM_LOCATION_ID, int $TO_LOCATION_ID, int $INTER_LOCATION_ACCOUNT_ID, string $NOTES, float $AMOUNT): int
     {
 
         $ID = (int) $this->object->ObjectNextID('FUND_TRANSFER');
@@ -44,6 +44,8 @@ class FundTransferServices
             'AMOUNT'                    => $AMOUNT,
             'NOTES'                     => $NOTES
         ]);
+
+        return $ID;
     }
     public function Update(int $ID, string $CODE, int $TO_ACCOUNT_ID, int $FROM_NAME_ID, int $TO_NAME_ID, int $FROM_LOCATION_ID, int $TO_LOCATION_ID, int $INTER_LOCATION_ACCOUNT_ID, string $NOTES, float $AMOUNT)
     {

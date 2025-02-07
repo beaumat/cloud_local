@@ -28,142 +28,170 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <label>Transfer </label>
-                                            <div class="container">
 
-                                                <div class='row'>
-                                                    <div class="col-md-6">
-                                                        @if ($Modify)
-                                                            <livewire:number-input name="AMOUNT" titleName="Amount Fund"
-                                                                :isDisabled=false wire:model='AMOUNT' />
-                                                        @else
-                                                            <livewire:number-input name="AMOUNT" titleName="Amount"
-                                                                :isDisabled=true wire:model='AMOUNT' />
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        @if ($Modify)
-                                                            <livewire:select-option name="TO_ACCOUNT_ID"
-                                                                titleName="To Account" :options="$toAccountList"
-                                                                :zero="true" :isDisabled=false
-                                                                wire:model='TO_ACCOUNT_ID' />
-                                                        @else
-                                                            <livewire:select-option name="TO_ACCOUNT_ID"
-                                                                titleName="To Account" :options="$toAccountList"
-                                                                :zero="true" :isDisabled=true
-                                                                wire:model='TO_ACCOUNT_ID' />
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        @if ($Modify)
-                                                            <livewire:select-option name="TO_LOCATION_ID"
-                                                                titleName="To Location" :options="$toLocationList"
-                                                                :zero="true" :isDisabled=false
-                                                                wire:model='TO_LOCATION_ID' />
-                                                        @else
-                                                            <livewire:select-option name="TO_LOCATION_ID"
-                                                                titleName="To Location" :options="$toLocationList"
-                                                                :zero="true" :isDisabled=true
-                                                                wire:model='TO_LOCATION_ID' />
-                                                        @endif
-                                                    </div>
 
-                                                    <div class="col-md-12">
-                                                        @if ($Modify)
-                                                            <livewire:select-option name="TO_NAME_ID"
-                                                                titleName="To Name" :options="$toContactList" :zero="true"
-                                                                :isDisabled=false wire:model='TO_NAME_ID' />
-                                                        @else
-                                                            <livewire:select-option name="TO_NAME_ID"
-                                                                titleName="To Name" :options="$toContactList"
-                                                                :zero="true" :isDisabled=true
-                                                                wire:model='TO_NAME_ID' />
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        @if ($Modify)
-                                                            <livewire:text-input name="NOTES" titleName="Notes"
-                                                                :isDisabled=false wire:model='NOTES'
-                                                                :vertical="false" />
-                                                        @else
-                                                            <livewire:text-input name="NOTES" titleName="Notes"
-                                                                :isDisabled=true wire:model='NOTES'
-                                                                :vertical="false" />
-                                                        @endif
-                                                    </div>
+                                            <div class="card bg-light">
+                                                <div class="card-header card-primary text-primary text-sm">
+                                                    Transfer
 
                                                 </div>
+                                                <div class="card-body">
+                                                    <div class="container">
+                                                        <div class='row'>
+                                                            <div class="col-md-6">
+                                                                @if ($Modify)
+                                                                    <livewire:number-input name="AMOUNT"
+                                                                        titleName="Amount Fund" :isDisabled=false
+                                                                        wire:model='AMOUNT' />
+                                                                @else
+                                                                    <livewire:number-input name="AMOUNT"
+                                                                        titleName="Amount" :isDisabled=true
+                                                                        wire:model='AMOUNT' />
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                @if ($Modify)
+                                                                    <livewire:select-option name="TO_ACCOUNT_ID"
+                                                                        titleName="To Account" :options="$toAccountList"
+                                                                        :zero="true" :isDisabled=false
+                                                                        wire:model='TO_ACCOUNT_ID' />
+                                                                @else
+                                                                    <livewire:select-option name="TO_ACCOUNT_ID"
+                                                                        titleName="To Account" :options="$toAccountList"
+                                                                        :zero="true" :isDisabled=true
+                                                                        wire:model='TO_ACCOUNT_ID' />
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                @if ($Modify)
+                                                                    <livewire:select-option name="TO_LOCATION_ID"
+                                                                        titleName="To Location" :options="$toLocationList"
+                                                                        :zero="true" :isDisabled=false
+                                                                        wire:model='TO_LOCATION_ID' />
+                                                                @else
+                                                                    <livewire:select-option name="TO_LOCATION_ID"
+                                                                        titleName="To Location" :options="$toLocationList"
+                                                                        :zero="true" :isDisabled=true
+                                                                        wire:model='TO_LOCATION_ID' />
+                                                                @endif
+                                                            </div>
+
+                                                            <div class="col-md-12">
+                                                                @if ($Modify)
+                                                                    <livewire:select-option name="TO_NAME_ID"
+                                                                        titleName="To Name" :options="$toContactList"
+                                                                        :zero="true" :isDisabled=false
+                                                                        wire:model='TO_NAME_ID' />
+                                                                @else
+                                                                    <livewire:select-option name="TO_NAME_ID"
+                                                                        titleName="To Name" :options="$toContactList"
+                                                                        :zero="true" :isDisabled=true
+                                                                        wire:model='TO_NAME_ID' />
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                @if ($Modify)
+                                                                    <livewire:text-input name="NOTES"
+                                                                        titleName="Notes" :isDisabled=false
+                                                                        wire:model='NOTES' :vertical="false" />
+                                                                @else
+                                                                    <livewire:text-input name="NOTES"
+                                                                        titleName="Notes" :isDisabled=true
+                                                                        wire:model='NOTES' :vertical="false" />
+                                                                @endif
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
+
+
+
+
+
+
+
+
+
                                         </div>
                                         <div class="col-md-4">
-                                            <label>Transaction</label>
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        @if ($ID == 0 && auth()->user()->date_enabled)
-                                                            <livewire:date-input name="DATE" titleName="Date"
-                                                                wire:model.live='DATE' :isDisabled="false" />
-                                                        @else
-                                                            <livewire:date-input name="DATE" titleName="Date"
-                                                                wire:model.live='DATE' :isDisabled="true" />
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        @if ($Modify)
-                                                            <livewire:text-input name="Code"
-                                                                titleName="Reference No." :isDisabled=false
-                                                                wire:model='CODE' />
-                                                        @else
-                                                            <livewire:text-input name="Code"
-                                                                titleName="Reference No." :isDisabled=true
-                                                                wire:model='CODE' />
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        @if ($Modify)
-                                                            <livewire:select-option name="FROM_ACCOUNT_ID"
-                                                                titleName="From Account" :options="$fromAccountList"
-                                                                :zero="false" :isDisabled=false
-                                                                wire:model='FROM_ACCOUNT_ID' />
-                                                        @else
-                                                            <livewire:select-option name="FROM_ACCOUNT_ID"
-                                                                titleName="From Account" :options="$fromAccountList"
-                                                                :zero="false" :isDisabled=true
-                                                                wire:model='FROM_ACCOUNT_ID' />
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-md-12"
-                                                        @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                        @if ($Modify)
-                                                            <livewire:select-option name="FROM_LOCATION_ID"
-                                                                titleName="From Location" :options="$fromLocationList"
-                                                                :zero="false" :isDisabled=false
-                                                                wire:model='FROM_LOCATION_ID' />
-                                                        @else
-                                                            <livewire:select-option name="FROM_LOCATION_ID"
-                                                                titleName="From Location" :options="$fromLocationList"
-                                                                :zero="false" :isDisabled=true
-                                                                wire:model='FROM_LOCATION_ID' />
-                                                        @endif
-                                                    </div>
-
-                                                    <div class="col-md-12">
-                                                        @if ($Modify)
-                                                            <livewire:select-option name="FROM_NAME_ID"
-                                                                titleName="From Name" :options="$fromContactList"
-                                                                :zero="true" :isDisabled=false
-                                                                wire:model='FROM_NAME_ID' />
-                                                        @else
-                                                            <livewire:select-option name="FROM_NAME_ID"
-                                                                titleName="From Name" :options="$fromContactList"
-                                                                :zero="true" :isDisabled=true
-                                                                wire:model='FROM_NAME_ID' />
-                                                        @endif
-                                                    </div>
-
+                                            <div class="card bg-light">
+                                                <div class="card-header card-primary text-primary text-sm">
+                                                    Transaction
                                                 </div>
+                                                <div class="card-body">
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                @if ($ID == 0 && auth()->user()->date_enabled)
+                                                                    <livewire:date-input name="DATE" titleName="Date"
+                                                                        wire:model.live='DATE' :isDisabled="false" />
+                                                                @else
+                                                                    <livewire:date-input name="DATE" titleName="Date"
+                                                                        wire:model.live='DATE' :isDisabled="true" />
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                @if ($Modify)
+                                                                    <livewire:text-input name="Code"
+                                                                        titleName="Reference No." :isDisabled=false
+                                                                        wire:model='CODE' />
+                                                                @else
+                                                                    <livewire:text-input name="Code"
+                                                                        titleName="Reference No." :isDisabled=true
+                                                                        wire:model='CODE' />
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                @if ($Modify)
+                                                                    <livewire:select-option name="FROM_ACCOUNT_ID"
+                                                                        titleName="From Account" :options="$fromAccountList"
+                                                                        :zero="true" :isDisabled=false
+                                                                        wire:model='FROM_ACCOUNT_ID' />
+                                                                @else
+                                                                    <livewire:select-option name="FROM_ACCOUNT_ID"
+                                                                        titleName="From Account" :options="$fromAccountList"
+                                                                        :zero="true" :isDisabled=true
+                                                                        wire:model='FROM_ACCOUNT_ID' />
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-md-12"
+                                                                @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                                @if ($Modify)
+                                                                    <livewire:select-option name="FROM_LOCATION_ID"
+                                                                        titleName="From Location" :options="$fromLocationList"
+                                                                        :zero="true" :isDisabled=false
+                                                                        wire:model='FROM_LOCATION_ID' />
+                                                                @else
+                                                                    <livewire:select-option name="FROM_LOCATION_ID"
+                                                                        titleName="From Location" :options="$fromLocationList"
+                                                                        :zero="true" :isDisabled=true
+                                                                        wire:model='FROM_LOCATION_ID' />
+                                                                @endif
+                                                            </div>
 
+                                                            <div class="col-md-12">
+                                                                @if ($Modify)
+                                                                    <livewire:select-option name="FROM_NAME_ID"
+                                                                        titleName="From Name" :options="$fromContactList"
+                                                                        :zero="true" :isDisabled=false
+                                                                        wire:model='FROM_NAME_ID' />
+                                                                @else
+                                                                    <livewire:select-option name="FROM_NAME_ID"
+                                                                        titleName="From Name" :options="$fromContactList"
+                                                                        :zero="true" :isDisabled=true
+                                                                        wire:model='FROM_NAME_ID' />
+                                                                @endif
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <label></label>
+
                                         </div>
 
 

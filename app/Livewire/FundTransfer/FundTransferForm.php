@@ -171,16 +171,19 @@ class FundTransferForm extends Component
             [
                 'CODE'          => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
                 'DATE'          => 'required',
-                'LOCATION_ID'   => 'required|exists:location,id',
-                'CONTACT_ID'    =>  $this->CONTACT_ID  > 0 ? 'exists:contact,id' : 'nullable',
+                'FROM_LOCATION_ID'   => 'required|exists:location,id',
+                'TO_LOCATION_ID'   => 'required|exists:location,id',
+                'FROM_NAME_ID'    =>  $this->CONTACT_ID  > 0 ? 'exists:contact,id' : 'nullable',
 
             ],
             [],
             [
-                'CODE'          => 'Reference No.',
-                'DATE'          => 'Date',
-                'LOCATION_ID'   => 'Location',
-                'CONTACT_ID'    => 'Contact Name'
+                'CODE'                  => 'Reference No.',
+                'DATE'                  => 'Date',
+                'FROM_LOCATION_ID'      => 'From Location',
+                'TO_LOCATION_ID'        => 'To Location',
+                'FROM_NAME_ID'          => 'From Name',
+                'TO_NAME_ID'            => 'To Name'
             ]
         );
 
@@ -191,10 +194,15 @@ class FundTransferForm extends Component
                 $this->ID = $this->fundTransferServices->Store(
                     $this->DATE,
                     $this->CODE,
-                    $this->LOCATION_ID,
-                    $this->ADJUSTING_ENTRY,
+                    $this->FROM_ACCOUNT_ID,
+                    $this->TO_ACCOUNT_ID,
+                    $this->FROM_NAME_ID,
+                    $this->TO_NAME_ID,
+                    $this->FROM_LOCATION_ID,
+                    $this->TO_LOCATION_ID,
+                    0,
                     $this->NOTES,
-                    $this->CONTACT_ID
+                    $this->AMOUNT
 
                 );
 
@@ -204,10 +212,15 @@ class FundTransferForm extends Component
                 $this->fundTransferServices->Update(
                     $this->ID,
                     $this->CODE,
-                    $this->LOCATION_ID,
-                    $this->ADJUSTING_ENTRY,
+                    $this->TO_ACCOUNT_ID,
+                    $this->FROM_NAME_ID,
+                    $this->TO_NAME_ID,
+                    $this->FROM_LOCATION_ID,
+                    $this->TO_LOCATION_ID,
+                    0,
                     $this->NOTES,
-                    $this->CONTACT_ID
+                    $this->AMOUNT
+
                 );
                 session()->flash('message', 'Successfully updated');
             }
@@ -236,6 +249,7 @@ class FundTransferForm extends Component
             $total_result = $this->fundTransferServices->GetTotal($this->ID);
             $total_debit = (float) $total_result['TOTAL_DEBIT'];
             $total_credit = (float) $total_result['TOTAL_CREDIT'];
+
             if ($total_debit == 0) {
                 Session()->flash('error', 'No debit entry');
                 return;
@@ -251,7 +265,7 @@ class FundTransferForm extends Component
                     DB::rollBack();
                     return;
                 }
-                $this->fundTransferServices->StatusUpdate($this->ID, 15);
+                
                 DB::commit();
 
                 $data = $this->fundTransferServices->get($this->ID);
