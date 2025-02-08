@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\TaxCredit;
 use App\Models\TaxCreditInvoices;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class TaxCreditServices
@@ -32,7 +33,7 @@ class TaxCreditServices
     }
     public function Get(int $ID)
     {
-        return TaxCredit::where('ID', $ID)->first();
+        return TaxCredit::where('ID', '=', $ID)->first();
     }
     public function Store(
         string $CODE,
@@ -99,13 +100,14 @@ class TaxCreditServices
     }
     public function setTotal(int $TAX_CREDIT_ID, float $AMOUNT)
     {
-        $data =  TaxCredit::where('ID', $TAX_CREDIT_ID)->update(
-            [
-                'AMOUNT' => $AMOUNT
-            ]
-        );
+        TaxCredit::where('ID', $TAX_CREDIT_ID)
+            ->update(
+                [
+                    'AMOUNT' => $AMOUNT
+                ]
+            );
     }
-    public function Search($search, int $LOCATION_ID, int $perPage)
+    public function Search($search, int $LOCATION_ID, int $perPage): LengthAwarePaginator
     {
 
         $result = TaxCredit::query()
@@ -145,7 +147,7 @@ class TaxCreditServices
 
         return $result;
     }
-    public function StatusUpdate(int $ID, int $STATUS)
+    public function StatusUpdate(int $ID, int $STATUS): void
     {
         TaxCredit::where('ID', '=', $ID)
             ->update([

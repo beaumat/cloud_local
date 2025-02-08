@@ -87,6 +87,7 @@ use App\Livewire\StockTransfer\StockTransferForm;
 use App\Livewire\StockTransfer\StockTransferList;
 use App\Livewire\TaxCredit\TaxCreditForm;
 use App\Livewire\TaxCredit\TaxCreditList;
+use App\Livewire\WithHoldingTax\WithHoldingTaxList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
@@ -173,6 +174,7 @@ use App\Livewire\User\UserList;
 use App\Livewire\User\UserRoles;
 use App\Livewire\Vendor\VendorForm;
 use App\Livewire\Vendor\VendorList;
+use App\Livewire\WithHoldingTax\WithHoldingTaxForm;
 use App\Livewire\WriteCheck\WriteCheckForm;
 use App\Livewire\WriteCheck\WriteCheckFormPrint;
 use App\Livewire\WriteCheck\WriteCheckList;
@@ -331,7 +333,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', BillCreditForm::class)->name('bill_credit_edit')->middleware(['permission:vendor.bill-credit.view']);
         });
 
-        Route::prefix('/withholding-tax')->group(function () {});
+        Route::prefix('/withholding-tax')->group(function () {
+            Route::get('/', WithHoldingTaxList::class)->name('withholding_tax')->middleware(['permission:vendor.withholding-tax.view']);
+            Route::get('/create', WithHoldingTaxForm::class)->name('withholding_tax_create')->middleware(['permission:vendor.withholding-tax.create']);
+            Route::get('/{id}/edit', WithHoldingTaxForm::class)->name('withholding_tax_edit')->middleware(['permission:vendor.withholding-tax.view']);
+        });
     });
     // Vendor End Category
 

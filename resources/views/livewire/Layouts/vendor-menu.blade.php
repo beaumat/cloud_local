@@ -40,5 +40,14 @@
                 </a>
             </li>
         @endcan
+
+         @can('vendor.withholding-tax.view')
+            <li class="nav-item">
+                <a href="{{ route('vendorswithholding_tax') }}"
+                    class="nav-link {{ request()->is('vendors/withholding-tax*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fas fa-balance-scale nav-icon"></i>
+                    <p>Withholding Tax</p>
+                </a>
+        @endcan
     </ul>
 </li>
