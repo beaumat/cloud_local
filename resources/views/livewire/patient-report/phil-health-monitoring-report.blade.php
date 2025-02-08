@@ -61,8 +61,7 @@ use App\Services\OtherServices;
                                                 wire:loading.attr='disabled'>Filter</button>
                                             <button class="btn btn-sm btn-success mt-4" wire:click='export()'
                                                 wire:loading.attr='disabled'>Export</button>
-                                            {{-- <button class="btn btn-sm btn-success" wire:click='export()'
-                                                wire:loading.attr='disabled'>Export</button> --}}
+
                                         </div>
                                         <div class="col-6">
                                         </div>
@@ -97,6 +96,7 @@ use App\Services\OtherServices;
                     <table class="table table-sm table-bordered table-hover">
                         @php
                             $running = 0;
+                            $TOTAL_NOT = 0;
                             $TOTAL_AMOUNT = 0;
                             $TOTAL_WTAX = 0;
                             $TOTAL_PAID = 0;
@@ -142,6 +142,7 @@ use App\Services\OtherServices;
                                     </td>
                                     <td class="text-center">{{ $list->HEMO_TOTAL }}</td>
                                     @php
+                                        $TOTAL_NOT += $list->HEMO_TOTAL;
                                         $TOTAL_AMOUNT += $list->P1_TOTAL;
                                     @endphp
                                     <td class="text-right">{{ number_format($list->P1_TOTAL, 2) }}</td>
@@ -210,7 +211,7 @@ use App\Services\OtherServices;
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <td class="text-center">{{ $TOTAL_NOT }}</td>
                                 <td class="text-right">{{ number_format($TOTAL_AMOUNT, 2) }}</td>
                                 <td></td>
                                 <td></td>
