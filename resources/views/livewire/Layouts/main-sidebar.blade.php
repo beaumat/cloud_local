@@ -31,7 +31,8 @@
                 @if (Auth::user()->can('vendor.purchase-order.view') ||
                         Auth::user()->can('vendor.bill.view') ||
                         Auth::user()->can('vendor.bill-credit.view') ||
-                        Auth::user()->can('vendor.bill-payment.view'))
+                        Auth::user()->can('vendor.bill-payment.view') ||
+                        AUth::user()->can('vendor.withholding-tax.view'))
                     @livewire('Layouts.VendorMenu')
                 @endif
                 @if (Auth::user()->can('company.stock-transfer.view') ||
