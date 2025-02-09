@@ -129,8 +129,9 @@
                             @endif
                         </td>
                         <td>
-                            <input step="0.01" type="number" class="form-control form-control-sm text-right" name="AMOUNT"
-                                wire:model='AMOUNT' />
+                            {{-- <input step="0.01" type="number" class="form-control form-control-sm text-right" name="AMOUNT"
+                                wire:model='AMOUNT' /> --}}
+                            <livewire:number-input name="AMOUNT" titleName="" :vertical="false" wire:model="AMOUNT" isDisabled="{{ false }}" :withLabel="false" />
                         </td>
                         <td class="text-center">
                             <input type="checkbox" class="text-lg" wire:model='TAXABLE' name="taxable"

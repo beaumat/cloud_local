@@ -94,19 +94,17 @@
 
     @livewireScripts
     @livewire('ChangePasswordModal');
+    @livewire('CalculatorModal')
 
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const pushMenuButton = document.querySelector('[data-widget="pushmenu"]');
-        if (pushMenuButton && window.innerWidth >= 600) { 
-            // Check if the screen width is 768px or smaller
-            pushMenuButton.click(); // Simulate a click on the button
-        }
-    });
-
-  
-</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const pushMenuButton = document.querySelector('[data-widget="pushmenu"]');
+            if (pushMenuButton && window.innerWidth >= 600) {
+                // Check if the screen width is 768px or smaller
+                pushMenuButton.click(); // Simulate a click on the button
+            }
+        });
+    </script>
 
 </body>
 

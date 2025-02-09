@@ -59,7 +59,7 @@ class WithholdingTaxServices
         return $ID;
     }
 
-    public function Update(int $ID, $CODE, int $WITHHELD_FROM_ID, float $EWT_RATE, int $EWT_ID, int $EWT_ACCOUNT_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID)
+    public function Update(int $ID, $CODE, int $WITHHELD_FROM_ID, float $EWT_RATE, int $EWT_ID, int $EWT_ACCOUNT_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID, float $AMOUNT)
     {
 
         WithholdingTax::where('ID', '=', $ID)
@@ -71,7 +71,8 @@ class WithholdingTaxServices
                 'EWT_ACCOUNT_ID'        => $EWT_ACCOUNT_ID,
                 'LOCATION_ID'           => $LOCATION_ID,
                 'NOTES'                 => $NOTES,
-                'ACCOUNTS_PAYABLE_ID'   => $ACCOUNTS_PAYABLE_ID
+                'ACCOUNTS_PAYABLE_ID'   => $ACCOUNTS_PAYABLE_ID,
+                'AMOUNT'                => $AMOUNT
             ]);
     }
 
@@ -189,7 +190,7 @@ class WithholdingTaxServices
             ])->join('withholding_tax', 'withholding_tax.ID', '=', 'withholding_tax_bills.WITHHOLDING_TAX_ID')
             ->where('withholding_tax_bills.WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID)
             ->get();
-       
+
         return $result;
     }
     public function UpdateAMOUNT_WITHHELD(int $WITHHOLDING_TAX_ID, float $EWT_RATE): float

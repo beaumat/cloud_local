@@ -169,7 +169,8 @@ class WithHoldingTaxForm extends Component
                     $this->EWT_ACCOUNT_ID,
                     $this->LOCATION_ID,
                     $this->NOTES,
-                    $this->ACCOUNTS_PAYABLE_ID
+                    $this->ACCOUNTS_PAYABLE_ID,
+                    $this->AMOUNT
                 );
 
                 DB::commit();
@@ -279,7 +280,7 @@ class WithHoldingTaxForm extends Component
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum) {
-           
+
                 $this->withholdingTaxServices->StatusUpdate($this->ID, 15);
                 DB::commit();
                 $data = $this->withholdingTaxServices->get($this->ID);
@@ -289,7 +290,6 @@ class WithHoldingTaxForm extends Component
                     session()->flash('message', 'Successfully posted');
                     return;
                 }
-       
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             DB::rollBack();
