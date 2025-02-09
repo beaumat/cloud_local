@@ -129,15 +129,15 @@
                             @endif
                         </td>
                         <td>
-                            <input step="0.01" type="number" class="form-control form-control-sm mt-1 text-right" name="AMOUNT"
+                            <input step="0.01" type="number" class="form-control form-control-sm text-right" name="AMOUNT"
                                 wire:model='AMOUNT' />
                         </td>
                         <td class="text-center">
-                            <input type="checkbox" class="text-lg mt-1" wire:model='TAXABLE' name="taxable"
+                            <input type="checkbox" class="text-lg" wire:model='TAXABLE' name="taxable"
                                 @if ($ACCOUNT_ID == 0) disabled @endif />
                         </td>
                         <td class="text-left">
-                            <input type="text" class="form-control form-control-sm mt-1" wire:model='PARTICULARS'
+                            <input type="text" class="form-control form-control-sm" wire:model='PARTICULARS'
                                 name="PARTICULARS" />
                         </td>
                         <td>

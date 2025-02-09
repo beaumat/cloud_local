@@ -411,10 +411,12 @@ class BillingForm extends Component
                         $this->getInfo($data);
                     }
                 }
+
                 DB::commit();
                 $this->billingServices->getUpdateTaxItem($this->ID, $this->INPUT_TAX_ID);
                 $getResult = $this->billingServices->ReComputed($this->ID);
                 $this->getUpdateAmount($getResult);
+
                 session()->flash('message', 'Successfully updated');
             }
             $this->Modify = false;
@@ -429,7 +431,7 @@ class BillingForm extends Component
     {
         foreach ($result as $list) {
             $this->AMOUNT = $list['AMOUNT'];
-            $this->BALANCE_DUE = $list['AMOUNT'];
+            $this->BALANCE_DUE = $list['BALANCE_DUE'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
         }
     }

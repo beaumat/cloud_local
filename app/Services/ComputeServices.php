@@ -85,9 +85,9 @@ class ComputeServices
         }
         $getResult = array(
             [
-                'AMOUNT' => $amount,
-                'TAX_AMOUNT' => $taxAmount,
-                'TAXABLE_AMOUNT' => $taxableAmount,
+                'AMOUNT'            => $amount,
+                'TAX_AMOUNT'        => $taxAmount,
+                'TAXABLE_AMOUNT'    => $taxableAmount,
                 'NONTAXABLE_AMOUNT' => $nonTaxableAmount
             ]
         );
@@ -97,7 +97,7 @@ class ComputeServices
         return $getResult;
     }
 
-    public function taxComputeWithExpenses($itemResult, $expensesResult, int $taxID): array
+    public function taxComputeWithExpenses($itemResult, $expensesResult, int $taxID, float $pay): array
     {
         $amount = 0;
         $taxAmount = 0;
@@ -180,7 +180,8 @@ class ComputeServices
                 'TAXABLE_AMOUNT'        => $taxableAmount,
                 'NONTAXABLE_AMOUNT'     => $nonTaxableAmount,
                 'ITEM_AMOUNT'           => $item_amount,
-                'EXPENSES_AMOUNT'       => $expenses_amount
+                'EXPENSES_AMOUNT'       => $expenses_amount,
+                'BALANCE_DUE'           => $amount - $pay
             ]
         );
 

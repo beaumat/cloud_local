@@ -3,21 +3,36 @@
 namespace App\Services;
 
 use App\Models\WithholdingTax;
+use App\Models\WithholdingTaxBills;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class WithholdingTaxServices
 {
+    public int $object_type_withholding_tax_id  = 67;
+    public int $object_type_witholding_tax_bills_id = 68;
+
     private $object;
     private $systemSettingServices;
     private $dateServices;
-    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, DateServices $dateServices)
+    private $billingServices;
+    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, DateServices $dateServices, BillingServices $billingServices)
     {
         $this->object = $objectServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
+        $this->billingServices = $billingServices;
     }
+    public function Get(int $ID)
+    {
+        $result =   WithholdingTax::where('ID', '=', $ID)->first();
+        if ($result) {
+            return $result;
+        }
 
-    public function Store(string $CODE, string $DATE, int $WITHHELD_FROM_ID, float $EWT_RATE, int $EWT_ID, int $EWT_ACCOUNT_ID, int  $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID)
+        return null;
+    }
+    public function Store(string $CODE, string $DATE, int $WITHHELD_FROM_ID, float $EWT_RATE, int $EWT_ID, int $EWT_ACCOUNT_ID, int  $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID): int
     {
 
         $ID  = (int) $this->object->ObjectNextID('WITHHOLDING_TAX');
@@ -40,9 +55,11 @@ class WithholdingTaxServices
             'STATUS_DATE'           => $this->dateServices->NowDate(),
             'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID
         ]);
+
+        return $ID;
     }
 
-    public function Update(int $ID, $CODE, int $WITHHELD_FROM_ID, float $EWT_RATE, int $EWT_ID, int $EWT_ACCOUNT_ID, int  $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID)
+    public function Update(int $ID, $CODE, int $WITHHELD_FROM_ID, float $EWT_RATE, int $EWT_ID, int $EWT_ACCOUNT_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID)
     {
 
         WithholdingTax::where('ID', '=', $ID)
@@ -54,7 +71,7 @@ class WithholdingTaxServices
                 'EWT_ACCOUNT_ID'        => $EWT_ACCOUNT_ID,
                 'LOCATION_ID'           => $LOCATION_ID,
                 'NOTES'                 => $NOTES,
-                'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID
+                'ACCOUNTS_PAYABLE_ID'   => $ACCOUNTS_PAYABLE_ID
             ]);
     }
 
@@ -102,5 +119,193 @@ class WithholdingTaxServices
             ->paginate($perPage);
 
         return $result;
+    }
+    public function StatusUpdate(int $ID, int $STATUS): void
+    {
+        WithholdingTax::where('ID', '=', $ID)
+            ->update([
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
+            ]);
+    }
+    public function getTotal(int $WITHHOLDING_TAX_ID): float
+    {
+        $TOTAL = 0;
+        $result = WithholdingTaxBills::query()
+            ->select([
+                'withholding_tax_bills.AMOUNT_WITHHELD',
+            ])
+            ->where('WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID)
+            ->get();
+
+        foreach ($result as $row) {
+            $AMOUNT_WITHHELD  = (float) $row->AMOUNT_WITHHELD ?? 0;
+            $TOTAL += $AMOUNT_WITHHELD;
+        }
+
+        return $TOTAL;
+    }
+
+
+    public function WtaxJournal(int $WITHHOLDING_TAX_ID)
+    {
+        $result = WithholdingTax::query()
+            ->select([
+                'ID',
+                'EWT_ACCOUNT_ID as ACCOUNT_ID',
+                'WITHHELD_FROM_ID as SUBSIDIARY_ID',
+                'AMOUNT',
+                DB::raw('1 as ENTRY_TYPE')
+            ])
+            ->where('ID', '=', $WITHHOLDING_TAX_ID)
+            ->get();
+
+        return $result;
+    }
+    public function WtaxRemaining(int $WITHHOLDING_TAX_ID)
+    {
+        $result = WithholdingTax::query()
+            ->select([
+                'withholding_tax.ID',
+                'withholding_tax.ACCOUNTS_PAYABLE_ID as ACCOUNT_ID',
+                'withholding_tax.WITHHELD_FROM_ID as SUBSIDIARY_ID',
+                DB::raw("(withholding_tax.AMOUNT - (select IFNULL(sum(withholding_tax_bills.AMOUNT_WITHHELD),0)  from withholding_tax_bills where withholding_tax_bills.WITHHOLDING_TAX_ID = withholding_tax.ID limit 1)) as AMOUNT"),
+                DB::raw('0 as ENTRY_TYPE')
+            ])
+            ->where('withholding_tax.ID', '=', $WITHHOLDING_TAX_ID)
+            ->get();
+
+        return $result;
+    }
+    public function WTaxBillJournal(int $WITHHOLDING_TAX_ID)
+    {
+        $result = WithholdingTaxBills::query()
+            ->select([
+                'withholding_tax_bills.ID',
+                'withholding_tax_bills.ACCOUNTS_PAYABLE_ID as ACCOUNT_ID',
+                'withholding_tax_bills.BILL_ID as SUBSIDIARY_ID',
+                'withholding_tax_bills.AMOUNT_WITHHELD as AMOUNT',
+                DB::raw('0 as ENTRY_TYPE')
+            ])->join('withholding_tax', 'withholding_tax.ID', '=', 'withholding_tax_bills.WITHHOLDING_TAX_ID')
+            ->where('withholding_tax_bills.WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID)
+            ->get();
+       
+        return $result;
+    }
+    public function UpdateAMOUNT_WITHHELD(int $WITHHOLDING_TAX_ID, float $EWT_RATE): float
+    {
+        $TOTAL = 0;
+        $result = WithholdingTaxBills::query()
+            ->select([
+                'withholding_tax_bills.BILL_ID',
+                'withholding_tax_bills.ID',
+                'i.AMOUNT'
+            ])
+            ->join('bill as i', 'i.ID', '=', 'withholding_tax_bills.BILL_ID')
+            ->where('WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID)
+            ->get();
+
+        foreach ($result as $row) {
+            $BILL_AMOUNT  = (float) $row->AMOUNT ?? 0;
+            $AMT_WITHHELD = (float) $BILL_AMOUNT * ($EWT_RATE / 100);
+            $TOTAL += $AMT_WITHHELD;
+            $this->UpdateBill($row->ID, $WITHHOLDING_TAX_ID, $row->BILL_ID, $AMT_WITHHELD);
+            $this->billingServices->UpdateBalance($row->BILL_ID);
+        }
+
+        return $TOTAL;
+    }
+
+    public function StoreBill(int $WITHHOLDING_TAX_ID, int $BILL_ID, float $AMOUNT_WITHHELD, int $ACCOUNTS_PAYABLE_ID): int
+    {
+
+        $ID  = (int) $this->object->ObjectNextID('WITHHOLDING_TAX_BILLS');
+
+        WithholdingTaxBills::create(
+            [
+                'ID'                        => $ID,
+                'WITHHOLDING_TAX_ID'        => $WITHHOLDING_TAX_ID,
+                'BILL_ID'                   => $BILL_ID,
+                'AMOUNT_WITHHELD'           => $AMOUNT_WITHHELD,
+                'ACCOUNTS_PAYABLE_ID'       => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null
+            ]
+        );
+
+        return $ID;
+    }
+    public function UpdateBill(int $ID, int $WITHHOLDING_TAX_ID, int $BILL_ID, float $AMOUNT_WITHHELD)
+    {
+
+        WithholdingTaxBills::where('ID', '=', $ID)
+            ->where('WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID)
+            ->where('BILL_ID', '=', $BILL_ID)
+            ->update(
+                [
+                    'AMOUNT_WITHHELD'           => $AMOUNT_WITHHELD
+                ]
+            );
+    }
+    public function WTaxBillExists(int $WITHHOLDING_TAX_ID, int $BILL_ID): bool
+    {
+        return WithholdingTaxBills::where('WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID)
+            ->where('BILL_ID', '=', $BILL_ID)
+            ->exists();
+    }
+    public function GetWTaxBillExists(int $ID, int $WITHHOLDING_TAX_ID, int $BILL_ID)
+    {
+        $result = WithholdingTaxBills::where('ID', '=', $ID)
+            ->where('WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID)
+            ->where('BILL_ID', '=', $BILL_ID)
+            ->first();
+
+        if ($result) {
+            return $result;
+        }
+
+        return [];
+    }
+    public function DeleteBill(int $ID)
+    {
+        WithholdingTaxBills::where('ID', '=', $ID)->delete();
+    }
+    public function GetWTaxBill(int $ID)
+    {
+
+        $result = WithholdingTaxBills::where('ID', '=', $ID)->first();
+        if ($result) {
+            return $result;
+        }
+
+        return null;
+    }
+    public function GetBillList(int $WITHHOLDING_TAX_ID)
+    {
+        $result = WithholdingTaxBills::query()
+            ->select([
+                'withholding_tax_bills.ID',
+                'withholding_tax_bills.BILL_ID',
+                'withholding_tax_bills.AMOUNT_WITHHELD',
+                'i.CODE',
+                'i.DATE',
+                'i.AMOUNT as ORG_AMOUNT',
+                'i.INPUT_TAX_AMOUNT',
+                'i.BALANCE_DUE'
+            ])
+            ->join('bill as i', 'i.ID', '=', 'withholding_tax_bills.BILL_ID')
+            ->where('withholding_tax_bills.WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID)
+            ->get();
+
+
+        return $result;
+    }
+
+    public function setTotal(int $WITHHOLDING_TAX_ID, float $AMOUNT)
+    {
+        WithholdingTax::where('ID', '=', $WITHHOLDING_TAX_ID)
+            ->update(
+                [
+                    'AMOUNT' => $AMOUNT
+                ]
+            );
     }
 }

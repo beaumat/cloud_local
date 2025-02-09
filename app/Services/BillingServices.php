@@ -8,6 +8,7 @@ use App\Models\BillExpenses;
 use App\Models\BillItems;
 use App\Models\CheckBills;
 use App\Models\Tax;
+use App\Models\WithholdingTaxBills;
 use Illuminate\Support\Facades\DB;
 
 class BillingServices
@@ -437,17 +438,21 @@ class BillingServices
                         'bill_expenses.TAXABLE'
                     ]
                 )
-                ->where('bill_expenses.BILL_ID', $ID)
+                ->where('bill_expenses.BILL_ID', '=', $ID)
                 ->orderBy('bill_expenses.LINE_NO', 'asc')
                 ->get();
+            $totalPay = (float) $this->GetTotalPayment($ID);
+            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID, $totalPay);
 
-            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID);
+
             foreach ($result as $list) {
-                Bill::where('ID', $ID)->update([
-                    'AMOUNT' => $list['AMOUNT'],
-                    'BALANCE_DUE' => $list['AMOUNT'],
-                    'INPUT_TAX_AMOUNT' => $list['TAX_AMOUNT']
-                ]);
+
+                Bill::where('ID', $ID)
+                    ->update([
+                        'AMOUNT' => $list['AMOUNT'],
+                        'BALANCE_DUE' => $list['BALANCE_DUE'],
+                        'INPUT_TAX_AMOUNT' => $list['TAX_AMOUNT']
+                    ]);
             }
             return $result;
         }
@@ -518,13 +523,27 @@ class BillingServices
 
         return (float) $result->pay ?? 0;
     }
-
-    public function UpdateBalance(int $BILL_ID)
+    public function GetWTax(int $BILL_ID): float
     {
+        $paymentSum = WithholdingTaxBills::query()
+            ->select(DB::raw('IFNULL(SUM(withholding_tax_bills.AMOUNT_WITHHELD), 0) AS pay'))
+            ->where('withholding_tax_bills.BILL_ID', '=', $BILL_ID)
+            ->first();
+
+        return $paymentSum->pay ?? 0;
+    }
+    public function GetTotalPayment(int $BILL_ID): float
+    {
+        $WTAX = $this->GetWTax($BILL_ID);
         $PAYMENT = $this->GetBillPaymentApplied($BILL_ID);
         $CREDIT = $this->GetBillCreditApplied($BILL_ID);
-        $PAY = (float) $PAYMENT + $CREDIT;
+        $PAY = (float) $PAYMENT + $CREDIT + $WTAX;
 
+        return $PAY;
+    }
+    public function UpdateBalance(int $BILL_ID)
+    {
+        $PAY = (float) $this->GetTotalPayment($BILL_ID);
         $data = Bill::where('ID', $BILL_ID)->first();
         if ($data) {
             $AMOUNT = (float) $data->AMOUNT;
@@ -664,7 +683,7 @@ class BillingServices
                 'ID',
                 'ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
-                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT,  IF(AMOUNT > 0, AMOUNT, AMOUNT * -1)) as AMOUNT'),
                 DB::raw('IF(AMOUNT >= 0, 0, 1)  as ENTRY_TYPE')
             ])
             ->where('BILL_ID', $BILL_ID)
@@ -680,15 +699,38 @@ class BillingServices
                 'ID',
                 'ACCOUNT_ID',
                 'ACCOUNT_ID as SUBSIDIARY_ID',
-                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
+                DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, IF(AMOUNT > 0, AMOUNT, AMOUNT * -1)) as AMOUNT'),
                 DB::raw('IF(AMOUNT >= 0, 0, 1) as ENTRY_TYPE')
             ])
-            ->where('BILL_ID', $BILL_ID)
+            ->where('BILL_ID','=', $BILL_ID)
             ->orderBy('LINE_NO', 'asc')
+            ->get();
+          
+        return $result;
+    }
+
+    public function getBillListViaWTax(int $VENDOR_ID, int $LOCATION_ID, int $WITHHOLDING_TAX_ID)
+    {
+        $result = Bill::query()
+            ->select([
+                'bill.ID',
+                'bill.DATE',
+                'bill.CODE',
+                'bill.AMOUNT',
+                'bill.BALANCE_DUE',
+
+            ])
+            ->whereNotExists(function ($query) use (&$WITHHOLDING_TAX_ID) {
+                $query->select(DB::raw(1))
+                    ->from('withholding_tax_bills as p')
+                    ->whereRaw('p.BILL_ID = bill.ID')
+                    ->where('p.WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID);
+            })
+            ->where('bill.VENDOR_ID', $VENDOR_ID)
+            ->where('bill.LOCATION_ID', $LOCATION_ID)
+            ->where('bill.BALANCE_DUE', '>', 0)
             ->get();
 
         return $result;
     }
-
-
 }

@@ -319,7 +319,7 @@ class BillCreditServices
                 ->orderBy('LINE_NO', 'asc')
                 ->get();
 
-            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID);
+            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID,0);
 
             foreach ($result as $list) {
                 BillCredit::where('ID', $ID)->update([

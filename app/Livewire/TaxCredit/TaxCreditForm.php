@@ -66,8 +66,6 @@ class TaxCreditForm extends Component
     }
     private function getInfo($data)
     {
-
-
         $this->ID = $data->ID;
         $this->CODE = $data->CODE ?? '';
         $this->CUSTOMER_ID = $data->CUSTOMER_ID ?? 0;
@@ -76,7 +74,6 @@ class TaxCreditForm extends Component
         $this->EWT_ACCOUNT_ID = $data->EWT_ACCOUNT_ID ?? 0;
         $this->ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
         $this->AMOUNT = $data->AMOUNT ?? 0;
-
         $this->EWT_RATE = $data->EWT_RATE ?? 0;
         $this->EWT_ID = $data->EWT_ID ?? 0;
         $this->NOTES = $data->NOTES ?? '';
@@ -133,37 +130,25 @@ class TaxCreditForm extends Component
     public function save()
     {
 
-        if ($this->ID === 0) {
-            $this->validate(
-                [
-                    'EWT_ID'        => 'required|integer|exists:tax,id',
-                    'CUSTOMER_ID'   => 'required|integer|exists:contact,id',
-                    'LOCATION_ID'   => 'required|integer|exists:location,id',
-                    'DATE'          => 'required|string'
-                ],
-                [],
-                [
-                    'EWT_ID'        => 'Withholding Tax Type',
-                    'CUSTOMER_ID'   => 'Customer',
-                    'LOCATION_ID'   => 'Location'
-                ]
-            );
-        } else {
-            $this->validate(
-                [
-                    'EWT_ID'        => 'required|integer|exists:tax,id',
-                    'CUSTOMER_ID'   => 'required|integer|exists:contact,id',
-                    'LOCATION_ID'   => 'required|integer|exists:location,id',
-                    'DATE'          => 'required|string'
-                ],
-                [],
-                [
-                    'EWT_ID'        => 'Withholding Tax Type',
-                    'CUSTOMER_ID'   => 'Customer',
-                    'LOCATION_ID'   => 'Location'
-                ]
-            );
-        }
+
+        $this->validate(
+            [
+                'EWT_ID'        => 'required|integer|exists:tax,id',
+                'CODE'          => 'nullable|max:20|unique:tax_credit,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'CUSTOMER_ID'   => 'required|integer|exists:contact,id',
+                'LOCATION_ID'   => 'required|integer|exists:location,id',
+                'DATE'          => 'required|date|string'
+            ],
+            [],
+            [
+                'EWT_ID'        => 'Withholding Tax Type',
+                'CODE'          => 'Reference No.',
+                'CUSTOMER_ID'   => 'Customer',
+                'LOCATION_ID'   => 'Location',
+                'DATE'          => 'Date'
+            ]
+        );
+
         DB::beginTransaction();
         try {
 

@@ -222,7 +222,7 @@ class WriteCheckServices
                 ->orderBy('check_expenses.LINE_NO', 'asc')
                 ->get();
 
-            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID);
+            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID,0);
 
             foreach ($result as $list) {
                 Check::where('ID', '=', $ID)

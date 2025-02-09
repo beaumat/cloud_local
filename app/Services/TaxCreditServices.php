@@ -189,8 +189,6 @@ class TaxCreditServices
             ->where('INVOICE_ID', '=', $INVOICE_ID)
             ->exists();
     }
-
-
     public function GetTaxCreditInvoiceExists(int $ID, int $TAX_CREDIT_ID, int $INVOICE_ID)
     {
         $result = TaxCreditInvoices::where('ID', '=', $ID)

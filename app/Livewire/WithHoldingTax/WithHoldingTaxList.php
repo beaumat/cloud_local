@@ -45,8 +45,16 @@ class WithHoldingTaxList extends Component
         }
     }
     public function delete(int $ID)
-    {
-        $this->withholdingTaxServices->Delete($ID);
+    {   
+
+        try {
+            $this->withholdingTaxServices->Delete($ID);
+            session()->flash('message','delete successfully');
+        } catch (\Throwable $th) {
+
+            session()->flash('error','Error:'. $th->getMessage());
+        }
+    
     }
     #[On('clear-alert')]
     public function clearAlert()
