@@ -64,8 +64,13 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <livewire:date-input name="DATE" titleName="Date"
-                                                        wire:model='DATE' :isDisabled="true" />
+                                                    @if ($ID == 0 && auth()->user()->date_enabled)
+                                                        <livewire:date-input name="DATE" titleName="Date"
+                                                            wire:model.live='DATE' :isDisabled="false" />
+                                                    @else
+                                                        <livewire:date-input name="DATE" titleName="Date"
+                                                            wire:model.live='DATE' :isDisabled="true" />
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify)
@@ -159,7 +164,8 @@
                                                         <a target="_BLANK"
                                                             href="{{ route('vendorsbill_payment_doctor', ['id' => $ID]) }}"
                                                             type="button" class="btn btn-sm btn-secondary">
-                                                            <i class="fa fa-print" aria-hidden="true"></i> Print Doctor Form
+                                                            <i class="fa fa-print" aria-hidden="true"></i> Print Doctor
+                                                            Form
                                                         </a>
                                                     @endif
                                                 @endcan
