@@ -118,13 +118,17 @@ class BillPaymentServices
 
         return $pay;
     }
-    public function Delete(int $ID)
+    public function UpdatePF_PERIOD_ID(int $CHECK_ID, int $PF_PERIOD_ID)
     {
 
-
-
-
-
+        Check::where('ID', '=', $CHECK_ID)
+            ->where('TYPE', '=', $this->CHECK_TYPE_ID)
+            ->update([
+                'PF_PERIOD_ID' => $PF_PERIOD_ID
+            ]);
+    }
+    public function Delete(int $ID)
+    {
 
         CheckBills::where('CHECK_ID', '=', $ID)
             ->delete();

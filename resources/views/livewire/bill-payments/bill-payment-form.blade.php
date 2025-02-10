@@ -43,13 +43,39 @@
                                                     @if ($Modify && $AMOUNT_APPLIED == 0)
                                                         <livewire:select-option-type name="PAY_TO_ID1"
                                                             titleName="Pay To" :options="$contactList" :zero="true"
-                                                            :isDisabled=false wire:model='PAY_TO_ID' />
+                                                            :isDisabled=false wire:model.live='PAY_TO_ID' />
                                                     @else
                                                         <livewire:select-option-type name="PAY_TO_ID2"
                                                             titleName="Pay To" :options="$contactList" :zero="true"
-                                                            :isDisabled=true wire:model='PAY_TO_ID' />
+                                                            :isDisabled=true wire:model.live='PAY_TO_ID' />
                                                     @endif
                                                 </div>
+                                                @if ($IS_DOCTOR == true)
+                                                    <div class="col-md-12">
+                                                        @if ($Modify && $AMOUNT_APPLIED == 0)
+
+
+
+                                                            @if ($ppRefresh)
+                                                                <livewire:select-option-type name="PR_PERIOD_ID11"
+                                                                    titleName="Payment Period" :options="$paymentPeriodList"
+                                                                    :zero="true" :isDisabled=false
+                                                                    wire:model='PF_PERIOD_ID' />
+                                                            @else
+                                                                <livewire:select-option-type name="PR_PERIOD_ID12"
+                                                                    titleName="Payment Period" :options="$paymentPeriodList"
+                                                                    :zero="true" :isDisabled=false
+                                                                    wire:model='PF_PERIOD_ID' />
+                                                            @endif
+                                                        @else
+                                                            <livewire:select-option-type name="PR_PERIOD_ID13"
+                                                                titleName="Payment Period" :options="$paymentPeriodList"
+                                                                :zero="true" :isDisabled=true
+                                                                wire:model='PF_PERIOD_ID' />
+                                                        @endif
+                                                    </div>
+                                                @endif
+
                                                 {{-- <div class="col-md-4">
                                                     @if ($Modify && $AMOUNT_APPLIED == 0)
                                                         <livewire:number-input name="AMOUNT" titleName="Amount"
@@ -87,11 +113,11 @@
                                                     @if ($Modify && $AMOUNT == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
-                                                            wire:model='LOCATION_ID' />
+                                                            wire:model.live='LOCATION_ID' />
                                                     @else
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=true
-                                                            wire:model='LOCATION_ID' />
+                                                            wire:model.live='LOCATION_ID' />
                                                     @endif
                                                 </div>
                                                 <div class="col-md-12">
@@ -211,7 +237,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'SAME_AMOUNT' => $SAME_AMOUNT])
+                                            @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'SAME_AMOUNT' => $SAME_AMOUNT,'PAYMENT_PERIOD_ID' => $PF_PERIOD_ID])
                                         </div>
                                     </div>
                                 </div>

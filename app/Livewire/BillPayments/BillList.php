@@ -28,7 +28,9 @@ class BillList extends Component
     #[Reactive]
     public int $STATUS;
     #[Reactive]
-     public bool $SAME_AMOUNT;
+    public bool $SAME_AMOUNT;
+    #[Reactive]
+    public int $PF_PERIOD_ID;
 
     public float $prevAmount;
     public float $orgAmount;

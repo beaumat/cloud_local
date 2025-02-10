@@ -141,7 +141,6 @@ class QuickPaidPanel extends Component
     private function philhealthInfo(int $INVOICE_ID)
     {
         $data =  $this->philHealthServices->getDataByInvoiceId($INVOICE_ID);
-
         if ($data) {
             $this->isPhilHealth = true;
             $this->PH_CODE = $data->CODE ?? '';
@@ -241,6 +240,7 @@ class QuickPaidPanel extends Component
     }
     public function AddPayment()
     {
+
         if ($this->paymentServices->PaymenIsOver($this->INVOICE_ID, $this->PAYMENT_AMOUNT) == true) {
             session()->flash('error', 'The payment exceeds the available balance');
             return false;
@@ -250,35 +250,9 @@ class QuickPaidPanel extends Component
 
         if ($period) {
 
-            $ID = $this->paymentServices->Store(
-                "",
-                $this->DATE,
-                $this->CUSTOMER_ID,
-                $this->LOCATION_ID,
-                $this->PAYMENT_AMOUNT,
-                $this->PAYMENT_AMOUNT,
-                $this->PAYMENT_METHOD_ID,
-                '',
-                null,
-                $period->RECEIPT_NO,
-                null,
-                '',
-                $period->BANK_ACCOUNT_ID,
-                0,
-                true,
-                $this->ACCOUNTS_RECEIVABLE_ID,
-                $this->PAYMENT_PERIOD_ID
-            );
+            $ID = $this->paymentServices->Store("", $this->DATE, $this->CUSTOMER_ID, $this->LOCATION_ID, $this->PAYMENT_AMOUNT, $this->PAYMENT_AMOUNT, $this->PAYMENT_METHOD_ID, '', null, $period->RECEIPT_NO, null, '', $period->BANK_ACCOUNT_ID, 0, true, $this->ACCOUNTS_RECEIVABLE_ID, $this->PAYMENT_PERIOD_ID);
 
-
-            $this->paymentServices->PaymentInvoiceStore(
-                $ID,
-                $this->INVOICE_ID,
-                0,
-                $this->PAYMENT_AMOUNT,
-                0,
-                $this->ACCOUNTS_RECEIVABLE_ID
-            );
+            $this->paymentServices->PaymentInvoiceStore($ID, $this->INVOICE_ID, 0, $this->PAYMENT_AMOUNT, 0, $this->ACCOUNTS_RECEIVABLE_ID);
             $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
             $isGood = $this->paymentServices->getPosted($ID, $this->DATE, $this->LOCATION_ID);
             if ($isGood) {
@@ -292,28 +266,41 @@ class QuickPaidPanel extends Component
             return false;
         }
     }
-
+    public function DateRangeChecking($dataPeriod): bool
+    {
+        if (
+            date('Y-m-d', strtotime($dataPeriod->DATE_FROM))  <=  date('Y-m-d', strtotime($this->PH_DATE_ADMITTED))  &&
+            date('Y-m-d', strtotime($dataPeriod->DATE_TO))  >=   date('Y-m-d', strtotime($this->PH_DATE_DISCHARGED))
+        ) {
+            return true;
+        }
+        return false;
+    }
     public function save()
     {
         $this->validate(
             [
-                'PAYMENT_AMOUNT' => 'required|numeric|not_in:0',
-                'PAYMENT_PERIOD_ID' => 'required|numeric|not_in:0|exists:payment_period,id',
+                'PAYMENT_AMOUNT'        => 'required|numeric|not_in:0',
+                'PAYMENT_PERIOD_ID'     => 'required|numeric|not_in:0|exists:payment_period,id',
             ],
             [],
             [
-                'PAYMENT_AMOUNT'    => 'Payment Amount',
-                'PAYMENT_PERIOD_ID' => 'Payment Period'
+                'PAYMENT_AMOUNT'        => 'Payment Amount',
+                'PAYMENT_PERIOD_ID'     => 'Payment Period'
             ]
         );
 
-
         $dataPeriod = $this->paymentPeriodServices->Get($this->PAYMENT_PERIOD_ID);
-
         if ($dataPeriod) {
             $this->DATE = $dataPeriod->DATE ?? $this->userServices->getTransactionDateDefault();
         } else {
             session()->flash('error', 'Payment Period not found.');
+            return;
+        }
+        $dtCheck = (bool) $this->DateRangeChecking($dataPeriod);
+
+        if ($dtCheck == false) {
+            session()->flash('error', "Invalid. the date period between admitted or discharge is out of range");
             return;
         }
 

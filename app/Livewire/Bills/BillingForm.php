@@ -232,8 +232,6 @@ class BillingForm extends Component
             }
         }
 
-
-
         $this->LoadDropdown();
         $this->tab = "item";
         $this->Modify = true;
@@ -273,30 +271,36 @@ class BillingForm extends Component
     public function save()
     {
 
+
+        $this->validate(
+            [
+                'VENDOR_ID'             => 'required|integer|exists:contact,id',
+                'CODE'                  => 'nullable|max:20|unique:bill,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'INPUT_TAX_ID'          => 'required|not_in:0|exists:tax,id',
+                'DATE'                  => 'required|string|date_format:Y-m-d',
+                'LOCATION_ID'           => 'required|integer|exists:location,id',
+                'PAYMENT_TERMS_ID'      => 'required|integer|exists:payment_terms,id',
+                'ACCOUNTS_PAYABLE_ID'   => 'required|integer|exists:account,id',
+                'INPUT_TAX_ACCOUNT_ID'  => 'required|integer|exists:account,id'
+            ],
+            [],
+            [
+                'VENDOR_ID'             => 'Vendor',
+                'CODE'                  => 'Reference No.',
+                'INPUT_TAX_ID'          => 'Tax',
+                'DATE'                  => 'Date',
+                'LOCATION_ID'           => 'Location',
+                'PAYMENT_TERMS_ID'      => 'Payment Terms',
+                'ACCOUNTS_PAYABLE_ID'   => 'Account Payables',
+                'INPUT_TAX_ACCOUNT_ID'  => 'Account Tax'
+            ]
+        );
+
+
         try {
             if ($this->ID == 0) {
 
-                $this->validate(
-                    [
-                        'VENDOR_ID'         => 'required|integer|exists:contact,id',
-                        'INPUT_TAX_ID'      => 'required|integer|not_in:0',
-                        'DATE'              => 'required|string|date_format:Y-m-d',
-                        'LOCATION_ID'       => 'required|integer|exists:location,id',
-                        'PAYMENT_TERMS_ID'  => 'required|integer|exists:payment_terms,id',
-                        'ACCOUNTS_PAYABLE_ID'   => 'required|integer|exists:account,id',
-                        'INPUT_TAX_ACCOUNT_ID'  => 'required|integer|exists:account,id'
-                    ],
-                    [],
-                    [
-                        'VENDOR_ID'         => 'Vendor',
-                        'INPUT_TAX_ID'      => 'Tax',
-                        'DATE'              => 'Date',
-                        'LOCATION_ID'       => 'Location',
-                        'PAYMENT_TERMS_ID'  => 'Payment Terms',
-                        'ACCOUNTS_PAYABLE_ID'   => 'Account Payables',
-                        'INPUT_TAX_ACCOUNT_ID'  => 'Account Tax'
-                    ]
-                );
+
 
                 $this->getTax();
                 DB::beginTransaction();
@@ -326,29 +330,7 @@ class BillingForm extends Component
                 return Redirect::route('vendorsbills_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
-                $this->validate(
-                    [
-                        'VENDOR_ID'             => 'required|integer|exists:contact,id',
-                        'CODE'                  => 'required|max:20|unique:bill,code,' . $this->ID,
-                        'INPUT_TAX_ID'          => 'required|not_in:0',
-                        'DATE'                  => 'required|string|date_format:Y-m-d',
-                        'LOCATION_ID'           => 'required|integer|exists:location,id',
-                        'PAYMENT_TERMS_ID'      => 'required|integer|exists:payment_terms,id',
-                        'ACCOUNTS_PAYABLE_ID'   => 'required|integer|exists:account,id',
-                        'INPUT_TAX_ACCOUNT_ID'  => 'required|integer|exists:account,id'
-                    ],
-                    [],
-                    [
-                        'VENDOR_ID'             => 'Vendor',
-                        'CODE'                  => 'Reference No.',
-                        'INPUT_TAX_ID'          => 'Tax',
-                        'DATE'                  => 'Date',
-                        'LOCATION_ID'           => 'Location',
-                        'PAYMENT_TERMS_ID'      => 'Payment Terms',
-                        'ACCOUNTS_PAYABLE_ID'   => 'Account Payables',
-                        'INPUT_TAX_ACCOUNT_ID'  => 'Account Tax'
-                    ]
-                );
+
 
                 DB::beginTransaction();
 

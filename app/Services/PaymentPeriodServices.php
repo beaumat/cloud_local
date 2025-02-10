@@ -136,7 +136,20 @@ class PaymentPeriodServices
 
         return $result;
     }
+    public function prPFList(int $LOCATION_ID)
+    {
+        $result = PaymentPeriod::query()
+            ->select([
+                'ID',
+                DB::raw("CONCAT(DATE_FROM,'-', DATE_TO,'  OR#:',RECEIPT_NO) as NAME"),
 
+            ])
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->orderBy('ID', 'desc')
+            ->get();
+
+        return $result;
+    }
     public function GetDropDownList(int $LOCATION_ID)
     {
         $result = PaymentPeriod::query()
