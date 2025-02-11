@@ -115,8 +115,7 @@ class BillList extends Component
             $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
             $this->billingServices->UpdateBalance($BILL_ID);
             DB::commit();
-
-
+            
             $this->SetAmount();
             $this->dispatch('reset-payment');
         } catch (\Exception $e) {

@@ -586,6 +586,33 @@ class BillingServices
 
         return $result;
     }
+
+    public function getBillListViaBillPaymentExistOnPhilealth(int $VENDOR_ID, int $LOCATION_ID, int $CHECK_ID)
+    {   
+
+
+        // add on
+        $result = Bill::query()
+            ->select([
+                'bill.ID',
+                'bill.DATE',
+                'bill.CODE',
+                'bill.AMOUNT',
+                'bill.BALANCE_DUE'
+            ])
+            ->whereNotExists(function ($query) use (&$CHECK_ID) {
+                $query->select(DB::raw(1))
+                    ->from('check_bills as b')
+                    ->whereRaw('b.BILL_ID = bill.ID')
+                    ->where('b.CHECK_ID', '=', $CHECK_ID);
+            })
+            ->where('bill.VENDOR_ID', $VENDOR_ID)
+            ->where('bill.LOCATION_ID', $LOCATION_ID)
+            ->where('bill.BALANCE_DUE', '>', 0)
+            ->get();
+
+        return $result;
+    }
     public function getBillListViaBillCredit(int $VENDOR_ID, int $LOCATION_ID, int $BILL_CREDIT_ID)
     {
         return Bill::query()

@@ -24,6 +24,8 @@ class BillModal extends Component
     #[Reactive]
     public bool $SAME_AMOUNT;
 
+    #[Reactive]
+    public int $PF_PERIOD_ID;
     public $invoiceList = [];
     public $selectedCharges = [];
     public $paymentAmounts = [];
@@ -168,7 +170,11 @@ class BillModal extends Component
     }
 
     public function render()
-    {
+    {   
+
+        if($this->PF_PERIOD_ID > 0) {
+            $this->invoiceList = $this->billingServices->getBillListViaBillPaymentExistOnPhilealth($this->VENDOR_ID, $this->LOCATION_ID, $this->CHECK_ID);
+        }
         $this->invoiceList = $this->billingServices->getBillListViaBillPayment($this->VENDOR_ID, $this->LOCATION_ID, $this->CHECK_ID);
 
         return view('livewire.bill-payments.bill-modal');

@@ -61,6 +61,6 @@
     </table>
 
     @if ($STATUS == 0 || $STATUS == 16)
-        @livewire('BillPayments.BillModal', ['VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'CHECK_ID' => $CHECK_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'STATUS' => $STATUS, 'SAME_AMOUNT' => $SAME_AMOUNT])
+        @livewire('BillPayments.BillModal', ['VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'CHECK_ID' => $CHECK_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'STATUS' => $STATUS, 'SAME_AMOUNT' => $SAME_AMOUNT, 'PF_PERIOD_ID'  => $PF_PERIOD_ID])
     @endif
 </div>
