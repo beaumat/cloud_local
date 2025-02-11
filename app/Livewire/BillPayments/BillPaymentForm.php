@@ -139,7 +139,7 @@ class BillPaymentForm extends Component
     {
         $this->Modify = true;
 
-        if($this->IS_DOCTOR) {
+        if ($this->IS_DOCTOR) {
             $this->updatedLocationid();
         }
     }
@@ -185,7 +185,9 @@ class BillPaymentForm extends Component
                     $this->NOTES,
                     $this->ACCOUNTS_PAYABLE_ID
                 );
-                $this->billPaymentServices->UpdatePF_PERIOD_ID($this->ID,$this->PF_PERIOD_ID);
+                if ($this->PF_PERIOD_ID  > 0) {
+                    $this->billPaymentServices->UpdatePF_PERIOD_ID($this->ID, $this->PF_PERIOD_ID);
+                }
                 DB::commit();
                 return Redirect::route('vendorsbill_payment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
@@ -204,7 +206,10 @@ class BillPaymentForm extends Component
                     }
 
                     $this->billPaymentServices->Update($this->ID, $this->CODE, $this->BANK_ACCOUNT_ID, $this->PAY_TO_ID, $this->LOCATION_ID, $this->AMOUNT, $this->NOTES);
-                    $this->billPaymentServices->UpdatePF_PERIOD_ID($this->ID,$this->PF_PERIOD_ID);
+                    if ($this->PF_PERIOD_ID  > 0) {
+                        $this->billPaymentServices->UpdatePF_PERIOD_ID($this->ID, $this->PF_PERIOD_ID);
+                    }
+
                     DB::commit();
                     session()->flash('message', 'Successfully updated');
                     $this->updatedLocationid();
@@ -325,10 +330,9 @@ class BillPaymentForm extends Component
     {
         $this->ppRefresh =  $this->ppRefresh  ? false : true;
         $this->IS_DOCTOR = (bool)  $this->contactServices->isDoctor($this->PAY_TO_ID);
-        if($this->IS_DOCTOR) {
+        if ($this->IS_DOCTOR) {
             $this->updatedLocationid();
         }
-
     }
     public function render()
     {

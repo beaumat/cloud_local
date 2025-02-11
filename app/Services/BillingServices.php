@@ -587,7 +587,7 @@ class BillingServices
         return $result;
     }
 
-    public function getBillListViaBillPaymentExistOnPhilealth(int $VENDOR_ID, int $LOCATION_ID, int $CHECK_ID)
+    public function getBillListViaBillPaymentExistOnPhilealth(int $VENDOR_ID, int $LOCATION_ID, int $CHECK_ID , int $PF_PERIOD_ID)
     {   
 
 
