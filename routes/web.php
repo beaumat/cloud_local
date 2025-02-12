@@ -46,7 +46,7 @@ use App\Livewire\FundTransfer\FundTransferList;
 use App\Livewire\GeneralJournal\GeneralJournalForm;
 use App\Livewire\GeneralJournal\GeneralJournalList;
 use App\Livewire\GeneralJournal\GeneralJournalPrint;
-use App\Livewire\HemoAgreementForm\AgreementPrint;
+use App\Livewire\Hemodialysis\AgreementForm;
 use App\Livewire\Hemodialysis\HemoForm;
 use App\Livewire\Hemodialysis\HemoList;
 use App\Livewire\Hemodialysis\PrintForm;
@@ -227,8 +227,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/print', PrintForm::class)->name('hemo_print')->middleware(['permission:patient.treatment.print']);
             Route::get('/{id}/print_back', PrintFormBack::class)->name('hemo_print_back')->middleware(['permission:patient.treatment.print']);
             Route::get('/{id}/print_front_back', PrintFormFrontBack::class)->name('hemo_print_front_back')->middleware(['permission:patient.treatment.print']);
+            Route::get('/{id}/agreement_form', AgreementForm::class)->name('agreement_form')->middleware(['permission:patient.treatment.print']);
 
-
+   
 
         });
 

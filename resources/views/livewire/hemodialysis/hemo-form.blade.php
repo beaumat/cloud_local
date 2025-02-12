@@ -136,13 +136,15 @@
                                                         aria-hidden="true"></i> Notes</button>
                                             @endif
                                         @endcan
-                              
+
                                         @can('patient.treatment.print')
                                             @if (!$Modify)
                                                 <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
                                                     class="btn btn-sm btn-success">Print</a>
                                             @endif
                                         @endcan
+                                        <a target="_blank" href="{{ route('patientsagreement_form', ['id' => $ID]) }}"
+                                            class="btn btn-sm btn-info">Agreement Form</a>
                                     </div>
 
                                 </div>
