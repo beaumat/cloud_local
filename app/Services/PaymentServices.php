@@ -167,6 +167,7 @@ class PaymentServices
                 'payment.AMOUNT',
                 'payment.AMOUNT_APPLIED',
                 'payment.NOTES',
+                'payment.STATUS as STATUS_ID',
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',

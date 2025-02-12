@@ -97,13 +97,14 @@ class BillPaymentList extends Component
                 DB::beginTransaction();
                 try {
 
-                    if ($data->STATUS  > 0) {
+                    if ($data->STATUS  == 16) {
                         $this->deleteJournal($data, $id);
                     }
-                    $billList= $this->billPaymentServices->billPaymentBills($id);                    
+
+                    $billList = $this->billPaymentServices->billPaymentBills($id);
                     $this->billPaymentServices->Delete($id);
 
-                    foreach($billList as $list) {
+                    foreach ($billList as $list) {
                         $this->billingServices->UpdateBalance($list->BILL_ID);
                     }
 

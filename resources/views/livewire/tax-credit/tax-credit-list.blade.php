@@ -55,10 +55,10 @@
                                     <tr>
                                         <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
-                                        <th class="col-1">Customer</th>
+                                        <th class="col-3">Customer</th>
                                         <th class="col-1">Tax Rate</th>
                                         <th class="col-1">Amount</th>
-                                        <th class="col-4">Notes</th>
+                                        <th class="col-2">Notes</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">
@@ -84,14 +84,25 @@
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('customerstax_credit_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    class="btn btn-xs btn-info" title="View Details">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+                                                
+                                                @if ($list->STATUS_ID == 0 || $list->STATUS_ID == 16)
+                                                    <button type="button" wire:click='delete({{ $list->ID }})'
+                                                        title="Delete"
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" wire:click='unposted({{ $list->ID }})'
+                                                        title="Unpost" wire:confirm="Are you sure you want to unpost?"
+                                                        class="btn btn-xs btn-secondary">
+                                                        <i class="fa fa-unlock" aria-hidden="true"></i>
+                                                    </button>
+                                                @endif
+
                                             </td>
                                         </tr>
                                     @endforeach

@@ -95,7 +95,10 @@ class PaymentList extends Component
             );
         }
     }
-
+    public function unposted(int $id)
+    {
+        $this->paymentServices->StatusUpdate($id, 16);
+    }
     public function delete(int $id)
     {
         try {

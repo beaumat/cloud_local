@@ -78,7 +78,7 @@ class InvoiceList extends Component
     #[On('reload_invoice')]
     public function render()
     {
-        $this->dataList = $this->taxCreditServices->GetInvoiceist($this->TAX_CREDIT_ID);
+        $this->dataList = $this->taxCreditServices->GetInvoiceList($this->TAX_CREDIT_ID);
         return view('livewire.tax-credit.invoice-list');
     }
 }

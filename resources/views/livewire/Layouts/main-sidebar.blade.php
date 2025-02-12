@@ -25,7 +25,7 @@
                         Auth::user()->can('customer.sales-order.view') ||
                         Auth::user()->can('customer.credit-memo.view') ||
                         Auth::user()->can('customer.received-payment.view') ||
-                        Auth::user()->can('customer.statement'))
+                        Auth::user()->can('customer.tax-credit.view'))
                     @livewire('Layouts.CustomerMenu')
                 @endif
                 @if (Auth::user()->can('vendor.purchase-order.view') ||

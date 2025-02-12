@@ -123,7 +123,6 @@ class TaxCreditForm extends Component
     #[On('reload_invoice')]
     public function updateAmount()
     {
-
         $this->AMOUNT = $this->taxCreditServices->getTotal($this->ID);
     }
 

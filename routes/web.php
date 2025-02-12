@@ -297,9 +297,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', CreditMemoForm::class)->name('credit_memo_edit')->middleware(['permission:customer.credit-memo.view']);
         });
         Route::prefix('/tax-credit')->group(function () {
-            Route::get('/', TaxCreditList::class)->name('tax_credit');
-            Route::get('/create', TaxCreditForm::class)->name('tax_credit_create');
-            Route::get('/{id}/edit', TaxCreditForm::class)->name('tax_credit_edit');
+            Route::get('/', TaxCreditList::class)->name('tax_credit')->middleware(['permission:customer.tax-credit.view']);
+            Route::get('/create', TaxCreditForm::class)->name('tax_credit_create')->middleware(['permission:customer.tax-credit.create']);
+            Route::get('/{id}/edit', TaxCreditForm::class)->name('tax_credit_edit')->middleware(['permission:customer.tax-credit.view']);
         });
     });
     // Customer End Category

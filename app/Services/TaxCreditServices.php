@@ -120,7 +120,8 @@ class TaxCreditServices
                 'tax_credit.EWT_RATE',
                 'c.PRINT_NAME_AS as NAME',
                 'l.NAME as LOCATION_NAME',
-                's.DESCRIPTION as STATUS'
+                's.DESCRIPTION as STATUS',
+                'tax_credit.STATUS as STATUS_ID'
 
             ])
             ->join('contact as c', 'c.ID', '=', 'tax_credit.CUSTOMER_ID')
@@ -212,7 +213,7 @@ class TaxCreditServices
 
         return TaxCreditInvoices::where('ID', '=', $ID)->first();
     }
-    public function GetInvoiceist(int $TAX_CREDIT_ID)
+    public function GetInvoiceList(int $TAX_CREDIT_ID)
     {
 
         $result = TaxCreditInvoices::query()
@@ -220,11 +221,13 @@ class TaxCreditServices
                 'tax_credit_invoices.ID',
                 'tax_credit_invoices.INVOICE_ID',
                 'tax_credit_invoices.AMOUNT_WITHHELD',
+                'tax_credit_invoices.ACCOUNTS_RECEIVABLE_ID',
                 'i.CODE',
                 'i.DATE',
                 'i.AMOUNT as ORG_AMOUNT',
                 'i.TAXABLE_AMOUNT',
-                'i.BALANCE_DUE'
+                'i.BALANCE_DUE',
+
 
             ])
             ->join('invoice as i', 'i.ID', '=', 'tax_credit_invoices.INVOICE_ID')

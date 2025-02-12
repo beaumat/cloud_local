@@ -89,11 +89,21 @@
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <button wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn btn-xs btn-danger">
-                                                    <i class="fas fa-trash" aria-hidden="true"></i>
-                                                </button>
+
+                                               @if ($list->STATUS_ID == 0 || $list->STATUS_ID == 16)
+                                                    <button type="button" wire:click='delete({{ $list->ID }})'
+                                                        title="Delete"
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" wire:click='unposted({{ $list->ID }})'
+                                                        title="Unpost" wire:confirm="Are you sure you want to unpost?"
+                                                        class="btn btn-xs btn-secondary">
+                                                        <i class="fa fa-unlock" aria-hidden="true"></i>
+                                                    </button>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
