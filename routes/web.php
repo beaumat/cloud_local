@@ -200,7 +200,6 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    // Patient Start Category
     Route::prefix('/patients')->name('patients')->group(function () {
 
         Route::prefix('/schedules')->group(function () {
@@ -228,10 +227,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/print', PrintForm::class)->name('hemo_print')->middleware(['permission:patient.treatment.print']);
             Route::get('/{id}/print_back', PrintFormBack::class)->name('hemo_print_back')->middleware(['permission:patient.treatment.print']);
             Route::get('/{id}/print_front_back', PrintFormFrontBack::class)->name('hemo_print_front_back')->middleware(['permission:patient.treatment.print']);
-            Route::get('/{id}/agreement-form', AgreementPrint::class)->name('hemo_agreement');
+
 
 
         });
+
 
         Route::prefix('/phil-health')->group(function () {
             Route::get('/', PhilHealthList::class)->name('phic')->middleware(['permission:patient.philhealth.view']);

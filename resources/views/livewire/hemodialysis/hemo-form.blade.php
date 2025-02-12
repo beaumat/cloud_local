@@ -104,8 +104,6 @@
                                                         </button>
                                                     @endif
                                                 @endif
-
-
                                             @endif
 
                                             @if ($STATUS == 3)
@@ -138,6 +136,7 @@
                                                         aria-hidden="true"></i> Notes</button>
                                             @endif
                                         @endcan
+                              
                                         @can('patient.treatment.print')
                                             @if (!$Modify)
                                                 <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
