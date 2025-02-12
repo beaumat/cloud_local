@@ -54,6 +54,9 @@ class TaxCreditList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public function delete(int $id) {
+        
+    }
     public function render()
     {
 

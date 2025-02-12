@@ -100,8 +100,9 @@ class BillPaymentList extends Component
                     if ($data->STATUS  > 0) {
                         $this->deleteJournal($data, $id);
                     }
-                    $billList= $this->billPaymentServices->billPaymentBills($id);
+                    $billList= $this->billPaymentServices->billPaymentBills($id);                    
                     $this->billPaymentServices->Delete($id);
+
                     foreach($billList as $list) {
                         $this->billingServices->UpdateBalance($list->BILL_ID);
                     }

@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Payment;
 
+use App\Services\AccountJournalServices;
+use App\Services\InvoiceServices;
 use App\Services\LocationServices;
 use App\Services\PaymentServices;
 use App\Services\UploadServices;
@@ -25,38 +27,104 @@ class PaymentList extends Component
     private $locationServices;
     private $userServices;
     private $uploadServices;
+    private $invoiceServices;
+    private $accountJournalServices;
     public function boot(
         PaymentServices $paymentServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        UploadServices $uploadServices
+        UploadServices $uploadServices,
+        InvoiceServices $invoiceServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->paymentServices = $paymentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->uploadServices = $uploadServices;
+        $this->invoiceServices = $invoiceServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
+
+    public function deleteJournal(object $data, int $id)
+    {
+
+        $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->paymentServices->object_type_payment, $id);
+        $payData = $this->paymentServices->PaymentInvoiceList($id);
+
+        foreach ($payData as $list) {
+
+            $this->accountJournalServices->DeleteJournal(
+                $list->ACCOUNTS_RECEIVABLE_ID,
+                $data->LOCATION_ID,
+                $JOURNAL_NO,
+                $data->CUSTOMER_ID,
+                $list->ID,
+                $this->paymentServices->object_type_payment_invoices,
+                $data->DATE,
+                1
+            );
+        }
+
+        $this->accountJournalServices->DeleteJournal(
+            $data->UNDEPOSITED_FUNDS_ACCOUNT_ID,
+            $data->LOCATION_ID,
+            $JOURNAL_NO,
+            $data->CUSTOMER_ID,
+            $data->ID,
+            $this->paymentServices->object_type_payment,
+            $data->DATE,
+            0
+        );
+
+        if ($data->ACCOUNTS_RECEIVABLE_ID  > 0) {
+            // optional if remaining
+            $this->accountJournalServices->DeleteJournal(
+                $data->ACCOUNTS_RECEIVABLE_ID ?? 0,
+                $data->LOCATION_ID,
+                $JOURNAL_NO,
+                $data->CUSTOMER_ID,
+                $data->ID,
+                $this->paymentServices->object_type_payment,
+                $data->DATE,
+                1
+            );
+        }
+    }
+
     public function delete(int $id)
     {
         try {
             $data = $this->paymentServices->get($id);
             if ($data) {
+                if ($data->DEPOSITED == 0) {
+                    if ($data->STATUS ==  0 || $data->STATUS == 16) {
+                        DB::beginTransaction();
 
-                if ($data->STATUS == 0) {
-                    DB::beginTransaction();
-                    $this->uploadServices->RemoveIfExists($data->FILE_PATH);
-                    $this->paymentServices->Delete($data->ID);
-                    session()->flash('message', 'Successfully deleted.');
-                    DB::commit();
+                        if ($data->STATUS  > 0) {
+                            $this->deleteJournal($data, $id);
+                        }
+
+                        $paymentList = $this->paymentServices->PaymentInvoiceList($data->ID);
+                        $this->paymentServices->delete($data->ID);
+
+                        foreach ($paymentList as $list) {
+                            $this->invoiceServices->updateInvoiceBalance($list->INVOICE_ID);
+                        }
+
+                        session()->flash('message', 'Successfully deleted.');
+                        DB::commit();
+                        return;
+                    }
+                    session()->flash('error', 'Invalid. this file already posted');
                     return;
                 }
 
-                session()->flash('error', 'Invalid. this file cannot be deleted.');
+                session()->flash('error', 'Invalid. this file cannot be deleted. or this payment already deposited');
             }
         } catch (\Exception $e) {
             DB::rollBack();

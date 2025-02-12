@@ -146,10 +146,11 @@ class PaymentServices
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
-        Payment::where('ID', $ID)->update([
-            'STATUS' => $STATUS,
-            'STATUS_DATE' => $this->dateServices->NowDate()
-        ]);
+        Payment::where('ID', $ID)
+            ->update([
+                'STATUS'        => $STATUS,
+                'STATUS_DATE'   => $this->dateServices->NowDate()
+            ]);
     }
     public function Delete(int $ID)
     {
@@ -265,7 +266,8 @@ class PaymentServices
                 'i.CODE',
                 'i.AMOUNT',
                 'i.BALANCE_DUE',
-                'payment_invoices.AMOUNT_APPLIED'
+                'payment_invoices.AMOUNT_APPLIED',
+                'payment_invoices.ACCOUNTS_RECEIVABLE_ID'
             ])
             ->leftJoin('invoice as i', 'i.ID', '=', 'payment_invoices.INVOICE_ID')
             ->where('payment_invoices.PAYMENT_ID', $PAYMENT_ID)
