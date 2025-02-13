@@ -6,7 +6,7 @@
 
     @livewire('Hemodialysis.AgreementFormPage1', ['HEMO_ID' => $HEMO_ID])
     <div class="page-break"></div>
-    @livewire('Hemodialysis.AgreementFormPage1', ['HEMO_ID' => $HEMO_ID])
+    @livewire('Hemodialysis.AgreementFormPage2', ['HEMO_ID' => $HEMO_ID])
 
 </div>
 

@@ -74,5 +74,41 @@
             the following services that are clinically indicated and necessary for my treatment session:
         </div>
     </div>
+    <div class="col-12">
+        <div class="container ">
+            <div class="row bottom-line2 top-line2 left-line2 right-line2">
+                <div class="col-6 right-line2 text-center">
+                    <h4>Items Covered by PhilHealth </h4>
+                </div>
+                <div class="col-6 text-center">
+                    <h4>Put a check (<i class="fa fa-check" aria-hidden="true"></i>) if indicated and a <br/>
+                        cross mark (<i class="fa fa-times" aria-hidden="true"></i>) if not indicated </h4>
+                </div>
 
+                <div class="col-6 top-line2 right-line2">
+                    &nbsp;
+                </div>
+                <div class="col-6 top-line2">
+                    &nbsp;
+                </div>
+
+                <div class="col-6 top-line2 right-line2">
+                    &nbsp;
+                </div>
+                <div class="col-6 top-line2">
+                    &nbsp;
+                </div>
+
+
+                <div class="col-6 top-line2 right-line2">
+                    &nbsp;
+                </div>
+                <div class="col-6 top-line2">
+                    &nbsp;
+                </div>
+
+
+            </div>
+        </div>
+    </div>
 </div>
