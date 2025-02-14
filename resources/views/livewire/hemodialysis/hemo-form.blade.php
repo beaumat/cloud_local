@@ -143,8 +143,7 @@
                                                     class="btn btn-sm btn-success">Print</a>
                                             @endif
                                         @endcan
-                                        <a target="_blank" href="{{ route('patientsagreement_form', ['id' => $ID]) }}"
-                                            class="btn btn-sm btn-info">Agreement Form</a>
+                                 
                                     </div>
 
                                 </div>

@@ -197,7 +197,12 @@
                                                 href="{{ route('patientshemo_edit', ['id' => $HEMO_ID]) }}"
                                                 class="btn btn-warning btn-sm">
                                                 <i class="fa fa-eye" aria-hidden="true"></i>
-                                                View Treatment </a>
+                                                Treatment Details </a>
+
+
+                                            <a target="_BLANK"
+                                                href="{{ route('patientsagreement_form', ['id' => $HEMO_ID]) }}"
+                                                class="btn btn-sm btn-info">Agreement Form</a>
                                         @endif
 
                                     </div>
