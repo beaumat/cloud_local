@@ -4,6 +4,7 @@ namespace App\Livewire\Hemodialysis;
 
 use App\Services\HemoServices;
 use App\Services\LocationServices;
+use App\Services\PhicAgreementFormServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -20,13 +21,16 @@ class AgreementFormPage2 extends Component
     public string $DATE;
 
     public int $LOCATION_ID;
-
+    public $typeFiveList = [];
+    public $typeSixList = [];
     private $hemoServices;
     private $locationServices;
-    public function boot(HemoServices $hemoServices, LocationServices $locationServices)
+    private $phicAgreementFormServices;
+    public function boot(HemoServices $hemoServices, LocationServices $locationServices, PhicAgreementFormServices $phicAgreementFormServices)
     {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
+        $this->phicAgreementFormServices = $phicAgreementFormServices;
     }
 
     public function mount()
@@ -36,15 +40,27 @@ class AgreementFormPage2 extends Component
         if ($data) {
             $this->DATE = $data->DATE;
             $this->LOCATION_ID = $data->LOCATION_ID;
-         
+
             $dataLoc = $this->locationServices->get($this->LOCATION_ID);
-            if($dataLoc) {
+            if ($dataLoc) {
 
                 // $this->ADMIN_NAME ="";
 
             }
+
+            $this->TypeFive();
+            $this->TypeSix();
         }
 
+    }
+
+    private function TypeFive()
+    {
+        $this->typeFiveList = $this->phicAgreementFormServices->getTitleByType(5);
+    }
+    private function TypeSix()
+    {
+        $this->typeSixList = $this->phicAgreementFormServices->getTitleByType(6);
     }
     public function render()
     {

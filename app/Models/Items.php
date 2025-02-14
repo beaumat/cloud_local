@@ -48,6 +48,7 @@ class Items extends Model
         'NON_HEMO',
         'HEMO_NON_INVENTORY',
         'IS_KIT',
-        'NON_PULL_OUT'
+        'NON_PULL_OUT',
+        'PHIC_AGREEMENT_FORM_TITLE_ID'
     ];
 }

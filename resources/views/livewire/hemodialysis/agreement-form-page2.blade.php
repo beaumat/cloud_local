@@ -18,50 +18,21 @@
     <div class="col-12">
         <div class="container-fluid pt-4">
             <div class="row bottom-line2 top-line2 left-line2 right-line2">
+                <div class="col-12  font-weight-bold"> Laboratory tests </div>
+                @foreach ($typeFiveList as $list)
+                    <div class="col-7 top-line2 right-line2">{{ $list->LINE }}. {{ $list->DESCRIPTION }}
+                    </div>
+                    <div class="col-5 top-line2"> &nbsp; </div>
+                @endforeach
 
-                <div class="col-7 right-line2"> 2. Serum creatinine </div>
-                <div class="col-5 "> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2"> 3. BUN </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
 
-                <div class="col-7 top-line2 right-line2"> 4. Hepatitis profile </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-
-                <div class="col-7 top-line2 right-line2"> 5. Alkaline phosphatase </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2"> 6. Potassium
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-
-                <div class="col-7 top-line2 right-line2">7. Phosphorus
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">8. Calcium
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">9. Sodium
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">10. Serum iron/ ferritin/ transferrin, total iron binding
-                    capacity
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
                 <div class="col-12 top-line2  font-weight-bold">Supplies </div>
-                <div class="col-7 top-line2 right-line2">Dialyzer, low-flux
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
 
-                <div class="col-7 top-line2 right-line2">Dialyzer, high-flux
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-
-                <div class="col-7 top-line2 right-line2">Hemodialysis Solutions
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-
-                <div class="col-7 top-line2 right-line2">Dialysis Kit
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
+                @foreach ($typeSixList as $list)
+                    <div class="col-7 top-line2 right-line2"> {{ $list->DESCRIPTION }}
+                    </div>
+                    <div class="col-5 top-line2"> &nbsp; </div>
+                @endforeach
                 <div class="col-7 top-line2  font-weight-bold right-line2">Administrative & Other Fees, specify: </div>
                 <div class="col-5 top-line2"> &nbsp; </div>
                 <div class="col-7 top-line2 right-line2">&nbsp;

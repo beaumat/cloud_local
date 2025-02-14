@@ -66,7 +66,8 @@
     </div>
     <div class="col-12">
         <div class="rr20 mt-3">
-            I have been fully informed by Dr./Mr./Ms. <b>{{ $PHIC_INCHARGE_NAME }}</b> of the PhilHealth policies on availing of the
+            I have been fully informed by Dr./Mr./Ms. <b>{{ $PHIC_INCHARGE_NAME }}</b> of the PhilHealth policies on
+            availing of the
             benefits package for HD.
         </div>
     </div>
@@ -110,36 +111,19 @@
                 <div class="col-7 top-line2 right-line2 font-weight-bold"> Drugs/Medicines </div>
                 <div class="col-5 top-line2"> &nbsp; </div>
                 <div class="col-12 top-line2 "> Epoetin alpha (Human Recombinant Erythropoietin) </div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. 2000 IU/0.5 mL
-                    pre-filled syringe </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. 4000 IU/0.4 mL
-                    pre-filled syringe </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. 4000 IU/mL, 1 mL vial
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. 4000 IU/mL solution for
-                    injection in 1 mL pre-filled syringe
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5. 10,000 IU/mL
-                    pre-filled syringe
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
+                @foreach ($typeOneList as $list)
+                    <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $list->LINE }}.
+                        {{ $list->DESCRIPTION }}
+                    </div>
+                    <div class="col-5 top-line2 text-center"> &nbsp; <i class="fa fa-check text-danger" aria-hidden="true"></i> </div>
+                @endforeach
                 <div class="col-12 top-line2"> Epoetin beta (Recombinant Erythropoietin) </div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. 2000 IU/0.3 mL
-                    pre-filled syringe
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. 5000 IU/0.3 mL
-                    pre-filled syringe
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. 10,000 IU/0.6 mL
-                    pre-filled syringe
-                </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
+                @foreach ($typeTwoList as $list)
+                    <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $list->LINE }}.
+                        {{ $list->DESCRIPTION }}
+                    </div>
+                    <div class="col-5 top-line2"> &nbsp; </div>
+                @endforeach
 
 
             </div>
@@ -149,24 +133,26 @@
     <div class="col-12">
         <div class="container-fluid pt-4">
             <div class="row bottom-line2 top-line2 left-line2 right-line2">
-                <div class="col-7  right-line2">Iron Sucrose 20 mg/mL, 5 mL ampule </div>
-                <div class="col-5 "> &nbsp; </div>
+                @foreach ($typeThreeList as $list)
+                    <div class="col-7 right-line2">
+                        {{ $list->DESCRIPTION }}
+                    </div>
+                    <div class="col-5 top-line2"> &nbsp; </div>
+                @endforeach
+
+
+
                 <div class="col-12  top-line2"> Heparin</div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Heparin sodium 1000
-                    IU/mL, 5 mL vial </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Heparin sodium 5000
-                    IU/mL, 5 mL vial </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Heparin sodium 1000
-                    IU/mL, 30 mL vial </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. Heparin sodium 5000
-                    IU/mL, 30 mL vial </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
-                <div class="col-12  top-line2 font-weight-bold"> Laboratory tests </div>
-                <div class="col-7 top-line2 right-line2">1. Complete blood count </div>
-                <div class="col-5 top-line2"> &nbsp; </div>
+
+                @foreach ($typeFourList as $list)
+                    <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $list->LINE }}.
+                        {{ $list->DESCRIPTION }}
+                    </div>
+                    <div class="col-5 top-line2"> &nbsp; </div>
+                @endforeach
+
+
+               
             </div>
         </div>
     </div>
