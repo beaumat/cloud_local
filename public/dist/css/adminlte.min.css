@@ -56169,6 +56169,9 @@ a.text-muted:hover {
 .noto {
     font-family: "Noto Sans HK", sans-serif;
 }
+.ggFont {
+    font-family: "Georgia", sans-serif;
+}
 
 .soa-text {
     font-size: 30px;
@@ -56214,4 +56217,17 @@ a.text-muted:hover {
 .table {
   border-spacing: 0px;   /* Remove cell spacing */
   border-collapse: collapse; /* Collapse borders to remove gaps */
+}
+
+.rrBox {
+  border: 3px solid #1486ff; /* Border color */
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 4px 4px 20px rgba(0, 0, 0, 1.5); /* Shadow effect */
+  padding-left: 10px; /* Padding inside the box */
+  padding-right: 60px;
+  text-align:justify;
+}
+
+.rr20 {
+   font-size: 20px;
 }

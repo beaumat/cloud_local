@@ -9,14 +9,9 @@ use Livewire\Component;
 #[Title('Agreement Form')]
 class AgreementForm extends Component
 {
-
-    
     public $HEMO_ID;
     public function mount($id)
     {
-
-      
-
         $this->HEMO_ID = $id;
         $this->dispatch('preview_print');
     }

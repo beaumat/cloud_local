@@ -1,3 +1,216 @@
-<div>
-    {{-- If your happiness depends on money, you will never be happy with yourself. --}}
+<div class="row" style=" font-family: Georgia, serif;color:black;padding-left:100px;padding-right:100px;">
+    <div class="col-12 top text-right">
+        <div style="font-size:23px;" class="font-weight-bold rr20">Annex A: Agreement Form</div>
+    </div>
+    <div class="col-12 header">
+        <div class="row">
+            <div class="col-6 text-center">
+                <img src="{{ asset('dist/logo/form/bago.jpg') }}" style="width:400px;" />
+
+            </div>
+            <div class="col-6">
+                <img src="{{ asset('dist/logo/form/address.jpg') }}" style="width:430px;" />
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12">
+        <div class="container-fluid pt-4">
+            <div class="row bottom-line2 top-line2 left-line2 right-line2">
+
+                <div class="col-7 right-line2"> 2. Serum creatinine </div>
+                <div class="col-5 "> &nbsp; </div>
+                <div class="col-7 top-line2 right-line2"> 3. BUN </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+
+                <div class="col-7 top-line2 right-line2"> 4. Hepatitis profile </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+
+                <div class="col-7 top-line2 right-line2"> 5. Alkaline phosphatase </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+                <div class="col-7 top-line2 right-line2"> 6. Potassium
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+
+                <div class="col-7 top-line2 right-line2">7. Phosphorus
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+                <div class="col-7 top-line2 right-line2">8. Calcium
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+                <div class="col-7 top-line2 right-line2">9. Sodium
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+                <div class="col-7 top-line2 right-line2">10. Serum iron/ ferritin/ transferrin, total iron binding
+                    capacity
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+                <div class="col-12 top-line2  font-weight-bold">Supplies </div>
+                <div class="col-7 top-line2 right-line2">Dialyzer, low-flux
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+
+                <div class="col-7 top-line2 right-line2">Dialyzer, high-flux
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+
+                <div class="col-7 top-line2 right-line2">Hemodialysis Solutions
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+
+                <div class="col-7 top-line2 right-line2">Dialysis Kit
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+                <div class="col-7 top-line2  font-weight-bold right-line2">Administrative & Other Fees, specify: </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+                <div class="col-7 top-line2 right-line2">&nbsp;
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+                <div class="col-7 top-line2 right-line2">&nbsp;
+                </div>
+                <div class="col-5 top-line2"> &nbsp; </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="rr20 mt-3">
+            I understand that I may be charged a copayment for the following items, amenities, additional services, and
+            premium services that are not covered by PhilHealth (attach additional sheet as necessary):
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="container-fluid pt-4">
+            <div class="row bottom-line2 top-line2 left-line2 right-line2">
+                <div class="col-6 right-line2 font-weight-bold  text-center">Item </div>
+                <div class="col-3 right-line2 font-weight-bold text-center"> Unit/Quantity</div>
+                <div class="col-3  font-weight-bold text-center"> Price (PHP) </div>
+
+                <div class="col-6 top-line2 right-line2 "> &nbsp; </div>
+                <div class="col-3 top-line2 right-line2 "> &nbsp; </div>
+                <div class="col-3 top-line2  "> &nbsp; </div>
+
+                <div class="col-6 top-line2  right-line2"> &nbsp; </div>
+                <div class="col-3 top-line2  right-line2 "> &nbsp; </div>
+                <div class="col-3 top-line2  "> &nbsp; </div>
+
+                <div class="col-6 top-line2  right-line2"> &nbsp; </div>
+                <div class="col-3 top-line2  right-line2 "> &nbsp; </div>
+                <div class="col-3 top-line2 font-weight-bold ">Total </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="rr20 mt-3 pb-4">
+            I have been furnished with a list of possible funding sources for medical assistance that may complement the
+            PhilHealth benefits for HD.
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="rr20 pt-4 pb-4">
+            Conforme:
+        </div>
+    </div>
+
+
+    <div class="col-12 rr20">
+        <div class="container-fluid pt-4">
+            <div class="row">
+                <div class="col-5 bottom-line2">{{ $PATIENT_NAME }}</div>
+                <div class="col-3"></div>
+                <div class="col-4 bottom-line2">{{ $ADMIN_NAME }}</div>
+
+                <div class="col-5">Printed name and signature of patient </div>
+                <div class="col-3"></div>
+                <div class="col-4">Printed name & signature </div>
+
+
+                <div class="col-5">&nbsp;</div>
+                <div class="col-3">&nbsp;</div>
+                <div class="col-4">HD Facility Representative</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 rr20">
+        <div class="container-fluid pt-4">
+            <div class="row">
+                <div class="col-5">
+                    <div class="row">
+                        <div class="col-2">
+                            Date:
+                        </div>
+                        <div class="col-10  bottom-line2">
+                            &nbsp;{{ date('m/d/Y', strtotime($DATE)) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3"></div>
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-2">
+                            Date:
+                        </div>
+                        <div class="col-10  bottom-line2">
+                            &nbsp;{{ date('m/d/Y', strtotime($DATE)) }}
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 rr20">
+        <div class="container-fluid pt-4">
+            <div class="row">
+                <div class="col-5">
+                    Witness:
+                </div>
+                <div class="col-3"></div>
+                <div class="col-4">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 rr20">
+        <div class="container-fluid pt-4">
+            <div class="row">
+                <div class="col-5 bottom-line2">{{ $WITNESS_NAME }}</div>
+                <div class="col-3"></div>
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-2">
+                            Date:
+                        </div>
+                        <div class="col-10  bottom-line2">
+                            &nbsp;{{ date('m/d/Y', strtotime($DATE)) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-5">Printed Name and signature </div>
+                <div class="col-3"></div>
+                <div class="col-4">&nbsp;</div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-12 footer pt-4">
+        <div class="pt-4">
+            <div class="row pt-4">
+                <div class="col-7 text-left pt-4">
+                    <img src="{{ asset('dist/logo/form/footer.jpg') }}" style="width:150px;" />
+
+                </div>
+                <div class="col-5">
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
