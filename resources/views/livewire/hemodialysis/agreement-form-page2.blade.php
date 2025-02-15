@@ -89,7 +89,7 @@
             <div class="row">
                 <div class="col-5 bottom-line2">{{ $PATIENT_NAME }}</div>
                 <div class="col-3"></div>
-                <div class="col-4 bottom-line2">{{ $ADMIN_NAME }}</div>
+                <div class="col-4 bottom-line2">{{ $HD_FACILITY_REP_NAME }}</div>
 
                 <div class="col-5">Printed name and signature of patient </div>
                 <div class="col-3"></div>
@@ -173,7 +173,7 @@
     </div>
     <div class="col-12 footer pt-4">
         <div class="pt-4">
-            <div class="row pt-4">
+            <div class="row">
                 <div class="col-7 text-left pt-4">
                     <img src="{{ asset('dist/logo/form/footer.jpg') }}" style="width:150px;" />
 

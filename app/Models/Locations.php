@@ -38,6 +38,7 @@ class Locations extends Model
         'USED_DRY_WEIGHT',
         'DOCTOR_ORDER_DEFAULT',
         'OTHER_SIGN',
-        'PREPARED_BY_ID'
+        'PREPARED_BY_ID',
+        'HD_FACILITY_REP_ID'
     ];
 }

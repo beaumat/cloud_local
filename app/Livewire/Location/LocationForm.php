@@ -39,15 +39,15 @@ class LocationForm extends Component
     public bool $IS_DAILY = false;
     public bool $USED_DRY_WEIGHT = false;
     public string $LOGO_FILE = '';
-    public  string $DOCTOR_ORDER_DEFAULT;
+    public string $DOCTOR_ORDER_DEFAULT;
     public bool $OTHER_SIGN;
-    public  int $PREPARED_BY_ID;
-
-
+    public int $PREPARED_BY_ID;
+    public int $HD_FACILITY_REP_ID;
     public $managerList = [];
     public $inchargeList = [];
     public $physicianList = [];
     public $preparedByList = [];
+    public $hdFacilityRepList = [];
     private $locationServices;
     private $contactServices;
     public function boot(LocationServices $locationServices, ContactServices $contactServices)
@@ -64,13 +64,14 @@ class LocationForm extends Component
         $this->inchargeList = $contactList;
         $this->physicianList = $contactList;
         $this->preparedByList = $contactList;
+        $this->hdFacilityRepList = $contactList;
     }
     public function mount($id = null)
     {
 
         $this->loadDropDown();
         if (is_numeric($id)) {
-            $data =   $this->locationServices->get($id);
+            $data = $this->locationServices->get($id);
             if ($data) {
                 $this->ID = $data->ID;
                 $this->NAME = $data->NAME;
@@ -97,7 +98,7 @@ class LocationForm extends Component
                 $this->DOCTOR_ORDER_DEFAULT = $data->DOCTOR_ORDER_DEFAULT ?? '';
                 $this->OTHER_SIGN = $data->OTHER_SIGN ?? false;
                 $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
-
+                $this->HD_FACILITY_REP_ID = $data->HD_FACILITY_REP_ID ?? 0;
                 return;
             }
 
@@ -118,17 +119,18 @@ class LocationForm extends Component
         $this->BRGY_CITY_MUNI = '';
         $this->PROVINCE = '';
         $this->ZIP_CODE = '';
-        $this->REPORT_HEADER_1 =  '';
+        $this->REPORT_HEADER_1 = '';
         $this->REPORT_HEADER_2 = '';
-        $this->REPORT_HEADER_3 =  '';
+        $this->REPORT_HEADER_3 = '';
         $this->PHIC_SOA_FORMAT = '';
-        $this->PHIC_FORM_MODIFY  = false;
+        $this->PHIC_FORM_MODIFY = false;
         $this->IS_DAILY = false;
         $this->LOGO_FILE = '';
         $this->USED_DRY_WEIGHT = false;
-        $this->DOCTOR_ORDER_DEFAULT =  '';
+        $this->DOCTOR_ORDER_DEFAULT = '';
         $this->OTHER_SIGN = false;
-        $this->PREPARED_BY_ID =  0;
+        $this->PREPARED_BY_ID = 0;
+        $this->HD_FACILITY_REP_ID = 0;
     }
 
     public function save()
@@ -165,7 +167,8 @@ class LocationForm extends Component
                     $this->USED_DRY_WEIGHT,
                     $this->DOCTOR_ORDER_DEFAULT,
                     $this->OTHER_SIGN,
-                    $this->PREPARED_BY_ID
+                    $this->PREPARED_BY_ID,
+                    $this->HD_FACILITY_REP_ID
                 );
 
                 Redirect::route('maintenancesettingslocation_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -195,7 +198,8 @@ class LocationForm extends Component
                     $this->USED_DRY_WEIGHT,
                     $this->DOCTOR_ORDER_DEFAULT,
                     $this->OTHER_SIGN,
-                    $this->PREPARED_BY_ID
+                    $this->PREPARED_BY_ID,
+                    $this->HD_FACILITY_REP_ID
                 );
                 session()->flash('message', 'Successfully updated');
             }

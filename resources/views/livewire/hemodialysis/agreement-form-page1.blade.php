@@ -23,10 +23,10 @@
         <div>
             <div class="row">
                 <div class="col-4 font-weight-bold">
-                    <div style="font-size: 20px;">HD Treatment Session No.</div>
+                    <div class="rr20">HD Treatment Session No.</div>
                 </div>
 
-                <div class="col-3 bottom-line2 font-weight-bold text-md">
+                <div class="col-3 bottom-line2 font-weight-bold rr20">
                     &nbsp; {{ $NO_OF_TREATMENT }}
                 </div>
                 <div class="col-5 ">
@@ -34,9 +34,9 @@
                 </div>
 
                 <div class="col-4 font-weight-bold  text-md">
-                    <div style="font-size: 20px;"> Date (Month/Day/Year)</div>
+                    <div class="rr20"> Date (Month/Day/Year)</div>
                 </div>
-                <div class="col-3 bottom-line2 font-weight-bold text-md">
+                <div class="col-3 bottom-line2 font-weight-bold rr20">
                     &nbsp; {{ date('m/d/Y', strtotime($DATE)) }}
                 </div>
                 <div class="col-5 ">
@@ -108,14 +108,15 @@
                         if indicated and a <br /> cross
                         mark (<i class="fa fa-times" aria-hidden="true"></i>) if not indicated </div>
                 </div>
-                <div class="col-7 top-line2 right-line2 font-weight-bold"> Drugs/Medicines </div>
+                <div class="col-7 top-line2 font-weight-bold"> Drugs/Medicines </div>
                 <div class="col-5 top-line2"> &nbsp; </div>
                 <div class="col-12 top-line2 "> Epoetin alpha (Human Recombinant Erythropoietin) </div>
                 @foreach ($typeOneList as $list)
                     <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $list->LINE }}.
                         {{ $list->DESCRIPTION }}
                     </div>
-                    <div class="col-5 top-line2 text-center"> &nbsp; <i class="fa fa-check text-danger" aria-hidden="true"></i> </div>
+                    <div class="col-5 top-line2 text-center"> &nbsp; <i class="fa fa-check text-danger"
+                            aria-hidden="true"></i> </div>
                 @endforeach
                 <div class="col-12 top-line2"> Epoetin beta (Recombinant Erythropoietin) </div>
                 @foreach ($typeTwoList as $list)
@@ -152,7 +153,7 @@
                 @endforeach
 
 
-               
+
             </div>
         </div>
     </div>

@@ -33,7 +33,14 @@ class ContactServices
             ->where('TYPE', '=', 4)
             ->exists();
     }
-
+    public function getName($ID): string
+    {
+        $result = contacts::query()->select(['NAME'])->where('ID', '=', $ID)->first();
+        if ($result) {
+            return $result->NAME ?? '';
+        }
+        return '';
+    }
     public function getPatientByMed($ID)
     {
         $result = contacts::query()
@@ -95,11 +102,11 @@ class ContactServices
             return false;
         }
 
-        return   true;
+        return true;
     }
     public function pinLogin(string $PIN): int
     {
-        $data =  Contacts::where('PIN', '=', $PIN)
+        $data = Contacts::where('PIN', '=', $PIN)
             ->where('TYPE', '=', 2)
             ->first();
 
@@ -347,47 +354,47 @@ class ContactServices
         $ID = $this->objectService->ObjectNextIdByName('Contact');
 
         Contacts::create([
-            "ID"                        => $ID,
-            "TYPE"                      => $TYPE,
-            "NAME"                      => strtoupper($NAME),
-            "COMPANY_NAME"              => strtoupper($COMPANY_NAME),
-            "SALUTATION"                => $SALUTATION,
-            "FIRST_NAME"                => strtoupper($FIRST_NAME),
-            "MIDDLE_NAME"               => strtoupper($MIDDLE_NAME),
-            "LAST_NAME"                 => strtoupper($LAST_NAME),
-            "PRINT_NAME_AS"             => strtoupper($PRINT_NAME_AS),
-            "POSTAL_ADDRESS"            => $POSTAL_ADDRESS,
-            "CONTACT_PERSON"            => strtoupper($CONTACT_PERSON),
-            "TELEPHONE_NO"              => $TELEPHONE_NO,
-            "FAX_NO"                    => $FAX_NO,
-            "MOBILE_NO"                 => $MOBILE_NO,
-            "ALT_TELEPHONE_NO"          => $ALT_TELEPHONE_NO,
-            "ALT_CONTACT_PERSON"        => $ALT_CONTACT_PERSON,
-            "EMAIL"                     => $EMAIL,
-            "ACCOUNT_NO"                => $ACCOUNT_NO != '' ? $ACCOUNT_NO : $this->objectService->GetSequence($OBJECT_TYPE, $CUSTOM_FIELD1),
-            "INACTIVE"                  => $INACTIVE,
-            "GROUP_ID"                  => $GROUP_ID > 0 ? $GROUP_ID : null,
-            "PAYMENT_TERMS_ID"          => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,
-            "CREDIT_LIMIT"              => $CREDIT_LIMIT,
-            "PREF_PAYMENT_METHOD_ID"    => $PREF_PAYMENT_METHOD_ID > 0 ? $PREF_PAYMENT_METHOD_ID : null,
-            "CREDIT_CARD_NO"            => $CREDIT_CARD_NO,
-            "CREDIT_CARD_EXPIRY_DATE"   => $CREDIT_CARD_EXPIRY_DATE ? $CREDIT_CARD_EXPIRY_DATE : null,
-            "SALES_REP_ID"              => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
-            "PRICE_LEVEL_ID"            => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-            "APPLY_FINANCE_CHARGE"      => null,
-            "TAXPAYER_ID"               => $TAXPAYER_ID,
-            "TAX_ID"                    => $TAX_ID > 0 ? $TAX_ID : null,
-            "EW_TAX_ID"                 => $EW_TAX_ID > 0 ? $EW_TAX_ID : null,
-            "SSS_NO"                    => $SSS_NO,
-            "GENDER"                    => $GENDER > -1 ? $GENDER : null,
-            "DATE_OF_BIRTH"             => $DATE_OF_BIRTH ? $DATE_OF_BIRTH : null,
-            "NICKNAME"                  => $NICKNAME,
-            "HIRE_DATE"                 => $HIRE_DATE ? $HIRE_DATE : null,
-            "CUSTOM_FIELD1"             => $CUSTOM_FIELD1,
-            "CUSTOM_FIELD2"             => $CUSTOM_FIELD2,
-            "CUSTOM_FIELD3"             => $CUSTOM_FIELD3,
-            "CUSTOM_FIELD4"             => $CUSTOM_FIELD4,
-            "CUSTOM_FIELD5"             => $CUSTOM_FIELD5
+            "ID" => $ID,
+            "TYPE" => $TYPE,
+            "NAME" => strtoupper($NAME),
+            "COMPANY_NAME" => strtoupper($COMPANY_NAME),
+            "SALUTATION" => $SALUTATION,
+            "FIRST_NAME" => strtoupper($FIRST_NAME),
+            "MIDDLE_NAME" => strtoupper($MIDDLE_NAME),
+            "LAST_NAME" => strtoupper($LAST_NAME),
+            "PRINT_NAME_AS" => strtoupper($PRINT_NAME_AS),
+            "POSTAL_ADDRESS" => $POSTAL_ADDRESS,
+            "CONTACT_PERSON" => strtoupper($CONTACT_PERSON),
+            "TELEPHONE_NO" => $TELEPHONE_NO,
+            "FAX_NO" => $FAX_NO,
+            "MOBILE_NO" => $MOBILE_NO,
+            "ALT_TELEPHONE_NO" => $ALT_TELEPHONE_NO,
+            "ALT_CONTACT_PERSON" => $ALT_CONTACT_PERSON,
+            "EMAIL" => $EMAIL,
+            "ACCOUNT_NO" => $ACCOUNT_NO != '' ? $ACCOUNT_NO : $this->objectService->GetSequence($OBJECT_TYPE, $CUSTOM_FIELD1),
+            "INACTIVE" => $INACTIVE,
+            "GROUP_ID" => $GROUP_ID > 0 ? $GROUP_ID : null,
+            "PAYMENT_TERMS_ID" => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,
+            "CREDIT_LIMIT" => $CREDIT_LIMIT,
+            "PREF_PAYMENT_METHOD_ID" => $PREF_PAYMENT_METHOD_ID > 0 ? $PREF_PAYMENT_METHOD_ID : null,
+            "CREDIT_CARD_NO" => $CREDIT_CARD_NO,
+            "CREDIT_CARD_EXPIRY_DATE" => $CREDIT_CARD_EXPIRY_DATE ? $CREDIT_CARD_EXPIRY_DATE : null,
+            "SALES_REP_ID" => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+            "PRICE_LEVEL_ID" => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+            "APPLY_FINANCE_CHARGE" => null,
+            "TAXPAYER_ID" => $TAXPAYER_ID,
+            "TAX_ID" => $TAX_ID > 0 ? $TAX_ID : null,
+            "EW_TAX_ID" => $EW_TAX_ID > 0 ? $EW_TAX_ID : null,
+            "SSS_NO" => $SSS_NO,
+            "GENDER" => $GENDER > -1 ? $GENDER : null,
+            "DATE_OF_BIRTH" => $DATE_OF_BIRTH ? $DATE_OF_BIRTH : null,
+            "NICKNAME" => $NICKNAME,
+            "HIRE_DATE" => $HIRE_DATE ? $HIRE_DATE : null,
+            "CUSTOM_FIELD1" => $CUSTOM_FIELD1,
+            "CUSTOM_FIELD2" => $CUSTOM_FIELD2,
+            "CUSTOM_FIELD3" => $CUSTOM_FIELD3,
+            "CUSTOM_FIELD4" => $CUSTOM_FIELD4,
+            "CUSTOM_FIELD5" => $CUSTOM_FIELD5
         ]);
 
         return $ID;
@@ -438,45 +445,45 @@ class ContactServices
         Contacts::where('ID', $ID)
             ->where('TYPE', $TYPE)
             ->update([
-                "NAME"                      => strtoupper($NAME),
-                "COMPANY_NAME"              => strtoupper($COMPANY_NAME),
-                "SALUTATION"                => $SALUTATION,
-                "FIRST_NAME"                => strtoupper($FIRST_NAME),
-                "MIDDLE_NAME"               => strtoupper($MIDDLE_NAME),
-                "LAST_NAME"                 => strtoupper($LAST_NAME),
-                "PRINT_NAME_AS"             => strtoupper($PRINT_NAME_AS),
-                "POSTAL_ADDRESS"            => $POSTAL_ADDRESS,
-                "CONTACT_PERSON"            => strtoupper($CONTACT_PERSON),
-                "TELEPHONE_NO"              => $TELEPHONE_NO,
-                "FAX_NO"                    => $FAX_NO,
-                "MOBILE_NO"                 => $MOBILE_NO,
-                "ALT_TELEPHONE_NO"          => $ALT_TELEPHONE_NO,
-                "ALT_CONTACT_PERSON"        => $ALT_CONTACT_PERSON,
-                "EMAIL"                     => $EMAIL,
-                "ACCOUNT_NO"                => $ACCOUNT_NO,
-                "INACTIVE"                  => $INACTIVE,
-                "GROUP_ID"                  => $GROUP_ID > 0 ? $GROUP_ID : null,
-                "PAYMENT_TERMS_ID"          => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,
-                "CREDIT_LIMIT"              => $CREDIT_LIMIT,
-                "PREF_PAYMENT_METHOD_ID"    => $PREF_PAYMENT_METHOD_ID > 0 ? $PREF_PAYMENT_METHOD_ID : null,
-                "CREDIT_CARD_NO"            => $CREDIT_CARD_NO,
-                "CREDIT_CARD_EXPIRY_DATE"   => $CREDIT_CARD_EXPIRY_DATE ? $CREDIT_CARD_EXPIRY_DATE : null,
-                "SALES_REP_ID"              => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
-                "PRICE_LEVEL_ID"            => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-                "APPLY_FINANCE_CHARGE"      => null,
-                "TAXPAYER_ID"               => $TAXPAYER_ID,
-                "TAX_ID"                    => $TAX_ID > 0 ? $TAX_ID : null,
-                "EW_TAX_ID"                 => $EW_TAX_ID > 0 ? $EW_TAX_ID : null,
-                "SSS_NO"                    => $SSS_NO,
-                "GENDER"                    => $GENDER > -1 ? $GENDER : null,
-                "DATE_OF_BIRTH"             => $DATE_OF_BIRTH ? $DATE_OF_BIRTH : null,
-                "NICKNAME"                  => $NICKNAME,
-                "HIRE_DATE"                 => $HIRE_DATE ? $HIRE_DATE : null,
-                "CUSTOM_FIELD1"             => $CUSTOM_FIELD1,
-                "CUSTOM_FIELD2"             => $CUSTOM_FIELD2,
-                "CUSTOM_FIELD3"             => $CUSTOM_FIELD3,
-                "CUSTOM_FIELD4"             => $CUSTOM_FIELD4,
-                "CUSTOM_FIELD5"             => $CUSTOM_FIELD5
+                "NAME" => strtoupper($NAME),
+                "COMPANY_NAME" => strtoupper($COMPANY_NAME),
+                "SALUTATION" => $SALUTATION,
+                "FIRST_NAME" => strtoupper($FIRST_NAME),
+                "MIDDLE_NAME" => strtoupper($MIDDLE_NAME),
+                "LAST_NAME" => strtoupper($LAST_NAME),
+                "PRINT_NAME_AS" => strtoupper($PRINT_NAME_AS),
+                "POSTAL_ADDRESS" => $POSTAL_ADDRESS,
+                "CONTACT_PERSON" => strtoupper($CONTACT_PERSON),
+                "TELEPHONE_NO" => $TELEPHONE_NO,
+                "FAX_NO" => $FAX_NO,
+                "MOBILE_NO" => $MOBILE_NO,
+                "ALT_TELEPHONE_NO" => $ALT_TELEPHONE_NO,
+                "ALT_CONTACT_PERSON" => $ALT_CONTACT_PERSON,
+                "EMAIL" => $EMAIL,
+                "ACCOUNT_NO" => $ACCOUNT_NO,
+                "INACTIVE" => $INACTIVE,
+                "GROUP_ID" => $GROUP_ID > 0 ? $GROUP_ID : null,
+                "PAYMENT_TERMS_ID" => $PAYMENT_TERMS_ID > 0 ? $PAYMENT_TERMS_ID : null,
+                "CREDIT_LIMIT" => $CREDIT_LIMIT,
+                "PREF_PAYMENT_METHOD_ID" => $PREF_PAYMENT_METHOD_ID > 0 ? $PREF_PAYMENT_METHOD_ID : null,
+                "CREDIT_CARD_NO" => $CREDIT_CARD_NO,
+                "CREDIT_CARD_EXPIRY_DATE" => $CREDIT_CARD_EXPIRY_DATE ? $CREDIT_CARD_EXPIRY_DATE : null,
+                "SALES_REP_ID" => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+                "PRICE_LEVEL_ID" => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+                "APPLY_FINANCE_CHARGE" => null,
+                "TAXPAYER_ID" => $TAXPAYER_ID,
+                "TAX_ID" => $TAX_ID > 0 ? $TAX_ID : null,
+                "EW_TAX_ID" => $EW_TAX_ID > 0 ? $EW_TAX_ID : null,
+                "SSS_NO" => $SSS_NO,
+                "GENDER" => $GENDER > -1 ? $GENDER : null,
+                "DATE_OF_BIRTH" => $DATE_OF_BIRTH ? $DATE_OF_BIRTH : null,
+                "NICKNAME" => $NICKNAME,
+                "HIRE_DATE" => $HIRE_DATE ? $HIRE_DATE : null,
+                "CUSTOM_FIELD1" => $CUSTOM_FIELD1,
+                "CUSTOM_FIELD2" => $CUSTOM_FIELD2,
+                "CUSTOM_FIELD3" => $CUSTOM_FIELD3,
+                "CUSTOM_FIELD4" => $CUSTOM_FIELD4,
+                "CUSTOM_FIELD5" => $CUSTOM_FIELD5
             ]);
     }
 
@@ -569,7 +576,7 @@ class ContactServices
                     'l.NAME as LOCATION_NAME',
                     'd.PRINT_NAME_AS as DOCTOR_NAME',
                     'pc.DESCRIPTION as CLASS'
-                 
+
                 ]
             )
             ->join('contact_type_map as t', function ($join) use (&$TYPE) {

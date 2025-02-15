@@ -17,7 +17,7 @@ class LocationServices
     }
     public function SOA_FORMAT(int $LOCATION_ID)
     {
-        $data =  Locations::where('ID','=', $LOCATION_ID)->first();
+        $data = Locations::where('ID', '=', $LOCATION_ID)->first();
 
         if ($data->PHIC_SOA_FORMAT) {
 
@@ -88,36 +88,38 @@ class LocationServices
         bool $USED_DRY_WEIGHT,
         string $DOCTOR_ORDER_DEFAULT,
         bool $OTHER_SIGN,
-        int $PREPARED_BY_ID
+        int $PREPARED_BY_ID,
+        int $HD_FACILITY_REP_ID
 
     ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
         Locations::create([
-            'ID'                    => $ID,
-            'NAME'                  => $NAME,
-            'INACTIVE'              => $INACTIVE,
-            'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-            'GROUP_ID'              => $GROUP_ID > 0 ? $GROUP_ID : null,
-            'HCI_MANAGER_ID'        => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
-            'PHIC_INCHARGE_ID'      => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
-            'NAME_OF_BUSINESS'      => strtoupper($NAME_OF_BUSINESS),
-            'ACCREDITATION_NO'      => $ACCREDITATION_NO,
-            'BLDG_NAME_LOT_BLOCK'   => strtoupper($BLDG_NAME_LOT_BLOCK),
-            'STREET_SUB_VALL'       => strtoupper($STREET_SUB_VALL),
-            'BRGY_CITY_MUNI'        => strtoupper($BRGY_CITY_MUNI),
-            'PROVINCE'              => strtoupper($PROVINCE),
-            'ZIP_CODE'              => $ZIP_CODE,
-            'REPORT_HEADER_1'       => $REPORT_HEADER_1,
-            'REPORT_HEADER_2'       => $REPORT_HEADER_2,
-            'REPORT_HEADER_3'       => $REPORT_HEADER_3,
-            'PHIC_SOA_FORMAT'       => $PHIC_SOA_FORMAT,
-            'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY,
-            'IS_DAILY'              => $IS_DAILY,
-            'LOGO_FILE'             => $LOGO_FILE,
-            'USED_DRY_WEIGHT'       => $USED_DRY_WEIGHT,
-            'DOCTOR_ORDER_DEFAULT'  => $DOCTOR_ORDER_DEFAULT,
-            'OTHER_SIGN'            => $OTHER_SIGN,
-            'PREPARED_BY_ID'        => $PREPARED_BY_ID
+            'ID' => $ID,
+            'NAME' => $NAME,
+            'INACTIVE' => $INACTIVE,
+            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'HCI_MANAGER_ID' => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
+            'PHIC_INCHARGE_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
+            'NAME_OF_BUSINESS' => strtoupper($NAME_OF_BUSINESS),
+            'ACCREDITATION_NO' => $ACCREDITATION_NO,
+            'BLDG_NAME_LOT_BLOCK' => strtoupper($BLDG_NAME_LOT_BLOCK),
+            'STREET_SUB_VALL' => strtoupper($STREET_SUB_VALL),
+            'BRGY_CITY_MUNI' => strtoupper($BRGY_CITY_MUNI),
+            'PROVINCE' => strtoupper($PROVINCE),
+            'ZIP_CODE' => $ZIP_CODE,
+            'REPORT_HEADER_1' => $REPORT_HEADER_1,
+            'REPORT_HEADER_2' => $REPORT_HEADER_2,
+            'REPORT_HEADER_3' => $REPORT_HEADER_3,
+            'PHIC_SOA_FORMAT' => $PHIC_SOA_FORMAT,
+            'PHIC_FORM_MODIFY' => $PHIC_FORM_MODIFY,
+            'IS_DAILY' => $IS_DAILY,
+            'LOGO_FILE' => $LOGO_FILE,
+            'USED_DRY_WEIGHT' => $USED_DRY_WEIGHT,
+            'DOCTOR_ORDER_DEFAULT' => $DOCTOR_ORDER_DEFAULT,
+            'OTHER_SIGN' => $OTHER_SIGN,
+            'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $HD_FACILITY_REP_ID : null,
+            'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null
         ]);
 
         return $ID;
@@ -148,36 +150,38 @@ class LocationServices
         bool $USED_DRY_WEIGHT,
         string $DOCTOR_ORDER_DEFAULT,
         bool $OTHER_SIGN,
-        int $PREPARED_BY_ID
+        int $PREPARED_BY_ID,
+        int $HD_FACILITY_REP_ID
 
     ): void {
 
         Locations::where('ID', $ID)
             ->update([
-                'NAME'                  => $NAME,
-                'INACTIVE'              => $INACTIVE,
-                'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-                'GROUP_ID'              => $GROUP_ID > 0 ? $GROUP_ID : null,
-                'HCI_MANAGER_ID'        => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
-                'PHIC_INCHARGE_ID'      => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
-                'NAME_OF_BUSINESS'      => strtoupper($NAME_OF_BUSINESS),
-                'ACCREDITATION_NO'      => $ACCREDITATION_NO,
-                'BLDG_NAME_LOT_BLOCK'   => strtoupper($BLDG_NAME_LOT_BLOCK),
-                'STREET_SUB_VALL'       => strtoupper($STREET_SUB_VALL),
-                'BRGY_CITY_MUNI'        => strtoupper($BRGY_CITY_MUNI),
-                'PROVINCE'              => strtoupper($PROVINCE),
-                'ZIP_CODE'              => $ZIP_CODE,
-                'REPORT_HEADER_1'       => $REPORT_HEADER_1,
-                'REPORT_HEADER_2'       => $REPORT_HEADER_2,
-                'REPORT_HEADER_3'       => $REPORT_HEADER_3,
-                'PHIC_SOA_FORMAT'       => $PHIC_SOA_FORMAT,
-                'PHIC_FORM_MODIFY'      => $PHIC_FORM_MODIFY,
-                'IS_DAILY'              => $IS_DAILY,
-                'LOGO_FILE'             => $LOGO_FILE,
-                'USED_DRY_WEIGHT'       => $USED_DRY_WEIGHT,
-                'DOCTOR_ORDER_DEFAULT'  => $DOCTOR_ORDER_DEFAULT,
-                'OTHER_SIGN'            => $OTHER_SIGN,
-                'PREPARED_BY_ID'        => $PREPARED_BY_ID >  0  ? $PREPARED_BY_ID : null
+                'NAME' => $NAME,
+                'INACTIVE' => $INACTIVE,
+                'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+                'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
+                'HCI_MANAGER_ID' => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
+                'PHIC_INCHARGE_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
+                'NAME_OF_BUSINESS' => strtoupper($NAME_OF_BUSINESS),
+                'ACCREDITATION_NO' => $ACCREDITATION_NO,
+                'BLDG_NAME_LOT_BLOCK' => strtoupper($BLDG_NAME_LOT_BLOCK),
+                'STREET_SUB_VALL' => strtoupper($STREET_SUB_VALL),
+                'BRGY_CITY_MUNI' => strtoupper($BRGY_CITY_MUNI),
+                'PROVINCE' => strtoupper($PROVINCE),
+                'ZIP_CODE' => $ZIP_CODE,
+                'REPORT_HEADER_1' => $REPORT_HEADER_1,
+                'REPORT_HEADER_2' => $REPORT_HEADER_2,
+                'REPORT_HEADER_3' => $REPORT_HEADER_3,
+                'PHIC_SOA_FORMAT' => $PHIC_SOA_FORMAT,
+                'PHIC_FORM_MODIFY' => $PHIC_FORM_MODIFY,
+                'IS_DAILY' => $IS_DAILY,
+                'LOGO_FILE' => $LOGO_FILE,
+                'USED_DRY_WEIGHT' => $USED_DRY_WEIGHT,
+                'DOCTOR_ORDER_DEFAULT' => $DOCTOR_ORDER_DEFAULT,
+                'OTHER_SIGN' => $OTHER_SIGN,
+                'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
+                'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null
 
             ]);
     }
@@ -208,6 +212,6 @@ class LocationServices
             ->orderBy('location.ID', 'desc')
             ->get();
 
-            return $result;
+        return $result;
     }
 }
