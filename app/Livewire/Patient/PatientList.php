@@ -64,6 +64,7 @@ class PatientList extends Component
             $this->contactRequirementServices->DeletePatient($id);
             $this->patientDoctorServices->DeletePatient($id);
             $this->contactServices->Delete($id);
+            
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -114,6 +115,7 @@ class PatientList extends Component
     public function render()
     {
         $this->doctorList = $this->doctorLocationServices->ViewList($this->locationid);
+
         $dataList = $this->contactServices->SearchPatient($this->search, $this->perPage, $this->locationid, $this->sortby, $this->isDesc, $this->doctorid);
 
         return view('livewire.patient.patient-list', ['dataList' => $dataList]);

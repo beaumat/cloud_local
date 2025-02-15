@@ -291,6 +291,12 @@ class StatementOfAccount extends Component
         $this->i = 0;
         $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
     }
+    public function changeDoctor()
+    {
+        $this->dispatch('open-change-doctor');
+        // to be added
+        
+    }
     public function render()
     {
         return view('livewire.phil-health.statement-of-account');

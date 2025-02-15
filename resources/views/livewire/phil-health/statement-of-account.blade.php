@@ -300,7 +300,7 @@
                             $i++;
                         @endphp
                         <tr>
-                            <td>{{ $i . '.)' }} {{ $list->NAME }} </td>
+                            <td wire:click='changeDoctor'> {{ $i . '.)' }} {{ $list->NAME }} </td>
                             <td class="text-right font-weight-bold text-xs ">
                                 @if ($list->AMOUNT > 0)
                                     {{ number_format($list->AMOUNT, 2) }}
@@ -316,7 +316,7 @@
                             <td class="discount text-right font-weight-bold">
                                 @if ($list->DISCOUNT > 0)
                                     {{-- {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }} --}}
-                                       {{ number_format($list->FIRST_CASE, 2) }}
+                                    {{ number_format($list->FIRST_CASE, 2) }}
                                 @endif
                             </td>
                             <td class="text-right font-weight-bold text-xs ">
