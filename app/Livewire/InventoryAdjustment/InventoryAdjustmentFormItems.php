@@ -268,7 +268,7 @@ class InventoryAdjustmentFormItems extends Component
                 }
                 $adjustmentData = $this->inventoryAdjustmentServices->Get($this->INVENTORY_ADJUSTMENT_ID);
                 if ($adjustmentData) {
-                    $adjustmentItemData = $this->inventoryAdjustmentServices->GetItem($Id, $this->INVENTORY_ADJUSTMENT_ID,);
+                    $adjustmentItemData = $this->inventoryAdjustmentServices->GetItem($Id, $this->INVENTORY_ADJUSTMENT_ID);
                     if ($adjustmentItemData) {
                         // Inventory
                         $this->itemInventoryServices->InventoryModify(

@@ -297,12 +297,13 @@ class QuickPaidPanel extends Component
             session()->flash('error', 'Payment Period not found.');
             return;
         }
-        $dtCheck = (bool) $this->DateRangeChecking($dataPeriod);
-
-        if ($dtCheck == false) {
-            session()->flash('error', "Invalid. the date period between admitted or discharge is out of range");
-            return;
-        }
+      
+      
+        // $dtCheck = (bool) $this->DateRangeChecking($dataPeriod);
+        // if ($dtCheck == false) {
+        //     session()->flash('error', "Invalid. the date period between admitted or discharge is out of range");
+        //     return;
+        // }
 
         DB::beginTransaction();
         try {
