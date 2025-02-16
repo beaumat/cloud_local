@@ -19,7 +19,10 @@
                                     <div class="row">
                                         <div class="col-12">
                                             @livewire('ServiceCharge.AgreementFormItems', ['HEMO_ID' => $HEMO_ID])
+                                        </div>
 
+                                        <div class="col-12">
+                                            @livewire('ServiceCharge.AgreementFormConforme', ['HEMO_ID' => $HEMO_ID])
                                         </div>
                                         <div class="col-12 text-right">
                                             {{-- close --}}

@@ -214,4 +214,10 @@ class LocationServices
 
         return $result;
     }
+    public function UpdateHDFacifilityRep(int $ID, int $HD_FACILITY_REP_ID)
+    {
+        Locations::where('ID', '=', $ID)->update([
+            'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null
+        ]);
+    }
 }

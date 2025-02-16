@@ -47,18 +47,26 @@ class AgreementFormPage2 extends Component
             $this->DATE = $data->DATE;
             $this->LOCATION_ID = $data->LOCATION_ID;
             $dataLoc = $this->locationServices->get($this->LOCATION_ID);
-
+            $this->getWithNess($data->CUSTOMER_ID);
             if ($dataLoc) {
                 $this->HD_FACILITY_REP_NAME = $this->contactServices->getName($dataLoc->HD_FACILITY_REP_ID);
             }
-
             $this->TypeFive();
             $this->TypeSix();
             $this->itemlistLoad();
         }
 
     }
-    private function itemlistLoad() {
+    private function getWithNess(int $CONTACT_ID)
+    {
+        $con = $this->contactServices->get($CONTACT_ID, 3);
+        if ($con) {
+            $wit_ID = $con->WITNESS_ID > 0 ? $con->WITNESS_ID : 0;
+            $this->WITNESS_NAME = $wit_ID > 0 ? $this->contactServices->getName($wit_ID) : $con->CONTACT_PERSON;
+        }
+    }
+    private function itemlistLoad()
+    {
         $this->itemList = $this->phicAgreementFormServices->getItemList($this->HEMO_ID);
     }
     private function TypeFive()

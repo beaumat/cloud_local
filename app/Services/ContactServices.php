@@ -35,7 +35,7 @@ class ContactServices
 	}
 	public function getName($ID): string
 	{
-		$result = contacts::query()->select(['NAME'])->where('ID', '=', $ID)->first();
+		$result = contacts::query()->select(['NAME'])->where('ID', '=', $ID)->where('INACTIVE', '=', '0')->first();
 		if ($result) {
 			return $result->NAME ?? '';
 		}
@@ -84,6 +84,11 @@ class ContactServices
 			->first();
 
 		return $result;
+	}
+	public function updateaWitNessOnly(int $ID, int $WITNESS_ID)
+	{
+		contacts::where('ID', '=', $ID)
+			->update(['WITNESS_ID' => $WITNESS_ID]);
 	}
 	public function getSingleData(int $ID)
 	{
