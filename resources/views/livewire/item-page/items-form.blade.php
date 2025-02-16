@@ -222,7 +222,7 @@
                                                                                                 isDisabled="{{ false }}"
                                                                                                 wire:model='IS_KIT' />
                                                                                         </div>
-                                                                                             <div class="col-md-6">
+                                                                                        <div class="col-md-6">
                                                                                             <livewire:custom-check-box
                                                                                                 name="NON_PULL_OUT"
                                                                                                 titleName="Non-Pullout"
@@ -301,14 +301,32 @@
                                                                                                 titleName="Income Accounts"
                                                                                                 wire:model='GL_ACCOUNT_ID'
                                                                                                 :vertical="true" />
+
+                                                                                            <livewire:select-option
+                                                                                                name="PHIC_AGREEMENT_FORM_TITLE_ID1"
+                                                                                                :options="$paftList"
+                                                                                                :zero="true"
+                                                                                                titleName="PAF Title"
+                                                                                                isDisabled="{{ false }}"
+                                                                                                wire:model='PHIC_AGREEMENT_FORM_TITLE_ID'
+                                                                                                :vertical="true" />
                                                                                         @else
                                                                                             <livewire:select-option
                                                                                                 name="GL_ACCOUNT_ID"
                                                                                                 :options="$accounts"
                                                                                                 :zero="true"
-                                                                                                titleName="GL Accounts"
+                                                                                                titleName="PAF Title"
                                                                                                 isDisabled="{{ false }}"
                                                                                                 wire:model='GL_ACCOUNT_ID'
+                                                                                                :vertical="true" />
+
+                                                                                            <livewire:select-option
+                                                                                                name="PHIC_AGREEMENT_FORM_TITLE_ID2"
+                                                                                                :options="$paftList"
+                                                                                                :zero="true"
+                                                                                                titleName="PAF Title"
+                                                                                                isDisabled="{{ false }}"
+                                                                                                wire:model='PHIC_AGREEMENT_FORM_TITLE_ID'
                                                                                                 :vertical="true" />
                                                                                         @endif
 

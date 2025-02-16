@@ -2,12 +2,14 @@
 
 namespace App\Livewire\ServiceCharge;
 
+use App\Services\HemoServices;
 use App\Services\PhicAgreementFormServices;
+use App\Services\ServiceChargeServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class AgreementFormDetails extends Component
-{   
+{
     #[Reactive]
     public $HEMO_ID;
 
@@ -15,9 +17,13 @@ class AgreementFormDetails extends Component
     public $titleSelected = [];
     public $checkedItems = [];
     private $phicAgreementFormServices;
-    public function boot(PhicAgreementFormServices $phicAgreementFormServices)
+    private $serviceChargeServices;
+    private $hemoServices;
+    public function boot(PhicAgreementFormServices $phicAgreementFormServices, ServiceChargeServices $serviceChargeServices, HemoServices $hemoServices)
     {
         $this->phicAgreementFormServices = $phicAgreementFormServices;
+        $this->serviceChargeServices = $serviceChargeServices;
+        $this->hemoServices = $hemoServices;
     }
 
     private function getList()
@@ -39,16 +45,43 @@ class AgreementFormDetails extends Component
             // Update
             $this->phicAgreementFormServices->updateDetails($this->HEMO_ID, $PHIC_AFT_ID, $STATUS);
         } else {
+            if ($STATUS) {
+                $this->phicAgreementFormServices->storeDetails($this->HEMO_ID, $PHIC_AFT_ID, $STATUS);
+            }
             // INSERT
-            $this->phicAgreementFormServices->storeDetails($this->HEMO_ID, $PHIC_AFT_ID, $STATUS);
+
         }
     }
+    public function AutoDetect()
+    {
+
+        $hemoData = $this->hemoServices->Get($this->HEMO_ID);
+        if ($hemoData) {
+            $scdata = $this->serviceChargeServices->get2($hemoData->CUSTOMER_ID, $hemoData->LOCATION_ID, $hemoData->DATE);
+            if ($scdata) {
+                foreach ($this->dataList as $list) {
+                    if ($this->serviceChargeServices->checkifSchavePAF($list->ID, $scdata->ID)) {
+                        $this->update($list->ID, true);
+                    } else {
+                        $this->update($list->ID, false);
+                    }
+                }
+            }
+            $this->getList();
+        }
+
+
+
+
+
+
+    }
     public function render()
-    {   
+    {
 
         $this->getList();
 
-        
+
         return view('livewire.service-charge.agreement-form-details');
     }
 }

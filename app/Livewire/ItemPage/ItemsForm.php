@@ -16,6 +16,7 @@ use App\Services\AccountServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
 use App\Services\ItemServices;
+use App\Services\PhicAgreementFormServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 
@@ -66,13 +67,16 @@ class ItemsForm extends Component
     public $accounts = [];
     public $rateType = [];
     public $units = [];
-
+    public int $PHIC_AGREEMENT_FORM_TITLE_ID;
+    public $paftList = [];
     private $itemServices;
     private $accountServices;
-    public function boot(ItemServices $itemServices, AccountServices $accountServices)
+    private $phicAgreementFormServices;
+    public function boot(ItemServices $itemServices, AccountServices $accountServices, PhicAgreementFormServices $phicAgreementFormServices)
     {
         $this->itemServices = $itemServices;
         $this->accountServices = $accountServices;
+        $this->phicAgreementFormServices = $phicAgreementFormServices;
     }
     public function SelectTab($tab)
     {
@@ -91,6 +95,7 @@ class ItemsForm extends Component
         $this->accounts = Accounts::query()->select(['ID', 'NAME as DESCRIPTION'])->where('INACTIVE', '0')->get();
         $this->rateType = RateType::all();
         $this->units = UnitOfMeasures::where('INACTIVE', '0')->get();
+        $this->paftList = $this->phicAgreementFormServices->getTitleList();
     }
     public function ClearField()
     {
@@ -117,10 +122,11 @@ class ItemsForm extends Component
         $this->SALES_UNIT_ID = 0;
         $this->PRINT_INDIVIDUAL_ITEMS = true;
         $this->INACTIVE = false;
-        $this->NON_HEMO =  false;
+        $this->NON_HEMO = false;
         $this->HEMO_NON_INVENTORY = false;
         $this->IS_KIT = false;
         $this->NON_PULL_OUT = false;
+        $this->PHIC_AGREEMENT_FORM_TITLE_ID = 0;
         $this->AccountInsert();
     }
     public function mount($id = null)
@@ -162,6 +168,7 @@ class ItemsForm extends Component
                 $this->HEMO_NON_INVENTORY = $item->HEMO_NON_INVENTORY ?? false;
                 $this->IS_KIT = $item->IS_KIT ?? false;
                 $this->NON_PULL_OUT = $item->NON_PULL_OUT ?? false;
+                $this->PHIC_AGREEMENT_FORM_TITLE_ID = $item->PHIC_AGREEMENT_FORM_TITLE_ID ?? 0;
 
                 $getSubClass = ItemSubClass::where('ID', $this->SUB_CLASS_ID)->first();
 
@@ -225,7 +232,7 @@ class ItemsForm extends Component
                 break;
 
             case 7: // discount
-                $this->GL_ACCOUNT_ID =  $this->accountServices->getByName('Sales>Discounts Given');
+                $this->GL_ACCOUNT_ID = $this->accountServices->getByName('Sales>Discounts Given');
                 $this->COGS_ACCOUNT_ID = 0;
                 $this->ASSET_ACCOUNT_ID = 0;
 
@@ -322,12 +329,13 @@ class ItemsForm extends Component
                     $this->NON_HEMO,
                     $this->HEMO_NON_INVENTORY,
                     $this->IS_KIT,
-                    $this->NON_PULL_OUT
+                    $this->NON_PULL_OUT,
+                    $this->PHIC_AGREEMENT_FORM_TITLE_ID
                 );
 
                 $Message = 'Successfully created.';
                 return Redirect::route('maintenanceinventoryitem_edit', ['id' => $this->ID])->with('message', $Message);
-                
+
             } else {
 
                 $this->itemServices->Update(
@@ -359,7 +367,8 @@ class ItemsForm extends Component
                     $this->NON_HEMO,
                     $this->HEMO_NON_INVENTORY,
                     $this->IS_KIT,
-                     $this->NON_PULL_OUT
+                    $this->NON_PULL_OUT,
+                    $this->PHIC_AGREEMENT_FORM_TITLE_ID
 
                 );
                 $Message = 'Successfully updated.';

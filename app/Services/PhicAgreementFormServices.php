@@ -14,6 +14,16 @@ class PhicAgreementFormServices
     {
         $this->object = $objectServices;
     }
+    public function getTitleList()
+    {
+        $result = PhicAgreementFormTitle::query()
+            ->select([
+                'ID',
+                'DESCRIPTION'
+            ])->get();
+
+        return $result;
+    }
     public function getTitleByType(int $TYPE, int $HEMO_ID)
     {
 

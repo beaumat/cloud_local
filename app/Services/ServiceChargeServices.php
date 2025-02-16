@@ -174,6 +174,14 @@ class ServiceChargeServices
 
         return [];
     }
+    public function checkifSchavePAF(int $PAF_ID, int $SC_ID): bool
+    {
+
+        return (bool) DB::table('service_charges_items as sci')->join('item as i', 'i.ID', '=', 'sci.ITEM_ID')
+            ->where('i.PHIC_AGREEMENT_FORM_TITLE_ID', '=', $PAF_ID)
+            ->where('sci.SERVICE_CHARGES_ID', '=', $SC_ID)
+            ->exists();
+    }
     public function getItemList(int $SERVICE_CHARGES_ID)
     {
 
@@ -210,24 +218,24 @@ class ServiceChargeServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         ServiceCharges::create([
-            'ID'                        => $ID,
-            'RECORDED_ON'               => $this->dateServices->Now(),
-            'CODE'                      => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                      => $DATE,
-            'PATIENT_ID'                => $PATIENT_ID,
-            'LOCATION_ID'               => $LOCATION_ID,
-            'NOTES'                     => $NOTES ?? null,
-            'AMOUNT'                    => 0,
-            'BALANCE_DUE'               => 0,
-            'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID,
-            'STATUS'                    => $STATUS,
-            'STATUS_DATE'               => $this->dateServices->NowDate(),
-            'OUTPUT_TAX_ID'             => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
-            'OUTPUT_TAX_RATE'           => $OUTPUT_TAX_RATE,
-            'OUTPUT_TAX_VAT_METHOD'     => $OUTPUT_TAX_VAT_METHOD,
-            'OUTPUT_TAX_ACCOUNT_ID'     => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
-            'WALK_IN'                   => $WALK_IN,
-            'USE_PHIC'                  => $USE_PHIC
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE' => $DATE,
+            'PATIENT_ID' => $PATIENT_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+            'NOTES' => $NOTES ?? null,
+            'AMOUNT' => 0,
+            'BALANCE_DUE' => 0,
+            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID,
+            'STATUS' => $STATUS,
+            'STATUS_DATE' => $this->dateServices->NowDate(),
+            'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
+            'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
+            'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
+            'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
+            'WALK_IN' => $WALK_IN,
+            'USE_PHIC' => $USE_PHIC
         ]);
 
         return $ID;
@@ -258,7 +266,7 @@ class ServiceChargeServices
 
         ServiceCharges::where('ID', $ID)
             ->update([
-                'CODE'  => $CODE,
+                'CODE' => $CODE,
                 'DATE' => $DATE,
                 'PATIENT_ID' => $PATIENT_ID,
                 'LOCATION_ID' => $LOCATION_ID,
@@ -278,12 +286,12 @@ class ServiceChargeServices
     }
     public function ServicesChargesExists(string $DATE, int $PATIENT_ID, int $LOCATION_ID): bool
     {
-        return  ServiceCharges::where('DATE', $DATE)->where('PATIENT_ID', $PATIENT_ID)->where('LOCATION_ID', $LOCATION_ID)->exists();
+        return ServiceCharges::where('DATE', $DATE)->where('PATIENT_ID', $PATIENT_ID)->where('LOCATION_ID', $LOCATION_ID)->exists();
     }
 
     public function ServicesChargesGetFirst(string $DATE, int $PATIENT_ID, int $LOCATION_ID)
     {
-        $data =  ServiceCharges::where('DATE', $DATE)->where('PATIENT_ID', $PATIENT_ID)->where('LOCATION_ID', $LOCATION_ID)->first();
+        $data = ServiceCharges::where('DATE', $DATE)->where('PATIENT_ID', $PATIENT_ID)->where('LOCATION_ID', $LOCATION_ID)->first();
 
         if ($data) {
             return $data;
@@ -366,7 +374,7 @@ class ServiceChargeServices
             ->paginate($perPage);
         return $result;
     }
-    public  function getItemDetails(int $id)
+    public function getItemDetails(int $id)
     {
         return ServiceChargesItems::where('id', $id)->first();
     }
@@ -374,7 +382,9 @@ class ServiceChargeServices
     {
         return (int) ServiceChargesItems::where('SERVICE_CHARGES_ID', $Id)->max('LINE_NO');
     }
-    public function AutoUpdateNextID() {}
+    public function AutoUpdateNextID()
+    {
+    }
     public function ItemStore(
         int $SERVICE_CHARGES_ID,
         int $ITEM_ID,
@@ -398,26 +408,26 @@ class ServiceChargeServices
         $LINE_NO = (int) $this->getLine($SERVICE_CHARGES_ID) + 1;
         $ID = (int) $this->object->ObjectNextID('SERVICE_CHARGES_ITEMS');
         ServiceChargesItems::create([
-            'ID'                    => $ID,
-            'SERVICE_CHARGES_ID'    => $SERVICE_CHARGES_ID,
-            'LINE_NO'               => $LINE_NO,
-            'ITEM_ID'               => $ITEM_ID,
-            'QUANTITY'              => $QUANTITY,
-            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-            'RATE'                  => $RATE,
-            'RATE_TYPE'             => $RATE_TYPE,
-            'AMOUNT'                => $AMOUNT,
-            'TAXABLE'               => $TAXABLE,
-            'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT'            => $TAX_AMOUNT,
-            'COGS_ACCOUNT_ID'       => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
-            'ASSET_ACCOUNT_ID'      => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-            'INCOME_ACCOUNT_ID'     => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null,
-            'GROUP_LINE_ID'         => $GROUP_LINE_ID > 0,
-            'PRINT_IN_FORMS'        => $PRINT_IN_FORMS,
-            'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-            'DATE_LOG'              => $this->dateServices->NowDate()
+            'ID' => $ID,
+            'SERVICE_CHARGES_ID' => $SERVICE_CHARGES_ID,
+            'LINE_NO' => $LINE_NO,
+            'ITEM_ID' => $ITEM_ID,
+            'QUANTITY' => $QUANTITY,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+            'RATE' => $RATE,
+            'RATE_TYPE' => $RATE_TYPE,
+            'AMOUNT' => $AMOUNT,
+            'TAXABLE' => $TAXABLE,
+            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT' => $TAX_AMOUNT,
+            'COGS_ACCOUNT_ID' => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
+            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'INCOME_ACCOUNT_ID' => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null,
+            'GROUP_LINE_ID' => $GROUP_LINE_ID > 0,
+            'PRINT_IN_FORMS' => $PRINT_IN_FORMS,
+            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+            'DATE_LOG' => $this->dateServices->NowDate()
         ]);
 
         return $ID;
@@ -442,16 +452,16 @@ class ServiceChargeServices
             ->where('SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->update([
-                'QUANTITY'              => $QUANTITY,
-                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-                'RATE'                  => $RATE,
-                'AMOUNT'                => $AMOUNT,
-                'TAXABLE'               => $TAXABLE,
-                'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
-                'TAX_AMOUNT'            => $TAX_AMOUNT,
-                'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-                'INCOME_ACCOUNT_ID'     => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null
+                'QUANTITY' => $QUANTITY,
+                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                'RATE' => $RATE,
+                'AMOUNT' => $AMOUNT,
+                'TAXABLE' => $TAXABLE,
+                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT' => $TAX_AMOUNT,
+                'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+                'INCOME_ACCOUNT_ID' => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null
             ]);
     }
     public function ItemDelete(int $ID, int $SERVICE_CHARGES_ID)
@@ -461,7 +471,7 @@ class ServiceChargeServices
     public function GetCountByYear(int $ITEM_ID, int $YEAR, int $PATIENT_ID, int $LOCATION_ID): int
     {
 
-        $count =  ServiceCharges::join('service_charges_items', 'service_charges_items.SERVICE_CHARGES_ID', '=', 'service_charges.ID')
+        $count = ServiceCharges::join('service_charges_items', 'service_charges_items.SERVICE_CHARGES_ID', '=', 'service_charges.ID')
             ->where('service_charges.PATIENT_ID', $PATIENT_ID)
             ->whereYear('service_charges.DATE', $YEAR)
             ->where('service_charges.LOCATION_ID', $LOCATION_ID)
@@ -533,7 +543,7 @@ class ServiceChargeServices
             return 0.00;
         }
 
-        $result =  ServiceChargesItems::query()
+        $result = ServiceChargesItems::query()
             ->select([
                 DB::raw('sum(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) as AMOUNT '),
             ])
@@ -551,7 +561,7 @@ class ServiceChargeServices
     public function getItemSum(int $SERVICE_CHARGES_ID, int $ID)
     {
 
-        $result =  ServiceChargesItems::query()
+        $result = ServiceChargesItems::query()
             ->select([
                 DB::raw('sum(service_charges_items.AMOUNT - service_charges_items.PAID_AMOUNT) as AMOUNT '),
             ])
@@ -595,19 +605,19 @@ class ServiceChargeServices
                 $balance = (float) $originalAmount - $this->GetPaymentAppliedViaServiceCharges($ID);
                 ServiceCharges::where('ID', $ID)
                     ->update([
-                        'AMOUNT'            => $originalAmount,
-                        'BALANCE_DUE'       => $balance,
+                        'AMOUNT' => $originalAmount,
+                        'BALANCE_DUE' => $balance,
                         'OUTPUT_TAX_AMOUNT' => $list['TAX_AMOUNT'],
-                        'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
+                        'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
                         'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                     ]);
 
                 $result = array(
                     [
-                        'AMOUNT'            => $originalAmount,
-                        'BALANCE_DUE'       => $balance,
-                        'TAX_AMOUNT'        => $list['TAX_AMOUNT'],
-                        'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
+                        'AMOUNT' => $originalAmount,
+                        'BALANCE_DUE' => $balance,
+                        'TAX_AMOUNT' => $list['TAX_AMOUNT'],
+                        'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
                         'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                     ]
                 );
@@ -635,7 +645,7 @@ class ServiceChargeServices
 
             ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)
                 ->update([
-                    'PAID_AMOUNT'   =>  $ITEM_PAID
+                    'PAID_AMOUNT' => $ITEM_PAID
                 ]);
             $this->updateServiceChargesBalance($data->SERVICE_CHARGES_ID);
         }
@@ -678,9 +688,9 @@ class ServiceChargeServices
     {
         ServiceCharges::where('ID', $SERVICE_CHARGES_ID)
             ->update([
-                'BALANCE_DUE'   => $BALANCE,
-                'STATUS'        => $STATUS,
-                'STATUS_DATE'   => $this->dateServices->NowDate()
+                'BALANCE_DUE' => $BALANCE,
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
     }
     public function getUpdateTaxItem(int $SERVICE_CHARGES_ID, int $TAX_ID)
@@ -709,9 +719,9 @@ class ServiceChargeServices
             }
         }
     }
-    public  function getSum(string $fromDate, string $toDate, int $locationId = 0, int $patientId  = 0): float
+    public function getSum(string $fromDate, string $toDate, int $locationId = 0, int $patientId = 0): float
     {
-        $result = (float)  ServiceCharges::whereBetween('DATE', [$fromDate, $toDate])
+        $result = (float) ServiceCharges::whereBetween('DATE', [$fromDate, $toDate])
             ->when($locationId > 0, function ($query) use (&$locationId) {
                 $query->where('LOCATION_ID', $locationId);
             })
@@ -770,7 +780,7 @@ class ServiceChargeServices
             ->when($PATIENT_ID > 0, function ($query) use (&$PATIENT_ID) {
                 $query->where('sc.PATIENT_ID', $PATIENT_ID);
             })
-            ->when($LOCATION_ID > 0, function ($query)  use (&$LOCATION_ID) {
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('sc.LOCATION_ID', $LOCATION_ID);
             })
             ->whereNotIn('service_charges_items.ITEM_ID', [2])
@@ -826,7 +836,7 @@ class ServiceChargeServices
     {
         ServiceCharges::where('ID', '=', $SERVICE_CHARGES_ID)
             ->update([
-                'PATIENT_ID'  => $TRANSFER_CONTACT_ID
+                'PATIENT_ID' => $TRANSFER_CONTACT_ID
             ]);
     }
     public function GetItemForCustomSoa(string $DATE, int $PATIENT_ID, int $LOCATION_ID)
@@ -923,7 +933,7 @@ class ServiceChargeServices
 
     public function isHavePriming(string $DATE, int $LOCATION_ID, int $PATIENT_ID): bool
     {
-        $result = (bool)  ServiceCharges::query()
+        $result = (bool) ServiceCharges::query()
             ->join('service_charges_items', 'service_charges_items.SERVICE_CHARGES_ID', '=', 'service_charges.ID')
             ->where('service_charges_items.ITEM_ID', '=', $this->PRIMING_FEE_ID)
             ->where('service_charges.LOCATION_ID', '=', $LOCATION_ID)

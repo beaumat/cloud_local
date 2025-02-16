@@ -13,16 +13,11 @@ class AgreementFormPage2 extends Component
 {
     #[Reactive]
     public int $HEMO_ID;
-
-
     public $HD_FACILITY_REP_NAME = "";
     public $PATIENT_NAME = "";
     public $WITNESS_NAME = "";
-
     public string $DATE;
-
     public int $LOCATION_ID;
-
     public $typeFiveList = [];
     public $typeSixList = [];
 

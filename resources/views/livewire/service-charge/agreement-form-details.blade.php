@@ -1,12 +1,14 @@
      <div class="form-group">
          @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
          <div style="max-height: 73vh; overflow-y: auto;" class="border">
-             <div>
+             <div class="form-group">
                  <table class="table table-sm table-bordered table-hover">
                      <thead class="text-xs bg-sky sticky-header">
                          <tr>
-                             <th class="col-10">Items Covered by PhilHealth </th>
-                             <th class="col-2 text-center">Status </th>
+                             <th class="col-9">Items Covered by PhilHealth </th>
+                             <th class="col-3 text-center"> <button type="button" class="btn btn-xs btn-info w-100"
+                                     wire:click='AutoDetect()' wire:confirm='Are you sure?'>Auto Fill-up</button>
+                             </th>
                          </tr>
                      </thead>
                      <tbody class="text-xs">
@@ -20,8 +22,10 @@
                                  </td>
                              </tr>
                          @endforeach
+
                      </tbody>
                  </table>
              </div>
+
          </div>
      </div>
