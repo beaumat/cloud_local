@@ -15,9 +15,9 @@ class AgreementFormPage2 extends Component
     public int $HEMO_ID;
 
 
-    public $HD_FACILITY_REP_NAME = "UNKNOWN";
-    public $PATIENT_NAME = "UNKNOWN";
-    public $WITNESS_NAME = "UNKNOWN";
+    public $HD_FACILITY_REP_NAME = "";
+    public $PATIENT_NAME = "";
+    public $WITNESS_NAME = "";
 
     public string $DATE;
 
@@ -25,11 +25,12 @@ class AgreementFormPage2 extends Component
 
     public $typeFiveList = [];
     public $typeSixList = [];
+
+    public $itemList = [];
     private $hemoServices;
     private $locationServices;
     private $phicAgreementFormServices;
     private $contactServices;
-
     public function boot(HemoServices $hemoServices, LocationServices $locationServices, PhicAgreementFormServices $phicAgreementFormServices, ContactServices $contactServices)
     {
         $this->hemoServices = $hemoServices;
@@ -49,23 +50,24 @@ class AgreementFormPage2 extends Component
 
             if ($dataLoc) {
                 $this->HD_FACILITY_REP_NAME = $this->contactServices->getName($dataLoc->HD_FACILITY_REP_ID);
-
-
             }
 
             $this->TypeFive();
             $this->TypeSix();
+            $this->itemlistLoad();
         }
 
     }
-
+    private function itemlistLoad() {
+        $this->itemList = $this->phicAgreementFormServices->getItemList($this->HEMO_ID);
+    }
     private function TypeFive()
     {
-        $this->typeFiveList = $this->phicAgreementFormServices->getTitleByType(5);
+        $this->typeFiveList = $this->phicAgreementFormServices->getTitleByType(5, $this->HEMO_ID);
     }
     private function TypeSix()
     {
-        $this->typeSixList = $this->phicAgreementFormServices->getTitleByType(6);
+        $this->typeSixList = $this->phicAgreementFormServices->getTitleByType(6, $this->HEMO_ID);
     }
     public function render()
     {

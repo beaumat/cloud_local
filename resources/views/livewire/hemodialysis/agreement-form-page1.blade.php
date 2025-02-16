@@ -42,12 +42,8 @@
                 <div class="col-5 ">
                     &nbsp;
                 </div>
-
-
             </div>
-
         </div>
-
     </div>
     <div class="col-12">
         <div class="pt-2">
@@ -115,49 +111,48 @@
                     <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $list->LINE }}.
                         {{ $list->DESCRIPTION }}
                     </div>
-                    <div class="col-5 top-line2 text-center"> &nbsp; <i class="fa fa-check text-danger"
-                            aria-hidden="true"></i> </div>
+                    <div class="col-5 top-line2 text-center">
+                        @if ($list->IS_CHECK)
+                            <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                        @endif
+                    </div>
                 @endforeach
                 <div class="col-12 top-line2"> Epoetin beta (Recombinant Erythropoietin) </div>
                 @foreach ($typeTwoList as $list)
                     <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $list->LINE }}.
                         {{ $list->DESCRIPTION }}
                     </div>
-                    <div class="col-5 top-line2"> &nbsp; </div>
+                    <div class="col-5 top-line2 text-center">
+                        @if ($list->IS_CHECK)
+                            <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                        @endif
+                    </div>
                 @endforeach
-
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12">
-        <div class="container-fluid pt-4">
-            <div class="row bottom-line2 top-line2 left-line2 right-line2">
                 @foreach ($typeThreeList as $list)
-                    <div class="col-7 right-line2">
+                    <div class="col-7 top-line2 right-line2">
                         {{ $list->DESCRIPTION }}
                     </div>
-                    <div class="col-5 top-line2"> &nbsp; </div>
+                    <div class="col-5 top-line2 text-center">
+                        @if ($list->IS_CHECK)
+                            <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                        @endif
+                    </div>
                 @endforeach
-
-
-
                 <div class="col-12  top-line2"> Heparin</div>
-
                 @foreach ($typeFourList as $list)
                     <div class="col-7 top-line2 right-line2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $list->LINE }}.
                         {{ $list->DESCRIPTION }}
                     </div>
-                    <div class="col-5 top-line2"> &nbsp; </div>
+                    <div class="col-5 top-line2 text-center">
+                        @if ($list->IS_CHECK)
+                            <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                        @endif
+                    </div>
                 @endforeach
-
-
-
             </div>
         </div>
     </div>
-
+    
     <div class="col-12 footer pt-2">
         <div>
             <div class="row">

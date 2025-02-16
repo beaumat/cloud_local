@@ -9,7 +9,7 @@ class PhicAgreementFormDetails extends Model
 {
     use HasFactory;
 
-    protected $table = 'PHIC_AGREEMENT_FORM_DETAILS';
+    protected $table = 'phic_agreement_form_details';
     protected $primaryKey = 'ID';
     public $timestamps = false;
     protected $fillable = [

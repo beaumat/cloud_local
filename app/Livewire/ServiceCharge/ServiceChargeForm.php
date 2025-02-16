@@ -168,7 +168,7 @@ class ServiceChargeForm extends Component
         $this->TAXABLE_AMOUNT = $Data->TAXABLE_AMOUNT ? $Data->TAXABLE_AMOUNT : 0;
         $this->NONTAXABLE_AMOUNT = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-        $this->WALK_IN  = $Data->WALK_IN ?? false;
+        $this->WALK_IN = $Data->WALK_IN ?? false;
     }
     public function updatedPAYMENTTERMSID()
     {
@@ -228,21 +228,21 @@ class ServiceChargeForm extends Component
 
         $this->validate(
             [
-                'PATIENT_ID'            => 'required|numeric|not_in:0|exists:contact,id',
-                'CODE'                  => $this->ID > 0 ? 'required|max:20|unique:invoice,code,' . $this->ID : 'nullable',
-                'OUTPUT_TAX_ID'         => 'required|numeric|not_in:0',
-                'DATE'                  => 'required|date',
-                'LOCATION_ID'           => 'required|numeric|exists:location,id',
-                'PAYMENT_TERMS_ID'      => 'required|numeric'
+                'PATIENT_ID' => 'required|numeric|not_in:0|exists:contact,id',
+                'CODE' => $this->ID > 0 ? 'required|max:20|unique:invoice,code,' . $this->ID : 'nullable',
+                'OUTPUT_TAX_ID' => 'required|numeric|not_in:0',
+                'DATE' => 'required|date',
+                'LOCATION_ID' => 'required|numeric|exists:location,id',
+                'PAYMENT_TERMS_ID' => 'required|numeric'
             ],
             [],
             [
-                'PATIENT_ID'            => 'Petient',
-                'CODE'                  => 'Reference No.',
-                'OUTPUT_TAX_ID'         => 'Tax',
-                'DATE'                  => 'Date',
-                'LOCATION_ID'           => 'Location',
-                'PAYMENT_TERMS_ID'      => 'Payment Terms'
+                'PATIENT_ID' => 'Petient',
+                'CODE' => 'Reference No.',
+                'OUTPUT_TAX_ID' => 'Tax',
+                'DATE' => 'Date',
+                'LOCATION_ID' => 'Location',
+                'PAYMENT_TERMS_ID' => 'Payment Terms'
             ]
         );
 
@@ -271,7 +271,7 @@ class ServiceChargeForm extends Component
                 );
 
                 $PRICE_LEVEL_ID = 0;
-                $dataItem =  $this->hemoServices->ItemListWithIsCashier($this->PATIENT_ID, $this->LOCATION_ID, $this->DATE);
+                $dataItem = $this->hemoServices->ItemListWithIsCashier($this->PATIENT_ID, $this->LOCATION_ID, $this->DATE);
                 $dataLoc = $this->locationServices->get($this->LOCATION_ID);
                 if ($dataLoc) {
                     if ($dataLoc->PRICE_LEVEL_ID > 0) {
@@ -287,7 +287,7 @@ class ServiceChargeForm extends Component
                         $RATE = (float) $list->RATE ?? 0;
                     }
 
-                    $AMOUNT = $list->QUANTITY  * $RATE;
+                    $AMOUNT = $list->QUANTITY * $RATE;
 
                     $SC_ITEM_ID = $this->serviceChargeServices->ItemStore(
                         $this->ID,
@@ -313,7 +313,7 @@ class ServiceChargeForm extends Component
                 $this->serviceChargeServices->ReComputed($this->ID);
                 DB::commit();
                 return Redirect::route('patientsservice_charges_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-          
+
             } else {
 
                 DB::beginTransaction();
@@ -344,7 +344,7 @@ class ServiceChargeForm extends Component
                 $this->getInfo($data);
             }
             $this->Modify = false;
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -393,6 +393,13 @@ class ServiceChargeForm extends Component
     public function updatedLocation()
     {
         $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID);
+    }
+    public function openForm()
+    {
+        $data = [
+            'HEMO_ID' => $this->HEMO_ID
+        ];
+        $this->dispatch('open-agreement-form', data: $data);
     }
     public function render()
     {

@@ -83,7 +83,9 @@ class QuickCreate extends Component
     {
         $this->ResetValue();
     }
-    public function mount() {}
+    public function mount()
+    {
+    }
     public function updatedSelectAll($value)
     {
         if ($value) {
@@ -91,14 +93,14 @@ class QuickCreate extends Component
                 $this->patientSelected[$list->ID] = true;
             }
         } else {
-     
+
             $this->reset('patientSelected');
         }
     }
 
     public function openModal()
     {
-        $this->dataLoc =  $this->locationServices->get($this->LOCATION_ID);
+        $this->dataLoc = $this->locationServices->get($this->LOCATION_ID);
         if ($this->dataLoc) {
             $this->isDaily = (bool) $this->dataLoc->IS_DAILY ?? false;
             $this->DATE_FROM = $this->dateServices->NowDate();
@@ -121,7 +123,7 @@ class QuickCreate extends Component
                 $this->DATE_ADMITTED = $data['FIRST_DATE'];
                 $this->TIME_ADMITTED = $data['FIRST_TIME'];
                 $this->DATE_DISCHARGED = $data['LAST_DATE'];
-                $this->TIME_DISCHARGED = $data['LAST_TIME'] ;
+                $this->TIME_DISCHARGED = $data['LAST_TIME'];
                 return true;
             }
         } else {
@@ -135,9 +137,6 @@ class QuickCreate extends Component
                 return true;
             }
         }
-
-
-
         return false;
     }
     private function resetMethod()
@@ -163,14 +162,12 @@ class QuickCreate extends Component
 
         $this->PHIC_FORM_MODIFY = false;
         if ($this->dataLoc) {
-            $this->PHIC_FORM_MODIFY =  $this->dataLoc->PHIC_FORM_MODIFY ?? false;
+            $this->PHIC_FORM_MODIFY = $this->dataLoc->PHIC_FORM_MODIFY ?? false;
         }
 
 
         DB::beginTransaction();
         try {
-
-
             $gotSelected = false;
             foreach ($this->patientSelected as $patientID => $isSelected) {
                 if ($isSelected) {
@@ -195,9 +192,8 @@ class QuickCreate extends Component
                             );
 
                             $this->philHealthServices->DefaultEntry($ID);
-
                             if ($this->DATE_ADMITTED == $this->DATE_DISCHARGED && $this->PHIC_FORM_MODIFY == true) {
-                                $HEMO_ID = (int)  $this->hemoServices->GetHemoID(
+                                $HEMO_ID = (int) $this->hemoServices->GetHemoID(
                                     $this->DATE_DISCHARGED,
                                     $patientID,
                                     $this->LOCATION_ID

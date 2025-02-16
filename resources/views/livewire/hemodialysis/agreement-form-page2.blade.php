@@ -22,7 +22,11 @@
                 @foreach ($typeFiveList as $list)
                     <div class="col-7 top-line2 right-line2">{{ $list->LINE }}. {{ $list->DESCRIPTION }}
                     </div>
-                    <div class="col-5 top-line2"> &nbsp; </div>
+                    <div class="col-5 top-line2 text-center">
+                        @if ($list->IS_CHECK)
+                            <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                        @endif
+                    </div>
                 @endforeach
 
 
@@ -31,7 +35,11 @@
                 @foreach ($typeSixList as $list)
                     <div class="col-7 top-line2 right-line2"> {{ $list->DESCRIPTION }}
                     </div>
-                    <div class="col-5 top-line2"> &nbsp; </div>
+                    <div class="col-5 top-line2 text-center">
+                        @if ($list->IS_CHECK)
+                            <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                        @endif
+                    </div>
                 @endforeach
                 <div class="col-7 top-line2  font-weight-bold right-line2">Administrative & Other Fees, specify: </div>
                 <div class="col-5 top-line2"> &nbsp; </div>
@@ -56,18 +64,44 @@
                 <div class="col-6 right-line2 font-weight-bold  text-center">Item </div>
                 <div class="col-3 right-line2 font-weight-bold text-center"> Unit/Quantity</div>
                 <div class="col-3  font-weight-bold text-center"> Price (PHP) </div>
+                @php
+                    $limit = 2;
+                    $total = 0;
+                @endphp
+                @foreach ($itemList as $list)
+                    @php
+                        $limit--;
 
-                <div class="col-6 top-line2 right-line2 "> &nbsp; </div>
-                <div class="col-3 top-line2 right-line2 "> &nbsp; </div>
-                <div class="col-3 top-line2  "> &nbsp; </div>
+                        $total = $total + ($list->QUANTITY * $list->RATE ?? 0);
+                    @endphp
+                    <div class="col-6 top-line2 right-line2 "> &nbsp; {{ $list->DESCRIPTION }} </div>
+                    <div class="col-3 top-line2 right-line2 text-center"> &nbsp; {{ $list->QUANTITY }} </div>
+                    <div class="col-3 top-line2 text-center "> &nbsp; {{ number_format($list->RATE, 2) }} </div>
+                @endforeach
+
+                @for ($n = 1; $n <= $limit; $n++)
+                    <div class="col-6 top-line2 right-line2 "> &nbsp; </div>
+                    <div class="col-3 top-line2 right-line2 "> &nbsp; </div>
+                    <div class="col-3 top-line2  "> &nbsp; </div>
+                @endfor
+
+
 
                 <div class="col-6 top-line2  right-line2"> &nbsp; </div>
                 <div class="col-3 top-line2  right-line2 "> &nbsp; </div>
-                <div class="col-3 top-line2  "> &nbsp; </div>
+                <div class="col-3 top-line2 font-weight-bold ">
+                    <div class="row">
+                        <div class="col-4">
+                            Total
+                        </div>
+                        <div class="col-8 ">
+                            @if ($total > 0)
+                                {{ number_format($total, 2) }}
+                            @endif
+                        </div>
+                    </div>
 
-                <div class="col-6 top-line2  right-line2"> &nbsp; </div>
-                <div class="col-3 top-line2  right-line2 "> &nbsp; </div>
-                <div class="col-3 top-line2 font-weight-bold ">Total </div>
+                </div>
             </div>
         </div>
     </div>

@@ -199,10 +199,8 @@
                                                 <i class="fa fa-eye" aria-hidden="true"></i>
                                                 Treatment Details </a>
 
-
-                                            <a target="_BLANK"
-                                                href="{{ route('patientsagreement_form', ['id' => $HEMO_ID]) }}"
-                                                class="btn btn-sm btn-info">Agreement Form</a>
+                                            <button type="button" class="btn btn-sm btn-info"
+                                                wire:click='openForm()'>Agreement Form</button>
                                         @endif
 
                                     </div>
@@ -239,4 +237,6 @@
             </div>
         </section>
     @endif
+
+    @livewire('ServiceCharge.AgreementFormModal');
 </div>

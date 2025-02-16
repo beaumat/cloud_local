@@ -66,19 +66,19 @@ class AgreementFormPage1 extends Component
     }
     private function TypeOne()
     {
-        $this->typeOneList = $this->phicAgreementFormServices->getTitleByType(1);
+        $this->typeOneList = $this->phicAgreementFormServices->getTitleByType(1, $this->HEMO_ID);
     }
     private function TypeTwo()
     {
-        $this->typeTwoList = $this->phicAgreementFormServices->getTitleByType(2);
+        $this->typeTwoList = $this->phicAgreementFormServices->getTitleByType(2, $this->HEMO_ID);
     }
     private function TypeThree()
     {
-        $this->typeThreeList = $this->phicAgreementFormServices->getTitleByType(3);
+        $this->typeThreeList = $this->phicAgreementFormServices->getTitleByType(3, $this->HEMO_ID);
     }
     private function TypeFour()
     {
-        $this->typeFourList = $this->phicAgreementFormServices->getTitleByType(4);
+        $this->typeFourList = $this->phicAgreementFormServices->getTitleByType(4, $this->HEMO_ID);
     }
 
     public function render()
