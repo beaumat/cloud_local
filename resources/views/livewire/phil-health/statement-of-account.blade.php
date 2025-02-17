@@ -300,7 +300,7 @@
                             $i++;
                         @endphp
                         <tr>
-                            <td wire:click='changeDoctor'> {{ $i . '.)' }} {{ $list->NAME }} </td>
+                            <td> {{ $i . '.)' }} {{ $list->NAME }} </td>
                             <td class="text-right font-weight-bold text-xs ">
                                 @if ($list->AMOUNT > 0)
                                     {{ number_format($list->AMOUNT, 2) }}
@@ -408,5 +408,7 @@
                 </tr>
             </tbody>
         </table>
+
     </div>
+
 </div>

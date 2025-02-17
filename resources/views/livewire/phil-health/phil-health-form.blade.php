@@ -163,6 +163,10 @@
                                                     class="btn btn-success active btn-sm text-xs">
                                                     <i class="fa fa-registered" aria-hidden="true"></i> LHIO Form
                                                 </button>
+                                                <button type="button" wire:click="getChangeDoctor()"
+                                                    class="btn btn-primary active btn-sm text-xs">
+                                                    <i class="fa fa-user-md" aria-hidden="true"></i> Change PF
+                                                </button>
                                             @endif
                                         @endif
                                     </div>
@@ -309,4 +313,6 @@
     @endif
     @livewire('PhilHealth.ArForm')
     @livewire('PhilHealth.PrintModal')
+
+    @livewire('PhilHealth.ChangeProFeeModal', ['PHILHEALTH_ID' => $ID,'LOCATION_ID' => $LOCATION_ID])
 </div>

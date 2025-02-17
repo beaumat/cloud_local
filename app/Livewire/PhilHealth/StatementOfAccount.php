@@ -124,6 +124,7 @@ class StatementOfAccount extends Component
         if (is_numeric($ID)) {
             $data = $this->philHealthServices->get($ID);
             if ($data) {
+                $this->ID = $ID;
                 // $this->NO_OF_TREATMENT = $this->philHealthServices->getNumberOfTreatment($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $this->CHARGES_ROOM_N_BOARD = $data->CHARGES_ROOM_N_BOARD;
                 $this->CHARGES_DRUG_N_MEDICINE = $data->CHARGES_DRUG_N_MEDICINE;
@@ -293,8 +294,7 @@ class StatementOfAccount extends Component
     }
     public function changeDoctor()
     {
-        $this->dispatch('open-change-doctor');
-        // to be added
+        // $this->dispatch('open-change-pf');
         
     }
     public function render()

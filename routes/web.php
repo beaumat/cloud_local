@@ -228,9 +228,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/print_back', PrintFormBack::class)->name('hemo_print_back')->middleware(['permission:patient.treatment.print']);
             Route::get('/{id}/print_front_back', PrintFormFrontBack::class)->name('hemo_print_front_back')->middleware(['permission:patient.treatment.print']);
             Route::get('/{id}/agreement_form', AgreementForm::class)->name('agreement_form')->middleware(['permission:patient.treatment.print']);
-
-   
-
         });
 
 

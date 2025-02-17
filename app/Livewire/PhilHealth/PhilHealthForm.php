@@ -103,7 +103,7 @@ class PhilHealthForm extends Component
     }
     private function GotHide()
     {
-        $data =  $this->philHealthSoaCustomServices->GetFirst($this->LOCATION_ID);
+        $data = $this->philHealthSoaCustomServices->GetFirst($this->LOCATION_ID);
         if ($data) {
             if ($data->HIDE_FEE > 0) {
                 $this->IS_HIDE = true;
@@ -159,7 +159,7 @@ class PhilHealthForm extends Component
         $this->FIRST_CASE_RATE = '';
         $this->SECOND_CASE_RATE = '';
         $this->AR_DATE = '';
-        $this->AR_NO =  '';
+        $this->AR_NO = '';
         $this->STATUS_ID = 0;
         $this->Modify = true;
     }
@@ -197,23 +197,23 @@ class PhilHealthForm extends Component
 
         $this->validate(
             [
-                'CONTACT_ID'        => 'required|not_in:0',
-                'DATE'              => 'required',
-                'LOCATION_ID'       => 'required',
-                'DATE_ADMITTED'     => 'required',
-                'TIME_ADMITTED'     => 'required',
-                'DATE_DISCHARGED'   => 'required',
-                'TIME_DISCHARGED'   => 'required'
+                'CONTACT_ID' => 'required|not_in:0',
+                'DATE' => 'required',
+                'LOCATION_ID' => 'required',
+                'DATE_ADMITTED' => 'required',
+                'TIME_ADMITTED' => 'required',
+                'DATE_DISCHARGED' => 'required',
+                'TIME_DISCHARGED' => 'required'
             ],
             [],
             [
-                'CONTACT_ID'        => 'Patient',
-                'DATE'              => 'Date',
-                'LOCATION_ID'       => 'Location',
-                'DATE_ADMITTED'     => 'Date Admitted',
-                'TIME_ADMITTED'     => 'Time Admiited',
-                'DATE_DISCHARGED'   => 'Date Discharged',
-                'TIME_DISCHARGED'   => 'Time Discharged'
+                'CONTACT_ID' => 'Patient',
+                'DATE' => 'Date',
+                'LOCATION_ID' => 'Location',
+                'DATE_ADMITTED' => 'Date Admitted',
+                'TIME_ADMITTED' => 'Time Admiited',
+                'DATE_DISCHARGED' => 'Date Discharged',
+                'TIME_DISCHARGED' => 'Time Discharged'
             ]
         );
 
@@ -275,7 +275,11 @@ class PhilHealthForm extends Component
 
         $this->dispatch('ar-form-show', result: $data);
     }
+    public function getChangeDoctor()
+    {
+        $this->dispatch('call-open-update-pf');
 
+    }
     #[On('clear-alert')]
     public function clearAlert()
     {
@@ -283,7 +287,7 @@ class PhilHealthForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-   
+
     public function render()
     {
         return view('livewire.phil-health.phil-health-form');
