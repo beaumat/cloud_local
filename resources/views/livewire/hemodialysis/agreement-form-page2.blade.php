@@ -49,13 +49,16 @@
                 <div class="col-5 top-line2"> &nbsp; </div>
                 <div class="col-7 top-line2 right-line2">&nbsp; HD MACHINE
                 </div>
-                <div class="col-5 top-line2"> &nbsp; <i class="fa fa-check text-danger" aria-hidden="true"></i> </div>
+                <div class="col-5 top-line2 text-center"> &nbsp; <i class="fa fa-check text-danger"
+                        aria-hidden="true"></i> </div>
                 <div class="col-7 top-line2 right-line2">&nbsp; FACILITY FEES
                 </div>
-                <div class="col-5 top-line2"> &nbsp; <i class="fa fa-check text-danger" aria-hidden="true"></i> </div>
+                <div class="col-5 top-line2 text-center"> &nbsp; <i class="fa fa-check text-danger"
+                        aria-hidden="true"></i> </div>
                 <div class="col-7 top-line2 right-line2">&nbsp; UTILITIES/OPERATING FEES
                 </div>
-                <div class="col-5 top-line2"> &nbsp; <i class="fa fa-check text-danger" aria-hidden="true"></i> </div>
+                <div class="col-5 top-line2 text-center"> &nbsp; <i class="fa fa-check text-danger"
+                        aria-hidden="true"></i> </div>
             </div>
         </div>
     </div>
