@@ -67,14 +67,15 @@ class AgreementFormDetails extends Component
                     }
                 }
             }
+
+
+            $this->update(26, true);
+            $this->update(27, true);
             $this->getList();
         }
 
 
 
-        $this->update(26,true);
-
-        $this->update(27,true);
 
 
 
