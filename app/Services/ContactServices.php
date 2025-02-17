@@ -27,6 +27,14 @@ class ContactServices
 
 		return true;
 	}
+	public function updateParameterBool(int $ID, string $paraName, bool $value)
+	{
+		Contacts::where('ID', '=', $ID)
+			->update([
+				$paraName => $value
+			]);
+	}
+
 	public function isDoctor(int $CONTACT_ID): bool
 	{
 		return (bool) Contacts::where('ID', '=', $CONTACT_ID)
@@ -64,7 +72,14 @@ class ContactServices
 				'ms.SHORT_DESCRIPTION',
 				'nurse.NAME as NURSE_NAME',
 				'nurse.TAXPAYER_ID as LIC_NUMBER',
-				'contact.LOCATION_ID'
+				'contact.LOCATION_ID',
+				'contact.FIX_MON',
+				'contact.FIX_TUE',
+				'contact.FIX_WEN',
+				'contact.FIX_THU',
+				'contact.FIX_FRI',
+				'contact.FIX_SAT',
+				'contact.FIX_SUN',
 			])
 			->leftJoin('contact as nurse', 'nurse.ID', '=', 'contact.MED_CERT_NURSE_ID')
 			->leftJoin('medcert_sched as ms', 'ms.ID', '=', 'contact.MED_CERT_SCHED_ID')

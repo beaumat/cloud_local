@@ -83,4 +83,26 @@ class OtherServices
         return $formatted; // This will return: 1202-0500922-3
 
     }
+
+    public function numberToWordWeeks($num): string
+    {
+        switch ($num) {
+            case 1:
+                return "Once";
+            case 2:
+                return "Twice";
+            case 3:
+                return "Thrice";
+            case 4:
+                return "Four times";
+            case 5:
+                return "Five times";
+            case 6:
+                return "Six times";
+            case 7:
+                return "Seven times";
+            default:
+                return "Number out of range";
+        }
+    }
 }

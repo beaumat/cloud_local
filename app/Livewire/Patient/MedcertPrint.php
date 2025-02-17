@@ -6,6 +6,7 @@ use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\MedCertServices;
+use App\Services\OtherServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -38,12 +39,13 @@ class MedcertPrint extends Component
     private $dateServices;
 
     private $locationServices;
-
-    public function boot(ContactServices $contactServices, DateServices $dateServices, LocationServices $locationServices)
+    private $otherServices;
+    public function boot(ContactServices $contactServices, DateServices $dateServices, LocationServices $locationServices, OtherServices $otherServices)
     {
         $this->contactServices = $contactServices;
         $this->dateServices = $dateServices;
         $this->locationServices = $locationServices;
+        $this->otherServices = $otherServices;
     }
     public function mount($id = null)
     {
@@ -55,7 +57,7 @@ class MedcertPrint extends Component
 
             $this->FULLNAME = $data->NAME ?? '';
             $this->AGE = $this->contactServices->calculateUserAge($data->DATE_OF_BIRTH);
-            $this->GENDER =  $data->GENDER == 'Male' ? 'Male' : 'Female';
+            $this->GENDER = $data->GENDER == 'Male' ? 'Male' : 'Female';
 
 
             $address = [
@@ -69,7 +71,7 @@ class MedcertPrint extends Component
                 $data->ADDRESS_PROVINCE            // Province
             ];
 
-            $this->ADDRESS =  implode(', ', array_filter($address));
+            $this->ADDRESS = implode(', ', array_filter($address));
 
             if ($this->GENDER == "Male") {
                 $this->PX_LASTNAME = 'Mr. ' . $data->LAST_NAME;
@@ -78,12 +80,43 @@ class MedcertPrint extends Component
             }
             $this->FINAL_DIAGNOSIS = $data->FINAL_DIAGNOSIS ?? '';
 
-            $this->SCHED_FULL_DESC = $data->FULL_DESCRIPTION ?? '';
-            $this->SCHED_SHORT_DESC = $data->SHORT_DESCRIPTION ?? '';
+            $count = 0;
+            if ($data->FIX_MON) {
+                $this->insertWeek("Monday");
+                $count++;
+            }
+            if ($data->FIX_TUE) {
+                $this->insertWeek("Tuesday");
+                $count++;
+            }
+            if ($data->FIX_WEN) {
+                $this->insertWeek("Wensday");
+                $count++;
+            }
+            if ($data->FIX_THU) {
+                $this->insertWeek("Thursday");
+                $count++;
+            }
+            if ($data->FIX_FRI) {
+                $this->insertWeek("Friday");
+                $count++;
+            }
+            if ($data->FIX_SAT) {
+                $this->insertWeek("Saturday");
+                $count++;
+            }
+            if ($data->FIX_SUN) {
+                $this->insertWeek("Sunday");
+                $count++;
+            }
+
+
+
+            $this->SCHED_SHORT_DESC = $this->otherServices->numberToWordWeeks($count);
             $this->NURSE_NAME = $data->NURSE_NAME ?? '';
             $this->LIC_NO = $data->LIC_NUMBER ?? '';
-            
-            $locData =  $this->locationServices->get($data->LOCATION_ID);
+
+            $locData = $this->locationServices->get($data->LOCATION_ID);
 
             if ($locData) {
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
@@ -98,7 +131,14 @@ class MedcertPrint extends Component
             $this->dispatch('preview_print');
         }
     }
-
+    private function insertWeek(string $Desc)
+    {
+        if ($this->SCHED_FULL_DESC == "") {
+            $this->SCHED_FULL_DESC = $Desc;
+        } else {
+            $this->SCHED_FULL_DESC = $this->SCHED_FULL_DESC . ", " . $Desc;
+        }
+    }
     #[On('preview_print')]
     public function print()
     {
