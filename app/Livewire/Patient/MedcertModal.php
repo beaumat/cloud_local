@@ -18,8 +18,17 @@ class MedcertModal extends Component
     public bool $showModal = false;
     public int $MED_CERT_SCHED_ID;
     public int $MED_CERT_NURSE_ID;
-    public $medCertScheduleList =  [];
+    public $medCertScheduleList = [];
     public $contactList = [];
+
+    public bool $FIX_MON;
+    public bool $FIX_TUE;
+    public bool $FIX_WEN;
+    public bool $FIX_THU;
+    public bool $FIX_FRI;
+    public bool $FIX_SAT;
+    public bool $FIX_SUN;
+
 
 
     private $contactServices;
@@ -40,9 +49,41 @@ class MedcertModal extends Component
             $this->MED_CERT_NURSE_ID = $data->MED_CERT_NURSE_ID ?? 0;
             $this->contactList = $this->contactServices->getList(4);
             $this->medCertScheduleList = $this->medCertServices->GetList();
+
+
+            $this->FIX_MON = $data->FIX_MON ?? false;
+            $this->FIX_TUE = $data->FIX_TUE ?? false;
+            $this->FIX_WEN = $data->FIX_WEN ?? false;
+            $this->FIX_THU = $data->FIX_THU ?? false;
+            $this->FIX_FRI = $data->FIX_FRI ?? false;
+            $this->FIX_SAT = $data->FIX_SAT ?? false;
+            $this->FIX_SUN = $data->FIX_SUN ?? false;
             $this->showModal = true;
         }
     }
+    public function updatedFixMon() {
+
+    }
+    public function updatedFixTue(){
+
+    }
+    public function updatedFixWen() {
+
+    }
+    public function updatedFixThu() {
+
+    }
+    public function updatedFixFri() {
+
+    }
+    public function updatedFixSat() {
+
+    }
+
+    public function updatedFixSun() {
+        
+    }
+
     public function closeModal()
     {
         $this->showModal = false;

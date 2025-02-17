@@ -17,11 +17,24 @@
                             @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                         </div>
                         <div class="form-group">
-                            <livewire:select-option name="MED_CERT_SCHED_ID" titleName="Schedule Description"
+                            {{-- <livewire:select-option name="MED_CERT_SCHED_ID" titleName="Schedule Description"
                                 :options="$medCertScheduleList" :zero="true" wire:model.live='MED_CERT_SCHED_ID'
-                                :vertical="false" :withLabel="true" isDisabled="{{ false }}" />
+                                :vertical="false" :withLabel="true" isDisabled="{{ false }}" /> --}}
+                            <livewire:custom-check-box name="FIX_MON" titleName="Monday" :isDisabled="false"
+                                wire:model='FIX_MON' />
+                            <livewire:custom-check-box name="FIX_TUE" titleName="Tuesday" :isDisabled="false"
+                                wire:model='FIX_TUE' />
+                            <livewire:custom-check-box name="FIX_WED" titleName="Wensday" :isDisabled="false"
+                                wire:model='FIX_WED' />
+                            <livewire:custom-check-box name="FIX_THU" titleName="Thursday" :isDisabled="false"
+                                wire:model='FIX_THU' />
+                            <livewire:custom-check-box name="FIX_FRI" titleName="Friday" :isDisabled="false"
+                                wire:model='FIX_FRI' />
+                            <livewire:custom-check-box name="FIX_SAT" titleName="Saturday" :isDisabled="false"
+                                wire:model='FIX_SAT' />
+                            <livewire:custom-check-box name="FIX_SUN" titleName="Sunday" :isDisabled="false"
+                                wire:model='FIX_SUN' />
 
-                                
                         </div>
 
                         <div class="form-group">

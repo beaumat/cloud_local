@@ -25,6 +25,8 @@
                     <div class="col-5 top-line2 text-center">
                         @if ($list->IS_CHECK)
                             <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                        @else
+                            <i class="fa fa-times text-danger" aria-hidden="true"></i>
                         @endif
                     </div>
                 @endforeach
@@ -38,6 +40,8 @@
                     <div class="col-5 top-line2 text-center">
                         @if ($list->IS_CHECK)
                             <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                        @else
+                            <i class="fa fa-times text-danger" aria-hidden="true"></i>
                         @endif
                     </div>
                 @endforeach
