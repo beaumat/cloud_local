@@ -48,7 +48,7 @@ class AgreementFormPage2 extends Component
                 $hdcon = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID, 2);
                 if ($hdcon) {
                     $this->HD_FACILITY_REP_NAME = $hdcon->NAME ?? '';
-                    $this->HD_FACILITY_REP_POS = $conPHIC->NICKNAME ?? '';
+                    $this->HD_FACILITY_REP_POS = $hdcon->NICKNAME ?? '';
                 }
                 $this->HD_FACILITY_REP_NAME = $this->contactServices->getName($dataLoc->HD_FACILITY_REP_ID);
 
