@@ -90,7 +90,7 @@ class MedcertPrint extends Component
                 $count++;
             }
             if ($data->FIX_WEN) {
-                $this->insertWeek("Wensday");
+                $this->insertWeek("Wednesday");
                 $count++;
             }
             if ($data->FIX_THU) {
