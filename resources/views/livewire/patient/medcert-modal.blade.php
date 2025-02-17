@@ -20,6 +20,8 @@
                             <livewire:select-option name="MED_CERT_SCHED_ID" titleName="Schedule Description"
                                 :options="$medCertScheduleList" :zero="true" wire:model.live='MED_CERT_SCHED_ID'
                                 :vertical="false" :withLabel="true" isDisabled="{{ false }}" />
+
+                                
                         </div>
 
                         <div class="form-group">
