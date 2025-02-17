@@ -16,8 +16,8 @@ class AgreementFormPage1 extends Component
     public int $HEMO_ID;
     public string $DATE;
     public int $NO_OF_TREATMENT = 0;
-    public $PHIC_INCHARGE_NAME = "(PHIC-INCHARGE)";
-
+    public string $PHIC_INCHARGE_NAME = "";
+    public string $PHIC_INCHARGE_POSITION ="";
 
     public $typeOneList = [];
     public $typeTwoList = [];
@@ -54,6 +54,7 @@ class AgreementFormPage1 extends Component
                 $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? Auth()->user()->contact_id, 2); // Employee
                 if ($conPHIC) {
                     $this->PHIC_INCHARGE_NAME = $conPHIC->PRINT_NAME_AS ?? '';
+                    $this->PHIC_INCHARGE_POSITION = $conPHIC->NICKNAME ?? '';
                 }
                 $this->TypeOne();
                 $this->TypeTwo();

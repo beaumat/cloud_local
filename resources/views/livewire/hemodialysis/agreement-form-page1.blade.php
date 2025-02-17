@@ -62,7 +62,9 @@
     </div>
     <div class="col-12">
         <div class="rr20 mt-3">
-            I have been fully informed by Dr./Mr./Ms. <b>{{ $PHIC_INCHARGE_NAME }}</b> of the PhilHealth policies on
+            I have been fully informed by Dr./Mr./Ms.
+            <b>{{ $PHIC_INCHARGE_NAME }}{{ $PHIC_INCHARGE_POSITION ? '/' . $PHIC_INCHARGE_POSITION : '' }}</b> of the
+            PhilHealth policies on
             availing of the
             benefits package for HD.
         </div>
@@ -125,7 +127,7 @@
                         {{ $list->DESCRIPTION }}
                     </div>
                     <div class="col-5 top-line2 text-center">
-                       @if ($list->IS_CHECK)
+                        @if ($list->IS_CHECK)
                             <i class="fa fa-check text-danger" aria-hidden="true"></i>
                         @else
                             <i class="fa fa-times text-danger" aria-hidden="true"></i>
@@ -150,7 +152,7 @@
                         {{ $list->DESCRIPTION }}
                     </div>
                     <div class="col-5 top-line2 text-center">
-                       @if ($list->IS_CHECK)
+                        @if ($list->IS_CHECK)
                             <i class="fa fa-check text-danger" aria-hidden="true"></i>
                         @else
                             <i class="fa fa-times text-danger" aria-hidden="true"></i>

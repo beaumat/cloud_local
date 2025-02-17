@@ -127,8 +127,8 @@
             <div class="row">
                 <div class="col-5 bottom-line2">{{ $PATIENT_NAME }}</div>
                 <div class="col-3"></div>
-                <div class="col-4 bottom-line2">{{ $HD_FACILITY_REP_NAME }}</div>
-
+                <div class="col-4 bottom-line2">
+                    {{ $HD_FACILITY_REP_NAME }}{{ $HD_FACILITY_REP_POS ? '/' . $HD_FACILITY_REP_POS : '' }}</div>
                 <div class="col-5">Printed name and signature of patient </div>
                 <div class="col-3"></div>
                 <div class="col-4">Printed name & signature </div>

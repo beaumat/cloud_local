@@ -14,6 +14,7 @@ class AgreementFormPage2 extends Component
     #[Reactive]
     public int $HEMO_ID;
     public $HD_FACILITY_REP_NAME = "";
+    public $HD_FACILITY_REP_POS = "";
     public $PATIENT_NAME = "";
     public $WITNESS_NAME = "";
     public string $DATE;
@@ -44,7 +45,13 @@ class AgreementFormPage2 extends Component
             $dataLoc = $this->locationServices->get($this->LOCATION_ID);
             $this->getWithNess($data->CUSTOMER_ID);
             if ($dataLoc) {
+                $hdcon = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID, 2);
+                if ($hdcon) {
+                    $this->HD_FACILITY_REP_NAME = $hdcon->NAME ?? '';
+                    $this->HD_FACILITY_REP_POS = $conPHIC->NICKNAME ?? '';
+                }
                 $this->HD_FACILITY_REP_NAME = $this->contactServices->getName($dataLoc->HD_FACILITY_REP_ID);
+
             }
             $this->TypeFive();
             $this->TypeSix();
