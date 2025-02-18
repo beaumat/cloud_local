@@ -31,7 +31,7 @@ class ItemSoaServices
     {
         return (int) ItemSoa::where('TYPE', $TYPE)->max('LINE') + 1;
     }
-    public function Store(int $LOCATION_ID, int $TYPE, string $ITEM_NAME, string $UNIT_NAME, float $RATE)
+    public function Store(int $LOCATION_ID, int $TYPE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE =  false)
     {
         $ID = $this->object->ObjectNextID('SOA_ITEM');
 
@@ -45,11 +45,12 @@ class ItemSoaServices
                 'TYPE'          => $TYPE,
                 'ITEM_NAME'     => $ITEM_NAME,
                 'UNIT_NAME'     => $UNIT_NAME,
-                'RATE'          => $RATE
+                'RATE'          => $RATE,
+                'ACTUAL_BASE'   => $ACTUAL_BASE
             ]
         );
     }
-    public function Update(int $ID, int $TYPE, string $ITEM_NAME, string $UNIT_NAME, float $RATE)
+    public function Update(int $ID, int $TYPE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false)
     {
         ItemSoa::where('ID', '=', $ID)
             ->update(
@@ -58,7 +59,8 @@ class ItemSoaServices
                     'TYPE'          => $TYPE,
                     'ITEM_NAME'     => $ITEM_NAME,
                     'UNIT_NAME'     => $UNIT_NAME,
-                    'RATE'          => $RATE
+                    'RATE'          => $RATE,
+                    'ACTUAL_BASE'   => $ACTUAL_BASE
                 ]
             );
     }
@@ -77,7 +79,8 @@ class ItemSoaServices
                 'soa_item_type.DESCRIPTION as TYPE_NAME',
                 'soa_item.ITEM_NAME',
                 'soa_item.UNIT_NAME',
-                'soa_item.RATE'
+                'soa_item.RATE',
+                'soa_item.ACTUAL_BASE'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -104,7 +107,8 @@ class ItemSoaServices
                 'soa_item_type.DESCRIPTION as TYPE_NAME',
                 'soa_item.ITEM_NAME',
                 'soa_item.UNIT_NAME',
-                'soa_item.RATE'
+                'soa_item.RATE',
+                'soa_item.ACTUAL_BASE'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)

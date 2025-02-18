@@ -19,11 +19,14 @@ class SoaItem extends Component
     public string $ITEM_NAME;
     public string $UNIT_NAME;
     public float $RATE;
+
+    public  bool $ACTUAL_BASE;
     public  $editid = null;
     public int $editTYPE;
     public string $editITEM_NAME;
     public string $editUNIT_NAME;
     public float $editRATE;
+    public float $editACTUAL_BASE;
     public $dataList = [];
     public $search;
     public $typeList = [];
@@ -57,6 +60,7 @@ class SoaItem extends Component
         $this->ITEM_NAME = '';
         $this->UNIT_NAME = '';
         $this->RATE = 0;
+        $this->ACTUAL_BASE = false;
     }
     public function Add()
     {
@@ -82,7 +86,8 @@ class SoaItem extends Component
                 $this->TYPE,
                 $this->ITEM_NAME,
                 $this->UNIT_NAME,
-                $this->RATE
+                $this->RATE,
+                $this->ACTUAL_BASE
             );
 
             $this->CleanAdd();
@@ -104,6 +109,7 @@ class SoaItem extends Component
             $this->editITEM_NAME = $data->ITEM_NAME ?? '';
             $this->editUNIT_NAME = $data->UNIT_NAME ?? '';
             $this->editRATE = $data->RATE ?? 0;
+            $this->editACTUAL_BASE = $data->ACTUAL_BASE ?? false;
         }
     }
     public function Update()
@@ -130,7 +136,8 @@ class SoaItem extends Component
                 $this->editTYPE,
                 $this->editITEM_NAME,
                 $this->editUNIT_NAME,
-                $this->editRATE
+                $this->editRATE,
+                 $this->editACTUAL_BASE
             );
             $this->Canceled();
         } catch (\Exception $e) {

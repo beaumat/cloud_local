@@ -33,9 +33,10 @@
                                     <tr>
 
                                         <th class="col-2">Type</th>
-                                        <th class="col-4">Item </th>
+                                        <th class="col-3">Item </th>
                                         <th class="col-2">Unit </th>
-                                        <th class="col-2">Rate </th>
+                                        <th class="col-1">Rate </th>
+                                        <th class="col-1 text-center">Actual <br />Base</th>
                                         <th class="col-1 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -83,20 +84,28 @@
                                                     {{ number_format($list->RATE, 2) }}
                                                 @endif
                                             </td>
+
+                                            <td class="text-center">
+                                                @if ($list->ID == $editid)
+                                                    <input type="checkbox" class="check-input mt-2"
+                                                        wire:model='editACTUAL_BASE' />
+                                                @else
+                                                    {{ $list->ACTUAL_BASE ? 'Yes' : 'No' }}
+                                                @endif
+                                            </td>
                                             <td>
                                                 @if ($editid === $list->ID)
                                                     <button name="btnUpdate" type="button"
                                                         class="btn btn-sm btn-success"
                                                         wire:click='Update()'>Update</button>
                                                     <button name="btnCanceled" type="button"
-                                                        class="btn btn-sm btn-secondary" wire:confirm="cancel?"
+                                                        class="btn btn-sm btn-secondary"
                                                         wire:click='Canceled()'>Cancel</button>
                                                 @else
                                                     <button name="btnEdit" type="button" class='btn btn-sm btn-primary'
                                                         wire:click='Edit({{ $list->ID }})'>Edit</button>
                                                     <button name="btnDelete" type="button"
                                                         class='btn btn-sm btn-danger'
-                                                        wire:confirm="Are you sure you want to delete this?"
                                                         wire:click='Delete({{ $list->ID }})'>Delete</button>
                                                 @endif
 
@@ -127,6 +136,9 @@
                                             <td>
                                                 <input type="number" class="form-control form-control-sm"
                                                     wire:model='RATE' />
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="checkbox" class="check-input" wire:model='ACTUAL_BASE' />
                                             </td>
                                             <td>
                                                 <button type="submit" class="btn btn-sm btn-success w-100">

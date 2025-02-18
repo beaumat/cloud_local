@@ -19,6 +19,7 @@ class ItemSoa extends Model
         'TYPE',
         'ITEM_NAME',
         'UNIT_NAME',
-        'RATE'
+        'RATE',
+        'ACTUAL_BASE'
     ];
 }
