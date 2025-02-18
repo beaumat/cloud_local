@@ -69,7 +69,7 @@ class SoaItem extends Component
             [
                 'TYPE' => 'required|numeric|exists:soa_item_type,id',
                 'ITEM_NAME' => 'required|string',
-                'RATE'      => 'required|numeric|not_in:0',
+                'RATE'      => 'required|numeric',
             ],
             [],
             [
@@ -119,7 +119,7 @@ class SoaItem extends Component
             [
                 'editTYPE'      => 'required|numeric|exists:soa_item_type,id',
                 'editITEM_NAME' => 'required|string',
-                'editRATE'      => 'required|numeric|not_in:0',
+                'editRATE'      => 'required|numeric',
             ],
             [],
             [
