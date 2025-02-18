@@ -134,7 +134,7 @@
                                                     wire:model='UNIT_NAME' />
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control form-control-sm"
+                                                <input   step="0.01" type="number" class="form-control form-control-sm"
                                                     wire:model='RATE' />
                                             </td>
                                             <td class="text-center">
