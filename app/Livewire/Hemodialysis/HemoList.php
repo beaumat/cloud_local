@@ -53,13 +53,18 @@ class HemoList extends Component
     {
         session()->flash('message', $data);
     }
-    public function delete($id)
+    public function delete(int $ID)
     {
         DB::beginTransaction();
         try {
-            $this->hemoServices->Delete($id);
-            session()->flash('message', 'Successfully deleted.');
-            DB::commit();
+            $data = $this->hemoServices->Get($ID);
+            if ($data) {
+                $this->hemoServices->StatusUpdate($data->ID, 3);
+                $this->scheduleServices->StatusUpdate($data->CUSTOMER_ID, $data->DATE, $data->LOCATION_ID, 3);
+                DB::commit();
+                session()->flash('message', 'Successfully void.');
+            }
+
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();

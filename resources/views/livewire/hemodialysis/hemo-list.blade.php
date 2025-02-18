@@ -201,15 +201,15 @@
                                                         </a>
                                                         @can('patient.treatment.delete')
                                                             @if ($list->STATUS_ID == 1)
-                                                                <button type="button"
-                                                                    wire:click='delete({{ $list->ID }})'
-                                                                    wire:confirm="Are you sure you want to delete this?"
+                                                                <button type="button" title="Void"
+                                                                    wire:click='void({{ $list->ID }})'
+                                                                    wire:confirm="Are you sure you want to void this?"
                                                                     class="btn btn-xs btn-danger">
-                                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                                    <i class="fa fa-ban" aria-hidden="true"></i>
                                                                 </button>
                                                             @else
-                                                                <a class="btn btn-xs btn-secondary">
-                                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                                <a class="btn btn-xs btn-secondary" title="Posted">
+                                                                    <i class="fa fa-lock" aria-hidden="true"></i>
                                                                 </a>
                                                             @endif
                                                         @endcan
@@ -324,10 +324,10 @@
                                                         @can('patient.treatment.delete')
                                                             @if ($list->STATUS_ID == 1)
                                                                 <button wire:click='delete({{ $list->ID }})'
-                                                                    title="Delete" name="del({{ $list->ID }})"
-                                                                    wire:confirm="Are you sure you want to delete this?"
+                                                                    title="Void" name="del({{ $list->ID }})"
+                                                                    wire:confirm="Are you sure you want to void this?"
                                                                     class="btn btn-xs btn-danger">
-                                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                                    <i class="fa fa-ban" aria-hidden="true"></i>
                                                                 </button>
                                                             @else
                                                                 @can('patient.treatment.update')
@@ -338,9 +338,10 @@
                                                                         <i class="fa fa-unlock" aria-hidden="true"></i>
                                                                     </button>
                                                                 @else
-                                                                    <button type="button" class="btn btn-xs btn-secondary"
+                                                                    <button title="Posted" type="button"
+                                                                        class="btn btn-xs btn-secondary"
                                                                         name="del({{ $list->ID }})">
-                                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                                        <i class="fa fa-lock" aria-hidden="true"></i>
                                                                     </button>
                                                                 @endcan
                                                             @endif

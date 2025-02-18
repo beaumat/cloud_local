@@ -98,9 +98,9 @@
                                                 @if (($ID > 0 && $STATUS == 1) || ($ID > 0 && $STATUS == 4))
                                                     @if (auth()->user()->can('patient.treatment.update'))
                                                         <button name="btnPosted" type='button' wire:click='getPosted()'
-                                                            class="btn btn-sm btn-warning"
+                                                            class="btn btn-sm btn-success"
                                                             wire:confirm="Are you sure you want to post?">
-                                                            <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
+                                                            <i class="fa fa-lock" aria-hidden="true"></i> Posted
                                                         </button>
                                                     @endif
                                                 @endif
@@ -108,11 +108,10 @@
 
                                             @if ($STATUS == 3)
                                                 @can('patient.treatment.update')
-                                                    <button name="btnUnposted" type='button'
-                                                        class="btn btn-sm btn-secondary"
+                                                    <button name="btnUnposted" type='button' class="btn btn-sm btn-warning"
                                                         wire:confirm="Are you sure you want to un-posted?"
                                                         wire:click='getUnposted()'>
-                                                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                                        <i class="fa fa-unlock" aria-hidden="true"></i>
                                                         Unposted
                                                     </button>
                                                 @endcan
@@ -140,10 +139,10 @@
                                         @can('patient.treatment.print')
                                             @if (!$Modify)
                                                 <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
-                                                    class="btn btn-sm btn-success">Print</a>
+                                                    class="btn btn-sm btn-dark"><i class="fa fa-print" aria-hidden="true"></i> Print</a>
                                             @endif
                                         @endcan
-                                 
+
                                     </div>
 
                                 </div>

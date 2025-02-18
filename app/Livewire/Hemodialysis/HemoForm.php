@@ -495,7 +495,6 @@ class HemoForm extends Component
     public function getCanceled()
     {
         $this->hemoServices->StatusUpdate($this->ID, 3);
-
         $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 3);
         return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully void');
     }
