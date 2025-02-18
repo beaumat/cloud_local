@@ -6,6 +6,7 @@ use App\Exports\TreatmentListExport;
 use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
+use App\Services\ScheduleServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -33,16 +34,19 @@ class HemoList extends Component
     public string $DATE_FROM;
     public string $DATE_TO;
     private $dateServices;
+    private $scheduleServices;
     public function boot(
         HemoServices $hemoServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        ScheduleServices $scheduleServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->dateServices = $dateServices;
+        $this->scheduleServices = $scheduleServices;
     }
     #[On('upload-alert')]
     public function AlertMsg($data)
@@ -62,7 +66,7 @@ class HemoList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function showNotes(int $ID,  string $NAME)
+    public function showNotes(int $ID, string $NAME)
     {
 
         $data = ['HEMO_ID' => $ID, 'PATIENT_NAME' => $NAME];
@@ -104,6 +108,33 @@ class HemoList extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+    public function unposted(int $ID)
+    {
+        DB::beginTransaction();
+        try {
+
+            $data = $this->hemoServices->Get($ID);
+            if ($data) {
+                $this->hemoServices->StatusUpdate($data->ID, 4);
+                $this->scheduleServices->StatusUpdate(
+                    $data->CUSTOMER_ID,
+                    $data->DATE,
+                    $data->LOCATION_ID,
+                    0
+                );
+                DB::commit();
+                session()->flash('message', 'Unpost successfully');
+            }
+
+
+        } catch (\Throwable $ex) {
+            DB::rollBack();
+            session()->flash('error', "Error :" . $ex->getMessage());
+        }
+
+
+
     }
     public int $count = 0;
     #[On('refresh-list')]

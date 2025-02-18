@@ -38,8 +38,8 @@
     </div>
     <section class="content">
         <div class="container-fluid">
-             {{-- agreement_form_print --}}
-     
+            {{-- agreement_form_print --}}
+
             <div class="row">
                 @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-12">
@@ -126,16 +126,11 @@
                                                 <th class="text-center"> SC</th>
                                                 <th class="text-center text-center">
                                                     Action
-                                                    {{-- @can('patient.treatment.create')
-                                                <a href="{{ route('patientshemo_create') }}"
-                                                    class="text-white btn btn-xs w-100">
-                                                    <i class="fas fa-plus"></i> New
-                                                </a>
-                                            @endcan --}}
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody class="text-xs bg-light">
+                                            {{-- unposted --}}
                                             @foreach ($pendingList as $list)
                                                 <tr>
                                                     @php
@@ -206,12 +201,12 @@
                                                         </a>
                                                         @can('patient.treatment.delete')
                                                             @if ($list->STATUS_ID == 1)
-                                                                <a href="#"
+                                                                <button type="button"
                                                                     wire:click='delete({{ $list->ID }})'
                                                                     wire:confirm="Are you sure you want to delete this?"
                                                                     class="btn btn-xs btn-danger">
                                                                     <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                </a>
+                                                                </button>
                                                             @else
                                                                 <a class="btn btn-xs btn-secondary">
                                                                     <i class="fas fa-trash" aria-hidden="true"></i>
@@ -314,13 +309,14 @@
                                                         @endif
                                                     </td>
                                                     <td class="text-center">
-                                                        <a type="button"
+                                                        <a type="button" title="View Details"
                                                             href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
                                                             class="btn btn-xs btn-info">
                                                             <i class="fas fa-eye" aria-hidden="true"></i>
                                                         </a>
                                                         @can('full-treatment-sheet')
                                                             <button type="button" class="btn btn-xs btn-dark"
+                                                                title="Open Notes"
                                                                 wire:click="showNotes({{ $list->ID }},'{{ $list->CONTACT_NAME }}')">
                                                                 <i class="fa fa-list-ol" aria-hidden="true"></i>
                                                             </button>
@@ -328,14 +324,25 @@
                                                         @can('patient.treatment.delete')
                                                             @if ($list->STATUS_ID == 1)
                                                                 <button wire:click='delete({{ $list->ID }})'
+                                                                    title="Delete" name="del({{ $list->ID }})"
                                                                     wire:confirm="Are you sure you want to delete this?"
                                                                     class="btn btn-xs btn-danger">
                                                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                                                 </button>
                                                             @else
-                                                                <button type="button" class="btn btn-xs btn-secondary">
-                                                                    <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                </button>
+                                                                @can('patient.treatment.update')
+                                                                    <button type="button" class="btn btn-xs btn-warning"
+                                                                        name="unpost{{ $list->ID }}"
+                                                                        wire:click='unposted({{ $list->ID }})'
+                                                                        wire:confirm="Are you sure you want to unpost this?">
+                                                                        <i class="fa fa-unlock" aria-hidden="true"></i>
+                                                                    </button>
+                                                                @else
+                                                                    <button type="button" class="btn btn-xs btn-secondary"
+                                                                        name="del({{ $list->ID }})">
+                                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                                    </button>
+                                                                @endcan
                                                             @endif
                                                         @endcan
 
