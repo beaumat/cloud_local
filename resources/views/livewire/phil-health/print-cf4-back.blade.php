@@ -249,7 +249,7 @@
                     <tr class="bottom-line2">
                         <td class="right-line2  text-center text-sm " style="width:20%">
                             <span class="p-1 font-weight-bold">
-                                &nbsp;{{ $list['DATE'] ? date('m/d/Y', strtotime($list['DATE'])) : '' }} </span>
+                                &nbsp;{{  $list['DATE'] != "" ? date('m/d/Y', strtotime($list['DATE'])) : ' ' }} </span>
                         </td>
                         <td class="text-left">
                             @if ($list['DOCTOR_ORDER'] == $DOCTOR_ORDER)
@@ -279,6 +279,7 @@
                 <th>Total Cost(cont)</th>
             </tr>
             @foreach ($dataMed as $list)
+         
                 <tr>
                     <td class="text-sm  ">{{ $list['GENERIC_NAME'] }} &nbsp;</td>
                     <td>

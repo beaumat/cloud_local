@@ -71,6 +71,7 @@ use App\Livewire\Payment\PaymentList;
 use App\Livewire\PhilHealth\PhilHealthForm;
 use App\Livewire\PhilHealth\PhilHealthList;
 use App\Livewire\PhilhealthPrint\PrintOutCf2;
+use App\Livewire\PhilhealthPrint\PrintOutCf4TempOut;
 use App\Livewire\Requirement\RequirementForm;
 use App\Livewire\Requirement\RequirementList;
 use App\Livewire\SalesOrder\SalesOrderForm;
@@ -253,6 +254,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/printout-soa-temp-out', PrintOutSoaTempOut::class)->name('printout_soa_temp_out')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-summary-temp-out', PrintOutSummaryTempOut::class)->name('printout_summary_temp_out')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-csf-temp-out', PrintOutCsfTempOut::class)->name('printout_csf_temp_out')->middleware(['permission:patient.philhealth.print']);
+            // PrintOutCf4TempOut
+            Route::get('/{id}/printout-cf4-temp-out', PrintOutCf4TempOut::class)->name('printout_cf4_temp_out')->middleware(['permission:patient.philhealth.print']);
+
+
         });
 
         Route::prefix('/doctor-pf')->group(function () {

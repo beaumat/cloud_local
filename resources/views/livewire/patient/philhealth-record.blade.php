@@ -121,12 +121,16 @@
                              class=" btn  btn-sm btn-primary">
                              <i class="fa fa-print" aria-hidden="true"></i> Summary (Pre-sign)
                          </a>
-                         <a type="button" target="_BLANK" title="Print Philheath CF4 (pre-sign)"
+                         <a type="button" target="_BLANK" title="Print Philheath CSF (pre-sign)"
                              href="{{ route('patientsprintout_csf_temp', ['id' => $CONTACT_ID]) }}"
                              class="btn btn-info btn-sm"> <i class="fa fa-print" aria-hidden="true"></i>
                              CSF (Pre-sign)
                          </a>
-                      
+                         <a type="button" target="_BLANK" title="Print Philheath CF4 (pre-sign)"
+                             href="{{ route('patientsprintout_cf4_temp_out', ['id' => $CONTACT_ID]) }}"
+                             class="btn btn-dark btn-sm"> <i class="fa fa-print" aria-hidden="true"></i>
+                             CF4 (Pre-sign)
+                         </a>
                      @endcan
                  </div>
              </div>

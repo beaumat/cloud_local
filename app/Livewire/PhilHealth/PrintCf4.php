@@ -117,8 +117,10 @@ class PrintCf4 extends Component
     public function mount(int $id = 0,  int $PATIENT_ID = 0, $OUTPUT = true)
     {
 
+
         $this->OUTPUT_SIGN = $OUTPUT;
         if ($id > 0) {
+            
             $this->PRE_SIGN_DATA =  false;
             $this->FIRST_CASE_RATE = $this->philHealthServices->FIRST_CASE_RATE;
             $data = $this->philHealthServices->get($id);
@@ -137,8 +139,6 @@ class PrintCf4 extends Component
                 $this->TIME_ADMITTED = $data->TIME_ADMITTED ? Carbon::createFromFormat('H:i:s', $data->TIME_ADMITTED)->format('h:i A') : '';
                 $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
                 $this->TIME_DISCHARGED = $data->TIME_DISCHARGED ? Carbon::createFromFormat('H:i:s', $this->IS_HIDE ? $this->TIME_HIDE : $data->TIME_DISCHARGED)->format('h:i A') : '';
-
-
 
                 $fee = $this->philHealthServices->getProfFee($id);
                 $row = 1;

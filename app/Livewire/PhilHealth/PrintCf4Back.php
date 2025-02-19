@@ -30,7 +30,7 @@ class PrintCf4Back extends Component
     private $patientDoctorServices;
     private $cf4DoctorOrderServices;
     private $doctorOrderDefaultServices;
-    public bool $PRE_SIGN_DATA =  false;
+    public bool $PRE_SIGN_DATA = false;
     public bool $OUTPUT_SIGN = false;
     public bool $PHIC_FORM_MODIFY = false;
 
@@ -40,7 +40,7 @@ class PrintCf4Back extends Component
         ContactServices $contactServices,
         PatientDoctorServices $patientDoctorServices,
         LocationServices $locationServices,
-        Cf4DoctorOrderServices   $cf4DoctorOrderServices,
+        Cf4DoctorOrderServices $cf4DoctorOrderServices,
         DoctorOrderDefaultServices $doctorOrderDefaultServices
     ) {
         $this->philHealthServices = $philHealthServices;
@@ -51,7 +51,7 @@ class PrintCf4Back extends Component
         $this->cf4DoctorOrderServices = $cf4DoctorOrderServices;
         $this->doctorOrderDefaultServices = $doctorOrderDefaultServices;
     }
-    public function mount($id = null,  int $PATIENT_ID = 0, bool $OUTPUT = true)
+    public function mount($id = null, int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
 
 
@@ -82,7 +82,7 @@ class PrintCf4Back extends Component
                     $this->DOCTOR_ORDER = $dataLoc->DOCTOR_ORDER_DEFAULT ?? 'UNDERGO HEMODIALYSIS TREATMENT WITH NO COMPLICATIONS';
                 }
 
-                $this->DATE_DISCHARGED =  $data->DATE_DISCHARGED ?? '';
+                $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
                 $r = 0;
                 $KEEP_ORDER = '';
                 $KEEP_DATE = '';
@@ -94,22 +94,21 @@ class PrintCf4Back extends Component
 
                 foreach ($getData as $item) {
 
-
                     if ($getIsExist) {
                         $KEEP_DATE = $item->DATE;
-                        $orderList =  $this->cf4DoctorOrderServices->GetList($item->ID);
+                        $orderList = $this->cf4DoctorOrderServices->GetList($item->ID);
                         foreach ($orderList as $list) {
                             $this->dateList[$r] = [
-                                'DATE'         =>  $KEEP_DATE,
-                                'DOCTOR_ORDER' =>  $list->DESCRIPTION
+                                'DATE' => $KEEP_DATE,
+                                'DOCTOR_ORDER' => $list->DESCRIPTION
                             ];
                             $KEEP_DATE = '';
                             $r++;
                         }
                     } else {
                         $this->dateList[$r] = [
-                            'DATE'         =>  $item->DATE,
-                            'DOCTOR_ORDER' =>  empty($item->DOCTOR_ORDER) ?  $this->DOCTOR_ORDER  : $item->DOCTOR_ORDER ?? ''
+                            'DATE' => $item->DATE,
+                            'DOCTOR_ORDER' => empty($item->DOCTOR_ORDER) ? $this->DOCTOR_ORDER : $item->DOCTOR_ORDER ?? ''
                         ];
                         $r++;
                     }
@@ -118,8 +117,8 @@ class PrintCf4Back extends Component
 
 
                 for ($i = $r; $i < 15; $i++) {
-                    $this->dateList[$i] =  [
-                        'DATE' =>  '',
+                    $this->dateList[$i] = [
+                        'DATE' => '',
                         'DOCTOR_ORDER' => ''
                     ];
                 }
@@ -129,15 +128,26 @@ class PrintCf4Back extends Component
                 $this->DR_NAME = strtoupper($list->NAME);
                 return;
             }
+        } else {
+            $this->makeTemp();
+            $this->getMed(0);
         }
-
         if ($PATIENT_ID > 0) {
-            $this->PRE_SIGN_DATA =  true;
+            $this->PRE_SIGN_DATA = true;
             $fee = $this->patientDoctorServices->GetList($PATIENT_ID);
             foreach ($fee as $list) {
                 $this->DR_NAME = strtoupper($list->NAME);
                 return;
             }
+        }
+    }
+    public function makeTemp()
+    {
+        for ($i = 0; $i < 15; $i++) {
+            $this->dateList[$i] = [
+                'DATE' => "",
+                'DOCTOR_ORDER' => " " 
+            ];
         }
     }
     public function getMed(int $ID)
@@ -159,27 +169,29 @@ class PrintCf4Back extends Component
             $this->dataMed[$i]['CONT_TOTAL_COST'] = '';
         }
 
-        $dt = $this->philHealthServices->DrugMedicineList($ID);
-        $r = 0;
+        if ($ID > 0) {
+            $dt = $this->philHealthServices->DrugMedicineList($ID);
+            $r = 0;
 
-        foreach ($dt as $list) {
-            if ($r == 7) {
-                return;
+            foreach ($dt as $list) {
+                if ($r == 7) {
+                    return;
+                }
+                $this->dataMed[$r]['GENERIC_NAME'] = $list->GENERIC_NAME ?? '';
+                $this->dataMed[$r]['QUANTITY'] = number_format($list->QUANTITY ?? 0, 0);
+                $this->dataMed[$r]['DOSSAGE'] = $list->DOSSAGE ?? '';
+                $this->dataMed[$r]['ROUTE'] = $list->ROUTE ?? '';
+                $this->dataMed[$r]['FREQUENCY'] = $list->FREQUENCY ?? '';
+                $this->dataMed[$r]['TOTAL_COST'] = number_format($list->TOTAL_COST, 2);
+
+                $this->dataMed[$r]['CONT_GENERIC_NAME'] = $list->CONT_GENERIC_NAME;
+                $this->dataMed[$r]['CONT_QUANTITY'] = number_format($list->CONT_QUANTITY, 0);
+                $this->dataMed[$r]['CONT_DOSSAGE'] = $list->CONT_DOSSAGE;
+                $this->dataMed[$r]['CONT_ROUTE'] = $list->CONT_ROUTE;
+                $this->dataMed[$r]['CONT_FREQUENCY'] = $list->CONT_FREQUENCY;
+                $this->dataMed[$r]['CONT_TOTAL_COST'] = number_format($list->CONT_TOTAL_COST, 2);
+                $r++;
             }
-            $this->dataMed[$r]['GENERIC_NAME'] = $list->GENERIC_NAME ?? '';
-            $this->dataMed[$r]['QUANTITY'] = number_format($list->QUANTITY ?? 0, 0);
-            $this->dataMed[$r]['DOSSAGE'] = $list->DOSSAGE ?? '';
-            $this->dataMed[$r]['ROUTE'] = $list->ROUTE ?? '';
-            $this->dataMed[$r]['FREQUENCY'] = $list->FREQUENCY ?? '';
-            $this->dataMed[$r]['TOTAL_COST'] = number_format($list->TOTAL_COST, 2);
-
-            $this->dataMed[$r]['CONT_GENERIC_NAME'] = $list->CONT_GENERIC_NAME;
-            $this->dataMed[$r]['CONT_QUANTITY'] = number_format($list->CONT_QUANTITY, 0);
-            $this->dataMed[$r]['CONT_DOSSAGE'] = $list->CONT_DOSSAGE;
-            $this->dataMed[$r]['CONT_ROUTE'] = $list->CONT_ROUTE;
-            $this->dataMed[$r]['CONT_FREQUENCY'] = $list->CONT_FREQUENCY;
-            $this->dataMed[$r]['CONT_TOTAL_COST'] = number_format($list->CONT_TOTAL_COST, 2);
-            $r++;
         }
     }
     public function render()
