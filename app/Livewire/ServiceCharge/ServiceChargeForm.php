@@ -225,7 +225,6 @@ class ServiceChargeForm extends Component
     public function save()
     {
 
-
         $this->validate(
             [
                 'PATIENT_ID' => 'required|numeric|not_in:0|exists:contact,id',
