@@ -1,3 +1,8 @@
+<?php
+use App\Services\OtherServices;
+?>
+
+
 <div>
 
     <button wire:click="openModal" class="btn btn-success btn-sm text-xs ">
@@ -19,33 +24,71 @@
                         <div class="container-flud">
                             <div class="form-group">
                                 <table class="table table-bordered table-hover">
-                                    <thead class="bg-sky ">
-                                        <tr>
-                                            <th class="">Select</th>
-                                            <th class="col-2">Date</th>
-                                            <th class="col-3">Reference</th>
-                                            <th class="col-2">Amount</th>
-                                            <th class="col-2">Balance</th>
-                                            <th class="col-3">Payment Initial</th>
-                                        </tr>
+                                    <thead class="bg-sky text-xs ">
+                                        @if ($PF_PERIOD_ID > 0)
+                                            <tr>
+                                                <th class="">Select</th>
+                                                <th class="col-4">Patient</th>
+                                                <th class="col-2">Confine Period </th>
+                                                <th class="col-1">First Case Amt.</th>
+                                                <th class="col-1">Date</th>
+                                                <th class="col-1">Bill NO.</th>
+                                                <th class="col-1">Amount</th>
+                                                <th class="col-1">Balance</th>
+                                                <th class="col-1">Initial</th>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <th class="">Select</th>
+                                                <th class="col-2">Date</th>
+                                                <th class="col-3">Reference</th>
+                                                <th class="col-2">Amount</th>
+                                                <th class="col-2">Balance</th>
+                                                <th class="col-3">Payment Initial</th>
+                                            </tr>
+                                        @endif
+
                                     </thead>
                                     <tbody class="text-xs">
                                         @foreach ($invoiceList as $list)
-                                            <tr>
-                                                <td class="text-center">
-                                                    <input class="text-lg" type="checkbox"
-                                                        wire:model.live="selectedCharges.{{ $list->ID }}" />
-                                                </td>
-                                                <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }} </td>
-                                                <td>{{ $list->CODE }}</td>
-                                                <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
-                                                <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}</td>
-                                                <td>
-                                                    <input type="number"
-                                                        wire:model="paymentAmounts.{{ $list->ID }}"
-                                                        class="form-control form-control-sm text-xs w-100" />
-                                                </td>
-                                            </tr>
+                                            @if ($PF_PERIOD_ID > 0)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <input class="text-lg" type="checkbox"
+                                                            wire:model.live="selectedCharges.{{ $list->ID }}" />
+                                                    </td>
+                                                    <td>{{ $list->PATIENT_NAME }}</td>
+                                                    <td>{{ OtherServices::formatDates($list->CONFINE_PERIOD) }}</td>
+                                                    <td class="text-right">{{ number_format($list->P1_TOTAL, 2) }}</td>
+                                                    <td>{{ date('m/d/Y', strtotime($list->DATE)) }} </td>
+                                                    <td>{{ $list->CODE }}</td>
+                                                    <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
+                                                    <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}
+                                                    </td>
+                                                    <td>
+                                                        <input type="number"
+                                                            wire:model="paymentAmounts.{{ $list->ID }}"
+                                                            class="form-control form-control-sm text-xs w-100" />
+                                                    </td>
+                                                </tr>
+                                            @else
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <input class="text-lg" type="checkbox"
+                                                            wire:model.live="selectedCharges.{{ $list->ID }}" />
+                                                    </td>
+                                                    <td>{{ date('m/d/Y', strtotime($list->DATE)) }} </td>
+                                                    <td>{{ $list->CODE }}</td>
+                                                    <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
+                                                    <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }}
+                                                    </td>
+                                                    <td>
+                                                        <input type="number"
+                                                            wire:model="paymentAmounts.{{ $list->ID }}"
+                                                            class="form-control form-control-xs text-xs w-100" />
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         @endforeach
                                     </tbody>
                                 </table>

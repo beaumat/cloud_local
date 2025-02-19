@@ -591,26 +591,41 @@ class BillingServices
     public function getBillListViaBillPaymentExistOnPhilealth(int $VENDOR_ID, int $LOCATION_ID, int $CHECK_ID, int $PF_PERIOD_ID)
     {
 
-
-        // add on
         $result = Bill::query()
             ->select([
                 'bill.ID',
                 'bill.DATE',
                 'bill.CODE',
                 'bill.AMOUNT',
-                'bill.BALANCE_DUE'
+                'bill.BALANCE_DUE',
+                'ph.DATE_ADMITTED',
+                'ph.DATE_DISCHARGED',
+                'ph.P1_TOTAL',
+                'pp.RECEIPT_NO as OR_NO',
+                'pp.DATE as OR_DATE',
+                'pp.DATE_FROM as DT_PERIOD_FORM',
+                'pp.DATE_TO as DT_PERIOD_TO',
+                'c.NAME as PATIENT_NAME',
+                DB::raw(" (select  GROUP_CONCAT(hemodialysis.DATE ORDER BY hemodialysis.DATE ASC SEPARATOR ', ') from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = ph.CONTACT_ID and hemodialysis.DATE between ph.DATE_ADMITTED and ph.DATE_DISCHARGED) as CONFINE_PERIOD "),
             ])
+            ->join('philhealth_prof_fee as pf', 'pf.BILL_ID', '=', 'bill.ID')
+            ->join('philhealth as ph', 'ph.ID', '=', 'pf.PHIC_ID')
+            ->join('payment_invoices as pv', 'pv.INVOICE_ID', '=', 'ph.INVOICE_ID')
+            ->join('payment as p', 'p.ID', '=', 'pv.PAYMENT_ID')
+            ->join('payment_period as pp', 'pp.ID', '=', 'p.PAYMENT_PERIOD_ID')
+            ->join('contact as c', 'c.ID', '=', 'ph.CONTACT_ID')
             ->whereNotExists(function ($query) use (&$CHECK_ID) {
                 $query->select(DB::raw(1))
                     ->from('check_bills as b')
                     ->whereRaw('b.BILL_ID = bill.ID')
                     ->where('b.CHECK_ID', '=', $CHECK_ID);
             })
-            ->where('bill.VENDOR_ID', $VENDOR_ID)
-            ->where('bill.LOCATION_ID', $LOCATION_ID)
+            ->where('p.PAYMENT_PERIOD_ID', '=', $PF_PERIOD_ID)
+            ->where('bill.VENDOR_ID', '=', $VENDOR_ID)
+            ->where('bill.LOCATION_ID', '=', $LOCATION_ID)
             ->where('bill.BALANCE_DUE', '>', 0)
             ->get();
+
 
         return $result;
     }

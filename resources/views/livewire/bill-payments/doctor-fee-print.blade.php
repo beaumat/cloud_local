@@ -18,13 +18,16 @@
                     @endif
 
                 </div>
+                <div class="col-md-12 text-center">
+                    <div class="text-lg font-weight-bold pb-4">Date Period : {{ $PERIOD }}</div>
+                </div>
                 <div class="col-md-12">
                     <table class="w-100 " border="1">
                         <thead class="">
                             <tr>
                                 <th class="col-1 h5 text-center">#</th>
                                 <th class="col-3 h5">PATIENT NAME</th>
-                                <th class="col-2 text-center h5">DATE ADMIITED</th>
+                                <th class="col-2 text-center h5">DATE ADMITTED</th>
                                 <th class="col-2 text-center h5">DATE DISCHARGED</th>
                                 <th class="col-1 text-center h5">NUMBER OF TREATMENT</th>
                                 <th class="col-2 text-center h5">TOTAL</th>

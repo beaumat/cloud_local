@@ -8,7 +8,6 @@ use App\Services\BillPaymentServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
-use App\Services\ObjectServices;
 use App\Services\PaymentPeriodServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
@@ -38,7 +37,7 @@ class BillPaymentForm extends Component
     public int $ACCOUNTS_PAYABLE_ID = 21;
     public bool $ppRefresh = false;
     public int $PF_PERIOD_ID;
-    public bool $SAME_AMOUNT  = true;
+    public bool $SAME_AMOUNT = true;
     public $locationList = [];
     public bool $Modify;
     public $contactList = [];
@@ -117,7 +116,7 @@ class BillPaymentForm extends Component
     {
 
         $this->paymentPeriodList = $this->paymentPeriodServices->prPFList($this->LOCATION_ID ?? 0);
-        $this->ppRefresh =  $this->ppRefresh  ? false : true;
+        $this->ppRefresh = $this->ppRefresh ? false : true;
     }
     public function getInfo($data)
     {
@@ -132,7 +131,7 @@ class BillPaymentForm extends Component
         $this->STATUS = $data->STATUS;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
         $this->Modify = false;
-        $this->IS_DOCTOR = (bool)  $this->contactServices->isDoctor($this->PAY_TO_ID);
+        $this->IS_DOCTOR = (bool) $this->contactServices->isDoctor($this->PAY_TO_ID);
         $this->PF_PERIOD_ID = $data->PF_PERIOD_ID ?? 0;
     }
     public function getModify()
@@ -154,21 +153,21 @@ class BillPaymentForm extends Component
     {
         $this->validate(
             [
-                'BANK_ACCOUNT_ID'   => 'required|not_in:0|exists:account,id',
-                'PAY_TO_ID'         => 'required|not_in:0|exists:contact,id',
-                'CODE'              => 'nullable|max:20|unique:check,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'DATE'              => 'required|date',
-                'LOCATION_ID'       => 'required|exists:location,id',
+                'BANK_ACCOUNT_ID' => 'required|not_in:0|exists:account,id',
+                'PAY_TO_ID' => 'required|not_in:0|exists:contact,id',
+                'CODE' => 'nullable|max:20|unique:check,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'DATE' => 'required|date',
+                'LOCATION_ID' => 'required|exists:location,id',
 
 
             ],
             [],
             [
-                'PAY_TO_ID'         => 'Pay To',
-                'BANK_ACCOUNT_ID'   => 'Bank Account',
-                'DATE'              => 'Date',
-                'LOCATION_ID'       => 'Location',
-                'CODE'              => 'Reference No.',
+                'PAY_TO_ID' => 'Pay To',
+                'BANK_ACCOUNT_ID' => 'Bank Account',
+                'DATE' => 'Date',
+                'LOCATION_ID' => 'Location',
+                'CODE' => 'Reference No.',
             ]
         );
 
@@ -185,7 +184,7 @@ class BillPaymentForm extends Component
                     $this->NOTES,
                     $this->ACCOUNTS_PAYABLE_ID
                 );
-                if ($this->PF_PERIOD_ID  > 0) {
+                if ($this->PF_PERIOD_ID > 0) {
                     $this->billPaymentServices->UpdatePF_PERIOD_ID($this->ID, $this->PF_PERIOD_ID);
                 }
                 DB::commit();
@@ -193,7 +192,7 @@ class BillPaymentForm extends Component
             } else {
 
                 DB::beginTransaction();
-                $data =  $this->billPaymentServices->Get($this->ID);
+                $data = $this->billPaymentServices->Get($this->ID);
                 if ($data) {
                     if ($this->STATUS == 16) {
                         $JNO = $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $this->ID);
@@ -206,7 +205,7 @@ class BillPaymentForm extends Component
                     }
 
                     $this->billPaymentServices->Update($this->ID, $this->CODE, $this->BANK_ACCOUNT_ID, $this->PAY_TO_ID, $this->LOCATION_ID, $this->AMOUNT, $this->NOTES);
-                    if ($this->PF_PERIOD_ID  > 0) {
+                    if ($this->PF_PERIOD_ID > 0) {
                         $this->billPaymentServices->UpdatePF_PERIOD_ID($this->ID, $this->PF_PERIOD_ID);
                     }
 
@@ -236,8 +235,8 @@ class BillPaymentForm extends Component
             DB::beginTransaction();
             $check = $this->billPaymentServices->object_type_check;
             $checkbills = $this->billPaymentServices->object_type_check_bills;
-            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($check, $this->ID);
-            if ($JOURNAL_NO  == 0) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($check, $this->ID);
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($check, $this->ID) + 1;
             }
 
@@ -317,7 +316,9 @@ class BillPaymentForm extends Component
             $this->dispatch('open-journal', result: $data);
         }
     }
-    public function DoctorPrint() {}
+    public function DoctorPrint()
+    {
+    }
     #[On('reload_bill_list')]
     public function getNewAmount()
     {
@@ -328,8 +329,8 @@ class BillPaymentForm extends Component
     }
     public function updatedPayToId()
     {
-        $this->ppRefresh =  $this->ppRefresh  ? false : true;
-        $this->IS_DOCTOR = (bool)  $this->contactServices->isDoctor($this->PAY_TO_ID);
+        $this->ppRefresh = $this->ppRefresh ? false : true;
+        $this->IS_DOCTOR = (bool) $this->contactServices->isDoctor($this->PAY_TO_ID);
         if ($this->IS_DOCTOR) {
             $this->updatedLocationid();
         }

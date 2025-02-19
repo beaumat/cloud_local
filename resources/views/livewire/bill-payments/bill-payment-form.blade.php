@@ -53,9 +53,6 @@
                                                 @if ($IS_DOCTOR == true)
                                                     <div class="col-md-12">
                                                         @if ($Modify && $AMOUNT_APPLIED == 0)
-
-
-
                                                             @if ($ppRefresh)
                                                                 <livewire:select-option-type name="PR_PERIOD_ID11"
                                                                     titleName="Payment Period" :options="$paymentPeriodList"
@@ -179,19 +176,19 @@
                                                         <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                                     </button>
 
-                                                    <a target="_BLANK"
-                                                        href="{{ route('vendorsbill_payment_print', ['id' => $ID]) }}"
-                                                        type="button" class="btn btn-sm btn-dark">
-                                                        <i class="fa fa-print" aria-hidden="true"></i> Print Form
-                                                    </a>
 
 
                                                     @if ($IS_DOCTOR)
                                                         <a target="_BLANK"
                                                             href="{{ route('vendorsbill_payment_doctor', ['id' => $ID]) }}"
-                                                            type="button" class="btn btn-sm btn-secondary">
-                                                            <i class="fa fa-print" aria-hidden="true"></i> Print Doctor
-                                                            Form
+                                                            type="button" class="btn btn-sm btn-dark">
+                                                            <i class="fa fa-print" aria-hidden="true"></i> Print
+                                                        </a>
+                                                    @else
+                                                        <a target="_BLANK"
+                                                            href="{{ route('vendorsbill_payment_print', ['id' => $ID]) }}"
+                                                            type="button" class="btn btn-sm btn-dark">
+                                                            <i class="fa fa-print" aria-hidden="true"></i> Print
                                                         </a>
                                                     @endif
                                                 @endcan
@@ -237,7 +234,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'SAME_AMOUNT' => $SAME_AMOUNT,'PF_PERIOD_ID' => $PF_PERIOD_ID])
+                                            @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'SAME_AMOUNT' => $SAME_AMOUNT, 'PF_PERIOD_ID' => $PF_PERIOD_ID])
                                         </div>
                                     </div>
                                 </div>
