@@ -33,7 +33,12 @@
 
                             </div>
                             <div class="col-md-2">
-
+                                @if (!$isDaily)
+                                    @can('phic-quick-create-advance')
+                                        <livewire:checkbox-input name="IS_EXISTS" titleName="Not Exists"
+                                            wire:model.live='showExists' :isDisabled=false />
+                                    @endcan
+                                @endif
                             </div>
                         </div>
                         <table class="table table-sm table-bordered table-hover mt-2">

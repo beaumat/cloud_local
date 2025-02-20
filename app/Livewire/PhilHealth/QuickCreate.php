@@ -48,6 +48,7 @@ class QuickCreate extends Component
     private string $FIRST_CASE_RATE = '';
     private string $SECOND_CASE_RATE = '';
     public bool $PHIC_FORM_MODIFY = false;
+    public bool $showExists = true;
     public function boot(
         LocationServices $locationServices,
         HemoServices $hemoServices,
@@ -252,7 +253,8 @@ class QuickCreate extends Component
                     $this->DATE_FROM,
                     $this->DATE_TO,
                     $this->LOCATION_ID,
-                    $this->search
+                    $this->search,
+                    $this->showExists
                 );
             }
 
