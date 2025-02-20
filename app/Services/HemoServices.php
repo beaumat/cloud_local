@@ -16,7 +16,7 @@ class HemoServices
 
     public $object_type_hemo = 95;
     public $object_type_hemo_item = 109;
-    public $dialyMode  = false;
+    public $dialyMode = false;
     private $object;
     private $user;
     private $systemSettingServices;
@@ -48,7 +48,7 @@ class HemoServices
         $this->itemServices = $itemServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->accountServices =  $accountServices;
+        $this->accountServices = $accountServices;
     }
 
     public function Get(int $ID)
@@ -77,7 +77,7 @@ class HemoServices
     public function GetDoctorOrder($ID): string
     {
 
-        return (string)  Hemodialysis::where('ID', $ID)->first()->DOCTOR_ORDER ?? '';
+        return (string) Hemodialysis::where('ID', $ID)->first()->DOCTOR_ORDER ?? '';
     }
     public function GetHemoID($DATE, $PATIENT_ID, $LOCATION_ID): int
     {
@@ -87,7 +87,7 @@ class HemoServices
             ->first();
 
         if ($dataRecord) {
-            return  (int)  $dataRecord->ID;
+            return (int) $dataRecord->ID;
         }
 
         return 0;
@@ -141,7 +141,7 @@ class HemoServices
                             ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 'sc.ID')
                             ->where('sc.DATE', $DATE)
                             ->where('sc.PATIENT_ID', $CONTACT_ID)
-                            ->where('sc.LOCATION_ID',  $LOCATION_ID)
+                            ->where('sc.LOCATION_ID', $LOCATION_ID)
                             ->where('sc.USE_PHIC', '=', 0)
                             ->where('sci.ITEM_ID', 2);
                     })
@@ -149,7 +149,7 @@ class HemoServices
                     ->TIME_START;
             }
 
-            $result =  Hemodialysis::query()
+            $result = Hemodialysis::query()
                 ->select([
                     'hemodialysis.TIME_START',
                     'hemodialysis.TIME_END'
@@ -164,7 +164,7 @@ class HemoServices
                         ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 'sc.ID')
                         ->where('sc.DATE', $DATE)
                         ->where('sc.PATIENT_ID', $CONTACT_ID)
-                        ->where('sc.LOCATION_ID',  $LOCATION_ID)
+                        ->where('sc.LOCATION_ID', $LOCATION_ID)
                         ->where('sc.USE_PHIC', '=', 0)
                         ->where('sci.ITEM_ID', 2);
                 })
@@ -229,10 +229,10 @@ class HemoServices
                 $lastTime = $this->getTime(false, $lastDate, $CONTACT_ID, $LOCATION_ID);
 
                 return [
-                    'FIRST_DATE'    => $firstDate,
-                    'FIRST_TIME'    => $firstTime,
-                    'LAST_DATE'     => $lastDate,
-                    'LAST_TIME'     => $lastTime
+                    'FIRST_DATE' => $firstDate,
+                    'FIRST_TIME' => $firstTime,
+                    'LAST_DATE' => $lastDate,
+                    'LAST_TIME' => $lastTime
                 ];
             }
         }
@@ -246,7 +246,7 @@ class HemoServices
     }
     public function HemoStatus()
     {
-        $result =  DB::table('hemo_status')
+        $result = DB::table('hemo_status')
             ->select(['ID', 'DESCRIPTION'])
             ->whereNotIn('ID', ['4'])
             ->get();
@@ -283,12 +283,13 @@ class HemoServices
                     ->where('sc.USE_PHIC', '=', 0)
                     ->where('sci.ITEM_ID', '=', 2);
             })
-            ->whereNotExists(function ($query) {
+            ->whereNotExists(function ($query) use (&$DT_FROM, &$DT_TO) {
                 $query->select(DB::raw(1))
                     ->from('philhealth as l')
                     ->whereColumn('l.CONTACT_ID', 'hemodialysis.CUSTOMER_ID')
                     ->whereColumn('l.LOCATION_ID', 'hemodialysis.LOCATION_ID')
-                    ->whereColumn('l.DATE_DISCHARGED', '>=', 'hemodialysis.DATE');
+                    ->where('l.DATE_ADMITTED', '>=', $DT_FROM)
+                    ->where('l.DATE_DISCHARGED', '<=', $DT_TO);
             })
             ->first();
 
@@ -364,20 +365,20 @@ class HemoServices
                 $lastTime = $this->getTime(false, $lastDate, $CONTACT_ID, $LOCATION_ID);
 
                 return [
-                    'FIRST_DATE'    => $firstDate,
-                    'FIRST_TIME'    => $firstTime,
-                    'LAST_DATE'     => $lastDate,
-                    'LAST_TIME'     => $lastTime
+                    'FIRST_DATE' => $firstDate,
+                    'FIRST_TIME' => $firstTime,
+                    'LAST_DATE' => $lastDate,
+                    'LAST_TIME' => $lastTime
                 ];
             }
         }
 
 
         return [
-            'FIRST_DATE'    => '',
-            'FIRST_TIME'    => '',
-            'LAST_DATE'     => '',
-            'LAST_TIME'     => ''
+            'FIRST_DATE' => '',
+            'FIRST_TIME' => '',
+            'LAST_DATE' => '',
+            'LAST_TIME' => ''
         ];
     }
 
@@ -512,17 +513,17 @@ class HemoServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Hemodialysis::create([
-            'ID'                => $ID,
-            'RECORDED_ON'       => $this->dateServices->Now(),
-            'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'              => $DATE,
-            'CUSTOMER_ID'       => $CUSTOMER_ID,
-            'LOCATION_ID'       => $LOCATION_ID,
-            'USER_ID'           => $this->user->UserId(),
-            'NO_OF_TREATMENT'   => $NO_OF_TREATMENT,
-            'MACHINE_NO'        => $MACHINE_NO,
-            'STATUS_ID'         => 1,
-            'STATUS_DATE'       =>  $this->dateServices->Now(),
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE' => $DATE,
+            'CUSTOMER_ID' => $CUSTOMER_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+            'USER_ID' => $this->user->UserId(),
+            'NO_OF_TREATMENT' => $NO_OF_TREATMENT,
+            'MACHINE_NO' => $MACHINE_NO,
+            'STATUS_ID' => 1,
+            'STATUS_DATE' => $this->dateServices->Now(),
         ]);
 
         return $ID;
@@ -550,7 +551,7 @@ class HemoServices
     public function GetOtherDetailsDefault(int $HEMO_ID, int $CUSTOMER_ID, string $DATE, int $LOCATION_ID)
     {
         //Get Previous  
-        $data =  $this->GetPreviousTreatment($HEMO_ID, $CUSTOMER_ID, $DATE, $LOCATION_ID);
+        $data = $this->GetPreviousTreatment($HEMO_ID, $CUSTOMER_ID, $DATE, $LOCATION_ID);
 
         if ($data) {
             Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)
@@ -558,19 +559,19 @@ class HemoServices
                 ->where('LOCATION_ID', $LOCATION_ID)
                 ->where('ID', $HEMO_ID)
                 ->update([
-                    'SE_DETAILS'        => $data->SE_DETAILS_NEXT ?? null,
-                    'SE_DETAILS_NEXT'   => '',
-                    'SO_DETAILS'        => $data->ORDER_USE_NEXT == true ? $data->SO_DETAILS ?? null : null,
-                    'BFR'               => $data->BFR ?? null,
-                    'DFR'               => $data->DFR ?? null,
-                    'DURATION'          => $data->DURATION ?? null,
-                    'DIALYZER'          => $data->DIALYZER ?? null,
-                    'HEPARIN'           => $data->HEPARIN ?? null,
-                    'REUSE_NO'          => $data->REUSE_NEXT ?? null,
-                    'FLUSHING'          => $data->FLUSHING ?? null,
-                    'DIALSATE_N'        => $data->DIALSATE_N ?? null,
-                    'DIALSATE_K'        => $data->DIALSATE_K ?? null,
-                    'DIALSATE_C'        => $data->DIALSATE_C ?? null
+                    'SE_DETAILS' => $data->SE_DETAILS_NEXT ?? null,
+                    'SE_DETAILS_NEXT' => '',
+                    'SO_DETAILS' => $data->ORDER_USE_NEXT == true ? $data->SO_DETAILS ?? null : null,
+                    'BFR' => $data->BFR ?? null,
+                    'DFR' => $data->DFR ?? null,
+                    'DURATION' => $data->DURATION ?? null,
+                    'DIALYZER' => $data->DIALYZER ?? null,
+                    'HEPARIN' => $data->HEPARIN ?? null,
+                    'REUSE_NO' => $data->REUSE_NEXT ?? null,
+                    'FLUSHING' => $data->FLUSHING ?? null,
+                    'DIALSATE_N' => $data->DIALSATE_N ?? null,
+                    'DIALSATE_K' => $data->DIALSATE_K ?? null,
+                    'DIALSATE_C' => $data->DIALSATE_C ?? null
                 ]);
         }
     }
@@ -588,21 +589,21 @@ class HemoServices
     {
         Hemodialysis::where('ID', $ID)
             ->update([
-                'PRE_WEIGHT'            => $PRE_WEIGHT,
-                'PRE_BLOOD_PRESSURE'    => $PRE_BLOOD_PRESSURE,
-                'PRE_BLOOD_PRESSURE2'   => $PRE_BLOOD_PRESSURE2,
-                'PRE_HEART_RATE'        => $PRE_HEART_RATE,
-                'PRE_O2_SATURATION'     => $PRE_O2_SATURATION,
-                'PRE_TEMPERATURE'       => $PRE_TEMPERATURE,
-                'POST_WEIGHT'           => $POST_WEIGHT,
-                'POST_BLOOD_PRESSURE'   => $POST_BLOOD_PRESSURE,
-                'POST_BLOOD_PRESSURE2'  => $POST_BLOOD_PRESSURE2,
-                'POST_HEART_RATE'       => $POST_HEART_RATE,
-                'POST_O2_SATURATION'    => $POST_O2_SATURATION,
-                'POST_TEMPERATURE'      => $POST_TEMPERATURE,
-                'TIME_START'            => $TIME_START != "" ? $TIME_START : null,
-                'TIME_END'              => $TIME_END != "" ? $TIME_END : null,
-                'IS_INCOMPLETE'         => $IS_INCOMPLETE
+                'PRE_WEIGHT' => $PRE_WEIGHT,
+                'PRE_BLOOD_PRESSURE' => $PRE_BLOOD_PRESSURE,
+                'PRE_BLOOD_PRESSURE2' => $PRE_BLOOD_PRESSURE2,
+                'PRE_HEART_RATE' => $PRE_HEART_RATE,
+                'PRE_O2_SATURATION' => $PRE_O2_SATURATION,
+                'PRE_TEMPERATURE' => $PRE_TEMPERATURE,
+                'POST_WEIGHT' => $POST_WEIGHT,
+                'POST_BLOOD_PRESSURE' => $POST_BLOOD_PRESSURE,
+                'POST_BLOOD_PRESSURE2' => $POST_BLOOD_PRESSURE2,
+                'POST_HEART_RATE' => $POST_HEART_RATE,
+                'POST_O2_SATURATION' => $POST_O2_SATURATION,
+                'POST_TEMPERATURE' => $POST_TEMPERATURE,
+                'TIME_START' => $TIME_START != "" ? $TIME_START : null,
+                'TIME_END' => $TIME_END != "" ? $TIME_END : null,
+                'IS_INCOMPLETE' => $IS_INCOMPLETE
 
             ]);
     }
@@ -613,110 +614,110 @@ class HemoServices
                 'EMPLOYEE_ID' => $EMPLOYEE_ID > 0 ? $EMPLOYEE_ID : null,
             ]);
     }
-    public function SaveOthers(int $ID, string $SE_DETAILS, string $SO_DETAILS, int $BFR, int $DFR, int $DURATION, string $DIALYZER, string  $DIALSATE_N, string $DIALSATE_K, string $DIALSATE_C, bool $DETAILS_USE_NEXT, bool $ORDER_USE_NEXT, string $SE_DETAILS_NEXT, string $HEPARIN, string $REUSE_NO, string $REUSE_NEXT, string $FLUSHING, string $UF_GOAL, bool $DB_STANDARD_HCOA, bool $DB_ACID, bool $SC_MACHINE_TEST, bool $SC_SECURED_CONNECTIONS, bool $SC_SALINE_LINE_DOUBLE_CLAMP, string $SC_CONDUCTIVITY, string $SC_DIALYSATE_TEMP, bool $SC_RESIDUAL_TEST_NEGATIVE, bool $AT_FISTULA, bool $AT_GRAFT, bool $AT_RIGHT, bool $AT_LEFT, bool $B_STRONG, bool $B_WEEK, bool $B_ABSENT, bool $T_STRONG, bool $T_WEAK, bool $T_ABSENT, bool $H_PRESENT, bool $H_ABSENT, string $H_OTHER_NOTES, bool $CVC_SUBCATH, bool $CVC_JUGCATH, bool $CVC_FEMCATCH, bool $CVC_PERMACATH, bool $CVC_RIGHT, bool $CVC_LEFT, bool $CVC_GOOD_FLOW_A, bool $CVC_GOOD_FLOW_V, bool $CVC_W_RESISTANCE_A, bool $CVC_W_RESISTANCE_V, bool $CVC_CLOTTED_A, bool $CVC_CLOTTED_V, bool $PRE_AMBULATORY, bool $PRE_AMBULATORY_W_ASSIT, bool $PRE_WHEEL_CHAIR, bool $PRE_CONSCIOUS, bool $PRE_COHERENT, bool $PRE_DISORIENTED, bool $PRE_DROWSY, bool $PRE_CLEAR, bool $PRE_CRACKLES, bool $PRE_RHONCHI, bool $PRE_WHEEZES, bool $PRE_RALES, bool $PRE_DISTENDED_JUGULAR_VIEW, bool $PRE_ASCITES, bool $PRE_EDEMA, bool $PRE_LOCATION, string $PRE_LOCATION_NOTES, bool $PRE_DEPTH, string $PRE_DEPTH_NOTES, bool $PRE_REGULAR, bool $PRE_IRREGULAR, bool $POST_AMBULATORY, bool $POST_AMBULATORY_W_ASSIT, bool $POST_WHEEL_CHAIR, bool $POST_CONSCIOUS, bool $POST_COHERENT, bool $POST_DISORIENTED, bool $POST_DROWSY, bool $POST_CLEAR, bool $POST_CRACKLES, bool $POST_RHONCHI, bool $POST_WHEEZES, bool $POST_RALES, bool $POST_DISTENDED_JUGULAR_VIEW, bool $POST_ASCITES, bool $POST_EDEMA, bool $POST_LOCATION, string $POST_LOCATION_NOTES, bool $POST_DEPTH, string $POST_DEPTH_NOTES, bool $POST_REGULAR, bool $POST_IRREGULAR, int $MACHINE_NO)
+    public function SaveOthers(int $ID, string $SE_DETAILS, string $SO_DETAILS, int $BFR, int $DFR, int $DURATION, string $DIALYZER, string $DIALSATE_N, string $DIALSATE_K, string $DIALSATE_C, bool $DETAILS_USE_NEXT, bool $ORDER_USE_NEXT, string $SE_DETAILS_NEXT, string $HEPARIN, string $REUSE_NO, string $REUSE_NEXT, string $FLUSHING, string $UF_GOAL, bool $DB_STANDARD_HCOA, bool $DB_ACID, bool $SC_MACHINE_TEST, bool $SC_SECURED_CONNECTIONS, bool $SC_SALINE_LINE_DOUBLE_CLAMP, string $SC_CONDUCTIVITY, string $SC_DIALYSATE_TEMP, bool $SC_RESIDUAL_TEST_NEGATIVE, bool $AT_FISTULA, bool $AT_GRAFT, bool $AT_RIGHT, bool $AT_LEFT, bool $B_STRONG, bool $B_WEEK, bool $B_ABSENT, bool $T_STRONG, bool $T_WEAK, bool $T_ABSENT, bool $H_PRESENT, bool $H_ABSENT, string $H_OTHER_NOTES, bool $CVC_SUBCATH, bool $CVC_JUGCATH, bool $CVC_FEMCATCH, bool $CVC_PERMACATH, bool $CVC_RIGHT, bool $CVC_LEFT, bool $CVC_GOOD_FLOW_A, bool $CVC_GOOD_FLOW_V, bool $CVC_W_RESISTANCE_A, bool $CVC_W_RESISTANCE_V, bool $CVC_CLOTTED_A, bool $CVC_CLOTTED_V, bool $PRE_AMBULATORY, bool $PRE_AMBULATORY_W_ASSIT, bool $PRE_WHEEL_CHAIR, bool $PRE_CONSCIOUS, bool $PRE_COHERENT, bool $PRE_DISORIENTED, bool $PRE_DROWSY, bool $PRE_CLEAR, bool $PRE_CRACKLES, bool $PRE_RHONCHI, bool $PRE_WHEEZES, bool $PRE_RALES, bool $PRE_DISTENDED_JUGULAR_VIEW, bool $PRE_ASCITES, bool $PRE_EDEMA, bool $PRE_LOCATION, string $PRE_LOCATION_NOTES, bool $PRE_DEPTH, string $PRE_DEPTH_NOTES, bool $PRE_REGULAR, bool $PRE_IRREGULAR, bool $POST_AMBULATORY, bool $POST_AMBULATORY_W_ASSIT, bool $POST_WHEEL_CHAIR, bool $POST_CONSCIOUS, bool $POST_COHERENT, bool $POST_DISORIENTED, bool $POST_DROWSY, bool $POST_CLEAR, bool $POST_CRACKLES, bool $POST_RHONCHI, bool $POST_WHEEZES, bool $POST_RALES, bool $POST_DISTENDED_JUGULAR_VIEW, bool $POST_ASCITES, bool $POST_EDEMA, bool $POST_LOCATION, string $POST_LOCATION_NOTES, bool $POST_DEPTH, string $POST_DEPTH_NOTES, bool $POST_REGULAR, bool $POST_IRREGULAR, int $MACHINE_NO)
     {
         Hemodialysis::where('ID', $ID)
             ->update([
 
-                'PRE_AMBULATORY'            => $PRE_AMBULATORY,
-                'PRE_AMBULATORY_W_ASSIT'    => $PRE_AMBULATORY_W_ASSIT,
-                'PRE_WHEEL_CHAIR'           => $PRE_WHEEL_CHAIR,
-                'PRE_CONSCIOUS'             => $PRE_CONSCIOUS,
-                'PRE_COHERENT'              => $PRE_COHERENT,
-                'PRE_DISORIENTED'           => $PRE_DISORIENTED,
-                'PRE_DROWSY'                => $PRE_DROWSY,
-                'PRE_CLEAR'                 => $PRE_CLEAR,
-                'PRE_CRACKLES'              => $PRE_CRACKLES,
-                'PRE_RHONCHI'               => $PRE_RHONCHI,
-                'PRE_WHEEZES'               => $PRE_WHEEZES,
-                'PRE_RALES'                 => $PRE_RALES,
+                'PRE_AMBULATORY' => $PRE_AMBULATORY,
+                'PRE_AMBULATORY_W_ASSIT' => $PRE_AMBULATORY_W_ASSIT,
+                'PRE_WHEEL_CHAIR' => $PRE_WHEEL_CHAIR,
+                'PRE_CONSCIOUS' => $PRE_CONSCIOUS,
+                'PRE_COHERENT' => $PRE_COHERENT,
+                'PRE_DISORIENTED' => $PRE_DISORIENTED,
+                'PRE_DROWSY' => $PRE_DROWSY,
+                'PRE_CLEAR' => $PRE_CLEAR,
+                'PRE_CRACKLES' => $PRE_CRACKLES,
+                'PRE_RHONCHI' => $PRE_RHONCHI,
+                'PRE_WHEEZES' => $PRE_WHEEZES,
+                'PRE_RALES' => $PRE_RALES,
                 'PRE_DISTENDED_JUGULAR_VIEW' => $PRE_DISTENDED_JUGULAR_VIEW,
-                'PRE_ASCITES'               => $PRE_ASCITES,
-                'PRE_EDEMA'                 => $PRE_EDEMA,
-                'PRE_LOCATION'              => $PRE_LOCATION,
-                'PRE_LOCATION_NOTES'        => $PRE_LOCATION_NOTES,
-                'PRE_DEPTH'                 => $PRE_DEPTH,
-                'PRE_DEPTH_NOTES'           => $PRE_DEPTH_NOTES,
-                'PRE_REGULAR'               => $PRE_REGULAR,
-                'PRE_IRREGULAR'             => $PRE_IRREGULAR,
-                'POST_AMBULATORY'            => $POST_AMBULATORY,
-                'POST_AMBULATORY_W_ASSIT'    => $POST_AMBULATORY_W_ASSIT,
-                'POST_WHEEL_CHAIR'           => $POST_WHEEL_CHAIR,
-                'POST_CONSCIOUS'             => $POST_CONSCIOUS,
-                'POST_COHERENT'              => $POST_COHERENT,
-                'POST_DISORIENTED'           => $POST_DISORIENTED,
-                'POST_DROWSY'                => $POST_DROWSY,
-                'POST_CLEAR'                 => $POST_CLEAR,
-                'POST_CRACKLES'              => $POST_CRACKLES,
-                'POST_RHONCHI'               => $POST_RHONCHI,
-                'POST_WHEEZES'               => $POST_WHEEZES,
-                'POST_RALES'                 => $POST_RALES,
+                'PRE_ASCITES' => $PRE_ASCITES,
+                'PRE_EDEMA' => $PRE_EDEMA,
+                'PRE_LOCATION' => $PRE_LOCATION,
+                'PRE_LOCATION_NOTES' => $PRE_LOCATION_NOTES,
+                'PRE_DEPTH' => $PRE_DEPTH,
+                'PRE_DEPTH_NOTES' => $PRE_DEPTH_NOTES,
+                'PRE_REGULAR' => $PRE_REGULAR,
+                'PRE_IRREGULAR' => $PRE_IRREGULAR,
+                'POST_AMBULATORY' => $POST_AMBULATORY,
+                'POST_AMBULATORY_W_ASSIT' => $POST_AMBULATORY_W_ASSIT,
+                'POST_WHEEL_CHAIR' => $POST_WHEEL_CHAIR,
+                'POST_CONSCIOUS' => $POST_CONSCIOUS,
+                'POST_COHERENT' => $POST_COHERENT,
+                'POST_DISORIENTED' => $POST_DISORIENTED,
+                'POST_DROWSY' => $POST_DROWSY,
+                'POST_CLEAR' => $POST_CLEAR,
+                'POST_CRACKLES' => $POST_CRACKLES,
+                'POST_RHONCHI' => $POST_RHONCHI,
+                'POST_WHEEZES' => $POST_WHEEZES,
+                'POST_RALES' => $POST_RALES,
                 'POST_DISTENDED_JUGULAR_VIEW' => $POST_DISTENDED_JUGULAR_VIEW,
-                'POST_ASCITES'               => $POST_ASCITES,
-                'POST_EDEMA'                 => $POST_EDEMA,
-                'POST_LOCATION'              => $POST_LOCATION,
-                'POST_LOCATION_NOTES'        => $POST_LOCATION_NOTES,
-                'POST_DEPTH'                 => $POST_DEPTH,
-                'POST_DEPTH_NOTES'           => $POST_DEPTH_NOTES,
-                'POST_REGULAR'               => $POST_REGULAR,
-                'POST_IRREGULAR'             => $POST_IRREGULAR,
-                'CVC_CLOTTED_V'             => $CVC_CLOTTED_V,
-                'CVC_CLOTTED_A'             => $CVC_CLOTTED_A,
-                'CVC_W_RESISTANCE_V'        => $CVC_W_RESISTANCE_V,
-                'CVC_W_RESISTANCE_A'        => $CVC_W_RESISTANCE_A,
-                'CVC_GOOD_FLOW_V'           => $CVC_GOOD_FLOW_V,
-                'CVC_GOOD_FLOW_A'           => $CVC_GOOD_FLOW_A,
-                'CVC_LEFT'                  => $CVC_LEFT,
-                'CVC_RIGHT'                 => $CVC_RIGHT,
-                'CVC_PERMACATH'             => $CVC_PERMACATH,
-                'CVC_FEMCATCH'              => $CVC_FEMCATCH,
-                'CVC_JUGCATH'               => $CVC_JUGCATH,
-                'CVC_SUBCATH'               => $CVC_SUBCATH,
-                'AT_FISTULA'                => $AT_FISTULA,
-                'AT_GRAFT'                  => $AT_GRAFT,
-                'AT_RIGHT'                  => $AT_RIGHT,
-                'AT_LEFT'                   => $AT_LEFT,
-                'B_STRONG'                  => $B_STRONG,
-                'B_WEEK'                    => $B_WEEK,
-                'B_ABSENT'                  => $B_ABSENT,
-                'T_STRONG'                  => $T_STRONG,
-                'T_WEAK'                    => $T_WEAK,
-                'T_ABSENT'                  => $T_ABSENT,
-                'H_PRESENT'                 => $H_PRESENT,
-                'H_ABSENT'                  => $H_ABSENT,
-                'H_OTHER_NOTES'             => $H_OTHER_NOTES,
-                'SE_DETAILS'                => $SE_DETAILS,
-                'SO_DETAILS'                => $SO_DETAILS,
-                'BFR'                       => $BFR,
-                'DFR'                       => $DFR,
-                'DURATION'          => $DURATION,
-                'DIALYZER'          => $DIALYZER,
-                'DIALSATE_N'        => $DIALSATE_N,
-                'DIALSATE_K'        => $DIALSATE_K,
-                'DIALSATE_C'        => $DIALSATE_C,
-                'DETAILS_USE_NEXT'  => $DETAILS_USE_NEXT,
-                'ORDER_USE_NEXT'    => $ORDER_USE_NEXT,
-                'SE_DETAILS_NEXT'   => $SE_DETAILS_NEXT,
-                'HEPARIN'           => $HEPARIN,
-                'REUSE_NO'          => $REUSE_NO,
-                'REUSE_NEXT'        => $REUSE_NEXT,
-                'FLUSHING'          => $FLUSHING,
-                'UF_GOAL'           => $UF_GOAL,
-                'DB_STANDARD_HCOA'  => $DB_STANDARD_HCOA,
-                'DB_ACID'           => $DB_ACID,
-                'SC_MACHINE_TEST'   => $SC_MACHINE_TEST,
-                'SC_SECURED_CONNECTIONS'        => $SC_SECURED_CONNECTIONS,
-                'SC_SALINE_LINE_DOUBLE_CLAMP'   => $SC_SALINE_LINE_DOUBLE_CLAMP,
-                'SC_CONDUCTIVITY'               => $SC_CONDUCTIVITY,
-                'SC_DIALYSATE_TEMP'             => $SC_DIALYSATE_TEMP,
-                'SC_RESIDUAL_TEST_NEGATIVE'     => $SC_RESIDUAL_TEST_NEGATIVE,
-                'MACHINE_NO'                    => $MACHINE_NO
+                'POST_ASCITES' => $POST_ASCITES,
+                'POST_EDEMA' => $POST_EDEMA,
+                'POST_LOCATION' => $POST_LOCATION,
+                'POST_LOCATION_NOTES' => $POST_LOCATION_NOTES,
+                'POST_DEPTH' => $POST_DEPTH,
+                'POST_DEPTH_NOTES' => $POST_DEPTH_NOTES,
+                'POST_REGULAR' => $POST_REGULAR,
+                'POST_IRREGULAR' => $POST_IRREGULAR,
+                'CVC_CLOTTED_V' => $CVC_CLOTTED_V,
+                'CVC_CLOTTED_A' => $CVC_CLOTTED_A,
+                'CVC_W_RESISTANCE_V' => $CVC_W_RESISTANCE_V,
+                'CVC_W_RESISTANCE_A' => $CVC_W_RESISTANCE_A,
+                'CVC_GOOD_FLOW_V' => $CVC_GOOD_FLOW_V,
+                'CVC_GOOD_FLOW_A' => $CVC_GOOD_FLOW_A,
+                'CVC_LEFT' => $CVC_LEFT,
+                'CVC_RIGHT' => $CVC_RIGHT,
+                'CVC_PERMACATH' => $CVC_PERMACATH,
+                'CVC_FEMCATCH' => $CVC_FEMCATCH,
+                'CVC_JUGCATH' => $CVC_JUGCATH,
+                'CVC_SUBCATH' => $CVC_SUBCATH,
+                'AT_FISTULA' => $AT_FISTULA,
+                'AT_GRAFT' => $AT_GRAFT,
+                'AT_RIGHT' => $AT_RIGHT,
+                'AT_LEFT' => $AT_LEFT,
+                'B_STRONG' => $B_STRONG,
+                'B_WEEK' => $B_WEEK,
+                'B_ABSENT' => $B_ABSENT,
+                'T_STRONG' => $T_STRONG,
+                'T_WEAK' => $T_WEAK,
+                'T_ABSENT' => $T_ABSENT,
+                'H_PRESENT' => $H_PRESENT,
+                'H_ABSENT' => $H_ABSENT,
+                'H_OTHER_NOTES' => $H_OTHER_NOTES,
+                'SE_DETAILS' => $SE_DETAILS,
+                'SO_DETAILS' => $SO_DETAILS,
+                'BFR' => $BFR,
+                'DFR' => $DFR,
+                'DURATION' => $DURATION,
+                'DIALYZER' => $DIALYZER,
+                'DIALSATE_N' => $DIALSATE_N,
+                'DIALSATE_K' => $DIALSATE_K,
+                'DIALSATE_C' => $DIALSATE_C,
+                'DETAILS_USE_NEXT' => $DETAILS_USE_NEXT,
+                'ORDER_USE_NEXT' => $ORDER_USE_NEXT,
+                'SE_DETAILS_NEXT' => $SE_DETAILS_NEXT,
+                'HEPARIN' => $HEPARIN,
+                'REUSE_NO' => $REUSE_NO,
+                'REUSE_NEXT' => $REUSE_NEXT,
+                'FLUSHING' => $FLUSHING,
+                'UF_GOAL' => $UF_GOAL,
+                'DB_STANDARD_HCOA' => $DB_STANDARD_HCOA,
+                'DB_ACID' => $DB_ACID,
+                'SC_MACHINE_TEST' => $SC_MACHINE_TEST,
+                'SC_SECURED_CONNECTIONS' => $SC_SECURED_CONNECTIONS,
+                'SC_SALINE_LINE_DOUBLE_CLAMP' => $SC_SALINE_LINE_DOUBLE_CLAMP,
+                'SC_CONDUCTIVITY' => $SC_CONDUCTIVITY,
+                'SC_DIALYSATE_TEMP' => $SC_DIALYSATE_TEMP,
+                'SC_RESIDUAL_TEST_NEGATIVE' => $SC_RESIDUAL_TEST_NEGATIVE,
+                'MACHINE_NO' => $MACHINE_NO
 
             ]);
     }
     public function UpdatedSpecialOrder(int $ID): bool
     {
-        $isBool =  Hemodialysis::where('ID', $ID)->first()->DETAILS_USE_NEXT ?? false;
+        $isBool = Hemodialysis::where('ID', $ID)->first()->DETAILS_USE_NEXT ?? false;
 
         if ($isBool) {
             Hemodialysis::where('ID', $ID)
@@ -731,7 +732,7 @@ class HemoServices
     }
     public function UpdatedStandingOrder(int $ID): bool
     {
-        $isBool =  Hemodialysis::where('ID', $ID)->first()->ORDER_USE_NEXT ?? false;
+        $isBool = Hemodialysis::where('ID', $ID)->first()->ORDER_USE_NEXT ?? false;
 
         if ($isBool) {
             Hemodialysis::where('ID', $ID)->update(['ORDER_USE_NEXT' => false]);
@@ -753,7 +754,7 @@ class HemoServices
         Hemodialysis::where('ID', $ID)
             ->update([
                 'STATUS_ID' => $STATUS,
-                'STATUS_DATE' =>  $this->dateServices->Now(),
+                'STATUS_DATE' => $this->dateServices->Now(),
             ]);
     }
     public function Delete(int $id)
@@ -1026,7 +1027,7 @@ class HemoServices
             ->where('s.USE_PHIC', '=', 0)
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.STATUS_ID', 2)
-            ->where('h.DATE',  $DATE)
+            ->where('h.DATE', $DATE)
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('philhealth as l')
@@ -1043,7 +1044,7 @@ class HemoServices
             ->get();
         return $result;
     }
-    public function QuickFilterByDateRange(string $DATE_FORM, string $DATE_TO, int $LOCATION_ID, $search, bool $exists = true): object
+    public function QuickFilterByDateRange(string $DATE_FORM, string $DATE_TO, int $LOCATION_ID, $search, bool $isExists = false): object
     {
         $result = Contacts::query()
             ->select([
@@ -1067,12 +1068,13 @@ class HemoServices
             ->where('h.LOCATION_ID', $LOCATION_ID)
             ->where('h.STATUS_ID', 2)
             ->whereBetween('h.DATE', [$DATE_FORM, $DATE_TO])
-            ->whereNotExists(function ($query) {
+            ->whereNotExists(function ($query) use (&$DATE_FORM, &$DATE_TO) {
                 $query->select(DB::raw(1))
                     ->from('philhealth as l')
                     ->whereColumn('l.CONTACT_ID', 'h.CUSTOMER_ID')
                     ->whereColumn('l.LOCATION_ID', 'h.LOCATION_ID')
-                    ->whereColumn('l.DATE_DISCHARGED', '>=', 'h.DATE');
+                    ->where('l.DATE_ADMITTED', '>=', $DATE_FORM)
+                    ->where('l.DATE_DISCHARGED', '<=', $DATE_TO);
             })
             ->when($search, function ($query) use (&$search) {
                 $query->where('contact.NAME', 'like', '%' . $search . '%');
@@ -1135,7 +1137,7 @@ class HemoServices
             ->orderBy('h.DATE', 'desc')
             ->first();
 
-        return $result->DATE  ?? '';
+        return $result->DATE ?? '';
     }
     public function getItemTotalUsed(int $ITEM_ID, $LOCATION_ID, $PATIENT_ID, $DATE_TREATMENT): int
     {
@@ -1157,12 +1159,12 @@ class HemoServices
             ->whereBetween('h.DATE', [$newitembyDate, $DATE_TREATMENT])
             ->first();
 
-        return  (int) $result_new->total_count ?? 0;
+        return (int) $result_new->total_count ?? 0;
     }
     public function ItemStoreExists(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT): bool
     {
         try {
-            $IsExist =  HemodialysisItems::where('HEMO_ID', $HEMO_ID)
+            $IsExist = HemodialysisItems::where('HEMO_ID', $HEMO_ID)
                 ->where('ITEM_ID', $ITEM_ID)
                 ->where('QUANTITY', $QUANTITY)
                 ->where('UNIT_ID', $UNIT_ID > 0 ? $UNIT_ID : null)
@@ -1183,21 +1185,21 @@ class HemoServices
         $LINE_NO = (int) $this->getLine($HEMO_ID) + 1;
 
         HemodialysisItems::create([
-            'ID'                    => $ID,
-            'HEMO_ID'               => $HEMO_ID,
-            'LINE_NO'               => $LINE_NO,
-            'ITEM_ID'               => $ITEM_ID,
-            'QUANTITY'              => $QUANTITY,
-            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-            'IS_NEW'                => $IS_NEW,
-            'IS_DEFAULT'            => $IS_DEFAULT,
-            'IS_POST'               => false,
-            'SC_ITEM_ID'            => $SC_ITEM_ID,
-            'IS_CASHIER'            => $IS_CASHIER,
-            'SK_LINE_ID'            => $SK_LINE_ID,
-            'IS_JUSTIFY'            => $IS_JUSTIFY,
-            'JUSTIFY_NOTES'         => $JUSTIFY_NOTES
+            'ID' => $ID,
+            'HEMO_ID' => $HEMO_ID,
+            'LINE_NO' => $LINE_NO,
+            'ITEM_ID' => $ITEM_ID,
+            'QUANTITY' => $QUANTITY,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+            'IS_NEW' => $IS_NEW,
+            'IS_DEFAULT' => $IS_DEFAULT,
+            'IS_POST' => false,
+            'SC_ITEM_ID' => $SC_ITEM_ID,
+            'IS_CASHIER' => $IS_CASHIER,
+            'SK_LINE_ID' => $SK_LINE_ID,
+            'IS_JUSTIFY' => $IS_JUSTIFY,
+            'JUSTIFY_NOTES' => $JUSTIFY_NOTES
         ]);
 
 
@@ -1214,7 +1216,7 @@ class HemoServices
         //     }
         // }
 
-        $dataCheck =  HemodialysisItems::where('ID', '=', $ID)
+        $dataCheck = HemodialysisItems::where('ID', '=', $ID)
             ->where('HEMO_ID', '=', $HEMO_ID)
             ->where('ITEM_ID', '=', $ITEM_ID)
             ->where('IS_DEFAULT', '=', $IS_DEFAULT);
@@ -1224,10 +1226,10 @@ class HemoServices
         $list = $getData->first();
         if ($list->IS_POST == false) {
             $dataCheck->update([
-                'QUANTITY'              =>  $QUANTITY,
-                'UNIT_ID'               =>  $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY'    =>  $UNIT_BASE_QUANTITY,
-                'IS_NEW'                =>  $IS_NEW
+                'QUANTITY' => $QUANTITY,
+                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                'IS_NEW' => $IS_NEW
             ]);
 
             return;
@@ -1236,11 +1238,11 @@ class HemoServices
         if ($ON_CHANGE_POST == true) {
             $dataCheck->update(
                 [
-                    'QUANTITY'              =>  $QUANTITY,
-                    'UNIT_ID'               =>  $UNIT_ID > 0 ? $UNIT_ID : null,
-                    'UNIT_BASE_QUANTITY'    =>  $UNIT_BASE_QUANTITY,
-                    'IS_NEW'                =>  $IS_NEW,
-                    'IS_POST'               =>  false
+                    'QUANTITY' => $QUANTITY,
+                    'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+                    'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                    'IS_NEW' => $IS_NEW,
+                    'IS_POST' => false
                 ]
             );
         }
@@ -1264,13 +1266,13 @@ class HemoServices
     }
     public function IsExist_SC_ITEM(int $SC_ITEM_ID): bool
     {
-        return  HemodialysisItems::where('SC_ITEM_ID', '=', $SC_ITEM_ID)
+        return HemodialysisItems::where('SC_ITEM_ID', '=', $SC_ITEM_ID)
             ->where('IS_CASHIER', '=', true)
             ->exists();
     }
     public function ItemDelete(int $ID, int $HEMO_ID, int $ITEM_ID, bool $IS_DEFAULT)
     {
-        $itemData =  $this->ItemGet($ID);
+        $itemData = $this->ItemGet($ID);
         if ($itemData) {
             if ($itemData->IS_POST) {
                 $data = $this->Get($HEMO_ID);
@@ -1295,12 +1297,12 @@ class HemoServices
 
     public function ItemDeleteTrigger(int $ID, int $HEMO_ID)
     {
-        $dataList =  HemodialysisItems::where('SK_LINE_ID', $ID)
+        $dataList = HemodialysisItems::where('SK_LINE_ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
             ->get();
 
         foreach ($dataList as $list) {
-            $itemData =  $this->ItemGet($list->ID);
+            $itemData = $this->ItemGet($list->ID);
             if ($itemData) {
                 if ($itemData->IS_POST) {
                     $data = $this->Get($HEMO_ID);
@@ -1334,7 +1336,7 @@ class HemoServices
     {
         HemodialysisItems::where('HEMO_ID', '=', $HEMO_ID)
             ->update([
-                'IS_POST' =>  false
+                'IS_POST' => false
             ]);
     }
     public function ItemGet(int $ID)
@@ -1559,42 +1561,42 @@ class HemoServices
 
         if ($result) {
             return [
-                'ID'                     => (int) $result->ID,
-                'PRE_WEIGHT'             => (float) $result->PRE_WEIGHT ?? 0,
-                'PRE_BLOOD_PRESSURE'     => (float) $result->PRE_BLOOD_PRESSURE ?? 0,
-                'PRE_HEART_RATE'         => (float) $result->PRE_HEART_RATE ?? 0,
-                'PRE_O2_SATURATION'      => (float) $result->PRE_O2_SATURATION ?? 0,
-                'POST_WEIGHT'            => (float) $result->POST_WEIGHT ?? 0,
-                'POST_BLOOD_PRESSURE'    => (float) $result->POST_BLOOD_PRESSURE ?? 0,
-                'POST_HEART_RATE'        => (float) $result->POST_HEART_RATE ?? 0,
-                'POST_O2_SATURATION'     => (float) $result->POST_O2_SATURATION ?? 0,
-                'PRE_BLOOD_PRESSURE2'    => (float) $result->PRE_BLOOD_PRESSURE2 ?? 0,
-                'POST_BLOOD_PRESSURE2'   => (float) $result->POST_BLOOD_PRESSURE2 ?? 0,
-                'TIME_START'             => $result->TIME_START ?? '',
-                'TIME_END'               => $result->TIME_END ?? '',
-                'STATUS_ID'              => $result->STATUS_ID ?? 0,
-                'IS_INCOMPLETE'          => $result->IS_INCOMPLETE ?? false,
-                'IS_PF'                  => (bool) $result->IS_PF ?? false
+                'ID' => (int) $result->ID,
+                'PRE_WEIGHT' => (float) $result->PRE_WEIGHT ?? 0,
+                'PRE_BLOOD_PRESSURE' => (float) $result->PRE_BLOOD_PRESSURE ?? 0,
+                'PRE_HEART_RATE' => (float) $result->PRE_HEART_RATE ?? 0,
+                'PRE_O2_SATURATION' => (float) $result->PRE_O2_SATURATION ?? 0,
+                'POST_WEIGHT' => (float) $result->POST_WEIGHT ?? 0,
+                'POST_BLOOD_PRESSURE' => (float) $result->POST_BLOOD_PRESSURE ?? 0,
+                'POST_HEART_RATE' => (float) $result->POST_HEART_RATE ?? 0,
+                'POST_O2_SATURATION' => (float) $result->POST_O2_SATURATION ?? 0,
+                'PRE_BLOOD_PRESSURE2' => (float) $result->PRE_BLOOD_PRESSURE2 ?? 0,
+                'POST_BLOOD_PRESSURE2' => (float) $result->POST_BLOOD_PRESSURE2 ?? 0,
+                'TIME_START' => $result->TIME_START ?? '',
+                'TIME_END' => $result->TIME_END ?? '',
+                'STATUS_ID' => $result->STATUS_ID ?? 0,
+                'IS_INCOMPLETE' => $result->IS_INCOMPLETE ?? false,
+                'IS_PF' => (bool) $result->IS_PF ?? false
             ];
         }
 
         return [
-            'ID'                     => 0,
-            'PRE_WEIGHT'             => 0,
-            'PRE_BLOOD_PRESSURE'     => 0,
-            'PRE_HEART_RATE'         => 0,
-            'PRE_O2_SATURATION'      => 0,
-            'POST_WEIGHT'            => 0,
-            'POST_BLOOD_PRESSURE'    => 0,
-            'POST_HEART_RATE'        => 0,
-            'POST_O2_SATURATION'     => 0,
-            'PRE_BLOOD_PRESSURE2'    => 0,
-            'POST_BLOOD_PRESSURE2'   => 0,
-            'TIME_START'             => '',
-            'TIME_END'               => '',
-            'STATUS_ID'              => 0,
-            'IS_INCOMPLETE'          => false,
-            'IS_PF'                  => false
+            'ID' => 0,
+            'PRE_WEIGHT' => 0,
+            'PRE_BLOOD_PRESSURE' => 0,
+            'PRE_HEART_RATE' => 0,
+            'PRE_O2_SATURATION' => 0,
+            'POST_WEIGHT' => 0,
+            'POST_BLOOD_PRESSURE' => 0,
+            'POST_HEART_RATE' => 0,
+            'POST_O2_SATURATION' => 0,
+            'PRE_BLOOD_PRESSURE2' => 0,
+            'POST_BLOOD_PRESSURE2' => 0,
+            'TIME_START' => '',
+            'TIME_END' => '',
+            'STATUS_ID' => 0,
+            'IS_INCOMPLETE' => false,
+            'IS_PF' => false
         ];
     }
     public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
@@ -1614,9 +1616,9 @@ class HemoServices
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
 
-        $sc = (int) PhilhealthItemAdjustment::where('PATIENT_ID','=', $CUSTOMER_ID)
-            ->where('LOCATION_ID','=', $LOCATION_ID)
-            ->where('YEAR','=', $year)
+        $sc = (int) PhilhealthItemAdjustment::where('PATIENT_ID', '=', $CUSTOMER_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('YEAR', '=', $year)
             ->sum('NO_OF_USED');
 
         $number = $trtNo + $sc;
@@ -1629,7 +1631,7 @@ class HemoServices
     }
     public function UpdateQRFile($CODE, $FILE_NAME, $FILE_PATH): bool
     {
-        $data =  $this->codeIfExist($CODE);
+        $data = $this->codeIfExist($CODE);
         if ($data) {
             Hemodialysis::where('CODE', '=', $CODE)
                 ->update([
@@ -1642,12 +1644,12 @@ class HemoServices
 
         return false;
     }
-    public function ItemQuery(int $PATIENT_ID, string $DATE, int $LOCATION_ID, int $ITEM_ID, float $QTY, bool $IS_DELETE, int $UNIT_ID, int $SC_ITEM_ID, bool $ON_CHANGE_POST  = false)
+    public function ItemQuery(int $PATIENT_ID, string $DATE, int $LOCATION_ID, int $ITEM_ID, float $QTY, bool $IS_DELETE, int $UNIT_ID, int $SC_ITEM_ID, bool $ON_CHANGE_POST = false)
     {
 
-        $itemDetails =  $this->itemServices->get($ITEM_ID);
+        $itemDetails = $this->itemServices->get($ITEM_ID);
         if ($itemDetails) {
-            $hasSubClass =  ItemSubClass::where('ID', $itemDetails->SUB_CLASS_ID)->first();
+            $hasSubClass = ItemSubClass::where('ID', $itemDetails->SUB_CLASS_ID)->first();
             if ($hasSubClass) {
                 if ($hasSubClass->IN_HEMO == false) {
                     return;
@@ -1698,11 +1700,11 @@ class HemoServices
                 ->where('hemodialysis_items.SK_LINE_ID', '=', $dataItem->ID)
                 ->get();
 
-            foreach ($dataTrigger  as $list) {
+            foreach ($dataTrigger as $list) {
                 $ORG_QTY = $this->itemTreatmentServices->getItemTriggerQuantity($ITEM_ID, $LOCATION_ID, $UNIT_ID, $list->ITEM_ID, $list->UNIT_ID);
                 $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
                 $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
-                $N_QTY =  $ORG_QTY * $QTY;
+                $N_QTY = $ORG_QTY * $QTY;
                 $this->ItemUpdate(
                     $list->ID,
                     $list->HEMO_ID,
@@ -1727,7 +1729,7 @@ class HemoServices
         if ($hemoData) { // if exists
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($ITEM_ID, $UNIT_ID);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-            $SK_LINE_ID =  $this->ItemStore(
+            $SK_LINE_ID = $this->ItemStore(
                 $hemoData->ID,
                 $ITEM_ID,
                 $QTY,
@@ -1748,14 +1750,14 @@ class HemoServices
                     $UNIT_ID
                 );
 
-                foreach ($dataTrigger  as $list) {
+                foreach ($dataTrigger as $list) {
                     $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails(
                         $list->ITEM_ID,
                         $list->UNIT_ID ?? 0
                     );
 
                     $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
-                    $N_QTY =  $list->QUANTITY * $QTY;
+                    $N_QTY = $list->QUANTITY * $QTY;
                     $this->ItemStore(
                         $hemoData->ID,
                         $list->ITEM_ID,
@@ -1775,7 +1777,7 @@ class HemoServices
 
     public function IsRestrictedFromUnposted(string $DATE, int $LOCATION_ID): bool
     {
-        return  Hemodialysis::where('DATE', '<', $DATE)
+        return Hemodialysis::where('DATE', '<', $DATE)
             ->where('STATUS_ID', '=', 4)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->exists();
@@ -1822,7 +1824,7 @@ class HemoServices
             $IS_CASHIER = (bool) $data->IS_CASHIER;
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
             $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
-            $SK_LINE_ID  =  $this->ItemStore(
+            $SK_LINE_ID = $this->ItemStore(
                 $HEMO_ID,
                 $data->ITEM_ID,
                 $data->QUANTITY,
@@ -1870,20 +1872,20 @@ class HemoServices
         $ID = $this->object->ObjectNextID('HEMO_NURSE_NOTES');
 
         HemoNurseNotes::create([
-            'ID'        => $ID,
-            'HEMO_ID'   => $HEMO_ID,
-            'TIME'      => $TIME,
-            'BP_1'      => $BP_1,
-            'BP_2'      => $BP_2,
-            'HR'        => $HR,
-            'BFR'       => $BFR,
-            'AP'        => $AP,
-            'VP'        => $VP,
-            'TFP'       => $TFP,
-            'TMP'       => $TMP,
-            'HEPARIN'   => $HEPARIN,
-            'FLUSHING'  => $FLUSHING,
-            'NOTES'     => $NOTES
+            'ID' => $ID,
+            'HEMO_ID' => $HEMO_ID,
+            'TIME' => $TIME,
+            'BP_1' => $BP_1,
+            'BP_2' => $BP_2,
+            'HR' => $HR,
+            'BFR' => $BFR,
+            'AP' => $AP,
+            'VP' => $VP,
+            'TFP' => $TFP,
+            'TMP' => $TMP,
+            'HEPARIN' => $HEPARIN,
+            'FLUSHING' => $FLUSHING,
+            'NOTES' => $NOTES
         ]);
     }
 
@@ -1893,18 +1895,18 @@ class HemoServices
         HemoNurseNotes::where('ID', $ID)
             ->where('HEMO_ID', $HEMO_ID)
             ->update([
-                'TIME'      => $TIME,
-                'BP_1'      => $BP_1,
-                'BP_2'      => $BP_2,
-                'HR'        => $HR,
-                'BFR'       => $BFR,
-                'AP'        => $AP,
-                'VP'        => $VP,
-                'TFP'       => $TFP,
-                'TMP'       => $TMP,
-                'HEPARIN'   => $HEPARIN,
-                'FLUSHING'  => $FLUSHING,
-                'NOTES'     => $NOTES
+                'TIME' => $TIME,
+                'BP_1' => $BP_1,
+                'BP_2' => $BP_2,
+                'HR' => $HR,
+                'BFR' => $BFR,
+                'AP' => $AP,
+                'VP' => $VP,
+                'TFP' => $TFP,
+                'TMP' => $TMP,
+                'HEPARIN' => $HEPARIN,
+                'FLUSHING' => $FLUSHING,
+                'NOTES' => $NOTES
             ]);
     }
     public function DeleteNotes(int $ID, int $HEMO_ID)
@@ -1915,7 +1917,7 @@ class HemoServices
     }
     public function ListNotes(int $HEMO_ID)
     {
-        $result =  HemoNurseNotes::query()
+        $result = HemoNurseNotes::query()
             ->select([
                 'ID',
                 'TIME',
@@ -1939,7 +1941,7 @@ class HemoServices
     }
     public function GetNotes(int $ID)
     {
-        $result =  HemoNurseNotes::where('ID', '=', $ID)->first();
+        $result = HemoNurseNotes::where('ID', '=', $ID)->first();
 
         if ($result) {
             return $result;
@@ -1950,10 +1952,10 @@ class HemoServices
     public function makeJournal(int $HEMO_ID)
     {
 
-        $dataHemo  = $this->get($HEMO_ID);
+        $dataHemo = $this->get($HEMO_ID);
         if ($dataHemo) {
             $JOURNAL_NO = $this->accountJournalServices->getRecord($this->object_type_hemo, $HEMO_ID);
-            if ($JOURNAL_NO  ==  0) {
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->object_type_hemo, $HEMO_ID) + 1;
             }
             // Main Expenses
@@ -2028,7 +2030,7 @@ class HemoServices
         try {
             $NowYear = $this->dateServices->NowYear();
 
-            $dataList =  Hemodialysis::query()
+            $dataList = Hemodialysis::query()
                 ->select([
                     'ID',
                     'CUSTOMER_ID',
@@ -2044,7 +2046,7 @@ class HemoServices
 
             foreach ($dataList as $list) {
 
-                $NO_OF_TREATMENT =  $this->getFixTreatmentNumberOnly($list->CUSTOMER_ID, $LOCATION_ID, $list->DATE);
+                $NO_OF_TREATMENT = $this->getFixTreatmentNumberOnly($list->CUSTOMER_ID, $LOCATION_ID, $list->DATE);
 
                 Hemodialysis::where('ID', '=', $list->ID)
                     ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -2064,7 +2066,7 @@ class HemoServices
 
         $NowYear = $this->dateServices->GetFirstDay_Year($DATE);
 
-        $result = (int) Hemodialysis::where('CUSTOMER_ID',  '=', $CUSTOMER_ID)
+        $result = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->whereYear('DATE', '=', $NowYear)
             ->where('DATE', '<=', $DATE) // Add a condition to filter by year
@@ -2077,7 +2079,7 @@ class HemoServices
     {
         Hemodialysis::where('ID', '=', $HEMO_ID)
             ->update([
-                'CUSTOMER_ID'  => $TRANSFER_CONTACT_ID
+                'CUSTOMER_ID' => $TRANSFER_CONTACT_ID
             ]);
     }
 }

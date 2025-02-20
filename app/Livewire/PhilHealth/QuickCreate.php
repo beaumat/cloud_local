@@ -174,8 +174,9 @@ class QuickCreate extends Component
                 if ($isSelected) {
                     $gotSelected = true;
                     if ($this->generateDateTime($patientID)) {
-
+                 
                         if (empty($this->DATE_ADMITTED) == false && empty($this->DATE_DISCHARGED) == false) {
+                           
                             $this->generateRemarks($patientID);
                             $ID = (int) $this->philHealthServices->preSave(
                                 '',
