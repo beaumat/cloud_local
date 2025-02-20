@@ -31,7 +31,7 @@ class ItemSoaServices
     {
         return (int) ItemSoa::where('TYPE', $TYPE)->max('LINE') + 1;
     }
-    public function Store(int $LOCATION_ID, int $TYPE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE =  false)
+    public function Store(int $LOCATION_ID, int $TYPE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false)
     {
         $ID = $this->object->ObjectNextID('SOA_ITEM');
 
@@ -39,14 +39,14 @@ class ItemSoaServices
 
         ItemSoa::create(
             [
-                'ID'            => $ID,
-                'LOCATION_ID'   => $LOCATION_ID,
-                'LINE'          => $LINE,
-                'TYPE'          => $TYPE,
-                'ITEM_NAME'     => $ITEM_NAME,
-                'UNIT_NAME'     => $UNIT_NAME,
-                'RATE'          => $RATE,
-                'ACTUAL_BASE'   => $ACTUAL_BASE
+                'ID' => $ID,
+                'LOCATION_ID' => $LOCATION_ID,
+                'LINE' => $LINE,
+                'TYPE' => $TYPE,
+                'ITEM_NAME' => $ITEM_NAME,
+                'UNIT_NAME' => $UNIT_NAME,
+                'RATE' => $RATE,
+                'ACTUAL_BASE' => $ACTUAL_BASE
             ]
         );
     }
@@ -55,12 +55,12 @@ class ItemSoaServices
         ItemSoa::where('ID', '=', $ID)
             ->update(
                 [
-                    'ID'            => $ID,
-                    'TYPE'          => $TYPE,
-                    'ITEM_NAME'     => $ITEM_NAME,
-                    'UNIT_NAME'     => $UNIT_NAME,
-                    'RATE'          => $RATE,
-                    'ACTUAL_BASE'   => $ACTUAL_BASE
+                    'ID' => $ID,
+                    'TYPE' => $TYPE,
+                    'ITEM_NAME' => $ITEM_NAME,
+                    'UNIT_NAME' => $UNIT_NAME,
+                    'RATE' => $RATE,
+                    'ACTUAL_BASE' => $ACTUAL_BASE
                 ]
             );
     }
@@ -120,7 +120,7 @@ class ItemSoaServices
     }
     public function getItemByCategory(int $LOCATION_ID, int $TYPE)
     {
-        $result =   ItemSoa::where('TYPE', '=', $TYPE)
+        $result = ItemSoa::where('TYPE', '=', $TYPE)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->get();
 
@@ -129,11 +129,23 @@ class ItemSoaServices
     }
     public function getItemBySingleCategoryWithSum(int $LOCATION_ID, int $TYPE)
     {
-        $result =   ItemSoa::where('TYPE', '=', $TYPE)
+        $result = ItemSoa::where('TYPE', '=', $TYPE)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->sum('RATE');
-       
-            if ($result > 0) {
+
+        if ($result > 0) {
+            return (float) $result;
+        }
+        return 0.00;
+    }
+    public function getSumNonActualByType(int $TYPE, int $LOCATION_ID): float
+    {
+        $result = ItemSoa::where('TYPE', '=', $TYPE)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('ACTUAL_BASE', '=', false)
+            ->sum('RATE');
+
+        if ($result > 0) {
             return (float) $result;
         }
         return 0.00;

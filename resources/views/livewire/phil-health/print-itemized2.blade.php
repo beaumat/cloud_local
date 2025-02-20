@@ -1,0 +1,189 @@
+<?php
+use App\Services\ItemSoaItemizedServices;
+?>
+
+<div class="row bottom-line2 right-line2 left-line2">
+    <div class="col-12 font-weight-bold text-center text-danger">
+        ITEMIZED CHARGES
+    </div>
+    <div class="col-8">
+        <table class="w-100" border="1">
+            <thead>
+                <tr class="text-center text-xs">
+                    <th>SERVICE DATE</th>
+                    <th>ITEM NAME</th>
+                    <th>UNIT OF MEASUREMENT</th>
+                    <th>PRICE</th>
+                    <th>QTY</th>
+                    <th>AMOUNT</th>
+                </tr>
+            </thead>
+            @php
+                $TOTAL = 0;
+                $TYPE = '';
+                $posted = false;
+            @endphp
+            @php
+                $row = 0;
+            @endphp
+            <tbody class=''>
+                @foreach ($dataList as $list)
+                    @if ($TYPE == '')
+                    @elseif ($TYPE != $list->TYPE_NAME)
+                        <tr class="font-weight-bold">
+                            <td class="text-center text-xs pb-0 pt-0">
+                                @if (isset($breakDownDate[$row]))
+                                    {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
+                                @endif
+
+                                @php
+                                    $row++;
+                                @endphp
+                            </td>
+                            <td class="text-xs pb-0 pt-0">{{ $TYPE }} TOTAL</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right text-xs pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
+                        </tr>
+                        @php
+                            $TOTAL = 0;
+                        @endphp
+                    @endif
+                    @php
+                        $TYPE = $list->TYPE_NAME;
+                    @endphp
+                    <tr>
+                        <td class="text-center font-weight-bold text-xs pb-0 pt-0">
+                            @if (isset($breakDownDate[$row]))
+                                {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
+                            @endif
+
+                            @php
+                                $row++;
+                            @endphp
+                            @php
+                                if ($list->ACTUAL_BASE) {
+                                    $defult_Qty = ItemSoaItemizedServices::getQuantityActual(
+                                        $dateList,
+                                        $LOCATION_ID,
+                                        $PATIENT_ID,
+                                        $list->ID,
+                                    );
+                                    $AMOUNT = $defult_Qty * $list->RATE ?? 0;
+                                } else {
+                                    $defult_Qty = $qty;
+                                    $AMOUNT = $qty * $list->RATE ?? 0;
+                                }
+
+                                $TOTAL = $TOTAL + $AMOUNT;
+                            @endphp
+                        </td>
+                        <td class="text-xs pb-0 pt-0">{{ $list->ITEM_NAME }}</td>
+                        <td class="text-xs text-center">{{ $list->UNIT_NAME }}</td>
+                        <td class=" text-right text-xs pb-0 pt-0">{{ number_format($list->RATE, 2) }}</td>
+                        <td class="text-center text-xs pb-0 pt-0"> {{ $defult_Qty }}</td>
+
+                        <td class="text-right text-xs pb-0 pt-0">{{ number_format($AMOUNT, 2) }}</td>
+                    </tr>
+                @endforeach
+
+                <tr class="font-weight-bold">
+                    <td></td>
+                    <td class="text-xs pb-0 pt-0">{{ $TYPE }} TOTAL</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right text-xs pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="col-4">
+        <table class="w-100" border="1">
+            <thead class="text-xs">
+                <tr class="text-center">
+                    <th class="">ROUTINE MONTHLY LABORATORIES</th>
+                </tr>
+            </thead>
+
+            <tbody class='text-xs'>
+                <tr>
+                    <th class="text-center text-xs pb-0 pt-0">(CLINICAL CHEMISTRY)</th>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0">PRE AND POST DIALYSIS BUN</td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> SERUM CREATININE </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> POTASSIUM </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> PHOSPHORUS </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> CALCIUM </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> SERUM SODIUM </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> KT/V </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> URR </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs"> URIC ACID </td>
+                </tr>
+
+                <tr>
+                    <th class="text-center text-xs pb-0 pt-0">(HEMATOLOGY) COMPLETE BLOOD COUNT</th>
+                </tr>
+
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0">HEMOGLOBIN</td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> HEMATOCRIT</td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> RED BLOOD CELLS </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> MCV </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> MCH </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> MCHC</td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> WHTE BLOODCELLS </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> NEUTROPHILS </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> LYMPHOCYTES </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> EOSINOPHILS </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> BASOPHILS </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-xs pb-0 pt-0"> PLATELET COUNT </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-12 pb-1">
+
+    </div>
+</div>

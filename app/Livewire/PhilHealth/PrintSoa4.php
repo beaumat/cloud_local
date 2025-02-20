@@ -150,9 +150,7 @@ class PrintSoa4 extends Component
         $this->OUTPUT_SIGN = $OUTPUT;
         if ($PRINT_ID > 0) {
             $this->PRE_SIGN_DATA = false;
-
             $this->HEADER = !$OUTPUT;
-
             $this->PreLoad($PRINT_ID);
             $this->profFeeList($PRINT_ID);
             return;
@@ -370,7 +368,6 @@ class PrintSoa4 extends Component
         $ADDRESS_STREET = $contact->ADDRESS_STREET ?? '';
         $ADDRESS_SUB_VALL = $contact->ADDRESS_SUB_VALL ?? '';
         $ADDRESS_BRGY = $contact->ADDRESS_BRGY ?? '';
-
 
         $ADDRESS = $ADDRESS_UNIT_ROOM_FLOOR . ' ' . $ADDRESS_BUILDING_NAME . ' ' . $ADDRESS_LOT_BLK_HOUSE_BLDG . ' ' . $ADDRESS_STREET . ' ' . $ADDRESS_SUB_VALL . ' ' . $ADDRESS_BRGY;
         return trim($ADDRESS);

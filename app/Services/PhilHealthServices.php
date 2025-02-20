@@ -25,7 +25,7 @@ class PhilHealthServices
     public string $FINAL_DIAGNOSIS_DEFAULT;
     public string $HISTORY_OF_PRESENT_ILLNESS_DEFAULT = 'CHRONIC KIDNEY DISEASE STAGE 5';
 
-
+    public float $FIRST_CASE_RATE_AMOUNT = 0;
     public float $OP_ROOM_N_BOARD = 0;
     public float $OP_DRUG_N_MEDICINE = 0;
     public float $OP_LAB_N_DIAGNOSTICS = 0;
@@ -44,7 +44,7 @@ class PhilHealthServices
     public float $PROF_FEE_AMOUNT = 0; //437.50;
     public float $PROF_FEE_HIDE = 0;
     public int $PHIL_HEALTH_ITEM_ID = 2;
-
+    public bool $ITEMIZED_BASE;
     private $object;
     private $dateServices;
     private $systemSettingServices;
@@ -59,6 +59,8 @@ class PhilHealthServices
     private $priceLevelLineServices;
     private $taxServices;
     private $computeServices;
+    private $itemSoaItemizedServices;
+    private $itemSoaServices;
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
@@ -73,7 +75,9 @@ class PhilHealthServices
         ItemServices $itemServices,
         PriceLevelLineServices $priceLevelLineServices,
         TaxServices $taxServices,
-        ComputeServices $computeServices
+        ComputeServices $computeServices,
+        ItemSoaItemizedServices $itemSoaItemizedServices,
+        ItemSoaServices $itemSoaServices
     ) {
         $this->object = $objectService;
         $this->dateServices = $dateServices;
@@ -89,6 +93,8 @@ class PhilHealthServices
         $this->priceLevelLineServices = $priceLevelLineServices;
         $this->taxServices = $taxServices;
         $this->computeServices = $computeServices;
+        $this->itemSoaItemizedServices = $itemSoaItemizedServices;
+        $this->itemSoaServices = $itemSoaServices;
     }
     public function get($ID)
     {
@@ -237,7 +243,7 @@ class PhilHealthServices
     {
         $loc = $this->locationServices->get($LOCATON_ID);
 
-        if ($loc->PHIC_FORM_MODIFY == true) {
+        if ($loc->PHIC_FORM_MODIFY) {
 
             $scItem = $this->serviceChargeServices->GetItemForCustomSoa($DATE_DISCHARGE, $PATIENT_ID, $LOCATON_ID);
             $customSOA = $this->philHealthSoaCustomServices->CollectionRequirements($LOCATON_ID, $scItem);
@@ -279,6 +285,16 @@ class PhilHealthServices
                 }
             }
         }
+
+        if ($loc->ITEMIZED_BASE) {
+            $this->ITEMIZED_BASE = true;
+            $this->FIRST_CASE_RATE_AMOUNT = 6000;
+            $this->PROF_FEE_AMOUNT = 437.50;
+            $this->PROF_FEE_HIDE = 0;
+            return;
+        }
+        $this->ITEMIZED_BASE = false;
+
         // By Default
         $soaData = $this->philHealthSoaCustomServices->GetFirst($LOCATON_ID);
         if ($soaData) {
@@ -304,6 +320,14 @@ class PhilHealthServices
             $this->OP_SUB_TOTAL = $this->OP_DRUG_N_MEDICINE + $this->OP_LAB_N_DIAGNOSTICS + $this->OP_OPERATING_ROOM_FEE + $this->OP_SUPPLIES + $this->OP_OTHERS;
         }
     }
+    private function ItemizedBaseTotalNonActual(int $LOCATION_ID, int $TYPE)
+    {
+        return (float) $this->itemSoaServices->getSumNonActualByType($TYPE, $LOCATION_ID);
+    }
+    private function ItemizedBaseTotalActual(int $LOCTION_ID, int $PATIENT_ID, int $TYPE, string $DATE_ADMITTED, string $DATE_DISCHARGED)
+    {
+        return (float) $this->itemSoaItemizedServices->getSumByOnActualQty($LOCTION_ID, $PATIENT_ID, $TYPE, $DATE_ADMITTED, $DATE_DISCHARGED);
+    }
     public function DefaultEntry(int $ID)
     {
 
@@ -326,30 +350,78 @@ class PhilHealthServices
                 $data->DATE_DISCHARGED
             );
 
-            $LAB_N_DIAGNOS = $this->LAB_N_DIAGNOSTICS_AMOUNT * $NO_OF_TREATMENT;
-            $DRUG_MED = (float) $this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT;
-            $OPERATE_FEE = (float) $this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT; //
-            $CHARGES_SUPPLIES = (float) $this->SUPPLIES * $NO_OF_TREATMENT;
-            $CHARGES_OTHERS = (float) $this->OTHER_CHARGES_AMOUNT * $NO_OF_TREATMENT;
-            $C_SUB_TOTAL = (float) $DRUG_MED + $OPERATE_FEE + $CHARGES_SUPPLIES + $LAB_N_DIAGNOS + $CHARGES_OTHERS;
+            $A_DRUG_N_MEDINE_AMOUNT = 0;
+            $A_SUPPLIES = 0;
+            $A_LAB_N_DIAGNOSTICS_AMOUNT = 0;
+            $A_OTHER_CHARGES_AMOUNT = 0;
+            $A_OPERATING_ROOM_FEE_AMOUNT = 0;
 
+            if ($this->ITEMIZED_BASE) {
+                $this->DRUG_N_MEDINE_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 1);
+                $this->SUPPLIES = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 2);
+                $this->LAB_N_DIAGNOSTICS_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 3);
+                $this->OTHER_CHARGES_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 4);
+                $this->OPERATING_ROOM_FEE_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 6);
+
+                $A_DRUG_N_MEDINE_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 1, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
+                $A_SUPPLIES = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 2, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
+                $A_LAB_N_DIAGNOSTICS_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 3, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
+                $A_OTHER_CHARGES_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 4, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
+                $A_OPERATING_ROOM_FEE_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 6, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
+
+
+            }
+
+
+
+            $LAB_N_DIAGNOS = (float) ($this->LAB_N_DIAGNOSTICS_AMOUNT * $NO_OF_TREATMENT) + $A_LAB_N_DIAGNOSTICS_AMOUNT;
+            $DRUG_MED = (float) ($this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT) + $A_DRUG_N_MEDINE_AMOUNT;
+
+            $OPERATE_FEE = (float) ($this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT) + $A_OPERATING_ROOM_FEE_AMOUNT; //
+            $CHARGES_SUPPLIES = (float) ($this->SUPPLIES * $NO_OF_TREATMENT) + $A_SUPPLIES;
+            $CHARGES_OTHERS = (float) ($this->OTHER_CHARGES_AMOUNT * $NO_OF_TREATMENT) + $A_OTHER_CHARGES_AMOUNT;
+
+            $TOTAL_ON_ACTUAL = $A_DRUG_N_MEDINE_AMOUNT + $A_SUPPLIES + $A_LAB_N_DIAGNOSTICS_AMOUNT + $A_OTHER_CHARGES_AMOUNT + $A_OPERATING_ROOM_FEE_AMOUNT;
+
+            $C_SUB_TOTAL = (float) $DRUG_MED + $OPERATE_FEE + $CHARGES_SUPPLIES + $LAB_N_DIAGNOS + $CHARGES_OTHERS;
             $SP_SUB_TOTAL = (float) $C_SUB_TOTAL * ($this->DISCOUNT_PERCENT / 100);
-            $AD_SUB_TOTAL = $C_SUB_TOTAL - $SP_SUB_TOTAL;
-            $P1_SUB_TOTAL = $AD_SUB_TOTAL - $this->OP_SUB_TOTAL;
-            $OP_SUB_TOTAL = $this->OP_SUB_TOTAL;
+            if ($this->ITEMIZED_BASE) {
+                $NEW_RATE = $this->FIRST_CASE_RATE_AMOUNT * $NO_OF_TREATMENT;
+                $AD_SUB_TOTAL = $NEW_RATE;
+                $GOV_SUB_TOTAL = ($C_SUB_TOTAL - $SP_SUB_TOTAL) - $AD_SUB_TOTAL;
+
+                $P1_SUB_TOTAL = $AD_SUB_TOTAL;
+                $OP_SUB_TOTAL = 0;
+            } else {
+                $AD_SUB_TOTAL = $C_SUB_TOTAL - $SP_SUB_TOTAL;
+                $P1_SUB_TOTAL = $AD_SUB_TOTAL - $this->OP_SUB_TOTAL;
+                $OP_SUB_TOTAL = $this->OP_SUB_TOTAL;
+            }
+
+
 
             $profArray = $this->AutoMakeProfFeeDetails($data->ID, $data->CONTACT_ID, $NO_OF_TREATMENT);
 
             $PROFESSIONAL_FEE_SUB_TOTAL = (float) $profArray['TOTAL_FEE'];
             $PROFESSIONAL_DISCOUNT_SUB_TOTAL = (float) $profArray['TOTAL_DISCOUNT'];
             $PROFESSIONAL_P1_SUB_TOTAL = (float) $profArray['TOTAL_FIRST_CASE'];
-
             $CHARGE_TOTAL = $PROFESSIONAL_FEE_SUB_TOTAL + $C_SUB_TOTAL;
+
             $SP_TOTAL = $CHARGE_TOTAL * ($this->DISCOUNT_PERCENT / 100);
+
             if ($this->PROF_FEE_HIDE == 0) {
-                $AD_TOTAL = $CHARGE_TOTAL - $SP_TOTAL;
+
+                if ($this->ITEMIZED_BASE) {
+                    $AD_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
+                } else {
+                    $AD_TOTAL = $CHARGE_TOTAL - $SP_TOTAL;
+                    
+        
+                }
+
                 $P1_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
                 $OP_TOTAL = $this->OP_SUB_TOTAL;
+
             } else {
                 $AD_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
                 $P1_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
@@ -359,31 +431,33 @@ class PhilHealthServices
 
             PhilHealth::where('ID', $data->ID)
                 ->update([
-                    'CHARGES_DRUG_N_MEDICINE' => $DRUG_MED,
-                    'CHARGES_LAB_N_DIAGNOSTICS' => $LAB_N_DIAGNOS,
-                    'CHARGES_OPERATING_ROOM_FEE' => $OPERATE_FEE,
-                    'CHARGES_SUPPLIES' => $CHARGES_SUPPLIES,
-                    'CHARGES_SUB_TOTAL' => $C_SUB_TOTAL,
-                    'CHARGES_OTHERS' => $CHARGES_OTHERS,
-                    'SP_SUB_TOTAL' => $SP_SUB_TOTAL,
-                    'P1_SUB_TOTAL' => $P1_SUB_TOTAL,
-                    'OP_SUB_TOTAL' => $OP_SUB_TOTAL,
-                    'AD_SUB_TOTAL' => $AD_SUB_TOTAL,
-                    'PROFESSIONAL_FEE_SUB_TOTAL' => $PROFESSIONAL_FEE_SUB_TOTAL,
-                    'PROFESSIONAL_DISCOUNT_SUB_TOTAL' => $PROFESSIONAL_DISCOUNT_SUB_TOTAL,
-                    'PROFESSIONAL_P1_SUB_TOTAL' => $PROFESSIONAL_P1_SUB_TOTAL,
-                    'CHARGE_TOTAL' => $CHARGE_TOTAL,
-                    'SP_TOTAL' => $SP_TOTAL,
-                    'P1_TOTAL' => $P1_TOTAL,
-                    'AD_TOTAL' => $AD_TOTAL,
-                    'OP_TOTAL' => $OP_TOTAL,
-                    'OP_ROOM_N_BOARD' => $this->OP_ROOM_N_BOARD,
-                    'OP_DRUG_N_MEDICINE' => $this->OP_DRUG_N_MEDICINE,
-                    'OP_LAB_N_DIAGNOSTICS' => $this->OP_LAB_N_DIAGNOSTICS,
-                    'OP_OPERATING_ROOM_FEE' => $this->OP_OPERATING_ROOM_FEE,
-                    'OP_SUPPLIES' => $this->OP_SUPPLIES,
-                    'OP_OTHERS' => $this->OP_OTHERS
-                ]);
+                        'CHARGES_DRUG_N_MEDICINE' => $DRUG_MED,
+                        'CHARGES_LAB_N_DIAGNOSTICS' => $LAB_N_DIAGNOS,
+                        'CHARGES_OPERATING_ROOM_FEE' => $OPERATE_FEE,
+                        'CHARGES_SUPPLIES' => $CHARGES_SUPPLIES,
+                        'CHARGES_SUB_TOTAL' => $C_SUB_TOTAL,
+                        'CHARGES_OTHERS' => $CHARGES_OTHERS,
+                        'SP_SUB_TOTAL' => $SP_SUB_TOTAL,
+                        'P1_SUB_TOTAL' => $P1_SUB_TOTAL,
+                        'OP_SUB_TOTAL' => $OP_SUB_TOTAL,
+                        'AD_SUB_TOTAL' => $AD_SUB_TOTAL,
+                        'PROFESSIONAL_FEE_SUB_TOTAL' => $PROFESSIONAL_FEE_SUB_TOTAL,
+                        'PROFESSIONAL_DISCOUNT_SUB_TOTAL' => $PROFESSIONAL_DISCOUNT_SUB_TOTAL,
+                        'PROFESSIONAL_P1_SUB_TOTAL' => $PROFESSIONAL_P1_SUB_TOTAL,
+                        'CHARGE_TOTAL' => $CHARGE_TOTAL,
+                        'SP_TOTAL' => $SP_TOTAL,
+                        'P1_TOTAL' => $P1_TOTAL,
+                        'AD_TOTAL' => $AD_TOTAL,
+                        'OP_TOTAL' => $OP_TOTAL,
+                        'OP_ROOM_N_BOARD' => $this->OP_ROOM_N_BOARD,
+                        'OP_DRUG_N_MEDICINE' => $this->OP_DRUG_N_MEDICINE,
+                        'OP_LAB_N_DIAGNOSTICS' => $this->OP_LAB_N_DIAGNOSTICS,
+                        'OP_OPERATING_ROOM_FEE' => $this->OP_OPERATING_ROOM_FEE,
+                        'OP_SUPPLIES' => $this->OP_SUPPLIES,
+                        'OP_OTHERS' => $this->OP_OTHERS,
+                        'GOV_SUB_TOTAL' => $GOV_SUB_TOTAL,
+                        'GOV_TOTAL' => $GOV_SUB_TOTAL
+                    ]);
         }
 
         //got professional fee
@@ -393,24 +467,24 @@ class PhilHealthServices
 
         PhilHealth::where('ID', $ID)
             ->update([
-                'CODE' => $CODE,
-                'DATE' => $DATE,
-                'LOCATION_ID' => $LOCATION_ID,
-                'CONTACT_ID' => $CONTACT_ID,
-                'DATE_ADMITTED' => $DATE_ADMITTED,
-                'TIME_ADMITTED' => $TIME_ADMITTED,
-                'DATE_DISCHARGED' => $DATE_DISCHARGED,
-                'TIME_DISCHARGED' => $TIME_DISCHARGED,
-                'FINAL_DIAGNOSIS' => $FINAL_DIAGNOSIS,
-                'OTHER_DIAGNOSIS' => $OTHER_DIAGNOSIS,
-                'FIRST_CASE_RATE' => $FIRST_CASE_RATE,
-                'SECOND_CASE_RATE' => $SECOND_CASE_RATE,
-                'TIME_HIDE' => date('H:i:s', strtotime($TIME_ADMITTED . ' +4 hours'))
-            ]);
+                    'CODE' => $CODE,
+                    'DATE' => $DATE,
+                    'LOCATION_ID' => $LOCATION_ID,
+                    'CONTACT_ID' => $CONTACT_ID,
+                    'DATE_ADMITTED' => $DATE_ADMITTED,
+                    'TIME_ADMITTED' => $TIME_ADMITTED,
+                    'DATE_DISCHARGED' => $DATE_DISCHARGED,
+                    'TIME_DISCHARGED' => $TIME_DISCHARGED,
+                    'FINAL_DIAGNOSIS' => $FINAL_DIAGNOSIS,
+                    'OTHER_DIAGNOSIS' => $OTHER_DIAGNOSIS,
+                    'FIRST_CASE_RATE' => $FIRST_CASE_RATE,
+                    'SECOND_CASE_RATE' => $SECOND_CASE_RATE,
+                    'TIME_HIDE' => date('H:i:s', strtotime($TIME_ADMITTED . ' +4 hours'))
+                ]);
     }
     public function preSave(string $CODE, string $DATE, int $LOCATION_ID, int $CONTACT_ID, string $DATE_ADMITTED, string $TIME_ADMITTED, string $DATE_DISCHARGED, string $TIME_DISCHARGED, string $FINAL_DIAGNOSIS, string $OTHER_DIAGNOSIS, string $FIRST_CASE_RATE, string $SECOND_CASE_RATE): int
     {
-        
+
         $ID = $this->object->ObjectNextID('PHILHEALTH');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PHILHEALTH');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
@@ -461,78 +535,146 @@ class PhilHealthServices
     public function PrintEmpty(int $PATIENT_ID)
     {
     }
-    public function Update(int $ID, float $CHARGES_ROOM_N_BOARD, float $CHARGES_DRUG_N_MEDICINE, float $CHARGES_LAB_N_DIAGNOSTICS, float $CHARGES_OPERATING_ROOM_FEE, float $CHARGES_SUPPLIES, float $CHARGES_OTHERS, float $CHARGES_SUB_TOTAL, string $OTHER_SPECIFY, float $VAT_ROOM_N_BOARD, float $VAT_DRUG_N_MEDICINE, float $VAT_LAB_N_DIAGNOSTICS, float $VAT_OPERATING_ROOM_FEE, float $VAT_SUPPLIES, float $VAT_OTHERS, float $VAT_SUB_TOTAL, float $SP_ROOM_N_BOARD, float $SP_DRUG_N_MEDICINE, float $SP_LAB_N_DIAGNOSTICS, float $SP_OPERATING_ROOM_FEE, float $SP_SUPPLIES, float $SP_OTHERS, float $SP_SUB_TOTAL, float $GOV_ROOM_N_BOARD, float $GOV_DRUG_N_MEDICINE, float $GOV_LAB_N_DIAGNOSTICS, float $GOV_OPERATING_ROOM_FEE, float $GOV_SUPPLIES, float $GOV_OTHERS, float $GOV_SUB_TOTAL, bool $GOV_PCSO, bool $GOV_DSWD, bool $GOV_DOH, bool $GOV_HMO, bool $GOV_LINGAP, float $P1_ROOM_N_BOARD, float $P1_DRUG_N_MEDICINE, float $P1_LAB_N_DIAGNOSTICS, float $P1_OPERATING_ROOM_FEE, float $P1_SUPPLIES, float $P1_OTHERS, float $P1_SUB_TOTAL, float $P2_ROOM_N_BOARD, float $P2_DRUG_N_MEDICINE, float $P2_LAB_N_DIAGNOSTICS, float $P2_OPERATING_ROOM_FEE, float $P2_SUPPLIES, float $P2_OTHERS, float $P2_SUB_TOTAL, float $OP_ROOM_N_BOARD, float $OP_DRUG_N_MEDICINE, float $OP_LAB_N_DIAGNOSTICS, float $OP_OPERATING_ROOM_FEE, float $OP_SUPPLIES, float $OP_OTHERS, float $OP_SUB_TOTAL, float $PROFESSIONAL_FEE_SUB_TOTAL, float $PROFESSIONAL_DISCOUNT_SUB_TOTAL, float $CHARGE_TOTAL, float $VAT_TOTAL, float $SP_TOTAL, float $GOV_TOTAL, float $P1_TOTAL, float $P2_TOTAL, float $OP_TOTAL, int $PREPARED_BY_ID, string $DATE_SIGNED, string $OTHER_NAME)
-    {
+    public function Update(
+        int $ID,
+        float $CHARGES_ROOM_N_BOARD,
+        float $CHARGES_DRUG_N_MEDICINE,
+        float $CHARGES_LAB_N_DIAGNOSTICS,
+        float $CHARGES_OPERATING_ROOM_FEE,
+        float $CHARGES_SUPPLIES,
+        float $CHARGES_OTHERS,
+        float $CHARGES_SUB_TOTAL,
+        string $OTHER_SPECIFY,
+        float $VAT_ROOM_N_BOARD,
+        float $VAT_DRUG_N_MEDICINE,
+        float $VAT_LAB_N_DIAGNOSTICS,
+        float $VAT_OPERATING_ROOM_FEE,
+        float $VAT_SUPPLIES,
+        float $VAT_OTHERS,
+        float $VAT_SUB_TOTAL,
+        float $SP_ROOM_N_BOARD,
+        float $SP_DRUG_N_MEDICINE,
+        float $SP_LAB_N_DIAGNOSTICS,
+        float $SP_OPERATING_ROOM_FEE,
+        float $SP_SUPPLIES,
+        float $SP_OTHERS,
+        float $SP_SUB_TOTAL,
+        float $GOV_ROOM_N_BOARD,
+        float $GOV_DRUG_N_MEDICINE,
+        float $GOV_LAB_N_DIAGNOSTICS,
+        float $GOV_OPERATING_ROOM_FEE,
+        float $GOV_SUPPLIES,
+        float $GOV_OTHERS,
+        float $GOV_SUB_TOTAL,
+        bool $GOV_PCSO,
+        bool $GOV_DSWD,
+        bool $GOV_DOH,
+        bool $GOV_HMO,
+        bool $GOV_LINGAP,
+        float $P1_ROOM_N_BOARD,
+        float $P1_DRUG_N_MEDICINE,
+        float $P1_LAB_N_DIAGNOSTICS,
+        float $P1_OPERATING_ROOM_FEE,
+        float $P1_SUPPLIES,
+        float $P1_OTHERS,
+        float $P1_SUB_TOTAL,
+        float $P2_ROOM_N_BOARD,
+        float $P2_DRUG_N_MEDICINE,
+        float $P2_LAB_N_DIAGNOSTICS,
+        float $P2_OPERATING_ROOM_FEE,
+        float $P2_SUPPLIES,
+        float $P2_OTHERS,
+        float $P2_SUB_TOTAL,
+        float $OP_ROOM_N_BOARD,
+        float $OP_DRUG_N_MEDICINE,
+        float $OP_LAB_N_DIAGNOSTICS,
+        float $OP_OPERATING_ROOM_FEE,
+        float $OP_SUPPLIES,
+        float $OP_OTHERS,
+        float $OP_SUB_TOTAL,
+        float $PROFESSIONAL_FEE_SUB_TOTAL,
+        float $PROFESSIONAL_DISCOUNT_SUB_TOTAL,
+        float $CHARGE_TOTAL,
+        float $VAT_TOTAL,
+        float $SP_TOTAL,
+        float $GOV_TOTAL,
+        float $P1_TOTAL,
+        float $P2_TOTAL,
+        float $OP_TOTAL,
+        int $PREPARED_BY_ID,
+        string $DATE_SIGNED,
+        string $OTHER_NAME
+    ) {
         PhilHealth::where('ID', $ID)
             ->update([
-                'CHARGES_ROOM_N_BOARD' => $CHARGES_ROOM_N_BOARD,
-                'CHARGES_DRUG_N_MEDICINE' => $CHARGES_DRUG_N_MEDICINE,
-                'CHARGES_LAB_N_DIAGNOSTICS' => $CHARGES_LAB_N_DIAGNOSTICS,
-                'CHARGES_OPERATING_ROOM_FEE' => $CHARGES_OPERATING_ROOM_FEE,
-                'CHARGES_SUPPLIES' => $CHARGES_SUPPLIES,
-                'CHARGES_OTHERS' => $CHARGES_OTHERS,
-                'CHARGES_SUB_TOTAL' => $CHARGES_SUB_TOTAL,
-                'OTHER_SPECIFY' => $OTHER_SPECIFY,
-                'VAT_ROOM_N_BOARD' => $VAT_ROOM_N_BOARD,
-                'VAT_DRUG_N_MEDICINE' => $VAT_DRUG_N_MEDICINE,
-                'VAT_LAB_N_DIAGNOSTICS' => $VAT_LAB_N_DIAGNOSTICS,
-                'VAT_OPERATING_ROOM_FEE' => $VAT_OPERATING_ROOM_FEE,
-                'VAT_SUPPLIES' => $VAT_SUPPLIES,
-                'VAT_OTHERS' => $VAT_OTHERS,
-                'VAT_SUB_TOTAL' => $VAT_SUB_TOTAL,
-                'SP_ROOM_N_BOARD' => $SP_ROOM_N_BOARD,
-                'SP_DRUG_N_MEDICINE' => $SP_DRUG_N_MEDICINE,
-                'SP_LAB_N_DIAGNOSTICS' => $SP_LAB_N_DIAGNOSTICS,
-                'SP_OPERATING_ROOM_FEE' => $SP_OPERATING_ROOM_FEE,
-                'SP_SUPPLIES' => $SP_SUPPLIES,
-                'SP_OTHERS' => $SP_OTHERS,
-                'SP_SUB_TOTAL' => $SP_SUB_TOTAL,
-                'GOV_ROOM_N_BOARD' => $GOV_ROOM_N_BOARD,
-                'GOV_DRUG_N_MEDICINE' => $GOV_DRUG_N_MEDICINE,
-                'GOV_LAB_N_DIAGNOSTICS' => $GOV_LAB_N_DIAGNOSTICS,
-                'GOV_OPERATING_ROOM_FEE' => $GOV_OPERATING_ROOM_FEE,
-                'GOV_SUPPLIES' => $GOV_SUPPLIES,
-                'GOV_OTHERS' => $GOV_OTHERS,
-                'GOV_SUB_TOTAL' => $GOV_SUB_TOTAL,
-                'GOV_PCSO' => $GOV_PCSO,
-                'GOV_DSWD' => $GOV_DSWD,
-                'GOV_DOH' => $GOV_DOH,
-                'GOV_HMO' => $GOV_HMO,
-                'GOV_LINGAP' => $GOV_LINGAP,
-                'P1_ROOM_N_BOARD' => $P1_ROOM_N_BOARD,
-                'P1_DRUG_N_MEDICINE' => $P1_DRUG_N_MEDICINE,
-                'P1_LAB_N_DIAGNOSTICS' => $P1_LAB_N_DIAGNOSTICS,
-                'P1_OPERATING_ROOM_FEE' => $P1_OPERATING_ROOM_FEE,
-                'P1_SUPPLIES' => $P1_SUPPLIES,
-                'P1_OTHERS' => $P1_OTHERS,
-                'P1_SUB_TOTAL' => $P1_SUB_TOTAL,
-                'P2_ROOM_N_BOARD' => $P2_ROOM_N_BOARD,
-                'P2_DRUG_N_MEDICINE' => $P2_DRUG_N_MEDICINE,
-                'P2_LAB_N_DIAGNOSTICS' => $P2_LAB_N_DIAGNOSTICS,
-                'P2_OPERATING_ROOM_FEE' => $P2_OPERATING_ROOM_FEE,
-                'P2_SUPPLIES' => $P2_SUPPLIES,
-                'P2_OTHERS' => $P2_OTHERS,
-                'P2_SUB_TOTAL' => $P2_SUB_TOTAL,
-                'OP_ROOM_N_BOARD' => $OP_ROOM_N_BOARD,
-                'OP_DRUG_N_MEDICINE' => $OP_DRUG_N_MEDICINE,
-                'OP_LAB_N_DIAGNOSTICS' => $OP_LAB_N_DIAGNOSTICS,
-                'OP_OPERATING_ROOM_FEE' => $OP_OPERATING_ROOM_FEE,
-                'OP_SUPPLIES' => $OP_SUPPLIES,
-                'OP_OTHERS' => $OP_OTHERS,
-                'OP_SUB_TOTAL' => $OP_SUB_TOTAL,
-                'PROFESSIONAL_FEE_SUB_TOTAL' => $PROFESSIONAL_FEE_SUB_TOTAL,
-                'PROFESSIONAL_DISCOUNT_SUB_TOTAL' => $PROFESSIONAL_DISCOUNT_SUB_TOTAL,
-                'CHARGE_TOTAL' => $CHARGE_TOTAL,
-                'VAT_TOTAL' => $VAT_TOTAL,
-                'SP_TOTAL' => $SP_TOTAL,
-                'GOV_TOTAL' => $GOV_TOTAL,
-                'P1_TOTAL' => $P1_TOTAL,
-                'P2_TOTAL' => $P2_TOTAL,
-                'OP_TOTAL' => $OP_TOTAL,
-                'PREPARED_BY_ID' => $PREPARED_BY_ID == 0 ? null : $PREPARED_BY_ID,
-                'DATE_SIGNED' => $DATE_SIGNED == '' ? null : $DATE_SIGNED,
-                'OTHER_NAME' => $OTHER_NAME ?? null,
-            ]);
+                    'CHARGES_ROOM_N_BOARD' => $CHARGES_ROOM_N_BOARD,
+                    'CHARGES_DRUG_N_MEDICINE' => $CHARGES_DRUG_N_MEDICINE,
+                    'CHARGES_LAB_N_DIAGNOSTICS' => $CHARGES_LAB_N_DIAGNOSTICS,
+                    'CHARGES_OPERATING_ROOM_FEE' => $CHARGES_OPERATING_ROOM_FEE,
+                    'CHARGES_SUPPLIES' => $CHARGES_SUPPLIES,
+                    'CHARGES_OTHERS' => $CHARGES_OTHERS,
+                    'CHARGES_SUB_TOTAL' => $CHARGES_SUB_TOTAL,
+                    'OTHER_SPECIFY' => $OTHER_SPECIFY,
+                    'VAT_ROOM_N_BOARD' => $VAT_ROOM_N_BOARD,
+                    'VAT_DRUG_N_MEDICINE' => $VAT_DRUG_N_MEDICINE,
+                    'VAT_LAB_N_DIAGNOSTICS' => $VAT_LAB_N_DIAGNOSTICS,
+                    'VAT_OPERATING_ROOM_FEE' => $VAT_OPERATING_ROOM_FEE,
+                    'VAT_SUPPLIES' => $VAT_SUPPLIES,
+                    'VAT_OTHERS' => $VAT_OTHERS,
+                    'VAT_SUB_TOTAL' => $VAT_SUB_TOTAL,
+                    'SP_ROOM_N_BOARD' => $SP_ROOM_N_BOARD,
+                    'SP_DRUG_N_MEDICINE' => $SP_DRUG_N_MEDICINE,
+                    'SP_LAB_N_DIAGNOSTICS' => $SP_LAB_N_DIAGNOSTICS,
+                    'SP_OPERATING_ROOM_FEE' => $SP_OPERATING_ROOM_FEE,
+                    'SP_SUPPLIES' => $SP_SUPPLIES,
+                    'SP_OTHERS' => $SP_OTHERS,
+                    'SP_SUB_TOTAL' => $SP_SUB_TOTAL,
+                    'GOV_ROOM_N_BOARD' => $GOV_ROOM_N_BOARD,
+                    'GOV_DRUG_N_MEDICINE' => $GOV_DRUG_N_MEDICINE,
+                    'GOV_LAB_N_DIAGNOSTICS' => $GOV_LAB_N_DIAGNOSTICS,
+                    'GOV_OPERATING_ROOM_FEE' => $GOV_OPERATING_ROOM_FEE,
+                    'GOV_SUPPLIES' => $GOV_SUPPLIES,
+                    'GOV_OTHERS' => $GOV_OTHERS,
+                    'GOV_SUB_TOTAL' => $GOV_SUB_TOTAL,
+                    'GOV_PCSO' => $GOV_PCSO,
+                    'GOV_DSWD' => $GOV_DSWD,
+                    'GOV_DOH' => $GOV_DOH,
+                    'GOV_HMO' => $GOV_HMO,
+                    'GOV_LINGAP' => $GOV_LINGAP,
+                    'P1_ROOM_N_BOARD' => $P1_ROOM_N_BOARD,
+                    'P1_DRUG_N_MEDICINE' => $P1_DRUG_N_MEDICINE,
+                    'P1_LAB_N_DIAGNOSTICS' => $P1_LAB_N_DIAGNOSTICS,
+                    'P1_OPERATING_ROOM_FEE' => $P1_OPERATING_ROOM_FEE,
+                    'P1_SUPPLIES' => $P1_SUPPLIES,
+                    'P1_OTHERS' => $P1_OTHERS,
+                    'P1_SUB_TOTAL' => $P1_SUB_TOTAL,
+                    'P2_ROOM_N_BOARD' => $P2_ROOM_N_BOARD,
+                    'P2_DRUG_N_MEDICINE' => $P2_DRUG_N_MEDICINE,
+                    'P2_LAB_N_DIAGNOSTICS' => $P2_LAB_N_DIAGNOSTICS,
+                    'P2_OPERATING_ROOM_FEE' => $P2_OPERATING_ROOM_FEE,
+                    'P2_SUPPLIES' => $P2_SUPPLIES,
+                    'P2_OTHERS' => $P2_OTHERS,
+                    'P2_SUB_TOTAL' => $P2_SUB_TOTAL,
+                    'OP_ROOM_N_BOARD' => $OP_ROOM_N_BOARD,
+                    'OP_DRUG_N_MEDICINE' => $OP_DRUG_N_MEDICINE,
+                    'OP_LAB_N_DIAGNOSTICS' => $OP_LAB_N_DIAGNOSTICS,
+                    'OP_OPERATING_ROOM_FEE' => $OP_OPERATING_ROOM_FEE,
+                    'OP_SUPPLIES' => $OP_SUPPLIES,
+                    'OP_OTHERS' => $OP_OTHERS,
+                    'OP_SUB_TOTAL' => $OP_SUB_TOTAL,
+                    'PROFESSIONAL_FEE_SUB_TOTAL' => $PROFESSIONAL_FEE_SUB_TOTAL,
+                    'PROFESSIONAL_DISCOUNT_SUB_TOTAL' => $PROFESSIONAL_DISCOUNT_SUB_TOTAL,
+                    'CHARGE_TOTAL' => $CHARGE_TOTAL,
+                    'VAT_TOTAL' => $VAT_TOTAL,
+                    'SP_TOTAL' => $SP_TOTAL,
+                    'GOV_TOTAL' => $GOV_TOTAL,
+                    'P1_TOTAL' => $P1_TOTAL,
+                    'P2_TOTAL' => $P2_TOTAL,
+                    'OP_TOTAL' => $OP_TOTAL,
+                    'PREPARED_BY_ID' => $PREPARED_BY_ID == 0 ? null : $PREPARED_BY_ID,
+                    'DATE_SIGNED' => $DATE_SIGNED == '' ? null : $DATE_SIGNED,
+                    'OTHER_NAME' => $OTHER_NAME ?? null,
+                ]);
     }
     public function Delete(int $ID)
     {
@@ -544,23 +686,23 @@ class PhilHealthServices
     {
         $result = PhilHealth::query()
             ->select([
-                'philhealth.ID',
-                'philhealth.RECORDED_ON',
-                'philhealth.CODE',
-                'philhealth.DATE',
-                'philhealth.DATE_ADMITTED',
-                'philhealth.DATE_DISCHARGED',
-                'philhealth.CHARGE_TOTAL',
-                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
-                'l.NAME as LOCATION_NAME',
-                's.DESCRIPTION as STATUS',
-                DB::raw('(select count(*) from service_charges inner join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID where service_charges_items.ITEM_ID = ' . $this->PHIL_HEALTH_ITEM_ID . ' and service_charges.LOCATION_ID = philhealth.LOCATION_ID  and service_charges.PATIENT_ID = philhealth.CONTACT_ID and service_charges.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
-                'philhealth.P1_TOTAL',
-                'philhealth.PAYMENT_AMOUNT',
-                'philhealth.AR_NO',
-                'philhealth.AR_DATE',
-                DB::raw('if(ISNULL(philhealth.AR_DATE),false,true)  as IN_PROGRESS')
-            ])
+                    'philhealth.ID',
+                    'philhealth.RECORDED_ON',
+                    'philhealth.CODE',
+                    'philhealth.DATE',
+                    'philhealth.DATE_ADMITTED',
+                    'philhealth.DATE_DISCHARGED',
+                    'philhealth.CHARGE_TOTAL',
+                    DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
+                    'l.NAME as LOCATION_NAME',
+                    's.DESCRIPTION as STATUS',
+                    DB::raw('(select count(*) from service_charges inner join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID where service_charges_items.ITEM_ID = ' . $this->PHIL_HEALTH_ITEM_ID . ' and service_charges.LOCATION_ID = philhealth.LOCATION_ID  and service_charges.PATIENT_ID = philhealth.CONTACT_ID and service_charges.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
+                    'philhealth.P1_TOTAL',
+                    'philhealth.PAYMENT_AMOUNT',
+                    'philhealth.AR_NO',
+                    'philhealth.AR_DATE',
+                    DB::raw('if(ISNULL(philhealth.AR_DATE),false,true)  as IN_PROGRESS')
+                ])
             ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'philhealth.LOCATION_ID');
@@ -595,9 +737,9 @@ class PhilHealthServices
     {
         PhilHealth::where('ID', '=', $ID)
             ->update([
-                'AR_NO' => $AR_NO == '' ? null : $AR_NO,
-                'AR_DATE' => $AR_DATE == '' ? null : $AR_DATE
-            ]);
+                    'AR_NO' => $AR_NO == '' ? null : $AR_NO,
+                    'AR_DATE' => $AR_DATE == '' ? null : $AR_DATE
+                ]);
     }
     public function IsExistsARNumber($AR_NO, $ID): bool
     {
@@ -607,19 +749,19 @@ class PhilHealthServices
     {
         $result = PhilHealth::query()
             ->select([
-                'philhealth.ID',
-                'philhealth.CODE',
-                'philhealth.DATE',
-                'philhealth.DATE_ADMITTED',
-                'philhealth.DATE_DISCHARGED',
-                'philhealth.CHARGE_TOTAL',
-                'l.NAME as LOCATION_NAME',
-                's.DESCRIPTION as STATUS',
-                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
-                'philhealth.P1_TOTAL',
-                'philhealth.PAYMENT_AMOUNT',
-                'philhealth.IS_TEMP'
-            ])
+                    'philhealth.ID',
+                    'philhealth.CODE',
+                    'philhealth.DATE',
+                    'philhealth.DATE_ADMITTED',
+                    'philhealth.DATE_DISCHARGED',
+                    'philhealth.CHARGE_TOTAL',
+                    'l.NAME as LOCATION_NAME',
+                    's.DESCRIPTION as STATUS',
+                    DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
+                    'philhealth.P1_TOTAL',
+                    'philhealth.PAYMENT_AMOUNT',
+                    'philhealth.IS_TEMP'
+                ])
             ->join('location as l', 'l.ID', '=', 'philhealth.LOCATION_ID')
             ->join('document_status_map as s', 's.ID', '=', 'philhealth.STATUS_ID')
             ->where('philhealth.CONTACT_ID', '=', $contact_id)
@@ -641,15 +783,15 @@ class PhilHealthServices
     {
         $result = PhilHealthProfFee::query()
             ->select([
-                'philhealth_prof_fee.ID',
-                'philhealth_prof_fee.CONTACT_ID',
-                'philhealth_prof_fee.AMOUNT',
-                'philhealth_prof_fee.DISCOUNT',
-                'philhealth_prof_fee.FIRST_CASE',
-                'c.PRINT_NAME_AS as NAME',
-                'c.PIN as PIN_NUM'
+                    'philhealth_prof_fee.ID',
+                    'philhealth_prof_fee.CONTACT_ID',
+                    'philhealth_prof_fee.AMOUNT',
+                    'philhealth_prof_fee.DISCOUNT',
+                    'philhealth_prof_fee.FIRST_CASE',
+                    'c.PRINT_NAME_AS as NAME',
+                    'c.PIN as PIN_NUM'
 
-            ])
+                ])
             ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
 
             ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
@@ -663,15 +805,15 @@ class PhilHealthServices
     {
         $result = PhilHealthProfFee::query()
             ->select([
-                'philhealth_prof_fee.ID',
-                'philhealth_prof_fee.CONTACT_ID',
-                'philhealth_prof_fee.AMOUNT',
-                'philhealth_prof_fee.DISCOUNT',
-                'philhealth_prof_fee.FIRST_CASE',
-                'philhealth_prof_fee.BILL_ID',
-                'c.PRINT_NAME_AS as NAME',
-                'c.PIN as PIN_NUM'
-            ])
+                    'philhealth_prof_fee.ID',
+                    'philhealth_prof_fee.CONTACT_ID',
+                    'philhealth_prof_fee.AMOUNT',
+                    'philhealth_prof_fee.DISCOUNT',
+                    'philhealth_prof_fee.FIRST_CASE',
+                    'philhealth_prof_fee.BILL_ID',
+                    'c.PRINT_NAME_AS as NAME',
+                    'c.PIN as PIN_NUM'
+                ])
             ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
             ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
             ->where('PHIC_ID', '=', $PHIC_ID)
@@ -684,8 +826,8 @@ class PhilHealthServices
     {
         PhilHealthProfFee::where('PHIC_ID', '=', $PHIC_ID)
             ->update([
-                'CONTACT_ID' => $NEW_CONTACT_ID
-            ]);
+                    'CONTACT_ID' => $NEW_CONTACT_ID
+                ]);
     }
     private function getLine($Id): int
     {
@@ -712,10 +854,10 @@ class PhilHealthServices
     {
         PhilHealthProfFee::where('ID', $ID)
             ->update([
-                'AMOUNT' => $AMOUNT,
-                'DISCOUNT' => $DISCOUNT,
-                'FIRST_CASE' => $FIRST_CASE
-            ]);
+                    'AMOUNT' => $AMOUNT,
+                    'DISCOUNT' => $DISCOUNT,
+                    'FIRST_CASE' => $FIRST_CASE
+                ]);
     }
     public function DeleteProfFee(int $ID)
     {
@@ -753,21 +895,21 @@ class PhilHealthServices
     {
         PhilhealthDrugsMedicines::where('ID', $ID)
             ->update([
-                'PHILHEALTH_ID' => $PHILHEALTH_ID,
-                'GENERIC_NAME' => $GENERIC_NAME,
-                'QUANTITY' => $QUANTITY,
-                'DOSSAGE' => $DOSSAGE,
-                'ROUTE' => $ROUTE,
-                'FREQUENCY' => $FREQUENCY,
-                'TOTAL_COST' => $TOTAL_COST,
-                'CONT_GENERIC_NAME' => $CONT_GENERIC_NAME,
-                'CONT_QUANTITY' => $CONT_QUANTITY,
-                'CONT_DOSSAGE' => $CONT_DOSSAGE,
-                'CONT_ROUTE' => $CONT_ROUTE,
-                'CONT_FREQUENCY' => $CONT_FREQUENCY,
-                'CONT_TOTAL_COST' => $CONT_TOTAL_COST
+                    'PHILHEALTH_ID' => $PHILHEALTH_ID,
+                    'GENERIC_NAME' => $GENERIC_NAME,
+                    'QUANTITY' => $QUANTITY,
+                    'DOSSAGE' => $DOSSAGE,
+                    'ROUTE' => $ROUTE,
+                    'FREQUENCY' => $FREQUENCY,
+                    'TOTAL_COST' => $TOTAL_COST,
+                    'CONT_GENERIC_NAME' => $CONT_GENERIC_NAME,
+                    'CONT_QUANTITY' => $CONT_QUANTITY,
+                    'CONT_DOSSAGE' => $CONT_DOSSAGE,
+                    'CONT_ROUTE' => $CONT_ROUTE,
+                    'CONT_FREQUENCY' => $CONT_FREQUENCY,
+                    'CONT_TOTAL_COST' => $CONT_TOTAL_COST
 
-            ]);
+                ]);
     }
     public function DrugMedicineDelete(int $ID)
     {
@@ -778,20 +920,20 @@ class PhilHealthServices
     {
         return PhilhealthDrugsMedicines::query()
             ->select([
-                'ID',
-                'GENERIC_NAME',
-                'QUANTITY',
-                'DOSSAGE',
-                'ROUTE',
-                'FREQUENCY',
-                'TOTAL_COST',
-                'CONT_GENERIC_NAME',
-                'CONT_QUANTITY',
-                'CONT_DOSSAGE',
-                'CONT_ROUTE',
-                'CONT_FREQUENCY',
-                'CONT_TOTAL_COST'
-            ])
+                    'ID',
+                    'GENERIC_NAME',
+                    'QUANTITY',
+                    'DOSSAGE',
+                    'ROUTE',
+                    'FREQUENCY',
+                    'TOTAL_COST',
+                    'CONT_GENERIC_NAME',
+                    'CONT_QUANTITY',
+                    'CONT_DOSSAGE',
+                    'CONT_ROUTE',
+                    'CONT_FREQUENCY',
+                    'CONT_TOTAL_COST'
+                ])
             ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
             ->orderBy('ID', 'asc')
             ->get();
@@ -814,9 +956,9 @@ class PhilHealthServices
 
             PhilHealth::where('ID', $PHILHEALTH_ID)
                 ->update([
-                    'PAYMENT_AMOUNT' => $TOTAL_PAY,
-                    'STATUS_ID' => $STATUS_ID
-                ]);
+                        'PAYMENT_AMOUNT' => $TOTAL_PAY,
+                        'STATUS_ID' => $STATUS_ID
+                    ]);
         }
     }
 
@@ -832,9 +974,9 @@ class PhilHealthServices
     {
         $result = PhilHealth::query()
             ->select([
-                'ID',
-                DB::raw("CONCAT(' SOA No.: ',CODE ,' /  Admitted:',DATE_ADMITTED ,'  /  Discharged:', DATE_DISCHARGED, '   / First Case Rate : ', format(P1_TOTAL,2) ) as NAME")
-            ])
+                    'ID',
+                    DB::raw("CONCAT(' SOA No.: ',CODE ,' /  Admitted:',DATE_ADMITTED ,'  /  Discharged:', DATE_DISCHARGED, '   / First Case Rate : ', format(P1_TOTAL,2) ) as NAME")
+                ])
             ->where('CONTACT_ID', '=', $PATIENT_ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->whereColumn('P1_TOTAL', '<>', 'PAYMENT_AMOUNT')
@@ -852,9 +994,9 @@ class PhilHealthServices
     {
         PhilHealth::where('ID', '=', $PHILHEALTH_ID)
             ->update([
-                'PATIENT_PAYMENT_ID' => $PATIENT_PAYMENT_ID,
-                'INVOICE_ID' => $INVOICE_ID
-            ]);
+                    'PATIENT_PAYMENT_ID' => $PATIENT_PAYMENT_ID,
+                    'INVOICE_ID' => $INVOICE_ID
+                ]);
     }
     public function getPhilHealthIdbyPatientPayment(int $PATIENT_PAYMENT_ID): int
     {
@@ -979,17 +1121,17 @@ class PhilHealthServices
 
         $result = DB::table('philhealth as p')
             ->select([
-                'p.ID',
-                'p.CODE',
-                'p.DATE',
-                'p.DATE_ADMITTED',
-                'p.DATE_DISCHARGED',
-                DB::raw('CONCAT( c.LAST_NAME, ", ", c.FIRST_NAME, ", ", LEFT(c.MIDDLE_NAME, 1) ) as PATIENT_NAME'),
-                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = p.CONTACT_ID and hemodialysis.DATE between p.DATE_ADMITTED and p.DATE_DISCHARGED ) as NO_TREAT '),
-                'pf.FIRST_CASE as AMOUNT',
-                'p.PF_RECEIVED_DATE',
+                    'p.ID',
+                    'p.CODE',
+                    'p.DATE',
+                    'p.DATE_ADMITTED',
+                    'p.DATE_DISCHARGED',
+                    DB::raw('CONCAT( c.LAST_NAME, ", ", c.FIRST_NAME, ", ", LEFT(c.MIDDLE_NAME, 1) ) as PATIENT_NAME'),
+                    DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = p.CONTACT_ID and hemodialysis.DATE between p.DATE_ADMITTED and p.DATE_DISCHARGED ) as NO_TREAT '),
+                    'pf.FIRST_CASE as AMOUNT',
+                    'p.PF_RECEIVED_DATE',
 
-            ])
+                ])
 
             ->join('contact as c', 'c.ID', 'p.CONTACT_ID')
             ->join('philhealth_prof_fee as pf', 'pf.PHIC_ID', '=', 'p.ID')
@@ -1013,8 +1155,8 @@ class PhilHealthServices
     {
         PhilHealth::where('ID', '=', $PHILHEALTH_ID)
             ->update([
-                'PF_RECEIVED_DATE' => $PF_RECEIVED_DATE
-            ]);
+                    'PF_RECEIVED_DATE' => $PF_RECEIVED_DATE
+                ]);
     }
 
     public function makeReceivableForCustomer(int $PHILHEALTH_ID): array
@@ -1144,8 +1286,8 @@ class PhilHealthServices
 
         PhilHealth::where('ID', '=', $PHILHEALTH_ID)
             ->update([
-                'INVOICE_ID' => $INVOICE_ID
-            ]);
+                    'INVOICE_ID' => $INVOICE_ID
+                ]);
 
         return [
             'STATUS' => true,
@@ -1160,38 +1302,38 @@ class PhilHealthServices
 
         $result = PhilHealth::query()
             ->select([
-                'philhealth.ID',
-                'philhealth.RECORDED_ON',
-                'philhealth.CODE',
-                'philhealth.DATE',
-                'philhealth.DATE_ADMITTED',
-                'philhealth.DATE_DISCHARGED',
-                'philhealth.CHARGE_TOTAL',
-                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
-                'l.NAME as LOCATION_NAME',
-                's.DESCRIPTION as STATUS',
-                DB::raw('(select count(*) from hemodialysis inner join service_charges as sc on sc.DATE = hemodialysis.DATE and sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID = hemodialysis.LOCATION_ID  inner join service_charges_items as sci on sci.SERVICE_CHARGES_ID = sc.ID and sci.ITEM_ID = 2  where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
-                'philhealth.P1_TOTAL',
-                'philhealth.PAYMENT_AMOUNT',
-                'philhealth.AR_NO',
-                'philhealth.AR_DATE',
-                DB::raw('if(ISNULL(philhealth.AR_DATE),false,true)  as IN_PROGRESS'),
-                DB::raw(" (select  GROUP_CONCAT(hemodialysis.DATE ORDER BY hemodialysis.DATE ASC SEPARATOR ', ') from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as CONFINE_PERIOD "),
-                DB::raw(" (select payment.DATE from payment_invoices 
+                    'philhealth.ID',
+                    'philhealth.RECORDED_ON',
+                    'philhealth.CODE',
+                    'philhealth.DATE',
+                    'philhealth.DATE_ADMITTED',
+                    'philhealth.DATE_DISCHARGED',
+                    'philhealth.CHARGE_TOTAL',
+                    DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
+                    'l.NAME as LOCATION_NAME',
+                    's.DESCRIPTION as STATUS',
+                    DB::raw('(select count(*) from hemodialysis inner join service_charges as sc on sc.DATE = hemodialysis.DATE and sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID = hemodialysis.LOCATION_ID  inner join service_charges_items as sci on sci.SERVICE_CHARGES_ID = sc.ID and sci.ITEM_ID = 2  where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
+                    'philhealth.P1_TOTAL',
+                    'philhealth.PAYMENT_AMOUNT',
+                    'philhealth.AR_NO',
+                    'philhealth.AR_DATE',
+                    DB::raw('if(ISNULL(philhealth.AR_DATE),false,true)  as IN_PROGRESS'),
+                    DB::raw(" (select  GROUP_CONCAT(hemodialysis.DATE ORDER BY hemodialysis.DATE ASC SEPARATOR ', ') from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as CONFINE_PERIOD "),
+                    DB::raw(" (select payment.DATE from payment_invoices 
                 inner join payment on payment.ID = payment_invoices.PAYMENT_ID 
                 inner join invoice on invoice.ID = payment_invoices.INVOICE_ID 
                 inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
                  where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
                 ) as PAID_DATE 
                  "),
-                DB::raw("  (select payment.AMOUNT from payment_invoices 
+                    DB::raw("  (select payment.AMOUNT from payment_invoices 
                 inner join payment on payment.ID = payment_invoices.PAYMENT_ID 
                 inner join invoice on invoice.ID = payment_invoices.INVOICE_ID 
                 inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
                  where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
                 ) as PAID_AMOUNT 
                  "),
-                DB::raw("  (select payment.RECEIPT_REF_NO from payment_invoices 
+                    DB::raw("  (select payment.RECEIPT_REF_NO from payment_invoices 
                 inner join payment on payment.ID = payment_invoices.PAYMENT_ID 
                 inner join invoice on invoice.ID = payment_invoices.INVOICE_ID 
                 inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
@@ -1199,17 +1341,17 @@ class PhilHealthServices
                 ) as OR_NUMBER 
                  "),
 
-                DB::raw(" (select tax_credit.AMOUNT from tax_credit_invoices 
+                    DB::raw(" (select tax_credit.AMOUNT from tax_credit_invoices 
                 inner join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID 
                 inner join invoice on invoice.ID = tax_credit_invoices.INVOICE_ID 
                 inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
                  where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
                 )  as TAX_AMOUNT
                   "),
-                DB::raw(" (select bill.AMOUNT from philhealth_prof_fee inner join bill on bill.ID = philhealth_prof_fee.BILL_ID  where philhealth_prof_fee.PHIC_ID =  philhealth.ID ) as DOCTOR_PF"),
-                DB::raw(" (select bill.BALANCE_DUE from philhealth_prof_fee inner join bill on bill.ID = philhealth_prof_fee.BILL_ID  where philhealth_prof_fee.PHIC_ID =  philhealth.ID ) as DOCTOR_PF_BALANCE"),
+                    DB::raw(" (select bill.AMOUNT from philhealth_prof_fee inner join bill on bill.ID = philhealth_prof_fee.BILL_ID  where philhealth_prof_fee.PHIC_ID =  philhealth.ID ) as DOCTOR_PF"),
+                    DB::raw(" (select bill.BALANCE_DUE from philhealth_prof_fee inner join bill on bill.ID = philhealth_prof_fee.BILL_ID  where philhealth_prof_fee.PHIC_ID =  philhealth.ID ) as DOCTOR_PF_BALANCE"),
 
-            ])
+                ])
             ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'philhealth.LOCATION_ID');

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ItemSoa;
 use App\Models\ItemSoaItemized;
 use App\Models\ServiceChargesItems;
 
@@ -73,7 +74,7 @@ class ItemSoaItemizedServices
     }
 
     public static function getQuantityActual($dates = [], int $locationid, int $patientid, int $SOA_ITEM_ID): int
-    {  
+    {
 
         $result = (int) ServiceChargesItems::join('item_soa_itemized as i', 'i.ITEM_ID', '=', 'service_charges_items.ITEM_ID')
             ->join('service_charges as sc', 'sc.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
@@ -82,7 +83,35 @@ class ItemSoaItemizedServices
             ->where('sc.LOCATION_ID', '=', $locationid)
             ->where('sc.PATIENT_ID', '=', $patientid)
             ->sum('service_charges_items.QUANTITY') ?? 0;
-         
+
         return $result;
+    }
+    private function getQty(string $DATE_ADMITTED, string $DATE_DISCHARGED, int $locationid, int $patientid, int $SOA_ITEM_ID)
+    {
+        $result = (int) ServiceChargesItems::join('item_soa_itemized as i', 'i.ITEM_ID', '=', 'service_charges_items.ITEM_ID')
+            ->join('service_charges as sc', 'sc.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->where('i.SOA_ITEM_ID', '=', $SOA_ITEM_ID)
+            ->whereBetween('sc.DATE', [$DATE_ADMITTED, $DATE_DISCHARGED])
+            ->where('sc.LOCATION_ID', '=', $locationid)
+            ->where('sc.PATIENT_ID', '=', $patientid)
+            ->sum('service_charges_items.QUANTITY') ?? 0;
+
+        return $result;
+    }
+    public function getSumByOnActualQty(int $locationid, int $patientid, int $SOA_TYPE, string $DATE_ADMITTED, string $DATE_DISCHARGED)
+    {
+        $TOTAL = 0;
+
+        $dataList = ItemSoa::where('TYPE', '=', $SOA_TYPE)
+            ->where('LOCATION_ID', '=', $locationid)
+            ->where('ACTUAL_BASE', '=', true)
+            ->get();
+
+        foreach ($dataList as $list) {
+            $QTY = $this->getQty($DATE_ADMITTED, $DATE_DISCHARGED, $locationid, $patientid, $list->ID);
+            $TOTAL = $TOTAL + ($QTY * $list->RATE);
+        }
+
+        return $TOTAL;
     }
 }
