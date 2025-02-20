@@ -2,7 +2,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12 text-center mb-1" @if ($HEADER) style="opacity: 0.0" @endif>
+                <div class="col-12 text-center " @if ($HEADER) style="opacity: 0.0" @endif>
                     @if (empty($LOGO_FILE))
                         <img class="print-logo" style="width:500px;" src="{{ asset('dist/logo/vida_logo.png') }}" />
                         <div class="text-center">
@@ -19,7 +19,7 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-4">
-                            <b class="bottom-line22" @if ($HEADER) style="opacity: 0.0" @endif>
+                            <b class="bottom-line2" @if ($HEADER) style="opacity: 0.0" @endif>
                                 PHILHEALTH ACCREDITED :
                             </b>
                         </div>
@@ -31,7 +31,7 @@
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
                                     class="col-6 text-right">
                                     SOA Reference No. : </div>
-                                <div class="col-6 @if ($OUTPUT_SIGN) bottom-line22 @endif">
+                                <div class="col-6 @if ($OUTPUT_SIGN) bottom-line2 @endif">
                                     <b>{{ $CODE }}</b>
                                 </div>
 
@@ -82,16 +82,7 @@
                         </div>
                         <div class="col-6">
                             <div class="row">
-                                <div class="col-12">
 
-                                </div>
-                                {{-- <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
-                                    PHILHEALTH No. :
-                                </div>
-                                <div class="col-7 @if ($OUTPUT_SIGN) bottom-line2 @endif">
-                                    {{ substr($PIN, 0, 1) . substr($PIN, 1, 1) . '-' . substr($PIN, 2, 1) . substr($PIN, 3, 1) . substr($PIN, 4, 1) . substr($PIN, 5, 1) . substr($PIN, 6, 1) . substr($PIN, 7, 1) . substr($PIN, 8, 1) . substr($PIN, 9, 1) . substr($PIN, 10, 1) . '-' . substr($PIN, 11, 1) }}
-
-                                </div> --}}
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">DATE
                                     & TIME ADMITTED :</div>
                                 <div class="col-7 @if ($OUTPUT_SIGN) bottom-line2 @endif">
@@ -446,8 +437,11 @@
                             @endif
                         </div>
                         <div id="p-pocket" class="col-1 text-right left-line2 font-weight-bold">
-
-                            {{ number_format($OP_SUB_TOTAL, 2) }}
+                            @if ($OP_SUB_TOTAL > 0)
+                                {{ number_format($OP_SUB_TOTAL, 2) }}
+                            @else
+                                &nbsp;
+                            @endif
 
                         </div>
                     </div>
@@ -493,11 +487,7 @@
                             </div>
                             <div id="p-second" class="col-1 left-line2 text-right "> </div>
                             <div id="p-pocket" class="col-1 text-right left-line2">
-                                @if ($list->FIRST_CASE > 0)
-                                    <i>
-                                        0.00
-                                    </i>
-                                @endif
+                                &nbsp;
                             </div>
                         </div>
                     @endforeach
@@ -531,9 +521,7 @@
                         </div>
                         <div id="p-second" class="col-1 left-line2 text-right font-weight-bold"> </div>
                         <div id="p-pocket" class="col-1 text-right left-line2 font-weight-bold">
-                            @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
-                                0.00
-                            @endif
+                            &nbsp;
                         </div>
                     </div>
 
