@@ -1,3 +1,7 @@
+<?php
+use App\Services\ItemSoaItemizedServices;
+?>
+
 <div class="mt-1 row">
     <div class="col-8">
         <table class="w-100" border="2">
@@ -46,7 +50,7 @@
                     @php
                         $TYPE = $list->TYPE_NAME;
                     @endphp
-                    <tr >
+                    <tr>
                         <td class="text-center font-weight-bold text-sm pb-0 pt-0">
                             @if (isset($breakDownDate[$row]))
                                 {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
@@ -55,16 +59,28 @@
                             @php
                                 $row++;
                             @endphp
+                            @php
+                                if ($list->ACTUAL_BASE) {
+                                    $defult_Qty = ItemSoaItemizedServices::getQuantityActual(
+                                        $dateList,
+                                        $LOCATION_ID,
+                                        $PATIENT_ID,
+                                        $list->ID,
+                                    );
+                                    $AMOUNT = $defult_Qty * $list->RATE ?? 0;
+                                } else {
+                                    $defult_Qty = $qty;
+                                    $AMOUNT = $qty * $list->RATE ?? 0;
+                                }
 
+                                $TOTAL = $TOTAL + $AMOUNT;
+                            @endphp
                         </td>
                         <td class="text-sm pb-0 pt-0">{{ $list->ITEM_NAME }}</td>
                         <td class="text-sm text-center">{{ $list->UNIT_NAME }}</td>
                         <td class=" text-right text-sm pb-0 pt-0">{{ number_format($list->RATE, 2) }}</td>
-                        <td class="text-center text-sm pb-0 pt-0"> {{ $qty }}</td>
-                        @php
-                            $AMOUNT = $qty * $list->RATE ?? 0;
-                            $TOTAL = $TOTAL + $AMOUNT;
-                        @endphp
+                        <td class="text-center text-sm pb-0 pt-0"> {{ $defult_Qty }}</td>
+
                         <td class="text-right text-sm pb-0 pt-0">{{ number_format($AMOUNT, 2) }}</td>
                     </tr>
                 @endforeach
@@ -82,7 +98,7 @@
 
     </div>
     <div class="col-4">
-        <table class="w-100" border="2"  >
+        <table class="w-100" border="2">
             <thead class="text-sm">
                 <tr class="text-center">
                     <th class="">ROUTINE MONTHLY LABORATORIES</th>
@@ -122,7 +138,7 @@
                 </tr>
 
                 <tr>
-                    <th class="text-center text-sm pb-0 pt-0" >(HEMATOLOGY) COMPLETE BLOOD COUNT</th>
+                    <th class="text-center text-sm pb-0 pt-0">(HEMATOLOGY) COMPLETE BLOOD COUNT</th>
                 </tr>
 
                 <tr>

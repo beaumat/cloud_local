@@ -595,7 +595,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    @livewire('PhilHealth.PrintItemized', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED, 'breakDownDate' => $breakDownDate])
+                    @livewire('PhilHealth.PrintItemized', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED, 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID])
                 </div>
                 {{-- @if ($OUTPUT_SIGN) --}}
                 <div class="col-12  pt-1">

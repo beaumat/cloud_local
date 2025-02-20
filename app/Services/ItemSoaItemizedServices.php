@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ItemSoaItemized;
+use App\Models\ServiceChargesItems;
 
 class ItemSoaItemizedServices
 {
@@ -71,4 +72,17 @@ class ItemSoaItemizedServices
         return $result;
     }
 
+    public static function getQuantityActual($dates = [], int $locationid, int $patientid, int $SOA_ITEM_ID): int
+    {  
+
+        $result = (int) ServiceChargesItems::join('item_soa_itemized as i', 'i.ITEM_ID', '=', 'service_charges_items.ITEM_ID')
+            ->join('service_charges as sc', 'sc.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->where('i.SOA_ITEM_ID', '=', $SOA_ITEM_ID)
+            ->whereIn('sc.DATE', $dates)
+            ->where('sc.LOCATION_ID', '=', $locationid)
+            ->where('sc.PATIENT_ID', '=', $patientid)
+            ->sum('service_charges_items.QUANTITY') ?? 0;
+         
+        return $result;
+    }
 }
