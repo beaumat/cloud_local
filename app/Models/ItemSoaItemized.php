@@ -13,7 +13,9 @@ class ItemSoaItemized extends Model
     public $timestamps = false;
     protected $fillable = [
         'ID',
-        'DESCRIPTION'
+        'ITEM_ID',
+        'SOA_ITEM_ID',
+        'INACTIVE'
     ];
 
 }
