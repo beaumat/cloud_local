@@ -89,7 +89,8 @@ class LocationServices
         string $DOCTOR_ORDER_DEFAULT,
         bool $OTHER_SIGN,
         int $PREPARED_BY_ID,
-        int $HD_FACILITY_REP_ID
+        int $HD_FACILITY_REP_ID,
+        bool $ITEMIZED_BASE
 
     ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
@@ -119,7 +120,8 @@ class LocationServices
             'DOCTOR_ORDER_DEFAULT' => $DOCTOR_ORDER_DEFAULT,
             'OTHER_SIGN' => $OTHER_SIGN,
             'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $HD_FACILITY_REP_ID : null,
-            'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null
+            'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null,
+            'ITEMIZED_BASE' => $ITEMIZED_BASE
         ]);
 
         return $ID;
@@ -151,7 +153,8 @@ class LocationServices
         string $DOCTOR_ORDER_DEFAULT,
         bool $OTHER_SIGN,
         int $PREPARED_BY_ID,
-        int $HD_FACILITY_REP_ID
+        int $HD_FACILITY_REP_ID,
+        bool $ITEMIZED_BASE,
 
     ): void {
 
@@ -181,7 +184,8 @@ class LocationServices
                 'DOCTOR_ORDER_DEFAULT' => $DOCTOR_ORDER_DEFAULT,
                 'OTHER_SIGN' => $OTHER_SIGN,
                 'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
-                'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null
+                'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null,
+                'ITEMIZED_BASE' => $ITEMIZED_BASE
 
             ]);
     }

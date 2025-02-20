@@ -166,6 +166,10 @@
                                             <livewire:custom-check-box name="USED_DRY_WEIGHT"
                                                 isDisabled="{{ false }}" titleName="Use Dry Weight"
                                                 wire:model='USED_DRY_WEIGHT' />
+
+                                            <livewire:custom-check-box name="ITEMIZED_BASE"
+                                                isDisabled="{{ false }}" titleName="Itemized Base"
+                                                wire:model='ITEMIZED_BASE' />
                                         </div>
                                         <div class="col-md-9">
                                             <livewire:text-input name="DOCTOR_ORDER_DEFAULT"
