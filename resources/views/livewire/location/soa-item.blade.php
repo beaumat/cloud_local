@@ -90,10 +90,15 @@
                                                     <input type="checkbox" class="check-input mt-2"
                                                         wire:model='editACTUAL_BASE' />
                                                 @else
-                                                    {{ $list->ACTUAL_BASE ? 'Yes' : 'No' }}
+                                                    @if ($list->ACTUAL_BASE)
+                                                        <button class="btn btn-info btn-sm"
+                                                            wire:click='OpenActualBase({{ $list->ID }})'><i class="fa fa-list" aria-hidden="true"></i></button>
+                                                    @else
+                                                        &nbsp;
+                                                    @endif
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($editid === $list->ID)
                                                     <button name="btnUpdate" type="button"
                                                         class="btn btn-sm btn-success"
@@ -103,10 +108,10 @@
                                                         wire:click='Canceled()'>Cancel</button>
                                                 @else
                                                     <button name="btnEdit" type="button" class='btn btn-sm btn-primary'
-                                                        wire:click='Edit({{ $list->ID }})'>Edit</button>
+                                                        wire:click='Edit({{ $list->ID }})'><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
                                                     <button name="btnDelete" type="button"
                                                         class='btn btn-sm btn-danger'
-                                                        wire:click='Delete({{ $list->ID }})'>Delete</button>
+                                                        wire:click='Delete({{ $list->ID }})'><i class="fa fa-trash" aria-hidden="true"></i></button>
                                                 @endif
 
                                             </td>
@@ -134,8 +139,8 @@
                                                     wire:model='UNIT_NAME' />
                                             </td>
                                             <td>
-                                                <input   step="0.01" type="number" class="form-control form-control-sm"
-                                                    wire:model='RATE' />
+                                                <input step="0.01" type="number"
+                                                    class="form-control form-control-sm" wire:model='RATE' />
                                             </td>
                                             <td class="text-center">
                                                 <input type="checkbox" class="check-input" wire:model='ACTUAL_BASE' />
@@ -155,4 +160,5 @@
             </div>
         </div>
     </section>
+    @livewire('Location.SoaItemModal');
 </div>

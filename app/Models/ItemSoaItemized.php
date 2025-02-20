@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ItemSoaItemized extends Model
 {
     use HasFactory;
-    protected $table = 'ItemSoaItemized';
+    protected $table = 'item_soa_itemized';
     protected $primaryKey = 'ID';
     public $timestamps = false;
     protected $fillable = [

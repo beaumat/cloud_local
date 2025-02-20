@@ -20,8 +20,8 @@ class SoaItem extends Component
     public string $UNIT_NAME;
     public float $RATE;
 
-    public  bool $ACTUAL_BASE;
-    public  $editid = null;
+    public bool $ACTUAL_BASE;
+    public $editid = null;
     public int $editTYPE;
     public string $editITEM_NAME;
     public string $editUNIT_NAME;
@@ -69,13 +69,13 @@ class SoaItem extends Component
             [
                 'TYPE' => 'required|numeric|exists:soa_item_type,id',
                 'ITEM_NAME' => 'required|string',
-                'RATE'      => 'required|numeric',
+                'RATE' => 'required|numeric',
             ],
             [],
             [
-                'TYPE'      => 'Type',
+                'TYPE' => 'Type',
                 'ITEM_NAME' => 'Item Name',
-                'RATE'      => 'Rate'
+                'RATE' => 'Rate'
             ]
         );
 
@@ -103,7 +103,7 @@ class SoaItem extends Component
         $data = $this->itemSoaServices->Get($ID);
 
         if ($data) {
-            $this->editid = (int)  $data->ID ?? 0;
+            $this->editid = (int) $data->ID ?? 0;
 
             $this->editTYPE = $data->TYPE;
             $this->editITEM_NAME = $data->ITEM_NAME ?? '';
@@ -117,15 +117,15 @@ class SoaItem extends Component
 
         $this->validate(
             [
-                'editTYPE'      => 'required|numeric|exists:soa_item_type,id',
+                'editTYPE' => 'required|numeric|exists:soa_item_type,id',
                 'editITEM_NAME' => 'required|string',
-                'editRATE'      => 'required|numeric',
+                'editRATE' => 'required|numeric',
             ],
             [],
             [
-                'editTYPE'      => 'Type',
+                'editTYPE' => 'Type',
                 'editITEM_NAME' => 'Item Name',
-                'editRATE'      => 'Rate'
+                'editRATE' => 'Rate'
             ]
         );
 
@@ -137,7 +137,7 @@ class SoaItem extends Component
                 $this->editITEM_NAME,
                 $this->editUNIT_NAME,
                 $this->editRATE,
-                 $this->editACTUAL_BASE
+                $this->editACTUAL_BASE
             );
             $this->Canceled();
         } catch (\Exception $e) {
@@ -146,13 +146,18 @@ class SoaItem extends Component
     }
     public function Delete(int $ID)
     {
-  
-     $this->itemSoaServices->Delete($ID);
+
+        $this->itemSoaServices->Delete($ID);
+    }
+    public function OpenActualBase(int $SOA_ITEM_ID)
+    {
+        $this->dispatch('open-actual-base', data: ['SOA_ITEM_ID' => $SOA_ITEM_ID]);
+    
     }
     public function Canceled()
     {
         $this->editid = null;
-        $this->editTYPE =  0;
+        $this->editTYPE = 0;
         $this->editITEM_NAME = '';
         $this->editUNIT_NAME = '';
         $this->editRATE = 0;
