@@ -1,11 +1,11 @@
 <div>
     <section class="content">
         <div class="container-fluid">
-            <div class="row mt-0">
-                <div class="col-12 text-center mt-0 mb-0" @if ($HEADER) style="opacity: 0.0" @endif>
+            <div class="row">
+                <div class="col-12 text-center mb-1" @if ($HEADER) style="opacity: 0.0" @endif>
                     @if (empty($LOGO_FILE))
-                        <img class="print-logo"  style="width: 500px;" src="{{ asset('dist/logo/vida_logo.png') }}" />
-                        <div class="text-center mt-0 mb-0">
+                        <img class="print-logo" style="width:500px;" src="{{ asset('dist/logo/vida_logo.png') }}" />
+                        <div class="text-center">
                             <b class="print-address1 text-center">
                                 {{ $REPORT_HEADER_1 }} <br />
                                 {{ $REPORT_HEADER_2 }}<br />
@@ -13,17 +13,43 @@
                         </div>
                     @else
                         {{-- nothing customize --}}
-                        <img class="print-logo" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
+                        <img class="w-50" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
                     @endif
                 </div>
-                <div class="col-12 mt-0">
+                <div class="col-12">
                     <div class="row">
+                        <div class="col-4">
+                            <b class="bottom-line2" @if ($HEADER) style="opacity: 0.0" @endif>
+                                PHILHEALTH ACCREDITED :
+                            </b>
+                        </div>
+                        <div class="col-4 text-center mb-1">
+                            <h4>STATEMENT OF ACCOUNT</h4>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div @if ($HEADER) style="opacity: 0.0" @endif
+                                    class="col-5 text-right">
+                                    SOA No. : </div>
+                                <div class="col-5 @if ($OUTPUT_SIGN) bottom-line2 @endif">
+                                    <b>{{ $CODE }}</b>
+                                </div>
+                                <div class="col-2">
+
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-6">
-                            <b class="bottom-line"
-                                @if ($HEADER) style="opacity: 0.0" @endif>PHILHEALTH ACCREDITED:</b>
-                            <div class="row  mt-1">
+                            <div class="row">
+                                <div class="col-6">
+
+                                </div>
+                                <div class="col-6 text-right">
+                                    <i>DOB</i>: {{ $DATE_BIRTH }}
+                                </div>
                                 <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
-                                    PATIENT`S NAME : </div>
+                                    PATIENT`S NAME :
+                                </div>
                                 <div class="col-8 bottom-line"
                                     @if ($HEADER) style="opacity: 0.0" @endif>
                                     <div class="row">
@@ -39,17 +65,18 @@
                                     &nbsp;</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
                                     class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS2 }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">FINAL
-                                    DIAGNOSIS : </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
+                                    FINAL DIAGNOSIS :
+                                </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
                                     class="col-8 bottom-line text-xs"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
+                                {{-- <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
                                     OTHER DIAGNOSIS : </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $OTHER_DIAGNOSIS }}</div>
+                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $OTHER_DIAGNOSIS }}</div> --}}
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
                                     TREATMENT DATES : </div>
-                                <div class="col-8 @if (!$PRE_SIGN_DATA) bottom-line @endif text-xs">
+                                <div class="col-8 @if (!$PRE_SIGN_DATA) bottom-line @endif text-sm">
                                     &nbsp;
                                     {{ $allDate }}
                                 </div>
@@ -57,12 +84,16 @@
                         </div>
                         <div class="col-6">
                             <div class="row">
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5"> Soa
-                                    Reference No. : </div>
+                                <div class="col-12">
+
+                                </div>
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
+                                    PHILHEALTH No. :
+                                </div>
                                 <div class="col-7 @if ($OUTPUT_SIGN) bottom-line @endif">
-                                    {{ $CODE }}</div>
-                            </div>
-                            <div class="row mt-1">
+                                    {{ substr($PIN, 0, 1) . substr($PIN, 1, 1) . '-' . substr($PIN, 2, 1) . substr($PIN, 3, 1) . substr($PIN, 4, 1) . substr($PIN, 5, 1) . substr($PIN, 6, 1) . substr($PIN, 7, 1) . substr($PIN, 8, 1) . substr($PIN, 9, 1) . substr($PIN, 10, 1) . '-' . substr($PIN, 11, 1) }}
+
+                                </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">DATE
                                     & TIME ADMITTED :</div>
                                 <div class="col-7 @if ($OUTPUT_SIGN) bottom-line @endif">
@@ -75,7 +106,7 @@
                                     {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : '' }}
                                     {{ $TIME_DISCHARGED ? \Carbon\Carbon::parse($TIME_DISCHARGED)->format('h:i:s A') : '' }}
                                 </div>
-                                <div class="col-12"> <br /></div>
+
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     FIRST CASE RATE :</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
@@ -93,19 +124,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 text-center mt-1" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
+                <div class="col-12 text-center" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <b class="text-lg">SUMMARY OF FEES</b>
                 </div>
-                <div class="col-12 " id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
+                <div class="col-12" id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <div class="row top-line right-line left-line">
                         <div class="col-4">
                         </div>
                         <div class="col-1 left-line">
                         </div>
-                        <div class="col-4 text-center  left-line bottom-line">
+                        <div class="col-4 text-center  left-line bottom-line text-sm">
                             AMOUNT OF DISCOUNTS
                         </div>
-                        <div class="col-2  text-center left-line bottom-line">
+                        <div class="col-2  text-center left-line bottom-line text-sm">
                             PHILHEALTH BENEFITS
                         </div>
                         <div class="col-1  left-line">
@@ -113,10 +144,10 @@
                     </div>
 
                     <div class="row bottom-line right-line left-line">
-                        <div class="col-4 text-center ">
+                        <div class="col-4 text-center text-md ">
                             PARTICULARS
                         </div>
-                        <div class="col-1 text-center left-line">
+                        <div class="col-1 text-center left-line ">
                             ACTUAL <br /> CHARGES
                         </div>
                         <div class="col-1 text-center left-line">
@@ -125,8 +156,8 @@
                         <div class="col-1 text-center left-line">
                             SENIOR CITIZEN / PWD
                         </div>
-                        <div class="col-1 text-center  left-line text-xs">
-                            <div class="row text-left">
+                        <div class="col-1 text-center  left-line">
+                            <div class="row text-left text-xs">
                                 <div class="col-12">___PCSO</div>
                                 <div class="col-12">___DSWD</div>
                                 <div class="col-12">___DOH(MAP)</div>
@@ -144,7 +175,7 @@
                             Second Case Rate amount
                         </div>
                         <div class="col-1 text-center left-line">
-                            Ouf of Pocket of Patient
+                            Ouf of <br /> Pocket <br /> of Patient
                         </div>
                     </div>
 
@@ -169,47 +200,61 @@
                         <div id="p-pocket" class="col-1 text-center left-line">
                         </div>
                     </div>
-
-                    <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-left ">
-                            <b>Drugs & Medicine</b>
-                        </div>
-                        <div id="p-charge" class="col-1 text-right  left-line">
-
-                        </div>
-                        <div id="p-vat" class="col-1 text-right  left-line">
-
-                        </div>
-                        <div id="p-sp" class="col-1 text-right   left-line">
-
-                        </div>
-                        <div id="p-gov" class="col-1 text-right  left-line text-xs">
-
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
-                        <div id="p-first" class="col-1  left-line text-center ">
-
-                        </div>
-                        <div id="p-second" class="col-1 left-line text-center ">
-
-                        </div>
-                        <div id="p-pocket" class="col-1 text-center left-line">
-
-                        </div>
-                    </div>
-                    @foreach ($drugMedList as $list)
+                    @if ($CHARGES_ROOM_N_BOARD > 0)
                         <div class="row bottom-line right-line left-line">
                             <div id="p-particular" class="col-4 text-left ">
-                                {{ $list->ITEM_NAME }}
+                                Room and Board
                             </div>
                             <div id="p-charge" class="col-1 text-right  left-line">
-                                {{ number_format($list->RATE * $NO_OF_TREATMENT, 2) }}
+                                @if ($CHARGES_ROOM_N_BOARD > 0)
+                                    {{ number_format($CHARGES_ROOM_N_BOARD, 2) }}
+                                @endif
                             </div>
                             <div id="p-vat" class="col-1 text-right  left-line">
+                                @if ($VAT_ROOM_N_BOARD > 0)
+                                    {{ number_format($VAT_ROOM_N_BOARD, 2) }}
+                                @endif
                             </div>
                             <div id="p-sp" class="col-1 text-right   left-line">
+                                @if ($SP_ROOM_N_BOARD > 0)
+                                    {{ number_format($SP_ROOM_N_BOARD, 2) }}
+                                @endif
                             </div>
                             <div id="p-gov" class="col-1 text-right  left-line text-xs">
+                                @if ($GOV_ROOM_N_BOARD > 0)
+                                    {{ number_format($GOV_ROOM_N_BOARD, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-after-disc" class="col-1 text-right  left-line"> </div>
+                            <div id="p-first" class="col-1  left-line text-right "> </div>
+                            <div id="p-second" class="col-1 left-line text-right "> </div>
+                            <div id="p-pocket" class="col-1 text-center left-line"> </div>
+                        </div>
+                    @endif
+                    @if ($CHARGES_DRUG_N_MEDICINE > 0)
+                        <div class="row bottom-line right-line left-line">
+                            <div id="p-particular" class="col-4 text-left ">
+                                Drugs & Medicine
+                            </div>
+                            <div id="p-charge" class="col-1 text-right  left-line">
+                                @if ($CHARGES_DRUG_N_MEDICINE > 0)
+                                    {{ number_format($CHARGES_DRUG_N_MEDICINE, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-vat" class="col-1 text-right  left-line">
+                                @if ($VAT_DRUG_N_MEDICINE > 0)
+                                    {{ number_format($VAT_DRUG_N_MEDICINE, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-sp" class="col-1 text-right   left-line">
+                                @if ($SP_DRUG_N_MEDICINE > 0)
+                                    {{ number_format($SP_DRUG_N_MEDICINE, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-gov" class="col-1 text-right  left-line text-xs">
+                                @if ($GOV_DRUG_N_MEDICINE > 0)
+                                    {{ number_format($GOV_DRUG_N_MEDICINE, 2) }}
+                                @endif
                             </div>
                             <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
                             <div id="p-first" class="col-1  left-line text-center ">
@@ -222,128 +267,65 @@
 
                             </div>
                         </div>
-                    @endforeach
-                    <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-center ">
-                            &nbsp;
-                        </div>
-                        <div id="p-charge" class="col-1 text-center left-line">
-                        </div>
-                        <div id="p-vat" class="col-1 text-center  left-line">
-                        </div>
-                        <div id="p-sp" class="col-1 text-center   left-line">
-                        </div>
-                        <div id="p-gov" class="col-1 text-center  left-line text-xs">
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line">
-                        </div>
-                        <div id="p-first" class="col-1  left-line text-center ">
-                        </div>
-                        <div id="p-second" class="col-1 left-line text-center ">
-                        </div>
-                        <div id="p-pocket" class="col-1 text-center left-line">
-                        </div>
-                    </div>
-                    <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-left ">
-                            <b>Laboratory & Diagnostics</b>
-                        </div>
-                        <div id="p-charge" class="col-1 text-right  left-line">
-                            {{-- dynamic --}}
-                            @if ($totalLab > 0)
-                                {{ number_format($totalLab * $NO_OF_TREATMENT, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-vat" class="col-1 text-right  left-line">
-                            @if ($VAT_LAB_N_DIAGNOSTICS > 0)
-                                {{ number_format($VAT_LAB_N_DIAGNOSTICS, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-sp" class="col-1 text-right   left-line">
-                            @if ($SP_LAB_N_DIAGNOSTICS > 0)
-                                {{ number_format($SP_LAB_N_DIAGNOSTICS, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-gov" class="col-1 text-right  left-line text-xs">
-                            @if ($GOV_LAB_N_DIAGNOSTICS > 0)
-                                {{ number_format($GOV_LAB_N_DIAGNOSTICS, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
-                        <div id="p-first" class="col-1  left-line text-center ">
-
-                        </div>
-                        <div id="p-second" class="col-1 left-line text-center ">
-
-                        </div>
-                        <div id="p-pocket" class="col-1 text-center left-line">
-
-                        </div>
-                    </div>
-                    <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-center ">
-                            &nbsp;
-                        </div>
-                        <div id="p-charge" class="col-1 text-center left-line">
-                        </div>
-                        <div id="p-vat" class="col-1 text-center  left-line">
-                        </div>
-                        <div id="p-sp" class="col-1 text-center   left-line">
-                        </div>
-                        <div id="p-gov" class="col-1 text-center  left-line text-xs">
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line">
-                        </div>
-                        <div id="p-first" class="col-1  left-line text-center ">
-                        </div>
-                        <div id="p-second" class="col-1 left-line text-center ">
-                        </div>
-                        <div id="p-pocket" class="col-1 text-center left-line">
-                        </div>
-                    </div>
-
-
-                    <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-left ">
-                            <b>Supplies</b>
-                        </div>
-                        <div id="p-charge" class="col-1 text-right  left-line">
-
-                        </div>
-                        <div id="p-vat" class="col-1 text-right  left-line">
-
-                        </div>
-                        <div id="p-sp" class="col-1 text-right   left-line">
-
-                        </div>
-                        <div id="p-gov" class="col-1 text-right  left-line text-xs">
-
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
-                        <div id="p-first" class="col-1  left-line text-center ">
-                        </div>
-                        <div id="p-second" class="col-1 left-line text-center ">
-                        </div>
-                        <div id="p-pocket" class="col-1 text-center left-line">
-
-                        </div>
-                    </div>
-                    @foreach ($suppliesList as $list)
+                    @endif
+                    @if ($CHARGES_SUPPLIES > 0)
                         <div class="row bottom-line right-line left-line">
                             <div id="p-particular" class="col-4 text-left ">
-                                {{ $list->ITEM_NAME }}
+                                Supplies
                             </div>
                             <div id="p-charge" class="col-1 text-right  left-line">
-                                {{ number_format($list->RATE * $NO_OF_TREATMENT, 2) }}
+                                @if ($CHARGES_SUPPLIES > 0)
+                                    {{ number_format($CHARGES_SUPPLIES, 2) }}
+                                @endif
                             </div>
                             <div id="p-vat" class="col-1 text-right  left-line">
-
+                                @if ($VAT_SUPPLIES > 0)
+                                    {{ number_format($VAT_SUPPLIES, 2) }}
+                                @endif
                             </div>
                             <div id="p-sp" class="col-1 text-right   left-line">
-
+                                @if ($SP_SUPPLIES > 0)
+                                    {{ number_format($SP_SUPPLIES, 2) }}
+                                @endif
                             </div>
                             <div id="p-gov" class="col-1 text-right  left-line text-xs">
-
+                                @if ($GOV_SUPPLIES > 0)
+                                    {{ number_format($GOV_SUPPLIES, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
+                            <div id="p-first" class="col-1  left-line text-center ">
+                            </div>
+                            <div id="p-second" class="col-1 left-line text-center ">
+                            </div>
+                            <div id="p-pocket" class="col-1 text-center left-line">
+                            </div>
+                        </div>
+                    @endif
+                    @if ($CHARGES_LAB_N_DIAGNOSTICS > 0)
+                        <div class="row bottom-line right-line left-line">
+                            <div id="p-particular" class="col-4 text-left ">
+                                Laboratory & Diagnostics
+                            </div>
+                            <div id="p-charge" class="col-1 text-right  left-line">
+                                @if ($CHARGES_LAB_N_DIAGNOSTICS > 0)
+                                    {{ number_format($CHARGES_LAB_N_DIAGNOSTICS, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-vat" class="col-1 text-right  left-line">
+                                @if ($VAT_LAB_N_DIAGNOSTICS > 0)
+                                    {{ number_format($VAT_LAB_N_DIAGNOSTICS, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-sp" class="col-1 text-right   left-line">
+                                @if ($SP_LAB_N_DIAGNOSTICS > 0)
+                                    {{ number_format($SP_LAB_N_DIAGNOSTICS, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-gov" class="col-1 text-right  left-line text-xs">
+                                @if ($GOV_LAB_N_DIAGNOSTICS > 0)
+                                    {{ number_format($GOV_LAB_N_DIAGNOSTICS, 2) }}
+                                @endif
                             </div>
                             <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
                             <div id="p-first" class="col-1  left-line text-center ">
@@ -356,104 +338,78 @@
 
                             </div>
                         </div>
-                    @endforeach
-
-                    <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-center ">
-                            &nbsp;
-                        </div>
-                        <div id="p-charge" class="col-1 text-center left-line">
-                        </div>
-                        <div id="p-vat" class="col-1 text-center  left-line">
-                        </div>
-                        <div id="p-sp" class="col-1 text-center   left-line">
-                        </div>
-                        <div id="p-gov" class="col-1 text-center  left-line text-xs">
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line">
-                        </div>
-                        <div id="p-first" class="col-1  left-line text-center ">
-                        </div>
-                        <div id="p-second" class="col-1 left-line text-center ">
-                        </div>
-                        <div id="p-pocket" class="col-1 text-center left-line">
-                        </div>
-                    </div>
-
-
-
-                    <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-left ">
-                            <b>Administrative & Other Fees</b>
-                        </div>
-                        <div id="p-charge" class="col-1 text-right  left-line">
-
-                        </div>
-                        <div id="p-vat" class="col-1 text-right  left-line">
-
-                        </div>
-                        <div id="p-sp" class="col-1 text-right   left-line">
-
-                        </div>
-                        <div id="p-gov" class="col-1 text-right  left-line text-xs">
-
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
-                        <div id="p-first" class="col-1  left-line text-center "> </div>
-                        <div id="p-second" class="col-1 left-line text-center "> </div>
-                        <div id="p-pocket" class="col-1 text-center left-line"> </div>
-                    </div>
-                    @foreach ($adminFeeList as $list)
+                    @endif
+                    @if ($CHARGES_OPERATING_ROOM_FEE > 0)
                         <div class="row bottom-line right-line left-line">
                             <div id="p-particular" class="col-4 text-left ">
-                                {{ $list->ITEM_NAME }}
+                                Operating Room Fee
                             </div>
                             <div id="p-charge" class="col-1 text-right  left-line">
-                                {{ number_format($list->RATE * $NO_OF_TREATMENT, 2) }}
+                                {{-- @if ($CHARGES_OPERATING_ROOM_FEE > 0) --}}
+                                {{ number_format($CHARGES_OPERATING_ROOM_FEE, 2) }}
+                                {{-- @endif --}}
                             </div>
                             <div id="p-vat" class="col-1 text-right  left-line">
-
+                                @if ($VAT_OPERATING_ROOM_FEE > 0)
+                                    {{ number_format($VAT_OPERATING_ROOM_FEE, 2) }}
+                                @endif
                             </div>
                             <div id="p-sp" class="col-1 text-right   left-line">
-
+                                @if ($SP_OPERATING_ROOM_FEE > 0)
+                                    {{ number_format($SP_OPERATING_ROOM_FEE, 2) }}
+                                @endif
                             </div>
                             <div id="p-gov" class="col-1 text-right  left-line text-xs">
-
+                                @if ($GOV_OPERATING_ROOM_FEE > 0)
+                                    {{ number_format($GOV_OPERATING_ROOM_FEE, 2) }}
+                                @endif
                             </div>
                             <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
                             <div id="p-first" class="col-1  left-line text-center ">
-
                             </div>
                             <div id="p-second" class="col-1 left-line text-center ">
-
                             </div>
                             <div id="p-pocket" class="col-1 text-center left-line">
 
                             </div>
                         </div>
-                    @endforeach
+                    @endif
+                    @if ($CHARGES_OTHERS > 0)
+                        <div class="row bottom-line right-line left-line">
+                            <div id="p-particular" class="col-4 text-left ">
+                                Administrative & Other Fees
+                            </div>
+                            <div id="p-charge" class="col-1 text-right  left-line">
+                                @if ($CHARGES_OTHERS > 0)
+                                    {{ number_format($CHARGES_OTHERS, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-vat" class="col-1 text-right  left-line">
+                                @if ($VAT_OTHERS > 0)
+                                    {{ number_format($VAT_OTHERS, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-sp" class="col-1 text-right   left-line">
+                                @if ($SP_OTHERS > 0)
+                                    {{ number_format($SP_OTHERS, 2) }}
+                                @endif
+                            </div>
+                            <div id="p-gov" class="col-1 text-right  left-line text-xs">
+                                @if ($GOV_OTHERS > 0)
+                                    {{ number_format($GOV_OTHERS, 2) }}
+                                @endif
+                            </div>
 
-                    <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-center ">
-                            &nbsp;
+                            <div id="p-first" class="col-2  left-line text-center "> </div>
+                            <div id="p-second" class="col-1 left-line text-center "> </div>
+                            <div id="p-pocket" class="col-1 text-center left-line">
+                                @if ($OP_OTHERS > 0)
+                                    {{ number_format($OP_OTHERS, 2) }}
+                                @endif
+                            </div>
                         </div>
-                        <div id="p-charge" class="col-1 text-center left-line">
-                        </div>
-                        <div id="p-vat" class="col-1 text-center  left-line">
-                        </div>
-                        <div id="p-sp" class="col-1 text-center   left-line">
-                        </div>
-                        <div id="p-gov" class="col-1 text-center  left-line text-xs">
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line">
-                        </div>
-                        <div id="p-first" class="col-1  left-line text-center ">
-                        </div>
-                        <div id="p-second" class="col-1 left-line text-center ">
-                        </div>
-                        <div id="p-pocket" class="col-1 text-center left-line">
-                        </div>
-                    </div>
+
+                    @endif
 
                     <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
@@ -501,8 +457,8 @@
                         </div>
                     </div>
                     <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-center font-weight-bold">
-                            PROFESSIONAL FEE/S
+                        <div id="p-particular" class="col-4 text-left font-weight-light">
+                            Professional Fee/s
                         </div>
                         <div id="p-charge" class="col-1 text-center  left-line"> </div>
                         <div id="p-vat" class="col-1 text-center  left-line"> </div>
@@ -539,8 +495,7 @@
                             <div id="p-gov" class="col-1 text-right  left-line text-xs"> </div>
                             <div id="p-after-disc" class="col-1 text-right  left-line">
                                 @if ($list->DISCOUNT > 0)
-                                    {{-- <i> {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }}</i> --}}
-                                    <i> {{ number_format($list->FIRST_CASE, 2) }}</i>
+                                    <i> {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }}</i>
                                 @endif
                             </div>
                             <div id="p-first" class="col-1  left-line text-right">
@@ -552,72 +507,14 @@
                             <div id="p-pocket" class="col-1 text-right left-line">
                                 @if ($list->FIRST_CASE > 0)
                                     <i>
-                                        {{-- {{ number_format($list->AMOUNT - $list->DISCOUNT - $list->FIRST_CASE, 2) }} --}}
                                         0.00
                                     </i>
                                 @endif
                             </div>
                         </div>
-                        <div class="row bottom-line right-line left-line">
-                            <div id="p-particular" class="col-4 text-left  ">
-                                <i>Acreditation No. <b>{{ $list->PIN }}</b></i>
-                            </div>
-                            <div id="p-charge" class="col-1 text-center  left-line">
-                                &nbsp;
-                            </div>
-                            <div id="p-vat" class="col-1 text-center  left-line">
-                                &nbsp;</div>
-                            <div id="p-sp" class="col-1 text-center   left-line">
-                                &nbsp;
-                            </div>
-                            <div id="p-gov" class="col-1 text-center  left-line text-xs">
-                                &nbsp; </div>
-                            <div id="p-after-disc" class="col-1 text-center  left-line">
-                                &nbsp;
-                            </div>
-                            <div id="p-first" class="col-1  left-line text-center ">
-                                &nbsp;
-                            </div>
-                            <div id="p-second" class="col-1 left-line text-center ">
-                                &nbsp;
-                            </div>
-                            <div id="p-pocket" class="col-1 text-center left-line">
-                                &nbsp;
-                            </div>
-                        </div>
                     @endforeach
 
-                    {{-- @for ($n = 1; $n <= 5; $n++)
-                        @if ($n > $i)
-                            <div class="row bottom-line right-line left-line">
-                                <div id="p-particular" class="col-4 text-left ">
-                                    {{ $n . '. ' }}
-                                </div>
-                                <div id="p-charge" class="col-1 text-center  left-line">
-                                    &nbsp;
-                                </div>
-                                <div id="p-vat" class="col-1 text-center  left-line">
-                                    &nbsp;</div>
-                                <div id="p-sp" class="col-1 text-center   left-line">
-                                    &nbsp;
-                                </div>
-                                <div id="p-gov" class="col-1 text-center  left-line text-xs">
-                                    &nbsp; </div>
-                                <div id="p-after-disc" class="col-1 text-center  left-line">
-                                    &nbsp;
-                                </div>
-                                <div id="p-first" class="col-1  left-line text-center ">
-                                    &nbsp;
-                                </div>
-                                <div id="p-second" class="col-1 left-line text-center ">
-                                    &nbsp;
-                                </div>
-                                <div id="p-pocket" class="col-1 text-center left-line">
-                                    &nbsp;
-                                </div>
-                            </div>
-                        @endif
-                    @endfor --}}
+
                     <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
                             <b>SUBTOTAL</b>
@@ -636,7 +533,7 @@
                         <div id="p-gov" class="col-1 text-right  left-line text-xs font-weight-bold"> </div>
                         <div id="p-after-disc" class="col-1 text-right  left-line font-weight-bold">
                             @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
+                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
                             @endif
                         </div>
                         <div id="p-first" class="col-1  left-line text-right font-weight-bold">
@@ -651,26 +548,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="row bottom-line right-line left-line">
-                        <div id="p-particular" class="col-4 text-right ">
-                            &nbsp;
-                        </div>
-                        <div id="p-charge" class="col-1 text-center  left-line">
-                        </div>
-                        <div id="p-vat" class="col-1 text-center  left-line">
-                        </div>
-                        <div id="p-sp" class="col-1 text-center   left-line">
-                        </div>
-                        <div id="p-gov" class="col-1 text-center  left-line text-xs">
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line"> </div>
-                        <div id="p-first" class="col-1  left-line text-center ">
-                        </div>
-                        <div id="p-second" class="col-1 left-line text-center ">
-                        </div>
-                        <div id="p-pocket" class="col-1 text-center left-line">
-                        </div>
-                    </div>
+
 
                     <div class="row bottom-line right-line left-line">
                         <div id="p-particular" class="col-4 text-left ">
@@ -697,8 +575,8 @@
                             @endif
                         </div>
                         <div id="p-after-disc" class="col-1 text-right  left-line font-weight-bold">
-                            @if ($AD_TOTAL > 0)
-                                {{ number_format($AD_TOTAL, 2) }}
+                            @if ($CHARGE_TOTAL > 0)
+                                {{ number_format($CHARGE_TOTAL - $SP_TOTAL, 2) }}
                             @endif
                         </div>
                         <div id="p-first" class="col-1  left-line text-right font-weight-bold">
@@ -716,21 +594,22 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="col-12">
+                    @livewire('PhilHealth.PrintItemized', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED, 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID])
+                </div>
                 {{-- @if ($OUTPUT_SIGN) --}}
-                <div class="col-12 mt-1">
+                <div class="col-12  pt-1">
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-5">
                             <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Prepared by:</div>
-                            <div class="form-group row mt-1">
-                                <div class="col-7 text-center">
-                                    <strong class="bottom-line"
-                                        @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
-                                      &nbsp;  {{ $USER_NAME }}</strong>
+                            <div class="form-group row  mt-4">
+                                <div class="col-7 text-center bottom-line2">
+                                    <strong @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                        {{ $USER_NAME }}</strong>
                                 </div>
                                 <div class="col-7 text-center"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>PHIC IN-Charge</div>
-                                <div class="col-12">
+                                <div class="col-12 mt-4">
                                     <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         Date Signed:
                                     </span>
@@ -742,35 +621,37 @@
                                     CONTACT No. {{ $USER_CONTACT }}</div>
                             </div>
                         </div>
-                        <div class="col-4"></div>
-                        <div class="col-4">
+                        <div class="col-2"></div>
+                        <div class="col-5">
                             <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Conforme:</div>
-                            <div class="form-group row  mt-1">
-                                <div class="col-12 text-center bottom-line"
+                            <div class="form-group row ">
+                                <div class="col-12 text-center bottom-line2"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     <b>{{ $PATIENT_NAME }}</b>
                                 </div>
-                                <div class="col-12 " @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                <div class="col-12 text-center"
+                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     Member/Patient/Authorized Representative</div>
-                                <div class="col-12 " @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                <div class="col-12  text-center"
+                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     (Signature over printed name)</div>
-                                <div class="col-12 text-xs"
-                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Relationship of
-                                    member of authorized representative
+                                <div class="col-12 text-sm text-center"
+                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    <i>Relationship of
+                                        member of authorized representative</i>
                                 </div>
-                                <div class="col-12 bottom-line"
+                                <div class="col-12 mt-4 bottom-line2"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>&nbsp;</div>
+
                                 <div class="col-12 ">
                                     <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         Date Signed:
                                     </span>
-                                    <span>
-                                        {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
-                                    </span>
-
+                                    {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
                                 </div>
-                                <div class="col-12 " @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
-                                    CONTACT No. {{ $PATIENT_CONTACT }}</div>
+                                <div class="col-12" @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    CONTACT No. {{ $PATIENT_CONTACT }}
+                                </div>
                             </div>
                         </div>
                     </div>
