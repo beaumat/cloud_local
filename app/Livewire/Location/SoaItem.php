@@ -146,7 +146,6 @@ class SoaItem extends Component
     }
     public function Delete(int $ID)
     {
-
         $this->itemSoaServices->Delete($ID);
     }
     public function OpenActualBase(int $SOA_ITEM_ID)
