@@ -2,14 +2,14 @@
 use App\Services\ItemSoaItemizedServices;
 ?>
 
-<div class="row bottom-line2 right-line2 left-line2">
+<div class="row bottom-line2 right-line2 left-line2 text-sm">
     <div class="col-12 font-weight-bold text-center text-danger">
         ITEMIZED CHARGES
     </div>
     <div class="col-8">
         <table class="w-100" border="1">
             <thead>
-                <tr class="text-center text-xs">
+                <tr class="text-center text-sm">
                     <th>SERVICE DATE</th>
                     <th>ITEM NAME</th>
                     <th>UNIT OF MEASUREMENT</th>
@@ -26,12 +26,12 @@ use App\Services\ItemSoaItemizedServices;
             @php
                 $row = 0;
             @endphp
-            <tbody class=''>
+            <tbody class='text-sm'>
                 @foreach ($dataList as $list)
                     @if ($TYPE == '')
                     @elseif ($TYPE != $list->TYPE_NAME)
                         <tr class="font-weight-bold">
-                            <td class="text-center text-xs pb-0 pt-0">
+                            <td class="text-center  pb-0 pt-0">
                                 @if (isset($breakDownDate[$row]))
                                     {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
                                 @endif
@@ -40,11 +40,11 @@ use App\Services\ItemSoaItemizedServices;
                                     $row++;
                                 @endphp
                             </td>
-                            <td class="text-xs pb-0 pt-0">{{ $TYPE }} TOTAL</td>
+                            <td class="pb-0 pt-0">{{ $TYPE }} TOTAL</td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td class="text-right text-xs pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
+                            <td class="text-right pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
                         </tr>
                         @php
                             $TOTAL = 0;
@@ -54,7 +54,7 @@ use App\Services\ItemSoaItemizedServices;
                         $TYPE = $list->TYPE_NAME;
                     @endphp
                     <tr>
-                        <td class="text-center font-weight-bold text-xs pb-0 pt-0">
+                        <td class="text-center font-weight-bold pb-0 pt-0">
                             @if (isset($breakDownDate[$row]))
                                 {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
                             @endif
@@ -79,22 +79,22 @@ use App\Services\ItemSoaItemizedServices;
                                 $TOTAL = $TOTAL + $AMOUNT;
                             @endphp
                         </td>
-                        <td class="text-xs pb-0 pt-0">{{ $list->ITEM_NAME }}</td>
-                        <td class="text-xs text-center">{{ $list->UNIT_NAME }}</td>
-                        <td class=" text-right text-xs pb-0 pt-0">{{ number_format($list->RATE, 2) }}</td>
-                        <td class="text-center text-xs pb-0 pt-0"> {{ $defult_Qty }}</td>
+                        <td class="pb-0 pt-0">{{ $list->ITEM_NAME }}</td>
+                        <td class="text-center">{{ $list->UNIT_NAME }}</td>
+                        <td class="text-right  pb-0 pt-0">{{ number_format($list->RATE, 2) }}</td>
+                        <td class="text-center pb-0 pt-0"> {{ $defult_Qty }}</td>
 
-                        <td class="text-right text-xs pb-0 pt-0">{{ number_format($AMOUNT, 2) }}</td>
+                        <td class="text-right pb-0 pt-0">{{ number_format($AMOUNT, 2) }}</td>
                     </tr>
                 @endforeach
 
                 <tr class="font-weight-bold">
                     <td></td>
-                    <td class="text-xs pb-0 pt-0">{{ $TYPE }} TOTAL</td>
+                    <td class="pb-0 pt-0">{{ $TYPE }} TOTAL</td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="text-right text-xs pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
+                    <td class="text-right pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -102,83 +102,83 @@ use App\Services\ItemSoaItemizedServices;
     </div>
     <div class="col-4">
         <table class="w-100" border="1">
-            <thead class="text-xs">
+            <thead class="text-sm">
                 <tr class="text-center">
                     <th class="">ROUTINE MONTHLY LABORATORIES</th>
                 </tr>
             </thead>
 
-            <tbody class='text-xs'>
+            <tbody class='text-sm'>
                 <tr>
-                    <th class="text-center text-xs pb-0 pt-0">(CLINICAL CHEMISTRY)</th>
+                    <th class="text-center  pb-0 pt-0">(CLINICAL CHEMISTRY)</th>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0">PRE AND POST DIALYSIS BUN</td>
+                    <td class="text-center pb-0 pt-0">PRE AND POST DIALYSIS BUN</td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> SERUM CREATININE </td>
+                    <td class="text-center  pb-0 pt-0"> SERUM CREATININE </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> POTASSIUM </td>
+                    <td class="text-center pb-0 pt-0"> POTASSIUM </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> PHOSPHORUS </td>
+                    <td class="text-center  pb-0 pt-0"> PHOSPHORUS </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> CALCIUM </td>
+                    <td class="text-center  pb-0 pt-0"> CALCIUM </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> SERUM SODIUM </td>
+                    <td class="text-center  pb-0 pt-0"> SERUM SODIUM </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> KT/V </td>
+                    <td class="text-center  pb-0 pt-0"> KT/V </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> URR </td>
+                    <td class="text-center  pb-0 pt-0"> URR </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs"> URIC ACID </td>
-                </tr>
-
-                <tr>
-                    <th class="text-center text-xs pb-0 pt-0">(HEMATOLOGY) COMPLETE BLOOD COUNT</th>
+                    <td class="text-center "> URIC ACID </td>
                 </tr>
 
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0">HEMOGLOBIN</td>
+                    <th class="text-center  pb-0 pt-0">(HEMATOLOGY) COMPLETE BLOOD COUNT</th>
+                </tr>
+
+                <tr>
+                    <td class="text-center  pb-0 pt-0">HEMOGLOBIN</td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> HEMATOCRIT</td>
+                    <td class="text-center  pb-0 pt-0"> HEMATOCRIT</td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> RED BLOOD CELLS </td>
+                    <td class="text-center  pb-0 pt-0"> RED BLOOD CELLS </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> MCV </td>
+                    <td class="text-center  pb-0 pt-0"> MCV </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> MCH </td>
+                    <td class="text-center  pb-0 pt-0"> MCH </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> MCHC</td>
+                    <td class="text-center  pb-0 pt-0"> MCHC</td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> WHTE BLOODCELLS </td>
+                    <td class="text-center  pb-0 pt-0"> WHTE BLOODCELLS </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> NEUTROPHILS </td>
+                    <td class="text-center  pb-0 pt-0"> NEUTROPHILS </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> LYMPHOCYTES </td>
+                    <td class="text-center  pb-0 pt-0"> LYMPHOCYTES </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> EOSINOPHILS </td>
+                    <td class="text-center  pb-0 pt-0"> EOSINOPHILS </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> BASOPHILS </td>
+                    <td class="text-center  pb-0 pt-0"> BASOPHILS </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-xs pb-0 pt-0"> PLATELET COUNT </td>
+                    <td class="text-center  pb-0 pt-0"> PLATELET COUNT </td>
                 </tr>
             </tbody>
         </table>
