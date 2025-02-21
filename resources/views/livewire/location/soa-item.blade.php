@@ -179,7 +179,7 @@
                                                     wire:model='RATE' />
                                             </td>
                                             <td class="text-center">
-                                                <input type="checkbox" class="check-input"
+                                                <input type="checkbox" class="check-input mt-2"
                                                     wire:model='ACTUAL_BASE' />
                                             </td>
                                             <td>
