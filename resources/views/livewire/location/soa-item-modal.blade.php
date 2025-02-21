@@ -6,7 +6,9 @@
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
                 <div class="modal-content text-left">
                     <div class="modal-header">
-                        <h6 class="modal-title">Include Base Quantity</h6>
+                        <h6 class="modal-title">Actual base quantity on :
+                            <span class="text-primary">{{ $ITEM_SOA_NAME }}</span>
+                        </h6>
                         <button type="button" class="close" wire:click="closeModal">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -20,7 +22,6 @@
                                         <tr>
                                             <th class="col-2">CODE</th>
                                             <th class="col-7">DESCRIPTION</th>
-
                                             <th class="col-2 text-center">ACTION</th>
                                         </tr>
                                     </thead>

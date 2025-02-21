@@ -4,6 +4,7 @@ namespace App\Livewire\Location;
 
 use App\Services\ItemServices;
 use App\Services\ItemSoaItemizedServices;
+use App\Services\ItemSoaServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -19,21 +20,32 @@ class SoaItemModal extends Component
     public bool $INACTIVE;
     public int $ITEM_ID = 0;
     public bool $refreshItem = false;
+
+    public string $ITEM_SOA_NAME;
     private $itemServices;
-    public function boot(ItemSoaItemizedServices $itemSoaItemizedServices, ItemServices $itemServices)
+    private $itemSoaServices;
+    public function boot(ItemSoaItemizedServices $itemSoaItemizedServices, ItemServices $itemServices, ItemSoaServices $itemSoaServices)
     {
         $this->itemSoaItemizedServices = $itemSoaItemizedServices;
         $this->itemServices = $itemServices;
+        $this->itemSoaServices = $itemSoaServices;
     }
     #[On('open-actual-base')]
     public function openModal($data)
-    {
-        $this->ITEM_ID = 0;
-        $this->INACTIVE = false;
-        $this->SOA_ITEM_ID = $data['SOA_ITEM_ID'];
-        $this->itemDescList = $this->itemServices->getByCustomer(false);
-        $this->refreshDataItem();
-        $this->showModal = true;
+    {   
+
+        $dt = $this->itemSoaServices->Get($data['SOA_ITEM_ID'] ?? 0);
+     
+        if($dt) {
+            $this->ITEM_SOA_NAME = $dt->ITEM_NAME ?? '';
+            $this->ITEM_ID = 0;
+            $this->INACTIVE = false;
+            $this->SOA_ITEM_ID = $data['SOA_ITEM_ID'];
+            $this->itemDescList = $this->itemServices->getByCustomer(false);
+            $this->refreshDataItem();
+            $this->showModal = true;
+        }
+      
     }
     public function closeModal()
     {

@@ -27,21 +27,21 @@ class ItemSoaServices
         $result = ItemSoa::where('ID', '=', $ID)->first();
         return $result;
     }
-    private function NextLine(int $TYPE)
+    private function NextLine(int $TYPE, int $LOCATION_ID)
     {
-        return (int) ItemSoa::where('TYPE', $TYPE)->max('LINE') + 1;
+        return (int) ItemSoa::where('TYPE', '=', $TYPE)->where('LOCATION_ID', '=', $LOCATION_ID)->max('LINE') + 1;
     }
-    public function Store(int $LOCATION_ID, int $TYPE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false)
+    public function Store(int $LOCATION_ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false)
     {
         $ID = $this->object->ObjectNextID('SOA_ITEM');
 
-        $LINE = $this->NextLine($TYPE);
+
 
         ItemSoa::create(
             [
                 'ID' => $ID,
                 'LOCATION_ID' => $LOCATION_ID,
-                'LINE' => $LINE,
+                'LINE' => $LINE > 0 ? $LINE : $this->NextLine($TYPE, $LOCATION_ID),
                 'TYPE' => $TYPE,
                 'ITEM_NAME' => $ITEM_NAME,
                 'UNIT_NAME' => $UNIT_NAME,
@@ -50,13 +50,14 @@ class ItemSoaServices
             ]
         );
     }
-    public function Update(int $ID, int $TYPE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false)
+    public function Update(int $ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false)
     {
         ItemSoa::where('ID', '=', $ID)
             ->update(
                 [
                     'ID' => $ID,
                     'TYPE' => $TYPE,
+                    'LINE' => $LINE,
                     'ITEM_NAME' => $ITEM_NAME,
                     'UNIT_NAME' => $UNIT_NAME,
                     'RATE' => $RATE,
@@ -70,7 +71,7 @@ class ItemSoaServices
             ->delete();
     }
 
-    public function Search($search, int $LOCATION_ID)
+    public function Search($search, int $LOCATION_ID): object
     {
         $result = ItemSoa::query()
             ->select([
@@ -80,7 +81,8 @@ class ItemSoaServices
                 'soa_item.ITEM_NAME',
                 'soa_item.UNIT_NAME',
                 'soa_item.RATE',
-                'soa_item.ACTUAL_BASE'
+                'soa_item.ACTUAL_BASE',
+                'soa_item.LINE'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)

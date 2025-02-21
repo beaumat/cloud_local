@@ -623,7 +623,7 @@
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>&nbsp;</div>
 
                                 <div class="col-12 ">
-                                    <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         Date Signed:
                                     </span>
                                     {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}

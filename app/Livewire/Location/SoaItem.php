@@ -14,8 +14,11 @@ class SoaItem extends Component
 {
 
     public int $LOCATION_ID;
+
+    public string $LOCATION_NAME;
     public int $ID;
     public int $TYPE;
+    public int $LINE;
     public string $ITEM_NAME;
     public string $UNIT_NAME;
     public float $RATE;
@@ -26,6 +29,7 @@ class SoaItem extends Component
     public string $editITEM_NAME;
     public string $editUNIT_NAME;
     public float $editRATE;
+    public int $editLINE = 0;
     public float $editACTUAL_BASE;
     public $dataList = [];
     public $search;
@@ -43,7 +47,7 @@ class SoaItem extends Component
         $data = $this->locationServices->get($id);
 
         if ($data) {
-
+            $this->LOCATION_NAME = $data->NAME ?? '';
             $this->LOCATION_ID = $id;
             $this->typeList = $this->itemSoaServices->TypeList();
             $this->CleanAdd();
@@ -61,6 +65,8 @@ class SoaItem extends Component
         $this->UNIT_NAME = '';
         $this->RATE = 0;
         $this->ACTUAL_BASE = false;
+        $this->LINE = 0;
+
     }
     public function Add()
     {
@@ -70,12 +76,14 @@ class SoaItem extends Component
                 'TYPE' => 'required|numeric|exists:soa_item_type,id',
                 'ITEM_NAME' => 'required|string',
                 'RATE' => 'required|numeric',
+                'LINE' => 'required|numeric'
             ],
             [],
             [
                 'TYPE' => 'Type',
                 'ITEM_NAME' => 'Item Name',
-                'RATE' => 'Rate'
+                'RATE' => 'Rate',
+                'LINE' => 'Line #'
             ]
         );
 
@@ -84,6 +92,7 @@ class SoaItem extends Component
             $this->itemSoaServices->Store(
                 $this->LOCATION_ID,
                 $this->TYPE,
+                $this->LINE,
                 $this->ITEM_NAME,
                 $this->UNIT_NAME,
                 $this->RATE,
@@ -110,6 +119,7 @@ class SoaItem extends Component
             $this->editUNIT_NAME = $data->UNIT_NAME ?? '';
             $this->editRATE = $data->RATE ?? 0;
             $this->editACTUAL_BASE = $data->ACTUAL_BASE ?? false;
+            $this->editLINE = $data->LINE ?? 0;
         }
     }
     public function Update()
@@ -120,12 +130,14 @@ class SoaItem extends Component
                 'editTYPE' => 'required|numeric|exists:soa_item_type,id',
                 'editITEM_NAME' => 'required|string',
                 'editRATE' => 'required|numeric',
+                'editLINE' => 'required|numeric'
             ],
             [],
             [
                 'editTYPE' => 'Type',
                 'editITEM_NAME' => 'Item Name',
-                'editRATE' => 'Rate'
+                'editRATE' => 'Rate',
+                'editLINE' => 'Line #'
             ]
         );
 
@@ -134,6 +146,7 @@ class SoaItem extends Component
             $this->itemSoaServices->update(
                 $this->editid,
                 $this->editTYPE,
+                $this->editLINE,
                 $this->editITEM_NAME,
                 $this->editUNIT_NAME,
                 $this->editRATE,
@@ -151,7 +164,7 @@ class SoaItem extends Component
     public function OpenActualBase(int $SOA_ITEM_ID)
     {
         $this->dispatch('open-actual-base', data: ['SOA_ITEM_ID' => $SOA_ITEM_ID]);
-    
+
     }
     public function Canceled()
     {
@@ -160,6 +173,7 @@ class SoaItem extends Component
         $this->editITEM_NAME = '';
         $this->editUNIT_NAME = '';
         $this->editRATE = 0;
+        $this->editLINE = 0;
     }
     private function refreshList()
     {
