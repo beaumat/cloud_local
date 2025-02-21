@@ -30,7 +30,7 @@ class SoaItem extends Component
     public string $editUNIT_NAME;
     public float $editRATE;
     public int $editLINE = 0;
-    public float $editACTUAL_BASE;
+    public bool $editACTUAL_BASE;
     public $dataList = [];
     public $search;
     public $typeList = [];
