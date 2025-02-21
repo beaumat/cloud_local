@@ -496,7 +496,7 @@
                     @endforeach
 
 
-                    <div class="row bottom-line2 right-line2 left-line2 text-sm">
+                    {{-- <div class="row bottom-line2 right-line2 left-line2 text-sm">
                         <div id="p-particular" class="col-3 text-left ">
                             <b>SUBTOTAL</b>
                         </div>
@@ -526,7 +526,7 @@
                         <div id="p-pocket" class="col-1 text-right left-line2 font-weight-bold">
                             &nbsp;
                         </div>
-                    </div>
+                    </div> --}}
 
 
                     <div class="row bottom-line2 right-line2 left-line2 text-sm">
