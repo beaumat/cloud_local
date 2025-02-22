@@ -24,9 +24,22 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <input type="text" wire:model.live.debounce.150ms='search' class="w-100 text-xs"
                                         placeholder="Search" />
+                                </div>
+                                <div class="col-md-3">
+
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Copy To Location</label>
+                                    <select name="tolcation" wire:model='TO_LOCATION_ID'>
+                                        <option value="0">&nbsp;</option>
+                                        @foreach ($locationList as $list)
+                                            <option value="{{ $list->ID }}">{{ $list->NAME }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button class="btn btn-xs btn-warning" wire:click='CopyMode()'>Copy</button>
                                 </div>
                             </div>
                             <table class="table table-xs table-bordered table-hover">
@@ -104,7 +117,8 @@
                                                     @if ($list->ACTUAL_BASE)
                                                         <button class="btn btn-info btn-xs"
                                                             wire:click='OpenActualBase({{ $list->ID }})'><i
-                                                                class="fa fa-list" aria-hidden="true"></i> Modify </button>
+                                                                class="fa fa-list" aria-hidden="true"></i> Modify
+                                                        </button>
                                                     @else
                                                         &nbsp;
                                                     @endif
@@ -146,7 +160,8 @@
                                                                 class='btn btn-xs btn-danger w-100'
                                                                 wire:confirm='Are you sure to delete?'
                                                                 wire:click='Delete({{ $list->ID }})'><i
-                                                                    class="fa fa-trash" aria-hidden="true"></i></button>
+                                                                    class="fa fa-trash"
+                                                                    aria-hidden="true"></i></button>
                                                         </div>
                                                     @endif
                                                 </div>

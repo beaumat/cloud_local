@@ -72,7 +72,11 @@ class ItemSoaItemizedServices
 
         return $result;
     }
-
+    public function getList(int $SOA_ITEM_ID)
+    {
+        $result = ItemSoaItemized::query()->where('SOA_ITEM_ID', '=', $SOA_ITEM_ID)->get();
+        return $result;
+    }
     public static function getQuantityActual($dates = [], int $locationid, int $patientid, int $SOA_ITEM_ID): int
     {
 

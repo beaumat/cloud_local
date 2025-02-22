@@ -9,10 +9,12 @@ class ItemSoaServices
 {
 
     private $object;
-    public function __construct(ObjectServices $objectServices)
+    private $itemSoaItemizedServices;
+    public function __construct(ObjectServices $objectServices, ItemSoaItemizedServices $itemSoaItemizedServices)
     {
 
         $this->object = $objectServices;
+        $this->itemSoaItemizedServices = $itemSoaItemizedServices;
     }
 
     public function TypeList()
@@ -49,6 +51,8 @@ class ItemSoaServices
                 'ACTUAL_BASE' => $ACTUAL_BASE
             ]
         );
+
+        return $ID;
     }
     public function Update(int $ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false)
     {
@@ -152,4 +156,26 @@ class ItemSoaServices
         }
         return 0.00;
     }
+    public function haveDataExist(int $LOC_ID): bool
+    {
+        return ItemSoa::where('LOCATION_ID', '=', $LOC_ID)->exists();
+    }
+    public function copyEntryToAnotherLocation(int $FORM_LOCATION_ID, int $TO_LOCATION_ID)
+    {
+
+        $fromDataList = ItemSoa::where('LOCATION_ID', '=', $FORM_LOCATION_ID)->get();
+        foreach ($fromDataList as $list) {
+            $NEW_ID = $this->Store($TO_LOCATION_ID, $list->TYPE, $list->LINE, $list->ITEM_NAME, $list->UNIT_NAME, $list->RATE, $list->ACTUAL_BASE);
+            if ($list->ACTUAL_BASE) {
+                $dataItem = $this->itemSoaItemizedServices->GetList($list->ID);
+                foreach ($dataItem as $itemList) {
+                    $this->itemSoaItemizedServices->Store($itemList->ITEM_ID, $NEW_ID);
+                }
+            }
+        }
+
+
+    }
+
+
 }

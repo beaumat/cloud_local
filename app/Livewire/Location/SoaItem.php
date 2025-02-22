@@ -4,6 +4,7 @@ namespace App\Livewire\Location;
 
 use App\Services\ItemSoaServices;
 use App\Services\LocationServices;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Reactive;
 use Livewire\Attributes\Title;
@@ -22,7 +23,8 @@ class SoaItem extends Component
     public string $ITEM_NAME;
     public string $UNIT_NAME;
     public float $RATE;
-
+    public $locationList = [];
+    public $TO_LOCATION_ID;
     public bool $ACTUAL_BASE;
     public $editid = null;
     public int $editTYPE;
@@ -51,6 +53,8 @@ class SoaItem extends Component
             $this->LOCATION_ID = $id;
             $this->typeList = $this->itemSoaServices->TypeList();
             $this->CleanAdd();
+            $this->TO_LOCATION_ID = 0;
+
             return;
         }
 
@@ -178,6 +182,34 @@ class SoaItem extends Component
     private function refreshList()
     {
         $this->dataList = $this->itemSoaServices->Search($this->search, $this->LOCATION_ID);
+        $this->locationList = $this->locationServices->getListExcept($this->LOCATION_ID);
+    }
+    public function CopyMode() // new to_location
+    {
+        $this->validate([
+            'TO_LOCATION_ID' => 'required|exists:location,id'
+        ], [], [
+            'TO_LOCATION_ID' => 'Transfer Location'
+        ]);
+
+
+        if ($this->itemSoaServices->haveDataExist($this->TO_LOCATION_ID)) {
+            session()->flash('error', 'Invalid Copy. location must empty data');
+            return;
+        }
+
+        DB::beginTransaction();
+        try {
+
+            $this->itemSoaServices->copyEntryToAnotherLocation($this->LOCATION_ID, $this->TO_LOCATION_ID);
+            DB::commit();
+            session()->flash('message', 'successfully copy');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            session()->flash('error', $th->getMessage());
+
+        }
+
     }
     public function render()
     {
