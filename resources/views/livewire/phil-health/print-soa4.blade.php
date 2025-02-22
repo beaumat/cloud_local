@@ -614,7 +614,7 @@
                             <div class="row">
                                 <div class="col-12" @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     Conforme:</div>
-                                <div class="col-12 mt-2 text-center bottom-line2 font-weight-bold"
+                                <div class="col-12 mt-3 text-center bottom-line2 font-weight-bold"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     {{ $PATIENT_NAME }}
                                 </div>
@@ -629,7 +629,7 @@
                                     <i>Relationship of
                                         member of authorized representative</i>
                                 </div>
-                                <div class="col-12 mt-4 bottom-line2"
+                                <div class="col-12 mt-1 bottom-line2"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>&nbsp;</div>
 
                                 <div class="col-6 ">
