@@ -597,7 +597,7 @@
                                 </div>
                                 <div class="col-7 text-center"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>PHIC IN-Charge</div>
-                                <div class="col-12 mt-4">
+                                <div class="col-12 mt-2">
                                     <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         Date Signed:
                                     </span>
@@ -614,7 +614,7 @@
                             <div class="row">
                                 <div class="col-12" @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     Conforme:</div>
-                                <div class="col-12 mt-3 text-center bottom-line2 font-weight-bold"
+                                <div class="col-12 mt-4 text-center bottom-line2 font-weight-bold"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     {{ $PATIENT_NAME }}
                                 </div>
