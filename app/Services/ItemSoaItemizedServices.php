@@ -98,7 +98,7 @@ class ItemSoaItemizedServices
             ->whereBetween('sc.DATE', [$DATE_ADMITTED, $DATE_DISCHARGED])
             ->where('sc.LOCATION_ID', '=', $locationid)
             ->where('sc.PATIENT_ID', '=', $patientid)
-            ->sum('service_charges_items.QUANTITY') ?? 0;
+            ->sum('service_charges_items.QUANTITY') ?? 0;   
 
         return $result;
     }
@@ -113,9 +113,11 @@ class ItemSoaItemizedServices
 
         foreach ($dataList as $list) {
             $QTY = $this->getQty($DATE_ADMITTED, $DATE_DISCHARGED, $locationid, $patientid, $list->ID);
-            $TOTAL = $TOTAL + ($QTY * $list->RATE);
+            $AMOUNT  = $QTY * $list->RATE ?? 0;
+            $TOTAL = $TOTAL + $AMOUNT;
         }
 
+     
         return $TOTAL;
     }
 }

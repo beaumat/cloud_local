@@ -181,7 +181,7 @@ class PrintSoa4 extends Component
                 $this->ADDRESS1 = $this->GetAddress1($contact);
                 $this->ADDRESS2 = $this->GetAddress2($contact);
                 $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
-                $this->FINAL_DIAGNOSIS = 'CHRONIC KIDNEY DISEASE'; //$this->philHealthServices->DEFAULT_DIAGNOSIS2 . $contact->FINAL_DIAGNOSIS ?? '';
+                $this->FINAL_DIAGNOSIS = $this->philHealthServices->ADMITTING_DIAGNOSIS_DEFAULT . ' ' . $contact->FINAL_DIAGNOSIS ?? '';
                 $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                 $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
