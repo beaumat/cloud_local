@@ -143,11 +143,11 @@
                         <div class="col-3 text-center ">
                             <div class="top" style="top:0">
                                 PARTICULARS
-                                
+
                             </div>
                             <div class="bottom font-weight-bold" style="bottom: 0;">
                                 <br />
-                             
+
                                 HCI FEES
                             </div>
                         </div>
@@ -575,7 +575,7 @@
                             @endif
                         </div>
                         <div id="p-pocket" class="col-1 text-center text-sm left-line2 font-weight-bold">
-                            ZERO COPY
+                            ZERO COPAY
                         </div>
                     </div>
 
