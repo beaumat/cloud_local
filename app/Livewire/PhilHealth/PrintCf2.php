@@ -8,6 +8,7 @@ use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use App\Services\PhilHealthSoaCustomServices;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class PrintCf2 extends Component
@@ -75,7 +76,7 @@ class PrintCf2 extends Component
     public string $POST_TEMPERATURE;
     public string $POST_BLOOD_PRESSURE2;
     public string $RELATED_PROCEDURE;
-    public bool $PRE_SIGN_DATA =  false;
+    public bool $PRE_SIGN_DATA = false;
     public bool $OUTPUT_SIGN = false;
     public string $RR_NO;
     public string $HCI_NAME;
@@ -105,21 +106,21 @@ class PrintCf2 extends Component
     }
     private function gotHide()
     {
-        $cusFirst =   $this->philHealthSoaCustomServices->GetFirst($this->LOCATION_ID);
+        $cusFirst = $this->philHealthSoaCustomServices->GetFirst($this->LOCATION_ID);
         if ($cusFirst) {
             if ($cusFirst->HIDE_FEE > 0) {
                 $this->IS_HIDE = true;
             }
         }
     }
-    public function mount(int $id = 0,  int $PATIENT_ID = 0, $OUTPUT = true)
+    public function mount(int $id = 0, int $PATIENT_ID = 0, $OUTPUT = true)
     {
 
-   
+
         $this->RELATED_PROCEDURE = "HEMODIALYSIS";
         $this->OUTPUT_SIGN = $OUTPUT;
         if ($id > 0) {
-            $this->PRE_SIGN_DATA =  false;
+            $this->PRE_SIGN_DATA = false;
             $this->FIRST_CASE_RATE = '90935';
             $data = $this->philHealthServices->get($id);
             if ($data) {
@@ -173,10 +174,19 @@ class PrintCf2 extends Component
                         $this->ZIP_CODE = $locData->ZIP_CODE;
                     }
 
-                    $locDataMgt =   $this->locationServices->getPesonel($this->LOCATION_ID);
-                    if ($locData) {
-                        $this->HCI_NAME = strtoupper($locDataMgt->MANAGER_NAME)  ?? '';
-                        $this->HCI_POSITION = strtoupper($locDataMgt->MANAGER_POSITION)  ?? '';
+                    $locDataMgt = $this->locationServices->getPesonel($this->LOCATION_ID);
+
+                    if ($locDataMgt) {
+                        if ($locDataMgt->HCI_NAME) {
+                            $this->HCI_NAME = strtoupper($locDataMgt->MANAGER_NAME) ?? '';
+                            $this->HCI_POSITION = strtoupper($locDataMgt->MANAGER_POSITION) ?? '';
+                        } else {
+                            $userData = $this->contactServices->get(Auth::user()->contact_id, 2);
+                            if ($userData) {
+                                $this->HCI_NAME = $userData->NAME ?? '';
+                                $this->HCI_POSITION = $userData->NICKNAME ?? '';
+                            }
+                        }
                     }
 
                     $this->HEIGHT = $contact->HEIGHT ?? 0;
@@ -187,14 +197,14 @@ class PrintCf2 extends Component
                     $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                     $this->PATIENT_GENDER = $contact->GENDER;
                     $this->IS_PATIENT = $contact->IS_PATIENT;
-                    $this->FINAL_DIAGNOSIS =  strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
+                    $this->FINAL_DIAGNOSIS = strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
                     $this->AGE = $this->contactServices->calculateUserAge($this->PATIENT_BIRTH_DATE);
 
                     if ($this->IS_PATIENT) {
                         $this->MEMBER_FIRST_NAME = strtoupper($contact->FIRST_NAME);
                         $this->MEMBER_LAST_NAME = strtoupper($contact->LAST_NAME);
                         $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MIDDLE_NAME);
-                        $this->MEMBER_EXTENSION =  strtoupper($contact->SALUTATION);
+                        $this->MEMBER_EXTENSION = strtoupper($contact->SALUTATION);
                         $this->MEMBER_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                         $this->MEMBER_GENDER = $contact->GENDER;
                     } else {
@@ -233,19 +243,19 @@ class PrintCf2 extends Component
 
                 $this->GetAddDate($data->CONTACT_ID);
                 $dataRow = $this->getTreatment($data->CONTACT_ID);
-           
+
                 foreach ($dataRow as $list) {
-                    $this->treatdata[] =  date('m/d/Y',strtotime( $list->DATE));
-                 
+                    $this->treatdata[] = date('m/d/Y', strtotime($list->DATE));
+
                 }
                 $hemo = $this->hemoServices->GetPost($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE_DISCHARGED);
                 if ($hemo) {
                     $this->POST_WEIGHT = $hemo->POST_WEIGHT;
                     $this->POST_BLOOD_PRESSURE = $hemo->POST_BLOOD_PRESSURE;
-                    $this->POST_HEART_RATE =  $hemo->POST_HEART_RATE;
-                    $this->POST_O2_SATURATION =  $hemo->POST_O2_SATURATION;
+                    $this->POST_HEART_RATE = $hemo->POST_HEART_RATE;
+                    $this->POST_O2_SATURATION = $hemo->POST_O2_SATURATION;
                     $this->POST_TEMPERATURE = $hemo->POST_TEMPERATURE;
-                    $this->POST_BLOOD_PRESSURE2 =  $hemo->POST_BLOOD_PRESSURE2;
+                    $this->POST_BLOOD_PRESSURE2 = $hemo->POST_BLOOD_PRESSURE2;
                 }
             }
 
@@ -254,7 +264,7 @@ class PrintCf2 extends Component
         }
 
         if ($PATIENT_ID > 0) {
-            $this->PRE_SIGN_DATA =  true;
+            $this->PRE_SIGN_DATA = true;
             $contact = $this->contactServices->get($PATIENT_ID, 3);
             if ($contact) {
                 $this->LOCATION_ID = $contact->LOCATION_ID;
@@ -279,14 +289,14 @@ class PrintCf2 extends Component
                 $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                 $this->PATIENT_GENDER = $contact->GENDER;
                 $this->IS_PATIENT = $contact->IS_PATIENT;
-                $this->FINAL_DIAGNOSIS =  strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
+                $this->FINAL_DIAGNOSIS = strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
                 $this->AGE = $this->contactServices->calculateUserAge($this->PATIENT_BIRTH_DATE);
 
                 if ($this->IS_PATIENT) {
                     $this->MEMBER_FIRST_NAME = strtoupper($contact->FIRST_NAME);
                     $this->MEMBER_LAST_NAME = strtoupper($contact->LAST_NAME);
                     $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MIDDLE_NAME);
-                    $this->MEMBER_EXTENSION =  strtoupper($contact->SALUTATION);
+                    $this->MEMBER_EXTENSION = strtoupper($contact->SALUTATION);
                     $this->MEMBER_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                     $this->MEMBER_GENDER = $contact->GENDER;
                 } else {
@@ -331,15 +341,15 @@ class PrintCf2 extends Component
         $LastDate = '';
         foreach ($dataList as $list) {
             if ($this->allDate == '') {
-                $this->allDate =  date('M d', strtotime($list->DATE));
+                $this->allDate = date('M d', strtotime($list->DATE));
             } else {
-                $this->allDate = $this->allDate . ', ' .  date('d', strtotime($list->DATE));
+                $this->allDate = $this->allDate . ', ' . date('d', strtotime($list->DATE));
             }
             $LastDate = $list->DATE;
         }
 
         if ($LastDate !== '') {
-            $this->allDate = $this->allDate . ', ' .  date('Y', strtotime($LastDate));
+            $this->allDate = $this->allDate . ', ' . date('Y', strtotime($LastDate));
         }
     }
 

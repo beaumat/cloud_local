@@ -6,6 +6,7 @@ use App\Services\ContactServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
 use App\Services\PhilHealthServices;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class PrintCsf extends Component
@@ -55,7 +56,7 @@ class PrintCsf extends Component
     public string $MEMBER_BIRTH_DATE;
     public int $MEMBER_GENDER;
     public string $MEMBER_POSITION;
-    public bool $PRE_SIGN_DATA =  false;
+    public bool $PRE_SIGN_DATA = false;
     public bool $OUTPUT_SIGN = false;
     private $philHealthServices;
     private $contactServices;
@@ -72,7 +73,7 @@ class PrintCsf extends Component
         $this->locationServices = $locationServices;
         $this->patientDoctorServices = $patientDoctorServices;
     }
-    public function mount(int $id = 0, int  $PATIENT_ID = 0, bool $OUTPUT = true)
+    public function mount(int $id = 0, int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
         $this->OUTPUT_SIGN = $OUTPUT;
 
@@ -165,10 +166,18 @@ class PrintCsf extends Component
                     $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
                     $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
-                    $locData =   $this->locationServices->getPesonel($this->LOCATION_ID);
+                    $locData = $this->locationServices->getPesonel($this->LOCATION_ID);
                     if ($locData) {
-                        $this->HCI_NAME = strtoupper($locData->MANAGER_NAME)  ?? '';
-                        $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION)  ?? '';
+                        if ($locData->HCI_NAME) {
+                            $this->HCI_NAME = strtoupper($locData->MANAGER_NAME) ?? '';
+                            $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION) ?? '';
+                        } else {
+                            $userData = $this->contactServices->get(Auth::user()->contact_id, 2);
+                            if ($userData) {
+                                $this->HCI_NAME = $userData->NAME ?? '';
+                                $this->HCI_POSITION = $userData->NICKNAME ?? '';
+                            }
+                        }
                     }
                 }
             }
@@ -180,7 +189,7 @@ class PrintCsf extends Component
             if ($contact) {
                 $this->AUTORIZE_REP_NAME1 = $contact->CUSTOM_FIELD5 ?? '';
                 $this->AUTORIZE_REP_NAME2 = $contact->CUSTOM_FIELD4 ?? '';
-                
+
                 $this->PATIENT_LASTNAME = strtoupper($contact->LAST_NAME);
                 $this->PATIENT_FIRSTNAME = strtoupper($contact->FIRST_NAME);
                 $this->PATIENT_MIDDLENAME = strtoupper($contact->MIDDLE_NAME);
@@ -231,10 +240,10 @@ class PrintCsf extends Component
                 $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
                 $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
-                $locData =   $this->locationServices->getPesonel($contact->LOCATION_ID);
+                $locData = $this->locationServices->getPesonel($contact->LOCATION_ID);
                 if ($locData) {
-                    $this->HCI_NAME = strtoupper($locData->MANAGER_NAME)  ?? '';
-                    $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION)  ?? '';
+                    $this->HCI_NAME = strtoupper($locData->MANAGER_NAME) ?? '';
+                    $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION) ?? '';
                 }
 
 
