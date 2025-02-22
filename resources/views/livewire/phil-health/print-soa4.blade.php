@@ -574,7 +574,7 @@
                                 {{ number_format($P2_TOTAL, 2) }}
                             @endif
                         </div>
-                        <div id="p-pocket" class="col-1 text-center text-sm left-line2 font-weight-bold">
+                        <div id="p-pocket" class="col-1 text-center text-xs left-line2 font-weight-bold">
                             ZERO COPAY
                         </div>
                     </div>
