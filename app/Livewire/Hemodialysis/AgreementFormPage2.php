@@ -53,7 +53,7 @@ class AgreementFormPage2 extends Component
                 $this->HD_FACILITY_REP_NAME = $this->contactServices->getName($dataLoc->HD_FACILITY_REP_ID);
 
             }
-            $this->TypeFive();+
+            $this->TypeFive();
             $this->TypeSix();
             $this->itemlistLoad();
         }
