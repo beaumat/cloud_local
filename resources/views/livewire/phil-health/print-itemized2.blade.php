@@ -27,6 +27,9 @@ use App\Services\ItemSoaItemizedServices;
                 $row = 0;
             @endphp
             <tbody class='text-xs'>
+                @php
+                    $GRAND_TOTAL = 0;
+                @endphp
                 @foreach ($dataList as $list)
                     @if ($TYPE == '')
                     @elseif ($TYPE != $list->TYPE_NAME)
@@ -85,6 +88,9 @@ use App\Services\ItemSoaItemizedServices;
                         <td class="text-center pb-0 pt-0"> {{ $defult_Qty }}</td>
 
                         <td class="text-right pb-0 pt-0">{{ number_format($AMOUNT, 2) }}</td>
+                        @php
+                            $GRAND_TOTAL = $GRAND_TOTAL + $AMOUNT ?? 0;
+                        @endphp
                     </tr>
                 @endforeach
 
@@ -95,6 +101,17 @@ use App\Services\ItemSoaItemizedServices;
                     <td></td>
                     <td></td>
                     <td class="text-right pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
+                </tr>
+
+
+                <tr class="font-weight-bold text-danger">
+                    <td class="text-right">TOTAL:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right pb-0 pt-0">{{ number_format($GRAND_TOTAL, 2) }}</td>
+
                 </tr>
             </tbody>
         </table>
