@@ -471,6 +471,7 @@
                         <div class="row bottom-line2 right-line2 left-line2 text-sm">
                             <div id="p-particular" class="col-3 text-left ">
                                 {{ $i . '. ' }} <span class="text-sm">{{ $list->NAME }}</span>
+
                             </div>
                             <div id="p-charge" class="col-1 text-right  left-line2">
                                 @if ($list->AMOUNT > 0)
@@ -499,40 +500,42 @@
                                 &nbsp;
                             </div>
                         </div>
+
+
+                        <div class="row bottom-line2 right-line2 left-line2 text-sm">
+                            <div id="p-particular" class="col-3 text-left ">
+                              ACCREDITATION #  <b class="font-weight-bold"> {{ $list->PIN }}</b>
+                            </div>
+                            <div id="p-charge" class="col-1 text-right  left-line2 font-weight-bold">
+                                {{-- @if ($PROFESSIONAL_FEE_SUB_TOTAL > 0)
+                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL, 2) }}
+                            @endif --}}
+                            </div>
+                            <div id="p-vat" class="col-1 text-right  left-line2 font-weight-bold"> </div>
+                            <div id="p-sp" class="col-1 text-right   left-line2 font-weight-bold">
+                                {{-- @if ($PROFESSIONAL_DISCOUNT_SUB_TOTAL > 0)
+                                {{ number_format($PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
+                            @endif --}}
+                            </div>
+                            <div id="p-gov" class="col-2 text-right  left-line2 text-xs font-weight-bold"> </div>
+                            <div id="p-after-disc" class="col-1 text-right  left-line2 font-weight-bold">
+                                {{-- @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
+                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
+                            @endif --}}
+                            </div>
+                            <div id="p-first" class="col-1  left-line2 text-right font-weight-bold">
+                                {{-- @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
+                                {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
+                            @endif --}}
+                            </div>
+                            <div id="p-second" class="col-1 left-line2 text-right font-weight-bold"> </div>
+                            <div id="p-pocket" class="col-1 text-right left-line2 font-weight-bold">
+                                &nbsp;
+                            </div>
+                        </div>
                     @endforeach
 
 
-                    {{-- <div class="row bottom-line2 right-line2 left-line2 text-sm">
-                        <div id="p-particular" class="col-3 text-left ">
-                            <b>SUBTOTAL</b>
-                        </div>
-                        <div id="p-charge" class="col-1 text-right  left-line2 font-weight-bold">
-                            @if ($PROFESSIONAL_FEE_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-vat" class="col-1 text-right  left-line2 font-weight-bold"> </div>
-                        <div id="p-sp" class="col-1 text-right   left-line2 font-weight-bold">
-                            @if ($PROFESSIONAL_DISCOUNT_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-gov" class="col-2 text-right  left-line2 text-xs font-weight-bold"> </div>
-                        <div id="p-after-disc" class="col-1 text-right  left-line2 font-weight-bold">
-                            @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-first" class="col-1  left-line2 text-right font-weight-bold">
-                            @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
-                            @endif
-                        </div>
-                        <div id="p-second" class="col-1 left-line2 text-right font-weight-bold"> </div>
-                        <div id="p-pocket" class="col-1 text-right left-line2 font-weight-bold">
-                            &nbsp;
-                        </div>
-                    </div> --}}
 
 
                     <div class="row bottom-line2 right-line2 left-line2 text-sm">
@@ -587,14 +590,14 @@
                     <div class="row">
                         <div class="col-5">
                             <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Prepared by:</div>
-                            <div class="form-group row  mt-2">
+                            <div class="form-group row  mt-4">
                                 <div class="col-7 text-center bottom-line2">
                                     <strong @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         {{ $USER_NAME }}</strong>
                                 </div>
                                 <div class="col-7 text-center"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>PHIC IN-Charge</div>
-                                <div class="col-12 mt-1">
+                                <div class="col-12 mt-4">
                                     <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         Date Signed:
                                     </span>
@@ -611,7 +614,7 @@
                             <div class="row">
                                 <div class="col-12" @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     Conforme:</div>
-                                <div class="col-12 text-center bottom-line2 font-weight-bold"
+                                <div class="col-12 mt-2 text-center bottom-line2 font-weight-bold"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                     {{ $PATIENT_NAME }}
                                 </div>
@@ -626,19 +629,19 @@
                                     <i>Relationship of
                                         member of authorized representative</i>
                                 </div>
-                                <div class="col-12 mt-1 bottom-line2"
+                                <div class="col-12 mt-4 bottom-line2"
                                     @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>&nbsp;</div>
 
-                                <div class="col-12 ">
+                                <div class="col-6 ">
                                     <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         Date Signed:
                                         </span>
                                         {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
                                     </div>
-                                    <div class="col-12"
-                                        @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
-                                        CONTACT No. {{ $PATIENT_CONTACT }}
-                                    </div>
+
+                                </div>
+                                <div class="col-6" @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    CONTACT No. {{ $PATIENT_CONTACT }}
                                 </div>
                             </div>
                         </div>

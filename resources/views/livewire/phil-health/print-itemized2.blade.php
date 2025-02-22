@@ -26,7 +26,7 @@ use App\Services\ItemSoaItemizedServices;
             @php
                 $row = 0;
             @endphp
-            <tbody class='text-sm'>
+            <tbody class='text-xs'>
                 @foreach ($dataList as $list)
                     @if ($TYPE == '')
                     @elseif ($TYPE != $list->TYPE_NAME)
