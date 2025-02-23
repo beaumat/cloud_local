@@ -21,12 +21,12 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <livewire:date-input name="AR_DATE" titleName="Date Transmit" wire:model='AR_DATE'
-                                    :isDisabled="false" />
+                                    isDisabled="{{ $isPaid }}" />
                             </div>
 
                             <div class="col-md-6">
-                                <livewire:text-input name="AR_NO" titleName="LHIO No." :isDisabled=false
-                                    wire:model='AR_NO' />
+                                <livewire:text-input name="AR_NO" titleName="LHIO No."
+                                    isDisabled="{{ $isPaid }}" wire:model='AR_NO' />
                             </div>
                         </div>
                     </div>
@@ -36,9 +36,12 @@
                                 <div class="col-6 text-left">
                                 </div>
                                 <div class="col-6 text-right">
-                                    <button type="button" wire:click='save()' class="btn btn-success btn-sm">
-                                        Save
-                                    </button>
+                                    @if (!$isPaid)
+                                        <button type="button" wire:click='save()' class="btn btn-success btn-sm">
+                                            Save
+                                        </button>
+                                    @endif
+
                                     <button type="button" wire:click='closeModal()' class="btn btn-danger btn-sm">
                                         Close
                                     </button>

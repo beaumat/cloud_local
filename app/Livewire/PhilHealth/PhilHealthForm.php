@@ -42,7 +42,7 @@ class PhilHealthForm extends Component
     public string $FIRST_CASE_RATE;
     public string $SECOND_CASE_RATE;
     public int $STATUS_ID;
-
+    public bool $isPaid = false;
     public string $AR_DATE;
     public string $AR_NO;
 
@@ -119,6 +119,9 @@ class PhilHealthForm extends Component
             if ($data) {
                 $this->LoadDropDown();
                 $this->ID = $data->ID;
+
+                $this->isPaid = $this->philHealthServices->isPaid($this->ID);
+
                 $this->CODE = $data->CODE;
                 $this->DATE = $data->DATE;
                 $this->LOCATION_ID = $data->LOCATION_ID;

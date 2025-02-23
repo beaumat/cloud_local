@@ -44,7 +44,7 @@ class ServiceChargeServices
     public function setItemPaidAmount(int $SERVICE_CHARGES_ITEM_ID, float $PAID_AMOUNT)
     {
 
-        ServiceChargesItems::where('ID', $SERVICE_CHARGES_ITEM_ID)
+        ServiceChargesItems::where('ID','=', $SERVICE_CHARGES_ITEM_ID)
             ->update([
                 'PAID_AMOUNT' => $PAID_AMOUNT
             ]);

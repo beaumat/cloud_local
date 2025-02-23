@@ -287,7 +287,6 @@ class ServiceChargeForm extends Component
                     }
 
                     $AMOUNT = $list->QUANTITY * $RATE;
-
                     $SC_ITEM_ID = $this->serviceChargeServices->ItemStore(
                         $this->ID,
                         $list->ITEM_ID,

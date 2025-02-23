@@ -95,7 +95,7 @@ class PatientPaymentServices
         int $ACCOUNTS_RECEIVABLE_ID,
         int $PHILHEALTH_ID = 0,
         int $WTAX_AMOUNT = 0,
-        int  $WTAX_ACCOUNT_ID = 0,
+        int $WTAX_ACCOUNT_ID = 0,
         float $LESS_AMOUNT = 0
     ): int {
         $ID = (int) $this->object->ObjectNextID('PATIENT_PAYMENT');
@@ -103,30 +103,30 @@ class PatientPaymentServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         PatientPayments::create([
-            'ID'                        => $ID,
-            'RECORDED_ON'               => $this->dateServices->Now(),
-            'CODE'                      => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                      => $DATE,
-            'PATIENT_ID'                => $PATIENT_ID,
-            'LOCATION_ID'               => $LOCATION_ID,
-            'AMOUNT'                    => $AMOUNT,
-            'AMOUNT_APPLIED'            => $AMOUNT_APPLIED,
-            'PAYMENT_METHOD_ID'         => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'CARD_NO'                   => $CARD_NO,
-            'CARD_EXPIRY_DATE'          => $CARD_EXPIRY_DATE ?? null,
-            'RECEIPT_REF_NO'            => $RECEIPT_REF_NO,
-            'RECEIPT_DATE'              => $RECEIPT_DATE ?? null,
-            'NOTES'                     => $NOTES,
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE' => $DATE,
+            'PATIENT_ID' => $PATIENT_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+            'AMOUNT' => $AMOUNT,
+            'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
+            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+            'CARD_NO' => $CARD_NO,
+            'CARD_EXPIRY_DATE' => $CARD_EXPIRY_DATE ?? null,
+            'RECEIPT_REF_NO' => $RECEIPT_REF_NO,
+            'RECEIPT_DATE' => $RECEIPT_DATE ?? null,
+            'NOTES' => $NOTES,
             'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
-            'OVERPAYMENT_ACCOUNT_ID'    => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-            'STATUS'                    => 2,
-            'STATUS_DATE'               => $this->dateServices->NowDate(),
-            'DEPOSITED'                 => $DEPOSITED,
-            'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID > 0  ? $ACCOUNTS_RECEIVABLE_ID : null,
-            'PHILHEALTH_ID'             => $PHILHEALTH_ID,
-            'WTAX_AMOUNT'               => $WTAX_AMOUNT  > 0 ? $WTAX_AMOUNT : null,
-            'WTAX_ACCOUNT_ID'           => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
-            'LESS_AMOUNT'               => $LESS_AMOUNT
+            'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
+            'STATUS' => 2,
+            'STATUS_DATE' => $this->dateServices->NowDate(),
+            'DEPOSITED' => $DEPOSITED,
+            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
+            'PHILHEALTH_ID' => $PHILHEALTH_ID,
+            'WTAX_AMOUNT' => $WTAX_AMOUNT > 0 ? $WTAX_AMOUNT : null,
+            'WTAX_ACCOUNT_ID' => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
+            'LESS_AMOUNT' => $LESS_AMOUNT
         ]);
 
         return $ID;
@@ -149,30 +149,30 @@ class PatientPaymentServices
         bool $DEPOSITED,
         int $ACCOUNTS_RECEIVABLE_ID,
         int $WTAX_AMOUNT = 0,
-        int  $WTAX_ACCOUNT_ID = 0,
+        int $WTAX_ACCOUNT_ID = 0,
         float $LESS_AMOUNT = 0
     ) {
 
         PatientPayments::where('ID', '=', $ID)
             ->update([
-                'DATE'                          => $DATE,
-                'CODE'                          => $CODE,
-                'PATIENT_ID'                    => $PATIENT_ID,
-                'LOCATION_ID'                   => $LOCATION_ID,
-                'AMOUNT'                        => $AMOUNT,
-                'PAYMENT_METHOD_ID'             => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-                'CARD_NO'                       => $CARD_NO,
-                'CARD_EXPIRY_DATE'              => $CARD_EXPIRY_DATE ?? null,
-                'RECEIPT_REF_NO'                => $RECEIPT_REF_NO,
-                'RECEIPT_DATE'                  => $RECEIPT_DATE ?? null,
-                'NOTES'                         => $NOTES,
-                'UNDEPOSITED_FUNDS_ACCOUNT_ID'  => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
-                'OVERPAYMENT_ACCOUNT_ID'        => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-                'DEPOSITED'                     => $DEPOSITED,
-                'ACCOUNTS_RECEIVABLE_ID'        => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
-                'WTAX_AMOUNT'                   => $WTAX_AMOUNT  > 0 ? $WTAX_AMOUNT : null,
-                'WTAX_ACCOUNT_ID'               => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
-                'LESS_AMOUNT'                   => $LESS_AMOUNT
+                'DATE' => $DATE,
+                'CODE' => $CODE,
+                'PATIENT_ID' => $PATIENT_ID,
+                'LOCATION_ID' => $LOCATION_ID,
+                'AMOUNT' => $AMOUNT,
+                'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+                'CARD_NO' => $CARD_NO,
+                'CARD_EXPIRY_DATE' => $CARD_EXPIRY_DATE ?? null,
+                'RECEIPT_REF_NO' => $RECEIPT_REF_NO,
+                'RECEIPT_DATE' => $RECEIPT_DATE ?? null,
+                'NOTES' => $NOTES,
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
+                'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
+                'DEPOSITED' => $DEPOSITED,
+                'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
+                'WTAX_AMOUNT' => $WTAX_AMOUNT > 0 ? $WTAX_AMOUNT : null,
+                'WTAX_ACCOUNT_ID' => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
+                'LESS_AMOUNT' => $LESS_AMOUNT
             ]);
     }
     public function StatusUpdate(int $ID, int $STATUS)
@@ -198,8 +198,9 @@ class PatientPaymentServices
     }
     public function ChargesAreAlreadyExists(int $ID): bool
     {
-        $r = (bool) PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->exists();;
-        return  $r;
+        $r = (bool) PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->exists();
+        ;
+        return $r;
     }
     public function Delete(int $ID)
     {
@@ -447,13 +448,13 @@ class PatientPaymentServices
 
         $ID = $this->object->ObjectNextID('PATIENT_PAYMENT_CHARGES');
         PatientPaymentCharges::create([
-            'ID'                        => $ID,
-            'PATIENT_PAYMENT_ID'        => $PATIENT_PAYMENT_ID,
-            'SERVICE_CHARGES_ITEM_ID'   => $SERVICE_CHARGES_ITEM_ID,
-            'DISCOUNT'                  => $DISCOUNT > 0 ? $DISCOUNT : null,
-            'AMOUNT_APPLIED'            => $AMOUNT_APPLIED,
-            'DISCOUNT_ACCOUNT_ID'       => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
-            'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
+            'ID' => $ID,
+            'PATIENT_PAYMENT_ID' => $PATIENT_PAYMENT_ID,
+            'SERVICE_CHARGES_ITEM_ID' => $SERVICE_CHARGES_ITEM_ID,
+            'DISCOUNT' => $DISCOUNT > 0 ? $DISCOUNT : null,
+            'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
+            'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
+            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
         ]);
 
         return $ID;
@@ -472,7 +473,7 @@ class PatientPaymentServices
         PatientPayments::where('ID', '=', $PATIENT_PAY_ID)
             ->update([
                 'IS_INVOICE' => $IS_INVOICE,
-                'REF_ID'    => $REF_ID > 0 ? $REF_ID : null
+                'REF_ID' => $REF_ID > 0 ? $REF_ID : null
             ]);
     }
     public function GetCustomerRef(bool $IS_INVOICE, int $REF_ID)
@@ -482,7 +483,7 @@ class PatientPaymentServices
             ->first();
 
         if ($data) {
-            return (int)  $data->ID;
+            return (int) $data->ID;
         }
         return 0;
     }
@@ -677,9 +678,9 @@ class PatientPaymentServices
         return false;
     }
 
-    public  function getSumApplied(string $fromDate, string $toDate, int $locationId = 0, int $patientId  = 0): float
+    public function getSumApplied(string $fromDate, string $toDate, int $locationId = 0, int $patientId = 0): float
     {
-        $result = (float)  PatientPayments::whereBetween('DATE', [$fromDate, $toDate])
+        $result = (float) PatientPayments::whereBetween('DATE', [$fromDate, $toDate])
             ->when($locationId > 0, function ($query) use (&$locationId) {
                 $query->where('LOCATION_ID', $locationId);
             })
@@ -690,7 +691,14 @@ class PatientPaymentServices
 
         return $result;
     }
-
+    public function PH_exists($PHILHEALTH_ID)
+    {
+        $result = PatientPayments::where('PHILHEALTH_ID', '=', $PHILHEALTH_ID)->first();
+        if ($result) {
+            return (int) $result->ID;
+        }
+        return 0;
+    }
     public function PH_Store(int $PHILHEALTH_ID, float $AMOUNT, string $RECEIPT_REF_NO, string $RECEIPT_DATE, string $NOTES)
     {
         $METHOD_ID = 91; // Philhealth
@@ -700,7 +708,7 @@ class PatientPaymentServices
 
         $ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
 
-        $this->Store(
+        $ID = $this->Store(
             "",
             $DATE,
             $phData->CONTACT_ID,
@@ -719,6 +727,8 @@ class PatientPaymentServices
             $ACCOUNTS_RECEIVABLE_ID,
             $PHILHEALTH_ID
         );
+
+        return $ID;
     }
     public function PH_Update(int $ID, int $PHILHEALTH_ID, float $AMOUNT, string $RECEIPT_REF_NO, string $RECEIPT_DATE, string $NOTES)
     {
@@ -729,10 +739,10 @@ class PatientPaymentServices
             ->where('PAYMENT_METHOD_ID', $METHOD_ID)
             ->where('AMOUNT_APPLIED', 0)
             ->update([
-                'AMOUNT'            => $AMOUNT,
-                'RECEIPT_REF_NO'    => $RECEIPT_REF_NO,
-                'RECEIPT_DATE'      => $RECEIPT_DATE,
-                'NOTES'             => $NOTES
+                'AMOUNT' => $AMOUNT,
+                'RECEIPT_REF_NO' => $RECEIPT_REF_NO,
+                'RECEIPT_DATE' => $RECEIPT_DATE,
+                'NOTES' => $NOTES
             ]);
     }
     public function PH_Delete(int $ID, int $PHILHEALTH_ID): bool
@@ -757,7 +767,7 @@ class PatientPaymentServices
     }
     public function PH_List(int $PHILHEALTH_ID, int $PATIENT_ID, int $LOCATION_ID)
     {
-        $result =  PatientPayments::query()
+        $result = PatientPayments::query()
             ->select([
                 'ID',
                 'CODE',

@@ -43,8 +43,7 @@
                                                 <div class="col-6">
                                                     <div class="mt-0">
                                                         <label class="text-sm">To :</label>
-                                                        <input type="date"
-                                                            wire:model.live.debounce='DISCHARGED'
+                                                        <input type="date" wire:model.live.debounce='DISCHARGED'
                                                             class="w-100 form-control form-control-sm" />
                                                     </div>
                                                 </div>
@@ -52,7 +51,8 @@
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mt-0">
-                                                <label class="text-sm">Location:</label>
+                                                <label class="text-sm" wire:click='locationClick()'
+                                                    wire:confirm='Are you use update all paid'>Location:</label>
                                                 <select
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
                                                     name="location" wire:model.live='locationid'
