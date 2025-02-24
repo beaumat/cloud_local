@@ -167,10 +167,12 @@ class PrintCsf extends Component
                     $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
                     $locData = $this->locationServices->getPesonel($this->LOCATION_ID);
+                
                     if ($locData) {
-                        if ($locData->HCI_NAME) {
+                        if ($locData->MANAGER_NAME) {
                             $this->HCI_NAME = strtoupper($locData->MANAGER_NAME) ?? '';
                             $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION) ?? '';
+                            dd("SS");
                         } else {
                             $userData = $this->contactServices->get(Auth::user()->contact_id, 2);
                             if ($userData) {

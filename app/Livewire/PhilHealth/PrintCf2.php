@@ -177,7 +177,7 @@ class PrintCf2 extends Component
                     $locDataMgt = $this->locationServices->getPesonel($this->LOCATION_ID);
 
                     if ($locDataMgt) {
-                        if ($locDataMgt->HCI_NAME) {
+                        if ($locDataMgt->MANAGER_NAME) {
                             $this->HCI_NAME = strtoupper($locDataMgt->MANAGER_NAME) ?? '';
                             $this->HCI_POSITION = strtoupper($locDataMgt->MANAGER_POSITION) ?? '';
                         } else {
