@@ -12,19 +12,19 @@ class PhilhealthItemAdjustmentServices
         $this->object = $objectServices;
     }
 
-    public function ItemAdjustStore(int $PATIENT_ID, int $LOCATION_ID, int $NO_OF_USED, int $YEAR, string $NOTES):int
+    public function ItemAdjustStore(int $PATIENT_ID, int $LOCATION_ID, int $NO_OF_USED, int $YEAR, string $NOTES): int
     {
 
         $ID = (int) $this->object->ObjectNextID('PHILHEALTH_ITEM_ADJUSTMENT');
 
         PhilhealthItemAdjustment::create(
             [
-                'ID'            => $ID,
-                'PATIENT_ID'    => $PATIENT_ID,
-                'LOCATION_ID'   => $LOCATION_ID,
-                'NO_OF_USED'    => $NO_OF_USED,
-                'YEAR'          => $YEAR,
-                'NOTES'         => $NOTES
+                'ID' => $ID,
+                'PATIENT_ID' => $PATIENT_ID,
+                'LOCATION_ID' => $LOCATION_ID,
+                'NO_OF_USED' => $NO_OF_USED,
+                'YEAR' => $YEAR,
+                'NOTES' => $NOTES
             ]
         );
 
@@ -45,9 +45,9 @@ class PhilhealthItemAdjustmentServices
         PhilhealthItemAdjustment::where('ID', '=', $ID)
             ->update(
                 [
-                    'YEAR'       => $YEAR,
+                    'YEAR' => $YEAR,
                     'NO_OF_USED' => $NO_OF_USED,
-                    'NOTES'      => $NOTES
+                    'NOTES' => $NOTES
                 ]
             );
     }
@@ -59,7 +59,7 @@ class PhilhealthItemAdjustmentServices
     public function GetItemAdjust(int $ID)
     {
 
-        $result =   PhilhealthItemAdjustment::where('ID', '=', $ID)->first();
+        $result = PhilhealthItemAdjustment::where('ID', '=', $ID)->first();
         if ($result) {
             return $result;
         }
@@ -70,7 +70,7 @@ class PhilhealthItemAdjustmentServices
     {
 
         $result = PhilhealthItemAdjustment::query()
-            ->select(['ID', 'NO_OF_USED', 'YEAR', 'NOTES','FILE_NAME','FILE_PATH'])
+            ->select(['ID', 'NO_OF_USED', 'YEAR', 'NOTES', 'FILE_NAME', 'FILE_PATH'])
             ->where('PATIENT_ID', $PATIENT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->get();
@@ -90,6 +90,20 @@ class PhilhealthItemAdjustmentServices
         if ($result) {
 
             return $result->NO_OF_USED ?? 0;
+        }
+
+        return 0;
+    }
+    public function ItemTotalOther(int $PATIENT_ID, int $LOCATION_ID, int $YEAR): int
+    {
+        $result = PhilhealthItemAdjustment::query()
+            ->where('PATIENT_ID', $PATIENT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('YEAR', $YEAR)
+            ->sum('NO_OF_USED');
+
+        if ($result) {
+            return (int) $result;
         }
 
         return 0;

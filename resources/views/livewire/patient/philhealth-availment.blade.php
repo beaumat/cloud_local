@@ -82,7 +82,8 @@
                                             <td class="text-lg">{{ $list['ID'] }}</td>
                                             <td class="text-lg">
                                                 @if ($list['DATES'])
-                                                    {{ OtherServices::formatDays($list['DATES']) }},  {{ $YEAR }}
+                                                    {{ OtherServices::formatDays($list['DATES']) }},
+                                                    {{ $YEAR }}
                                                 @endif
                                             </td>
                                         </tr>
@@ -92,7 +93,23 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="col-12 pt-4 pb-4">
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-10 text-lg ">
+                            Confinement from Other Hopitals/Facility - <b>{{ $TOTAL_OTHER }}</b>
+                        </div>
+                        <div class="col-2"></div>
+                        <div class="col-10 text-lg ">
+                            Confinement at {{ $BRANCH_NAME }} - <b>{{ $TOTAL_MAIN }}</b>
+                        </div>
+                        <div class="col-2"></div>
+                        <div class="col-10 text-lg">
+                            Total Philhealth Availment as of {{ date('M/d/Y', strtotime($DATE)) }} -
+                            <b>{{ $TOTAL_OTHER + $TOTAL_MAIN }}</b>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-12">
                     <div class="row">
                         <div class="col-2"></div>
@@ -100,12 +117,10 @@
                             <div class="text-lg pb-4">
                                 This certification is issued to whatever purpose it may serve best the patient.
                             </div>
-
                             <div class="text-lg pt-4">
                                 {{ $DONE_DATE }}
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="col-12 text-lg">
