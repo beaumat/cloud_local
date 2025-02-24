@@ -172,7 +172,7 @@ class PrintCsf extends Component
                         if ($locData->MANAGER_NAME) {
                             $this->HCI_NAME = strtoupper($locData->MANAGER_NAME) ?? '';
                             $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION) ?? '';
-                            dd("SS");
+                       
                         } else {
                             $userData = $this->contactServices->get(Auth::user()->contact_id, 2);
                             if ($userData) {
