@@ -64,8 +64,8 @@
                             <div class="row text-center font-weight-bold">
                                 <div class="col-12 bottom-line-hide">
 
-                                    <p class="up-space down-space">      @if ($DRY_WEIGHT)
-                                        DRY WEIGHT: ___________
+                                    <p class="up-space down-space"> &nbsp;@if ($DRY_WEIGHT)
+                                        DRY WEIGHT: _________
                                     @endif </p>
                              
                                 </div>
