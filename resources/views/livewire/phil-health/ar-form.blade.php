@@ -30,7 +30,7 @@
                             </div>
                         </div>
                         @if ($INVOICE_CODE)
-                            <div class="form-group row">
+                            <div class="form-group row text-xs">
                                 <div class="col-12">Invoice Details</div>
                                 <div class="col-md-6">
                                     <a target="_blank" href="{{ route('customersinvoice_edit', ['id' => $INVOICE_ID]) }}">Ref# :
