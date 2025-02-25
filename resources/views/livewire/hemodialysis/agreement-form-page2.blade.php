@@ -131,7 +131,7 @@
                 <div class="col-5 bottom-line2">{{ $PATIENT_NAME }}</div>
                 <div class="col-2"></div>
                 <div class="col-5 bottom-line2">
-                    <div class="text-right" style="position: absolute;left:10%">
+                    <div class="text-right" style="position: absolute;left:0%;">
                                  {{ $HD_FACILITY_REP_NAME }}{{ $HD_FACILITY_REP_POS ? '/' . $HD_FACILITY_REP_POS : '' }}
                     </div>
                 </div>
