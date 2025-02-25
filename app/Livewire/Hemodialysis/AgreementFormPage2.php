@@ -46,7 +46,7 @@ class AgreementFormPage2 extends Component
             $dataLoc = $this->locationServices->get($this->LOCATION_ID);
             $this->getWithNess($data->CUSTOMER_ID);
             if ($dataLoc) {
-                $hdcon = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID > 0, 2);
+                $hdcon = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID , 2);
                 if ($hdcon) {
                     $this->HD_FACILITY_REP_NAME = $hdcon->NAME ?? '';
                     $this->HD_FACILITY_REP_POS = $hdcon->NICKNAME ?? '';
