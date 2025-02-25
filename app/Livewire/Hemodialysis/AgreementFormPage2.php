@@ -43,8 +43,9 @@ class AgreementFormPage2 extends Component
             $this->PATIENT_NAME = $this->contactServices->getName($data->CUSTOMER_ID);
             $this->DATE = $data->DATE;
             $this->LOCATION_ID = $data->LOCATION_ID;
-            $dataLoc = $this->locationServices->get($this->LOCATION_ID);
             $this->getWithNess($data->CUSTOMER_ID);
+            $dataLoc = $this->locationServices->get($this->LOCATION_ID);
+        
             if ($dataLoc) {
                 $hdcon = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID , 2);
                 if ($hdcon) {
@@ -54,6 +55,8 @@ class AgreementFormPage2 extends Component
 
        
             }
+
+       
             $this->TypeFive();
             $this->TypeSix();
             $this->itemlistLoad();
@@ -65,7 +68,8 @@ class AgreementFormPage2 extends Component
         $con = $this->contactServices->get2($CONTACT_ID);
         if ($con) {
             $wit_ID = $con->WITNESS_ID > 0 ? $con->WITNESS_ID : 0;
-            $this->WITNESS_NAME = $wit_ID > 0 ? $this->contactServices->getName($wit_ID) : $con->CONTACT_PERSON;
+            $this->WITNESS_NAME = $wit_ID > 0 ? $this->contactServices->getName2($wit_ID) : $con->CONTACT_PERSON;
+    
         }
     }
     private function itemlistLoad()

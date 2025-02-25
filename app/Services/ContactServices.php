@@ -44,9 +44,20 @@ class ContactServices
 	public function getName($ID): string
 	{
 		$result = contacts::query()->select([
-		DB::raw("CONCAT( contact.FIRST_NAME, ' ', LEFT(contact.MIDDLE_NAME, 1),'. ', contact.LAST_NAME, '  ', IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as NAME")
-			
-			])->where('ID', '=', $ID)->where('INACTIVE', '=', '0')->first();
+			DB::raw("CONCAT( contact.FIRST_NAME, ' ', LEFT(contact.MIDDLE_NAME, 1),'. ', contact.LAST_NAME, '  ', IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as NAME")
+
+		])->where('ID', '=', $ID)->where('INACTIVE', '=', '0')->first();
+		if ($result) {
+			return $result->NAME ?? '';
+		}
+		return '';
+	}
+	public function getName2($ID)
+	{
+		$result = contacts::query()->select([
+			"NAME"
+
+		])->where('ID', '=', $ID)->where('INACTIVE', '=', '0')->first();
 		if ($result) {
 			return $result->NAME ?? '';
 		}
