@@ -6,6 +6,7 @@ use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PhicAgreementFormServices;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -50,7 +51,7 @@ class AgreementFormPage2 extends Component
                     $this->HD_FACILITY_REP_NAME = $hdcon->NAME ?? '';
                     $this->HD_FACILITY_REP_POS = $hdcon->NICKNAME ?? '';
                 }
-                $this->HD_FACILITY_REP_NAME = $this->contactServices->getName($dataLoc->HD_FACILITY_REP_ID);
+
 
             }
             $this->TypeFive();

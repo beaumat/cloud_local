@@ -51,7 +51,7 @@ class AgreementFormPage1 extends Component
             if ($locData) {
 
                 // $this->ADMIN_NAME ="";
-                $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? Auth()->user()->contact_id, 2); // Employee
+                $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID > 0 ? $locData->PHIC_INCHARGE_ID : Auth()->user()->contact_id, 2); // Employee
                 if ($conPHIC) {
                     $this->PHIC_INCHARGE_NAME = $conPHIC->PRINT_NAME_AS ?? '';
                     $this->PHIC_INCHARGE_POSITION = $conPHIC->NICKNAME ?? '';
