@@ -62,7 +62,7 @@ class AgreementFormPage2 extends Component
     }
     private function getWithNess(int $CONTACT_ID)
     {
-        $con = $this->contactServices->get($CONTACT_ID, 3);
+        $con = $this->contactServices->get2($CONTACT_ID);
         if ($con) {
             $wit_ID = $con->WITNESS_ID > 0 ? $con->WITNESS_ID : 0;
             $this->WITNESS_NAME = $wit_ID > 0 ? $this->contactServices->getName($wit_ID) : $con->CONTACT_PERSON;

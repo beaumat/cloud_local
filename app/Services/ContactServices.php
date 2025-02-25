@@ -103,6 +103,14 @@ class ContactServices
 
 		return $result;
 	}
+	public function get2(int $ID)
+	{
+
+		$result = contacts::where('ID', '=', $ID)
+			->first();
+
+		return $result;
+	}
 	public function updateaWitNessOnly(int $ID, int $WITNESS_ID)
 	{
 		contacts::where('ID', '=', $ID)
