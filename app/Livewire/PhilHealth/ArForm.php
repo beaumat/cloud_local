@@ -18,7 +18,11 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ArForm extends Component
-{
+{   
+    public int $INVOICE_ID;
+    public string $INVOICE_CODE;
+    public string $INVOICE_AMOUNT;
+
     public bool $showModal = false;
     public int $PHILHEALTH_ID;
     public string $AR_DATE;
@@ -119,11 +123,10 @@ class ArForm extends Component
         if ($data) {
             $this->CODE = $data->CODE;
             $this->DATE = $data->DATE;
-
+            $this->INVOICE_ID = $data->INVOICE_ID ?? 0;
             $this->AR_DATE = $data->AR_DATE ?? '';
             $this->AR_NO = $data->AR_NO ?? '';
             $this->showModal = true;
-
             $this->isPaid = $this->philHealthServices->isPaid($this->PHILHEALTH_ID);
 
         }
@@ -170,7 +173,7 @@ class ArForm extends Component
 
         $QTY = $this->philHealthServices->getNumberOfTreatment($dataPhic->CONTACT_ID, $dataPhic->LOCATION_ID, $dataPhic->DATE_ADMITTED, $dataPhic->DATE_DISCHARGED);
         $INVOICE_ID = $this->makeInvoice($dataPhic, $this->philHealthServices->TERM_ID, $PHILHEALTH_ID, $QTY, $this->philHealthServices->PHIL_HEALTH_ITEM_ID, $this->philHealthServices->TAX_ID);
-
+        $this->INVOICE_ID = $INVOICE_ID;
         return [
             'STATUS' => true,
             'MESSAGE' => 'Successfully save & invoice created',
@@ -382,9 +385,23 @@ class ArForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
-    public function render()
+    private function invoiceRefresh()
     {
+        $invoice_data = $this->invoiceServices->get($this->INVOICE_ID);
+        if($invoice_data) {
+            $this->INVOICE_CODE =$invoice_data->CODE;
+            $this->INVOICE_AMOUNT = $invoice_data->AMOUNT;
+            return;
+        }
+        $this->INVOICE_CODE = '';
+        $this->INVOICE_AMOUNT = 0;
+    }
+    public function render()
+    {   
+        if($this->showModal) {
+            $this->invoiceRefresh();
+        }
+        
         return view('livewire.phil-health.ar-form');
     }
 }

@@ -29,11 +29,25 @@
                                     isDisabled="{{ $isPaid }}" wire:model='AR_NO' />
                             </div>
                         </div>
+                        @if ($INVOICE_CODE)
+                            <div class="form-group row">
+                                <div class="col-12">Invoice Details</div>
+                                <div class="col-md-6">
+                                    <a target="_blank" href="{{ route('customersinvoice_edit', ['id' => $INVOICE_ID]) }}">Ref# :
+                                        {{ $INVOICE_CODE }}</a>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    Amount : {{ number_format($INVOICE_AMOUNT, 2) }}
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                     <div class='modal-footer'>
                         <div class="container">
                             <div class="row">
                                 <div class="col-6 text-left">
+
                                 </div>
                                 <div class="col-6 text-right">
                                     @if (!$isPaid)
