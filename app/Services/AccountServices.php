@@ -129,14 +129,14 @@ class AccountServices
         $ID = $this->object->ObjectNextID('ACCOUNT');
 
         Accounts::create([
-            'ID'                => $ID,
-            'NAME'              => $NAME,
-            'GROUP_ACCOUNT_ID'  => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
-            'TYPE'              => $TYPE,
-            'BANK_ACCOUNT_NO'   => $BANK_ACCOUNT_NO,
-            'INACTIVE'          => $INACTIVE,
-            'TAG'               => $TAG,
-            'LINE_NO'           => $LINE_NO
+            'ID' => $ID,
+            'NAME' => $NAME,
+            'GROUP_ACCOUNT_ID' => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
+            'TYPE' => $TYPE,
+            'BANK_ACCOUNT_NO' => $BANK_ACCOUNT_NO,
+            'INACTIVE' => $INACTIVE,
+            'TAG' => $TAG,
+            'LINE_NO' => $LINE_NO
 
         ]);
 
@@ -148,13 +148,13 @@ class AccountServices
 
         Accounts::where('ID', '=', $ID)
             ->update([
-                'NAME'              => $NAME,
-                'GROUP_ACCOUNT_ID'  => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
-                'TYPE'              => $TYPE,
-                'BANK_ACCOUNT_NO'   => $BANK_ACCOUNT_NO,
-                'INACTIVE'          => $INACTIVE,
-                'TAG'               => $TAG,
-                'LINE_NO'           => $LINE_NO
+                'NAME' => $NAME,
+                'GROUP_ACCOUNT_ID' => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
+                'TYPE' => $TYPE,
+                'BANK_ACCOUNT_NO' => $BANK_ACCOUNT_NO,
+                'INACTIVE' => $INACTIVE,
+                'TAG' => $TAG,
+                'LINE_NO' => $LINE_NO
             ]);
     }
 
@@ -192,5 +192,21 @@ class AccountServices
             })
             ->orderBy('account.TYPE', 'asc')
             ->get();
+    }
+    public function IncomeStatementMonthly()
+    {
+        $result = Accounts::query()
+            ->select([
+                'account.ID',
+                'account.NAME',
+                'account.TYPE'
+            ])
+            ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
+            ->where('account.INACTIVE', '=', 0)
+            ->whereIn('account.TYPE', [10, 11, 12, 13, 14])
+            ->orderByRaw("FIELD(account.TYPE, '10', '11', '13','12','14')")
+            ->get();
+
+        return $result;
     }
 }
