@@ -49,8 +49,8 @@
                                                     <td>{{ $list->CODE }}</td>
                                                     <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                                     <td>
-                                                        <label class="text-primary"
-                                                            wire:click='openARform({{ $list->PHILHEALTH_ID }})'>{{ $list->PO_NUMBER }}</label>
+                                                        <a href="#"
+                                                            wire:click='openARform({{ $list->PHILHEALTH_ID }})'>{{ $list->PO_NUMBER }}</a>
 
                                                     </td>
                                                     <td>{{ date('m/d/Y', strtotime($list->DUE_DATE)) }}</td>
