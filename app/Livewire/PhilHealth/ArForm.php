@@ -172,8 +172,8 @@ class ArForm extends Component
 
     
         $QTY = $this->philHealthServices->getNumberOfTreatment($dataPhic->CONTACT_ID, $dataPhic->LOCATION_ID, $dataPhic->DATE_ADMITTED, $dataPhic->DATE_DISCHARGED);
-        $AMOUNT = (float) $dataPhic->P1_TOTAL ?? 0  / $QTY;
-        $INVOICE_ID = $this->makeInvoice($dataPhic, $this->philHealthServices->TERM_ID, $PHILHEALTH_ID, $QTY, $this->philHealthServices->PHIL_HEALTH_ITEM_ID, $this->philHealthServices->TAX_ID , $AMOUNT);
+        $RATE = (float) $dataPhic->P1_TOTAL / $QTY;
+        $INVOICE_ID = $this->makeInvoice($dataPhic, $this->philHealthServices->TERM_ID, $PHILHEALTH_ID, $QTY, $this->philHealthServices->PHIL_HEALTH_ITEM_ID, $this->philHealthServices->TAX_ID , $RATE);
         $this->INVOICE_ID = $INVOICE_ID;
         return [
             'STATUS' => true,
