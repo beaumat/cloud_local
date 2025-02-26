@@ -200,23 +200,23 @@ class PhilHealthForm extends Component
 
         $this->validate(
             [
-                'CONTACT_ID' => 'required|not_in:0',
-                'DATE' => 'required',
-                'LOCATION_ID' => 'required',
-                'DATE_ADMITTED' => 'required',
-                'TIME_ADMITTED' => 'required',
-                'DATE_DISCHARGED' => 'required',
-                'TIME_DISCHARGED' => 'required'
+                'CONTACT_ID'        => 'required|not_in:0|exists:contact,id',
+                'DATE'              => 'required|date',
+                'LOCATION_ID'       => 'required|exists:location,id',
+                'DATE_ADMITTED'     => 'required|date',
+                'TIME_ADMITTED'     => 'required',
+                'DATE_DISCHARGED'   => 'required|date',
+                'TIME_DISCHARGED'   => 'required'
             ],
             [],
             [
-                'CONTACT_ID' => 'Patient',
-                'DATE' => 'Date',
-                'LOCATION_ID' => 'Location',
-                'DATE_ADMITTED' => 'Date Admitted',
-                'TIME_ADMITTED' => 'Time Admiited',
-                'DATE_DISCHARGED' => 'Date Discharged',
-                'TIME_DISCHARGED' => 'Time Discharged'
+                'CONTACT_ID'        => 'Patient',
+                'DATE'              => 'Date',
+                'LOCATION_ID'       => 'Location',
+                'DATE_ADMITTED'     => 'Date Admitted',
+                'TIME_ADMITTED'     => 'Time Admiited',
+                'DATE_DISCHARGED'   => 'Date Discharged',
+                'TIME_DISCHARGED'   => 'Time Discharged'
             ]
         );
 

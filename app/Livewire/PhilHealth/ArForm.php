@@ -170,9 +170,10 @@ class ArForm extends Component
             }
         }
 
-
+    
         $QTY = $this->philHealthServices->getNumberOfTreatment($dataPhic->CONTACT_ID, $dataPhic->LOCATION_ID, $dataPhic->DATE_ADMITTED, $dataPhic->DATE_DISCHARGED);
-        $INVOICE_ID = $this->makeInvoice($dataPhic, $this->philHealthServices->TERM_ID, $PHILHEALTH_ID, $QTY, $this->philHealthServices->PHIL_HEALTH_ITEM_ID, $this->philHealthServices->TAX_ID);
+        $AMOUNT = (float) $dataPhic->P1_TOTAL ?? 0  / $QTY;
+        $INVOICE_ID = $this->makeInvoice($dataPhic, $this->philHealthServices->TERM_ID, $PHILHEALTH_ID, $QTY, $this->philHealthServices->PHIL_HEALTH_ITEM_ID, $this->philHealthServices->TAX_ID , $AMOUNT);
         $this->INVOICE_ID = $INVOICE_ID;
         return [
             'STATUS' => true,
@@ -180,8 +181,11 @@ class ArForm extends Component
             'INVOICE_ID' => $INVOICE_ID
         ];
     }
-    private function makeInvoice($data, int $TERM_ID, int $PHILHEALTH_ID, int $QTY, int $PHIL_HEALTH_ITEM_ID, int $TAX_ID): int
-    {
+    private function makeInvoice($data, int $TERM_ID, int $PHILHEALTH_ID, int $QTY, int $PHIL_HEALTH_ITEM_ID, int $TAX_ID, float $RATE): int
+    {   
+        
+
+
         $DUE_DATE = (string) $this->paymentTermServices->getDueDate($TERM_ID, $data->AR_DATE);
         $ACCOUNT_RECEIVABLE_ID = 4;
         $OUTPUT_TAX_ID = 12;
@@ -219,7 +223,11 @@ class ArForm extends Component
 
         $dataItem = $this->itemServices->get($PHIL_HEALTH_ITEM_ID);
         if ($dataItem) {
-            $RATE = $this->priceLevelLineServices->GetPriceByLocation($data->LOCATION_ID, $PHIL_HEALTH_ITEM_ID);
+
+
+
+            // $RATE = $this->priceLevelLineServices->GetPriceByLocation($data->LOCATION_ID, $PHIL_HEALTH_ITEM_ID);
+
             $AMOUNT = $RATE * $QTY;
 
             $taxRate = $this->taxServices->getRate($TAX_ID);
