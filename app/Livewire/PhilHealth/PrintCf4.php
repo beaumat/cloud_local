@@ -5,6 +5,7 @@ namespace App\Livewire\PhilHealth;
 use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use App\Services\PhilHealthSoaCustomServices;
 use Carbon\Carbon;
@@ -91,19 +92,21 @@ class PrintCf4 extends Component
     public $TIME_HIDE;
     public bool $IS_HIDE = false;
     private $philHealthSoaCustomServices;
-
+    private $philHealthProfFeeServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
         HemoServices $hemoServices,
-        PhilHealthSoaCustomServices $philHealthSoaCustomServices
+        PhilHealthSoaCustomServices $philHealthSoaCustomServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
         $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
     private function gotHide()
     {
@@ -140,7 +143,7 @@ class PrintCf4 extends Component
                 $this->DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
                 $this->TIME_DISCHARGED = $data->TIME_DISCHARGED ? Carbon::createFromFormat('H:i:s', $this->IS_HIDE ? $this->TIME_HIDE : $data->TIME_DISCHARGED)->format('h:i A') : '';
 
-                $fee = $this->philHealthServices->getProfFee($id);
+                $fee = $this->philHealthProfFeeServices->getProfFee($id);
                 $row = 1;
 
                 foreach ($fee as $list) {

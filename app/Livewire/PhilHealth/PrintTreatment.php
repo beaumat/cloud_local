@@ -6,6 +6,7 @@ use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +34,7 @@ class PrintTreatment extends Component
     public string $FIRST_CASE_RATE;
     public string $SECOND_CASE_RATE;
 
-    public bool $PRE_SIGN_DATA =  false;
+    public bool $PRE_SIGN_DATA = false;
     public bool $OUTPUT_SIGN = false;
     public bool $HEADER = true; // default TRUE;
     public float $CHARGES_ROOM_N_BOARD;
@@ -104,14 +105,21 @@ class PrintTreatment extends Component
     public $hemoList = [];
     public $i;
     private $patientDoctorServices;
-
-    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, HemoServices $hemoServices, LocationServices $locationServices, PatientDoctorServices $patientDoctorServices)
-    {
+    private $philHealthProfFeeServices;
+    public function boot(
+        PhilHealthServices $philHealthServices,
+        ContactServices $contactServices,
+        HemoServices $hemoServices,
+        LocationServices $locationServices,
+        PatientDoctorServices $patientDoctorServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
+    ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
         $this->patientDoctorServices = $patientDoctorServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
 
 
@@ -120,7 +128,7 @@ class PrintTreatment extends Component
         $this->i = 0;
         $this->hemoList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
     }
-    public function mount(int $PRINT_ID,  int $PATIENT_ID = 0, bool $OUTPUT = true)
+    public function mount(int $PRINT_ID, int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
 
         $this->OUTPUT_SIGN = $OUTPUT;
@@ -141,16 +149,16 @@ class PrintTreatment extends Component
             if ($contact) {
                 $this->LOCATION_ID = $contact->LOCATION_ID;
                 $MI = substr($contact->MIDDLE_NAME, 0, 1);
-                $MI_COUNT  = strlen($contact->MIDDLE_NAME);
+                $MI_COUNT = strlen($contact->MIDDLE_NAME);
                 $EX_COUNT = strlen($contact->SALUTATION);
                 $MI_NAME = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
                 $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
 
-                $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME .   $MI_NAME   . $contact->LAST_NAME . $EX_NAME);
+                $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME . $MI_NAME . $contact->LAST_NAME . $EX_NAME);
                 $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                 $this->ADDRESS = $contact->POSTAL_ADDRESS;
                 $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
-                $this->FINAL_DIAGNOSIS =  $this->philHealthServices->DEFAULT_DIAGNOSIS . strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
+                $this->FINAL_DIAGNOSIS = $this->philHealthServices->DEFAULT_DIAGNOSIS . strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
                 $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                 $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
@@ -270,16 +278,16 @@ class PrintTreatment extends Component
                 $contact = $this->contactServices->get($this->CONTACT_ID, 3);
                 if ($contact) {
                     $MI = substr($contact->MIDDLE_NAME, 0, 1);
-                    $MI_COUNT  = strlen($contact->MIDDLE_NAME);
+                    $MI_COUNT = strlen($contact->MIDDLE_NAME);
                     $EX_COUNT = strlen($contact->SALUTATION);
                     $MI_NAME = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
                     $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
 
-                    $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME .   $MI_NAME   . $contact->LAST_NAME . $EX_NAME);
+                    $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME . $MI_NAME . $contact->LAST_NAME . $EX_NAME);
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS = $contact->POSTAL_ADDRESS;
                     $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
-                    $this->FINAL_DIAGNOSIS =  $this->philHealthServices->DEFAULT_DIAGNOSIS . strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
+                    $this->FINAL_DIAGNOSIS = $this->philHealthServices->DEFAULT_DIAGNOSIS . strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
                     $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
                     $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
@@ -291,7 +299,7 @@ class PrintTreatment extends Component
                     $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                     $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
                     $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
-                    $conPHIC = $this->contactServices->get($locData->PREPARED_BY_ID ??   Auth()->user()->contact_id, 2); // Employee
+                    $conPHIC = $this->contactServices->get($locData->PREPARED_BY_ID ?? Auth()->user()->contact_id, 2); // Employee
                     if ($conPHIC) {
                         $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
                         $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
@@ -309,7 +317,7 @@ class PrintTreatment extends Component
 
 
                 $this->DATE_SIGNED = Carbon::today()->format('F j, Y');
-                $PF = $this->philHealthServices->getProfFee($ID);
+                $PF = $this->philHealthProfFeeServices->getProfFee($ID);
                 foreach ($PF as $p) {
                     $this->PHYSICIAN = strtoupper($p->NAME);
                 }

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PhilHealth;
 
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use Livewire\Component;
 
@@ -68,55 +69,16 @@ class StatementOfAccount extends Component
     public string $DATE_SIGNED;
     public string $OTHER_NAME;
 
-
-
-
     public float $AD_SUB_TOTAL;
     public  float $AD_TOTAL = 0;
     private $philHealthServices;
+    private $philHealthProfFeeServices;
     public $feeList = [];
 
-
-
-    // public function ComputeTotal()
-    // {
-    //     try {
-    //         $this->CHARGES_SUB_TOTAL = $this->CHARGES_ROOM_N_BOARD + $this->CHARGES_DRUG_N_MEDICINE + $this->CHARGES_LAB_N_DIAGNOSTICS + $this->CHARGES_OPERATING_ROOM_FEE + $this->CHARGES_SUPPLIES + $this->CHARGES_OTHERS;
-    //         $this->VAT_SUB_TOTAL = $this->VAT_ROOM_N_BOARD + $this->VAT_DRUG_N_MEDICINE + $this->VAT_LAB_N_DIAGNOSTICS + $this->VAT_OPERATING_ROOM_FEE + $this->VAT_SUPPLIES + $this->VAT_OTHERS;
-    //         $this->SP_SUB_TOTAL = $this->SP_ROOM_N_BOARD + $this->SP_DRUG_N_MEDICINE + $this->SP_LAB_N_DIAGNOSTICS + $this->SP_OPERATING_ROOM_FEE + $this->SP_SUPPLIES + $this->SP_OTHERS;
-    //         $this->GOV_SUB_TOTAL = $this->GOV_ROOM_N_BOARD + $this->GOV_DRUG_N_MEDICINE + $this->GOV_LAB_N_DIAGNOSTICS + $this->GOV_OPERATING_ROOM_FEE + $this->GOV_SUPPLIES + $this->GOV_OTHERS;
-
-
-
-    //         // $sub_total_discount = (float) $this->VAT_SUB_TOTAL + $this->SP_SUB_TOTAL + $this->GOV_SUB_TOTAL;
-
-
-    //         // $this->P1_SUB_TOTAL = $this->P1_ROOM_N_BOARD + $this->P1_DRUG_N_MEDICINE + $this->P1_LAB_N_DIAGNOSTICS + $this->P1_OPERATING_ROOM_FEE + $this->P1_SUPPLIES + $this->P1_OTHERS + $this->P1_PHIC_AMOUNT;
-    //         // $this->P2_SUB_TOTAL = $this->P2_ROOM_N_BOARD + $this->P2_DRUG_N_MEDICINE + $this->P2_LAB_N_DIAGNOSTICS + $this->P2_OPERATING_ROOM_FEE + $this->P2_SUPPLIES + $this->P2_OTHERS;
-    //         // $sub_total_benefits = (float) $this->P1_SUB_TOTAL + $this->P2_SUB_TOTAL;
-
-    //         // $otherTotal = (float) $this->OP_ROOM_N_BOARD + $this->OP_DRUG_N_MEDICINE + $this->OP_LAB_N_DIAGNOSTICS + $this->OP_OPERATING_ROOM_FEE + $this->OP_SUPPLIES + $this->OP_OTHERS;
-    //         // $this->OP_SUB_TOTAL = ($this->CHARGES_SUB_TOTAL - $sub_total_discount) - $sub_total_benefits;
-
-    //         $this->CHARGE_TOTAL = $this->CHARGES_SUB_TOTAL + $this->PROFESSIONAL_FEE_SUB_TOTAL;
-    //         $this->VAT_TOTAL = $this->VAT_SUB_TOTAL;
-    //         $this->SP_TOTAL = $this->SP_SUB_TOTAL;
-    //         $this->GOV_TOTAL = $this->GOV_SUB_TOTAL;
-    //         $this->P1_TOTAL = $this->P1_SUB_TOTAL + $this->PROFESSIONAL_FEE_SUB_TOTAL;
-    //         $this->P2_TOTAL = $this->P2_SUB_TOTAL;
-
-    //         $total_discount = (float) $this->VAT_TOTAL + $this->SP_TOTAL + $this->GOV_TOTAL;
-    //         $total_benefits = (float) $this->P1_TOTAL + $this->P2_TOTAL;
-
-    //         $this->OP_TOTAL = ($this->CHARGE_TOTAL - $total_discount) - $total_benefits;
-    //     } catch (\Throwable $th) {
-    //         //throw $th;
-    //     }
-    // }
-
-    public function boot(PhilHealthServices $philHealthServices)
+    public function boot(PhilHealthServices $philHealthServices,PhilHealthProfFeeServices $philHealthProfFeeServices)
     {
         $this->philHealthServices = $philHealthServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
 
     public function PreLoad($ID)
@@ -278,19 +240,14 @@ class StatementOfAccount extends Component
 
     public function mount($ID)
     {
-        // $this->P1_PHIC_AMOUNT = $this->philHealthServices->P1_PHIC_AMOUNT;
-        // $this->DRUG_N_MEDINE_AMOUNT = $this->philHealthServices->DRUG_N_MEDINE_AMOUNT;
-        // $this->OPERATING_ROOM_FEE_AMOUNT = $this->philHealthServices->OPERATING_ROOM_FEE_AMOUNT;
-        // $this->SUPPLIES = $this->philHealthServices->SUPPLIES;
-        // $this->PROF_FEE_AMOUNT = $this->philHealthServices->PROF_FEE_AMOUNT;
-
+     
         $this->profFeeList($ID);
         $this->PreLoad($this->ID);
     }
     public function profFeeList($PHIC_ID)
     {
         $this->i = 0;
-        $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
+        $this->feeList = $this->philHealthProfFeeServices->getProfFee($PHIC_ID);
     }
     public function changeDoctor()
     {

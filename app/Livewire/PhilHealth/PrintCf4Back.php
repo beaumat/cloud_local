@@ -9,6 +9,7 @@ use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
 use App\Services\PhilhealthDrugsMedicineServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use Livewire\Component;
 
@@ -22,8 +23,7 @@ class PrintCf4Back extends Component
     private $philhealthDrugsMedicineServices;
     private $hemoServices;
     private $locationServices;
-    private $contactServices;
-
+    private $philHealthProfFeeServices;
     public string $DR_NAME;
     public $dateList = [];
     public $dataMed = [];
@@ -44,16 +44,17 @@ class PrintCf4Back extends Component
         PatientDoctorServices $patientDoctorServices,
         LocationServices $locationServices,
         Cf4DoctorOrderServices $cf4DoctorOrderServices,
-        DoctorOrderDefaultServices $doctorOrderDefaultServices
+        DoctorOrderDefaultServices $doctorOrderDefaultServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->philhealthDrugsMedicineServices = $philhealthDrugsMedicineServices;
         $this->hemoServices = $hemoServices;
-        $this->contactServices = $contactServices;
         $this->patientDoctorServices = $patientDoctorServices;
         $this->locationServices = $locationServices;
         $this->cf4DoctorOrderServices = $cf4DoctorOrderServices;
         $this->doctorOrderDefaultServices = $doctorOrderDefaultServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
     public function mount($id = null, int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
@@ -127,7 +128,7 @@ class PrintCf4Back extends Component
                     ];
                 }
             }
-            $fee = $this->philHealthServices->getProfFee($id);
+            $fee = $this->philHealthProfFeeServices->getProfFee($id);
             foreach ($fee as $list) {
                 $this->DR_NAME = strtoupper($list->NAME);
                 return;

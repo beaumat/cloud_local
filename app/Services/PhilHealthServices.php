@@ -54,7 +54,7 @@ class PhilHealthServices
     private $accountJournalServices;
     private $itemSoaItemizedServices;
     private $itemSoaServices;
-
+    private $philHealthProfFeeServices;
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
@@ -67,6 +67,7 @@ class PhilHealthServices
         AccountJournalServices $accountJournalServices,
         ItemSoaItemizedServices $itemSoaItemizedServices,
         ItemSoaServices $itemSoaServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
 
     ) {
         $this->object = $objectService;
@@ -80,6 +81,7 @@ class PhilHealthServices
         $this->accountJournalServices = $accountJournalServices;
         $this->itemSoaItemizedServices = $itemSoaItemizedServices;
         $this->itemSoaServices = $itemSoaServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
 
     }
     public function get($ID)
@@ -170,7 +172,7 @@ class PhilHealthServices
                 if (!$isDataExists) {
 
                     // clean
-                    $this->StoreProfFee(
+                    $this->philHealthProfFeeServices->StoreProfFee(
                         $PHIC_ID,
                         $list->DOCTOR_ID,
                         $AMOUNT,
@@ -178,7 +180,7 @@ class PhilHealthServices
                         $FIRST_CASE
                     );
                 } else {
-                    $this->UpdateProfFee(
+                    $this->philHealthProfFeeServices->UpdateProfFee(
                         $isDataExists->ID,
                         $AMOUNT,
                         $DISCOUNT,
@@ -769,95 +771,7 @@ class PhilHealthServices
 
         return $result;
     }
-    public function getProfFee($ID)
-    {
-        $result = PhilHealthProfFee::query()
-            ->select([
-                'philhealth_prof_fee.ID',
-                'philhealth_prof_fee.CONTACT_ID',
-                'philhealth_prof_fee.AMOUNT',
-                'philhealth_prof_fee.DISCOUNT',
-                'philhealth_prof_fee.FIRST_CASE',
-                'c.PRINT_NAME_AS as NAME',
-                'c.PIN as PIN_NUM'
-
-            ])
-            ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
-
-            ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
-            ->where('PHIC_ID', $ID)
-            ->orderBy('LINE_NO', 'asc')
-            ->get();
-
-        return $result;
-    }
-    public function getProfFeeFirst(int $PHIC_ID)
-    {
-        $result = PhilHealthProfFee::query()
-            ->select([
-                'philhealth_prof_fee.ID',
-                'philhealth_prof_fee.CONTACT_ID',
-                'philhealth_prof_fee.AMOUNT',
-                'philhealth_prof_fee.DISCOUNT',
-                'philhealth_prof_fee.FIRST_CASE',
-                'philhealth_prof_fee.BILL_ID',
-                'c.PRINT_NAME_AS as NAME',
-                'c.PIN as PIN_NUM'
-            ])
-            ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
-            ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
-            ->where('PHIC_ID', '=', $PHIC_ID)
-            ->orderBy('LINE_NO', 'asc')
-            ->first();
-
-        return $result;
-    }
-    public function UpdatePFContact(int $PHIC_ID, int $NEW_CONTACT_ID)
-    {
-        PhilHealthProfFee::where('PHIC_ID', '=', $PHIC_ID)
-            ->update([
-                'CONTACT_ID' => $NEW_CONTACT_ID
-            ]);
-    }
-    private function getLine($Id): int
-    {
-        return (int) PhilHealthProfFee::where('PHIC_ID', $Id)->max('LINE_NO');
-    }
-    public function StoreProfFee(int $PHIC_ID, int $CONTACT_ID, float $AMOUNT, float $DISCOUNT, float $FIRST_CASE)
-    {
-        $this->CleanProfFee($PHIC_ID); // reset purspose
-
-        $ID = $this->object->ObjectNextID('PHILHEALTH_PROF_FEE');
-        $LINE_NO = $this->getLine($PHIC_ID) + 1;
-
-        PhilHealthProfFee::create([
-            'ID' => $ID,
-            'PHIC_ID' => $PHIC_ID,
-            'CONTACT_ID' => $CONTACT_ID,
-            'AMOUNT' => $AMOUNT,
-            'LINE_NO' => $LINE_NO,
-            'DISCOUNT' => $DISCOUNT,
-            'FIRST_CASE' => $FIRST_CASE
-        ]);
-    }
-    public function UpdateProfFee(int $ID, float $AMOUNT, float $DISCOUNT, float $FIRST_CASE)
-    {
-        PhilHealthProfFee::where('ID', $ID)
-            ->update([
-                'AMOUNT' => $AMOUNT,
-                'DISCOUNT' => $DISCOUNT,
-                'FIRST_CASE' => $FIRST_CASE
-            ]);
-    }
-    public function DeleteProfFee(int $ID)
-    {
-        PhilHealthProfFee::where('ID', $ID)->delete();
-    }
-    public function CleanProfFee(int $PHIC_ID)
-    {
-
-        PhilHealthProfFee::where('PHIC_ID', $PHIC_ID)->delete();
-    }
+    
 
     public function UpdatePayment(int $PHILHEALTH_ID, float $TOTAL_PAY): int
     {
@@ -1077,10 +991,6 @@ class PhilHealthServices
                 'PF_RECEIVED_DATE' => $PF_RECEIVED_DATE
             ]);
     }
-
-
-
-
     public function getMonitor(int $YEAR, int $MONTH, int $locationId)
     {
 

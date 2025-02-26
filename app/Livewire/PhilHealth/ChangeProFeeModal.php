@@ -4,6 +4,7 @@ namespace App\Livewire\PhilHealth;
 
 use App\Services\BillingServices;
 use App\Services\DoctorLocationServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -25,11 +26,13 @@ class ChangeProFeeModal extends Component
     private $philHealthServices;
     private $doctorLocationServices;
     private $billingServices;
-    public function boot(PhilHealthServices $philHealthServices, DoctorLocationServices $doctorLocationServices, BillingServices $billingServices)
+    private $philHealthProfFeeServices;
+    public function boot(PhilHealthServices $philHealthServices, DoctorLocationServices $doctorLocationServices, BillingServices $billingServices, PhilHealthProfFeeServices $philHealthProfFeeServices)
     {
         $this->philHealthServices = $philHealthServices;
         $this->doctorLocationServices = $doctorLocationServices;
         $this->billingServices = $billingServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
 
     #[On('call-open-update-pf')]
@@ -37,7 +40,7 @@ class ChangeProFeeModal extends Component
     {
 
 
-        $data = $this->philHealthServices->getProfFeeFirst($this->PHILHEALTH_ID);
+        $data = $this->philHealthProfFeeServices->getProfFeeFirst($this->PHILHEALTH_ID);
         if ($data) {
             $this->doctorid = $data->CONTACT_ID;
             $this->BILL_ID = (int) $data->BILL_ID ?? 0;
@@ -54,7 +57,7 @@ class ChangeProFeeModal extends Component
 
         DB::beginTransaction();
         try {
-            $this->philHealthServices->UpdatePFContact($this->PHILHEALTH_ID, $this->doctorid);
+            $this->philHealthProfFeeServices->UpdatePFContact($this->PHILHEALTH_ID, $this->doctorid);
             if ($this->BILL_ID > 0) {
                 $this->billingServices->billChangeVendor($this->BILL_ID, $this->doctorid);
             }

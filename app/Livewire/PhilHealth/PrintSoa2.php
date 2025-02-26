@@ -7,6 +7,7 @@ use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -90,8 +91,8 @@ class PrintSoa2 extends Component
     public float $P2_TOTAL;
     public float $OP_TOTAL;
     public float $AD_SUB_TOTAL;
-    public  float $AD_TOTAL = 0;
-    public bool $PRE_SIGN_DATA =  false;
+    public float $AD_TOTAL = 0;
+    public bool $PRE_SIGN_DATA = false;
     public bool $OUTPUT_SIGN = false;
     public bool $HEADER = true; // default TRUE;
 
@@ -113,20 +114,27 @@ class PrintSoa2 extends Component
     public string $REPORT_HEADER_3;
     private $patientDoctorServices;
 
-
-    public function boot(PhilHealthServices $philHealthServices, ContactServices $contactServices, LocationServices $locationServices, HemoServices $hemoServices, PatientDoctorServices $patientDoctorServices)
-    {
+    private $philHealthProfFeeServices;
+    public function boot(
+        PhilHealthServices $philHealthServices,
+        ContactServices $contactServices,
+        LocationServices $locationServices,
+        HemoServices $hemoServices,
+        PatientDoctorServices $patientDoctorServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
+    ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
         $this->patientDoctorServices = $patientDoctorServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
 
     public function profFeeList($PHIC_ID)
     {
         $this->i = 0;
-        $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
+        $this->feeList = $this->philHealthProfFeeServices->getProfFee($PHIC_ID);
     }
     public function mount(int $PRINT_ID, int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
@@ -147,15 +155,15 @@ class PrintSoa2 extends Component
             $contact = $this->contactServices->get($PATIENT_ID, 3);
             if ($contact) {
                 $MI = substr($contact->MIDDLE_NAME, 0, 1);
-                $MI_COUNT  = strlen($contact->MIDDLE_NAME);
+                $MI_COUNT = strlen($contact->MIDDLE_NAME);
                 $EX_COUNT = strlen($contact->SALUTATION);
                 $MI_NAME = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
                 $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
 
-                $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME .   $MI_NAME   . $contact->LAST_NAME . $EX_NAME);
+                $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME . $MI_NAME . $contact->LAST_NAME . $EX_NAME);
                 $this->PIN = $contact->PIN;
                 $this->LOCATION_ID = $contact->LOCATION_ID;
-                $this->DATE_OF_BIRTH  = $contact->DATE_OF_BIRTH;
+                $this->DATE_OF_BIRTH = $contact->DATE_OF_BIRTH;
                 $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                 $this->ADDRESS1 = $this->GetAddress1($contact);
                 $this->ADDRESS2 = $this->GetAddress2($contact);
@@ -166,7 +174,7 @@ class PrintSoa2 extends Component
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
             }
             $this->i = 0;
-            $this->feeList  = $this->patientDoctorServices->GetbyTemp($PATIENT_ID);
+            $this->feeList = $this->patientDoctorServices->GetbyTemp($PATIENT_ID);
 
             $locData = $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {
@@ -187,17 +195,17 @@ class PrintSoa2 extends Component
         if (is_numeric($ID)) {
             $data = $this->philHealthServices->get($ID);
             if ($data) {
-                $this->LOCATION_ID =        $data->LOCATION_ID;
-                $this->CONTACT_ID =         $data->CONTACT_ID;
-                $this->CODE =               $data->CODE;
-                $this->DATE_ADMITTED =      $data->DATE_ADMITTED;
-                $this->TIME_ADMITTED =      $data->TIME_ADMITTED;
-                $this->DATE_DISCHARGED =    $data->DATE_DISCHARGED;
-                $this->TIME_DISCHARGED =    $data->TIME_DISCHARGED;
-                $this->FINAL_DIAGNOSIS =    $data->FINAL_DIAGNOSIS ?? '';
-                $this->OTHER_DIAGNOSIS =    $data->OTHER_DIAGNOSIS ?? '';
-                $this->FIRST_CASE_RATE =    $data->FIRST_CASE_RATE ?? '';
-                $this->SECOND_CASE_RATE =   $data->SECOND_CASE_RATE ?? '';
+                $this->LOCATION_ID = $data->LOCATION_ID;
+                $this->CONTACT_ID = $data->CONTACT_ID;
+                $this->CODE = $data->CODE;
+                $this->DATE_ADMITTED = $data->DATE_ADMITTED;
+                $this->TIME_ADMITTED = $data->TIME_ADMITTED;
+                $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
+                $this->TIME_DISCHARGED = $data->TIME_DISCHARGED;
+                $this->FINAL_DIAGNOSIS = $data->FINAL_DIAGNOSIS ?? '';
+                $this->OTHER_DIAGNOSIS = $data->OTHER_DIAGNOSIS ?? '';
+                $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE ?? '';
+                $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE ?? '';
 
                 $this->CHARGES_ROOM_N_BOARD = $data->CHARGES_ROOM_N_BOARD;
                 $this->CHARGES_DRUG_N_MEDICINE = $data->CHARGES_DRUG_N_MEDICINE;
@@ -276,13 +284,13 @@ class PrintSoa2 extends Component
 
                 if ($contact) {
                     $MI = substr($contact->MIDDLE_NAME, 0, 1);
-                    $MI_COUNT  = strlen($contact->MIDDLE_NAME);
+                    $MI_COUNT = strlen($contact->MIDDLE_NAME);
                     $EX_COUNT = strlen($contact->SALUTATION);
                     $MI_NAME = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
                     $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
                     $this->PIN = $contact->PIN;
-                    $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME .   $MI_NAME   . $contact->LAST_NAME . $EX_NAME);
-                    $this->DATE_OF_BIRTH  = $contact->DATE_OF_BIRTH;
+                    $this->PATIENT_NAME = strtoupper($contact->FIRST_NAME . $MI_NAME . $contact->LAST_NAME . $EX_NAME);
+                    $this->DATE_OF_BIRTH = $contact->DATE_OF_BIRTH;
                     $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
                     $this->ADDRESS1 = $this->GetAddress1($contact);
                     $this->ADDRESS2 = $this->GetAddress2($contact);
@@ -314,15 +322,15 @@ class PrintSoa2 extends Component
                 $LastDate = '';
                 foreach ($dataList as $list) {
                     if ($this->allDate == '') {
-                        $this->allDate =  date('M d', strtotime($list->DATE));
+                        $this->allDate = date('M d', strtotime($list->DATE));
                     } else {
-                        $this->allDate = $this->allDate . ', ' .  date('d', strtotime($list->DATE));
+                        $this->allDate = $this->allDate . ', ' . date('d', strtotime($list->DATE));
                     }
                     $LastDate = $list->DATE;
                 }
 
                 if ($LastDate !== '') {
-                    $this->allDate = $this->allDate . ', ' .  date('Y', strtotime($LastDate));
+                    $this->allDate = $this->allDate . ', ' . date('Y', strtotime($LastDate));
                 }
             }
         }
@@ -330,26 +338,26 @@ class PrintSoa2 extends Component
 
     public function GetAddress1($contact): string
     {
-        $ADDRESS_UNIT_ROOM_FLOOR    =   $contact->ADDRESS_UNIT_ROOM_FLOOR ?? '';
-        $ADDRESS_BUILDING_NAME      =   $contact->ADDRESS_BUILDING_NAME ?? '';
-        $ADDRESS_LOT_BLK_HOUSE_BLDG =   $contact->ADDRESS_LOT_BLK_HOUSE_BLDG ?? '';
-        $ADDRESS_STREET             =   $contact->ADDRESS_STREET ?? '';
-        $ADDRESS_SUB_VALL           =   $contact->ADDRESS_SUB_VALL ?? '';
-        $ADDRESS_BRGY               =   $contact->ADDRESS_BRGY ?? '';
+        $ADDRESS_UNIT_ROOM_FLOOR = $contact->ADDRESS_UNIT_ROOM_FLOOR ?? '';
+        $ADDRESS_BUILDING_NAME = $contact->ADDRESS_BUILDING_NAME ?? '';
+        $ADDRESS_LOT_BLK_HOUSE_BLDG = $contact->ADDRESS_LOT_BLK_HOUSE_BLDG ?? '';
+        $ADDRESS_STREET = $contact->ADDRESS_STREET ?? '';
+        $ADDRESS_SUB_VALL = $contact->ADDRESS_SUB_VALL ?? '';
+        $ADDRESS_BRGY = $contact->ADDRESS_BRGY ?? '';
 
 
-        $ADDRESS =  $ADDRESS_UNIT_ROOM_FLOOR . ' ' . $ADDRESS_BUILDING_NAME . ' ' . $ADDRESS_LOT_BLK_HOUSE_BLDG . ' ' . $ADDRESS_STREET  . ' ' . $ADDRESS_SUB_VALL . ' ' . $ADDRESS_BRGY;
-        return  trim($ADDRESS);
+        $ADDRESS = $ADDRESS_UNIT_ROOM_FLOOR . ' ' . $ADDRESS_BUILDING_NAME . ' ' . $ADDRESS_LOT_BLK_HOUSE_BLDG . ' ' . $ADDRESS_STREET . ' ' . $ADDRESS_SUB_VALL . ' ' . $ADDRESS_BRGY;
+        return trim($ADDRESS);
     }
 
     public function GetAddress2($contact): string
     {
-        $ADDRESS_CITY_MUNI          =   $contact->ADDRESS_CITY_MUNI ?? '';
-        $ADDRESS_PROVINCE           =   $contact->ADDRESS_PROVINCE ?? '';
-        $ADDRESS_COUNTRY            =   $contact->ADDRESS_COUNTRY ?? '';
-        $ADDRESS_ZIP_CODE           =   $contact->ADDRESS_ZIP_CODE ?? '';
-        $ADDRESS =  $ADDRESS_CITY_MUNI . ', ' . $ADDRESS_PROVINCE  . ', ' . $ADDRESS_COUNTRY . ' ' . $ADDRESS_ZIP_CODE;
-        return  trim($ADDRESS);
+        $ADDRESS_CITY_MUNI = $contact->ADDRESS_CITY_MUNI ?? '';
+        $ADDRESS_PROVINCE = $contact->ADDRESS_PROVINCE ?? '';
+        $ADDRESS_COUNTRY = $contact->ADDRESS_COUNTRY ?? '';
+        $ADDRESS_ZIP_CODE = $contact->ADDRESS_ZIP_CODE ?? '';
+        $ADDRESS = $ADDRESS_CITY_MUNI . ', ' . $ADDRESS_PROVINCE . ', ' . $ADDRESS_COUNTRY . ' ' . $ADDRESS_ZIP_CODE;
+        return trim($ADDRESS);
     }
     public function DocFormat(string $CODE): string
     {

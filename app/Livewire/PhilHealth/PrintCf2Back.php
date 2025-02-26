@@ -5,6 +5,7 @@ namespace App\Livewire\PhilHealth;
 use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
@@ -140,17 +141,19 @@ class PrintCf2Back extends Component
     private $contactServices;
     private $locationServices;
     private $hemoServices;
-
+    private $philHealthProfFeeServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
-        HemoServices $hemoServices
+        HemoServices $hemoServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
     public function mount(int $id = 0,  int $PATIENT_ID = 0, $OUTPUT = true)
     {
@@ -206,19 +209,9 @@ class PrintCf2Back extends Component
                 $this->GOV_DOH = $data->GOV_DOH;
                 $this->GOV_HMO = $data->GOV_HMO;
                 $this->GOV_LINGAP = $data->GOV_LINGAP;
-                // $this->P1_ROOM_N_BOARD = $data->P1_ROOM_N_BOARD;
-                // $this->P1_DRUG_N_MEDICINE = $data->P1_DRUG_N_MEDICINE;
-                // $this->P1_LAB_N_DIAGNOSTICS = $data->P1_LAB_N_DIAGNOSTICS;
-                // $this->P1_OPERATING_ROOM_FEE = $data->P1_OPERATING_ROOM_FEE;
-                // $this->P1_SUPPLIES = $data->P1_SUPPLIES;
-                // $this->P1_OTHERS = $data->P1_OTHERS;
+ 
                 $this->P1_SUB_TOTAL = $data->P1_SUB_TOTAL;
-                // $this->P2_ROOM_N_BOARD = $data->P2_ROOM_N_BOARD;
-                // $this->P2_DRUG_N_MEDICINE = $data->P2_DRUG_N_MEDICINE;
-                // $this->P2_LAB_N_DIAGNOSTICS = $data->P2_LAB_N_DIAGNOSTICS;
-                // $this->P2_OPERATING_ROOM_FEE = $data->P2_OPERATING_ROOM_FEE;
-                // $this->P2_SUPPLIES = $data->P2_SUPPLIES;
-                // $this->P2_OTHERS = $data->P2_OTHERS;
+
                 $this->P2_SUB_TOTAL = $data->P2_SUB_TOTAL;
                 $this->OP_ROOM_N_BOARD = $data->OP_ROOM_N_BOARD;
                 $this->OP_DRUG_N_MEDICINE = $data->OP_DRUG_N_MEDICINE;
@@ -244,7 +237,7 @@ class PrintCf2Back extends Component
 
                 // number end
 
-                $fee = $this->philHealthServices->getProfFee($id);
+                $fee = $this->philHealthProfFeeServices->getProfFee($id);
                 $row = 1;
 
                 foreach ($fee as $list) {

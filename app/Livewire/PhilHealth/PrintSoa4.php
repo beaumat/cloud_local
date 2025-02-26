@@ -6,6 +6,7 @@ use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use App\Services\PhilHealthSoaCustomServices;
 use Illuminate\Support\Carbon;
@@ -115,13 +116,15 @@ class PrintSoa4 extends Component
     public $breakDownDate = [];
     public bool $IS_HIDE = false;
     private $philHealthSoaCustomServices;
+    private $philHealthProfFeeServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
         HemoServices $hemoServices,
         PatientDoctorServices $patientDoctorServices,
-        PhilHealthSoaCustomServices $philHealthSoaCustomServices
+        PhilHealthSoaCustomServices $philHealthSoaCustomServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
@@ -129,6 +132,7 @@ class PrintSoa4 extends Component
         $this->hemoServices = $hemoServices;
         $this->patientDoctorServices = $patientDoctorServices;
         $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
     private function gotHide()
     {
@@ -142,7 +146,7 @@ class PrintSoa4 extends Component
     public function profFeeList($PHIC_ID)
     {
         $this->i = 0;
-        $this->feeList = $this->philHealthServices->getProfFee($PHIC_ID);
+        $this->feeList = $this->philHealthProfFeeServices->getProfFee($PHIC_ID);
     }
 
     public function mount(int $PRINT_ID, int $PATIENT_ID = 0, bool $OUTPUT = true)

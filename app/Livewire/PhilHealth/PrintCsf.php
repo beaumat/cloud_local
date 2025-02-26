@@ -5,6 +5,7 @@ namespace App\Livewire\PhilHealth;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -62,16 +63,19 @@ class PrintCsf extends Component
     private $contactServices;
     private $locationServices;
     private $patientDoctorServices;
+    private $philHealthProfFeeServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
-        PatientDoctorServices $patientDoctorServices
+        PatientDoctorServices $patientDoctorServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->patientDoctorServices = $patientDoctorServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
     public function mount(int $id = 0, int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
@@ -87,10 +91,9 @@ class PrintCsf extends Component
                 $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE ?? '';
                 $this->LOCATION_ID = $data->LOCATION_ID;
-                $fee = $this->philHealthServices->getProfFee($id);
+                $fee = $this->philHealthProfFeeServices->getProfFee($id);
                 $row = 1;
                 foreach ($fee as $list) {
-
                     switch ($row) {
                         case '1':
                             $this->HCP_1_AN = str_replace('-', '', $list->PIN);
