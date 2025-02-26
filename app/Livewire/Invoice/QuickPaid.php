@@ -34,6 +34,10 @@ class QuickPaid extends Component
     {
         $this->showModal = false;
     }
+    public function openARform(int $PHILHEALTH_ID)
+    {
+        $this->dispatch('ar-form-show', result: ['PHILHEALTH_ID' => $PHILHEALTH_ID]);
+    }
     public function makePaid(int $INVOICE_ID)
     {
 

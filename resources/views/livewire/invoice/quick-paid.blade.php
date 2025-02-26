@@ -48,7 +48,11 @@
                                                 <tr>
                                                     <td>{{ $list->CODE }}</td>
                                                     <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                                    <td>{{ $list->PO_NUMBER }}</td>
+                                                    <td>
+                                                        <label class="text-primary"
+                                                            wire:click='openARform({{ $list->PHILHEALTH_ID }})'>{{ $list->PO_NUMBER }}</label>
+
+                                                    </td>
                                                     <td>{{ date('m/d/Y', strtotime($list->DUE_DATE)) }}</td>
                                                     <td class="text-center">{{ $list->TOTAL_TREATMENT }}</td>
                                                     <td>{{ date('m/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
@@ -78,6 +82,7 @@
             </div>
         </div>
         @livewire('Invoice.QuickPaidPanel')
+        @livewire('PhilHealth.ArForm')
     @endif
 
 </div>

@@ -703,6 +703,7 @@ class InvoiceServices
                 'ph.CODE as SOA_NO',
                 'ph.DATE_ADMITTED',
                 'ph.DATE_DISCHARGED',
+                'ph.ID as PHILHEALTH_ID',
                 DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = ph.CONTACT_ID and hemodialysis.DATE between ph.DATE_ADMITTED and ph.DATE_DISCHARGED) as TOTAL_TREATMENT '),
                 DB::raw('(select cd.NAME from philhealth_prof_fee as pf join contact as cd on cd.ID = pf.CONTACT_ID where pf.PHIC_ID = ph.ID) as DOCTOR_NAME')
             ])->join('contact as c', 'c.ID', '=', 'invoice.CUSTOMER_ID')
