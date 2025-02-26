@@ -175,8 +175,6 @@ class PhilHealthForm extends Component
                 session()->flash('error', 'cannot be print. this document already set AR info');
                 return;
             }
-
-
             if (floatval($ds->PAYMENT_AMOUNT ?? 0) > 0) {
                 session()->flash('error', 'cannot be print. this document having a payment collection');
                 return;

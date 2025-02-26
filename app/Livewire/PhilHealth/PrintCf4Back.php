@@ -8,6 +8,7 @@ use App\Services\DoctorOrderDefaultServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
+use App\Services\PhilhealthDrugsMedicineServices;
 use App\Services\PhilHealthServices;
 use Livewire\Component;
 
@@ -18,6 +19,7 @@ class PrintCf4Back extends Component
 
     public int $LOCATION_ID;
     private $philHealthServices;
+    private $philhealthDrugsMedicineServices;
     private $hemoServices;
     private $locationServices;
     private $contactServices;
@@ -36,6 +38,7 @@ class PrintCf4Back extends Component
 
     public function boot(
         PhilHealthServices $philHealthServices,
+        PhilhealthDrugsMedicineServices $philhealthDrugsMedicineServices,
         HemoServices $hemoServices,
         ContactServices $contactServices,
         PatientDoctorServices $patientDoctorServices,
@@ -44,6 +47,7 @@ class PrintCf4Back extends Component
         DoctorOrderDefaultServices $doctorOrderDefaultServices
     ) {
         $this->philHealthServices = $philHealthServices;
+        $this->philhealthDrugsMedicineServices = $philhealthDrugsMedicineServices;
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
         $this->patientDoctorServices = $patientDoctorServices;
@@ -170,7 +174,7 @@ class PrintCf4Back extends Component
         }
 
         if ($ID > 0) {
-            $dt = $this->philHealthServices->DrugMedicineList($ID);
+            $dt = $this->philhealthDrugsMedicineServices->DrugMedicineList($ID);
             $r = 0;
 
             foreach ($dt as $list) {

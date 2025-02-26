@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PhilHealth;
 
+use App\Services\PhilhealthDrugsMedicineServices;
 use App\Services\PhilHealthServices;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -25,10 +26,10 @@ class DrugMedicines extends Component
     public string $CONT_ROUTE;
     public string $CONT_FREQUENCY;
     public float $CONT_TOTAL_COST;
-    private $philHealthServices;
-    public function boot(PhilHealthServices $philHealthServices)
+    private $philhealthDrugsMedicineServices;
+    public function boot(PhilhealthDrugsMedicineServices $philhealthDrugsMedicineServices)
     {
-        $this->philHealthServices = $philHealthServices;
+        $this->philhealthDrugsMedicineServices = $philhealthDrugsMedicineServices;
     }
     public function mount()
     {
@@ -52,7 +53,7 @@ class DrugMedicines extends Component
     }
     public function save()
     {
-        $this->philHealthServices->DrugMedicineStore(
+        $this->philhealthDrugsMedicineServices->DrugMedicineStore(
             $this->PHILHEALTH_ID,
             $this->GENERIC_NAME,
             $this->QUANTITY,
@@ -86,7 +87,7 @@ class DrugMedicines extends Component
 
     public function edit(int $ID)
     {
-        $data = $this->philHealthServices->GetDrugMedicine($ID);
+        $data = $this->philhealthDrugsMedicineServices->GetDrugMedicine($ID);
         if ($data) {
             $this->ID = $data->ID;
             $this->E_GENERIC_NAME = $data->GENERIC_NAME;
@@ -122,7 +123,7 @@ class DrugMedicines extends Component
     public function update(
     ) {
 
-        $this->philHealthServices->DrugMedicineUpdate(
+        $this->philhealthDrugsMedicineServices->DrugMedicineUpdate(
             $this->ID,
             $this->PHILHEALTH_ID,
             $this->E_GENERIC_NAME,
@@ -143,15 +144,18 @@ class DrugMedicines extends Component
 
     public function delete(int $ID)
     {
-        $this->philHealthServices->DrugMedicineDelete($ID);
+        $this->philhealthDrugsMedicineServices->DrugMedicineDelete($ID);
         $this->clearField();
     }
-    public function AutoFillUp() {
-        
+    public function AutoFillUp()
+    {
+
+
+
     }
     public function render()
     {
-        $this->dataList = $this->philHealthServices->DrugMedicineList($this->PHILHEALTH_ID);
+        $this->dataList = $this->philhealthDrugsMedicineServices->DrugMedicineList($this->PHILHEALTH_ID);
         return view('livewire.phil-health.drug-medicines');
     }
 }

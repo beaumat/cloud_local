@@ -68,11 +68,13 @@ class PhilhealthAvailment extends Component
             $this->TOTAL_DAYS = (int) $this->serviceChargeServices->getAvailmentTotal($contact->ID, $year, $locationid);
             $lastData = $this->serviceChargeServices->getLastAvailment($id, $year, $locationid);
 
-            $locData = $this->locationServices->get($locationid);
+
             $this->TOTAL_MAIN = $this->TOTAL_DAYS;
             $this->TOTAL_OTHER = $this->philhealthItemAdjustmentServices->ItemTotalOther($contact->ID, $locationid, $year);
             $this->DATE = $this->dateServices->NowDate();
             $this->DONE_DATE = $this->otherServices->formatSpecialDate($this->dateServices->NowDate());
+
+            $locData = $this->locationServices->get($locationid);
             if ($locData) {
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
