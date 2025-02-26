@@ -46,7 +46,7 @@ class QuickPaid extends Component
         ];
         $this->dispatch('quick-paid', result: $data);
     }
-    #[On('quick-paid-reload')]
+    #[On('quick-paid-reload', 'ar-form-data')]
     public function render()
     {
         if ($this->showModal) {
