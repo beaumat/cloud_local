@@ -8,6 +8,7 @@ use App\Services\LocationServices;
 use App\Services\OtherServices;
 use App\Services\PhilhealthItemAdjustmentServices;
 use App\Services\ServiceChargeServices;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class PhilhealthAvailment extends Component
@@ -76,7 +77,7 @@ class PhilhealthAvailment extends Component
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                 $this->BRANCH_NAME = $locData->NAME_OF_BUSINESS ?? '';
-                $user = $this->contactServices->get($locData->PHIC_INCHARGE_ID, 2);
+                $user = $this->contactServices->get($locData->PHIC_INCHARGE_ID > 0 ? $locData->PHIC_INCHARGE_ID : Auth()->user()->contact_id, 2);
                 if ($user) {
                     $this->USER_NAME = $user->PRINT_NAME_AS ?? ' ';
                 }

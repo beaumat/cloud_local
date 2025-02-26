@@ -146,7 +146,9 @@ class DrugMedicines extends Component
         $this->philHealthServices->DrugMedicineDelete($ID);
         $this->clearField();
     }
-
+    public function AutoFillUp() {
+        
+    }
     public function render()
     {
         $this->dataList = $this->philHealthServices->DrugMedicineList($this->PHILHEALTH_ID);

@@ -154,6 +154,9 @@
                                     aria-hidden="true"></i> </button> </td>
                     </tr>
                 </form>
+              <tr>
+                <td>  <button class="btn btn-xs btn-info" wire:click='AutoFillUp()'>Auto Set</button></td>
+              </tr>
             </tbody>
         </table>
     </div>
