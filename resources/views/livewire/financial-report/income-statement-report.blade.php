@@ -92,7 +92,6 @@
                     </div>
                 </div>
                 @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-
                 @if ($isDate)
                     <div class=" col-12 col-sm-12 col-md-12  col-lg-8" style="max-height: 80vh; overflow-y: auto;">
                         @livewire('IncomeStatement.IncomeStatementDateRange')

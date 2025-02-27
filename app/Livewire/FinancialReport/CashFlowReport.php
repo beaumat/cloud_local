@@ -17,9 +17,6 @@ use Maatwebsite\Excel\Facades\Excel;
 class CashFlowReport extends Component
 {
 
-
-
-
     public float $TOTAL_AFTER_NEW_HEADER = 0;
     public int $YEAR;
     public int $MONTH;
@@ -51,7 +48,6 @@ class CashFlowReport extends Component
     }
     public function mount()
     {
-
         $this->monthList = $this->dateServices->MonthList();
         $this->locationList = $this->locationServices->getList();
         $this->YEAR = $this->dateServices->NowYear();

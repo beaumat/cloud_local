@@ -209,4 +209,20 @@ class AccountServices
 
         return $result;
     }
+    public function BalanceSheetMonthly()
+    {
+        $result = Accounts::query()
+            ->select([
+                'account.ID',
+                'account.NAME',
+                'account.TYPE'
+            ])
+            ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
+            ->where('account.INACTIVE', '=', 0)
+            ->whereIn('account.TYPE', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+            ->orderBy("account.TYPE", 'asc')
+            ->get();
+
+        return $result;
+    }
 }
