@@ -53,8 +53,6 @@ class IncomeStatementReport extends Component
     }
     public function generate()
     {
-
-
         $this->isDate = true;
         $this->dispatch('call-back');
     }
