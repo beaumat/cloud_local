@@ -30,7 +30,8 @@ class IncomeStatementMonthly extends Component
 
     #[On('income-monthly')]
     public function generate($result)
-    {
+    {   
+        
         $YEAR = (int) $result['YEAR'];
         $LOCATION_ID = (int) $result['LOCATION_ID'];
         $this->dataList = [];
@@ -68,12 +69,14 @@ class IncomeStatementMonthly extends Component
             }
 
 
+
+            
+
+
             if ($TMP != $list->TYPE) {
                 if ($TMP == 0) {
                     $this->dataList[] = $this->getInsert($list->ID, $this->customTYPE($list->TYPE), '', '', '', '', '', '', '', '', '', '', '', '', '', '');
                 } else {
-
-
 
                     $this->dataList[] = $this->getInsert($list->ID, 'Total ' . $this->customTYPE($TMP), '', '', '', '', '', '', '', '', '', '', '', '', '', '');
                     $this->dataList[] = $this->getInsert($list->ID, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');

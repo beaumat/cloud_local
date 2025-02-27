@@ -19,23 +19,23 @@
             </tr>
         </thead>
         <tbody class="h1">
-       
+
             @foreach ($dataList as $list)
-                <tr class="@if($list['ACCOUNT_TYPE'] == '') font-weight-bold text-danger @endif">
+                <tr class="@if ($list['ACCOUNT_TYPE'] == '') font-weight-bold text-danger @endif">
                     <td> &nbsp; {{ $list['ACCOUNT_NAME'] }}</td>
-                    <td class="text-right"> {{ $list['JAN'] }}</td>
-                    <td class="text-right"> {{ $list['FEB'] }}</td>
-                    <td class="text-right"> {{ $list['MAR'] }}</td>
-                    <td class="text-right"> {{ $list['APR'] }}</td>
-                    <td class="text-right"> {{ $list['MAY'] }}</td>
-                    <td class="text-right"> {{ $list['JUN'] }}</td>
-                    <td class="text-right"> {{ $list['JUL'] }}</td>
-                    <td class="text-right"> {{ $list['AUG'] }}</td>
-                    <td class="text-right"> {{ $list['SEP'] }}</td>
-                    <td class="text-right"> {{ $list['OCT'] }}</td>
-                    <td class="text-right"> {{ $list['NOV'] }}</td>
-                    <td class="text-right"> {{ $list['DEC'] }}</td>
-                    <td class="text-right"> {{ $list['TOTAL'] }}</td>
+                    <td class="text-right"> <a href="#" target="_blank"> {{ $list['JAN'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['FEB'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['MAR'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['APR'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['MAY'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['JUN'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['JUL'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['AUG'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['SEP'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['OCT'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['NOV'] }}</a></td>
+                    <td class="text-right"> <a href="#" target="_blank">{{ $list['DEC'] }}</a></td>
+                    <td class="text-right">{{ $list['TOTAL'] }}</td>
                 </tr>
             @endforeach
         </tbody>

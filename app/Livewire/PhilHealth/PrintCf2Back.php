@@ -8,6 +8,7 @@ use App\Services\LocationServices;
 use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class PrintCf2Back extends Component
@@ -73,7 +74,7 @@ class PrintCf2Back extends Component
     public string $POST_O2_SATURATION;
     public string $POST_TEMPERATURE;
     public string $POST_BLOOD_PRESSURE2;
-    public bool $PRE_SIGN_DATA =  false;
+    public bool $PRE_SIGN_DATA = false;
     public bool $OUTPUT_SIGN = false;
 
 
@@ -132,7 +133,7 @@ class PrintCf2Back extends Component
     public float $P2_TOTAL;
     public float $OP_TOTAL;
     public float $AD_SUB_TOTAL;
-    public  float $AD_TOTAL = 0;
+    public float $AD_TOTAL = 0;
     public string $HCI_NAME;
     public string $HCI_POSITION;
 
@@ -155,12 +156,12 @@ class PrintCf2Back extends Component
         $this->hemoServices = $hemoServices;
         $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
-    public function mount(int $id = 0,  int $PATIENT_ID = 0, $OUTPUT = true)
+    public function mount(int $id = 0, int $PATIENT_ID = 0, $OUTPUT = true)
     {
 
         $this->OUTPUT_SIGN = $OUTPUT;
         if ($id > 0) {
-            $this->PRE_SIGN_DATA =  false;
+            $this->PRE_SIGN_DATA = false;
             $this->FIRST_CASE_RATE = '90935';
             $data = $this->philHealthServices->get($id);
             if ($data) {
@@ -209,7 +210,7 @@ class PrintCf2Back extends Component
                 $this->GOV_DOH = $data->GOV_DOH;
                 $this->GOV_HMO = $data->GOV_HMO;
                 $this->GOV_LINGAP = $data->GOV_LINGAP;
- 
+
                 $this->P1_SUB_TOTAL = $data->P1_SUB_TOTAL;
 
                 $this->P2_SUB_TOTAL = $data->P2_SUB_TOTAL;
@@ -281,11 +282,22 @@ class PrintCf2Back extends Component
                         $this->ZIP_CODE = $locData->ZIP_CODE;
                     }
 
-                    $locDataMgt =   $this->locationServices->getPesonel($this->LOCATION_ID);
-                    if ($locData) {
-                        $this->HCI_NAME = strtoupper($locDataMgt->MANAGER_NAME)  ?? '';
-                        $this->HCI_POSITION = strtoupper($locDataMgt->MANAGER_POSITION)  ?? '';
+
+                    $locDataMgt = $this->locationServices->getPesonel($this->LOCATION_ID);
+                    if ($locDataMgt) {
+                        if ($locDataMgt->MANAGER_NAME) {
+                            $this->HCI_NAME = strtoupper($locDataMgt->MANAGER_NAME) ?? '';
+                            $this->HCI_POSITION = strtoupper($locDataMgt->MANAGER_POSITION) ?? '';
+
+                        } else {
+                            $userData = $this->contactServices->get(Auth::user()->contact_id, 2);
+                            if ($userData) {
+                                $this->HCI_NAME = $userData->NAME ?? '';
+                                $this->HCI_POSITION = $userData->NICKNAME ?? '';
+                            }
+                        }
                     }
+
 
                     $this->HEIGHT = $contact->HEIGHT ?? 0;
                     $this->PATIENT_LASTNAME = $contact->LAST_NAME;
@@ -295,14 +307,14 @@ class PrintCf2Back extends Component
                     $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                     $this->PATIENT_GENDER = $contact->GENDER;
                     $this->IS_PATIENT = $contact->IS_PATIENT;
-                    $this->FINAL_DIAGNOSIS =  strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
+                    $this->FINAL_DIAGNOSIS = strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
                     $this->AGE = $this->contactServices->calculateUserAge($this->PATIENT_BIRTH_DATE);
 
                     if ($this->IS_PATIENT) {
                         $this->MEMBER_FIRST_NAME = strtoupper($contact->FIRST_NAME);
                         $this->MEMBER_LAST_NAME = strtoupper($contact->LAST_NAME);
                         $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MIDDLE_NAME);
-                        $this->MEMBER_EXTENSION =  strtoupper($contact->SALUTATION);
+                        $this->MEMBER_EXTENSION = strtoupper($contact->SALUTATION);
                         $this->MEMBER_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                         $this->MEMBER_GENDER = $contact->GENDER;
                     } else {
@@ -345,15 +357,15 @@ class PrintCf2Back extends Component
                 if ($hemo) {
                     $this->POST_WEIGHT = $hemo->POST_WEIGHT;
                     $this->POST_BLOOD_PRESSURE = $hemo->POST_BLOOD_PRESSURE;
-                    $this->POST_HEART_RATE =  $hemo->POST_HEART_RATE;
-                    $this->POST_O2_SATURATION =  $hemo->POST_O2_SATURATION;
+                    $this->POST_HEART_RATE = $hemo->POST_HEART_RATE;
+                    $this->POST_O2_SATURATION = $hemo->POST_O2_SATURATION;
                     $this->POST_TEMPERATURE = $hemo->POST_TEMPERATURE;
-                    $this->POST_BLOOD_PRESSURE2 =  $hemo->POST_BLOOD_PRESSURE2;
+                    $this->POST_BLOOD_PRESSURE2 = $hemo->POST_BLOOD_PRESSURE2;
                 }
             }
         }
         if ($PATIENT_ID > 0) {
-            $this->PRE_SIGN_DATA =  true;
+            $this->PRE_SIGN_DATA = true;
 
             $contact = $this->contactServices->get($PATIENT_ID, 3);
 
@@ -381,14 +393,14 @@ class PrintCf2Back extends Component
                 $this->PATIENT_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                 $this->PATIENT_GENDER = $contact->GENDER;
                 $this->IS_PATIENT = $contact->IS_PATIENT;
-                $this->FINAL_DIAGNOSIS =  strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
+                $this->FINAL_DIAGNOSIS = strtoupper($contact->FINAL_DIAGNOSIS) ?? '';
                 $this->AGE = $this->contactServices->calculateUserAge($this->PATIENT_BIRTH_DATE);
 
                 if ($this->IS_PATIENT) {
                     $this->MEMBER_FIRST_NAME = strtoupper($contact->FIRST_NAME);
                     $this->MEMBER_LAST_NAME = strtoupper($contact->LAST_NAME);
                     $this->MEMBER_MIDDLE_NAME = strtoupper($contact->MIDDLE_NAME);
-                    $this->MEMBER_EXTENSION =  strtoupper($contact->SALUTATION);
+                    $this->MEMBER_EXTENSION = strtoupper($contact->SALUTATION);
                     $this->MEMBER_BIRTH_DATE = $contact->DATE_OF_BIRTH;
                     $this->MEMBER_GENDER = $contact->GENDER;
                 } else {
