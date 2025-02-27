@@ -169,8 +169,8 @@ class PrintCsf extends Component
                     $this->COMPANY_NAME = $contact->COMPANY_NAME ?? '';
                     $this->FIRST_CASE_RATE = $contact->FIRST_CASE_RATE ?? '';
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
-                    $locData = $this->locationServices->getPesonel($this->LOCATION_ID);
-                
+
+                    $locData = $this->locationServices->getPesonel($this->LOCATION_ID); 
                     if ($locData) {
                         if ($locData->MANAGER_NAME) {
                             $this->HCI_NAME = strtoupper($locData->MANAGER_NAME) ?? '';

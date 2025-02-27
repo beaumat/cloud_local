@@ -12,6 +12,7 @@ class PhilhealthDrugsMedicineServices
     public function __construct(ObjectServices $objectServices, DateServices $dateServices)
     {
         $this->object = $objectServices;
+        $this->dateServices = $dateServices;
     }
     public function DrugMedicineStore(int $PHILHEALTH_ID, string $GENERIC_NAME, float $QUANTITY, string $DOSSAGE, string $ROUTE, string $FREQUENCY, float $TOTAL_COST, string $CONT_GENERIC_NAME, float $CONT_QUANTITY, string $CONT_DOSSAGE, string $CONT_ROUTE, string $CONT_FREQUENCY, float $CONT_TOTAL_COST)
     {
