@@ -54,6 +54,7 @@ use App\Livewire\Hemodialysis\PrintFormBack;
 use App\Livewire\Hemodialysis\PrintFormFrontBack;
 use App\Livewire\HemodialysisMachine\HemoMachineForm;
 use App\Livewire\HemodialysisMachine\HemoMachineList;
+use App\Livewire\IncomeStatement\IncomeStatementAccountDetails;
 use App\Livewire\InventoryAdjustment\InventoryAdjustmentForm;
 use App\Livewire\InventoryAdjustment\InventoryAdjustmentList;
 use App\Livewire\Invoice\InvoiceForm;
@@ -656,6 +657,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/financial')->name('financial')->group(function () {
             Route::prefix('/income-statement')->middleware(['permission:report.financial.income-statement'])->group(function () {
                 Route::get('/', IncomeStatementReport::class)->name('income_statement_report');
+                Route::get('/details/{id}/{year}/{month}/{locationid}', IncomeStatementAccountDetails::class)->name('income_statement_report_account_viewer');
             });
             Route::prefix('/balance-sheet')->middleware(['permission:report.financial.balance-sheet'])->group(function () {
                 Route::get('/', BalanceSheetReport::class)->name('balance_sheet_report');

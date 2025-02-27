@@ -747,4 +747,35 @@ class AccountJournalServices
 
         return $final_result;
     }
+    public function getTransactionJournalViewer(int $ACCOUNT_ID,int $YEAR, int $MONTH, int $LOCATION_ID )
+    {
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'aj.JOURNAL_NO',
+                'aj.OBJECT_DATE as DATE',
+                'a.TAG as ACCOUNT_CODE',
+                'a.NAME as ACCOUNT_TITLE',
+                'd.DESCRIPTION as TYPE',
+                'l.NAME as LOCATION',
+                DB::raw($this->TX_CODE),
+                DB::raw($this->TX_NOTES),
+                DB::raw(" if(aj.ENTRY_TYPE = 0, aj.AMOUNT, '' ) as DEBIT "),
+                DB::raw(" if(aj.ENTRY_TYPE = 1, aj.AMOUNT, '' ) as CREDIT "),
+                DB::raw($this->TX_NAME),
+            ])->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->whereYear('aj.OBJECT_DATE', '=', $YEAR)
+            ->whereMonth('aj.OBJECT_DATE', '=', $MONTH)
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->where('aj.ACCOUNT_ID','=', $ACCOUNT_ID)
+            ->get();
+
+        return $result;
+    }
+
 }

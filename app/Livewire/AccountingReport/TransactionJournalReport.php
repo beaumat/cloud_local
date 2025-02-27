@@ -50,8 +50,6 @@ class TransactionJournalReport extends Component
     }
     public function mount()
     {
-
-
         $this->DATE_TO = $this->dateServices->NowDate();
         $this->DATE_FROM = $this->dateServices->GetFirstDay_Month($this->DATE_TO);
         $this->LOCATION_ID =  $this->userServices->getLocationDefault();
