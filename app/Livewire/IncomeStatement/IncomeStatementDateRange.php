@@ -11,13 +11,11 @@ use Livewire\Component;
 class IncomeStatementDateRange extends Component
 {
 
-    
+
     public $dataList = [];
-
-
     private $financialStatementServices;
     private $numberServices;
-    public function boot(FinancialStatementServices $financialStatementServices,NumberServices $numberServices)
+    public function boot(FinancialStatementServices $financialStatementServices, NumberServices $numberServices)
     {
         $this->financialStatementServices = $financialStatementServices;
         $this->numberServices = $numberServices;

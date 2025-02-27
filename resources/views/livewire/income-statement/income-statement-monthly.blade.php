@@ -34,7 +34,8 @@
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['FEB'] }}@else<a
+                            {{ $list['FEB'] }}@else
+                            <a
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 2, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['FEB'] }}</a>
                         @endif

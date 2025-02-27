@@ -359,8 +359,9 @@ class IncomeStatementMonthly extends Component
         ];
 
     }
-    public function openAccountDetails() {
-        
+    public function openAccountDetails(int $ACCOUNT_ID, int $MONTH) {
+
+        $this->dispatch('open-income-account-details',result:['ACCOUNT_ID' => $ACCOUNT_ID, 'MONTH' => $MONTH, 'YEAR' => $this->YEAR, 'LOCATION_ID' => $this->LOCATION_ID]);
     }
     public function render()
     {
