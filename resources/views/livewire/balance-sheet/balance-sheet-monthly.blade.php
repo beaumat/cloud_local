@@ -22,94 +22,97 @@
 
             @foreach ($dataList as $list)
                 <tr
-                    class="@if ($list['ACCOUNT_TYPE'] == 'total') font-weight-bold text-danger @elseif ($list['ACCOUNT_TYPE'] == 'grand') font-weight-bold text-info @endif">
-                    <td> &nbsp; {{ $list['ACCOUNT_NAME'] }}</td>
+                    class="@if ($list['ACCOUNT_TYPE'] == 'total') font-weight-bold @elseif ($list['ACCOUNT_TYPE'] == 'grand') font-weight-bold  text-info @else text-primary @endif">
+                    <td
+                        class="@if ($list['ACCOUNT_TYPE'] == 'total') text-sm @elseif ($list['ACCOUNT_TYPE'] == 'grand') text-sm @endif">
+                        &nbsp; {{ $list['ACCOUNT_NAME'] }}</td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
                             {{ $list['JAN'] }}
                         @else
-                            <a href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 1, 'locationid' => $LOCATION_ID]) }}"
+                            <a class="font-weight-normal"href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 1, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank"> {{ $list['JAN'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['FEB'] }}@else
-                            <a
+                            {{ $list['FEB'] }}
+                        @else
+                            <a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 2, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['FEB'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['MAR'] }}@else<a
+                            {{ $list['MAR'] }}@else<a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 3, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['MAR'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['APR'] }}@else<a
+                            {{ $list['APR'] }}@else<a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 4, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['APR'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['MAY'] }}@else<a
+                            {{ $list['MAY'] }}@else<a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 5, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['MAY'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['JUN'] }}@else<a
+                            {{ $list['JUN'] }}@else<a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 6, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['JUN'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['JUL'] }}@else<a
+                            {{ $list['JUL'] }}@else<a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 7, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['JUL'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['AUG'] }}@else<a
+                            {{ $list['AUG'] }}@else<a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 8, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['AUG'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['SEP'] }}@else<a
+                            {{ $list['SEP'] }}@else<a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 9, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['SEP'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['OCT'] }}@else<a
+                            {{ $list['OCT'] }}@else<a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 10, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['OCT'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['NOV'] }}@else<a
+                            {{ $list['NOV'] }}@else<a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 11, 'locationid' => $LOCATION_ID]) }}"target="_blank">{{ $list['NOV'] }}</a>
                         @endif
                     </td>
                     <td class="text-right">
                         @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand')
-                            {{ $list['DEC'] }}@else<a
+                            {{ $list['DEC'] }}@else<a class="font-weight-normal"
                                 href="{{ route('reportsfinancialincome_statement_report_account_viewer', ['id' => $list['ACCOUNT_ID'], 'year' => $YEAR, 'month' => 12, 'locationid' => $LOCATION_ID]) }}"
                                 target="_blank">{{ $list['DEC'] }}</a>
                         @endif
                     </td>
-                    <td class="text-right">{{ $list['TOTAL'] }}</td>
+                    <td class="text-right  @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand') font-weight-bold @else font-weight-normal text-danger @endif">{{ $list['TOTAL'] }}</td>
                 </tr>
             @endforeach
         </tbody>

@@ -80,7 +80,6 @@ class BalanceSheetDateRange extends Component
 
         $this->TotalParameter('N', 'NET ASSETS', 'NET ASSETS', $totalAsset - $totalLiabilities);
 
-
         $this->dataList[] = [
             'ORDER' => '',
             'TYPE' => '',
@@ -94,7 +93,6 @@ class BalanceSheetDateRange extends Component
 
         $net_income = $this->financialStatementServices->getTotalNetIncome($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
         $this->CustomParameter('D', '', 'Net Income', $net_income);
-
         $RetainingEarnings = $this->HistoryRetainingEarnings($this->DATE_FROM);
         $this->CustomParameter('D', '', 'Retaining Earnings', $RetainingEarnings);
         $newEquty = $RetainingEarnings + $net_income + $equityTotal;
