@@ -39,6 +39,9 @@ class Locations extends Model
         'DOCTOR_ORDER_DEFAULT',
         'OTHER_SIGN',
         'PREPARED_BY_ID',
-        'HD_FACILITY_REP_ID'
+        'HD_FACILITY_REP_ID',
+        'ITEMIZED_BASE',
+        'PHIC_INCHARGE2_ID',
+        
     ];
 }

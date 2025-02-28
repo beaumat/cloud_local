@@ -24,6 +24,7 @@ class LocationForm extends Component
 
     public int $HCI_MANAGER_ID;
     public int $PHIC_INCHARGE_ID;
+    public int $PHIC_INCHARGE2_ID;
     public string $NAME_OF_BUSINESS;
     public string $ACCREDITATION_NO;
     public string $BLDG_NAME_LOT_BLOCK;
@@ -82,6 +83,7 @@ class LocationForm extends Component
                 $this->GROUP_ID = $data->GROUP_ID ? $data->GROUP_ID : 0;
                 $this->HCI_MANAGER_ID = $data->HCI_MANAGER_ID ?? 0;
                 $this->PHIC_INCHARGE_ID = $data->PHIC_INCHARGE_ID ?? 0;
+                $this->PHIC_INCHARGE2_ID = $data->PHIC_INCHARGE2_ID ?? 0;
                 $this->NAME_OF_BUSINESS = $data->NAME_OF_BUSINESS ?? '';
                 $this->ACCREDITATION_NO = $data->ACCREDITATION_NO ?? '';
                 $this->BLDG_NAME_LOT_BLOCK = $data->BLDG_NAME_LOT_BLOCK ?? '';
@@ -115,6 +117,7 @@ class LocationForm extends Component
         $this->INACTIVE = false;
         $this->HCI_MANAGER_ID = 0;
         $this->PHIC_INCHARGE_ID = 0;
+        $this->PHIC_INCHARGE2_ID = 0;
         $this->NAME_OF_BUSINESS = '';
         $this->ACCREDITATION_NO = '';
         $this->BLDG_NAME_LOT_BLOCK = '';
@@ -173,7 +176,8 @@ class LocationForm extends Component
                     $this->OTHER_SIGN,
                     $this->PREPARED_BY_ID,
                     $this->HD_FACILITY_REP_ID,
-                    $this->ITEMIZED_BASE
+                    $this->ITEMIZED_BASE,
+                    $this->PHIC_INCHARGE2_ID
                 );
 
                 Redirect::route('maintenancesettingslocation_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -205,7 +209,8 @@ class LocationForm extends Component
                     $this->OTHER_SIGN,
                     $this->PREPARED_BY_ID,
                     $this->HD_FACILITY_REP_ID,
-                    $this->ITEMIZED_BASE
+                    $this->ITEMIZED_BASE,
+                    $this->PHIC_INCHARGE2_ID
                 );
                 session()->flash('message', 'Successfully updated');
             }

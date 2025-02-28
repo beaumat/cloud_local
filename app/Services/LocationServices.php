@@ -90,7 +90,8 @@ class LocationServices
         bool $OTHER_SIGN,
         int $PREPARED_BY_ID,
         int $HD_FACILITY_REP_ID,
-        bool $ITEMIZED_BASE
+        bool $ITEMIZED_BASE,
+        int $PHIC_INCHARGE2_ID
 
     ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
@@ -121,7 +122,8 @@ class LocationServices
             'OTHER_SIGN' => $OTHER_SIGN,
             'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $HD_FACILITY_REP_ID : null,
             'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null,
-            'ITEMIZED_BASE' => $ITEMIZED_BASE
+            'ITEMIZED_BASE' => $ITEMIZED_BASE,
+            'PHIC_INCHARGE2_ID' => $PHIC_INCHARGE2_ID > 0 ? $PHIC_INCHARGE2_ID : null
         ]);
 
         return $ID;
@@ -155,6 +157,7 @@ class LocationServices
         int $PREPARED_BY_ID,
         int $HD_FACILITY_REP_ID,
         bool $ITEMIZED_BASE,
+        int $PHIC_INCHARGE2_ID
 
     ): void {
 
@@ -185,7 +188,8 @@ class LocationServices
                 'OTHER_SIGN' => $OTHER_SIGN,
                 'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
                 'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null,
-                'ITEMIZED_BASE' => $ITEMIZED_BASE
+                'ITEMIZED_BASE' => $ITEMIZED_BASE,
+                'PHIC_INCHARGE2_ID' => $PHIC_INCHARGE2_ID
 
             ]);
     }

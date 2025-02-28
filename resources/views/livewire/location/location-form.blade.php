@@ -94,23 +94,28 @@
                                 </div>
                                 <div class="form-group border-top border-secondary">
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <livewire:select-option name="HCI_MANAGER_ID" :options="$managerList"
                                                 isDisabled="{{ false }}" :zero="true"
                                                 titleName="HCI Manager" wire:model.live='HCI_MANAGER_ID' />
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <livewire:select-option name="PHIC_INCHARGE_ID" :options="$inchargeList"
                                                 isDisabled="{{ false }}" :zero="true"
                                                 titleName="Phic In-charge" wire:model.live='PHIC_INCHARGE_ID' />
                                         </div>
-                                        <div class="col-md-3">
+                                         <div class="col-md-2">
+                                            <livewire:select-option name="PHIC_INCHARGE2_ID" :options="$inchargeList"
+                                                isDisabled="{{ false }}" :zero="true"
+                                                titleName="Phic In-charge(other form)" wire:model.live='PHIC_INCHARGE2_ID' />
+                                        </div>
+                                        <div class="col-md-2">
                                             <livewire:select-option name="PREPARED_BY_ID" :options="$preparedByList"
                                                 isDisabled="{{ false }}" :zero="true"
                                                 titleName="Prepared By (Treatment Summary)"
                                                 wire:model.live='PREPARED_BY_ID' />
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             {{-- HD_FACILITY_REP_ID --}}
                                             <livewire:select-option name="HD_FACILITY_REP_ID" :options="$hdFacilityRepList"
                                                 isDisabled="{{ false }}" :zero="true"
