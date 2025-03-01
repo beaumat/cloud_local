@@ -78,6 +78,32 @@ class BalanceSheetMonthly extends Component
         $e = $this->SetData($equityList, '');
         $dataIS = $this->getIncomeStatement();
 
+        $LASTYEAR = $this->YEAR - 1;
+        $lastdate = $this->financialStatementServices->lastDate($LASTYEAR, 12);
+        $BS_BALANCE = (float) $this->financialStatementServices->getBalanceSheetBalance($lastdate, $this->LOCATION_ID);
+        $IS_BALANCE = (float) $this->financialStatementServices->getIncomeStatementHistoryBalance($lastdate, $this->LOCATION_ID);
+
+        
+        $E_JAN = (float) $BS_BALANCE + $dataIS['JAN'] + $e['JAN'];
+        $E_FEB = (float) $BS_BALANCE + $dataIS['FEB'] + $e['FEB'];
+
+        $this->dataList[] = $this->getInsert(
+            0,
+            "Retaining Earnings",
+            "",
+            $BS_BALANCE != 0 ? $this->numberServices->AcctFormat($BS_BALANCE) : '-',
+            $E_JAN != 0 ? $this->numberServices->AcctFormat($E_JAN) : '-',
+        );
+
+
+        $this->dataList[] = $this->getInsert(
+            0,
+            "TOTAL EQUITY",
+            "grand",
+            $E_JAN != 0 ? $this->numberServices->AcctFormat($E_JAN) : '-',
+            $E_FEB != 0 ? $this->numberServices->AcctFormat($E_FEB) : '-',
+        );
+
     }
     private function SetData($list, string $title, bool $notToDisplay = false): array
     {
@@ -344,7 +370,7 @@ class BalanceSheetMonthly extends Component
         $OP_DEC = $G_DEC - $e['DEC'];
         $OP_TOTAL = $G_TOTAL - $e['TOTAL'];
 
-        $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([14], $this->YEAR, $this->LOCATION_ID, true);
+        $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([14], $this->YEAR, $this->LOCATION_ID, false);
         $ex = $this->SetData($otherExpense, "", true);
 
         // NET profit
@@ -355,7 +381,7 @@ class BalanceSheetMonthly extends Component
         $NET_MAY = $OP_MAY + $i['MAY'] - $ex['MAY'];
         $NET_JUN = $OP_JUN + $i['JUN'] - $ex['JUN'];
         $NET_JUL = $OP_JUL + $i['JUL'] - $ex['JUL'];
-        $NET_AUG = $OP_JUL + $i['AUG'] - $ex['AUG'];
+        $NET_AUG = $OP_AUG + $i['AUG'] - $ex['AUG'];
         $NET_SEP = $OP_SEP + $i['SEP'] - $ex['SEP'];
         $NET_OCT = $OP_OCT + $i['OCT'] - $ex['OCT'];
         $NET_NOV = $OP_NOV + $i['NOV'] - $ex['NOV'];
@@ -367,7 +393,7 @@ class BalanceSheetMonthly extends Component
         $this->dataList[] = $this->getInsert(
             0,
             'Current Year Earnings ',
-            'grand',
+            '',
             $NET_JAN != 0 ? $this->numberServices->AcctFormat($NET_JAN) : '-',
             $NET_FEB != 0 ? $this->numberServices->AcctFormat($NET_FEB) : '-',
             $NET_MAR != 0 ? $this->numberServices->AcctFormat($NET_MAR) : '-',
@@ -403,11 +429,6 @@ class BalanceSheetMonthly extends Component
         ];
     }
 
-    public function getIncomeStatementLastRange()
-    {
-        $LASTYEAR = $this->YEAR - 1;
-
-    }
 
     private function getInsert(int $ID, string $NAME, string $TYPE, string $JAN = '', string $FEB = '', string $MAR = '', string $APR = '', string $MAY = '', string $JUN = '', string $JUL = '', string $AUG = '', string $SEP = '', string $OCT = '', string $NOV = '', string $DEC = '', string $TOTAL = ''): array
     {
