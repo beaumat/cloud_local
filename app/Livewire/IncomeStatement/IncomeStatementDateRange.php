@@ -53,8 +53,6 @@ class IncomeStatementDateRange extends Component
 
         $this->dataList[] = $this->getInsert( 0, 'Operating Proft ', 'grand', $OP_TOTAL != 0 ? $this->numberServices->AcctFormat($OP_TOTAL) : '-' );
 
-
-
         $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([14], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
         $ex = $this->SetData($otherExpense, "");
 

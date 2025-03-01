@@ -1,6 +1,6 @@
 <div class="form-group">
-    <table class="table table-sm table-bordered table-hover ">
-        <thead class="bg-sky h1">
+    <table class="table table-bordered table-hover ">
+        <thead class="bg-sky text-xs">
             <tr>
                 <th class='col-4'>Account</th>
                 <th class=''>Jan</th>
@@ -18,7 +18,7 @@
                 <th class=''>Total</th>
             </tr>
         </thead>
-        <tbody class="h1">
+        <tbody class="text-xs">
 
             @foreach ($dataList as $list)
                 <tr

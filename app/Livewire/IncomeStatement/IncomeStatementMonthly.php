@@ -10,6 +10,8 @@ use Livewire\Component;
 class IncomeStatementMonthly extends Component
 {
 
+    public bool $isRun = true;
+    public bool $isFocus = true;
     public $dataList = [];
     public $LOCATION_ID;
     public $YEAR;
@@ -29,10 +31,10 @@ class IncomeStatementMonthly extends Component
         $this->LOCATION_ID = (int) $result['LOCATION_ID'];
         $this->dataList = [];
 
-        $revenueList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([10], $this->YEAR, $this->LOCATION_ID, true);
+        $revenueList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([10], $this->YEAR, $this->LOCATION_ID, true,$this->isRun, $this->isFocus);
         $r = $this->SetData($revenueList, "Trading Income");
 
-        $costList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([11], $this->YEAR, $this->LOCATION_ID, false);
+        $costList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([11], $this->YEAR, $this->LOCATION_ID, false, $this->isRun, $this->isFocus);
         $c = $this->SetData($costList, "Cost of Sales");
 
         $G_JAN = $r['JAN'] - $c['JAN'];
@@ -70,10 +72,10 @@ class IncomeStatementMonthly extends Component
         );
 
 
-        $otherincome = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([13], $this->YEAR, $this->LOCATION_ID, true);
+        $otherincome = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([13], $this->YEAR, $this->LOCATION_ID, true,$this->isRun, $this->isFocus);
         $i = $this->SetData($otherincome, "");
 
-        $expense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([12], $this->YEAR, $this->LOCATION_ID, false);
+        $expense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([12], $this->YEAR, $this->LOCATION_ID, false, $this->isRun, $this->isFocus);
         $e = $this->SetData($expense, "Operating Expenses");
         // operating profit
         $OP_JAN = $G_JAN - $e['JAN'];
@@ -111,7 +113,7 @@ class IncomeStatementMonthly extends Component
 
 
 
-        $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([14], $this->YEAR, $this->LOCATION_ID, true);
+        $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([14], $this->YEAR, $this->LOCATION_ID, true,$this->isRun,$this->isFocus);
         $ex = $this->SetData($otherExpense, "");
 
         // NET profit

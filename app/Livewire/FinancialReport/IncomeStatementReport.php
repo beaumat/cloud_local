@@ -69,7 +69,6 @@ class IncomeStatementReport extends Component
         if ($this->isDate) {
             $this->dispatch('income-date-range', result: ['DATE_FROM' => $this->DATE_FROM, 'DATE_TO' => $this->DATE_TO, 'LOCATION_ID' => $this->LOCATION_ID]);
         } else {
-
             $this->dispatch('income-monthly', result: ['YEAR' => $this->YEAR,'LOCATION_ID' => $this->LOCATION_ID]);
         }
 

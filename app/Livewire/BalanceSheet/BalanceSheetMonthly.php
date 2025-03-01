@@ -2,7 +2,6 @@
 
 namespace App\Livewire\BalanceSheet;
 
-use App\Services\AccountServices;
 use App\Services\FinancialStatementServices;
 use App\Services\NumberServices;
 use Livewire\Attributes\On;
@@ -10,16 +9,18 @@ use Livewire\Component;
 
 class BalanceSheetMonthly extends Component
 {
+
+    public $isFocus = true;
+    public $isRunning = true;
     public $YEAR;
     public $LOCATION_ID;
     public $dataList = [];
     private $financialStatementServices;
-    private $accountServices;
+
     private $numberServices;
-    public function boot(FinancialStatementServices $financialStatementServices, AccountServices $accountServices, NumberServices $numberServices)
+    public function boot(FinancialStatementServices $financialStatementServices, NumberServices $numberServices)
     {
         $this->financialStatementServices = $financialStatementServices;
-        $this->accountServices = $accountServices;
         $this->numberServices = $numberServices;
     }
     #[On('balance-sheet-monthly')]
@@ -30,9 +31,9 @@ class BalanceSheetMonthly extends Component
         $this->YEAR = $result['YEAR'];
         $this->LOCATION_ID = $result['LOCATION_ID'];
 
-        $assetList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([0, 1, 2, 3, 4], $this->YEAR, $this->LOCATION_ID, false);
+        $assetList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([0, 1, 2, 3, 4], $this->YEAR, $this->LOCATION_ID, false, $this->isRunning, $this->isFocus);
         $a[] = $this->SetData($assetList, 'Assets');
-        $liabilityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([5, 6, 7, 8], $this->YEAR, $this->LOCATION_ID, true);
+        $liabilityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([5, 6, 7, 8], $this->YEAR, $this->LOCATION_ID, true, $this->isRunning, $this->isFocus);
         $l[] = $this->SetData($liabilityList, 'Liabilities');
 
         $JAN = $a[0]['JAN'] - $l[0]['JAN'];
@@ -74,27 +75,43 @@ class BalanceSheetMonthly extends Component
 
     private function equitySide()
     {
-        $equityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([9], $this->YEAR, $this->LOCATION_ID, true);
-        $e = $this->SetData($equityList, '');
-        $dataIS = $this->getIncomeStatement();
-
-        $LASTYEAR = $this->YEAR - 1;
-        $lastdate = $this->financialStatementServices->lastDate($LASTYEAR, 12);
-        $BS_BALANCE = (float) $this->financialStatementServices->getBalanceSheetBalance($lastdate, $this->LOCATION_ID);
-        $IS_BALANCE = (float) $this->financialStatementServices->getIncomeStatementHistoryBalance($lastdate, $this->LOCATION_ID);
-
-        
-        $E_JAN = (float) $BS_BALANCE + $dataIS['JAN'] + $e['JAN'];
-        $E_FEB = (float) $BS_BALANCE + $dataIS['FEB'] + $e['FEB'];
 
         $this->dataList[] = $this->getInsert(
             0,
-            "Retaining Earnings",
-            "",
-            $BS_BALANCE != 0 ? $this->numberServices->AcctFormat($BS_BALANCE) : '-',
-            $E_JAN != 0 ? $this->numberServices->AcctFormat($E_JAN) : '-',
+            "EQUITY",
+            "grand"
         );
+        $equityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([9], $this->YEAR, $this->LOCATION_ID, true, $this->isRunning, $this->isFocus);
+        $e = $this->SetData($equityList, '', true, true);
+        $dataIS = $this->getIncomeStatement(); // Current Year Earnings 
 
+        // $LASTYEAR = $this->YEAR - 1;
+        // $lastdate = $this->financialStatementServices->lastDate($LASTYEAR, 12);
+        // $BS_BALANCE = (float) $this->financialStatementServices->getBalanceSheetBalance($lastdate, $this->LOCATION_ID);
+        // $IS_BALANCE = (float) $this->financialStatementServices->getIncomeStatementHistoryBalance($lastdate, $this->LOCATION_ID);
+
+
+        $E_JAN = (float) $dataIS['JAN'] + $e['JAN'];
+        $E_FEB = (float) $dataIS['FEB'] + $e['FEB'];
+        $E_MAR = (float) $dataIS['MAR'] + $e['MAR'];
+        $E_APR = (float) $dataIS['APR'] + $e['APR'];
+        $E_MAY = (float) $dataIS['MAY'] + $e['MAY'];
+        $E_JUN = (float) $dataIS['JUN'] + $e['JUN'];
+        $E_JUL = (float) $dataIS['JUL'] + $e['JUL'];
+        $E_AUG = (float) $dataIS['AUG'] + $e['AUG'];
+        $E_SEP = (float) $dataIS['SEP'] + $e['SEP'];
+        $E_OCT = (float) $dataIS['OCT'] + $e['OCT'];
+        $E_NOV = (float) $dataIS['NOV'] + $e['NOV'];
+        $E_DEC = (float) $dataIS['DEC'] + $e['DEC'];
+        $E_TOTAL = (float) $dataIS['TOTAL'] + $e['TOTAL'];
+
+        // $this->dataList[] = $this->getInsert(
+        //     0,
+        //     "Retaining Earnings",
+        //     "",
+        //     $BS_BALANCE != 0 ? $this->numberServices->AcctFormat($BS_BALANCE) : '-',
+        //     $E_FEB != 0 ? $this->numberServices->AcctFormat($E_FEB) : '-',
+        // );
 
         $this->dataList[] = $this->getInsert(
             0,
@@ -102,10 +119,21 @@ class BalanceSheetMonthly extends Component
             "grand",
             $E_JAN != 0 ? $this->numberServices->AcctFormat($E_JAN) : '-',
             $E_FEB != 0 ? $this->numberServices->AcctFormat($E_FEB) : '-',
+            $E_MAR != 0 ? $this->numberServices->AcctFormat($E_MAR) : '-',
+            $E_APR != 0 ? $this->numberServices->AcctFormat($E_APR) : '-',
+            $E_MAY != 0 ? $this->numberServices->AcctFormat($E_MAY) : '-',
+            $E_JUN != 0 ? $this->numberServices->AcctFormat($E_JUN) : '-',
+            $E_JUL != 0 ? $this->numberServices->AcctFormat($E_JUL) : '-',
+            $E_AUG != 0 ? $this->numberServices->AcctFormat($E_AUG) : '-',
+            $E_SEP != 0 ? $this->numberServices->AcctFormat($E_SEP) : '-',
+            $E_OCT != 0 ? $this->numberServices->AcctFormat($E_OCT) : '-',
+            $E_NOV != 0 ? $this->numberServices->AcctFormat($E_NOV) : '-',
+            $E_DEC != 0 ? $this->numberServices->AcctFormat($E_DEC) : '-',
+            $E_TOTAL != 0 ? $this->numberServices->AcctFormat($E_TOTAL) : '-',
         );
 
     }
-    private function SetData($list, string $title, bool $notToDisplay = false): array
+    private function SetData($list, string $title, bool $notToDisplay = false, bool $showItem = true): array
     {
 
 
@@ -160,9 +188,6 @@ class BalanceSheetMonthly extends Component
             $DEC += $data->DEC;
             $TOTAL += $data->TOTAL;
 
-
-
-
             if ($TMP == -1) {
                 if (!$notToDisplay) {
                     $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
@@ -212,7 +237,10 @@ class BalanceSheetMonthly extends Component
                 }
                 $TMP_NAME = $data->TYPE_NAME;
             }
-            if (!$notToDisplay) {
+
+
+            if (!$notToDisplay || $showItem) {
+
                 $this->dataList[] = $this->getInsert(
                     $data->ID,
                     '   ' . $data->ACCOUNT_NAME,
@@ -288,6 +316,7 @@ class BalanceSheetMonthly extends Component
         $T_NOV = 0;
         $T_DEC = 0;
         $T_TOTAL = 0;
+
         if ($title <> '') {
             if (!$notToDisplay) {
                 $this->dataList[] = $this->getInsert(
@@ -330,11 +359,12 @@ class BalanceSheetMonthly extends Component
 
     public function getIncomeStatement(): array
     {
-        $revenueList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([10], $this->YEAR, $this->LOCATION_ID, true);
-        $r = $this->SetData($revenueList, "Trading Income", true);
 
-        $costList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([11], $this->YEAR, $this->LOCATION_ID, false);
-        $c = $this->SetData($costList, "Cost of Sales", true);
+        $revenueList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([10], $this->YEAR, $this->LOCATION_ID, true, $this->isRunning, $this->isFocus);
+        $r = $this->SetData($revenueList, "Trading Income", true, false);
+
+        $costList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([11], $this->YEAR, $this->LOCATION_ID, false, $this->isRunning, $this->isFocus);
+        $c = $this->SetData($costList, "Cost of Sales", true, false);
 
         $G_JAN = $r['JAN'] - $c['JAN'];
         $G_FEB = $r['FEB'] - $c['FEB'];
@@ -350,11 +380,11 @@ class BalanceSheetMonthly extends Component
         $G_DEC = $r['DEC'] - $c['DEC'];
         $G_TOTAL = $r['TOTAL'] - $c['TOTAL'];
 
-        $otherincome = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([13], $this->YEAR, $this->LOCATION_ID, true);
-        $i = $this->SetData($otherincome, "", true);
+        $otherincome = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([13], $this->YEAR, $this->LOCATION_ID, true, $this->isRunning, $this->isFocus);
+        $i = $this->SetData($otherincome, "", true, false);
 
-        $expense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([12], $this->YEAR, $this->LOCATION_ID, false);
-        $e = $this->SetData($expense, "Operating Expenses", true);
+        $expense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([12], $this->YEAR, $this->LOCATION_ID, false, $this->isRunning, $this->isFocus);
+        $e = $this->SetData($expense, "Operating Expenses", true, false);
         // operating profit
         $OP_JAN = $G_JAN - $e['JAN'];
         $OP_FEB = $G_FEB - $e['FEB'];
@@ -370,8 +400,8 @@ class BalanceSheetMonthly extends Component
         $OP_DEC = $G_DEC - $e['DEC'];
         $OP_TOTAL = $G_TOTAL - $e['TOTAL'];
 
-        $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([14], $this->YEAR, $this->LOCATION_ID, false);
-        $ex = $this->SetData($otherExpense, "", true);
+        $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([14], $this->YEAR, $this->LOCATION_ID, false, $this->isRunning, $this->isFocus);
+        $ex = $this->SetData($otherExpense, "", true, false);
 
         // NET profit
         $NET_JAN = $OP_JAN + $i['JAN'] - $ex['JAN'];

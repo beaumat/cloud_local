@@ -41,7 +41,7 @@ class BalanceSheetDateRange extends Component
         $l[] = $this->SetData($liabilityList, 'Liabilities');
         $TOTAL = $a[0]['TOTAL'] - $l[0]['TOTAL'];
 
-    
+
         $this->dataList[] = $this->getInsert(
             0,
             'Net Assets ',
@@ -52,14 +52,32 @@ class BalanceSheetDateRange extends Component
     }
     private function equitySide()
     {
-        $equityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByDateRange([9], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
-    
-        $e = $this->SetData($equityList, '');
-     
- $dataIS = $this->getIncomeStatement();
 
+        
+
+        $this->dataList[] = $this->getInsert(
+            0,
+            'Equity ',
+            'grand',
+            ''
+        );
+
+        $equityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByDateRange([9], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
+
+        $e = $this->SetData($equityList, '', false);
+
+        $dataIS = $this->getIncomeStatement();
+
+        $TOTAL = (float) $e['TOTAL'] + $dataIS['TOTAL'];
+
+        $this->dataList[] = $this->getInsert(
+            0,
+            'Total Equity ',
+            'grand',
+            $TOTAL != 0 ? $this->numberServices->AcctFormat($TOTAL) : '-'
+        );
     }
-    private function SetData($list, string $title, bool $notToDisplay = false): array
+    private function SetData($list, string $title, bool $notToDisplay = false,): array
     {
 
         $TOTAL = 0;
@@ -104,7 +122,7 @@ class BalanceSheetDateRange extends Component
                 }
                 $TMP_NAME = $data->TYPE_NAME;
             }
-            if (!$notToDisplay) {
+            if (!$notToDisplay ) {
                 $this->dataList[] = $this->getInsert(
                     $data->ID,
                     '   ' . $data->ACCOUNT_NAME,
@@ -183,13 +201,9 @@ class BalanceSheetDateRange extends Component
         $this->dataList[] = $this->getInsert(
             0,
             'Current Year Earnings ',
-            'grand',
-
+            '',
             $NET_TOTAL != 0 ? $this->numberServices->AcctFormat($NET_TOTAL) : '-'
         );
-
-
-
 
         return [
             'TOTAL' => $NET_TOTAL
@@ -209,10 +223,7 @@ class BalanceSheetDateRange extends Component
             'ACCOUNT_ID' => $ID,
             'ACCOUNT_NAME' => $NAME,
             'ACCOUNT_TYPE' => $TYPE,
-
             'TOTAL' => $TOTAL
-
-
         ];
 
     }
