@@ -11,7 +11,9 @@ use Livewire\Component;
 class IncomeStatementDateRange extends Component
 {
 
-
+    public string $DATE_FROM;
+    public string $DATE_TO;
+    public string $LOCATION_ID;
     public $dataList = [];
     private $financialStatementServices;
     private $numberServices;
@@ -24,111 +26,102 @@ class IncomeStatementDateRange extends Component
     public function generate($result)
     {
         $this->dataList = [];
-        $DATE_FROM = $result['DATE_FROM'];
-        $DATE_TO = $result['DATE_TO'];
-        $LOCATION_ID = $result['LOCATION_ID'];
+        $this->DATE_FROM = $result['DATE_FROM'];
+        $this->DATE_TO = $result['DATE_TO'];
+        $this->LOCATION_ID = $result['LOCATION_ID'];
 
-        $incomeList = $this->financialStatementServices->IncomeAccount($DATE_FROM, $DATE_TO, $LOCATION_ID);
-        $totalIncome = $this->SetParameter($incomeList, 'REVENUE');
-        $this->SetTotal('TOTAL REVENUE', $totalIncome);
+        $revenueList = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([10], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
+        $r = $this->SetData($revenueList, "Trading Income");
 
-        $cogsList = $this->financialStatementServices->CogsAccount($DATE_FROM, $DATE_TO, $LOCATION_ID);
-        $totalCogs = $this->SetParameter($cogsList, 'COGS');
-        $this->SetTotal('TOTAL COGS', $totalCogs);
+        $costList = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([11], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, false);
+        $c = $this->SetData($costList, "Cost of Sales");
+        $G_TOTAL = $r['TOTAL'] - $c['TOTAL'];
 
-        $totalGross = $totalIncome - $totalCogs;
-        $this->SetPrimaryTotal('GROSS PROFIT', $totalGross);
+        $this->dataList[] = $this->getInsert(
+            0,
+            'Gross Profit ',
+            'grand',
+            $G_TOTAL != 0 ? $this->numberServices->AcctFormat($G_TOTAL) : '-'
+        );
+        $otherincome = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([13], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
+        $i = $this->SetData($otherincome, "");
 
-        $expensesList = $this->financialStatementServices->ExpensesAccount($DATE_FROM, $DATE_TO, $LOCATION_ID);
-        $totalExpenses = $this->SetParameter($expensesList, 'EXPENSES');
-        $this->SetTotal('TOTAL EXPENSES', $totalExpenses);
+        $expense = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([12], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, false);
+        $e = $this->SetData($expense, "Operating Expenses");
+        // operating profit
+        $OP_TOTAL = $G_TOTAL - $e['TOTAL'];
 
-        $opIncome = $totalGross - $totalExpenses;
-        $this->SetPrimaryTotal('OPERATING INCOME', $opIncome);
+        $this->dataList[] = $this->getInsert( 0, 'Operating Proft ', 'grand', $OP_TOTAL != 0 ? $this->numberServices->AcctFormat($OP_TOTAL) : '-' );
 
-        $otherIncomeList = $this->financialStatementServices->OtherIncomeAccount($DATE_FROM, $DATE_TO, $LOCATION_ID);
-        $totalOtherIncome = $this->SetParameter($otherIncomeList, 'OTHER INCOME');
-        $this->SetTotal('TOTAL OTHER INCOME', $totalOtherIncome);
 
-        $otherExpensesList = $this->financialStatementServices->OtherExpensesAccount($DATE_FROM, $DATE_TO, $LOCATION_ID);
-        $totalOtherExpenses = $this->SetParameter($otherExpensesList, 'OTHER EXPENSES');
-        $this->SetTotal('TOTAL OTHER EXPENSES', $totalOtherExpenses);
 
-        $net_other_income = $totalOtherIncome - $totalOtherExpenses;
-        $this->SetPrimaryTotal('NET OTHER INCOME', $net_other_income);
+        $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([14], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
+        $ex = $this->SetData($otherExpense, "");
 
-        $netIncome = $opIncome + $net_other_income;
-        $this->SetTotal('NET INCOME', $netIncome);
+        // NET profit
+        $NET_TOTAL = $OP_TOTAL + $i['TOTAL'] - $ex['TOTAL'];
+
+        $this->dataList[] = $this->getInsert( 0, 'Net Proft ', 'grand', $NET_TOTAL != 0 ? $this->numberServices->AcctFormat($NET_TOTAL) : '-' );
+
     }
-    private function SetParameter($dataList = [], string $TYPE): float
+
+    private function getInsert(int $ID, string $NAME, string $TYPE, string $TOTAL = ''): array
     {
-        $TYPE_TITLE = '';
 
-        $total = 0;
+        return [
+            'ACCOUNT_ID' => $ID,
+            'ACCOUNT_NAME' => $NAME,
+            'ACCOUNT_TYPE' => $TYPE,
+            'TOTAL' => $TOTAL
+        ];
 
-        foreach ($dataList as $list) {
-            if ($TYPE_TITLE == '') {
-                $TYPE_TITLE = $TYPE;
-                $this->dataList[] = [
-                    'TYPE' => 'H',
-                    'ACCOUNT' => $TYPE_TITLE,
-                    'AMOUNT' => '',
-                    'TOTAL' => ''
-                ];
+    }
+    private function SetData($list, string $title): array
+    {
+
+        $TOTAL = 0;
+        $T_TOTAL = 0;
+
+        $TMP = -1;
+        $TMP_NAME = "";
+        if ($title <> "") {
+            $this->dataList[] = $this->getInsert(0, $title, 'grand');
+        }
+        foreach ($list as $data) {
+            $TOTAL += $data->TOTAL;
+
+            if ($TMP == -1) {
+                $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
+                $TMP_NAME = $data->TYPE_NAME;
+            } elseif ($TMP <> $data->TYPE) {
+                $this->dataList[] = $this->getInsert(0, ' Total ' . $TMP_NAME, 'total', $T_TOTAL != 0 ? $this->numberServices->AcctFormat($T_TOTAL) : '-');
+
+                //CLEAR
+                $T_TOTAL = 0;
+                $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
+                $TMP_NAME = $data->TYPE_NAME;
             }
+            $this->dataList[] = $this->getInsert($data->ID, '   ' . $data->ACCOUNT_NAME, $data->TYPE_NAME, $data->TOTAL != 0 ? $this->numberServices->AcctFormat($data->TOTAL) : '-');
 
-            $this->dataList[] = [
-                'TYPE' => $TYPE,
-                'ACCOUNT' => $list->ACCOUNT_TITLE,
-                'AMOUNT' => $this->numberServices->Fixed($list->AMOUNT),
-                'TOTAL' => ''
-            ];
+            $T_TOTAL += $data->TOTAL;
+            $TMP = (int) $data->TYPE;
 
-            $total = $total + $list->AMOUNT ?? 0;
+        }
+        if ($TMP_NAME <> '') {
+            $this->dataList[] = $this->getInsert(0, ' Total ' . $TMP_NAME, 'total', $T_TOTAL != 0 ? $this->numberServices->AcctFormat($T_TOTAL) : '-');
+        }
+        //CLEAR
+        $T_TOTAL = 0;
+
+        if ($title <> "") {
+            $this->dataList[] = $this->getInsert(0, 'Total ' . $title, 'grand', $TOTAL != 0 ? $this->numberServices->AcctFormat($TOTAL) : '-');
         }
 
-        return $total;
-    }
-    private function SetTotal(string $TITLE, float $TOTAL)
-    {
-        if ($TOTAL == 0) {
-            return;
-        }
-
-
-        $this->dataList[] = [
-            'TYPE' => '',
-            'ACCOUNT' => '',
-            'AMOUNT' => '',
-            'TOTAL' => ''
+        // return total
+        return [
+            'TOTAL' => $TOTAL
         ];
-        $this->dataList[] = [
-            'TYPE' => 'H',
-            'ACCOUNT' => $TITLE,
-            'AMOUNT' => '',
-            'TOTAL' => $this->numberServices->Fixed($TOTAL)
-        ];
-    }
 
-    private function SetPrimaryTotal(string $TITLE, float $TOTAL)
-    {
-        if ($TOTAL == 0) {
-            return;
-        }
-
-
-        $this->dataList[] = [
-            'TYPE' => '',
-            'ACCOUNT' => '',
-            'AMOUNT' => '',
-            'TOTAL' => ''
-        ];
-        $this->dataList[] = [
-            'TYPE' => 'P',
-            'ACCOUNT' => $TITLE,
-            'AMOUNT' => '',
-            'TOTAL' => $this->numberServices->Fixed($TOTAL)
-        ];
     }
     public function render()
     {

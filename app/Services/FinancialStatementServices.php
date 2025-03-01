@@ -122,28 +122,29 @@ class FinancialStatementServices
 
         return $result;
     }
-    public function getIncomeStatementAccountTypeByMonth(array $TYPE = [], int $YEAR, int $LOCATION_ID, bool $isCreditIncrease = false)
+    public function getIncomeStatementAccountTypeByMonth(array $TYPE = [], int $YEAR, int $LOCATION_ID, bool $isCreditIncrease = false, bool $isRunning = true)
     {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
+        $operation = $isRunning == true ? "<=" : "=";
         $result = DB::table('account_journal as aj')
             ->select([
                 'a.ID',
                 'a.NAME as ACCOUNT_NAME',
                 'a.TYPE',
                 't.DESCRIPTION as TYPE_NAME',
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 1 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as JAN"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 2 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as FEB"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 3 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as MAR"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 4 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as APR"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 5 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as MAY"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 6 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as JUN"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 7 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as JUL"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 8 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as AUG"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 9 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as SEP"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 10 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as OCT"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 11 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as NOV"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 12 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as `DEC`"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 1 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as JAN"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 2 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as FEB"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 3 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as MAR"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 4 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as APR"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 5 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as MAY"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 6 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as JUN"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 7 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as JUL"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 8 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as AUG"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 9 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as SEP"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 10 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as OCT"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 11 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as NOV"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 12 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as `DEC`"),
                 DB::raw("SUM(if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)) as TOTAL")
             ])
             ->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
@@ -153,13 +154,45 @@ class FinancialStatementServices
                 return $query->where('aj.LOCATION_ID', $LOCATION_ID);
             })
             ->whereIn('a.TYPE', $TYPE)
-            ->whereYear('aj.OBJECT_DATE', $YEAR)
+            ->when($isRunning, function ($query) use (&$YEAR) {
+                $query->whereYear('aj.OBJECT_DATE', '<=', $YEAR);
+            })
+            ->when(!$isRunning, function ($query) use (&$YEAR) {
+                $query->whereYear('aj.OBJECT_DATE', '=', $YEAR);
+            })
             ->groupBy(['a.ID', 'a.NAME', 'a.TYPE', 't.DESCRIPTION'])
             ->orderBy('a.TYPE')
             ->get();
 
         return $result;
     }
+    public function getIncomeStatementAccountTypeByDate(array $TYPE = [], string $dateFrom, string $dateTo, int $LOCATION_ID, bool $isCreditIncrease = false)
+    {
+        $debit_is = $isCreditIncrease ? 1 : 0;
+        $credit_is = $isCreditIncrease ? 0 : 1;
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'a.ID',
+                'a.NAME as ACCOUNT_NAME',
+                'a.TYPE',
+                't.DESCRIPTION as TYPE_NAME',
+                DB::raw("SUM(if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)) as TOTAL")
+            ])
+            ->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->join('account_type_map as t', 't.ID', '=', 'a.TYPE')
+            ->where('aj.AMOUNT', '>', 0)
+            ->when($LOCATION_ID > 0, function ($query) use ($LOCATION_ID) {
+                return $query->where('aj.LOCATION_ID', $LOCATION_ID);
+            })
+            ->whereIn('a.TYPE', $TYPE)
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
+            ->groupBy(['a.ID', 'a.NAME', 'a.TYPE', 't.DESCRIPTION'])
+            ->orderBy('a.TYPE')
+            ->get();
+
+        return $result;
+    }
+
     public static function getIncomeStatementAccountByIDSumArray(string $dateFrom, string $dateTo, int $LOCATION_ID, array $accountId = [], bool $isCreditIncrease = false): float
     {
         $debit_is = $isCreditIncrease ? 1 : 0;
@@ -393,28 +426,29 @@ class FinancialStatementServices
 
         return $result;
     }
-    public function getBalanceSheetAccountTypeListByMonth(array $type = [], int $YEAR, int $LOCATION_ID, bool $isCreditIncrease = false)
+    public function getBalanceSheetAccountTypeListByMonth(array $type = [], int $YEAR, int $LOCATION_ID, bool $isCreditIncrease = false, bool $isRunning = true)
     {
         $debit_is = $isCreditIncrease ? 1 : 0;
         $credit_is = $isCreditIncrease ? 0 : 1;
+        $operation = $isRunning == true ? "<=" : "=";
         $result = DB::table('account_journal as aj')
             ->select([
                 'a.ID',
                 'a.NAME as ACCOUNT_NAME',
                 'a.TYPE',
                 't.DESCRIPTION as TYPE_NAME',
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 1 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as JAN"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 2 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as FEB"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 3 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as MAR"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 4 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as APR"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 5 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as MAY"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 6 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as JUN"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 7 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as JUL"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 8 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as AUG"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 9 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as SEP"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 10 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as OCT"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 11 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as NOV"),
-                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) = 12 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as `DEC`"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 1 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as JAN"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 2 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as FEB"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 3 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as MAR"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 4 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)  ELSE 0 END) as APR"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 5 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as MAY"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 6 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as JUN"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 7 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as JUL"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 8 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as AUG"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 9 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as SEP"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 10 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as OCT"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 11 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as NOV"),
+                DB::raw("SUM(CASE WHEN MONTH(aj.OBJECT_DATE) $operation 12 THEN if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0) ELSE 0 END) as `DEC`"),
                 DB::raw("SUM(if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)) as TOTAL")
             ])
             ->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
@@ -424,14 +458,45 @@ class FinancialStatementServices
                 return $query->where('aj.LOCATION_ID', $LOCATION_ID);
             })
             ->whereIn('a.TYPE', $type)
-            ->whereYear('aj.OBJECT_DATE', $YEAR)
+            ->when($isRunning, function ($query) use (&$YEAR) {
+                $query->whereYear('aj.OBJECT_DATE', '<=', $YEAR);
+            })
+            ->when(!$isRunning, function ($query) use (&$YEAR) {
+                $query->whereYear('aj.OBJECT_DATE', '=', $YEAR);
+            })
             ->groupBy(['a.ID', 'a.NAME', 'a.TYPE', 't.DESCRIPTION'])
             ->orderBy('a.TYPE')
             ->get();
 
         return $result;
     }
+    public function getBalanceSheetAccountTypeListByDateRange(array $type = [], string $DATE_FROM, string $DATE_TO, int $LOCATION_ID, bool $isCreditIncrease = false)
+    {
+        $debit_is = $isCreditIncrease ? 1 : 0;
+        $credit_is = $isCreditIncrease ? 0 : 1;
 
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'a.ID',
+                'a.NAME as ACCOUNT_NAME',
+                'a.TYPE',
+                't.DESCRIPTION as TYPE_NAME',
+                DB::raw("SUM(if(aj.ENTRY_TYPE = " . $debit_is . ", aj.AMOUNT,0) - if (aj.ENTRY_TYPE = " . $credit_is . ", aj.AMOUNT, 0)) as TOTAL")
+            ])
+            ->join('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->join('account_type_map as t', 't.ID', '=', 'a.TYPE')
+            ->where('aj.AMOUNT', '>', 0)
+            ->when($LOCATION_ID > 0, function ($query) use ($LOCATION_ID) {
+                return $query->where('aj.LOCATION_ID', $LOCATION_ID);
+            })
+            ->whereIn('a.TYPE', $type)
+            ->whereBetween('aj.OBJECT_DATE', [$DATE_FROM, $DATE_TO])
+            ->groupBy(['a.ID', 'a.NAME', 'a.TYPE', 't.DESCRIPTION'])
+            ->orderBy('a.TYPE')
+            ->get();
+
+        return $result;
+    }
     public function getEquityRetainingEarningPrevious(string $Date, int $LOCATION_ID)
     {
     }

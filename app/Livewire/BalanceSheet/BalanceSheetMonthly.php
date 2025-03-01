@@ -75,17 +75,11 @@ class BalanceSheetMonthly extends Component
     private function equitySide()
     {
         $equityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([9], $this->YEAR, $this->LOCATION_ID, true);
-        $e = $this->SetData($equityList, 'Equity');
+        $e = $this->SetData($equityList, '');
+        $dataIS = $this->getIncomeStatement();
 
-
-        $net_income = $this->financialStatementServices->getTotalNetIncome($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
-        $this->CustomParameter('D', '', 'Net Income', $net_income);
-        $RetainingEarnings = $this->HistoryRetainingEarnings($this->DATE_FROM);
-        $this->CustomParameter('D', '', 'Retaining Earnings', $RetainingEarnings);
-        $newEquty = $RetainingEarnings + $net_income + $e[0]['TOTAL'];
-        $this->TotalParameter('HEADER', 'HEADER', 'TOTAL EQUITY', $newEquty);
     }
-    private function SetData($list, string $title): array
+    private function SetData($list, string $title, bool $notToDisplay = false): array
     {
 
 
@@ -119,7 +113,11 @@ class BalanceSheetMonthly extends Component
 
         $TMP = -1;
         $TMP_NAME = "";
-        $this->dataList[] = $this->getInsert(0, $title, 'grand');
+        if (!$notToDisplay) {
+            $this->dataList[] = $this->getInsert(0, $title, 'grand');
+        }
+
+
         foreach ($list as $data) {
 
             $JAN += $data->JAN;
@@ -140,28 +138,32 @@ class BalanceSheetMonthly extends Component
 
 
             if ($TMP == -1) {
-                $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
+                if (!$notToDisplay) {
+                    $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
+                }
+
                 $TMP_NAME = $data->TYPE_NAME;
             } elseif ($TMP <> $data->TYPE) {
-                $this->dataList[] = $this->getInsert(
-                    0,
-                    ' Total ' . $TMP_NAME,
-                    'total',
-                    $T_JAN != 0 ? $this->numberServices->AcctFormat($T_JAN) : '-',
-                    $T_FEB != 0 ? $this->numberServices->AcctFormat($T_FEB) : '-',
-                    $T_MAR != 0 ? $this->numberServices->AcctFormat($T_MAR) : '-',
-                    $T_APR != 0 ? $this->numberServices->AcctFormat($T_APR) : '-',
-                    $T_MAY != 0 ? $this->numberServices->AcctFormat($T_MAY) : '-',
-                    $T_JUN != 0 ? $this->numberServices->AcctFormat($T_JUN) : '-',
-                    $T_JUL != 0 ? $this->numberServices->AcctFormat($T_JUL) : '-',
-                    $T_AUG != 0 ? $this->numberServices->AcctFormat($T_AUG) : '-',
-                    $T_SEP != 0 ? $this->numberServices->AcctFormat($T_SEP) : '-',
-                    $T_OCT != 0 ? $this->numberServices->AcctFormat($T_OCT) : '-',
-                    $T_NOV != 0 ? $this->numberServices->AcctFormat($T_NOV) : '-',
-                    $T_DEC != 0 ? $this->numberServices->AcctFormat($T_DEC) : '-',
-                    $T_TOTAL != 0 ? $this->numberServices->AcctFormat($T_TOTAL) : '-'
-                );
-
+                if (!$notToDisplay) {
+                    $this->dataList[] = $this->getInsert(
+                        0,
+                        ' Total ' . $TMP_NAME,
+                        'total',
+                        $T_JAN != 0 ? $this->numberServices->AcctFormat($T_JAN) : '-',
+                        $T_FEB != 0 ? $this->numberServices->AcctFormat($T_FEB) : '-',
+                        $T_MAR != 0 ? $this->numberServices->AcctFormat($T_MAR) : '-',
+                        $T_APR != 0 ? $this->numberServices->AcctFormat($T_APR) : '-',
+                        $T_MAY != 0 ? $this->numberServices->AcctFormat($T_MAY) : '-',
+                        $T_JUN != 0 ? $this->numberServices->AcctFormat($T_JUN) : '-',
+                        $T_JUL != 0 ? $this->numberServices->AcctFormat($T_JUL) : '-',
+                        $T_AUG != 0 ? $this->numberServices->AcctFormat($T_AUG) : '-',
+                        $T_SEP != 0 ? $this->numberServices->AcctFormat($T_SEP) : '-',
+                        $T_OCT != 0 ? $this->numberServices->AcctFormat($T_OCT) : '-',
+                        $T_NOV != 0 ? $this->numberServices->AcctFormat($T_NOV) : '-',
+                        $T_DEC != 0 ? $this->numberServices->AcctFormat($T_DEC) : '-',
+                        $T_TOTAL != 0 ? $this->numberServices->AcctFormat($T_TOTAL) : '-'
+                    );
+                }
 
                 //CLEAR
                 $T_JAN = 0;
@@ -179,29 +181,31 @@ class BalanceSheetMonthly extends Component
                 $T_TOTAL = 0;
 
 
-
-                $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
+                if (!$notToDisplay) {
+                    $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
+                }
                 $TMP_NAME = $data->TYPE_NAME;
             }
-            $this->dataList[] = $this->getInsert(
-                $data->ID,
-                '   ' . $data->ACCOUNT_NAME,
-                $data->TYPE_NAME,
-                $data->JAN != 0 ? $this->numberServices->AcctFormat($data->JAN) : '-',
-                $data->FEB != 0 ? $this->numberServices->AcctFormat($data->FEB) : '-',
-                $data->MAR != 0 ? $this->numberServices->AcctFormat($data->MAR) : '-',
-                $data->APR != 0 ? $this->numberServices->AcctFormat($data->APR) : '-',
-                $data->MAY != 0 ? $this->numberServices->AcctFormat($data->MAY) : '-',
-                $data->JUN != 0 ? $this->numberServices->AcctFormat($data->JUN) : '-',
-                $data->JUL != 0 ? $this->numberServices->AcctFormat($data->JUL) : '-',
-                $data->AUG != 0 ? $this->numberServices->AcctFormat($data->AUG) : '-',
-                $data->SEP != 0 ? $this->numberServices->AcctFormat($data->SEP) : '-',
-                $data->OCT != 0 ? $this->numberServices->AcctFormat($data->OCT) : '-',
-                $data->NOV != 0 ? $this->numberServices->AcctFormat($data->NOV) : '-',
-                $data->DEC != 0 ? $this->numberServices->AcctFormat($data->DEC) : '-',
-                $data->TOTAL != 0 ? $this->numberServices->AcctFormat($data->TOTAL) : '-'
-            );
-
+            if (!$notToDisplay) {
+                $this->dataList[] = $this->getInsert(
+                    $data->ID,
+                    '   ' . $data->ACCOUNT_NAME,
+                    $data->TYPE_NAME,
+                    $data->JAN != 0 ? $this->numberServices->AcctFormat($data->JAN) : '-',
+                    $data->FEB != 0 ? $this->numberServices->AcctFormat($data->FEB) : '-',
+                    $data->MAR != 0 ? $this->numberServices->AcctFormat($data->MAR) : '-',
+                    $data->APR != 0 ? $this->numberServices->AcctFormat($data->APR) : '-',
+                    $data->MAY != 0 ? $this->numberServices->AcctFormat($data->MAY) : '-',
+                    $data->JUN != 0 ? $this->numberServices->AcctFormat($data->JUN) : '-',
+                    $data->JUL != 0 ? $this->numberServices->AcctFormat($data->JUL) : '-',
+                    $data->AUG != 0 ? $this->numberServices->AcctFormat($data->AUG) : '-',
+                    $data->SEP != 0 ? $this->numberServices->AcctFormat($data->SEP) : '-',
+                    $data->OCT != 0 ? $this->numberServices->AcctFormat($data->OCT) : '-',
+                    $data->NOV != 0 ? $this->numberServices->AcctFormat($data->NOV) : '-',
+                    $data->DEC != 0 ? $this->numberServices->AcctFormat($data->DEC) : '-',
+                    $data->TOTAL != 0 ? $this->numberServices->AcctFormat($data->TOTAL) : '-'
+                );
+            }
 
             $T_JAN += $data->JAN;
             $T_FEB += $data->FEB;
@@ -221,24 +225,26 @@ class BalanceSheetMonthly extends Component
 
         }
         if ($TMP_NAME <> '') {
-            $this->dataList[] = $this->getInsert(
-                0,
-                ' Total ' . $TMP_NAME,
-                'total',
-                $T_JAN != 0 ? $this->numberServices->AcctFormat($T_JAN) : '-',
-                $T_FEB != 0 ? $this->numberServices->AcctFormat($T_FEB) : '-',
-                $T_MAR != 0 ? $this->numberServices->AcctFormat($T_MAR) : '-',
-                $T_APR != 0 ? $this->numberServices->AcctFormat($T_APR) : '-',
-                $T_MAY != 0 ? $this->numberServices->AcctFormat($T_MAY) : '-',
-                $T_JUN != 0 ? $this->numberServices->AcctFormat($T_JUN) : '-',
-                $T_JUL != 0 ? $this->numberServices->AcctFormat($T_JUL) : '-',
-                $T_AUG != 0 ? $this->numberServices->AcctFormat($T_AUG) : '-',
-                $T_SEP != 0 ? $this->numberServices->AcctFormat($T_SEP) : '-',
-                $T_OCT != 0 ? $this->numberServices->AcctFormat($T_OCT) : '-',
-                $T_NOV != 0 ? $this->numberServices->AcctFormat($T_NOV) : '-',
-                $T_DEC != 0 ? $this->numberServices->AcctFormat($T_DEC) : '-',
-                $T_TOTAL != 0 ? $this->numberServices->AcctFormat($T_TOTAL) : '-'
-            );
+            if (!$notToDisplay) {
+                $this->dataList[] = $this->getInsert(
+                    0,
+                    ' Total ' . $TMP_NAME,
+                    'total',
+                    $T_JAN != 0 ? $this->numberServices->AcctFormat($T_JAN) : '-',
+                    $T_FEB != 0 ? $this->numberServices->AcctFormat($T_FEB) : '-',
+                    $T_MAR != 0 ? $this->numberServices->AcctFormat($T_MAR) : '-',
+                    $T_APR != 0 ? $this->numberServices->AcctFormat($T_APR) : '-',
+                    $T_MAY != 0 ? $this->numberServices->AcctFormat($T_MAY) : '-',
+                    $T_JUN != 0 ? $this->numberServices->AcctFormat($T_JUN) : '-',
+                    $T_JUL != 0 ? $this->numberServices->AcctFormat($T_JUL) : '-',
+                    $T_AUG != 0 ? $this->numberServices->AcctFormat($T_AUG) : '-',
+                    $T_SEP != 0 ? $this->numberServices->AcctFormat($T_SEP) : '-',
+                    $T_OCT != 0 ? $this->numberServices->AcctFormat($T_OCT) : '-',
+                    $T_NOV != 0 ? $this->numberServices->AcctFormat($T_NOV) : '-',
+                    $T_DEC != 0 ? $this->numberServices->AcctFormat($T_DEC) : '-',
+                    $T_TOTAL != 0 ? $this->numberServices->AcctFormat($T_TOTAL) : '-'
+                );
+            }
         }
 
 
@@ -256,26 +262,28 @@ class BalanceSheetMonthly extends Component
         $T_NOV = 0;
         $T_DEC = 0;
         $T_TOTAL = 0;
-
-        $this->dataList[] = $this->getInsert(
-            0,
-            'Total ' . $title,
-            'grand',
-            $JAN != 0 ? $this->numberServices->AcctFormat($JAN) : '-',
-            $FEB != 0 ? $this->numberServices->AcctFormat($FEB) : '-',
-            $MAR != 0 ? $this->numberServices->AcctFormat($MAR) : '-',
-            $APR != 0 ? $this->numberServices->AcctFormat($APR) : '-',
-            $MAY != 0 ? $this->numberServices->AcctFormat($MAY) : '-',
-            $JUN != 0 ? $this->numberServices->AcctFormat($JUN) : '-',
-            $JUL != 0 ? $this->numberServices->AcctFormat($JUL) : '-',
-            $AUG != 0 ? $this->numberServices->AcctFormat($AUG) : '-',
-            $SEP != 0 ? $this->numberServices->AcctFormat($SEP) : '-',
-            $OCT != 0 ? $this->numberServices->AcctFormat($OCT) : '-',
-            $NOV != 0 ? $this->numberServices->AcctFormat($NOV) : '-',
-            $DEC != 0 ? $this->numberServices->AcctFormat($DEC) : '-',
-            $TOTAL != 0 ? $this->numberServices->AcctFormat($TOTAL) : '-'
-        );
-
+        if ($title <> '') {
+            if (!$notToDisplay) {
+                $this->dataList[] = $this->getInsert(
+                    0,
+                    'Total ' . $title,
+                    'grand',
+                    $JAN != 0 ? $this->numberServices->AcctFormat($JAN) : '-',
+                    $FEB != 0 ? $this->numberServices->AcctFormat($FEB) : '-',
+                    $MAR != 0 ? $this->numberServices->AcctFormat($MAR) : '-',
+                    $APR != 0 ? $this->numberServices->AcctFormat($APR) : '-',
+                    $MAY != 0 ? $this->numberServices->AcctFormat($MAY) : '-',
+                    $JUN != 0 ? $this->numberServices->AcctFormat($JUN) : '-',
+                    $JUL != 0 ? $this->numberServices->AcctFormat($JUL) : '-',
+                    $AUG != 0 ? $this->numberServices->AcctFormat($AUG) : '-',
+                    $SEP != 0 ? $this->numberServices->AcctFormat($SEP) : '-',
+                    $OCT != 0 ? $this->numberServices->AcctFormat($OCT) : '-',
+                    $NOV != 0 ? $this->numberServices->AcctFormat($NOV) : '-',
+                    $DEC != 0 ? $this->numberServices->AcctFormat($DEC) : '-',
+                    $TOTAL != 0 ? $this->numberServices->AcctFormat($TOTAL) : '-'
+                );
+            }
+        }
         // return total
         return [
             'JAN' => $JAN,
@@ -294,38 +302,113 @@ class BalanceSheetMonthly extends Component
         ];
     }
 
-    private function CustomParameter(string $order, string $type, string $Account, float $Amount)
+    public function getIncomeStatement(): array
     {
-        if ($Amount > 0) {
+        $revenueList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([10], $this->YEAR, $this->LOCATION_ID, true);
+        $r = $this->SetData($revenueList, "Trading Income", true);
 
-            $this->dataList[] = [
-                'ORDER' => $order,
-                'TYPE' => $type,
-                'ACCOUNT' => $Account,
-                'AMOUNT' => $this->numberServices->Fixed($Amount)
-            ];
-        }
-    }
-    private function HeaderParameter(string $order, string $type, string $Account)
-    {
-        $this->dataList[] = [
-            'ORDER' => $order,
-            'TYPE' => $type,
-            'ACCOUNT' => $Account,
-            'AMOUNT' => ''
+        $costList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([11], $this->YEAR, $this->LOCATION_ID, false);
+        $c = $this->SetData($costList, "Cost of Sales", true);
+
+        $G_JAN = $r['JAN'] - $c['JAN'];
+        $G_FEB = $r['FEB'] - $c['FEB'];
+        $G_MAR = $r['MAR'] - $c['MAR'];
+        $G_APR = $r['APR'] - $c['APR'];
+        $G_MAY = $r['MAY'] - $c['MAY'];
+        $G_JUN = $r['JUN'] - $c['JUN'];
+        $G_JUL = $r['JUL'] - $c['JUL'];
+        $G_AUG = $r['AUG'] - $c['AUG'];
+        $G_SEP = $r['SEP'] - $c['SEP'];
+        $G_OCT = $r['OCT'] - $c['OCT'];
+        $G_NOV = $r['NOV'] - $c['NOV'];
+        $G_DEC = $r['DEC'] - $c['DEC'];
+        $G_TOTAL = $r['TOTAL'] - $c['TOTAL'];
+
+        $otherincome = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([13], $this->YEAR, $this->LOCATION_ID, true);
+        $i = $this->SetData($otherincome, "", true);
+
+        $expense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([12], $this->YEAR, $this->LOCATION_ID, false);
+        $e = $this->SetData($expense, "Operating Expenses", true);
+        // operating profit
+        $OP_JAN = $G_JAN - $e['JAN'];
+        $OP_FEB = $G_FEB - $e['FEB'];
+        $OP_MAR = $G_MAR - $e['MAR'];
+        $OP_APR = $G_APR - $e['APR'];
+        $OP_MAY = $G_MAY - $e['MAY'];
+        $OP_JUN = $G_JUN - $e['JUN'];
+        $OP_JUL = $G_JUL - $e['JUL'];
+        $OP_AUG = $G_AUG - $e['AUG'];
+        $OP_SEP = $G_SEP - $e['SEP'];
+        $OP_OCT = $G_OCT - $e['OCT'];
+        $OP_NOV = $G_NOV - $e['NOV'];
+        $OP_DEC = $G_DEC - $e['DEC'];
+        $OP_TOTAL = $G_TOTAL - $e['TOTAL'];
+
+        $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([14], $this->YEAR, $this->LOCATION_ID, true);
+        $ex = $this->SetData($otherExpense, "", true);
+
+        // NET profit
+        $NET_JAN = $OP_JAN + $i['JAN'] - $ex['JAN'];
+        $NET_FEB = $OP_FEB + $i['FEB'] - $ex['FEB'];
+        $NET_MAR = $OP_MAR + $i['MAR'] - $ex['MAR'];
+        $NET_APR = $OP_APR + $i['APR'] - $ex['APR'];
+        $NET_MAY = $OP_MAY + $i['MAY'] - $ex['MAY'];
+        $NET_JUN = $OP_JUN + $i['JUN'] - $ex['JUN'];
+        $NET_JUL = $OP_JUL + $i['JUL'] - $ex['JUL'];
+        $NET_AUG = $OP_JUL + $i['AUG'] - $ex['AUG'];
+        $NET_SEP = $OP_SEP + $i['SEP'] - $ex['SEP'];
+        $NET_OCT = $OP_OCT + $i['OCT'] - $ex['OCT'];
+        $NET_NOV = $OP_NOV + $i['NOV'] - $ex['NOV'];
+        $NET_DEC = $OP_DEC + $i['DEC'] - $ex['DEC'];
+        $NET_TOTAL = $OP_TOTAL + $i['TOTAL'] - $ex['TOTAL'];
+
+
+        // MUST BE
+        $this->dataList[] = $this->getInsert(
+            0,
+            'Current Year Earnings ',
+            'grand',
+            $NET_JAN != 0 ? $this->numberServices->AcctFormat($NET_JAN) : '-',
+            $NET_FEB != 0 ? $this->numberServices->AcctFormat($NET_FEB) : '-',
+            $NET_MAR != 0 ? $this->numberServices->AcctFormat($NET_MAR) : '-',
+            $NET_APR != 0 ? $this->numberServices->AcctFormat($NET_APR) : '-',
+            $NET_MAY != 0 ? $this->numberServices->AcctFormat($NET_MAY) : '-',
+            $NET_JUN != 0 ? $this->numberServices->AcctFormat($NET_JUN) : '-',
+            $NET_JUL != 0 ? $this->numberServices->AcctFormat($NET_JUL) : '-',
+            $NET_AUG != 0 ? $this->numberServices->AcctFormat($NET_AUG) : '-',
+            $NET_SEP != 0 ? $this->numberServices->AcctFormat($NET_SEP) : '-',
+            $NET_OCT != 0 ? $this->numberServices->AcctFormat($NET_OCT) : '-',
+            $NET_NOV != 0 ? $this->numberServices->AcctFormat($NET_NOV) : '-',
+            $NET_DEC != 0 ? $this->numberServices->AcctFormat($NET_DEC) : '-',
+            $NET_TOTAL != 0 ? $this->numberServices->AcctFormat($NET_TOTAL) : '-'
+        );
+
+
+
+
+        return [
+            'JAN' => $NET_JAN,
+            'FEB' => $NET_FEB,
+            'MAR' => $NET_MAR,
+            'APR' => $NET_APR,
+            'MAY' => $NET_MAY,
+            'JUN' => $NET_JUN,
+            'JUL' => $NET_JUL,
+            'AUG' => $NET_AUG,
+            'SEP' => $NET_SEP,
+            'OCT' => $NET_OCT,
+            'NOV' => $NET_NOV,
+            'DEC' => $NET_DEC,
+            'TOTAL' => $NET_TOTAL
         ];
     }
-    private function TotalParameter(string $order, string $type, string $Account, float $Amount)
+
+    public function getIncomeStatementLastRange()
     {
+        $LASTYEAR = $this->YEAR - 1;
 
-
-        $this->dataList[] = [
-            'ORDER' => $order,
-            'TYPE' => $type,
-            'ACCOUNT' => $Account,
-            'AMOUNT' => $this->numberServices->Fixed($Amount)
-        ];
     }
+
     private function getInsert(int $ID, string $NAME, string $TYPE, string $JAN = '', string $FEB = '', string $MAR = '', string $APR = '', string $MAY = '', string $JUN = '', string $JUL = '', string $AUG = '', string $SEP = '', string $OCT = '', string $NOV = '', string $DEC = '', string $TOTAL = ''): array
     {
 

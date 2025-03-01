@@ -9,6 +9,7 @@ use App\Services\InvoiceServices;
 use App\Services\PatientPaymentServices;
 use App\Services\PaymentPeriodServices;
 use App\Services\PaymentServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use App\Services\ServiceChargeServices;
 use App\Services\TaxCreditServices;
@@ -58,6 +59,7 @@ class QuickPaidPanel extends Component
     private $patientPaymentServices;
     private $serviceChargeServices;
     private $hemoServices;
+    private $philHealthProfFeeServices;
     public function boot(
         InvoiceServices $invoiceServices,
         PaymentServices $paymentServices,
@@ -70,7 +72,8 @@ class QuickPaidPanel extends Component
         PhilHealthServices $philHealthServices,
         PatientPaymentServices $patientPaymentServices,
         ServiceChargeServices $serviceChargeServices,
-        HemoServices $hemoServices
+        HemoServices $hemoServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
     ) {
         $this->invoiceServices = $invoiceServices;
         $this->paymentServices = $paymentServices;
@@ -84,6 +87,7 @@ class QuickPaidPanel extends Component
         $this->patientPaymentServices = $patientPaymentServices;
         $this->serviceChargeServices = $serviceChargeServices;
         $this->hemoServices = $hemoServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
 
     }
 
@@ -147,7 +151,7 @@ class QuickPaidPanel extends Component
             $this->PH_CODE = $data->CODE ?? '';
             $this->PH_DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
             $this->PH_DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
-            $dataPF = $this->philHealthServices->getProfFeeFirst($data->ID);
+            $dataPF = $this->philHealthProfFeeServices->getProfFeeFirst($data->ID);
             if ($dataPF) {
                 $this->PH_DOCTOR_NAME = $dataPF->NAME ?? '';
                 $this->DOCTOR_FEE = $dataPF->FIRST_CASE ?? 0;
