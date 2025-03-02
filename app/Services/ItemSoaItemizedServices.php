@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ItemSoa;
 use App\Models\ItemSoaItemized;
+use App\Models\PhilHealth;
 use App\Models\ServiceChargesItems;
 
 class ItemSoaItemizedServices
@@ -90,6 +91,7 @@ class ItemSoaItemizedServices
 
         return $result;
     }
+
     private function getQty(string $DATE_ADMITTED, string $DATE_DISCHARGED, int $locationid, int $patientid, int $SOA_ITEM_ID)
     {
         $result = (int) ServiceChargesItems::join('item_soa_itemized as i', 'i.ITEM_ID', '=', 'service_charges_items.ITEM_ID')

@@ -23,6 +23,9 @@ class SoaItem extends Component
     public string $ITEM_NAME;
     public string $UNIT_NAME;
     public float $RATE;
+    public string $DOSAGE;
+    public string $ROUTE;
+    public string $FREQUENCY;
     public $locationList = [];
     public $TO_LOCATION_ID;
     public bool $ACTUAL_BASE;
@@ -33,6 +36,10 @@ class SoaItem extends Component
     public float $editRATE;
     public int $editLINE = 0;
     public bool $editACTUAL_BASE;
+
+    public string $editDOSAGE;
+    public string $editROUTE;
+    public string $editFREQUENCY;
     public $dataList = [];
     public $search;
     public $typeList = [];
@@ -100,7 +107,10 @@ class SoaItem extends Component
                 $this->ITEM_NAME,
                 $this->UNIT_NAME,
                 $this->RATE,
-                $this->ACTUAL_BASE
+                $this->ACTUAL_BASE,
+                $this->DOSAGE,
+                $this->ROUTE,
+                $this->FREQUENCY
             );
 
             $this->CleanAdd();
@@ -124,6 +134,9 @@ class SoaItem extends Component
             $this->editRATE = $data->RATE ?? 0;
             $this->editACTUAL_BASE = $data->ACTUAL_BASE ?? false;
             $this->editLINE = $data->LINE ?? 0;
+            $this->editDOSAGE = $data->DOSAGE ?? '';
+            $this->editROUTE = $data->ROUTE ?? '';
+            $this->editFREQUENCY = $data->FREQUENCTY ?? '';
         }
     }
     public function Update()
@@ -154,7 +167,10 @@ class SoaItem extends Component
                 $this->editITEM_NAME,
                 $this->editUNIT_NAME,
                 $this->editRATE,
-                $this->editACTUAL_BASE
+                $this->editACTUAL_BASE,
+                $this->editDOSAGE,
+                $this->editROUTE,
+                $this->editFREQUENCY
             );
             $this->Canceled();
         } catch (\Exception $e) {

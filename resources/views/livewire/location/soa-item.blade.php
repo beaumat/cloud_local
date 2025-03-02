@@ -48,11 +48,14 @@
 
                                         <th class="col-2">Type</th>
                                         <th class="col-1">Line #</th>
-                                        <th class="col-3">Item </th>
-                                        <th class="col-2">Unit </th>
+                                        <th class="col-2">Item </th>
+                                        <th class="col-1">Unit </th>
                                         <th class="col-1">Rate </th>
+                                        <th class="col-1">Dosage</th>
+                                        <th class="col-1">Route</th>
+                                        <th class="col-1">Frequency</th>
                                         <th class="col-1 text-center">Actual Base</th>
-                                        <th class="col-1 text-center">Action</th>
+                                        <th class="col-2 text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -108,6 +111,35 @@
                                                     {{ number_format($list->RATE, 2) }}
                                                 @endif
                                             </td>
+
+
+                                            <td>
+                                                @if ($list->ID == $editid)
+                                                    <input name="editDOSAGE" type="text" class="w-100"
+                                                        wire:model='editDOSAGE' />
+                                                @else
+                                                    {{ $list->DOSAGE }}
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                @if ($list->ID == $editid)
+                                                    <input name="editROUTE" type="text" class="w-100"
+                                                        wire:model='editROUTE' />
+                                                @else
+                                                    {{ $list->ROUTE }}
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                @if ($list->ID == $editid)
+                                                    <input name="editFREQUENCY" type="text" class="w-100"
+                                                        wire:model='editFREQUENCY' />
+                                                @else
+                                                    {{ $list->FREQUENCY }}
+                                                @endif
+                                            </td>
+
 
                                             <td class="text-center">
                                                 @if ($list->ID == $editid)
@@ -192,6 +224,17 @@
                                             <td>
                                                 <input step="0.01" type="number" class="w-100"
                                                     wire:model='RATE' />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="w-100" wire:model='DOSAGE' />
+                                            </td>
+
+                                            <td>
+                                                <input type="text" class="w-100" wire:model='ROUTE' />
+                                            </td>
+
+                                            <td>
+                                                <input type="text" class="w-100" wire:model='FREQUENCY' />
                                             </td>
                                             <td class="text-center">
                                                 <input type="checkbox" class="check-input mt-2"

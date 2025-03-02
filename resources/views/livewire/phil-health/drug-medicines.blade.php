@@ -154,9 +154,13 @@
                                     aria-hidden="true"></i> </button> </td>
                     </tr>
                 </form>
-              <tr>
-                <td>  <button class="btn btn-xs btn-info" wire:click='AutoFillUp()'>Auto Set</button></td>
-              </tr>
+                @if ($isItemized)
+                    @if (!$exists)
+                        <tr>
+                            <td> <button class="btn btn-xs btn-info" wire:click='AutoFillUp()' wire:confirm='Are you sure?'>Auto Set</button></td>
+                        </tr>
+                    @endif
+                @endif
             </tbody>
         </table>
     </div>

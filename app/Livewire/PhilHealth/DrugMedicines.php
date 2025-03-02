@@ -2,6 +2,10 @@
 
 namespace App\Livewire\PhilHealth;
 
+use App\Services\HemoServices;
+use App\Services\ItemSoaItemizedServices;
+use App\Services\ItemSoaServices;
+use App\Services\LocationServices;
 use App\Services\PhilhealthDrugsMedicineServices;
 use App\Services\PhilHealthServices;
 use Livewire\Attributes\Reactive;
@@ -10,10 +14,14 @@ use Livewire\Component;
 class DrugMedicines extends Component
 {
 
-    public $dataList = [];
     public $ID = null;
     #[Reactive]
     public int $PHILHEALTH_ID;
+    public int $LOCATION_ID;
+    public string $DATE_ADMITTED;
+    public string $DATE_DISCHARGED;
+    public int $CONTACT_ID;
+    public $dataList = [];
     public string $GENERIC_NAME;
     public float $QUANTITY;
     public string $DOSSAGE;
@@ -26,15 +34,50 @@ class DrugMedicines extends Component
     public string $CONT_ROUTE;
     public string $CONT_FREQUENCY;
     public float $CONT_TOTAL_COST;
+    public bool $exists = false;
+    public bool $isItemized = false;
+
     private $philhealthDrugsMedicineServices;
-    public function boot(PhilhealthDrugsMedicineServices $philhealthDrugsMedicineServices)
-    {
+    private $locationServices;
+    private $philHealthServices;
+    private $itemSoaItemizedServices;
+    private $itemSoaServices;
+    private $hemoServices;
+    public function boot(
+        PhilhealthDrugsMedicineServices $philhealthDrugsMedicineServices,
+        LocationServices $locationServices,
+        PhilHealthServices $philHealthServices,
+        ItemSoaServices $itemSoaServices,
+        ItemSoaItemizedServices $itemSoaItemizedServices,
+        HemoServices $hemoServices
+    ) {
         $this->philhealthDrugsMedicineServices = $philhealthDrugsMedicineServices;
+        $this->locationServices = $locationServices;
+        $this->philHealthServices = $philHealthServices;
+        $this->itemSoaServices = $itemSoaServices;
+        $this->itemSoaItemizedServices = $itemSoaItemizedServices;
+        $this->hemoServices = $hemoServices;
     }
     public function mount()
     {
+
         $this->clearField();
         $this->canceled();
+
+    }
+    private function GetAutoAllowed()
+    {
+        $this->exists = $this->philhealthDrugsMedicineServices->drugMedicineAlreadyEntry($this->PHILHEALTH_ID);
+        $data = $this->philHealthServices->get($this->PHILHEALTH_ID);
+        if ($data) {
+            $this->LOCATION_ID = $data->LOCATION_ID;
+            $this->DATE_ADMITTED = $data->DATE_ADMITTED;
+            $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
+            $this->CONTACT_ID = $data->CONTACT_ID;
+
+            $this->isItemized = $this->locationServices->isITEMIZED($this->LOCATION_ID);
+
+        }
     }
     private function clearField()
     {
@@ -50,6 +93,7 @@ class DrugMedicines extends Component
         $this->CONT_ROUTE = '';
         $this->CONT_FREQUENCY = '';
         $this->CONT_TOTAL_COST = 0;
+        $this->GetAutoAllowed();
     }
     public function save()
     {
@@ -149,9 +193,61 @@ class DrugMedicines extends Component
     }
     public function AutoFillUp()
     {
+        $exists = $this->philhealthDrugsMedicineServices->drugMedicineAlreadyEntry($this->PHILHEALTH_ID);
+        if ($exists) {
+            session()->flash('error', 'data already entry.');
+            return;
+        }
+
+        $dateList = [];
+        $qty = 0;
+        $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
+        foreach ($dataList as $list) {
+            $dateList[] = $list->DATE;
+            $qty++;
+        }
+
+
+        $itemList = $this->itemSoaServices->GetMedicineList($this->LOCATION_ID);
+        foreach ($itemList as $list) {
+
+            if ($list->ACTUAL_BASE) {
+                $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual(
+                    $dateList,
+                    $this->LOCATION_ID,
+                    $this->CONTACT_ID,
+                    $list->ID,
+                );
+                $AMOUNT = $defult_Qty * $list->RATE ?? 0;
+
+            } else {
+                $defult_Qty = $qty;
+                $AMOUNT = $qty * $list->RATE ?? 0;
+            }
+
+            if ($AMOUNT > 0) {
+                $this->philhealthDrugsMedicineServices->DrugMedicineStore(
+                    $this->PHILHEALTH_ID,
+                    $list->ITEM_NAME,
+                    $defult_Qty,
+                    $list->DOSAGE ?? '',
+                    $list->ROUTE ?? '',
+                    $list->FREQUENCY ?? '',
+                    $AMOUNT,
+                    "",
+                    0,
+                    "",
+                    "",
+                    "",
+                    0,
+                );
+            }
 
 
 
+
+        }
+        $this->clearField();
     }
     public function render()
     {

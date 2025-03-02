@@ -64,6 +64,10 @@ class LocationServices
     {
         return (bool) Locations::where('ID', '=', $ID)->exists();
     }
+    public function isITEMIZED(int $ID): bool
+    {
+        return (bool) Locations::where('ID', '=', $ID)->where('ITEMIZED_BASE', '=', true)->exists();
+    }
     public function Store(
         string $NAME,
         bool $INACTIVE,

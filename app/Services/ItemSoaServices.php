@@ -33,7 +33,7 @@ class ItemSoaServices
     {
         return (int) ItemSoa::where('TYPE', '=', $TYPE)->where('LOCATION_ID', '=', $LOCATION_ID)->max('LINE') + 1;
     }
-    public function Store(int $LOCATION_ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false)
+    public function Store(int $LOCATION_ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false, string $DOSAGE, string $ROUTE, string $FREQUENCY)
     {
         $ID = $this->object->ObjectNextID('SOA_ITEM');
 
@@ -48,13 +48,16 @@ class ItemSoaServices
                 'ITEM_NAME' => $ITEM_NAME,
                 'UNIT_NAME' => $UNIT_NAME,
                 'RATE' => $RATE,
-                'ACTUAL_BASE' => $ACTUAL_BASE
+                'ACTUAL_BASE' => $ACTUAL_BASE,
+                'DOSAGE' => $DOSAGE,
+                'ROUTE' => $ROUTE,
+                'FREQUENCY' => $FREQUENCY
             ]
         );
 
         return $ID;
     }
-    public function Update(int $ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false)
+    public function Update(int $ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false, string $DOSAGE, string $ROUTE, string $FREQUENCY)
     {
         ItemSoa::where('ID', '=', $ID)
             ->update(
@@ -65,7 +68,10 @@ class ItemSoaServices
                     'ITEM_NAME' => $ITEM_NAME,
                     'UNIT_NAME' => $UNIT_NAME,
                     'RATE' => $RATE,
-                    'ACTUAL_BASE' => $ACTUAL_BASE
+                    'ACTUAL_BASE' => $ACTUAL_BASE,
+                    'DOSAGE' => $DOSAGE,
+                    'ROUTE' => $ROUTE,
+                    'FREQUENCY' => $FREQUENCY
                 ]
             );
     }
@@ -86,7 +92,11 @@ class ItemSoaServices
                 'soa_item.UNIT_NAME',
                 'soa_item.RATE',
                 'soa_item.ACTUAL_BASE',
-                'soa_item.LINE'
+                'soa_item.LINE',
+                'soa_item.DOSAGE',
+                'soa_item.ROUTE',
+                'soa_item.FREQUENCY'
+
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -123,6 +133,33 @@ class ItemSoaServices
             ->get();
 
         return $result;
+    }
+
+    public function GetMedicineList(int $LOCATION_ID)
+    {
+        $result = ItemSoa::query()
+            ->select([
+                'soa_item.ID',
+                'soa_item.TYPE',
+                'soa_item_type.DESCRIPTION as TYPE_NAME',
+                'soa_item.ITEM_NAME',
+                'soa_item.UNIT_NAME',
+                'soa_item.RATE',
+                'soa_item.ACTUAL_BASE',
+                'soa_item.DOSAGE',
+                'soa_item.ROUTE',
+                'soa_item.FREQUENCY'
+
+            ])
+            ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('TYPE', '=', 1)
+            ->orderBy('TYPE', 'asc')
+            ->orderBy('LINE', 'asc')
+            ->get();
+
+        return $result;
+
     }
     public function getItemByCategory(int $LOCATION_ID, int $TYPE)
     {
@@ -165,7 +202,7 @@ class ItemSoaServices
 
         $fromDataList = ItemSoa::where('LOCATION_ID', '=', $FORM_LOCATION_ID)->get();
         foreach ($fromDataList as $list) {
-            $NEW_ID = $this->Store($TO_LOCATION_ID, $list->TYPE, $list->LINE, $list->ITEM_NAME, $list->UNIT_NAME, $list->RATE, $list->ACTUAL_BASE);
+            $NEW_ID = $this->Store($TO_LOCATION_ID, $list->TYPE, $list->LINE, $list->ITEM_NAME, $list->UNIT_NAME, $list->RATE, $list->ACTUAL_BASE, $list->DOSAGE, $list->ROUTE, $list->FREQUENCY);
             if ($list->ACTUAL_BASE) {
                 $dataItem = $this->itemSoaItemizedServices->GetList($list->ID);
                 foreach ($dataItem as $itemList) {

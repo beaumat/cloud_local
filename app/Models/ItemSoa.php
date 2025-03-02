@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ItemSoa extends Model
-{   
+{
     use HasFactory;
 
     protected $table = 'soa_item';
@@ -20,6 +20,9 @@ class ItemSoa extends Model
         'ITEM_NAME',
         'UNIT_NAME',
         'RATE',
-        'ACTUAL_BASE'
+        'ACTUAL_BASE',
+        'DOSAGE',
+        'ROUTE',
+        'FREQUENCY'
     ];
 }

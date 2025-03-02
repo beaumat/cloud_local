@@ -61,7 +61,10 @@ class PhilhealthDrugsMedicineServices
     {
         PhilhealthDrugsMedicines::where('ID', $ID, )->delete();
     }
-
+    public function drugMedicineAlreadyEntry(int $PHILHEALTH_ID): bool
+    {
+        return PhilhealthDrugsMedicines::where('PHILHEALTH_ID', '=', $PHILHEALTH_ID)->exists();
+    }
     public function DrugMedicineList(int $PHILHEALTH_ID): object
     {
         return PhilhealthDrugsMedicines::query()
@@ -84,6 +87,7 @@ class PhilhealthDrugsMedicineServices
             ->orderBy('ID', 'asc')
             ->get();
     }
+    
     public function GetDrugMedicine(int $ID): object
     {
         return PhilhealthDrugsMedicines::where('ID', $ID)->first();
