@@ -200,6 +200,16 @@
                                                     </a>
                                                 @endcan
                                             @endif
+                                        @else
+                                            @if ($ID > 0)
+                                                @if ($IS_DOCTOR)
+                                                    <a target="_BLANK"
+                                                        href="{{ route('vendorsbill_payment_doctor', ['id' => $ID]) }}"
+                                                        type="button" class="btn btn-sm btn-dark">
+                                                        <i class="fa fa-print" aria-hidden="true"></i> Print
+                                                    </a>
+                                                @endif
+                                            @endif
                                         @endif
                                     </div>
                                 </div>
