@@ -234,9 +234,9 @@ class AccountJournalServices
                 ->where('OBJECT_DATE', $OBJECT_DATE)
                 ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
                 ->update([
-                    'SEQUENCE_GROUP'    => $SEQUENCE_GROUP,
-                    'ENTRY_TYPE'        => $ENTRY_TYPE,
-                    'AMOUNT'            => $AMOUNT
+                    'SEQUENCE_GROUP' => $SEQUENCE_GROUP,
+                    'ENTRY_TYPE' => $ENTRY_TYPE,
+                    'AMOUNT' => $AMOUNT
                 ]);
         }
     }
@@ -260,18 +260,18 @@ class AccountJournalServices
         $ID = (int) $this->object->ObjectNextID('ACCOUNT_JOURNAL');
         AccountJournal::create([
             'ID' => $ID,
-            'PREVIOUS_ID'    => $PREVIOUS_ID > 0 ? $PREVIOUS_ID : null,
-            'SEQUENCE_NO'    => $SEQUENCE_NO,
-            'JOURNAL_NO'     => $JOURNAL_NO,
-            'ACCOUNT_ID'     => $ACCOUNT_ID,
-            'LOCATION_ID'    => $LOCATION_ID,
-            'SUBSIDIARY_ID'  => $SUBSIDIARY_ID,
+            'PREVIOUS_ID' => $PREVIOUS_ID > 0 ? $PREVIOUS_ID : null,
+            'SEQUENCE_NO' => $SEQUENCE_NO,
+            'JOURNAL_NO' => $JOURNAL_NO,
+            'ACCOUNT_ID' => $ACCOUNT_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+            'SUBSIDIARY_ID' => $SUBSIDIARY_ID,
             'SEQUENCE_GROUP' => $SEQUENCE_GROUP,
-            'OBJECT_TYPE'    => $OBJECT_TYPE,
-            'OBJECT_ID'      => $OBJECT_ID,
-            'OBJECT_DATE'    => $OBJECT_DATE,
-            'ENTRY_TYPE'     => $ENTRY_TYPE,
-            'AMOUNT'         => $AMOUNT,
+            'OBJECT_TYPE' => $OBJECT_TYPE,
+            'OBJECT_ID' => $OBJECT_ID,
+            'OBJECT_DATE' => $OBJECT_DATE,
+            'ENTRY_TYPE' => $ENTRY_TYPE,
+            'AMOUNT' => $AMOUNT,
             'ENDING_BALANCE' => $ENDING_BALANCE,
             'EXTENDED_OPTIONS' => $EXTENDED_OPTIONS
         ]);
@@ -288,7 +288,7 @@ class AccountJournalServices
             return (int) $data->JOURNAL_NO;
         }
 
-        return  (int) AccountJournal::max('JOURNAL_NO');
+        return (int) AccountJournal::max('JOURNAL_NO');
     }
 
     public function getRecord(int $OBJECT_TYPE, int $OBJECT_ID): int
@@ -384,18 +384,20 @@ class AccountJournalServices
 
         return $result;
     }
-    public function AccountSwitch(int $NEW_ACCOUNT_ID, int $OLD_ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE,)
+    public function AccountSwitch(int $NEW_ACCOUNT_ID, int $OLD_ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE, )
     {
 
-        if ($this->JournalExists(
-            $OLD_ACCOUNT_ID,
-            $ENTRY_TYPE,
-            $OBJECT_ID,
-            $OBJECT_TYPE,
-            $OBJECT_DATE,
-            $LOCATION_ID,
-            $SUBSIDIARY_ID,
-        )) {
+        if (
+            $this->JournalExists(
+                $OLD_ACCOUNT_ID,
+                $ENTRY_TYPE,
+                $OBJECT_ID,
+                $OBJECT_TYPE,
+                $OBJECT_DATE,
+                $LOCATION_ID,
+                $SUBSIDIARY_ID,
+            )
+        ) {
             AccountJournal::where('LOCATION_ID', $LOCATION_ID)
                 ->where('JOURNAL_NO', $JOURNAL_NO)
                 ->where('ACCOUNT_ID', $OLD_ACCOUNT_ID)
@@ -409,12 +411,12 @@ class AccountJournalServices
                 ]);
         }
     }
-    public function JournalModify(int $ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE, float $AMOUNT, int  $SEQUENCE_GROUP, string $EXTENDED_OPTIONS)
+    public function JournalModify(int $ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE, float $AMOUNT, int $SEQUENCE_GROUP, string $EXTENDED_OPTIONS)
     {
 
-        if (!$this->JournalExists($ACCOUNT_ID, $ENTRY_TYPE, $OBJECT_ID, $OBJECT_TYPE, $OBJECT_DATE, $LOCATION_ID, $SUBSIDIARY_ID,)) {
+        if (!$this->JournalExists($ACCOUNT_ID, $ENTRY_TYPE, $OBJECT_ID, $OBJECT_TYPE, $OBJECT_DATE, $LOCATION_ID, $SUBSIDIARY_ID, )) {
 
-            if ($ACCOUNT_ID  ==  0) {
+            if ($ACCOUNT_ID == 0) {
                 return;
             }
 
@@ -542,7 +544,7 @@ class AccountJournalServices
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->where('aj.AMOUNT', '>', '0')
-            ->whereBetween('aj.OBJECT_DATE',  [$dateFrom, $dateTo])
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
@@ -604,7 +606,7 @@ class AccountJournalServices
         return $result;
     }
 
-    public function getTransactionJournal(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account =  [], array $accountType = [])
+    public function getTransactionJournal(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
     {
         $result = DB::table('account_journal as aj')
             ->select([
@@ -688,7 +690,7 @@ class AccountJournalServices
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->where('aj.AMOUNT', '>', '0')
-            ->where('aj.OBJECT_DATE', '<',  $dateFrom)
+            ->where('aj.OBJECT_DATE', '<', $dateFrom)
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
@@ -717,7 +719,7 @@ class AccountJournalServices
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->where('aj.AMOUNT', '>', '0')
-            ->whereBetween('aj.OBJECT_DATE',  [$dateFrom, $dateTo])
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
@@ -747,7 +749,7 @@ class AccountJournalServices
 
         return $final_result;
     }
-    public function getTransactionJournalViewer(int $ACCOUNT_ID,int $YEAR, int $MONTH, int $LOCATION_ID )
+    public function getTransactionJournalViewer(int $ACCOUNT_ID, int $YEAR, int $MONTH, int $LOCATION_ID)
     {
         $result = DB::table('account_journal as aj')
             ->select([
@@ -772,10 +774,17 @@ class AccountJournalServices
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
-            ->where('aj.ACCOUNT_ID','=', $ACCOUNT_ID)
+            ->where('aj.ACCOUNT_ID', '=', $ACCOUNT_ID)
             ->get();
 
         return $result;
     }
+    public function updateObjectDate(int $JOURNAL_NO, string $NEW_DATE)
+    {
+        if ($JOURNAL_NO > 0) {
+            AccountJournal::where('JOURNAL_NO', '=', $JOURNAL_NO)
+                ->update(['OBJECT_DATE' => $NEW_DATE]);
+        }
 
+    }
 }

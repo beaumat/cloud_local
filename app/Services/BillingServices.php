@@ -804,4 +804,12 @@ class BillingServices
 
 
     }
+    public function billingUpdateDateOnly(int $BILL_ID, string $NEW_DATE)
+    {
+        if ($BILL_ID > 0) {
+            Bill::where('ID', '=', $BILL_ID)
+                ->update(['DATE' => $NEW_DATE]);
+        }
+
+    }
 }

@@ -18,11 +18,11 @@ class PaymentPeriodServices
     public function Get($ID)
     {
 
-        $result =  PaymentPeriod::where('ID', '=', $ID)->first();
+        $result = PaymentPeriod::where('ID', '=', $ID)->first();
 
         return $result;
     }
-    public function GetData(int $LOCATION_ID,  $DATE_FROM,  $DATE_TO): object
+    public function GetData(int $LOCATION_ID, $DATE_FROM, $DATE_TO): object
     {
         $data = PaymentPeriod::query()
             ->select([
@@ -78,45 +78,61 @@ class PaymentPeriodServices
         $ID = (int) $this->object->ObjectNextID(TABLE_NAME: 'PAYMENT_PERIOD');
 
         PaymentPeriod::create([
-            'ID'                => $ID,
-            'RECEIPT_NO'        => $RECEIPT_NO,
-            'LOCATION_ID'       => $LOCATION_ID,
-            'DATE_FROM'         => $DATE_FROM,
-            'DATE_TO'           => $DATE_TO,
-            'TOTAL_PAYMENT'     => $TOTAL_PAYMENT,
-            'TOTAL_WTAX'        => $TOTAL_WTAX,
-            'BANK_ACCOUNT_ID'   => $BANK_ACCOUNT_ID,
+            'ID' => $ID,
+            'RECEIPT_NO' => $RECEIPT_NO,
+            'LOCATION_ID' => $LOCATION_ID,
+            'DATE_FROM' => $DATE_FROM,
+            'DATE_TO' => $DATE_TO,
+            'TOTAL_PAYMENT' => $TOTAL_PAYMENT,
+            'TOTAL_WTAX' => $TOTAL_WTAX,
+            'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID,
             'DATE' => $DATE
         ]);
     }
-    public function Update(int $ID, string $RECEIPT_NO, string $DATE_FROM, string $DATE_TO, $DATE)
+    public function dateExists(int $ID, string $DATE): bool
+    {
+
+        return PaymentPeriod::where('ID', '=', $ID)->where('DATE', '=', $DATE)->exists();
+    }
+    public function Update(int $ID, string $RECEIPT_NO, string $DATE_FROM, string $DATE_TO, string $DATE, float $TOTAL_PAYMENT)
     {
         PaymentPeriod::where('ID', '=', $ID)
             ->update([
-                'RECEIPT_NO'    => $RECEIPT_NO,
-                'DATE_FROM'     => $DATE_FROM,
-                'DATE_TO'       => $DATE_TO,
-                'DATE'          => $DATE
+                'RECEIPT_NO' => $RECEIPT_NO,
+                'DATE_FROM' => $DATE_FROM,
+                'DATE_TO' => $DATE_TO,
+                'DATE' => $DATE,
+                'TOTAL_PAYMENT' => $TOTAL_PAYMENT
             ]);
     }
     public function Delete(int $ID)
     {
         PaymentPeriod::where('ID', '=', $ID)->delete();
     }
-    public function search($search, int $LOCATION_ID)
+    public function search($search, int $locationId, int $perPage)
     {
         $result = PaymentPeriod::query()
             ->select([
-                'ID',
-                'RECEIPT_NO',
-                'DATE_FROM',
-                'DATE_TO',
-                'DATE'
-            ])->where('LOCATION_ID', '=', $LOCATION_ID)
-            ->when($search, function ($query) use (&$search) {
-                $query->where('RECEIPT_NO', 'like', '%' . $search . '%');
+                'payment_period.ID',
+                'payment_period.RECEIPT_NO',
+                'payment_period.DATE_FROM',
+                'payment_period.DATE_TO',
+                'payment_period.DATE',
+                'TOTAL_PAYMENT as AMOUNT',
+                'l.NAME as LOCATION_NAME',
+                'a.NAME as BANK_ACCOUNT_NAME'
+            ])
+            ->join('location as l', function ($join) use (&$locationId) {
+                $join->on('l.ID', '=', 'payment_period.LOCATION_ID');
+                if ($locationId > 0) {
+                    $join->where('l.ID', $locationId);
+                }
             })
-            ->get();
+            ->leftJoin('account as a', 'a.ID', '=', 'payment_period.BANK_ACCOUNT_ID')
+            ->when($search, function ($query) use (&$search) {
+                $query->where('payment_period.RECEIPT_NO', 'like', '%' . $search . '%');
+            })
+            ->paginate($perPage);
 
         return $result;
     }
@@ -188,7 +204,7 @@ class PaymentPeriodServices
 
         return $result;
     }
-    public function getDoctorByDatePeriod(int $LOCATION_ID,  $DATE_FROM,  $DATE_TO): object
+    public function getDoctorByDatePeriod(int $LOCATION_ID, $DATE_FROM, $DATE_TO): object
     {
         $result = PaymentPeriod::query()
             ->select(
@@ -291,4 +307,5 @@ class PaymentPeriodServices
 
         return 0.00;
     }
+
 }

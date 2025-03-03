@@ -47,25 +47,25 @@ class TaxCreditServices
         int $ACCOUNTS_RECEIVABLE_ID
     ): int {
 
-        $ID  = (int) $this->object->ObjectNextID('TAX_CREDIT');
+        $ID = (int) $this->object->ObjectNextID('TAX_CREDIT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('TAX_CREDIT');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         TaxCredit::create([
-            'ID'                        => $ID,
-            'RECORDED_ON'               => $this->dateServices->Now(),
-            'CODE'                      => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                      => $DATE,
-            'CUSTOMER_ID'               => $CUSTOMER_ID,
-            'EWT_ID'                    => $EWT_ID,
-            'EWT_RATE'                  => $EWT_RATE,
-            'EWT_ACCOUNT_ID'            => $EWT_ACCOUNT_ID > 0 ? $EWT_ACCOUNT_ID : null,
-            'LOCATION_ID'               => $LOCATION_ID,
-            'AMOUNT'                    => 0,
-            'NOTES'                     => $NOTES,
-            'STATUS'                    => 0,
-            'STATUS_DATE'               => $this->dateServices->NowDate(),
-            'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE' => $DATE,
+            'CUSTOMER_ID' => $CUSTOMER_ID,
+            'EWT_ID' => $EWT_ID,
+            'EWT_RATE' => $EWT_RATE,
+            'EWT_ACCOUNT_ID' => $EWT_ACCOUNT_ID > 0 ? $EWT_ACCOUNT_ID : null,
+            'LOCATION_ID' => $LOCATION_ID,
+            'AMOUNT' => 0,
+            'NOTES' => $NOTES,
+            'STATUS' => 0,
+            'STATUS_DATE' => $this->dateServices->NowDate(),
+            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
         ]);
 
         return $ID;
@@ -83,13 +83,13 @@ class TaxCreditServices
 
         TaxCredit::where('ID', '=', $ID)
             ->update([
-                'CODE'                      => $CODE,
-                'EWT_ID'                    => $EWT_ID,
-                'EWT_RATE'                  => $EWT_RATE,
-                'EWT_ACCOUNT_ID'            => $EWT_ACCOUNT_ID > 0 ? $EWT_ACCOUNT_ID : null,
-                'NOTES'                     => $NOTES,
-                'AMOUNT'                    => $AMOUNT,
-                'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
+                'CODE' => $CODE,
+                'EWT_ID' => $EWT_ID,
+                'EWT_RATE' => $EWT_RATE,
+                'EWT_ACCOUNT_ID' => $EWT_ACCOUNT_ID > 0 ? $EWT_ACCOUNT_ID : null,
+                'NOTES' => $NOTES,
+                'AMOUNT' => $AMOUNT,
+                'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
             ]);
     }
 
@@ -159,14 +159,14 @@ class TaxCreditServices
     public function StoreInvoice(int $TAX_CREDIT_ID, int $INVOICE_ID, float $AMOUNT_WITHHELD, int $ACCOUNTS_RECEIVABLE_ID): int
     {
 
-        $ID  = (int) $this->object->ObjectNextID('TAX_CREDIT_INVOICES');
+        $ID = (int) $this->object->ObjectNextID('TAX_CREDIT_INVOICES');
         TaxCreditInvoices::create(
             [
-                'ID'                        => $ID,
-                'TAX_CREDIT_ID'             => $TAX_CREDIT_ID,
-                'INVOICE_ID'                => $INVOICE_ID,
-                'AMOUNT_WITHHELD'           => $AMOUNT_WITHHELD,
-                'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
+                'ID' => $ID,
+                'TAX_CREDIT_ID' => $TAX_CREDIT_ID,
+                'INVOICE_ID' => $INVOICE_ID,
+                'AMOUNT_WITHHELD' => $AMOUNT_WITHHELD,
+                'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
             ]
         );
 
@@ -180,7 +180,7 @@ class TaxCreditServices
             ->where('INVOICE_ID', '=', $INVOICE_ID)
             ->update(
                 [
-                    'AMOUNT_WITHHELD'           => $AMOUNT_WITHHELD
+                    'AMOUNT_WITHHELD' => $AMOUNT_WITHHELD
                 ]
             );
     }
@@ -252,7 +252,7 @@ class TaxCreditServices
             ->get();
 
         foreach ($result as $row) {
-            $INVOICE_AMOUNT  = (float) $row->AMOUNT ?? 0;
+            $INVOICE_AMOUNT = (float) $row->AMOUNT ?? 0;
             $AMT_WITHHELD = (float) $INVOICE_AMOUNT * ($EWT_RATE / 100);
             $TOTAL += $AMT_WITHHELD;
             $this->UpdateInvoice($row->ID, $TAX_CREDIT_ID, $row->INVOICE_ID, $AMT_WITHHELD);
@@ -273,7 +273,7 @@ class TaxCreditServices
             ->get();
 
         foreach ($result as $row) {
-            $AMOUNT_WITHHELD  = (float) $row->AMOUNT_WITHHELD ?? 0;
+            $AMOUNT_WITHHELD = (float) $row->AMOUNT_WITHHELD ?? 0;
             $TOTAL += $AMOUNT_WITHHELD;
         }
 
@@ -365,8 +365,8 @@ class TaxCreditServices
     {
         $taxCredit = $this->object_type_tax_credit;
         $taxCreditInvoices = $this->object_type_tax_credit_invoices;
-        $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($taxCredit, $TAX_CREDIT_ID);
-        if ($JOURNAL_NO  == 0) {
+        $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($taxCredit, $TAX_CREDIT_ID);
+        if ($JOURNAL_NO == 0) {
             $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($taxCredit, $TAX_CREDIT_ID) + 1;
         }
 
@@ -416,5 +416,18 @@ class TaxCreditServices
         }
 
         return false;
+    }
+
+    public function updateDateOnly(int $INVOICE_ID, $NEW_DATE): int
+    {
+        $data = TaxCreditInvoices::where('INVOICE_ID', '=', $INVOICE_ID)->first();
+        if ($data) {
+            TaxCredit::where('ID', '=', $data->TAX_CREDIT_ID)->update(['DATE' => $NEW_DATE]);
+            return (int) $data->TAX_CREDIT_ID;
+        }
+
+        return 0;
+
+
     }
 }

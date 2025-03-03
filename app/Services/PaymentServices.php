@@ -32,12 +32,12 @@ class PaymentServices
     }
     public function get($ID)
     {
-        $result =  Payment::where('ID', $ID)->first();
+        $result = Payment::where('ID', $ID)->first();
         return $result;
     }
     public function getViaUndeposit($ID)
     {
-        $result =  Payment::where('ID', $ID)->where('DEPOSITED', '=', '0')->first();
+        $result = Payment::where('ID', $ID)->where('DEPOSITED', '=', '0')->first();
         if ($result) {
             return $result;
         }
@@ -50,7 +50,6 @@ class PaymentServices
             ->where('INVOICE_ID', $INVOICE_ID)
             ->where('PAYMENT_ID', '<>', $EXECPT_PAYMENT_ID)
             ->first();
-
         if ($data) {
             return $data->total;
         }
@@ -82,27 +81,27 @@ class PaymentServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Payment::create([
-            'ID'                    => $ID,
-            'RECORDED_ON'           => $this->dateServices->Now(),
-            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                  => $DATE,
-            'CUSTOMER_ID'           => $CUSTOMER_ID,
-            'LOCATION_ID'           => $LOCATION_ID,
-            'AMOUNT'                => $AMOUNT,
-            'AMOUNT_APPLIED'        => $AMOUNT_APPLIED,
-            'PAYMENT_METHOD_ID'     => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'CARD_NO'               => $CARD_NO,
-            'CARD_EXPIRY_DATE'      => $CARD_EXPIRY_DATE ?? null,
-            'RECEIPT_REF_NO'        => $RECEIPT_REF_NO,
-            'RECEIPT_DATE'          => $RECEIPT_DATE ?? null,
-            'NOTES'                         => $NOTES,
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE' => $DATE,
+            'CUSTOMER_ID' => $CUSTOMER_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+            'AMOUNT' => $AMOUNT,
+            'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
+            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+            'CARD_NO' => $CARD_NO,
+            'CARD_EXPIRY_DATE' => $CARD_EXPIRY_DATE ?? null,
+            'RECEIPT_REF_NO' => $RECEIPT_REF_NO,
+            'RECEIPT_DATE' => $RECEIPT_DATE ?? null,
+            'NOTES' => $NOTES,
             'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
             'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-            'STATUS'                => 0,
-            'STATUS_DATE'           => $this->dateServices->NowDate(),
-            'DEPOSITED'             => $DEPOSITED,
+            'STATUS' => 0,
+            'STATUS_DATE' => $this->dateServices->NowDate(),
+            'DEPOSITED' => $DEPOSITED,
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
-            'PAYMENT_PERIOD_ID'       => $PAYMENT_PERIOD_ID > 0  ? $PAYMENT_PERIOD_ID : null
+            'PAYMENT_PERIOD_ID' => $PAYMENT_PERIOD_ID > 0 ? $PAYMENT_PERIOD_ID : null
         ]);
 
         return $ID;
@@ -127,29 +126,29 @@ class PaymentServices
     ) {
         Payment::where('ID', $ID)
             ->update([
-                'CODE'                          => $CODE,
-                'DATE'                          => $DATE,
-                'CUSTOMER_ID'                   => $CUSTOMER_ID,
-                'LOCATION_ID'                   => $LOCATION_ID,
-                'AMOUNT'                        => $AMOUNT,
-                'PAYMENT_METHOD_ID'             => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-                'CARD_NO'                       => $CARD_NO,
-                'CARD_EXPIRY_DATE'              => $CARD_EXPIRY_DATE ?? null,
-                'RECEIPT_REF_NO'                => $RECEIPT_REF_NO,
-                'RECEIPT_DATE'                  => $RECEIPT_DATE ?? null,
-                'NOTES'                         => $NOTES,
-                'UNDEPOSITED_FUNDS_ACCOUNT_ID'  => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
-                'OVERPAYMENT_ACCOUNT_ID'        => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-                'DEPOSITED'                     => $DEPOSITED,
-                'ACCOUNTS_RECEIVABLE_ID'        => $ACCOUNTS_RECEIVABLE_ID
+                'CODE' => $CODE,
+                'DATE' => $DATE,
+                'CUSTOMER_ID' => $CUSTOMER_ID,
+                'LOCATION_ID' => $LOCATION_ID,
+                'AMOUNT' => $AMOUNT,
+                'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+                'CARD_NO' => $CARD_NO,
+                'CARD_EXPIRY_DATE' => $CARD_EXPIRY_DATE ?? null,
+                'RECEIPT_REF_NO' => $RECEIPT_REF_NO,
+                'RECEIPT_DATE' => $RECEIPT_DATE ?? null,
+                'NOTES' => $NOTES,
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
+                'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
+                'DEPOSITED' => $DEPOSITED,
+                'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID
             ]);
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
         Payment::where('ID', $ID)
             ->update([
-                'STATUS'        => $STATUS,
-                'STATUS_DATE'   => $this->dateServices->NowDate()
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
     }
     public function Delete(int $ID)
@@ -208,13 +207,13 @@ class PaymentServices
     {
         $ID = $this->object->ObjectNextID('PAYMENT_INVOICES');
         PaymentInvoices::create([
-            'ID'                        => $ID,
-            'PAYMENT_ID'                => $PAYMENT_ID,
-            'INVOICE_ID'                => $INVOICE_ID,
-            'DISCOUNT'                  => $DISCOUNT > 0 ? $DISCOUNT : null,
-            'AMOUNT_APPLIED'            => $AMOUNT_APPLIED,
-            'DISCOUNT_ACCOUNT_ID'       => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
-            'ACCOUNTS_RECEIVABLE_ID'    => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
+            'ID' => $ID,
+            'PAYMENT_ID' => $PAYMENT_ID,
+            'INVOICE_ID' => $INVOICE_ID,
+            'DISCOUNT' => $DISCOUNT > 0 ? $DISCOUNT : null,
+            'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
+            'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
+            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
         ]);
 
         return $ID;
@@ -236,8 +235,8 @@ class PaymentServices
             ->where('PAYMENT_ID', $PAYMENT_ID)
             ->where('INVOICE_ID', $INVOICE_ID)
             ->update([
-                'DISCOUNT'          => $DISCOUNT,
-                'AMOUNT_APPLIED'    => $AMOUNT_APPLIED
+                'DISCOUNT' => $DISCOUNT,
+                'AMOUNT_APPLIED' => $AMOUNT_APPLIED
             ]);
     }
     public function PaymentInvoiceDelete(int $ID, int $PAYMENT_ID, int $INVOICE_ID)
@@ -249,7 +248,7 @@ class PaymentServices
     }
     public function getPaymentInvoiceDetails(int $ID)
     {
-        $data =   PaymentInvoices::where('ID', '=', $ID)->first();
+        $data = PaymentInvoices::where('ID', '=', $ID)->first();
 
         if ($data) {
             return $data;
@@ -399,10 +398,10 @@ class PaymentServices
         $data = Invoice::where('ID', $INVOICE_ID)->first();
 
         if ($data) {
-            $ORG_AMOUNT =  $data->AMOUNT ?? 0;
+            $ORG_AMOUNT = $data->AMOUNT ?? 0;
             $AMOUNT_PAID = $NEW_APPLIED + (float) PaymentInvoices::where('INVOICE_ID', '=', $INVOICE_ID)->sum("AMOUNT_APPLIED");
 
-            $BALANCE =  $ORG_AMOUNT - $AMOUNT_PAID;
+            $BALANCE = $ORG_AMOUNT - $AMOUNT_PAID;
 
             if ($BALANCE < 0) {
                 return true;
@@ -420,8 +419,8 @@ class PaymentServices
 
         $payment = $this->object_type_payment;
         $paymentInvoicesId = $this->object_type_payment_invoices;
-        $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($payment, $PAYMENT_ID);
-        if ($JOURNAL_NO  == 0) {
+        $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($payment, $PAYMENT_ID);
+        if ($JOURNAL_NO == 0) {
             $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($payment, $PAYMENT_ID) + 1;
         }
 
@@ -471,5 +470,28 @@ class PaymentServices
         }
 
         return false;
+    }
+
+    public function getPaymentbyPaymentPeriod(int $PAYMENT_PERIOD_ID)
+    {
+
+        $result = Payment::query()
+            ->select([
+                'payment.ID',
+                'payment_invoices.INVOICE_ID',
+                'philhealth_prof_fee.BILL_ID'
+            ])
+            ->join('payment_invoices', 'payment_invoices.PAYMENT_ID', '=', 'payment.ID')
+            ->join('philhealth', 'philhealth.INVOICE_ID', '=', 'payment_invoices.INVOICE_ID')
+            ->leftJoin('philhealth_prof_fee', 'philhealth_prof_fee.PHIC_ID', '=', 'philhealth.ID')
+            ->where('payment.PAYMENT_PERIOD_ID', '=', $PAYMENT_PERIOD_ID)
+            ->get();
+
+        return $result;
+    }
+    public function getUpdateDateOnly(int $ID, string $DATE)
+    {
+        Payment::where('ID', '=', $ID)
+            ->update(['DATE' => $DATE]);
     }
 }
