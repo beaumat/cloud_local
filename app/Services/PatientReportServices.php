@@ -10,19 +10,22 @@ use Illuminate\Support\Facades\DB;
 class PatientReportServices
 {
     private $itemServices;
-    public function __construct(ItemServices $itemServices)
+    private $dateServices;
+    public function __construct(ItemServices $itemServices, DateServices $dateServices)
     {
         $this->itemServices = $itemServices;
+        $this->dateServices = $dateServices;
     }
 
     /**
      * @param array $patientData
      */
 
-    public function generateSalesReportData(string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [], array $methodData = []): object
+    public function generateSalesReportData(string $scFrom, string $scTo, int $locatoinId, array $patientData = [], array $itemData = [], array $methodData = []): object
     {
 
-        
+        $isWhole = (bool) $this->dateServices->isWholeMonth($scFrom, $scTo);
+
 
         $results = DB::table('service_charges_items as sci')
             ->select([
@@ -49,10 +52,19 @@ class PatientReportServices
             ->join('location as l', 'l.ID', '=', 'sc.LOCATION_ID')
             ->join('contact as c', 'c.ID', '=', 'sc.PATIENT_ID')
             ->leftJoin('patient_payment_charges as ppc', 'ppc.SERVICE_CHARGES_ITEM_ID', '=', 'sci.ID')
-            ->leftJoin('patient_payment as pp', function ($join) {
-                $join->on('pp.ID', '=', 'ppc.PATIENT_PAYMENT_ID')
-                    ->on('pp.LOCATION_ID', '=', 'sc.LOCATION_ID')
-                    ->on('pp.DATE', '<=', 'sc.DATE');
+            ->leftJoin('patient_payment as pp', function ($join) use (&$isWhole) {
+                $join->when($isWhole, function ($q) {
+                    $q->on('pp.ID', '=', 'ppc.PATIENT_PAYMENT_ID')
+                        ->on('pp.LOCATION_ID', '=', 'sc.LOCATION_ID');
+                });
+
+                $join->when(!$isWhole, function ($q) {
+                    $q->on('pp.ID', '=', 'ppc.PATIENT_PAYMENT_ID')
+                        ->on('pp.LOCATION_ID', '=', 'sc.LOCATION_ID')
+                        ->on('pp.DATE', '<=', 'sc.DATE');
+                });
+
+
             })
             ->leftJoin('payment_method as pm', 'pm.ID', '=', 'pp.PAYMENT_METHOD_ID')
             ->whereBetween('sc.DATE', [$scFrom, $scTo])
@@ -78,9 +90,13 @@ class PatientReportServices
 
         return $results;
     }
-    public function generatePrevCollection(string $scFrom, string $scTo, int  $locatoinId, array  $patientData = [], array $itemData = [], array $methodData = []): object
+    public function generatePrevCollection(string $scFrom, string $scTo, int $locatoinId, array $patientData = [], array $itemData = [], array $methodData = [])
     {
+        $isWhole = (bool) $this->dateServices->isWholeMonth($scFrom, $scTo);
 
+        if ($isWhole) {
+            return [];
+        }
 
         $results = DB::table('service_charges_items as sci')
             ->select([
@@ -182,7 +198,7 @@ class PatientReportServices
 
         return $result;
     }
-    public function getMonthlyTreatment(int $year, int $month, array  $dayList = [], array $patient = [], int $LocationId): object
+    public function getMonthlyTreatment(int $year, int $month, array $dayList = [], array $patient = [], int $LocationId): object
     {
         $PHIC_ITEM_ID = $this->itemServices->PHIC_ITEM_ID;
         $PRIMING_ITEM_ID = $this->itemServices->PRIMING_ITEM_ID;
@@ -210,6 +226,6 @@ class PatientReportServices
             ->orderBy('contact.LAST_NAME', 'asc')
             ->get();
 
-        return  $results;
+        return $results;
     }
 }

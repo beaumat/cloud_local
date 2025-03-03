@@ -14,11 +14,11 @@ class DateServices
         $y = $date->format('Y');
         return $this->getFirstDayViaYear($y);
     }
-    public  static function getFirstDayViaYear(int $YEAR)
+    public static function getFirstDayViaYear(int $YEAR)
     {
         return "$YEAR-01-01";
     }
-    public  static function getLastDayViaYear(int $YEAR)
+    public static function getLastDayViaYear(int $YEAR)
     {
         return "$YEAR-12-31";
     }
@@ -26,7 +26,7 @@ class DateServices
     {
         $date = new DateTime($BASE_DATE);
         $y = $date->format('Y');
-        $m  = $date->format('m');
+        $m = $date->format('m');
         return "$y-$m-01";
     }
     public function GetLastDay_Month(string $BASE_DATE): string
@@ -50,7 +50,7 @@ class DateServices
     }
     public function NowMonth(): int
     {
-        return  Carbon::now()->month;
+        return Carbon::now()->month;
     }
     public function NowYear(): int
     {
@@ -80,7 +80,7 @@ class DateServices
 
         ];
     }
-    public  function Get7Days(int $yr, int $m, int $wk_selected)
+    public function Get7Days(int $yr, int $m, int $wk_selected)
     {
         $month = $m;
         $year = $yr;
@@ -222,13 +222,13 @@ class DateServices
     }
     public function YearList(): array
     {
-        $currentYear = (int)date('Y');
+        $currentYear = (int) date('Y');
         $years = [];
-    
+
         for ($year = 2022; $year <= $currentYear; $year++) {
-            $years[] = ['ID' => $year, 'NAME' => (string)$year];
+            $years[] = ['ID' => $year, 'NAME' => (string) $year];
         }
-    
+
         return $years;
     }
     public function isNextMonthIsChange()
@@ -244,5 +244,22 @@ class DateServices
         }
 
         return false;
+    }
+    public function isWholeMonth(string $startDate, string $endDate): bool
+    {
+        // Convert strings to DateTime objects
+        $start = new DateTime($startDate);
+        $end = new DateTime($endDate);
+
+        // Check if the start date is the first day of the month
+        if ($start->format('d') != '01') {
+            return false;
+        }
+
+        // Get the last day of the month for the start date
+        $lastDay = $start->format('t'); // 't' gives the number of days in the month
+
+        // Check if the end date matches the last day of the month
+        return $end->format('Y-m-d') === $start->format("Y-m-") . $lastDay;
     }
 }
