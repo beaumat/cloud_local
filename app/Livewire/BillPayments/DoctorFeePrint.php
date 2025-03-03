@@ -7,6 +7,7 @@ use App\Services\ContactServices;
 use App\Services\DoctorPFServices;
 use App\Services\LocationServices;
 use App\Services\PaymentPeriodServices;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -68,8 +69,8 @@ class DoctorFeePrint extends Component
                     $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                 }
 
-                $this->billList = $this->billPaymentServices->billPaymentBIllsPatientList($id);
-                $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? 0, 2); // Employee
+
+                $conUser = $this->contactServices->get(Auth::user()->contact_id ?? 0, 2); // Employee
                 if ($conUser) {
                     $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
                 }

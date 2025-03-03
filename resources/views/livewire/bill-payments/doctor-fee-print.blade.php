@@ -87,7 +87,7 @@
                         <div class="col-4">
                             <div class="form-group row ">
                                 <div class="col-7 h5 text-center bottom-line">
-                                    <strong> {{ $USER_NAME }}</strong>
+                                    <strong>&nbsp; {{ $USER_NAME }}</strong>
                                 </div>
                                 <div class="col-7 text-center "><i>Prepered By :</i></div>
                             </div>
@@ -104,7 +104,7 @@
                             <div class="form-group row  mt-4">
                                 <div class="col-7 h5 text-left bottom-line">
                                     <strong class="" style="position:absolute; width:250px;">
-                                        {{ $ADMINISTRATOR_NAME }}
+                                        &nbsp; {{ $ADMINISTRATOR_NAME }}
                                     </strong>
                                     <br />
                                 </div>
