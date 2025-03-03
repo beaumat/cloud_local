@@ -131,6 +131,8 @@ use App\Livewire\PatientReport\PhilHealthMonitoringReport;
 use App\Livewire\PayableReport\AccountPayableAging;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
 use App\Livewire\PaymentMethod\PaymentMethodList;
+use App\Livewire\PaymentPeriod\PaymentPeriodForm;
+use App\Livewire\PaymentPeriod\PaymentPeriodList;
 use App\Livewire\PaymentTerm\PaymentTermForm;
 use App\Livewire\PaymentTerm\PaymentTermList;
 use App\Livewire\PhilHealth\PhilHealthPrintFormTempOut;
@@ -265,6 +267,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', DoctorFeeList::class)->name('doctor_fee')->middleware(['permission:report.patient.doctor-pf']);
             Route::get('/{id}/{locationid}/print-form', DoctorsFeeReportPrint::class)->name('doctor_fee_print');
         });
+
+        Route::prefix('/payment-period')->group(function () {
+            Route::get('/', PaymentPeriodList::class)->name('payment_period');
+            Route::get('/{id}/details', PaymentPeriodForm::class)->name('payment_period_details');
+        });
     });
     // Patient End Category
 
@@ -312,7 +319,6 @@ Route::middleware(['auth'])->group(function () {
     });
     // Customer End Category
     // Vendor Start Category
-
     Route::prefix('/vendors')->name('vendors')->group(function () {
         Route::prefix('/purchase-order')->group(function () {
             Route::get('/', PurchaseOrderList::class)->name('purchase_order')->middleware(['permission:vendor.purchase-order.view']);

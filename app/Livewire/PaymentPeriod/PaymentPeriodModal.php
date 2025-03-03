@@ -44,25 +44,25 @@ class PaymentPeriodModal extends Component
     {
         $this->validate(
             [
-                'RECEIPT_NO'        => 'required|string|unique:payment_period,receipt_no',
-                'DATE'              => 'required|date',
-                'DATE_FROM'         => 'required|date',
-                'DATE_TO'           => 'required|date',
-                'LOCATION_ID'       => 'required|numeric|exists:location,id',
-                'TOTAL_PAYMENT'     => 'required|numeric',
+                'RECEIPT_NO' => 'required|string|unique:payment_period,receipt_no',
+                'DATE' => 'required|date',
+                'DATE_FROM' => 'required|date',
+                'DATE_TO' => 'required|date',
+                'LOCATION_ID' => 'required|numeric|exists:location,id',
+                'TOTAL_PAYMENT' => 'required|numeric',
                 // 'TOTAL_WTAX'        => 'required|numeric',
-                'BANK_ACCOUNT_ID'   => 'required|numeric|exists:account,id'
+                'BANK_ACCOUNT_ID' => 'required|numeric|exists:account,id'
             ],
             [],
             [
-                'RECEIPT_NO'        => 'OR No.',
-                'DATE'              => 'OR Date',
-                'DATE_FROM'         => 'Date From',
-                'DATE_TO'           => 'Date To',
-                'LOCATION_ID'       => 'Location',
-                'TOTAL_PAYMENT'     => 'Total Payment',
+                'RECEIPT_NO' => 'OR No.',
+                'DATE' => 'OR Date',
+                'DATE_FROM' => 'Date From',
+                'DATE_TO' => 'Date To',
+                'LOCATION_ID' => 'Location',
+                'TOTAL_PAYMENT' => 'Total Payment',
                 // 'TOTAL_WTAX'        => 'Total Wtax',
-                'BANK_ACCOUNT_ID'   => 'Bank Account'
+                'BANK_ACCOUNT_ID' => 'Bank Account'
 
             ]
         );

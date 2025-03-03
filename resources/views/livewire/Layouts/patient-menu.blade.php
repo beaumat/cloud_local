@@ -56,12 +56,19 @@
             <li class="nav-item {{ request()->is('patients/doctor-pf*') ? 'menu-open' : '' }}">
                 <a href="{{ route('patientsdoctor_fee') }}"
                     class="nav-link {{ request()->is('patients/doctor-pf*') ? 'text-warning font-weight-bold' : '' }}">
-              
+
                     <i class="fa fa-user-md nav-icon" aria-hidden="true"></i>
                     <p>Doctor PF</p>
                 </a>
             </li>
         @endcan
+        <li class="nav-item {{ request()->is('patients/payment-period*') ? 'menu-open' : '' }}">
+            <a href="{{ route('patientspayment_period') }}"
+                class="nav-link {{ request()->is('patients/payment-period*') ? 'text-warning font-weight-bold' : '' }}">
 
+                <i class="fa fa-user-md nav-icon" aria-hidden="true"></i>
+                <p>Payment Period (ACPN)</p>
+            </a>
+        </li>
     </ul>
 </li>
