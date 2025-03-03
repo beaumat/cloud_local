@@ -108,13 +108,10 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    @if ($ID == 0)
-                                                        <livewire:date-input name="DATE" titleName="Date"
-                                                            wire:model.live='DATE' :isDisabled="false" />
-                                                    @else
-                                                        <livewire:date-input name="DATE" titleName="Date"
-                                                            wire:model.live='DATE' :isDisabled="true" />
-                                                    @endif
+
+                                                    <livewire:date-input name="DATE" titleName="Date"
+                                                        wire:model.live='DATE' isDisabled="{{ !$Modify }}" />
+
                                                 </div>
                                                 <div class="col-md-4">
                                                     <livewire:text-input name="Code" titleName="Reference No."
