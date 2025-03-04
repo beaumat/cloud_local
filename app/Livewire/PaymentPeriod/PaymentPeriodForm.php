@@ -103,8 +103,6 @@ class PaymentPeriodForm extends Component
         );
 
         $isDateExist = (bool) $this->paymentPeriodServices->dateExists($this->ID, $this->DATE);
-
-
         $this->paymentPeriodServices->Update($this->ID, $this->RECEIPT_NO, $this->DATE_FROM, $this->DATE_TO, $this->DATE, $this->TOTAL_PAYMENT);
         if (!$isDateExist) {
             //DATE UPDATE
@@ -113,10 +111,6 @@ class PaymentPeriodForm extends Component
         }
         $this->Modify = false;
         session()->flash('message', 'Successfully update');
-
-
-
-
     }
 
     private function getUpdateOrderDate()

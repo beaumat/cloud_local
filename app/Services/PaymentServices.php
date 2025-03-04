@@ -489,6 +489,40 @@ class PaymentServices
 
         return $result;
     }
+    public function getListInvoicePaymentTaxBillPhic(int $PAYMENT_PERIOD_ID): object
+    {
+
+        $result = Payment::query()
+            ->select([
+                'payment_invoices.INVOICE_ID',
+                'philhealth.P1_TOTAL as INVOICE_AMOUNT',
+                'philhealth.DATE_ADMITTED',
+                'philhealth.DATE_DISCHARGED',
+                'philhealth.AR_NO',
+                'philhealth.AR_DATE',
+                'philhealth.ID as PHILHEALTH_ID',
+                'payment_invoices.PAYMENT_ID',
+                'payment_invoices.AMOUNT_APPLIED as PAYMENT_AMOUNT',
+                'philhealth_prof_fee.BILL_ID',
+                'philhealth_prof_fee.FIRST_CASE as BILL_AMOUNT',
+                'tax_credit_invoices.TAX_CREDIT_ID',
+                'tax_credit_invoices.AMOUNT_WITHHELD as TAX_AMOUNT',
+                'p.NAME as PATIENT_NAME',
+                'd.NAME as DOCTOR_NAME',
+                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL'),
+                DB::raw(" (select  GROUP_CONCAT(hemodialysis.DATE ORDER BY hemodialysis.DATE ASC SEPARATOR ', ') from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as CONFINE_PERIOD "),
+            ])
+            ->join('payment_invoices', 'payment_invoices.PAYMENT_ID', '=', 'payment.ID')
+            ->join('philhealth', 'philhealth.INVOICE_ID', '=', 'payment_invoices.INVOICE_ID')
+            ->join('contact as p', 'p.ID', '=', 'philhealth.CONTACT_ID')
+            ->leftJoin('philhealth_prof_fee', 'philhealth_prof_fee.PHIC_ID', '=', 'philhealth.ID')
+            ->join('contact as d', 'd.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
+            ->leftJoin('tax_credit_invoices', 'tax_credit_invoices.INVOICE_ID', '=', 'payment_invoices.INVOICE_ID')
+            ->where('payment.PAYMENT_PERIOD_ID', '=', $PAYMENT_PERIOD_ID)
+            ->get();
+
+        return $result;
+    }
     public function getUpdateDateOnly(int $ID, string $DATE)
     {
         Payment::where('ID', '=', $ID)

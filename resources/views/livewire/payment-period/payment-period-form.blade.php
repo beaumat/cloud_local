@@ -74,6 +74,9 @@
                                                     @endif
                                                 </div>
                                             </div>
+
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     @if ($Modify)
@@ -108,41 +111,76 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-
-                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            @can('patient.payment-period.edit')
-                                <div class="card-footer">
-                                    <div class="row">
-                                        <div class="col-md-6 col-6">
+                                @can('patient.payment-period.edit')
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-6 col-6">
 
-                                            @if ($Modify)
-                                                <button type="submit" class="btn btn-sm btn-primary"> <i
-                                                        class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
+                                                @if ($Modify)
+                                                    <button type="submit" class="btn btn-sm btn-primary"> <i
+                                                            class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                        {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
-                                                @if ($ID > 0)
-                                                    <button type="button" wire:click='updateCancel'
-                                                        wire:confirm='Want to cancel?' class="btn btn-sm btn-danger"><i
-                                                            class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                                    @if ($ID > 0)
+                                                        <button type="button" wire:click='updateCancel'
+                                                            wire:confirm='Want to cancel?' class="btn btn-sm btn-danger"><i
+                                                                class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                                    @endif
+                                                @else
+                                                    <button type="button" wire:click='getModify()'
+                                                        class="btn btn-sm btn-info">
+                                                        <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                    </button>
                                                 @endif
-                                            @else
-                                                <button type="button" wire:click='getModify()' class="btn btn-sm btn-info">
-                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                                </button>
-                                            @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endcan
+                                @endcan
+                            </div>
+
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <section class="content">
+        <div class="container-fluid bg-light ">
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="card card-primary card-outline card-outline-tabs">
+                        <div class="card-header p-0 border-bottom-0">
+                            <ul class="nav text-sm nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
+                                        href="#custom-tabs-four-item" role="tab"
+                                        aria-controls="custom-tabs-four-item" aria-selected="true">
+                                        <div class="text-xs"> Paid List </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="custom-tabs-four-tabContent">
+                                <div class="tab-pane fade show active " id="custom-tabs-four-item" role="tabpanel"
+                                    aria-labelledby="custom-tabs-four-item-tab">
+                                    <div class="row"
+                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                        <div class="col-md-12"
+                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                            @livewire('PaymentPeriod.PaidList', ['PAYMENT_PERIOD_ID' => $ID, 'GROSS_TOTAL' => $TOTAL_PAYMENT])
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 </div>

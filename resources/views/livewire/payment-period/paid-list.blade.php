@@ -1,0 +1,90 @@
+<?php
+use App\Services\OtherServices;
+?>
+<div>
+    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+    <table class="table table-sm table-bordered table-hover">
+        <thead class="text-xs bg-sky">
+            <tr>
+                <th class="">Date Transmitted</th>
+                <th class="col-1">LHIO #</th>
+                <th class="col-2">Patient</th>
+                <th class="">Admitted</th>
+                <th class="">Discharge</th>
+                <th class="col-1">No. of Treatment</th>
+                <th class="col-">Confinement Period</th>
+                <th class="text-right">First Case Amt </th>
+                <th class="text-right">Paid Amt</th>
+                <th class="text-right">WTax Amt</th>
+                <th class="text-right">PF Amt</th>
+                <th class="col-2">Doctor Name</th>
+            </tr>
+        </thead>
+        <tbody class="text-xs">
+            @php
+                $TOTAL_INVOICE = 0;
+                $TOTAL_TAX = 0;
+                $TOTAL_PAID = 0;
+                $TOTAL_PF = 0;
+            @endphp
+            @foreach ($dataList as $list)
+                <tr>
+                    <td>{{ \Carbon\Carbon::parse($list->AR_DATE)->format('m/d/Y') }}</td>
+                    <td> <a target="_blank"
+                            href="{{ route('patientsphic_edit', ['id' => $list->PHILHEALTH_ID]) }}">{{ $list->AR_NO }}</a>
+                    </td>
+                    <td>{{ $list->PATIENT_NAME }}</td>
+                    <td>{{ \Carbon\Carbon::parse($list->DATE_ADMITTED)->format('m/d/Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($list->DATE_DISCHARGED)->format('m/d/Y') }}</td>
+                    <td class="text-center">{{ $list->HEMO_TOTAL }}</td>
+
+                    <td class=""> {{ OtherServices::formatDates($list->CONFINE_PERIOD) }}</td>
+                    <td class="text-right">{{ number_format($list->INVOICE_AMOUNT, 2) }} </td>
+                    <td class="text-right">{{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
+
+                    <td class="text-right">{{ number_format($list->TAX_AMOUNT, 2) }}</td>
+                    <td class="text-right text-info">{{ number_format($list->BILL_AMOUNT, 2) }}</td>
+                    <td class="text-info">{{ $list->DOCTOR_NAME }}</td>
+                    @php
+                        $TOTAL_INVOICE += $list->INVOICE_AMOUNT;
+                        $TOTAL_PAID += $list->PAYMENT_AMOUNT;
+                        $TOTAL_TAX += $list->TAX_AMOUNT;
+                        $TOTAL_PF += $list->BILL_AMOUNT;
+                    @endphp
+
+                </tr>
+            @endforeach
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-primary font-weight-bold text-right">Grand Total</td>
+                <td class="text-primary font-weight-bold text-right">{{ number_format($TOTAL_INVOICE, 2) }}</td>
+                <td class="text-danger font-weight-bold text-right">{{ number_format($TOTAL_PAID, 2) }}</td>
+                <td class="text-danger font-weight-bold text-right">{{ number_format($TOTAL_TAX, 2) }}</td>
+                <td class="text-info font-weight-bold text-right">{{ number_format($TOTAL_PF, 2) }}</td>
+                <td class="text-orange font-weight-bold text-right">
+
+                </td>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-orange font-weight-bold text-right">Difference</td>
+                <td class="text-orange font-weight-bold text-right">
+                    {{ number_format($TOTAL_INVOICE - $GROSS_TOTAL, 2) }}</td>
+                <td class="text-danger font-weight-bold text-right"></td>
+                <td class="text-danger font-weight-bold text-right"></td>
+                <td class="text-danger font-weight-bold text-right"></td>
+                <td class="text-orange font-weight-bold text-right">
+
+                </td>
+        </tbody>
+    </table>
+</div>
