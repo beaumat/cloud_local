@@ -687,6 +687,7 @@ class BillingServices
             ->where('bill_items.BILL_ID', $BILL_ID)
             ->get();
 
+    
         return $result;
     }
     public function getBillTaxJournal(int $BILL_ID)

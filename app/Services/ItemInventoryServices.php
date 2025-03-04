@@ -370,13 +370,14 @@ class ItemInventoryServices
             ->where('SOURCE_REF_DATE', '>', $SOURCE_REF_DATE)
             ->exists();
 
-
+       
         if ($itsHave) {
             // stop to procceed.
             return;
         }
 
         $dataExist = $this->getInvItem($ITEM_ID, $LOCATION_ID, $SOURCE_REF_ID, $SOURCE_REF_TYPE, $SOURCE_REF_DATE);
+  
         if (!$dataExist) {
             // new store
             $PREVIOUS_ID        = $this->getPreviousID($LOCATION_ID, $ITEM_ID); // FIXED
@@ -405,6 +406,7 @@ class ItemInventoryServices
             return;
         }
         // update 
+     
         $this->Update(
             $ITEM_ID,
             $LOCATION_ID,
@@ -439,6 +441,8 @@ class ItemInventoryServices
             if ($COST  == 0) {
                 $COST = (float) $this->priceLevelLineServices->GetCostByLocation($LOCATION_ID, $ITEM_ID);
             }
+
+        
 
             $this->InventoryModify(
                 $ITEM_ID,

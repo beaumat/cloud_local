@@ -532,7 +532,8 @@ class ItemServices
                 ]
             )
             ->selectSub(function ($query) use (&$locationId, &$dateAsof) {
-                $query->from('item_inventory')->select('item_inventory.ENDING_QUANTITY')
+                $query->from('item_inventory')
+                ->select('item_inventory.ENDING_QUANTITY')
                     ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
                     ->where('item_inventory.LOCATION_ID', $locationId)
                     ->where('item_inventory.SOURCE_REF_DATE', '<=', $dateAsof)
