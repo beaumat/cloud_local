@@ -114,34 +114,31 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <div class="row">
-                                    <div class="col-md-6 col-6">
+                            @can('patient.payment-period.edit')
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-md-6 col-6">
 
-                                        @if ($Modify)
-                                            <button type="submit" class="btn btn-sm btn-primary"> <i
-                                                    class="fa fa-floppy-o" aria-hidden="true"></i>
-                                                {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
+                                            @if ($Modify)
+                                                <button type="submit" class="btn btn-sm btn-primary"> <i
+                                                        class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                    {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
-                                            @if ($ID > 0)
-                                                <button type="button" wire:click='updateCancel'
-                                                    wire:confirm='Want to cancel?' class="btn btn-sm btn-danger"><i
-                                                        class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                                @if ($ID > 0)
+                                                    <button type="button" wire:click='updateCancel'
+                                                        wire:confirm='Want to cancel?' class="btn btn-sm btn-danger"><i
+                                                            class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                                                @endif
+                                            @else
+                                                <button type="button" wire:click='getModify()' class="btn btn-sm btn-info">
+                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                </button>
                                             @endif
-                                        @else
-                                            <button type="button" wire:click='getModify()' class="btn btn-sm btn-info">
-                                                <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                            </button>
-
-                                        @endif
-
-
+                                        </div>
                                     </div>
-
                                 </div>
-                            </div>
+                            @endcan
                         </form>
-
                     </div>
                 </div>
             </div>
