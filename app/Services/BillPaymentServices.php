@@ -207,7 +207,7 @@ class BillPaymentServices
             ->join('contact', 'contact.ID', '=', 'philhealth.CONTACT_ID')
             ->where('check_bills.CHECK_ID', '=', $CHECK_ID)
             ->get();
-
+               
         return $result;
     }
     public function billPaymentBills(int $CHECK_ID): object
@@ -228,6 +228,7 @@ class BillPaymentServices
             ->where('check_bills.CHECK_ID', '=', $CHECK_ID)
             ->get();
 
+       
         return $result;
     }
     public function getTotalApplied(int $CHECK_ID): float

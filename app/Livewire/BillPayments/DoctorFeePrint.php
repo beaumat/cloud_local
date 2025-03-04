@@ -69,6 +69,7 @@ class DoctorFeePrint extends Component
                     $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                 }
 
+                $this->billList = $this->billPaymentServices->billPaymentBIllsPatientList($id);
 
                 $conUser = $this->contactServices->get(Auth::user()->contact_id ?? 0, 2); // Employee
                 if ($conUser) {
