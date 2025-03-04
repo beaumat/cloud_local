@@ -14,9 +14,8 @@
                         <div class="pt-1 pb-1 card-header bg-sky">
                             <div class="row">
                                 <div class="col-sm-6">
-
-                                    <a class="text-white" href="{{ route('patientspayment_period') }}"> Payment Period
-                                        (ACPN)
+                                    <a class="text-white" href="{{ route('patientspayment_period') }}">
+                                        Payment Period (ACPN)
                                     </a>
                                 </div>
                                 <div class="col-sm-6 text-right">
