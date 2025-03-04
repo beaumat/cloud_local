@@ -67,7 +67,8 @@
                 <a href="{{ route('patientspayment_period') }}"
                     class="nav-link {{ request()->is('patients/payment-period*') ? 'text-warning font-weight-bold' : '' }}">
 
-                    <i class="fa fa-user-md nav-icon" aria-hidden="true"></i>
+                    <i class="fa fa-cc-mastercard nav-icon" aria-hidden="true"></i>
+                   
                     <p>Payment Period (ACPN)</p>
                 </a>
             </li>
