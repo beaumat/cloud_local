@@ -270,7 +270,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('/payment-period')->group(function () {
             Route::get('/', PaymentPeriodList::class)->name('payment_period')->middleware(['permission:patient.payment-period.view']);
-            Route::get('/{id}/details', PaymentPeriodForm::class)->name('payment_period_details')->name('payment_period')->middleware(['permission:patient.payment-period.view']);
+            Route::get('/{id}/details', PaymentPeriodForm::class)->name('payment_period_details')->middleware(['permission:patient.payment-period.view']);
         });
     });
     // Patient End Category
