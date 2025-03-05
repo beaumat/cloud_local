@@ -111,7 +111,7 @@ class BankTransferServices
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
-        BankTransfer::where('ID', $ID)
+        BankTransfer::where('ID','=', $ID)
             ->update([
                 'STATUS' => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate()

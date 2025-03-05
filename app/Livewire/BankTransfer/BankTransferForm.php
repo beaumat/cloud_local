@@ -96,8 +96,8 @@ class BankTransferForm extends Component
         $this->CODE = $data->CODE;
         $this->DATE = $data->DATE;
         $this->AMOUNT = $data->AMOUNT ?? 0;
-        $this->FROM_BANK_ACCOUNT_ID = $data->FROM_ACCOUNT_ID ?? 0;
-        $this->TO_BANK_ACCOUNT_ID = $data->TO_ACCOUNT_ID ?? 0;
+        $this->FROM_BANK_ACCOUNT_ID = $data->FROM_BANK_ACCOUNT_ID ?? 0;
+        $this->TO_BANK_ACCOUNT_ID = $data->TO_BANK_ACCOUNT_ID ?? 0;
         $this->FROM_LOCATION_ID = $data->FROM_LOCATION_ID ?? 0;
         $this->TO_LOCATION_ID = $data->TO_LOCATION_ID ?? 0;
         $this->INTER_LOCATION_ACCOUNT_ID = $data->INTER_LOCATION_ACCOUNT_ID ?? 0;
@@ -121,7 +121,7 @@ class BankTransferForm extends Component
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
-            return Redirect::route('bankingfund_transfer')->with('error', $errorMessage);
+            return Redirect::route('bankingbank_transfer')->with('error', $errorMessage);
         }
 
         $this->LoadDropdown();
@@ -157,7 +157,7 @@ class BankTransferForm extends Component
 
         $this->validate(
             [
-                'CODE' => 'nullable|max:20|unique:fund_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'CODE' => 'nullable|max:20|unique:bank_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
                 'DATE' => 'required|date',
                 'FROM_LOCATION_ID' => 'required|exists:location,id',
                 'TO_LOCATION_ID' => 'required|exists:location,id',
@@ -203,7 +203,7 @@ class BankTransferForm extends Component
 
 
                 $this->bankTransferServices->StatusUpdate($this->ID, 0);
-                return Redirect::route('bankingfund_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+                return Redirect::route('bankingbank_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
                 $this->bankTransferServices->Update(
@@ -239,49 +239,49 @@ class BankTransferForm extends Component
 
 
         try {
-            $fundTransfer = $this->bankTransferServices->object_type_id;
+            $bankTransfer = $this->bankTransferServices->object_type_id;
 
-            $JOURNAL_NO = $this->accountJournalServices->getRecord($fundTransfer, $this->ID);
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($bankTransfer, $this->ID);
             if ($JOURNAL_NO == 0) {
-                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($fundTransfer, $this->ID) + 1;
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($bankTransfer, $this->ID) + 1;
             }
             // Inter From
-            $fundData = $this->bankTransferServices->getJournalFrom($this->ID, true, true);
+            $bankData = $this->bankTransferServices->getJournalFrom($this->ID, true, true);
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
-                $fundData,
+                $bankData,
                 $this->FROM_LOCATION_ID,
-                $fundTransfer,
+                $bankTransfer,
                 $this->DATE
             );
 
             //From
-            $fundData = $this->bankTransferServices->getJournalFrom($this->ID, false, false);
+            $bankData = $this->bankTransferServices->getJournalFrom($this->ID, false, false);
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
-                $fundData,
+                $bankData,
                 $this->FROM_LOCATION_ID,
-                $fundTransfer,
+                $bankTransfer,
                 $this->DATE
             );
 
             // Inter TO
-            $fundData = $this->bankTransferServices->getJournalTo($this->ID, false, true);
+            $bankData = $this->bankTransferServices->getJournalTo($this->ID, false, true);
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
-                $fundData,
+                $bankData,
                 $this->TO_LOCATION_ID,
-                $fundTransfer,
+                $bankTransfer,
                 $this->DATE
             );
 
             //TO
-            $fundData = $this->bankTransferServices->getJournalTo($this->ID, true, false);
+            $bankData = $this->bankTransferServices->getJournalTo($this->ID, true, false);
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
-                $fundData,
+                $bankData,
                 $this->TO_LOCATION_ID,
-                $fundTransfer,
+                $bankTransfer,
                 $this->DATE
             );
 
@@ -303,7 +303,7 @@ class BankTransferForm extends Component
     }
     public function updateCancel()
     {
-        return Redirect::route('bankingfund_transfer_edit', ['id' => $this->ID]);
+        return Redirect::route('bankingbank_transfer_edit', ['id' => $this->ID]);
     }
 
     #[On('clear-alert')]
@@ -370,7 +370,7 @@ class BankTransferForm extends Component
             DB::beginTransaction();
             $this->bankTransferServices->StatusUpdate($this->ID, 16);
             DB::commit();
-            Redirect::route('bankingfund_transfer_edit', $this->ID);
+            Redirect::route('bankingbank_transfer_edit', $this->ID);
         } catch (\Throwable $th) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $th->getMessage();

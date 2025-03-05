@@ -80,10 +80,10 @@
                                                 </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                            <td>{{ $list->FROM_BANK }}</td>
+                                            <td>{{ $list->FROM_BANK_NAME }}</td>
                                             <td>{{ $list->FROM_NAME }}</td>
                                             <td>{{ $list->LOCATION_FROM }}</td>
-                                            <td>{{ $list->TO_BANK }}</td>
+                                            <td>{{ $list->TO_BANK_NAME }}</td>
                                             <td>{{ $list->TO_NAME }}</td>
                                             <td>{{ $list->LOCATION_TO }}</td>
                                             <td>{{ $list->NOTES }}</td>

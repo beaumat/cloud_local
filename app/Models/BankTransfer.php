@@ -26,6 +26,8 @@ class BankTransfer extends Model
         'INTER_LOCATION_ACCOUNT_ID',
         'CLASS_ID',
         'AMOUNT',
-        'NOTES'
+        'NOTES',
+        'STATUS',
+        'STATUS_DATE'
     ];
 }
