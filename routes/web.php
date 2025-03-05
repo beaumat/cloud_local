@@ -8,6 +8,8 @@ use App\Livewire\AccountingReport\TrialBalanceReport;
 use App\Livewire\BankRecon\BankReconForm;
 use App\Livewire\BankRecon\BankReconFormPrint;
 use App\Livewire\BankRecon\BankReconList;
+use App\Livewire\BankTransfer\BankTransferForm;
+use App\Livewire\BankTransfer\BankTransferList;
 use App\Livewire\BillCredit\BillCreditForm;
 use App\Livewire\BillCredit\BillCreditList;
 use App\Livewire\BillPayments\BillPaymentForm;
@@ -408,6 +410,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', FundTransferForm::class)->name('fund_transfer_credit')->middleware(['permission:banking.fund-transfer.create']);
             Route::get('/{id}/edit', FundTransferForm::class)->name('fund_transfer_edit')->middleware(['permission:banking.fund-transfer.view']);
         });
+
+        Route::prefix('/bank-transfer')->group(function () {
+            Route::get('/', BankTransferList::class)->name('bank_transfer')->middleware(['permission:banking.bank-transfer.view']);
+            Route::get('/create', BankTransferForm::class)->name('bank_transfer_credit')->middleware(['permission:banking.bank-transfer.create']);
+            Route::get('/{id}/edit', BankTransferForm::class)->name('bank_transfer_edit')->middleware(['permission:banking.bank-transfer.view']);
+        });
+
 
         Route::prefix('/make-cheque')->group(function () {
             Route::get('/', WriteCheckList::class)->name('make_cheque')->middleware(['permission:banking.make-cheque.view']);

@@ -81,12 +81,12 @@ class FundTransferForm extends Component
         $this->toLocationList = $dataLocationList;
 
 
-        $dataContactList =  $this->contactServices->getListAllType();
+        $dataContactList = $this->contactServices->getListAllType();
         $this->fromContactList = $dataContactList;
         $this->toContactList = $dataContactList;
 
-        $acctList =  $this->accountServices->getAccount(false);
-        $this->fromAccountList =  $acctList;
+        $acctList = $this->accountServices->getAccount(false);
+        $this->fromAccountList = $acctList;
         $this->toAccountList = $acctList;
         $this->interLocationAccountList = $acctList;
     }
@@ -158,29 +158,29 @@ class FundTransferForm extends Component
 
         $this->validate(
             [
-                'CODE'                      => 'nullable|max:20|unique:fund_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'DATE'                      => 'required|date',
-                'FROM_LOCATION_ID'          => 'required|exists:location,id',
-                'TO_LOCATION_ID'            => 'required|exists:location,id',
-                'FROM_ACCOUNT_ID'           => 'required|exists:account,id',
-                'TO_ACCOUNT_ID'             => 'required|exists:account,id',
+                'CODE' => 'nullable|max:20|unique:fund_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'DATE' => 'required|date',
+                'FROM_LOCATION_ID' => 'required|exists:location,id',
+                'TO_LOCATION_ID' => 'required|exists:location,id',
+                'FROM_ACCOUNT_ID' => 'required|exists:account,id',
+                'TO_ACCOUNT_ID' => 'required|exists:account,id',
                 'INTER_LOCATION_ACCOUNT_ID' => 'required|exists:account,id',
-                'FROM_NAME_ID'              =>  $this->FROM_NAME_ID  > 0 ? 'exists:contact,id' : 'nullable',
-                'TO_NAME_ID'                =>  $this->TO_NAME_ID  > 0 ? 'exists:contact,id' : 'nullable',
-                'AMOUNT'                    => 'required|numeric|not_in:0'
+                'FROM_NAME_ID' => $this->FROM_NAME_ID > 0 ? 'exists:contact,id' : 'nullable',
+                'TO_NAME_ID' => $this->TO_NAME_ID > 0 ? 'exists:contact,id' : 'nullable',
+                'AMOUNT' => 'required|numeric|not_in:0'
             ],
             [],
             [
-                'CODE'                      => 'Reference No.',
-                'DATE'                      => 'Date',
-                'FROM_LOCATION_ID'          => 'From Location',
-                'TO_LOCATION_ID'            => 'To Location',
-                'FROM_ACCOUNT_ID'           => 'From Account',
-                'TO_ACCOUNT_ID'             => 'To Account',
+                'CODE' => 'Reference No.',
+                'DATE' => 'Date',
+                'FROM_LOCATION_ID' => 'From Location',
+                'TO_LOCATION_ID' => 'To Location',
+                'FROM_ACCOUNT_ID' => 'From Account',
+                'TO_ACCOUNT_ID' => 'To Account',
                 'INTER_LOCATION_ACCOUNT_ID' => 'Inter Location Account',
-                'FROM_NAME_ID'              => 'From Name',
-                'TO_NAME_ID'                => 'To Name',
-                'AMOUNT'                    => 'Amount Fund',
+                'FROM_NAME_ID' => 'From Name',
+                'TO_NAME_ID' => 'To Name',
+                'AMOUNT' => 'Amount Fund',
             ]
         );
 
@@ -221,7 +221,12 @@ class FundTransferForm extends Component
                     $this->AMOUNT
 
                 );
-                $this->fundTransferServices->StatusUpdate($this->ID, 0);
+
+
+                if ($this->STATUS == 16) {
+
+                }
+
                 session()->flash('message', 'Successfully updated');
             }
             $this->updateCancel();
@@ -238,7 +243,7 @@ class FundTransferForm extends Component
             $fundTransfer = $this->fundTransferServices->object_type_id;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($fundTransfer, $this->ID);
-            if ($JOURNAL_NO  == 0) {
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($fundTransfer, $this->ID) + 1;
             }
             // Inter From
@@ -340,7 +345,9 @@ class FundTransferForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function print() {}
+    public function print()
+    {
+    }
     public function OpenJournal()
     {
 

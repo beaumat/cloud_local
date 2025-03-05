@@ -23,6 +23,15 @@
             </li>
         @endcan
 
+        @can('banking.bank-transfer.view')
+            <li class="nav-item">
+                <a href="{{ route('bankingbank_transfer') }}"
+                    class="nav-link  {{ request()->is('banking/bank-transfer*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-stack-exchange nav-icon"></i>
+                    <p>Bank Transfer</p>
+                </a>
+            </li>
+        @endcan
         @can('banking.make-cheque.view')
             <li class="nav-item">
                 <a href="{{ route('bankingmake_cheque') }}"

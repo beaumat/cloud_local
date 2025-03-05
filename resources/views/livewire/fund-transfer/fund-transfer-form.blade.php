@@ -29,7 +29,7 @@
                                         <div class="col-md-4">
                                             <div class="card bg-light">
                                                 <div class="card-header card-primary text-primary text-sm">
-                                                    Transfer
+                                                    Received
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="container">
@@ -85,17 +85,7 @@
                                                                         wire:model='TO_NAME_ID' />
                                                                 @endif
                                                             </div>
-                                                            <div class="col-md-12">
-                                                                @if ($Modify)
-                                                                    <livewire:text-input name="NOTES"
-                                                                        titleName="Notes" :isDisabled=false
-                                                                        wire:model='NOTES' :vertical="false" />
-                                                                @else
-                                                                    <livewire:text-input name="NOTES"
-                                                                        titleName="Notes" :isDisabled=true
-                                                                        wire:model='NOTES' :vertical="false" />
-                                                                @endif
-                                                            </div>
+
 
                                                         </div>
                                                     </div>
@@ -107,30 +97,16 @@
                                         <div class="col-md-4">
                                             <div class="card bg-light">
                                                 <div class="card-header card-primary text-primary text-sm">
-                                                    Transaction
+                                                    Spend
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="container">
                                                         <div class="row">
-                                                            <div class="col-md-4">
-                                                                @if ($ID == 0 && auth()->user()->date_enabled)
-                                                                    <livewire:date-input name="DATE" titleName="Date"
-                                                                        wire:model.live='DATE' :isDisabled="false" />
-                                                                @else
-                                                                    <livewire:date-input name="DATE" titleName="Date"
-                                                                        wire:model.live='DATE' :isDisabled="true" />
-                                                                @endif
+                                                            <div class="col-md-12">
+                                                                &nbsp;
                                                             </div>
-                                                            <div class="col-md-4">
-                                                                @if ($Modify)
-                                                                    <livewire:text-input name="Code"
-                                                                        titleName="Reference No." :isDisabled=false
-                                                                        wire:model='CODE' />
-                                                                @else
-                                                                    <livewire:text-input name="Code"
-                                                                        titleName="Reference No." :isDisabled=true
-                                                                        wire:model='CODE' />
-                                                                @endif
+                                                            <div class="col-md-12">
+                                                                &nbsp;
                                                             </div>
                                                             <div class="col-md-12">
                                                                 @if ($Modify)
@@ -173,6 +149,39 @@
                                                                         wire:model='FROM_NAME_ID' />
                                                                 @endif
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card bg-light">
+                                                <div class="card-header card-primary text-primary text-sm">
+                                                    Transaction
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                @if ($ID == 0 && auth()->user()->date_enabled)
+                                                                    <livewire:date-input name="DATE" titleName="Date"
+                                                                        wire:model.live='DATE' :isDisabled="false" />
+                                                                @else
+                                                                    <livewire:date-input name="DATE" titleName="Date"
+                                                                        wire:model.live='DATE' :isDisabled="true" />
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                @if ($Modify)
+                                                                    <livewire:text-input name="Code"
+                                                                        titleName="Reference No." :isDisabled=false
+                                                                        wire:model='CODE' />
+                                                                @else
+                                                                    <livewire:text-input name="Code"
+                                                                        titleName="Reference No." :isDisabled=true
+                                                                        wire:model='CODE' />
+                                                                @endif
+                                                            </div>
                                                             <div class="col-md-12">
                                                                 @if ($Modify)
                                                                     <livewire:select-option
@@ -190,9 +199,20 @@
                                                                         wire:model='INTER_LOCATION_ACCOUNT_ID' />
                                                                 @endif
                                                             </div>
+                                                            <div class="col-md-12">
+                                                                @if ($Modify)
+                                                                    <livewire:text-input name="NOTES"
+                                                                        titleName="Notes" :isDisabled=false
+                                                                        wire:model='NOTES' :vertical="false" />
+                                                                @else
+                                                                    <livewire:text-input name="NOTES"
+                                                                        titleName="Notes" :isDisabled=true
+                                                                        wire:model='NOTES' :vertical="false" />
+                                                                @endif
+                                                            </div>
                                                         </div>
-
                                                     </div>
+
                                                 </div>
                                             </div>
 

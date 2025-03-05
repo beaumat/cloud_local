@@ -85,7 +85,9 @@ class BankTransferServices
                 DB::raw("(select contact.PRINT_NAME_AS from contact  where ID = bank_transfer.FROM_NAME_ID) as FROM_NAME"),
                 DB::raw("(select contact.PRINT_NAME_AS from contact  where ID = bank_transfer.TO_NAME_ID) as TO_NAME"),
                 'bank_transfer.NOTES',
-                'bank_transfer.AMOUNT'
+                'bank_transfer.AMOUNT',
+                'f.NAME as FROM_BANK_NAME',
+                't.NAME as TO_BANK_NAME'
             ])
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'bank_transfer.FROM_LOCATION_ID');
@@ -93,6 +95,8 @@ class BankTransferServices
                     $join->where('l.ID', $locationId);
                 }
             })
+            ->join('account as f', 'f.ID', '=', 'bank_transfer.FROM_BANK_ACCOUNT_ID')
+            ->join('account as t', 't.ID', '=', 'bank_transfer.TO_BANK_ACCOUNT_ID')
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
                     $q->where('bank_transfer.CODE', 'like', '%' . $search . '%')

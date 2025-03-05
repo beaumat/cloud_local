@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('companygeneral_journal') }}"> Fund Transfer </a></h5>
+                    <h5 class="m-0"><a href="{{ route('bankingfund_transfer') }}"> Fund Transfer </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -92,7 +92,7 @@
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
 
-                                                @if (auth()->user()->can('cbanking.fund-transfer.delete'))
+                                                @if (auth()->user()->can('banking.fund-transfer.delete'))
                                                     <button title="delete" wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-danger btn-xs">

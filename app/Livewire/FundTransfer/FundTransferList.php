@@ -52,7 +52,7 @@ class FundTransferList extends Component
     public function delete($id)
     {
 
-        $data = $this->generalJournalServices->Get($id);
+        $data = $this->fundTransferServices->Get($id);
 
         if ($data) {
 
@@ -60,26 +60,63 @@ class FundTransferList extends Component
             try {
                 DB::beginTransaction();
 
-                // $JOURNAL_NO = $this->accountJournalServices->getRecord(
-                //     $this->generalJournalServices->object_type_general_journal_details_id,
-                //     $id
-                // );
+                $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                    $this->fundTransferServices->object_type_id,
+                    $id
+                );
 
-                // if ($JOURNAL_NO  >  0) {
-                //     $dataList = $this->generalJournalServices->ListDetails($id);
-                //     foreach ($dataList as $list) {
-                //         $this->accountJournalServices->DeleteJournal(
-                //             $list->ACCOUNT_ID,
-                //             $data->LOCATION_ID,
-                //             $JOURNAL_NO,
-                //             0,
-                //             $list->ID,
-                //             $this->generalJournalServices->object_type_general_journal_details_id,
-                //             $data->DATE,
-                //             $list->ENTRY_TYPE
-                //         );
-                //     }
-                // }
+                if ($JOURNAL_NO > 0) {
+                    $data = $this->fundTransferServices->get($id);
+                    if ($data) {
+                        // FROM
+                        $this->accountJournalServices->DeleteJournal(
+                            $data->FROM_ACCOUNT_ID,
+                            $data->FROM_LOCATION_ID,
+                            $JOURNAL_NO,
+                            $data->FROM_NAME_ID ?? 0,
+                            $data->ID,
+                            $this->fundTransferServices->object_type_id,
+                            $data->DATE,
+                            1
+                        );
+                        $this->accountJournalServices->DeleteJournal(
+                            $data->INTER_LOCATION_ACCOUNT_ID,
+                            $data->FROM_LOCATION_ID,
+                            $JOURNAL_NO,
+                            $data->FROM_NAME_ID ?? 0,
+                            $data->ID,
+                            $this->fundTransferServices->object_type_id,
+                            $data->DATE,
+                            0
+                        );
+
+
+
+                        // TO
+                        $this->accountJournalServices->DeleteJournal(
+                            $data->TO_ACCOUNT_ID,
+                            $data->TO_LOCATION_ID,
+                            $JOURNAL_NO,
+                            $data->TO_NAME_ID ?? 0,
+                            $data->ID,
+                            $this->fundTransferServices->object_type_id,
+                            $data->DATE,
+                            0
+                        );
+                        // TO
+                        $this->accountJournalServices->DeleteJournal(
+                            $data->INTER_LOCATION_ACCOUNT_ID,
+                            $data->TO_LOCATION_ID,
+                            $JOURNAL_NO,
+                            $data->TO_NAME_ID ?? 0,
+                            $data->ID,
+                            $this->fundTransferServices->object_type_id,
+                            $data->DATE,
+                            1
+                        );
+
+                    }
+                }
 
                 $this->fundTransferServices->Delete($id);
                 DB::commit();
