@@ -37,29 +37,24 @@ class ItemActiveList extends Component
   public function OnClick(int $ID)
   {
     $data = [
-      'ITEM_ID'     => $ID,
+      'ITEM_ID' => $ID,
       'LOCATION_ID' => $this->LOCATION_ID,
-      'showModal'   => true,
-      'DATE'        => $this->DATE
+      'showModal' => true,
+      'DATE' => $this->DATE
     ];
 
     $this->dispatch('open-modal', result: $data);
   }
   public function showNotInclude()
   {
-    $data =  [
+    $data = [
       'PRICE_LEVEL_ID' => $this->PRICE_LEVEL_ID,
-      'LOCATION_ID'   => $this->LOCATION_ID
+      'LOCATION_ID' => $this->LOCATION_ID
     ];
     $this->dispatch('not-include-show', result: $data);
   }
-  public function boot(
-    UserServices $userServices,
-    DateServices $dateServices,
-    LocationServices $locationServices,
-    ItemServices $itemServices,
-    PriceLevelLineServices $priceLevelLineServices
-  ) {
+  public function boot(UserServices $userServices, DateServices $dateServices, LocationServices $locationServices, ItemServices $itemServices, PriceLevelLineServices $priceLevelLineServices)
+  {
     $this->userServices = $userServices;
     $this->dateServices = $dateServices;
     $this->locationServices = $locationServices;
@@ -89,14 +84,14 @@ class ItemActiveList extends Component
   }
   public function getPriceLevel()
   {
-    $data =  $this->locationServices->get($this->LOCATION_ID);
+    $data = $this->locationServices->get($this->LOCATION_ID);
     if ($data) {
       $this->PRICE_LEVEL_ID = $data->PRICE_LEVEL_ID;
     }
   }
   public function sorting(string $column)
   {
-    if ($this->sortby  == $column) {
+    if ($this->sortby == $column) {
       $this->isDesc = $this->isDesc ? false : true;
       $this->refreshItem();
       return;
@@ -115,8 +110,18 @@ class ItemActiveList extends Component
   }
   public function updatedLocationId()
   {
-    $this->getPriceLevel();
-    $this->refreshItem();
+
+    try {
+      $this->userServices->SwapLocation($this->LOCATION_ID);
+      $this->getPriceLevel();
+      $this->refreshItem();
+    } catch (\Exception $e) {
+      $errorMessage = 'Error occurred: ' . $e->getMessage();
+      session()->flash('error', $errorMessage);
+    }
+
+
+
   }
   #[On('refresh-active-list')]
   public function onset()
@@ -156,6 +161,15 @@ class ItemActiveList extends Component
       $this->refreshItem();
     }
   }
+
+  #[On('clear-alert')]
+  public function clearAlert()
+  {
+    $this->resetErrorBag();
+    session()->forget('message');
+    session()->forget('error');
+  }
+
   public function render()
   {
 

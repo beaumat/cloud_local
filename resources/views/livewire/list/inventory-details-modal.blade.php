@@ -7,6 +7,8 @@
                 <div class="modal-content text-left">
                     <div class="modal-header">{{ $ITEM_NAME }} : Inventory Item</div>
                     <div class="modal-body">
+                        @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+
                         <div id="tableContainer" style="max-height: 80vh; overflow-y: auto;">
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky sticky-header">
@@ -24,7 +26,9 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>{{ $list->TYPE }}</td>
-                                            <td>{{ date('m/d/Y', strtotime($list->SOURCE_REF_DATE)) }}</td>
+                                            <td wire:confirm='Are you sure'
+                                                wire:click="refreshOnHand('{{ $list->SOURCE_REF_DATE }}')">
+                                                {{ date('m/d/Y', strtotime($list->SOURCE_REF_DATE)) }}</td>
                                             <td>{{ $list->TX_CODE }}</td>
                                             <td>{{ $list->CONTACT_NAME }}</td>
                                             <td>{{ $list->TX_NOTES }}</td>

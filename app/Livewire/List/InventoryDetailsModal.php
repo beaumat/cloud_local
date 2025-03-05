@@ -59,6 +59,26 @@ class InventoryDetailsModal extends Component
     {
         $this->dispatch('scrollToBottom');
     }
+    public function refreshOnHand(string $DATE_START)
+    {
+       
+        if ($this->itemInventoryServices->isHaveInventoryAdjustmet($this->ITEM_ID, $this->LOCATION_ID, $DATE_START)) {
+
+            $this->itemInventoryServices->RecomputedOnhand($this->ITEM_ID, $this->LOCATION_ID, $DATE_START);
+
+            session()->flash('message', 'Successfully fixed');
+            return;
+        }
+
+        session()->flash('error', 'adjustment that date is not found');
+    }
+    #[On('clear-alert')]
+    public function clearAlert()
+    {
+        $this->resetErrorBag();
+        session()->forget('message');
+        session()->forget('error');
+    }
     public function render()
     {
         if ($this->showModal) {
