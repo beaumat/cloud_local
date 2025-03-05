@@ -120,8 +120,6 @@ class ItemActiveList extends Component
       session()->flash('error', $errorMessage);
     }
 
-
-
   }
   #[On('refresh-active-list')]
   public function onset()
