@@ -12,8 +12,10 @@ use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Bank Transfer')]
 class BankTransferForm extends Component
 {
 
