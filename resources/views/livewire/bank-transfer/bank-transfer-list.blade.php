@@ -64,7 +64,7 @@
                                         <th class="col-1">Amount</th>
                                         <th class="text-center bg-success col-1">
                                             @can('banking.bank-transfer.create')
-                                                <a href="{{ route('bankingfund_transfer_credit') }}"
+                                                <a href="{{ route('bankingbank_transfer_credit') }}"
                                                     class="text-white btn btn-xs btn-success w-100">
                                                     <i class="fas fa-plus"></i></a>
                                             @endcan
@@ -75,7 +75,7 @@
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('bankingfund_transfer_edit', ['id' => $list->ID]) }}">
+                                                <a href="{{ route('bankingbank_transfer_edit', ['id' => $list->ID]) }}">
                                                     {{ $list->CODE }}
                                                 </a>
                                             </td>
@@ -91,7 +91,7 @@
                                             <td class="text-center">
 
                                                 <a title="View"
-                                                    href="{{ route('bankingfund_transfer_edit', ['id' => $list->ID]) }}"
+                                                    href="{{ route('bankingbank_transfer_edit', ['id' => $list->ID]) }}"
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
