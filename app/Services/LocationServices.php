@@ -15,6 +15,10 @@ class LocationServices
     {
         return Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->get();
     }
+    public function getCenterList()
+    {
+        return Locations::query()->select(['ID', 'NAME'])->where('INACTIVE', '0')->where('USED_DRY_WEIGHT', '=', true)->get();
+    }
     public function SOA_FORMAT(int $LOCATION_ID)
     {
         $data = Locations::where('ID', '=', $LOCATION_ID)->first();
