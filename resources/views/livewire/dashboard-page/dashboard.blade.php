@@ -25,11 +25,12 @@
                         @livewire('DashBoardPage.PatientStatus')
                     </div>
                     <div class="col-md-3">
-                        @livewire('DashBoardPage.DoctorStatus')
-                    </div>
-                    <div class="col-md-3">
                         @livewire('DashBoardPage.TreatmentSummaryStatus')
                     </div>
+                    <div class="col-md-3">
+                        @livewire('DashBoardPage.DoctorStatus')
+                    </div>
+
                     <div class="col-md-3">
                         @livewire('DashBoardPage.PhilhealthStatus')
                     </div>

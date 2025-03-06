@@ -3,10 +3,12 @@
 namespace App\Livewire\DashboardPage;
 
 use App\Services\DateServices;
+use App\Services\PatientStatusServices;
 use Livewire\Component;
 
 class TreatmentSummaryStatus extends Component
-{
+{   
+    public $locaitonList = [];
     private $dateServices;
     public $monthlyList = [];
     public $yearList = [];
@@ -14,10 +16,11 @@ class TreatmentSummaryStatus extends Component
     public int $year = 0;
     public int $pre_month = 0;
     public int $pre_year = 0;
-
-    public function boot(DateServices $dateServices)
+    private $patientStatusServices;
+    public function boot(PatientStatusServices $patientStatusServices,DateServices $dateServices)
     {
         $this->dateServices = $dateServices;
+        $this->patientStatusServices = $patientStatusServices;
     }
     public function mount()
     {
@@ -26,7 +29,7 @@ class TreatmentSummaryStatus extends Component
 
         $this->month = $this->dateServices->NowMonth();
         $this->year = $this->dateServices->NowYear();
-        $this->setPrev();
+    
     }
 
     private function setPrev()
@@ -42,6 +45,8 @@ class TreatmentSummaryStatus extends Component
     }
     public function render()
     {
+        $this->setPrev();
+        $this->locaitonList = $this->patientStatusServices->getList($this->month, $this->year);
         return view('livewire.dashboard-page.treatment-summary-status');
     }
 }

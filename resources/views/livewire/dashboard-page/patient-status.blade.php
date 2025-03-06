@@ -1,6 +1,6 @@
      <div class="small-box text-bg-primary">
          <div class="inner">
-             <p class="h6">Monthly Patient Summary </p>
+             <p class="h6">Patient Summary </p>
          </div>
          <div class="inner" style="height:300px;">
              <div class="row">
