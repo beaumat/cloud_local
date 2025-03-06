@@ -185,10 +185,9 @@ class BankTransferForm extends Component
             ]
         );
 
-
+        DB::beginTransaction();
         try {
             if ($this->ID == 0) {
-
                 $this->ID = $this->bankTransferServices->Store(
                     $this->DATE,
                     $this->CODE,
@@ -202,12 +201,12 @@ class BankTransferForm extends Component
                     $this->NOTES,
                     $this->AMOUNT
                 );
-
-
                 $this->bankTransferServices->StatusUpdate($this->ID, 0);
                 return Redirect::route('bankingbank_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
-
+                if ($this->STATUS == 16) {
+                    $this->editJournal();
+                }
                 $this->bankTransferServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -222,18 +221,47 @@ class BankTransferForm extends Component
                     $this->AMOUNT
 
                 );
-
-
-                if ($this->STATUS == 16) {
-
-                }
-
                 session()->flash('message', 'Successfully updated');
             }
+            DB::commit();
             $this->updateCancel();
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
+        }
+    }
+
+    private function editJournal()
+    {
+
+        $data = $this->fundTransferServices->Get($this->ID);
+
+        if ($data) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->bankTransferServices->object_type_id, $this->ID);
+            $this->updateJournal($JOURNAL_NO, 1, $this->FROM_BANK_ACCOUNT_ID, $this->FROM_NAME_ID, $this->FROM_LOCATION_ID, $data->FROM_BANK_ACCOUNT_ID);
+            $this->updateJournal($JOURNAL_NO, 0, $this->INTER_LOCATION_ACCOUNT_ID, $this->FROM_NAME_ID, $this->FROM_LOCATION_ID, $data->INTER_LOCATION_ACCOUNT_ID);
+            $this->updateJournal($JOURNAL_NO, 0, $this->TO_BANK_ACCOUNT_ID, $this->TO_NAME_ID, $this->TO_LOCATION_ID, $data->TO_BANK_ACCOUNT_ID);
+            $this->updateJournal($JOURNAL_NO, 1, $this->INTER_LOCATION_ACCOUNT_ID, $this->TO_NAME_ID, $this->TO_LOCATION_ID, $data->INTER_LOCATION_ACCOUNT_ID);
+        }
+    }
+    private function updateJournal(int $JOURNAL_NO, int $ENTRY_TYPE, int $ACCOUNT_ID, int $NAME_ID, int $LOCATION_ID, int $PREV_ACCOUNT_ID)
+    {
+        if ($JOURNAL_NO > 0) {
+
+            $this->accountJournalServices->parameterUpdate([
+                ['JOURNAL_NO', '=', $JOURNAL_NO],
+                ['OBJECT_TYPE', '=', $this->bankTransferServices->object_type_id],
+                ['OBJECT_ID', '=', $this->ID],
+                ['ENTRY_TYPE', '=', $ENTRY_TYPE],
+                ['LOCATION_ID', '=', $LOCATION_ID],
+                ['ACCOUNT_ID', '=', $PREV_ACCOUNT_ID],
+
+            ], [
+                'AMOUNT' => $this->AMOUNT,
+                'ACCOUNT_ID' => $ACCOUNT_ID,
+                'SUBSIDIARY_ID' => $NAME_ID
+            ]);
         }
     }
     private function AccountJournal(): bool

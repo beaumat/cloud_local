@@ -791,4 +791,8 @@ class AccountJournalServices
         }
 
     }
+    public function parameterUpdate($where=[],$update=[]) {
+        
+        AccountJournal::where($where)->update($update);
+    }
 }

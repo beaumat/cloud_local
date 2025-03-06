@@ -112,14 +112,18 @@ class FundTransferForm extends Component
     public function mount($id = null)
     {
 
-
         if (is_numeric($id)) {
-            $data = $this->fundTransferServices->Get($id);
-            if ($data) {
-                $this->LoadDropdown();
-                $this->getInfo($data);
-                $this->Modify = false;
-                return;
+            try {
+                $data = $this->fundTransferServices->Get($id);
+                if ($data) {
+                    $this->LoadDropdown();
+                    $this->getInfo($data);
+                    $this->Modify = false;
+                    return;
+                }
+
+            } catch (\Throwable $th) {
+                //throw $th;
             }
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('bankingfund_transfer')->with('error', $errorMessage);
@@ -134,15 +138,12 @@ class FundTransferForm extends Component
         $this->TO_ACCOUNT_ID = 0;
 
         $this->INTER_LOCATION_ACCOUNT_ID = 0;
-
         $this->FROM_LOCATION_ID = $this->userServices->getLocationDefault();
         $this->TO_LOCATION_ID = 0;
 
         $this->FROM_NAME_ID = 0;
         $this->TO_NAME_ID = 0;
         $this->AMOUNT = 0;
-
-
         $this->NOTES = '';
 
         $this->STATUS = 0;
@@ -184,7 +185,7 @@ class FundTransferForm extends Component
             ]
         );
 
-
+        DB::beginTransaction();
         try {
             if ($this->ID == 0) {
 
@@ -206,7 +207,9 @@ class FundTransferForm extends Component
                 $this->fundTransferServices->StatusUpdate($this->ID, 0);
                 return Redirect::route('bankingfund_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
-
+                if ($this->STATUS == 16) {
+                    $this->editJournal();
+                }
                 $this->fundTransferServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -219,20 +222,49 @@ class FundTransferForm extends Component
                     $this->INTER_LOCATION_ACCOUNT_ID,
                     $this->NOTES,
                     $this->AMOUNT
-
                 );
-
-
-                if ($this->STATUS == 16) {
-
-                }
 
                 session()->flash('message', 'Successfully updated');
             }
+
+            DB::commit();
             $this->updateCancel();
         } catch (\Exception $e) {
+            DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
+        }
+    }
+    private function editJournal()
+    {
+
+        $data = $this->fundTransferServices->Get($this->ID);
+
+        if ($data) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->fundTransferServices->object_type_id, $this->ID);
+            $this->updateJournal($JOURNAL_NO, 1, $this->FROM_ACCOUNT_ID, $this->FROM_NAME_ID, $this->FROM_LOCATION_ID, $data->FROM_ACCOUNT_ID);
+            $this->updateJournal($JOURNAL_NO, 0, $this->INTER_LOCATION_ACCOUNT_ID, $this->FROM_NAME_ID, $this->FROM_LOCATION_ID, $data->INTER_LOCATION_ACCOUNT_ID);
+            $this->updateJournal($JOURNAL_NO, 0, $this->TO_ACCOUNT_ID, $this->TO_NAME_ID, $this->TO_LOCATION_ID, $data->TO_ACCOUNT_ID);
+            $this->updateJournal($JOURNAL_NO, 1, $this->INTER_LOCATION_ACCOUNT_ID, $this->TO_NAME_ID, $this->TO_LOCATION_ID, $data->INTER_LOCATION_ACCOUNT_ID);
+        }
+    }
+    private function updateJournal(int $JOURNAL_NO, int $ENTRY_TYPE, int $ACCOUNT_ID, int $NAME_ID, int $LOCATION_ID, int $PREV_ACCOUNT_ID)
+    {
+        if ($JOURNAL_NO > 0) {
+
+            $this->accountJournalServices->parameterUpdate([
+                ['JOURNAL_NO', '=', $JOURNAL_NO],
+                ['OBJECT_TYPE', '=', $this->fundTransferServices->object_type_id],
+                ['OBJECT_ID', '=', $this->ID],
+                ['ENTRY_TYPE', '=', $ENTRY_TYPE],
+                ['LOCATION_ID', '=', $LOCATION_ID],
+                ['ACCOUNT_ID', '=', $PREV_ACCOUNT_ID],
+
+            ], [
+                'AMOUNT' => $this->AMOUNT,
+                'ACCOUNT_ID' => $ACCOUNT_ID,
+                'SUBSIDIARY_ID' => $NAME_ID
+            ]);
         }
     }
     private function AccountJournal(): bool
