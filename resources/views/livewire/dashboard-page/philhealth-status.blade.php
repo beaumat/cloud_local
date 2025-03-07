@@ -1,6 +1,6 @@
    <div class="small-box bg-white">
        <div class="inner">
-           <p class="h6">Philhealth Monitoring </p>
+           <p class="h6">Philhealth Monitoring Summary</p>
        </div>
        <div class="inner" style="height:300px;">
            <div class="row">
@@ -15,9 +15,9 @@
                <thead>
                    <tr>
                        <th class="col-3">Branch</th>
-                       <th class="text-center col-2">Last SOA Created</th>
+                       <th class="text-center col-2">Latest SOA Created</th>
                        <th class="text-center col-2"># of w/o Transmittal</th>
-                       <th class="text-center col-2">Latest Due w/o Tras.</th>
+                       <th class="text-center col-2">Latest Due w/o Trans.</th>
                        <th class="text-center col-2"># w/o Paid</th>
                    </tr>
                </thead>
