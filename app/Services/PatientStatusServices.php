@@ -52,4 +52,20 @@ class PatientStatusServices
             ->where('USED_DRY_WEIGHT', '=', true)
             ->get();
     }
+
+    public function getPhilheatlh()
+    {
+
+
+        return DB::table('location')
+            ->select([
+                'ID',
+                'NAME',
+       
+
+            ])
+            ->where('INACTIVE', '0')
+            ->where('USED_DRY_WEIGHT', '=', true)
+            ->get();
+    }
 }

@@ -1,4 +1,4 @@
-     <div class="small-box text-bg-primary">
+     <div class="small-box bg-white">
          <div class="inner">
              <p class="h6">Patient Summary </p>
          </div>

@@ -1,18 +1,18 @@
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
-            <div class="mb-2 row">
+            {{-- <div class="mb-2 row">
                 <div class="col-sm-6">
                     <h4 class="m-0"><a href="{{ route('dashboard') }}"> Dashboard </a></h4>
-                </div><!-- /.col -->
+                </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
 
                         </li>
                     </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
+                </div>
+            </div> --}}
         </div>
     </div>
     <!-- Main content -->
@@ -28,12 +28,15 @@
                         @livewire('DashBoardPage.TreatmentSummaryStatus')
                     </div>
                     <div class="col-md-3">
-                        @livewire('DashBoardPage.DoctorStatus')
-                    </div>
-
-                    <div class="col-md-3">
                         @livewire('DashBoardPage.PhilhealthStatus')
                     </div>
+                    <div class="col-md-3">
+                        @livewire('DashBoardPage.DoctorStatus')
+                    </div>
+                    <div class="col-md-3">
+                        @livewire('DashBoardPage.SalesCollection')
+                    </div>
+
                     <div class="col-md-3">
                         @livewire('DashBoardPage.ReceivableStatus')
                     </div>

@@ -1,7 +1,7 @@
-     <div class="small-box text-bg-primary">
+     <div class="small-box bg-white">
          <div class="inner row">
              <div class="col-6">
-                 <p class="h6">Treatment Report Summary </p>
+                 <p class="h6">Treatment Summary </p>
              </div>
              <div class="col-6">
                <span class="badge bg-info">Previous</span> <span class="badge bg-primary">Selected</span>
@@ -32,7 +32,7 @@
                  <thead>
                      <tr>
                          <th>Branch</th>
-                         <th class="text-center">Philheatlh</th>
+                         <th class="text-center">Philhealth</th>
                          <th class="text-center">Priming</th>
                          <th class="text-center">Regular Rate</th>
                          <th class="text-center">No of Treament</th>
