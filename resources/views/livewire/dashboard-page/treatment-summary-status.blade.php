@@ -3,7 +3,7 @@
              <div class="col-6">
                  <p class="h6">Treatment Summary </p>
              </div>
-             <div class="col-6">
+             <div class="col-6 text-right">
                <span class="badge bg-info">Previous</span> <span class="badge bg-primary">Selected</span>
              </div>
          </div>
