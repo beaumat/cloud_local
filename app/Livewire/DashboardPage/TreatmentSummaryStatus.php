@@ -14,8 +14,8 @@ class TreatmentSummaryStatus extends Component
     public $yearList = [];
     public int $month = 0;
     public int $year = 0;
-    public int $pre_month = 0;
-    public int $pre_year = 0;
+    public int $prev_month = 0;
+    public int $prev_year = 0;
     private $patientStatusServices;
     public function boot(PatientStatusServices $patientStatusServices,DateServices $dateServices)
     {
@@ -36,17 +36,20 @@ class TreatmentSummaryStatus extends Component
     {
         $current = $this->month - 1;
         if ($current == 0) {
-            $this->pre_year = $this->year - 1;
-            $this->pre_month = 12;
+            $this->prev_year = $this->year - 1;
+            $this->prev_month = 12;
+            return;
         }
-        $this->pre_month = $current;
+        $this->prev_month = $current;
+        $this->prev_year = $this->year;
 
 
     }
     public function render()
     {
         $this->setPrev();
-        $this->locaitonList = $this->patientStatusServices->getList($this->month, $this->year);
+        // dd($this->prev_month . '   ' . $this->prev_year );
+        $this->locaitonList = $this->patientStatusServices->getTreatmentSummaryList($this->month, $this->year, $this->prev_month, $this->prev_year);
         return view('livewire.dashboard-page.treatment-summary-status');
     }
 }

@@ -1,12 +1,17 @@
      <div class="small-box text-bg-primary">
-         <div class="inner">
-             <p class="h6">Treatment Report Summary </p>
+         <div class="inner row">
+             <div class="col-6">
+                 <p class="h6">Treatment Report Summary </p>
+             </div>
+             <div class="col-6">
+               <span class="badge bg-info">Previous</span> <span class="badge bg-primary">Selected</span>
+             </div>
          </div>
          <div class="inner" style="height:300px;">
              <div class="row">
 
                  <div class="col-8">
-                     <div class="text-xs">Month</div>
+                     <div class="text-xs">Select: Month</div>
                      <select class="text-xs w-100" wire:model.live='month'>
                          @foreach ($monthlyList as $list)
                              <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
@@ -14,7 +19,7 @@
                      </select>
                  </div>
                  <div class='col-4'>
-                     <div class="text-xs">Year</div>
+                     <div class="text-xs">Select: Year</div>
                      <select class="text-xs w-100" wire:model.live='year'>
                          @foreach ($yearList as $list)
                              <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
@@ -27,10 +32,10 @@
                  <thead>
                      <tr>
                          <th>Branch</th>
-                         <th class="text-center">No of Treament</th>
                          <th class="text-center">Philheatlh</th>
                          <th class="text-center">Priming</th>
                          <th class="text-center">Regular Rate</th>
+                         <th class="text-center">No of Treament</th>
                      </tr>
 
                  </thead>
@@ -39,10 +44,35 @@
                      @foreach ($locaitonList as $list)
                          <tr>
                              <td>{{ $list->NAME }}</td>
-                             <td class="text-center">1000/120</td>
-                             <td class="text-center">1000/120</td>
-                             <td class="text-center">1000/120</td>
-                             <td class="text-center">1000/120</td>
+                             <td class="text-center ">
+                                 <div class="row">
+                                     <div class="text-info col-6">{{ $list->PREV_TOTAL_PHILHEALTH }}</div>
+                                     <div class="text-primary col-6">{{ $list->TOTAL_PHILHEALTH }}</div>
+                                 </div>
+                             </td>
+                             <td class="text-center">
+                                 <div class="row">
+                                     <div class="text-info col-6">{{ $list->PREV_TOTAL_PRIMING }}</div>
+                                     <div class="text-primary col-6">{{ $list->TOTAL_PRIMING }}</div>
+                                 </div>
+
+                             </td>
+                             <td class="text-center">
+                                 <div class="row">
+                                     <div class="text-info col-6">{{ $list->PREV_TOTAL_REGULAR }}</div>
+                                     <div class="text-primary col-6">{{ $list->TOTAL_REGULAR }}</div>
+                                 </div>
+                             </td>
+                             <td class="text-center">
+                                 <div class="row">
+                                     <div class="text-info col-6">
+                                         {{ $list->PREV_TOTAL_PHILHEALTH + $list->PREV_TOTAL_PRIMING + $list->PREV_TOTAL_REGULAR }}
+                                     </div>
+                                     <div class="text-primary col-6">
+                                         {{ $list->TOTAL_PHILHEALTH + $list->TOTAL_PRIMING + $list->TOTAL_REGULAR }}
+                                     </div>
+                                 </div>
+                             </td>
                          </tr>
                      @endforeach
                  </tbody>
