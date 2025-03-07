@@ -47,9 +47,12 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-6">
-                                    <a type="button"
-                                        href="{{ route('maintenancecontactprint_medical_cert', ['id' => $PATIENT_ID]) }}"
-                                        class="btn btn-sm btn-warning" target="_blank"> Print</a>
+                                    @if ($MED_CERT_NURSE_ID > 0)
+                                        <a type="button"
+                                            href="{{ route('maintenancecontactprint_medical_cert', ['id' => $PATIENT_ID]) }}"
+                                            class="btn btn-sm btn-warning" target="_blank"> Print</a>
+                                    @endif
+
                                 </div>
                                 <div class="col-6 text-right">
                                     {{-- <button type="button" class="btn btn-success btn-sm" wire:click="SaveChange()">Save
