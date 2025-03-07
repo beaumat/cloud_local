@@ -21,19 +21,19 @@
                                 :options="$medCertScheduleList" :zero="true" wire:model.live='MED_CERT_SCHED_ID'
                                 :vertical="false" :withLabel="true" isDisabled="{{ false }}" /> --}}
                             <livewire:custom-check-box name="FIX_MON" titleName="Monday" :isDisabled="false"
-                                wire:model='FIX_MON' />
+                                wire:model.live='FIX_MON' />
                             <livewire:custom-check-box name="FIX_TUE" titleName="Tuesday" :isDisabled="false"
-                                wire:model='FIX_TUE' />
-                            <livewire:custom-check-box name="FIX_WED" titleName="Wensday" :isDisabled="false"
-                                wire:model='FIX_WED' />
+                                wire:model.live='FIX_TUE' />
+                            <livewire:custom-check-box name="FIX_WEN" titleName="Wensday" :isDisabled="false"
+                                wire:model.live='FIX_WEN' />
                             <livewire:custom-check-box name="FIX_THU" titleName="Thursday" :isDisabled="false"
-                                wire:model='FIX_THU' />
+                                wire:model.live='FIX_THU' />
                             <livewire:custom-check-box name="FIX_FRI" titleName="Friday" :isDisabled="false"
-                                wire:model='FIX_FRI' />
+                                wire:model.live='FIX_FRI' />
                             <livewire:custom-check-box name="FIX_SAT" titleName="Saturday" :isDisabled="false"
-                                wire:model='FIX_SAT' />
+                                wire:model.live='FIX_SAT' />
                             <livewire:custom-check-box name="FIX_SUN" titleName="Sunday" :isDisabled="false"
-                                wire:model='FIX_SUN' />
+                                wire:model.live='FIX_SUN' />
 
                         </div>
 
@@ -47,13 +47,16 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-6">
-                                    <a type="button"
-                                        href="{{ route('maintenancecontactprint_medical_cert', ['id' => $PATIENT_ID]) }}"
-                                        class="btn btn-sm btn-warning" target="_blank"> Print</a>
+                                    @if ($MED_CERT_NURSE_ID > 0)
+                                        <a type="button"
+                                            href="{{ route('maintenancecontactprint_medical_cert', ['id' => $PATIENT_ID]) }}"
+                                            class="btn btn-sm btn-warning" target="_blank"> Print</a>
+                                    @endif
+
                                 </div>
                                 <div class="col-6 text-right">
-                                    <button type="button" class="btn btn-success btn-sm" wire:click="SaveChange()">Save
-                                    </button>
+                                    {{-- <button type="button" class="btn btn-success btn-sm" wire:click="SaveChange()">Save
+                                    </button> --}}
                                     <button type="button" class="btn btn-secondary btn-sm"
                                         wire:click="closeModal">Close</button>
                                 </div>

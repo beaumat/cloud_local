@@ -1,4 +1,6 @@
 <div>
+
+
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -23,11 +25,11 @@
                     <b class="print-title">HEMODIALYSIS TREATMENT SHEET</b>
                 </div>
                 <div class="col-6">
-                    <b>ID NO.:</b> <u class="text-primary font-weight-bold">{{ $CODE }}</u>
+                    <b>ID NO.:</b> <u class="text-purple font-weight-bold font-weight-bold">{{ $CODE }}</u>
                 </div>
 
                 <div class="col-6 text-right">
-                    <b>PHIC NO.:</b> <u class="text-primary font-weight-bold">
+                    <b>PHIC NO.:</b> <u class="text-purple font-weight-bold font-weight-bold">
                         @if ($PHIC_NO)
                             {{ $PHIC_NO }}
                         @else
@@ -38,23 +40,23 @@
                 <div class="col-12 top-line left-line right-line">
                     <div class="row font-weight-bold" id="firstfloor">
                         <div class="col-4">NAME:
-                            <label class="text-primary font-weight-bold text-uppercase">{{ $FULL_NAME }}</label>
+                            <label class="text-purple font-weight-bold font-weight-bold text-uppercase">{{ $FULL_NAME }}</label>
                         </div>
 
                         <div class="col-2">
                             AGE:
-                            <label class="text-primary font-weight-bold text-uppercase">{{ $AGE }}</label>
+                            <label class="text-purple font-weight-bold font-weight-bold text-uppercase">{{ $AGE }}</label>
                         </div>
                         <div class="col-2">NO. OF TREATMENT:
-                            <label class="text-primary font-weight-bold">{{ $NO_OF_TREATMENT }}</label>
+                            <label class="text-purple font-weight-bold font-weight-bold">{{ $NO_OF_TREATMENT }}</label>
                         </div>
-                        <div class="col-2">MACHINE NO. : <label class="text-primary font-weight-bold">
+                        <div class="col-2">MACHINE NO. : <label class="text-purple font-weight-bold font-weight-bold">
                                 @if ($MACHINE_NO > 0)
                                     {{ $MACHINE_NO }}
                                 @endif
                             </label></div>
                         <div class="col-2">DATE: <label
-                                class="text-primary font-weight-bold">{{ \Carbon\Carbon::parse($DATE)->format('m/d/Y') }}</label>
+                                class="text-purple font-weight-bold font-weight-bold">{{ \Carbon\Carbon::parse($DATE)->format('m/d/Y') }}</label>
                         </div>
                     </div>
                 </div>
@@ -65,9 +67,10 @@
                                 <div class="col-12 bottom-line-hide">
 
                                     <p class="up-space down-space"> &nbsp;@if ($DRY_WEIGHT)
-                                        DRY WEIGHT: _________
-                                    @endif </p>
-                             
+                                            DRY WEIGHT: _________
+                                        @endif
+                                    </p>
+
                                 </div>
                                 <div class="col-12 bottom-line up-space">
                                     &nbsp;
@@ -234,7 +237,7 @@
                             <div class="row">
                                 <div class="col-12 bottom-line">
                                     <p class="up-space down-space"> <b>UF GOAL :</b><span
-                                            class="text-sm font-weight-bold text-primary">&nbsp;{{ $UF_GOAL }}</span>
+                                            class="text-sm font-weight-bold text-purple font-weight-bold">&nbsp;{{ $UF_GOAL }}</span>
                                     </p>
                                 </div>
                                 <div class="col-4 ">
@@ -245,7 +248,7 @@
                                                     BFR
                                                 </div>
                                                 <div
-                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    class="col-5 text-center bottom-line2 text-purple font-weight-bold font-weight-normal">
                                                     &nbsp;{{ $BFR > 0 ? $BFR : '' }}
                                                 </div>
                                             </div>
@@ -254,7 +257,7 @@
                                             <div class="row right-space">
                                                 <div class="col-7">DFR</div>
                                                 <div
-                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    class="col-5 text-center bottom-line2 text-purple font-weight-bold font-weight-normal">
                                                     &nbsp;{{ $DFR > 0 ? $DFR : '' }}
                                                 </div>
                                             </div>
@@ -263,7 +266,7 @@
                                             <div class="row right-space">
                                                 <div class="col-7">DURATION</div>
                                                 <div
-                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    class="col-5 text-center bottom-line2 text-purple font-weight-bold font-weight-normal">
                                                     &nbsp;{{ $DURATION > 0 ? $DURATION . 'hrs' : '' }}</div>
                                             </div>
                                         </div>
@@ -271,7 +274,7 @@
                                             <div class="row right-space">
                                                 <div class="col-7">DIALYZER</div>
                                                 <div
-                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    class="col-5 text-center bottom-line2 text-purple font-weight-bold font-weight-normal">
                                                     <span class="text-xs">&nbsp;{{ $DIALYZER }}</span>
                                                 </div>
                                             </div>
@@ -280,7 +283,7 @@
                                             <div class="row right-space">
                                                 <div class="col-7">RE-USE NO.</div>
                                                 <div
-                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    class="col-5 text-center bottom-line2 text-purple font-weight-bold font-weight-normal">
                                                     <span class="text-md"> &nbsp;{{ $REUSE_NO }}</span>
                                                 </div>
                                             </div>
@@ -289,7 +292,7 @@
                                             <div class="row right-space">
                                                 <div class="col-7">HEPARIN</div>
                                                 <div
-                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    class="col-5 text-center bottom-line2 text-purple font-weight-bold font-weight-normal">
                                                     <span class="text-xs"
                                                         style="position:absolute;width:80px;left:0">&nbsp;
                                                         {{ $HEPARIN }}</span>
@@ -300,7 +303,7 @@
                                             <div class="row right-space">
                                                 <div class="col-7">FLUSHING</div>
                                                 <div
-                                                    class="col-5 text-center bottom-line2 text-primary font-weight-normal">
+                                                    class="col-5 text-center bottom-line2 text-purple font-weight-bold font-weight-normal">
                                                     <span class="text-xs"
                                                         style="position:absolute;width:80px;left:0">&nbsp;
                                                         {{ $FLUSHING }}</span>
@@ -390,21 +393,21 @@
                                         <div class="col-12 text-center">
                                             <div class="row text-xs mt-3">
                                                 <div class="col-3 text-right"> Na :</div>
-                                                <div class="col-3 bottom-line2 text-primary">&nbsp;{{ $DIALSATE_N }}
+                                                <div class="col-3 bottom-line2 text-purple font-weight-bold">&nbsp;{{ $DIALSATE_N }}
                                                 </div>
                                                 <div class="col-3">meq/L </div>
                                             </div>
 
                                             <div class="row text-xs ">
                                                 <div class="col-3 text-right"> K+ :</div>
-                                                <div class="col-3 bottom-line2 text-primary">&nbsp;{{ $DIALSATE_K }}
+                                                <div class="col-3 bottom-line2 text-purple font-weight-bold">&nbsp;{{ $DIALSATE_K }}
                                                 </div>
                                                 <div class="col-3">meq/L </div>
                                             </div>
 
                                             <div class="row text-xs ">
                                                 <div class="col-3 text-right"> Ca+ :</div>
-                                                <div class="col-3 bottom-line2 text-primary">&nbsp;{{ $DIALSATE_C }}
+                                                <div class="col-3 bottom-line2 text-purple font-weight-bold">&nbsp;{{ $DIALSATE_C }}
                                                 </div>
                                                 <div class="col-3">meq/L </div>
                                             </div>
@@ -422,7 +425,7 @@
                             <label class="text-sm">NEPHROLOGIST:</label>
                             <div class="form-group px-3">
                                 <div class="row ">
-                                    <div class="col-12 bottom-line2 text-uppercase text-center text-primary">
+                                    <div class="col-12 bottom-line2 text-uppercase text-center text-purple font-weight-bold">
                                         &nbsp;{{ $NEPRHO_NAME }}
                                     </div>
                                     <div class="col-12  text-center">
@@ -451,7 +454,7 @@
                             <label class="text-sm">DIAGNOSIS:</label>
                             <div class="form-group px-3">
                                 <div class="row">
-                                    <div class="col-12 bottom-line2 text-uppercase text-center text-primary">
+                                    <div class="col-12 bottom-line2 text-uppercase text-center text-purple font-weight-bold">
                                         &nbsp; {{ $DIAGNOSIS }}
                                     </div>
                                     <div class="col-12  text-center">
@@ -817,7 +820,7 @@
                                             SIGNATURE:
                                         </div>
                                         <div class="col-6 text-left bottom-line2">
-                                            <span class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span>
+                                            <span class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span>
                                         </div>
 
                                     </div>
@@ -978,7 +981,7 @@
                                             SIGNATURE:
                                         </div>
                                         <div class="col-6 text-left bottom-line2">
-                                            <span class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span>
+                                            <span class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span>
                                         </div>
 
                                     </div>
@@ -1003,7 +1006,7 @@
                     </thead>
                     <tbody>
                         @foreach ($noteList as $list)
-                            <tr class="text-center top-line text-primary">
+                            <tr class="text-center top-line text-purple font-weight-bold">
                                 <td>{{ date('h:i:s A', strtotime($list->TIME)) }}</td>
                                 <td class="left-line">
                                     <div class="row">
@@ -1057,7 +1060,7 @@
                             <div class="row">
                                 <div class="col-4 text-sm text-left"><b>CANNULATED&nbsp;BY&nbsp;:</b></div>
                                 <div class="col-8 text-sm bottom-line2"> <span
-                                        class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
+                                        class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
                             </div>
                             <div class="row">
                                 <div class="col-4 text-sm text-left"> <b>NO&nbsp;OF&nbsp;ATTEMPT:</b> </div>
@@ -1098,17 +1101,17 @@
                             <div class="row">
                                 <div class="col-4 text-sm text-left"><b>PRIMED&nbsp;BY&nbsp;:</b></div>
                                 <div class="col-8 text-sm bottom-line2"><span
-                                        class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
+                                        class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
                             </div>
                             <div class="row">
                                 <div class="col-4 text-sm text-left"><b>INITIATED&nbsp;BY&nbsp;:</b></div>
                                 <div class="col-8 text-sm bottom-line2"><span
-                                        class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
+                                        class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
                             </div>
                             <div class="row">
                                 <div class="col-4 text-sm text-left"><b>TERMINATED&nbsp;BY&nbsp;:</b></div>
                                 <div class="col-8 text-sm bottom-line2"><span
-                                        class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
+                                        class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span></div>
                             </div>
                         </div>
                         <div class="col-4">
@@ -1139,7 +1142,7 @@
                                             <b>GIVEN&nbsp;BY: </b>
                                         </div>
                                         <div class="col-8 text-sm text-left bottom-line2">
-                                            <span class="text-primary">{{ $EMPLOYEE_NAME }}&nbsp;</span>
+                                            <span class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span>
                                         </div>
                                     </div>
                                 </div>

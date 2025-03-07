@@ -36,4 +36,7 @@ class MedCertServices
                 'FIX_SUN'   => $FIX_SUN
             ]);
     }
+    public function updateParamater(int $ID, array $parameter = []) {
+        Contacts::where('ID','=', $ID)->update($parameter);
+    }
 }

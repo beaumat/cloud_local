@@ -47,6 +47,7 @@ class AgreementFormPage1 extends Component
         if ($data) {
             $this->DATE = $data->DATE;
             $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment($data->CUSTOMER_ID, $data->LOCATION_ID, $this->DATE);
+          
             $locData = $this->locationServices->get($data->LOCATION_ID);
             if ($locData) {
 
