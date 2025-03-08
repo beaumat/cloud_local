@@ -1,6 +1,6 @@
     <div class="card card-info @if (!$isShow) collapsed-card @endif">
         <div class="card-header">
-            <h3 class="card-title">Treatment Summary</h3>
+            <h3 class="card-title"><i class="fa fa-heartbeat" aria-hidden="true"></i> Treatment Summary</h3>
             <div class="card-tools">
                 <button type="button" wire:loading.attr='disabled' wire:click="onClickWid" class="btn btn-tool">
                     @if (!$isShow)

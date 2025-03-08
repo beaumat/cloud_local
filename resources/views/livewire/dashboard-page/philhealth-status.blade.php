@@ -1,6 +1,6 @@
     <div class="card card-success @if (!$isShow) collapsed-card @endif">
         <div class="card-header">
-            <h3 class="card-title">Philhealth Monitoring Summary</h3>
+            <h3 class="card-title"><i class="fa fa-medkit" aria-hidden="true"></i> Philhealth Monitoring Summary</h3>
             <div class="card-tools">
                 <button type="button" wire:loading.attr='disabled' wire:click="onClickWid" class="btn btn-tool">
                     @if (!$isShow)
