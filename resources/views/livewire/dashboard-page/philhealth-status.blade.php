@@ -18,7 +18,8 @@
             <div class="inner" style="height:300px;">
                 <div class="row">
                     <div class="col-12">
-                        &nbsp; <span class="badge bg-orange text-white"> 10 days</span>
+                        &nbsp; <span class="text-xs text-dark">Remarks:due date for more than </span> <span
+                            class="badge bg-orange">10 days</span>
                         <span class="badge bg-pink">20 Days</span>
                         <span class="badge bg-danger">30 Days</span>
                     </div>
@@ -44,7 +45,20 @@
                                     @endif
                                 </td>
                                 <td class="text-center">{{ $list->NO_TRANSMIT }}</td>
-                                <td class="text-left">{{ $list->DUE }}</td>
+                                <td class="text-left">
+
+
+                                    @if ($list->DUE <= 9)
+                                        {{ $list->DUE }} Days
+                                    @elseif ($list->DUE <= 19)
+                                        <span class="text-orange font-weight-bold">{{ $list->DUE }} Days</span>
+                                    @elseif ($list->DUE <= 29)
+                                        <span class="text-pink font-weight-bold">{{ $list->DUE }} Days</span>
+                                    @else
+                                        <span class="text-red font-weight-bold">{{ $list->DUE }} Days</span>
+                                    @endif
+                                </td>
+
                                 <td class="text-center">{{ $list->NOT_PAID }}</td>
 
                             </tr>

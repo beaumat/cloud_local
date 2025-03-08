@@ -82,7 +82,7 @@ class PatientStatusServices
                 'NAME',
                 DB::raw("(select philhealth.DATE from philhealth where philhealth.LOCATION_ID = location.ID order by philhealth.RECORDED_ON desc limit 1) as LAST_RECORDED "),
                 DB::raw("(select count(*) from philhealth where philhealth.LOCATION_ID = location.ID and isnull(philhealth.`INVOICE_ID`) = true) as NO_TRANSMIT "),
-                DB::raw("(SELECT CONCAT(DATEDIFF('$currentDays',philhealth.`DATE_ADMITTED`),' Days ') FROM philhealth WHERE philhealth.`LOCATION_ID` = location.`ID` AND isnull(philhealth.`INVOICE_ID`) = true and philhealth.`DATE_ADMITTED` < '$currentDays'  ORDER BY philhealth.`DATE_ADMITTED` LIMIT 1 ) AS DUE "),
+                DB::raw("(SELECT DATEDIFF('$currentDays',philhealth.`DATE_ADMITTED`) FROM philhealth WHERE philhealth.`LOCATION_ID` = location.`ID` AND isnull(philhealth.`INVOICE_ID`) = true and philhealth.`DATE_ADMITTED` <= '$currentDays'  ORDER BY philhealth.`DATE_ADMITTED` LIMIT 1 ) AS DUE "),
                 DB::raw("(select count(*) from philhealth where philhealth.LOCATION_ID = location.ID and isnull(philhealth.`INVOICE_ID`) = false and philhealth.PAYMENT_AMOUNT = 0) as NOT_PAID "),
             ])
             ->where('INACTIVE', '0')
