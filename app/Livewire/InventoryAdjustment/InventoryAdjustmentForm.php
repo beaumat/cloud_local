@@ -32,7 +32,7 @@ class InventoryAdjustmentForm extends Component
     public $adjustmentTypeList = [];
     public bool $Modify;
     public bool $transferReset = false;
-    private   $inventoryAdjustmentServices;
+    private $inventoryAdjustmentServices;
     private $locationServices;
     private $userServices;
     public int $STATUS;
@@ -66,19 +66,22 @@ class InventoryAdjustmentForm extends Component
     }
 
     private function ItemInventory(): bool
-    {
-        try {
-            $SOURCE_REF_TYPE = (int) $this->inventoryAdjustmentServices->documentTypeMapId;
-            $dataItem = $this->inventoryAdjustmentServices->ItemInventory($this->ID);
-            if ($dataItem) {
-                $this->itemInventoryServices->InventoryExecuteAdjustment($dataItem, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE);
-            }
-            return true;
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred Inv: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-            return false;
+    {   
+
+        $SOURCE_REF_TYPE = (int) $this->inventoryAdjustmentServices->documentTypeMapId;
+        $dataItem = $this->inventoryAdjustmentServices->ItemInventory($this->ID);
+
+
+        if ($dataItem) {
+            return $this->itemInventoryServices->InventoryExecuteAdjustment(
+                $dataItem,
+                $this->LOCATION_ID,
+                $SOURCE_REF_TYPE,
+                $this->DATE
+            );
         }
+        return false;
+
     }
     private function AccountJournal(): bool
     {
@@ -204,17 +207,17 @@ class InventoryAdjustmentForm extends Component
 
             $this->validate(
                 [
-                    'CODE'                  =>  $this->ID > 0 ? 'required|max:20|unique:inventory_adjustment,code,' . $this->ID : 'nullable',
-                    'DATE'                  => 'required|date_format:Y-m-d',
-                    'LOCATION_ID'           => 'required|not_in:0|exists:location,id',
-                    'ADJUSTMENT_TYPE_ID'    => 'required|not_in:0|exists:inventory_adjustment_type,id'
+                    'CODE' => $this->ID > 0 ? 'required|max:20|unique:inventory_adjustment,code,' . $this->ID : 'nullable',
+                    'DATE' => 'required|date_format:Y-m-d',
+                    'LOCATION_ID' => 'required|not_in:0|exists:location,id',
+                    'ADJUSTMENT_TYPE_ID' => 'required|not_in:0|exists:inventory_adjustment_type,id'
                 ],
                 [],
                 [
-                    'CODE'                  => 'Reference No.',
-                    'DATE'                  => 'Date',
-                    'LOCATION_ID'           => 'Location',
-                    'ADJUSTMENT_TYPE_ID'    => 'Adjustment Type'
+                    'CODE' => 'Reference No.',
+                    'DATE' => 'Date',
+                    'LOCATION_ID' => 'Location',
+                    'ADJUSTMENT_TYPE_ID' => 'Adjustment Type'
                 ]
             );
 

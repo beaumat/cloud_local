@@ -258,7 +258,6 @@ class InventoryAdjustmentServices
                 'inventory_adjustment_items.QTY_DIFFERENCE',
                 'inventory_adjustment_items.UNIT_COST as COST'
             ])
-            ->join('inventory_adjustment as n', 'n.ID', '=', 'inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID')
             ->where('inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID', '=', $INVENTORY_ADJUSTMENT_ID)
             ->get();
 

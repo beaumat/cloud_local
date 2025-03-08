@@ -459,98 +459,116 @@ class ItemInventoryServices
         }
     }
 
-    public function InventoryExecuteAdjustment($data, int $LOCATION_ID, int $SOURCE_REF_TYPE, $SOURCE_REF_DATE)
+    public function InventoryExecuteAdjustment($data, int $LOCATION_ID, int $SOURCE_REF_TYPE, $SOURCE_REF_DATE): bool
     {
 
-        foreach ($data as $list) {
-            $SOURCE_REF_ID = (int) $list->ID;
-            $ITEM_ID = (int) $list->ITEM_ID;
-            $QUANTITY = (float) $list->QUANTITY ?? 1;
-            $BATCH_ID = $list->BATCH_ID ?? 0;
-            $UNIT_BASE_QUANTITY = (float) $list->UNIT_BASE_QUANTITY ?? 1;
-            $ENDING_QUANTITY = (float) $QUANTITY * $UNIT_BASE_QUANTITY;
-            $QTY_DIFFERENCE = (float) $list->QTY_DIFFERENCE ?? 0;
+        try {
+            foreach ($data as $list) {
+                $SOURCE_REF_ID = (int) $list->ID;
+                $ITEM_ID = (int) $list->ITEM_ID;
+                $QUANTITY = (float) $list->QUANTITY ?? 1;
+                $BATCH_ID = $list->BATCH_ID ?? 0;
+                $UNIT_BASE_QUANTITY = (float) $list->UNIT_BASE_QUANTITY ?? 1;
+                $ENDING_QUANTITY = (float) $QUANTITY * $UNIT_BASE_QUANTITY;
+                $QTY_DIFFERENCE = (float) $list->QTY_DIFFERENCE ?? 0;
 
-            $gotCOST = false;
-
-            if (isset($list->COST)) {
-                $COST = (float) $list->COST ?? 0;
-                $gotCOST = true;
-            } else {
-                $COST = 0;
                 $gotCOST = false;
-            }
 
-            $isExists = (bool) $this->InvItemExists($ITEM_ID, $LOCATION_ID, $SOURCE_REF_ID, $SOURCE_REF_TYPE, $SOURCE_REF_DATE);
-
-            if (!$isExists) {
-                $PREVIOUS_ID = $this->getPreviousID($LOCATION_ID, $ITEM_ID);
-                $endingData = $this->getEndingLastOutPutAdjustment($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE, $SOURCE_REF_ID);
-                $SEQUENCE_NO = (int) $endingData['SEQUENCE_NO'];
-                $ENDING_UNIT_COST = (float) $COST;
-
-                if ($gotCOST) {
-                    $ENDING_COST = (float) $COST * $ENDING_QUANTITY;
+                if (isset($list->COST)) {
+                    $COST = (float) $list->COST ?? 0;
+                    $gotCOST = true;
                 } else {
-                    $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
+                    $COST = 0;
+                    $gotCOST = false;
                 }
-                $this->Store(
-                    $PREVIOUS_ID,
-                    $SEQUENCE_NO + 1,
+
+                $isExists = (bool) $this->InvItemExists(
                     $ITEM_ID,
                     $LOCATION_ID,
-                    $BATCH_ID,
-                    $SOURCE_REF_TYPE,
                     $SOURCE_REF_ID,
-                    $SOURCE_REF_DATE,
-                    $QTY_DIFFERENCE,
-                    $COST,
-                    $ENDING_QUANTITY,
-                    $gotCOST == false ? $ENDING_UNIT_COST : $ENDING_COST / $ENDING_QUANTITY,
-                    $ENDING_COST
+                    $SOURCE_REF_TYPE,
+                    $SOURCE_REF_DATE
                 );
 
-                return;
+                if (!$isExists) {
+                    $PREVIOUS_ID = $this->getPreviousID($LOCATION_ID, $ITEM_ID);
+                    $endingData = $this->getEndingLastOutPutAdjustment($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE, $SOURCE_REF_ID);
+                    $SEQUENCE_NO = (int) $endingData['SEQUENCE_NO'];
+                    $ENDING_UNIT_COST = (float) $COST;
+
+                    if ($gotCOST) {
+                        $ENDING_COST = (float) $COST * $ENDING_QUANTITY;
+                    } else {
+                        $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
+                    }
+
+
+                    $this->Store(
+                        $PREVIOUS_ID,
+                        $SEQUENCE_NO + 1,
+                        $ITEM_ID,
+                        $LOCATION_ID,
+                        $BATCH_ID,
+                        $SOURCE_REF_TYPE,
+                        $SOURCE_REF_ID,
+                        $SOURCE_REF_DATE,
+                        $QTY_DIFFERENCE,
+                        $COST,
+                        $ENDING_QUANTITY,
+                        $gotCOST == false ? $ENDING_UNIT_COST : $ENDING_COST / $ENDING_QUANTITY,
+                        $ENDING_COST
+                    );
+
+                } else {
+
+
+                    $ENDING_UNIT_COST = (float) $COST;
+                    // set update
+                    if ($gotCOST) {
+                        $ENDING_COST = (float) $COST * $ENDING_QUANTITY;
+                    } else {
+                        $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
+                    }
+
+                    $data = ItemInventory::where('ITEM_ID', '=', $ITEM_ID)
+                        ->where('LOCATION_ID', '=', $LOCATION_ID)
+                        ->where('SOURCE_REF_TYPE', '=', $SOURCE_REF_TYPE)
+                        ->where('SOURCE_REF_ID', '=', $SOURCE_REF_ID)
+                        ->where('SOURCE_REF_DATE', '=', $SOURCE_REF_DATE);
+
+                    $PK_ID = $data->first()->ID;
+
+                    $data->update([
+                        'QUANTITY' => $QTY_DIFFERENCE,
+                        'ENDING_QUANTITY' => $ENDING_QUANTITY,
+                        'COST' => $COST,
+                        'ENDING_UNIT_COST' => $gotCOST == false ? $ENDING_UNIT_COST : $ENDING_COST / $ENDING_QUANTITY,
+                        'ENDING_COST' => $this->numberServices->doubleNumber($ENDING_COST)
+                    ]);
+
+                    $this->fixList(
+                        $ITEM_ID,
+                        $LOCATION_ID,
+                        $SOURCE_REF_DATE,
+                        $PK_ID,
+                        $ENDING_QUANTITY
+                    );
+                }
+
             }
 
-            $ENDING_UNIT_COST = (float) $COST;
-            // set update
-            if ($gotCOST) {
-                $ENDING_COST = (float) $COST * $ENDING_QUANTITY;
-            } else {
-                $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
-            }
+            return true;
+        } catch (\Throwable $th) {
 
-            $data = ItemInventory::where('ITEM_ID', '=', $ITEM_ID)
-                ->where('LOCATION_ID', '=', $LOCATION_ID)
-                ->where('SOURCE_REF_TYPE', '=', $SOURCE_REF_TYPE)
-                ->where('SOURCE_REF_ID', '=', $SOURCE_REF_ID)
-                ->where('SOURCE_REF_DATE', '=', $SOURCE_REF_DATE);
-
-            $PK_ID = $data->first()->ID;
-
-            $data->update([
-                'QUANTITY' => $QTY_DIFFERENCE,
-                'ENDING_QUANTITY' => $ENDING_QUANTITY,
-                'COST' => $COST,
-                'ENDING_UNIT_COST' => $gotCOST == false ? $ENDING_UNIT_COST : $ENDING_COST / $ENDING_QUANTITY,
-                'ENDING_COST' => $this->numberServices->doubleNumber($ENDING_COST)
-            ]);
-
-            $this->fixList(
-                $ITEM_ID,
-                $LOCATION_ID,
-                $SOURCE_REF_DATE,
-                $PK_ID,
-                $ENDING_QUANTITY
-            );
+            dd($th->getMessage() . ' something wrong please contact system administrator.');
+            return false;
         }
+
+
+
     }
 
     // data
-
-
-
 
     private string $TX_ID = '
      CASE 
