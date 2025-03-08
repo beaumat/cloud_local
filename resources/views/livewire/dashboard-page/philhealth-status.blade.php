@@ -17,12 +17,12 @@
         <div class="card-body @if (!$isShow) d-none @endif">
             <div class="inner" style="height:300px;">
                 <div class="row">
-                    <div class="col-8">
-                        &nbsp;
+                    <div class="col-12">
+                        &nbsp; <span class="badge bg-orange text-white"> 10 days</span>
+                        <span class="badge bg-pink">20 Days</span>
+                        <span class="badge bg-danger">30 Days</span>
                     </div>
-                    <div class='col-4'>
-                        &nbsp;
-                    </div>
+
                 </div>
                 <table class="table table-bordered table-hover">
                     <thead>
