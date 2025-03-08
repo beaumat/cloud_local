@@ -35,21 +35,20 @@
                         </select>
                     </div>
                 </div>
-
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>Branch</th>
-                            <th class="text-center">Philhealth</th>
+                            <th class="text-center col-3">Philhealth</th>
                             <th class="text-center">Priming</th>
                             <th class="text-center">Regular</th>
-                            <th class="text-center">No of Treament</th>
+                            <th class="text-center col-3">No of Treament</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($locationList as $list)
                             <tr>
-                                <td>{{ $list->NAME }}</td>
+                                <td class="text-xs">{{ $list->NAME }}</td>
                                 <td class="text-center ">
                                     <div class="row">
                                         <div class="text-info col-6">{{ $list->PREV_TOTAL_PHILHEALTH }}</div>
