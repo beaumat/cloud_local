@@ -195,7 +195,7 @@
         <div class="container-fluid pt-4">
             <div class="row">
                 <div class="col-5 bottom-line2">
-                    <div class="text-center" style="position: absolute;left:0%;">
+                    <div class="text-left" style="position: absolute;left:0%; width: 600px;">
                         {{ $WITNESS_NAME }}
                     </div>
                 </div>
