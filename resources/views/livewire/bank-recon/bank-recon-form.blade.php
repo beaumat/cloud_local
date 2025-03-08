@@ -42,7 +42,7 @@
                                                 </div>
                                                 <div class="col-md-3 col-3">
                                                     <livewire:number-input name="BEGINNING_BALANCE"
-                                                        titleName="Beginning Balance" isDisabled="{{ true }}"
+                                                        titleName="Beginning Balance" isDisabled="{{ !$Modify }}"
                                                         wire:model='BEGINNING_BALANCE' />
                                                 </div>
                                                 <div class="col-md-3 col-3">
@@ -98,7 +98,7 @@
                                                 </div>
 
                                                 <div class="col-md-12">
-                                
+
 
                                                     <div class="row">
                                                         <div class="col-md-3 col-3">
