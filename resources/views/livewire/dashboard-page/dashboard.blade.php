@@ -18,7 +18,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            @if (Auth::user()->name == 'admin')
+            @if (Auth::user()->can('tracking-branches'))
                 <div class="row">
                     <!--begin::Col-->
                     <div class="col-md-3">

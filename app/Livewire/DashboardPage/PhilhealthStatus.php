@@ -7,7 +7,8 @@ use App\Services\PatientStatusServices;
 use Livewire\Component;
 
 class PhilhealthStatus extends Component
-{ public $locaitonList = [];
+{ 
+    public $locationList = [];
     private $patientStatusServices;
     private $dateServices;
     public $monthlyList = [];
@@ -26,10 +27,21 @@ class PhilhealthStatus extends Component
 
 
     }
-
-    public function render()
+    public bool $isShow = false;
+    public function onClickWid()
     {
-        $this->locaitonList = $this->patientStatusServices->getPhilheatlh();
+        $this->isShow = $this->isShow ? false : true;
+    }
+    public function render()
+    {   
+        if($this->isShow)
+        {
+            $this->locationList = $this->patientStatusServices->getPhilheatlh();
+        }
+        else {
+            $this->locationList= [];
+        }
+
         return view('livewire.dashboard-page.philhealth-status');
     }
 }

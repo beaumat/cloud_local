@@ -3,13 +3,13 @@
 namespace App\Livewire\DashboardPage;
 
 use App\Services\DateServices;
-use App\Services\LocationServices;
 use App\Services\PatientStatusServices;
 use Livewire\Component;
 
 class PatientStatus extends Component
 {
-    public $locaitonList = [];
+
+    public $locationList = [];
     private $patientStatusServices;
     private $dateServices;
     public $monthlyList = [];
@@ -29,10 +29,20 @@ class PatientStatus extends Component
         $this->year = $this->dateServices->NowYear();
 
     }
-
+    public bool $isShow = false;
+    public function onClickWid()
+    {
+        $this->isShow = $this->isShow ? false : true;
+    }
     public function render()
     {
-        $this->locaitonList = $this->patientStatusServices->getList($this->month, $this->year);
+        if ($this->isShow) {
+            $this->locationList = $this->patientStatusServices->getList($this->month, $this->year);
+        }else{
+            $this->locationList = [];
+        }
+
+
         return view('livewire.dashboard-page.patient-status');
     }
 }

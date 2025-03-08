@@ -7,17 +7,16 @@ use App\Services\PatientStatusServices;
 use Livewire\Component;
 
 class TreatmentSummaryStatus extends Component
-{   
-    public $locaitonList = [];
+{
+    public $locationList = [];
     private $dateServices;
     public $monthlyList = [];
     public $yearList = [];
     public int $month = 0;
     public int $year = 0;
-    public int $prev_month = 0;
-    public int $prev_year = 0;
+    public bool $isShow = false;
     private $patientStatusServices;
-    public function boot(PatientStatusServices $patientStatusServices,DateServices $dateServices)
+    public function boot(PatientStatusServices $patientStatusServices, DateServices $dateServices)
     {
         $this->dateServices = $dateServices;
         $this->patientStatusServices = $patientStatusServices;
@@ -26,30 +25,27 @@ class TreatmentSummaryStatus extends Component
     {
         $this->monthlyList = $this->dateServices->FullMonthList();
         $this->yearList = $this->dateServices->YearList();
-
         $this->month = $this->dateServices->NowMonth();
         $this->year = $this->dateServices->NowYear();
-    
+        $this->isShow = false;
     }
 
-    private function setPrev()
+    public function onClickWid()
     {
-        $current = $this->month - 1;
-        if ($current == 0) {
-            $this->prev_year = $this->year - 1;
-            $this->prev_month = 12;
-            return;
-        }
-        $this->prev_month = $current;
-        $this->prev_year = $this->year;
-
-
+        $this->isShow = $this->isShow ? false : true;
     }
     public function render()
     {
-        $this->setPrev();
-        // dd($this->prev_month . '   ' . $this->prev_year );
-        $this->locaitonList = $this->patientStatusServices->getTreatmentSummaryList($this->month, $this->year, $this->prev_month, $this->prev_year);
+
+        if ($this->isShow) {
+            $this->locationList = $this->patientStatusServices->getTreatmentSummaryList($this->month, $this->year);
+        } else {
+            $this->locationList = [];
+        }
+
+
+
+
         return view('livewire.dashboard-page.treatment-summary-status');
     }
 }

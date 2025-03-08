@@ -7,12 +7,16 @@ use Illuminate\Support\Facades\DB;
 class PatientStatusServices
 {
     private $itemServices;
-    public function __construct(ItemServices $itemServices)
+    private $dateServices;
+    public function __construct(ItemServices $itemServices, DateServices $date)
     {
         $this->itemServices = $itemServices;
+        $this->dateServices = $date;
     }
     public function getList(int $month, int $year)
     {
+
+
 
 
         return DB::table('location')
@@ -31,12 +35,26 @@ class PatientStatusServices
             ->get();
     }
 
-    public function getTreatmentSummaryList(int $month, int $year, int $prev_month, int $prev_year)
+    public function getTreatmentSummaryList(int $month, int $year)
     {
+
+        $current = $month - 1;
+        if ($current == 0) {
+            $prev_year = $year - 1;
+            $prev_month = 12;
+
+        } else {
+            $prev_month = $current;
+            $prev_year = $year;
+
+        }
+
+
+
         $PHIC_ITEM_ID = $this->itemServices->PHIC_ITEM_ID;
         $PRIMING_ITEM_ID = $this->itemServices->PRIMING_ITEM_ID;
 
-        return DB::table('location')
+        $result = DB::table('location')
             ->select([
                 'ID',
                 'NAME',
@@ -51,18 +69,38 @@ class PatientStatusServices
             ->where('INACTIVE', '0')
             ->where('USED_DRY_WEIGHT', '=', true)
             ->get();
+
+        return $result;
     }
 
     public function getPhilheatlh()
     {
-
-
+        $currentDays = $this->dateServices->NowDate();
         return DB::table('location')
             ->select([
                 'ID',
                 'NAME',
-       
+                DB::raw("(select philhealth.DATE from philhealth where philhealth.LOCATION_ID = location.ID order by philhealth.RECORDED_ON desc limit 1) as LAST_RECORDED "),
+                DB::raw("(select count(*) from philhealth where philhealth.LOCATION_ID = location.ID and isnull(philhealth.`INVOICE_ID`) = true) as NO_TRANSMIT "),
+                DB::raw("(SELECT CONCAT(DATEDIFF('$currentDays',philhealth.`DATE_ADMITTED`),' Days ') FROM philhealth WHERE philhealth.`LOCATION_ID` = location.`ID` AND isnull(philhealth.`INVOICE_ID`) = true and philhealth.`DATE_ADMITTED` < '$currentDays'  ORDER BY philhealth.`DATE_ADMITTED` LIMIT 1 ) AS DUE "),
+                DB::raw("(select count(*) from philhealth where philhealth.LOCATION_ID = location.ID and isnull(philhealth.`INVOICE_ID`) = false and philhealth.PAYMENT_AMOUNT = 0) as NOT_PAID "),
+            ])
+            ->where('INACTIVE', '0')
+            ->where('USED_DRY_WEIGHT', '=', true)
+            ->get();
+    }
 
+    public function getDoctorPF()
+    {
+ 
+        return DB::table('location')
+            ->select([
+                'ID',
+                'NAME',
+                DB::raw("(select bill.DATE from bill inner join contact on contact.ID = bill.VENDOR_ID inner join contact_type_map on contact_type_map.ID = contact.TYPE where contact.TYPE = 4 and  bill.LOCATION_ID = location.ID order by bill.RECORDED_ON desc limit 1) as LAST_RECORDED "),
+                DB::raw("(select sum(bill.BALANCE_DUE) from bill inner join contact on contact.ID = bill.VENDOR_ID inner join contact_type_map on contact_type_map.ID = contact.TYPE where contact.TYPE = 4 AND  bill.LOCATION_ID = location.ID and bill.BALANCE_DUE > 0) as TOTAL_BALANCE "),
+                DB::raw("(select count(*) from bill inner join contact on contact.ID = bill.VENDOR_ID inner join contact_type_map on contact_type_map.ID = contact.TYPE where contact.TYPE = 4 AND  bill.LOCATION_ID = location.ID and bill.BALANCE_DUE > 0) as NO_BILL_NOT_PAID "),
+                DB::raw("(select count(*) from `check` inner join contact on contact.ID = `check`.PAY_TO_ID inner join contact_type_map on contact_type_map.ID = contact.TYPE where contact.TYPE = 4  AND `check`.LOCATION_ID = location.ID  AND (`check`.STATUS = 0 or `check`.STATUS = 16 )) as NOT_PAID "),
             ])
             ->where('INACTIVE', '0')
             ->where('USED_DRY_WEIGHT', '=', true)
