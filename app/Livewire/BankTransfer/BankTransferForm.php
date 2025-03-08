@@ -202,6 +202,7 @@ class BankTransferForm extends Component
                     $this->AMOUNT
                 );
                 $this->bankTransferServices->StatusUpdate($this->ID, 0);
+                DB::commit();
                 return Redirect::route('bankingbank_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 if ($this->STATUS == 16) {
@@ -222,9 +223,10 @@ class BankTransferForm extends Component
 
                 );
                 session()->flash('message', 'Successfully updated');
+                DB::commit();
+                $this->updateCancel();
             }
-            DB::commit();
-            $this->updateCancel();
+
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
