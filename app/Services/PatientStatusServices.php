@@ -76,7 +76,7 @@ class PatientStatusServices
     public function getPhilheatlh()
     {
         $currentDays = $this->dateServices->NowDate();
-        return DB::table('location')
+        $result = DB::table('location')
             ->select([
                 'ID',
                 'NAME',
@@ -88,11 +88,13 @@ class PatientStatusServices
             ->where('INACTIVE', '0')
             ->where('USED_DRY_WEIGHT', '=', true)
             ->get();
+
+        return $result;
     }
 
     public function getDoctorPF()
     {
- 
+
         return DB::table('location')
             ->select([
                 'ID',
@@ -104,6 +106,42 @@ class PatientStatusServices
             ])
             ->where('INACTIVE', '0')
             ->where('USED_DRY_WEIGHT', '=', true)
+            ->get();
+    }
+    public function getSalesColleciton(int $month, int $year)
+    {
+        return DB::table('location')
+            ->select([
+                'ID',
+                'NAME',
+                DB::raw("(select sum(AMOUNT) from service_charges  where service_charges.LOCATION_ID = location.ID and month(service_charges.DATE) = '$month' and year(service_charges.DATE) = '$year') as SERVICE_CHARGES_TOTAL"),
+                DB::raw("(select sum(AMOUNT) from sales_receipt  where sales_receipt.LOCATION_ID = location.ID and sales_receipt.STATUS = 15 and month(sales_receipt.DATE) = '$month' and year(sales_receipt.DATE) = '$year') as SALES_RECEIPT_TOTAL"),
+                DB::raw("(select sum(AMOUNT) from invoice where invoice.LOCATION_ID = location.ID and invoice.STATUS = 15 and month(invoice.DATE) = '$month' and year(invoice.DATE) = '$year') as INVOICE_TOTAL"),
+                DB::raw("(select sum(AMOUNT) from payment where payment.LOCATION_ID = location.ID and payment.STATUS = 15 and month(payment.DATE) = '$month' and year(payment.DATE) = '$year') as PAYMENT_TOTAL"),
+            ])
+            ->where('INACTIVE', '0')
+            ->get();
+    }
+    public function getReceivableAging()
+    {
+        return DB::table('location')
+            ->select([
+                'ID',
+                'NAME',
+               
+            ])
+            ->where('INACTIVE', '0')
+            ->get();
+    }
+    public function getPayableAging()
+    {
+        return DB::table('location')
+            ->select([
+                'ID',
+                'NAME',
+               
+            ])
+            ->where('INACTIVE', '0')
             ->get();
     }
 }

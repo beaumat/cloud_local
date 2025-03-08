@@ -15,21 +15,45 @@
             </div>
         </div>
         <div class="card-body @if (!$isShow) d-none @endif">
-            <div class="inner" style="height:300px;">
+            <div class="inner" >
                 <div class="row">
                     <div class="col-8">
-                        &nbsp;
+                        <div class="text-xs">Month</div>
+                        <select class="text-xs w-100" wire:model.live='month'>
+                            @foreach ($monthlyList as $list)
+                                <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class='col-4'>
-                        &nbsp;
+                        <div class="text-xs">Year</div>
+                        <select class="text-xs w-100" wire:model.live='year'>
+                            @foreach ($yearList as $list)
+                                <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <table class="table table-bordered table-hover">
                     <thead>
-
+                        <tr>
+                            <th class="col-3">Branch</th>
+                            <th class="col-2">Service Charges</th>
+                            <th class="col-2">Sales Receipt</th>
+                            <th class="col-2">Invoice</th>
+                            <th class="col-2">Payment Received </th>
+                        </tr>
                     </thead>
                     <tbody>
-
+                        @foreach ($locationList as $list)
+                            <tr>
+                                <td>{{ $list->NAME }}</td>
+                                <td class="text-right">{{ number_format($list->SERVICE_CHARGES_TOTAL, 2) }}</td>
+                                <td class="text-right">{{ number_format($list->SALES_RECEIPT_TOTAL, 2) }}</td>
+                                <td class="text-right">{{ number_format($list->INVOICE_TOTAL, 2) }}</td>
+                                <td class="text-right">{{ number_format($list->PAYMENT_TOTAL, 2) }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

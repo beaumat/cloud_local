@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="card-body @if (!$isShow) d-none @endif">
-            <div class="inner" style="height:300px;">
+            <div class="inner">
                 <div class="row">
                     <div class="col-8">
                         <div class="text-xs">Select: Month <span class="badge bg-info">Previous</span> <span
