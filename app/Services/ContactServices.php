@@ -55,11 +55,17 @@ class ContactServices
 	public function getName2($ID)
 	{
 		$result = contacts::query()->select([
-			"NAME"
+			"NAME",
+			"NICKNAME"
 
 		])->where('ID', '=', $ID)->where('INACTIVE', '=', '0')->first();
 		if ($result) {
-			return $result->NAME ?? '';
+			$name = $result->NAME ?? '';
+			$pos = $result->NICKNAME ?? '';
+			if ($pos) {
+				return $name . '/' . $pos;
+			}
+			return $name ?? '';
 		}
 		return '';
 	}
