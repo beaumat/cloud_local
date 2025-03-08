@@ -31,7 +31,7 @@
                             <th class="col-3">Branch</th>
                             <th class="text-center col-2">Latest SOA Created</th>
                             <th class="text-center col-2"># of w/o Transmittal</th>
-                            <th class="text-center col-2">Latest Due w/o Trans.</th>
+                            <th class="text-center col-2">Last Due w/o Trans.</th>
                             <th class="text-center col-2"># of Not Paid</th>
                         </tr>
                     </thead>
