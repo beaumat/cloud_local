@@ -1,6 +1,6 @@
     <div class="card card-primary @if (!$isShow) collapsed-card @endif">
         <div class="card-header">
-            <h3 class="card-title"><i class="fa fa-wheelchair" aria-hidden="true"></i> Patient Summary</h3>
+            <h3 class="card-title" type="button" wire:loading.attr='disabled' wire:click="onClickWid"><i class="fa fa-wheelchair" aria-hidden="true"></i> Patient Summary</h3>
             <div class="card-tools">
                 <button type="button" wire:loading.attr='disabled' wire:click="onClickWid" class="btn btn-tool">
                     @if (!$isShow)
@@ -38,6 +38,7 @@
                      <thead class="bg-sky">
                                 <tr>
                                     <th>Branch</th>
+                                    <th class="text-center bg-purple">Active</th>
                                     <th class="text-center">New</th>
                                     <th class="text-center">Confine</th>
                                     <th class="text-center">Transfer</th>
@@ -48,6 +49,7 @@
                                 @foreach ($locationList as $list)
                                     <tr>
                                         <td>{{ $list->NAME }}</td>
+                                        <td class="text-center text-purple font-weight-bold">{{ $list->ACTIVE }}</td>
                                         <td class="text-center">{{ $list->NEW }}</td>
                                         <td class="text-center">{{ $list->CONFINEMENT }}</td>
                                         <td class="text-center">{{ $list->TRANSFER }}</td>

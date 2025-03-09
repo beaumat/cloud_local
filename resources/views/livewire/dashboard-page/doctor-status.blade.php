@@ -1,6 +1,6 @@
     <div class="card card-red @if (!$isShow) collapsed-card @endif">
         <div class="card-header">
-            <h3 class="card-title"><i class="fa fa-user-md" aria-hidden="true"></i> Doctor PF Monitoring</h3>
+            <h3 class="card-title" type="button" wire:loading.attr='disabled' wire:click="onClickWid"><i class="fa fa-user-md" aria-hidden="true"></i> Doctor PF Monitoring</h3>
             <div class="card-tools">
                 <button type="button" wire:loading.attr='disabled' wire:click="onClickWid" class="btn btn-tool">
                     @if (!$isShow)

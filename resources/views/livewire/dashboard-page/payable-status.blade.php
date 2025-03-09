@@ -1,6 +1,6 @@
     <div class="card card-teal @if (!$isShow) collapsed-card @endif">
         <div class="card-header">
-            <h3 class="card-title text-dark"><i class="fa fa-credit-card" aria-hidden="true"></i> Payables Aging Status
+            <h3 class="card-title text-dark" type="button" wire:loading.attr='disabled' wire:click="onClickWid"><i class="fa fa-credit-card" aria-hidden="true"></i> Payables Aging Status
             </h3>
             <div class="card-tools ">
                 <button type="button" wire:loading.attr='disabled' wire:click="onClickWid" class="btn btn-tool text-dark">
