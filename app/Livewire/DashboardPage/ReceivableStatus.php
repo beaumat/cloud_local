@@ -22,11 +22,8 @@ class ReceivableStatus extends Component
     public function render()
     {
 
-        if ($this->isShow) {
-            $this->locationList = $this->patientStatusServices->getReceivableAging();
-        } else {
-            $this->locationList = [];
-        }
+        $this->locationList = $this->isShow ? $this->patientStatusServices->getReceivableAging() : [];
+
         return view('livewire.dashboard-page.receivable-status');
     }
 }

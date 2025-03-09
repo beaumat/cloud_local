@@ -34,13 +34,7 @@ class PhilhealthStatus extends Component
     }
     public function render()
     {   
-        if($this->isShow)
-        {
-            $this->locationList = $this->patientStatusServices->getPhilheatlh();
-        }
-        else {
-            $this->locationList= [];
-        }
+        $this->locationList = $this->isShow ? $this->patientStatusServices->getPhilheatlh() : [];
 
         return view('livewire.dashboard-page.philhealth-status');
     }

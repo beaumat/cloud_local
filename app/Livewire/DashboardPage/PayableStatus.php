@@ -21,12 +21,8 @@ class PayableStatus extends Component
     }
     public function render()
     {
+        $this->locationList = $this->isShow ? $this->patientStatusServices->getPayableAging() : [];
 
-        if ($this->isShow) {
-            $this->locationList = $this->patientStatusServices->getPayableAging();
-        } else {
-            $this->locationList = [];
-        }
         return view('livewire.dashboard-page.payable-status');
     }
 }

@@ -36,16 +36,7 @@ class TreatmentSummaryStatus extends Component
     }
     public function render()
     {
-
-        if ($this->isShow) {
-            $this->locationList = $this->patientStatusServices->getTreatmentSummaryList($this->month, $this->year);
-        } else {
-            $this->locationList = [];
-        }
-
-
-
-
+        $this->locationList = $this->isShow ? $this->patientStatusServices->getTreatmentSummaryList($this->month, $this->year) : [];
         return view('livewire.dashboard-page.treatment-summary-status');
     }
 }

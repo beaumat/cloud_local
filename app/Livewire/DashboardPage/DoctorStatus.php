@@ -33,14 +33,8 @@ class DoctorStatus extends Component
         $this->isShow = $this->isShow ? false : true;
     }
     public function render()
-    {   
-        if($this->isShow)
-        {
-            $this->locationList = $this->patientStatusServices->getDoctorPF();
-        }
-        else {
-            $this->locationList= [];
-        }
+    {
+        $this->locationList = $this->isShow ? $this->patientStatusServices->getDoctorPF() : [];
 
         return view('livewire.dashboard-page.doctor-status');
     }

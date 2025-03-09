@@ -36,12 +36,7 @@ class PatientStatus extends Component
     }
     public function render()
     {
-        if ($this->isShow) {
-            $this->locationList = $this->patientStatusServices->getList($this->month, $this->year);
-        }else{
-            $this->locationList = [];
-        }
-
+        $this->locationList = $this->isShow ? $this->patientStatusServices->getList($this->month, $this->year) : [];
 
         return view('livewire.dashboard-page.patient-status');
     }

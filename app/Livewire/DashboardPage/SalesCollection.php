@@ -35,13 +35,9 @@ class SalesCollection extends Component
         $this->isShow = $this->isShow ? false : true;
     }
     public function render()
-    {
-
-        if ($this->isShow) {
-            $this->locationList = $this->patientStatusServices->getSalesColleciton($this->month, $this->year);
-        } else {
-            $this->locationList = [];
-        }
+    {      
+            $this->locationList = $this->isShow ? $this->patientStatusServices->getSalesColleciton($this->month, $this->year) : [];
+       
         return view('livewire.dashboard-page.sales-collection');
     }
 }
