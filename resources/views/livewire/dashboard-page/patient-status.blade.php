@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <div class="card-body @if (!$isShow) d-none @endif">
+        <div class="card-body p-1 @if (!$isShow) d-none @endif">
             <div class="inner">
                 <div class="row">
                     <div class="col-8">
@@ -35,7 +35,7 @@
                     </div>
                     <div class="col-12">
                         <table class="table table-bordered table-hover">
-                            <thead>
+                     <thead class="bg-sky">
                                 <tr>
                                     <th>Branch</th>
                                     <th class="text-center">New</th>

@@ -15,42 +15,44 @@
                 </div>
             </div>
         </div>
-        <div class="card-body @if (!$isShow) d-none @endif">
-            <div class="inner">
-                <div class="row">
-                    <div class="col-8">
-                        &nbsp;
-                    </div>
-                    <div class='col-4'>
-                        &nbsp;
+        <div class="card-body p-1 @if (!$isShow) d-none @endif">
+            <div class="row">
+                <div class="col-8">
+                    &nbsp;
+                </div>
+                <div class='col-4'>
+                    &nbsp;
+                </div>
+                <div class="col-12">
+                    <div style="max-height: 83vh; overflow-y: auto;">
+                        <table class="table table-bordered table-hover">
+                            <thead class="text-xs bg-primary">
+                                <tr>
+                                    <th class="col-6">Branch</th>
+                                    <th class="col-1">Current</th>
+                                    <th class="col-1">1-30</th>
+                                    <th class="col-1">31-60</th>
+                                    <th class="col-1">61-90</th>
+                                    <th class="col-1">Over 90</th>
+                                    <th class="col-1">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs">
+                                @foreach ($locationList as $list)
+                                    <tr>
+                                        <td>{{ $list->NAME }}</td>
+                                        <td class="text-right">{{ number_format($list->CURRENT, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->TOTAL_1_30, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->TOTAL_31_60, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->TOTAL_61_90, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->OVER_90, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->BALANCE, 2) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>Branch</th>
-                            <th>Current</th>
-                            <th>1-30</th>
-                            <th>31-60</th>
-                            <th>61-90</th>
-                            <th>Over 90</th>
-                            <th>Balance</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($locationList as $list)
-                            <tr>
-                                <td>{{ $list->NAME }}</td>
-                                <td class="text-right">0</td>
-                                <td class="text-right">0</td>
-                                <td class="text-right">0</td>
-                                <td class="text-right">0</td>
-                                <td class="text-right">0</td>
-                                <td class="text-right">0</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>

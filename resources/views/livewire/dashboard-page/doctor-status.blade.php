@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <div class="card-body @if (!$isShow) d-none @endif">
+        <div class="card-body p-1 @if (!$isShow) d-none @endif">
             <div class="inner">
                 <div class="row">
                     <div class="col-8">
@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <table class="table table-bordered table-hover">
-                    <thead>
+                    <thead class="bg-sky">
                         <tr>
                             <th class="col-3">Branch</th>
                             <th class="text-center col-2">Latest Billing Created</th>

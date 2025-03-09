@@ -110,7 +110,7 @@ class PatientStatusServices
     }
     public function getSalesColleciton(int $month, int $year)
     {
-        return DB::table('location')
+        $result = DB::table('location')
             ->select([
                 'ID',
                 'NAME',
@@ -121,25 +121,47 @@ class PatientStatusServices
             ])
             ->where('INACTIVE', '0')
             ->get();
+
+        return $result;
     }
     public function getReceivableAging()
     {
+        $AS_OF_DATE = $this->dateServices->NowDate();
+
         return DB::table('location')
             ->select([
                 'ID',
                 'NAME',
-               
+
+
+                DB::raw("(SELECT SUM(invoice.BALANCE_DUE) from invoice where invoice.STATUS <> 0 and invoice.LOCATION_ID = location.ID  and DATEDIFF('$AS_OF_DATE',invoice.DUE_DATE) <= 0   and invoice.BALANCE_DUE > 0 ) AS CURRENT "),
+                DB::raw("(SELECT SUM(invoice.BALANCE_DUE) from invoice where invoice.STATUS <> 0 and invoice.LOCATION_ID = location.ID  and DATEDIFF('$AS_OF_DATE',invoice.DUE_DATE) BETWEEN 31 AND 60  and invoice.BALANCE_DUE > 0 ) AS TOTAL_1_30"),
+                DB::raw("(SELECT SUM(invoice.BALANCE_DUE) from invoice where invoice.STATUS <> 0 and invoice.LOCATION_ID = location.ID  and DATEDIFF('$AS_OF_DATE',invoice.DUE_DATE) BETWEEN 61 AND 90  and invoice.BALANCE_DUE > 0 ) AS TOTAL_31_60"),
+                DB::raw("(SELECT SUM(invoice.BALANCE_DUE) from invoice where invoice.STATUS <> 0 and invoice.LOCATION_ID = location.ID  and DATEDIFF('$AS_OF_DATE',invoice.DUE_DATE) BETWEEN 61 AND 90   and invoice.BALANCE_DUE > 0) AS TOTAL_61_90"),
+                DB::raw("(SELECT SUM(invoice.BALANCE_DUE) from invoice where invoice.STATUS <> 0 and invoice.LOCATION_ID = location.ID  and DATEDIFF('$AS_OF_DATE',invoice.DUE_DATE) > 90  and invoice.BALANCE_DUE > 0) AS OVER_90 "),
+                DB::raw("(SELECT SUM(invoice.BALANCE_DUE) from invoice where invoice.STATUS <> 0 and invoice.LOCATION_ID = location.ID  and invoice.BALANCE_DUE > 0) AS BALANCE"),
+
+
             ])
             ->where('INACTIVE', '0')
             ->get();
     }
     public function getPayableAging()
     {
+
+        $AS_OF_DATE = $this->dateServices->NowDate();
         return DB::table('location')
             ->select([
                 'ID',
                 'NAME',
-               
+         
+                DB::raw("(SELECT SUM(bill.BALANCE_DUE) from bill where bill.STATUS <> 0 and bill.LOCATION_ID = location.ID  and DATEDIFF('$AS_OF_DATE',bill.DUE_DATE) <= 0   and bill.BALANCE_DUE > 0 ) AS CURRENT "),
+                DB::raw("(SELECT SUM(bill.BALANCE_DUE) from bill where bill.STATUS <> 0 and bill.LOCATION_ID = location.ID  and DATEDIFF('$AS_OF_DATE',bill.DUE_DATE) BETWEEN 31 AND 60  and bill.BALANCE_DUE > 0 ) AS TOTAL_1_30"),
+                DB::raw("(SELECT SUM(bill.BALANCE_DUE) from bill where bill.STATUS <> 0 and bill.LOCATION_ID = location.ID  and DATEDIFF('$AS_OF_DATE',bill.DUE_DATE) BETWEEN 61 AND 90  and bill.BALANCE_DUE > 0 ) AS TOTAL_31_60"),
+                DB::raw("(SELECT SUM(bill.BALANCE_DUE) from bill where bill.STATUS <> 0 and bill.LOCATION_ID = location.ID  and DATEDIFF('$AS_OF_DATE',bill.DUE_DATE) BETWEEN 61 AND 90   and bill.BALANCE_DUE > 0) AS TOTAL_61_90"),
+                DB::raw("(SELECT SUM(bill.BALANCE_DUE) from bill where bill.STATUS <> 0 and bill.LOCATION_ID = location.ID  and DATEDIFF('$AS_OF_DATE',bill.DUE_DATE) > 90  and bill.BALANCE_DUE > 0) AS OVER_90 "),
+                DB::raw("(SELECT SUM(bill.BALANCE_DUE) from bill where bill.STATUS <> 0 and bill.LOCATION_ID = location.ID  and bill.BALANCE_DUE > 0) AS BALANCE"),
+
             ])
             ->where('INACTIVE', '0')
             ->get();

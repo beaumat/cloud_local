@@ -33,14 +33,14 @@
                     <div class="col-md-3">
                         @livewire('DashBoardPage.DoctorStatus')
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         @livewire('DashBoardPage.SalesCollection')
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         @livewire('DashBoardPage.ReceivableStatus')
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         @livewire('DashBoardPage.PayableStatus')
                     </div>
 

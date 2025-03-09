@@ -14,34 +14,49 @@
                 </div>
             </div>
         </div>
-        <div class="card-body @if (!$isShow) d-none @endif">
-            <div class="inner" >
+        <div class="card-body p-1 @if (!$isShow) d-none @endif">
+            <div class="inner">
                 <div class="row">
                     <div class="col-8">
-                        <div class="text-xs">Month</div>
-                        <select class="text-xs w-100" wire:model.live='month'>
-                            @foreach ($monthlyList as $list)
-                                <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
-                            @endforeach
-                        </select>
+                        <div class="text-xs row">
+                            <div class="col-4 text-right"> Month </div>
+                            <div class="col-8">
+                                <select class="text-xs w-100" wire:model.live='month'>
+                                    @foreach ($monthlyList as $list)
+                                        <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+
+                        </div>
+
                     </div>
                     <div class='col-4'>
-                        <div class="text-xs">Year</div>
-                        <select class="text-xs w-100" wire:model.live='year'>
-                            @foreach ($yearList as $list)
-                                <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
-                            @endforeach
-                        </select>
+                        <div class="text-xs row">
+                            <div class="col-4 text-right">
+                                Year
+                            </div>
+                            <div class="col-8">
+                                <select class="text-xs w-100" wire:model.live='year'>
+                                    @foreach ($yearList as $list)
+                                        <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <table class="table table-bordered table-hover">
-                    <thead>
+                    <thead class="bg-sky">
                         <tr>
-                            <th class="col-3">Branch</th>
-                            <th class="col-2">Service Charges</th>
-                            <th class="col-2">Sales Receipt</th>
-                            <th class="col-2">Invoice</th>
-                            <th class="col-2">Payment Received </th>
+                            <th class="">Branch</th>
+                            <th class="">Service Charges</th>
+                            <th class="">Sales Receipt</th>
+                            <th class="">Invoice</th>
+                            <th class="">Receive Payment </th>
                         </tr>
                     </thead>
                     <tbody>
