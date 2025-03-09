@@ -26,7 +26,7 @@
                 <div class="col-12">
                     <div style="max-height: 83vh; overflow-y: auto;">
                         <table class="table table-bordered table-hover">
-                            <thead class="text-xs bg-primary">
+                            <thead class="text-xs bg-sky">
                                 <tr>
                                     <th class="col-6">Branch</th>
                                     <th class="col-1">Current</th>
