@@ -681,6 +681,9 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/cash-flow')->middleware(['permission:report.financial.cash-flow'])->group(function () {
                 Route::get('/', CashFlowReport::class)->name('cash_flow_report');
             });
+            Route::prefix('/equity-movement')->middleware(['permission:report.financial.equity-movement'])->group(function () {
+                Route::get('/', CashFlowReport::class)->name('equity_movement_report');
+            });
         });
 
         Route::prefix('/customer')->group(function () {
