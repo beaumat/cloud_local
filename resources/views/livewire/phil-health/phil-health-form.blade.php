@@ -137,9 +137,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer"
-                                @if ($isPaid) style="opacity:
-                                            0.5;pointer-events: none;" @endif>
+                            <div class="card-footer" >
                                 <div class="row">
                                     <div class="col-md-6 col-6">
                                         @if ($STATUS == 0)
@@ -154,17 +152,17 @@
                                                             aria-hidden="true"></i> Cancel</button>
                                                 @endif
                                             @else
-                                                <button type="button" wire:click='getModify()'
-                                                    class="btn btn-sm btn-info text-xs"
-                                                    @if ($STATUS > 0) style="opacity:
-                                            0.5;pointer-events: none;" @endif>
-                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                                </button>
-
-                                                <button type="button" wire:click="getARForm()"
-                                                    class="btn btn-success active btn-sm text-xs">
-                                                    <i class="fa fa-registered" aria-hidden="true"></i> LHIO Form
-                                                </button>
+                                                @if (!$isPaid)
+                                                    <button type="button" wire:click='getModify()'
+                                                        class="btn btn-sm btn-info text-xs"
+                                                        @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                    </button>
+                                                    <button type="button" wire:click="getARForm()"
+                                                        class="btn btn-success active btn-sm text-xs"> <i
+                                                            class="fa fa-registered" aria-hidden="true"></i> LHIO Form
+                                                    </button>
+                                                @endif
                                                 @if ($ID > 0)
                                                     @can('patient.philhealth.update')
                                                         <button type="button" wire:click="getChangeDoctor()"
