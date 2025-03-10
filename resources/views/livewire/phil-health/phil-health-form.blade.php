@@ -152,7 +152,7 @@
                                                             aria-hidden="true"></i> Cancel</button>
                                                 @endif
                                             @else
-                                                @if ($isPaid)
+                                                @if (!$isPaid)
                                                     <button type="button" wire:click='getModify()'
                                                         class="btn btn-sm btn-info text-xs"
                                                         @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
