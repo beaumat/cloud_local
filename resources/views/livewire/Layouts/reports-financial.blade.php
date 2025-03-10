@@ -25,6 +25,16 @@
                 </a>
             </li>
         @endcan
+        @can('report.financial.equity')
+            <li class="nav-item">
+                <a href="{{ route('reportsfinancialequity_report') }}"
+                    class="nav-link {{ request()->is('reports/financial/equity*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print nav-icon"></i>
+                    <p>Movements in Equity</p>
+                </a>
+            </li>
+        @endcan
+
         @can('report.financial.cash-flow')
             <li class="nav-item">
                 <a href="{{ route('reportsfinancialcash_flow_report') }}"
@@ -34,14 +44,6 @@
                 </a>
             </li>
         @endcan
-        {{-- @can('report.financial.equity-movement') --}}
-        <li class="nav-item">
-            <a href="{{ route('reportsfinancialequity_report') }}"
-                class="nav-link {{ request()->is('reports/financial/equity-movement*') ? 'text-warning font-weight-bold' : '' }}">
-                <i class="fa fa-print nav-icon"></i>
-                <p>Equity Movement</p>
-            </a>
-        </li>
-        {{-- @endcan --}}
+
     </ul>
 </li>
