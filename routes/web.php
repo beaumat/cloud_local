@@ -40,6 +40,7 @@ use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
 use App\Livewire\FinancialReport\BalanceSheetReport;
 use App\Livewire\FinancialReport\CashFlowReport;
+use App\Livewire\FinancialReport\EquityReport;
 use App\Livewire\FinancialReport\IncomeStatementReport;
 use App\Livewire\FixedAssetItem\FixedAssetItemForm;
 use App\Livewire\FixedAssetItem\FixedAssetItemList;
@@ -275,9 +276,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/details', PaymentPeriodForm::class)->name('payment_period_details')->middleware(['permission:patient.payment-period.view']);
         });
     });
-    // Patient End Category
 
-    // Customer Start Category
 
     Route::prefix('/customers')->name('customers')->group(function () {
         Route::prefix('/sales-order')->group(function () {
@@ -298,8 +297,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', SalesReceiptForm::class)->name('sales_receipt_create')->middleware(['permission:customer.invoice.create']);
             Route::get('/{id}/edit', SalesReceiptForm::class)->name('sales_receipt_edit')->middleware(['permission:customer.invoice.view']);
         });
-
-
         Route::prefix('/payment')->group(function () {
             Route::get('/', PaymentList::class)->name('payment')->middleware(['permission:customer.received-payment.view']);
             Route::get('/create', PaymentForm::class)->name('payment_create')->middleware(['permission:customer.received-payment.create']);
@@ -458,7 +455,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/create', PatientForm::class)->name('patients_create')->middleware(['permission:contact.patient.create']);
                 Route::get('/{id}/edit', PatientForm::class)->name('patients_edit')->middleware(['permission:contact.patient.view']);
                 Route::get('/{id}/{year}/{locationid}', PrintAvailment::class)->name('print_availment');
-                // Route::get('/{id}/{year}',PhilhealthModify::class)->name('philhealth_modify');
                 Route::get('/{id}/medical-certificate', MedcertPrint::class)->name('print_medical_cert');
             });
 
@@ -498,7 +494,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('/inventory')->name('inventory')->group(function () {
             Route::prefix('/items')->group(function () {
-                // ok
                 Route::get('/', ItemsList::class)->name('item')->middleware(['permission:items.view']);
                 Route::get('/create', ItemsForm::class)->name('item_create')->middleware(['permission:items.create']);
                 Route::get('/{id}/edit', ItemsForm::class)->name('item_edit')->middleware(['permission:items.edit']);
@@ -650,6 +645,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', PhilHealthAvailmentList::class)->name('philhealth_availment_list')->middleware(['permission:report.philhealth.availment']);
                 Route::get('/{id}/{locationid}/{year}', PhilHealthAvailmentListPrint::class)->name('philhealth_availment_list_print')->middleware(['permission:report.philhealth.availment']);
             });
+
         });
 
         Route::prefix('/accounting')->name('accounting')->group(function () {
@@ -677,13 +673,14 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/balance-sheet')->middleware(['permission:report.financial.balance-sheet'])->group(function () {
                 Route::get('/', BalanceSheetReport::class)->name('balance_sheet_report');
             });
-
             Route::prefix('/cash-flow')->middleware(['permission:report.financial.cash-flow'])->group(function () {
                 Route::get('/', CashFlowReport::class)->name('cash_flow_report');
             });
-            Route::prefix('/equity-movement')->middleware(['permission:report.financial.equity-movement'])->group(function () {
-                Route::get('/', CashFlowReport::class)->name('equity_movement_report');
+
+            Route::prefix('/equity')->middleware(['permission:report.financial.equity'])->group(function () {
+                Route::get('/', EquityReport::class)->name('equity_report');
             });
+
         });
 
         Route::prefix('/customer')->group(function () {
@@ -697,13 +694,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/ap-aging', AccountPayableAging::class)->name('ap_aging')->middleware(['permission:report.payables.ap-aging']);
             Route::get('/vendor-balance', VendorBalance::class)->name('vendor_balance')->middleware(['permission:report.payables.vendor-balance']);
         });
-        Route::prefix('/purchases')->group(function () { });
-        Route::prefix('/expenses')->group(function () { });
+        // Route::prefix('/purchases')->group(function () { });
+        // Route::prefix('/expenses')->group(function () { });
 
         Route::prefix('/inventory')->group(function () {
             Route::get('/validation-summary', ValidationSummaryReport::class)->name('validation_summry')->middleware(['permission:report.inventory.validation-summary']);
         });
-        Route::prefix('/documents')->group(function () { });
+        // Route::prefix('/documents')->group(function () { });
     });
 });
 
