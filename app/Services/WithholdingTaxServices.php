@@ -9,50 +9,57 @@ use Illuminate\Support\Facades\DB;
 
 class WithholdingTaxServices
 {
-    public int $object_type_withholding_tax_id  = 67;
+    public int $object_type_withholding_tax_id = 67;
     public int $object_type_witholding_tax_bills_id = 68;
 
     private $object;
     private $systemSettingServices;
     private $dateServices;
     private $billingServices;
-    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, DateServices $dateServices, BillingServices $billingServices)
-    {
+    private $accountJournalServices;
+    public function __construct(
+        ObjectServices $objectServices,
+        SystemSettingServices $systemSettingServices,
+        DateServices $dateServices,
+        BillingServices $billingServices,
+        AccountJournalServices $accountJournalServices
+    ) {
         $this->object = $objectServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
         $this->billingServices = $billingServices;
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function Get(int $ID)
     {
-        $result =   WithholdingTax::where('ID', '=', $ID)->first();
+        $result = WithholdingTax::where('ID', '=', $ID)->first();
         if ($result) {
             return $result;
         }
 
         return null;
     }
-    public function Store(string $CODE, string $DATE, int $WITHHELD_FROM_ID, float $EWT_RATE, int $EWT_ID, int $EWT_ACCOUNT_ID, int  $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID): int
+    public function Store(string $CODE, string $DATE, int $WITHHELD_FROM_ID, float $EWT_RATE, int $EWT_ID, int $EWT_ACCOUNT_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID): int
     {
 
-        $ID  = (int) $this->object->ObjectNextID('WITHHOLDING_TAX');
+        $ID = (int) $this->object->ObjectNextID('WITHHOLDING_TAX');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('WITHHOLDING_TAX');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         WithholdingTax::create([
-            'ID'                    => $ID,
-            'RECORDED_ON'           => $this->dateServices->Now(),
-            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                  => $DATE,
-            'WITHHELD_FROM_ID'      => $WITHHELD_FROM_ID,
-            'EWT_ID'                => $EWT_ID,
-            'EWT_RATE'              => $EWT_RATE,
-            'EWT_ACCOUNT_ID'        => $EWT_ACCOUNT_ID,
-            'LOCATION_ID'           => $LOCATION_ID,
-            'AMOUNT'                => 0,
-            'NOTES'                 => $NOTES,
-            'STATUS'                => 0,
-            'STATUS_DATE'           => $this->dateServices->NowDate(),
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE' => $DATE,
+            'WITHHELD_FROM_ID' => $WITHHELD_FROM_ID,
+            'EWT_ID' => $EWT_ID,
+            'EWT_RATE' => $EWT_RATE,
+            'EWT_ACCOUNT_ID' => $EWT_ACCOUNT_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+            'AMOUNT' => 0,
+            'NOTES' => $NOTES,
+            'STATUS' => 0,
+            'STATUS_DATE' => $this->dateServices->NowDate(),
             'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID
         ]);
 
@@ -64,15 +71,15 @@ class WithholdingTaxServices
 
         WithholdingTax::where('ID', '=', $ID)
             ->update([
-                'CODE'                  => $CODE,
-                'WITHHELD_FROM_ID'      => $WITHHELD_FROM_ID,
-                'EWT_ID'                => $EWT_ID,
-                'EWT_RATE'              => $EWT_RATE,
-                'EWT_ACCOUNT_ID'        => $EWT_ACCOUNT_ID,
-                'LOCATION_ID'           => $LOCATION_ID,
-                'NOTES'                 => $NOTES,
-                'ACCOUNTS_PAYABLE_ID'   => $ACCOUNTS_PAYABLE_ID,
-                'AMOUNT'                => $AMOUNT
+                'CODE' => $CODE,
+                'WITHHELD_FROM_ID' => $WITHHELD_FROM_ID,
+                'EWT_ID' => $EWT_ID,
+                'EWT_RATE' => $EWT_RATE,
+                'EWT_ACCOUNT_ID' => $EWT_ACCOUNT_ID,
+                'LOCATION_ID' => $LOCATION_ID,
+                'NOTES' => $NOTES,
+                'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID,
+                'AMOUNT' => $AMOUNT
             ]);
     }
 
@@ -140,7 +147,7 @@ class WithholdingTaxServices
             ->get();
 
         foreach ($result as $row) {
-            $AMOUNT_WITHHELD  = (float) $row->AMOUNT_WITHHELD ?? 0;
+            $AMOUNT_WITHHELD = (float) $row->AMOUNT_WITHHELD ?? 0;
             $TOTAL += $AMOUNT_WITHHELD;
         }
 
@@ -207,7 +214,7 @@ class WithholdingTaxServices
             ->get();
 
         foreach ($result as $row) {
-            $BILL_AMOUNT  = (float) $row->AMOUNT ?? 0;
+            $BILL_AMOUNT = (float) $row->AMOUNT ?? 0;
             $AMT_WITHHELD = (float) $BILL_AMOUNT * ($EWT_RATE / 100);
             $TOTAL += $AMT_WITHHELD;
             $this->UpdateBill($row->ID, $WITHHOLDING_TAX_ID, $row->BILL_ID, $AMT_WITHHELD);
@@ -220,15 +227,15 @@ class WithholdingTaxServices
     public function StoreBill(int $WITHHOLDING_TAX_ID, int $BILL_ID, float $AMOUNT_WITHHELD, int $ACCOUNTS_PAYABLE_ID): int
     {
 
-        $ID  = (int) $this->object->ObjectNextID('WITHHOLDING_TAX_BILLS');
+        $ID = (int) $this->object->ObjectNextID('WITHHOLDING_TAX_BILLS');
 
         WithholdingTaxBills::create(
             [
-                'ID'                        => $ID,
-                'WITHHOLDING_TAX_ID'        => $WITHHOLDING_TAX_ID,
-                'BILL_ID'                   => $BILL_ID,
-                'AMOUNT_WITHHELD'           => $AMOUNT_WITHHELD,
-                'ACCOUNTS_PAYABLE_ID'       => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null
+                'ID' => $ID,
+                'WITHHOLDING_TAX_ID' => $WITHHOLDING_TAX_ID,
+                'BILL_ID' => $BILL_ID,
+                'AMOUNT_WITHHELD' => $AMOUNT_WITHHELD,
+                'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null
             ]
         );
 
@@ -242,7 +249,7 @@ class WithholdingTaxServices
             ->where('BILL_ID', '=', $BILL_ID)
             ->update(
                 [
-                    'AMOUNT_WITHHELD'           => $AMOUNT_WITHHELD
+                    'AMOUNT_WITHHELD' => $AMOUNT_WITHHELD
                 ]
             );
     }
@@ -308,5 +315,70 @@ class WithholdingTaxServices
                     'AMOUNT' => $AMOUNT
                 ]
             );
+    }
+    public function getPosted(int $WTAX_ID, string $DATE, int $LOCATION_ID):bool
+    {
+        try {
+            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->object_type_withholding_tax_id, $WTAX_ID);
+            if ($JOURNAL_NO  == 0) {
+                $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->object_type_withholding_tax_id, $WTAX_ID) + 1;
+            }
+
+            $paymentData = $this->WtaxJournal($WTAX_ID);
+
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $paymentData,
+                $LOCATION_ID,
+                $this->object_type_withholding_tax_id,
+                $DATE,
+                "TAX"
+            );
+
+
+            $paymentDataR = $this->WtaxRemaining($WTAX_ID);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $paymentDataR,
+                $LOCATION_ID,
+                $this->object_type_withholding_tax_id,
+                $DATE,
+                "A/P"
+            );
+
+
+            $taxBillData = $this->WTaxBillJournal($WTAX_ID);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $taxBillData,
+                $LOCATION_ID,
+                $this->object_type_witholding_tax_bills_id,
+                $DATE,
+                "A/P"
+            );
+
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum) {
+
+                $this->StatusUpdate($WTAX_ID, 15);
+                DB::commit();
+                $data = $this->get($WTAX_ID);
+                if ($data) {
+        
+                    return true;
+                }
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+        } catch (\Exception $e) {
+    
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
     }
 }

@@ -244,7 +244,7 @@
                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                         <div class="col-md-12"
                                             @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'SAME_AMOUNT' => $SAME_AMOUNT, 'PF_PERIOD_ID' => $PF_PERIOD_ID])
+                                            @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'SAME_AMOUNT' => $SAME_AMOUNT, 'PF_PERIOD_ID' => $PF_PERIOD_ID, 'DATE' => $DATE])
                                         </div>
                                     </div>
                                 </div>

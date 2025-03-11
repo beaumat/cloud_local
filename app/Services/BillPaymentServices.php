@@ -222,7 +222,8 @@ class BillPaymentServices
                 'bill.DATE',
                 'bill.AMOUNT',
                 'bill.BALANCE_DUE',
-                'bill.ACCOUNTS_PAYABLE_ID'
+                'bill.ACCOUNTS_PAYABLE_ID',
+                DB::raw("(SELECT SUM(withholding_tax_bills.AMOUNT_WITHHELD) from withholding_tax_bills where withholding_tax_bills.BILL_ID = check_bills.BILL_ID) as TAX_AMOUNT")
             ])
             ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
             ->where('check_bills.CHECK_ID', '=', $CHECK_ID)

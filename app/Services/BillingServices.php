@@ -19,6 +19,8 @@ class BillingServices
     public int $object_type_map_bill_item = 3;
     public int $object_type_map_bill_expenses = 78;
     public int $document_type_id = 1;
+    public int $ACCOUNTS_PAYABLE_ID = 21;
+
 
     private $object;
     private $compute;

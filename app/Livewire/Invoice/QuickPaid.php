@@ -40,7 +40,6 @@ class QuickPaid extends Component
     }
     public function makePaid(int $INVOICE_ID)
     {
-
         $data = [
             'INVOICE_ID' => $INVOICE_ID
         ];

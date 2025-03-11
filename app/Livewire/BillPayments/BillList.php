@@ -31,6 +31,8 @@ class BillList extends Component
     public bool $SAME_AMOUNT;
     #[Reactive]
     public int $PF_PERIOD_ID;
+    #[Reactive()]
+    public string $DATE;
 
     public float $prevAmount;
     public float $orgAmount;
@@ -89,7 +91,7 @@ class BillList extends Component
             DB::beginTransaction();
             if ($this->STATUS == 16) {
                 $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $this->CHECK_ID);
-                if ($JOURNAL_NO  ==  0) {
+                if ($JOURNAL_NO == 0) {
                     session()->flash('message', 'journal not found');
                     return;
                 }
@@ -115,7 +117,7 @@ class BillList extends Component
             $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
             $this->billingServices->UpdateBalance($BILL_ID);
             DB::commit();
-            
+
             $this->SetAmount();
             $this->dispatch('reset-payment');
         } catch (\Exception $e) {
@@ -138,7 +140,10 @@ class BillList extends Component
         $this->AMOUNT = $AMOUNT;
         $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
     }
+    public function addTax(int $BILL_ID, float $AMOUNT)
+    {
 
+    }
     #[On('clear-alert')]
     public function clearAlert()
     {

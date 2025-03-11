@@ -23,7 +23,6 @@ class BillModal extends Component
     public float $AMOUNT_APPLIED;
     #[Reactive]
     public bool $SAME_AMOUNT;
-
     #[Reactive]
     public int $PF_PERIOD_ID;
 
@@ -49,7 +48,7 @@ class BillModal extends Component
         $this->AMOUNT = $AMOUNT;
         $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
     }
-
+    
 
     public function updatedSelectedCharges(bool $value, $id)
     {
@@ -60,7 +59,6 @@ class BillModal extends Component
 
         if (!$this->SAME_AMOUNT) {
             $CurrentAmount = (float) $this->AMOUNT - $this->AMOUNT_APPLIED;
-
             $CollectAmount = 0;
             foreach ($this->selectedCharges as $chargeId => $isSelected) {
                 if ($isSelected) {
@@ -71,11 +69,8 @@ class BillModal extends Component
                     }
                 }
             }
-
-
             $newPay = $CurrentAmount - $CollectAmount;
             $balance = $this->billingServices->getBalance($id);
-
             if ($balance <= $newPay) {
                 $mustPay = $balance;
             } else {

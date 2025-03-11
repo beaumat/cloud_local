@@ -77,7 +77,7 @@ class EquityReport extends Component
     }
 
     public function render()
-    {
+    {   
         return view('livewire.financial-report.equity-report');
     }
 }

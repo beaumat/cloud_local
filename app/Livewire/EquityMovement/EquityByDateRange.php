@@ -30,42 +30,15 @@ class EquityByDateRange extends Component
         $this->LOCATION_ID = $result['LOCATION_ID'];
 
         $this->dataList = [];
-
-
-
-        // $assetList = $this->financialStatementServices->getBalanceSheetAccountTypeListByDateRange([0, 1, 2, 3, 4], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, false);
-        // $a[] = $this->SetData($assetList, 'Assets');
-        // $liabilityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByDateRange([5, 6, 7, 8], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
-        // $l[] = $this->SetData($liabilityList, 'Liabilities');
-        // $TOTAL = $a[0]['TOTAL'] - $l[0]['TOTAL'];
-
-
-        // $this->dataList[] = $this->getInsert(
-        //     0,
-        //     'Net Assets ',
-        //     'total',
-        //     $TOTAL != 0 ? $this->numberServices->AcctFormat($TOTAL) : '-'
-        // );
         $this->equitySide();
     }
     private function equitySide()
     {
 
-        
-
-        // $this->dataList[] = $this->getInsert(
-        //     0,
-        //     'Equity ',
-        //     'grand',
-        //     ''
-        // );
 
         $equityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByDateRange([9], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
-
         $e = $this->SetData($equityList, '', false);
-
         $dataIS = $this->getIncomeStatement();
-
         $TOTAL = (float) $e['TOTAL'] + $dataIS['TOTAL'];
 
         $this->dataList[] = $this->getInsert( 0, 'Total Equity ', 'grand', $TOTAL != 0 ? $this->numberServices->AcctFormat($TOTAL) : '-' );
@@ -128,17 +101,6 @@ class EquityByDateRange extends Component
             $TMP = (int) $data->TYPE;
 
         }
-        // if ($TMP_NAME <> '') {
-        //     if (!$notToDisplay) {
-        //         $this->dataList[] = $this->getInsert(
-        //             0,
-        //             ' Total ' . $TMP_NAME,
-        //             'total',
-
-        //             $T_TOTAL != 0 ? $this->numberServices->AcctFormat($T_TOTAL) : '-'
-        //         );
-        //     }
-        // }
 
 
         //CLEAR

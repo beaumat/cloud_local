@@ -198,6 +198,7 @@ class WithHoldingTaxForm extends Component
         $this->ACCOUNTS_PAYABLE_ID = $data->ACCOUNTS_PAYABLE_ID ?? 0;
         $this->EWT_RATE = $data->EWT_RATE ?? 0;
         $this->EWT_ID = $data->EWT_ID ?? 0;
+    
         $this->NOTES = $data->NOTES ?? '';
         $this->STATUS =   $data->STATUS ?? 0;
     }

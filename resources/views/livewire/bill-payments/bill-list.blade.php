@@ -8,6 +8,10 @@
                 <th class="col-1">Orig. Amount</th>
                 <th class="col-1">Balance</th>
                 <th class="col-1">Payment</th>
+
+                @if ($PF_PERIOD_ID > 0)
+                    <th class="col-1">WTax</th>
+                @endif
                 @if ($STATUS == 0 || $STATUS == 16)
                     <th class="text-center col-1">Action</th>
                 @endif
@@ -31,10 +35,26 @@
                         @endif
                     </td>
 
+                    @if ($PF_PERIOD_ID > 0)
+                        @if ($list->TAX_AMOUNT > 0)
+                            <td class="text-right">
+                                {{ number_format($list->TAX_AMOUNT, 2) }}
+                            </td>
+                        @else
+                            <td>
+                                <button type="button" class="btn btn-xs btn-success w-100"
+                                    wire:click='addTax({{ $list->BILL_ID }},{{ $list->AMOUNT }})'
+                                    wire:confirm='Are you sure tax. the payment will adjusted?'>
+                                    <i class="fa fa-plus" aria-hidden="true"></i> Add Tax
+                                </button>
+                            </td>
+                        @endif
+                    @endif
                     @if ($STATUS == 0 || $STATUS == 16)
                         <td class="text-center">
                             @if ($editPaymentId === $list->ID)
-                                <button title="Update" id="updatebtn" wire:click="update()" class="btn btn-success btn-xs">
+                                <button title="Update" id="updatebtn" wire:click="update()"
+                                    class="btn btn-success btn-xs">
                                     <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>
                                 <button title="Cancel" id="cancelbtn" wire:click="cancel()"
@@ -61,6 +81,11 @@
     </table>
 
     @if ($STATUS == 0 || $STATUS == 16)
-        @livewire('BillPayments.BillModal', ['VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'CHECK_ID' => $CHECK_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'STATUS' => $STATUS, 'SAME_AMOUNT' => $SAME_AMOUNT, 'PF_PERIOD_ID'  => $PF_PERIOD_ID])
+
+        @if ($PF_PERIOD_ID > 0)
+            @livewire('BillPayments.DoctorPaid', ['VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'CHECK_ID' => $CHECK_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'STATUS' => $STATUS, 'SAME_AMOUNT' => $SAME_AMOUNT, 'PF_PERIOD_ID' => $PF_PERIOD_ID, 'DATE' => $DATE])
+        @else
+            @livewire('BillPayments.BillModal', ['VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'CHECK_ID' => $CHECK_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'STATUS' => $STATUS, 'SAME_AMOUNT' => $SAME_AMOUNT, 'PF_PERIOD_ID' => 0])
+        @endif
     @endif
 </div>

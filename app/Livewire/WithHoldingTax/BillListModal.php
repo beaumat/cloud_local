@@ -71,8 +71,6 @@ class BillListModal extends Component
                 if ($ID > 0) {
                     $invData =  $this->billingServices->get($chargeId);
                     $chargeAmount =  $invData->AMOUNT * ($this->EWT_RATE / 100);
-
-
                     $this->withholdingTaxServices->UpdateBill(
                         $ID,
                         $this->WITHHOLDING_TAX_ID,
@@ -101,7 +99,6 @@ class BillListModal extends Component
         }
 
         $NEW_AMOUNT = $this->withholdingTaxServices->getTotal($this->WITHHOLDING_TAX_ID);
-  
 
         $this->withholdingTaxServices->setTotal($this->WITHHOLDING_TAX_ID, $NEW_AMOUNT);
         $this->showModal = false;
