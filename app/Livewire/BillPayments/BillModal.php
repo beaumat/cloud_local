@@ -153,9 +153,7 @@ class BillModal extends Component
         $this->showModal = false;
         $this->selectedCharges = [];
         $this->paymentAmounts = [];
-
         $this->SetAmount();
-
         $this->dispatch('reload_bill_list');
     }
     private function SetAmount()
@@ -170,7 +168,6 @@ class BillModal extends Component
         session()->forget('message');
         session()->forget('error');
     }
-
     public function render()
     {   
         if($this->showModal) {
@@ -179,10 +176,7 @@ class BillModal extends Component
             } else {
                 $this->invoiceList = $this->billingServices->getBillListViaBillPayment($this->VENDOR_ID, $this->LOCATION_ID, $this->CHECK_ID);
             }
-    
         }
-
-     
         return view('livewire.bill-payments.bill-modal');
     }
 }
