@@ -200,7 +200,8 @@ class BillPaymentServices
                 'philhealth.DATE_ADMITTED',
                 'philhealth.DATE_DISCHARGED',
                 DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as NO_TREATMENT '),
-            ])
+                DB::raw("(SELECT SUM(withholding_tax_bills.AMOUNT_WITHHELD) from withholding_tax_bills where withholding_tax_bills.BILL_ID = check_bills.BILL_ID) as TAX_AMOUNT")
+                ])
             ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
             ->join('philhealth_prof_fee', 'philhealth_prof_fee.BILL_ID', '=', 'check_bills.BILL_ID')
             ->join('philhealth', 'philhealth.ID', '=', 'philhealth_prof_fee.PHIC_ID')

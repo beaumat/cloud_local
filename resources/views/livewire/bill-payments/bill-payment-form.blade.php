@@ -184,6 +184,11 @@
                                                             type="button" class="btn btn-sm btn-dark">
                                                             <i class="fa fa-print" aria-hidden="true"></i> Print
                                                         </a>
+                                                        <a target="_BLANK"
+                                                            href="{{ route('vendorsbill_payment_doctor_tax', ['id' => $ID]) }}"
+                                                            type="button" class="btn btn-sm btn-secondary">
+                                                            <i class="fa fa-print" aria-hidden="true"></i> Print WTax
+                                                        </a>
                                                     @else
                                                         <a target="_BLANK"
                                                             href="{{ route('vendorsbill_payment_print', ['id' => $ID]) }}"
@@ -207,6 +212,11 @@
                                                         href="{{ route('vendorsbill_payment_doctor', ['id' => $ID]) }}"
                                                         type="button" class="btn btn-sm btn-dark">
                                                         <i class="fa fa-print" aria-hidden="true"></i> Print
+                                                    </a>
+                                                    <a target="_BLANK"
+                                                        href="{{ route('vendorsbill_payment_doctor_tax', ['id' => $ID]) }}"
+                                                        type="button" class="btn btn-sm btn-secondary">
+                                                        <i class="fa fa-print" aria-hidden="true"></i> Print WTax
                                                     </a>
                                                 @endif
                                             @endif
@@ -255,12 +265,32 @@
                                 <div class="col-md-6 text-left">
 
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-2">
+                                    <div class="row">
+                                        <div class="col-md-12 text-right">
+                                            <label class="text-sm">TOTAL:</label>
+                                            <label class="text-primary text-lg">
+                                                {{ number_format($AMOUNT_APPLIED + $WTAX_APPLIED, 2) }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
                                     <div class="row">
                                         <div class="col-md-12 text-right">
                                             <label class="text-sm">Payment Applied:</label>
                                             <label class="text-primary text-lg">
                                                 {{ number_format($AMOUNT_APPLIED, 2) }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="row">
+                                        <div class="col-md-12 text-right">
+                                            <label class="text-sm">WTax Applied:</label>
+                                            <label class="text-primary text-lg">
+                                                {{ number_format($WTAX_APPLIED, 2) }}
                                             </label>
                                         </div>
                                     </div>

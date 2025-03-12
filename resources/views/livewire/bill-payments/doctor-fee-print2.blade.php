@@ -30,6 +30,8 @@
                                 <th class="col-2 text-center h5">DATE ADMITTED</th>
                                 <th class="col-2 text-center h5">DATE DISCHARGED</th>
                                 <th class="col-1 text-center h5">NUMBER OF TREATMENT</th>
+                                <th class="col-1 text-center h5">PAID</th>
+                                <th class="col-1 text-center h5">TAX</th>
                                 <th class="col-2 text-center h5">TOTAL</th>
                             </tr>
                         </thead>
@@ -49,6 +51,11 @@
                                     <td class="text-center h5 font-weight-normal">
                                         &nbsp;{{ date('m/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
                                     <td class="text-center h5 font-weight-normal">{{ $list->NO_TREATMENT }}</td>
+                                    <td class="text-right h5 font-weight-normal">
+                                        {{ number_format($list->AMOUNT_PAID, 2) }} &nbsp;</td>
+
+                                    <td class="text-right h5 font-weight-normal">
+                                        {{ number_format($list->TAX_AMOUNT, 2) }} &nbsp;</td>
                                     <td class="text-right h5 font-weight-normal">
                                         {{ number_format($list->AMOUNT, 2) }} &nbsp;</td>
                                 </tr>

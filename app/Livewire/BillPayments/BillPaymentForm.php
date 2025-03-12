@@ -2,6 +2,7 @@
 
 namespace App\Livewire\BillPayments;
 
+use App\Models\WithholdingTax;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\BillPaymentServices;
@@ -10,6 +11,7 @@ use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\PaymentPeriodServices;
 use App\Services\UserServices;
+use App\Services\WithholdingTaxServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
@@ -30,6 +32,7 @@ class BillPaymentForm extends Component
     public int $BANK_ACCOUNT_ID;
     public float $AMOUNT;
     public float $AMOUNT_APPLIED;
+    public float $WTAX_APPLIED;
     public string $NOTES;
     public int $TYPE = 1;
     public int $STATUS = 0;
@@ -51,6 +54,7 @@ class BillPaymentForm extends Component
     private $documentStatusServices;
     private $accountJournalServices;
     private $paymentPeriodServices;
+    private $withholdingTaxServices;
     public function boot(
         BillPaymentServices $billPaymentServices,
         ContactServices $contactServices,
@@ -59,7 +63,8 @@ class BillPaymentForm extends Component
         AccountServices $accountServices,
         DocumentStatusServices $documentStatusServices,
         AccountJournalServices $accountJournalServices,
-        PaymentPeriodServices $paymentPeriodServices
+        PaymentPeriodServices $paymentPeriodServices,
+        WithholdingTaxServices $withholdingTaxServices
     ) {
         $this->billPaymentServices = $billPaymentServices;
         $this->contactServices = $contactServices;
@@ -69,11 +74,13 @@ class BillPaymentForm extends Component
         $this->documentStatusServices = $documentStatusServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->paymentPeriodServices = $paymentPeriodServices;
+        $this->withholdingTaxServices = $withholdingTaxServices;
     }
     #[On('reset-payment')]
     public function ResetPaymentApplied()
     {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->UpdateBillPaymentApplied($this->ID);
+        $this->WTAX_APPLIED = (float) $this->withholdingTaxServices->getAmountBetweenBillPayment( $this->ID);
         $this->getNewAmount();
     }
     private function LoadDropDown()
@@ -338,6 +345,7 @@ class BillPaymentForm extends Component
     public function render()
     {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->getTotalApplied($this->ID);
+        $this->WTAX_APPLIED = (float) $this->withholdingTaxServices->getAmountBetweenBillPayment( $this->ID);
         return view('livewire.bill-payments.bill-payment-form');
     }
 }

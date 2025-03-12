@@ -316,11 +316,11 @@ class WithholdingTaxServices
                 ]
             );
     }
-    public function getPosted(int $WTAX_ID, string $DATE, int $LOCATION_ID):bool
+    public function getPosted(int $WTAX_ID, string $DATE, int $LOCATION_ID): bool
     {
         try {
-            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->object_type_withholding_tax_id, $WTAX_ID);
-            if ($JOURNAL_NO  == 0) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->object_type_withholding_tax_id, $WTAX_ID);
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->object_type_withholding_tax_id, $WTAX_ID) + 1;
             }
 
@@ -368,17 +368,31 @@ class WithholdingTaxServices
                 DB::commit();
                 $data = $this->get($WTAX_ID);
                 if ($data) {
-        
+
                     return true;
                 }
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
         } catch (\Exception $e) {
-    
+
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
             return false;
         }
+    }
+    public function getAmountBetweenBillPayment(int $CHECK_ID): float
+    {
+        $result = DB::table('withholding_tax_bills')
+            ->select([
+                DB::raw('sum(withholding_tax_bills.AMOUNT_WITHHELD) as TOTAL_TAX')
+            ])->whereExists(function ($query) use ($CHECK_ID) {
+                $query->select(DB::raw(1))
+                    ->from('check_bills as bpay')
+                    ->whereRaw('bpay.BILL_ID = withholding_tax_bills.BILL_ID')
+                    ->where('bpay.CHECK_ID', '=', $CHECK_ID);
+            })->first();
+
+        return $result->TOTAL_TAX ?? 0;
     }
 }
