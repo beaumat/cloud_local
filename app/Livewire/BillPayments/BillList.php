@@ -205,7 +205,7 @@ class BillList extends Component
             $this->DATE,
             $this->VENDOR_ID,
             $this->EWT_RATE,
-            $this->EWT_ID,
+        $this->EWT_ID,
             $this->EWT_ACCOUNT_ID,
             $this->LOCATION_ID,
             '',

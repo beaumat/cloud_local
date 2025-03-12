@@ -325,6 +325,8 @@ class BillPaymentForm extends Component
     }
     public function DoctorPrint()
     {
+
+        
     }
     #[On('reload_bill_list')]
     public function getNewAmount()

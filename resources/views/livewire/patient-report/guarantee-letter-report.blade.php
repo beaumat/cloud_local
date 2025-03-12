@@ -24,8 +24,8 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <livewire:date-input name="DATE_FROM" titleName="As Of"
-                                            wire:model.live='DATE_FROM' :isDisabled="false" />
+                                        <livewire:checkbox-input name="INCLUDE_ZERO" wire:model='includeZero'
+                                            titleName="Inlclude Zero balance" :isDisabled=false />
                                     </div>
                                     <div class="col-md-5">
                                         {{-- <livewire:date-input name="DATE_TO" titleName="(SC) To"
@@ -75,7 +75,7 @@
                                     <span class="spinner"></span>
                                 </div>
                                 <button class="btn btn-sm btn-primary" wire:click='generate()'
-                                    wire:loading.attr='disabled'>Filter</button>
+                                    wire:loading.attr='disabled'>Generate</button>
                                 <button class="btn btn-sm btn-success" wire:click='export()'
                                     wire:loading.attr='disabled'>Export</button>
                             </div>
@@ -101,10 +101,20 @@
                         <tbody class="text-xs">
                             @php
                                 $BALANCE = 0;
+                                $TEMP_NAME = '';
                             @endphp
                             @foreach ($dataList as $list)
                                 <tr>
-                                    <td>{{ $list->PATIENT_NAME }}</td>
+
+                                    <td>
+                                        @if ($TEMP_NAME != $list->PATIENT_NAME)
+                                            {{ $list->PATIENT_NAME }}
+                                        @endif
+                                        @php
+                                            $TEMP_NAME = $list->PATIENT_NAME;
+                                            $BALANCE += $list->BALANCE;
+                                        @endphp
+                                    </td>
                                     <td>{{ $list->METHOD }}</td>
                                     <td>{{ date('M/d/Y', strtotime($list->TRANS_DATE)) }}</td>
                                     <td>{{ $list->TRANS_CODE }}</td>
@@ -113,6 +123,16 @@
                                     <td class="text-right">{{ number_format($list->BALANCE, 2) }}</td>
                                 </tr>
                             @endforeach
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-right text-danger font-weight-bold">{{ number_format($BALANCE, 2) }}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

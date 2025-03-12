@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PatientReport;
 
+use App\Exports\GuaranteeLetterExport;
 use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\LocationServices;
@@ -10,22 +11,21 @@ use App\Services\ServiceChargeServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Guarantee Letter Report')]
 class GuaranteeLetterReport extends Component
-{   
-   
-    public  bool $refreshComponent = false;
+{
+
+    public bool $refreshComponent = false;
     public int $PATIENT_ID = 0;
     public int $LOCATION_ID;
-    public string $DATE_FROM;
-    public string $DATE_TO;
+
     public float $BALANCE;
-    public  $locationList = [];
+    public $locationList = [];
     public $patientList = [];
     public $dataList = [];
-
+    public bool $includeZero = false;
     private $patientPaymentServices;
     private $dateServices;
     private $userServices;
@@ -38,7 +38,7 @@ class GuaranteeLetterReport extends Component
         UserServices $userServices,
         LocationServices $locationServices
     ) {
-    
+
         $this->locationServices = $locationServices;
         $this->dateServices = $dateServices;
         $this->userServices = $userServices;
@@ -47,35 +47,50 @@ class GuaranteeLetterReport extends Component
     }
     public function export()
     {
-        // return Excel::download(new SalesPatientBalanceExport(
-        //     $this->serviceChargeServices,
-        //     $this->PATIENT_ID,
-        //     $this->LOCATION_ID,
-        //     $this->DATE_FROM,
-        //     $this->DATE_TO
 
-        // ), 'patient-balance.xlsx');
+        $dataList = $this->patientPaymentServices->GetAssistanceAll(
+            $this->PATIENT_ID,
+            $this->LOCATION_ID,
+            $this->includeZero
+        );
+        return Excel::download(new GuaranteeLetterExport(
+            $dataList
+
+        ), 'GL-Export.xlsx');
     }
     public function mount()
     {
-        $this->locationList  = $this->locationServices->getList();
+        $this->locationList = $this->locationServices->getList();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->DATE_FROM = $this->dateServices->NowDate();
-        $this->DATE_TO = $this->dateServices->NowDate();
+
         $this->updatedlocationId();
     }
     public function updatedlocationId()
     {
 
-        $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
-        $this->PATIENT_ID  = 0;
-        $this->refreshComponent = $this->refreshComponent ? false : true;
+        try {
+
+            $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
+            $this->PATIENT_ID = 0;
+            $this->refreshComponent = $this->refreshComponent ? false : true;
+
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+
     }
+
     public function generate()
     {
         $this->BALANCE = 0;
-        $this->dataList =  $this->patientPaymentServices->GetAssistanceAll($this->PATIENT_ID,$this->LOCATION_ID);
- 
+        $this->dataList = $this->patientPaymentServices->GetAssistanceAll(
+            $this->PATIENT_ID,
+            $this->LOCATION_ID,
+            $this->includeZero
+        );
+
     }
     public function render()
     {

@@ -824,7 +824,7 @@ class PatientPaymentServices
         return $result;
     }
 
-    public function GetAssistanceAll(int $PATIENT_ID, int $LOCATION_ID)
+    public function GetAssistanceAll(int $PATIENT_ID, int $LOCATION_ID, bool $includeZeroBalance = false)
     {
         $result = PatientPayments::select([
             'c.NAME as PATIENT_NAME',
@@ -840,6 +840,9 @@ class PatientPaymentServices
             ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->when($PATIENT_ID > 0, function ($query) use ($PATIENT_ID) {
                 $query->where('PATIENT_ID', '=', $PATIENT_ID);
+            })
+            ->when(!$includeZeroBalance, function ($query) {
+                $query->whereRaw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED) > 0');
             })
             ->whereIn('PAYMENT_METHOD_ID', [92, 93, 94, 96, 97, 98])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
