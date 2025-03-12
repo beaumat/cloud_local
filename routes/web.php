@@ -650,7 +650,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/{locationid}/{year}', PhilHealthAvailmentListPrint::class)->name('philhealth_availment_list_print')->middleware(['permission:report.philhealth.availment']);
             });
             Route::prefix('/guarantee-letter')->group(function () {
-                Route::get('/', GuaranteeLetterReport::class)->name('guarantee_letter'); //->middleware(['permission:report.guarantee.letter']);
+                Route::get('/', GuaranteeLetterReport::class)->name('guarantee_letter')->middleware(['permission:report.guarantee.letter']);
             });
 
         });
