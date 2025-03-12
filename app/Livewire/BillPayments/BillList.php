@@ -5,6 +5,8 @@ namespace App\Livewire\BillPayments;
 use App\Services\AccountJournalServices;
 use App\Services\BillingServices;
 use App\Services\BillPaymentServices;
+use App\Services\TaxServices;
+use App\Services\WithholdingTaxServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -34,6 +36,15 @@ class BillList extends Component
     #[Reactive()]
     public string $DATE;
 
+
+
+    public float $BILL_PAID = 0;
+    public int $EWT_ID = 10;
+    public $EWT_ACCOUNT_ID = 29;
+    public float $AMOUNT_WITHHELD;
+    public float $EWT_RATE;
+
+
     public float $prevAmount;
     public float $orgAmount;
     public $editPaymentId = null;
@@ -42,14 +53,21 @@ class BillList extends Component
 
     private $billingServices;
     private $accountJournalServices;
+    private $withholdingTaxServices;
+    private $taxServices;
     public function boot(
         BillPaymentServices $billPaymentServices,
         BillingServices $billingServices,
-        AccountJournalServices $accountJournalServices
+        AccountJournalServices $accountJournalServices,
+        WithholdingTaxServices $withholdingTaxServices,
+        TaxServices $taxServices
     ) {
         $this->billPaymentServices = $billPaymentServices;
         $this->billingServices = $billingServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->withholdingTaxServices = $withholdingTaxServices;
+        $this->taxServices = $taxServices;
+
     }
     public function edit(int $ID, int $BILL_ID, float $Applied)
     {
@@ -140,9 +158,74 @@ class BillList extends Component
         $this->AMOUNT = $AMOUNT;
         $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
     }
+
+    public function getSetTax(float $BALANCE_DUE)
+    {
+        $tax = $this->taxServices->get($this->EWT_ID);
+        if ($tax) {
+            $this->EWT_RATE = $tax->RATE ?? 0;
+            $this->AMOUNT_WITHHELD = $BALANCE_DUE * ($this->EWT_RATE / 100);
+            $this->EWT_ACCOUNT_ID = $tax->TAX_ACCOUNT_ID ?? 0;
+            $this->BILL_PAID = $BALANCE_DUE - $this->AMOUNT_WITHHELD;
+        }
+    }
+    public function addingTax(int $ID, int $BILL_ID, float $AMOUNT)
+    {
+        DB::beginTransaction();
+        try {
+            $isGood = (bool) $this->addTax($BILL_ID, $AMOUNT);
+
+            if (!$isGood) {
+                DB::rollBack();
+                return;
+            }
+            $this->billPaymentServices->billPaymentBills_Update($ID, $this->CHECK_ID, $BILL_ID, 0, $this->BILL_PAID);
+            $this->billingServices->UpdateBalance($BILL_ID);
+            $this->SetAmount();
+            $this->dispatch('reload_bill_list');
+            DB::commit();
+
+        } catch (\Throwable $th) {
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+            DB::rollBack();
+        }
+    }
     public function addTax(int $BILL_ID, float $AMOUNT)
     {
+        if ($this->EWT_ID == 0) {
+            return false;
+        }
 
+
+        $this->getSetTax($AMOUNT);
+
+        $ID = $this->withholdingTaxServices->Store(
+            "",
+            $this->DATE,
+            $this->VENDOR_ID,
+            $this->EWT_RATE,
+            $this->EWT_ID,
+            $this->EWT_ACCOUNT_ID,
+            $this->LOCATION_ID,
+            '',
+            $this->billingServices->ACCOUNTS_PAYABLE_ID
+        );
+
+
+        $this->withholdingTaxServices->StoreBill(
+            $ID,
+            $BILL_ID,
+            $this->AMOUNT_WITHHELD,
+            $this->billingServices->ACCOUNTS_PAYABLE_ID
+        );
+        $total = $this->withholdingTaxServices->GetTotal($ID);
+        $this->withholdingTaxServices->setTotal($ID, $total);
+        $this->billingServices->UpdateBalance($BILL_ID);
+
+        $isGood = $this->withholdingTaxServices->getPosted($ID, $this->DATE, $this->LOCATION_ID);
+
+        return $isGood;
     }
     #[On('clear-alert')]
     public function clearAlert()

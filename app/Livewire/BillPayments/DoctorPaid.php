@@ -97,16 +97,7 @@ class DoctorPaid extends Component
 
     }
 
-    public function getSetTax(float $BALANCE_DUE)
-    {
-        $tax = $this->taxServices->get($this->EWT_ID);
-        if ($tax) {
-            $this->EWT_RATE = $tax->RATE ?? 0;
-            $this->AMOUNT_WITHHELD = $BALANCE_DUE * ($this->EWT_RATE / 100);
-            $this->EWT_ACCOUNT_ID = $tax->TAX_ACCOUNT_ID ?? 0;
-            $this->BILL_PAID = $BALANCE_DUE - $this->AMOUNT_WITHHELD;
-        }
-    }
+
     public function addItem(int $BILL_ID, float $BILL_AMOUNT)
     {   
 
@@ -129,7 +120,16 @@ class DoctorPaid extends Component
 
 
     }
-
+    public function getSetTax(float $BALANCE_DUE)
+    {
+        $tax = $this->taxServices->get($this->EWT_ID);
+        if ($tax) {
+            $this->EWT_RATE = $tax->RATE ?? 0;
+            $this->AMOUNT_WITHHELD = $BALANCE_DUE * ($this->EWT_RATE / 100);
+            $this->EWT_ACCOUNT_ID = $tax->TAX_ACCOUNT_ID ?? 0;
+            $this->BILL_PAID = $BALANCE_DUE - $this->AMOUNT_WITHHELD;
+        }
+    }
     public function AddTAX(int $BILL_ID, float $AMOUNT)
     {
         if ($this->EWT_ID == 0) {

@@ -43,7 +43,7 @@
                         @else
                             <td>
                                 <button type="button" class="btn btn-xs btn-success w-100"
-                                    wire:click='addTax({{ $list->BILL_ID }},{{ $list->AMOUNT }})'
+                                    wire:click='addingTax({{ $list->ID }},{{ $list->BILL_ID }},{{ $list->AMOUNT }})'
                                     wire:confirm='Are you sure tax. the payment will adjusted?'>
                                     <i class="fa fa-plus" aria-hidden="true"></i> Add Tax
                                 </button>
