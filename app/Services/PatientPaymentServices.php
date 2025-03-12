@@ -814,10 +814,38 @@ class PatientPaymentServices
         ])
             ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('PATIENT_ID', $PATIENT_ID)
-            ->whereIn('PAYMENT_METHOD_ID', [91, 92, 93, 94, 96, 97, 98])
+            ->whereIn('PAYMENT_METHOD_ID', [92, 93, 94, 96, 97, 98])
             ->when($LOCK_LOCATION_ID > 0, function ($query) use (&$LOCK_LOCATION_ID) {
                 $query->where('patient_payment.LOCATION_ID', $LOCK_LOCATION_ID);
             })
+            ->orderBy('TRANS_DATE', 'asc')
+            ->get();
+
+        return $result;
+    }
+
+    public function GetAssistanceAll(int $PATIENT_ID, int $LOCATION_ID)
+    {
+        $result = PatientPayments::select([
+            'c.NAME as PATIENT_NAME',
+            DB::raw('IF(ISNULL(RECEIPT_DATE), patient_payment.DATE, RECEIPT_DATE) AS TRANS_DATE'),
+            DB::raw('IF(ISNULL(RECEIPT_REF_NO), patient_payment.CODE, RECEIPT_REF_NO) AS TRANS_CODE'),
+            'patient_payment.AMOUNT',
+            'patient_payment.AMOUNT_APPLIED',
+            DB::raw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED)  as BALANCE'),
+            'pm.description AS METHOD',
+            'patient_payment.PAYMENT_METHOD_ID'
+        ])
+            ->join('contact as c', 'c.ID', '=', 'patient_payment.PATIENT_ID')
+            ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
+            ->when($PATIENT_ID > 0, function ($query) use ($PATIENT_ID) {
+                $query->where('PATIENT_ID', '=', $PATIENT_ID);
+            })
+            ->whereIn('PAYMENT_METHOD_ID', [92, 93, 94, 96, 97, 98])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('patient_payment.LOCATION_ID', $LOCATION_ID);
+            })
+            ->orderBy('c.NAME')
             ->orderBy('TRANS_DATE', 'asc')
             ->get();
 

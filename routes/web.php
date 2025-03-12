@@ -69,6 +69,7 @@ use App\Livewire\Location\LocationDoctors;
 use App\Livewire\Option\OptionSettings;
 use App\Livewire\PatientPayment\PatientPaymentForm;
 use App\Livewire\PatientPayment\PatientPaymentList;
+use App\Livewire\PatientReport\GuaranteeLetterReport;
 use App\Livewire\PatientReport\PhilHealthAvailmentListPrint;
 use App\Livewire\PayableReport\VendorBalance;
 use App\Livewire\Payment\PaymentForm;
@@ -317,8 +318,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', TaxCreditForm::class)->name('tax_credit_edit')->middleware(['permission:customer.tax-credit.view']);
         });
     });
-    // Customer End Category
-    // Vendor Start Category
+
     Route::prefix('/vendors')->name('vendors')->group(function () {
         Route::prefix('/purchase-order')->group(function () {
             Route::get('/', PurchaseOrderList::class)->name('purchase_order')->middleware(['permission:vendor.purchase-order.view']);
@@ -340,7 +340,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/print', BillPaymentPrint::class)->name('bill_payment_print')->middleware(['permission:vendor.bill-payment.print']);
             Route::get('/{id}/doctor-fee-print', DoctorFeePrint::class)->name('bill_payment_doctor')->middleware(['permission:vendor.bill-payment.print']);
             Route::get('/{id}/doctor-fee-print-tax', DoctorFeePrint2::class)->name('bill_payment_doctor_tax')->middleware(['permission:vendor.bill-payment.print']);
-     
+
         });
 
         Route::prefix('/bill-credits')->group(function () {
@@ -355,7 +355,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', WithHoldingTaxForm::class)->name('withholding_tax_edit')->middleware(['permission:vendor.withholding-tax.view']);
         });
     });
-    // Vendor End Category
+
 
     Route::prefix('/company')->name('company')->group(function () {
         Route::prefix('/build-assembly')->group(function () {
@@ -630,6 +630,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('/reports')->name('reports')->group(function () {
         Route::prefix('/patients')->group(function () {
+
             Route::prefix('/sales')->group(function () {
                 Route::get('/', PatientSalesReport::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
                 Route::get('/{date_from}/{date_to}/{location_id}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
@@ -647,6 +648,9 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/philhealth-availment-list')->group(function () {
                 Route::get('/', PhilHealthAvailmentList::class)->name('philhealth_availment_list')->middleware(['permission:report.philhealth.availment']);
                 Route::get('/{id}/{locationid}/{year}', PhilHealthAvailmentListPrint::class)->name('philhealth_availment_list_print')->middleware(['permission:report.philhealth.availment']);
+            });
+            Route::prefix('/guarantee-letter')->group(function () {
+                Route::get('/', GuaranteeLetterReport::class)->name('guarantee_letter'); //->middleware(['permission:report.guarantee.letter']);
             });
 
         });

@@ -60,7 +60,13 @@
                 </a>
             </li>
         @endif --}}
-
+        <li class="nav-item ">
+                <a href="{{ route('reportsguarantee_letter') }}"
+                    class="nav-link {{ request()->is('reports/reports/guarantee-letter*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print nav-icon"></i>
+                    <p>Guarantee Letter</p>
+                </a>
+            </li>
 
     </ul>
 </li>
