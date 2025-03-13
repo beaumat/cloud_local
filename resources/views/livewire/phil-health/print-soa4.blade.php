@@ -234,7 +234,7 @@
                             <div id="p-particular" class="col-3 text-left ">
                                 DRUGS AND MEDICINES
                             </div>
-                            <div id="p-charge" class="col-1 text-right  left-line2">
+                            <div id="p-charge" class="col-1 text-right  left-line2 font-italic">
                                 @if ($CHARGES_DRUG_N_MEDICINE > 0)
                                     {{ number_format($CHARGES_DRUG_N_MEDICINE, 2) }}
                                 @endif
@@ -271,7 +271,7 @@
                             <div id="p-particular" class="col-3 text-left ">
                                 SUPPLIES
                             </div>
-                            <div id="p-charge" class="col-1 text-right  left-line2">
+                            <div id="p-charge" class="col-1 text-right  left-line2 font-italic">
                                 @if ($CHARGES_SUPPLIES > 0)
                                     {{ number_format($CHARGES_SUPPLIES, 2) }}
                                 @endif
@@ -305,7 +305,7 @@
                             <div id="p-particular" class="col-3 text-left ">
                                 LABORATORY & DIAGNOSTIC
                             </div>
-                            <div id="p-charge" class="col-1 text-right  left-line2">
+                            <div id="p-charge" class="col-1 text-right  left-line2 font-italic">
                                 @if ($CHARGES_LAB_N_DIAGNOSTICS > 0)
                                     {{ number_format($CHARGES_LAB_N_DIAGNOSTICS, 2) }}
                                 @endif
@@ -342,7 +342,7 @@
                             <div id="p-particular" class="col-3 text-left ">
                                 OPERATING ROOM FEES
                             </div>
-                            <div id="p-charge" class="col-1 text-right  left-line2">
+                            <div id="p-charge" class="col-1 text-right  left-line2 font-italic">
                                 {{ number_format($CHARGES_OPERATING_ROOM_FEE, 2) }}
                             </div>
                             <div id="p-vat" class="col-1 text-right left-line2">
@@ -375,7 +375,7 @@
                             <div id="p-particular" class="col-3 text-left ">
                                 ADMINISTRATIVE & OTHER FEES
                             </div>
-                            <div id="p-charge" class="col-1 text-right  left-line2">
+                            <div id="p-charge" class="col-1 text-right  left-line2 font-italic">
                                 @if ($CHARGES_OTHERS > 0)
                                     {{ number_format($CHARGES_OTHERS, 2) }}
                                 @endif
@@ -473,24 +473,24 @@
                                 {{ $i . '. ' }} <span class="text-sm">{{ $list->NAME }}</span>
 
                             </div>
-                            <div id="p-charge" class="col-1 text-right  left-line2">
+                            <div id="p-charge" class="col-1 text-right  left-line2 font-italic">
                                 @if ($list->AMOUNT > 0)
                                     <i> {{ number_format($list->AMOUNT, 2) }}</i>
                                 @endif
                             </div>
-                            <div id="p-vat" class="col-1 text-right left-line2"> </div>
-                            <div id="p-sp" class="col-1 text-right left-line2">
+                            <div id="p-vat" class="col-1 text-right left-line2 font-italic"> </div>
+                            <div id="p-sp" class="col-1 text-right left-line2 font-italic">
                                 @if ($list->DISCOUNT > 0)
                                     <i>{{ number_format($list->DISCOUNT, 2) }}</i>
                                 @endif
                             </div>
-                            <div id="p-gov" class="col-2 text-right  left-line2 text-xs"> </div>
-                            <div id="p-after-disc" class="col-1 text-right  left-line2">
+                            <div id="p-gov" class="col-2 text-right  left-line2 text-xs font-italic"> </div>
+                            <div id="p-after-disc" class="col-1 text-right  left-line2 font-italic">
                                 @if ($list->DISCOUNT > 0)
                                     <i> {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }}</i>
                                 @endif
                             </div>
-                            <div id="p-first" class="col-1  left-line2 text-right">
+                            <div id="p-first" class="col-1  left-line2 text-right font-italic">
                                 @if ($list->FIRST_CASE > 0)
                                     <i> {{ number_format($list->FIRST_CASE, 2) }}</i>
                                 @endif
@@ -528,32 +528,32 @@
                     @endforeach
 
                     <div class="row bottom-line2 right-line2 left-line2 text-sm">
-                        <div id="p-particular" class="col-3 text-left ">
+                        <div id="p-particular" class="col-3 text-left">
                             <b>SUBTOTAL</b>
                         </div>
-                        <div id="p-charge" class="col-1 text-right  left-line2">
+                        <div id="p-charge" class="col-1 text-right  left-line2 font-weight-bold">
                             @if ($PROFESSIONAL_FEE_SUB_TOTAL > 0)
                                 {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL, 2) }}
                             @endif
                         </div>
-                        <div id="p-vat" class="col-1 text-right  left-line2 "> </div>
-                        <div id="p-sp" class="col-1 text-right   left-line2 ">
+                        <div id="p-vat" class="col-1 text-right  left-line2 font-weight-bold"> </div>
+                        <div id="p-sp" class="col-1 text-right   left-line2 font-weight-bold">
                             @if ($PROFESSIONAL_DISCOUNT_SUB_TOTAL > 0)
                                 {{ number_format($PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
                             @endif
                         </div>
 
-                        <div id="p-after-disc" class="col-2 text-right left-line2 ">
+                        <div id="p-after-disc" class="col-2 text-right left-line2 font-weight-bold">
                             {{-- @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
                                 {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
                             @endif --}}
                         </div>
-                        <div id="p-first" class="col-1  left-line2 text-right">
+                        <div id="p-first" class="col-1  left-line2 text-right font-weight-bold">
                             @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
                                 {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
                             @endif
                         </div>
-                        <div id="p-second" class="col-1 left-line2 text-right ">
+                        <div id="p-second" class="col-1 left-line2 text-right font-weight-bold ">
                             @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
                                 {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
                             @endif
