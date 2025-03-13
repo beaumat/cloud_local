@@ -504,29 +504,21 @@
 
                         <div class="row bottom-line2 right-line2 left-line2 text-sm">
                             <div id="p-particular" class="col-3 text-left ">
-                              ACCREDITATION #  <b class="font-weight-bold"> {{ $list->PIN }}</b>
+                                ACCREDITATION # <b class="font-weight-bold"> {{ $list->PIN }}</b>
                             </div>
                             <div id="p-charge" class="col-1 text-right  left-line2 font-weight-bold">
-                                {{-- @if ($PROFESSIONAL_FEE_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL, 2) }}
-                            @endif --}}
+
                             </div>
                             <div id="p-vat" class="col-1 text-right  left-line2 font-weight-bold"> </div>
                             <div id="p-sp" class="col-1 text-right   left-line2 font-weight-bold">
-                                {{-- @if ($PROFESSIONAL_DISCOUNT_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
-                            @endif --}}
+
                             </div>
                             <div id="p-gov" class="col-2 text-right  left-line2 text-xs font-weight-bold"> </div>
                             <div id="p-after-disc" class="col-1 text-right  left-line2 font-weight-bold">
-                                {{-- @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
-                            @endif --}}
+
                             </div>
                             <div id="p-first" class="col-1  left-line2 text-right font-weight-bold">
-                                {{-- @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
-                                {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
-                            @endif --}}
+
                             </div>
                             <div id="p-second" class="col-1 left-line2 text-right font-weight-bold"> </div>
                             <div id="p-pocket" class="col-1 text-right left-line2 font-weight-bold">
@@ -535,6 +527,44 @@
                         </div>
                     @endforeach
 
+                    <div class="row bottom-line2 right-line2 left-line2 text-sm">
+                        <div id="p-particular" class="col-3 text-left ">
+                            <b>SUBTOTAL</b>
+                        </div>
+                        <div id="p-charge" class="col-1 text-right  left-line2">
+                            @if ($PROFESSIONAL_FEE_SUB_TOTAL > 0)
+                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL, 2) }}
+                            @endif
+                        </div>
+                        <div id="p-vat" class="col-1 text-right  left-line2 "> </div>
+                        <div id="p-sp" class="col-1 text-right   left-line2 ">
+                            @if ($PROFESSIONAL_DISCOUNT_SUB_TOTAL > 0)
+                                {{ number_format($PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
+                            @endif
+                        </div>
+
+                        <div id="p-after-disc" class="col-2 text-right left-line2 ">
+                            {{-- @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
+                                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL - $PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
+                            @endif --}}
+                        </div>
+                        <div id="p-first" class="col-1  left-line2 text-right">
+                            @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
+                                {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
+                            @endif
+                        </div>
+                        <div id="p-second" class="col-1 left-line2 text-right ">
+                            @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
+                                {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
+                            @endif
+                        </div>
+                        <div id="p-pocket" class="col-1 text-right left-line2 ">
+
+                        </div>
+                        <div id="p-pocket" class="col-1 text-right left-line2 ">
+
+                        </div>
+                    </div>
 
 
 
