@@ -154,6 +154,10 @@ use App\Services\ItemSoaItemizedServices;
                     <td class="text-center  pb-0 pt-0"> URR </td>
                 </tr>
                 <tr>
+                    <td class="text-center  pb-0 pt-0"> ALBUMIN </td>
+                </tr>
+
+                <tr>
                     <td class="text-center "> URIC ACID </td>
                 </tr>
 
