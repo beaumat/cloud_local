@@ -568,7 +568,7 @@
 
 
 
-                    <div class="row bottom-line2 right-line2 left-line2 text-sm">
+                    <div class="row bottom-line2 right-line2 left-line2 text-sm text-danger">
                         <div id="p-particular" class="col-3 text-left ">
                             <b>TOTAL</b>
                         </div>
