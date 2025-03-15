@@ -382,30 +382,9 @@ class SalesReceiptForm extends Component
                         $JNO = $this->accountJournalServices->getRecord($this->salesReceiptServices->object_type_sales_receipt, $this->ID);
                         if ($JNO > 0) {
                             // ACCOUNTS_RECEIVABLE_ID
-                            $this->accountJournalServices->AccountSwitch(
-                                $this->UNDEPOSITED_FUNDS_ACCOUNT_ID,
-                                $data->UNDEPOSITED_FUNDS_ACCOUNT_ID,
-                                $this->LOCATION_ID,
-                                $JNO,
-                                $data->CUSTOMER_ID,
-                                $this->ID,
-                                $this->salesReceiptServices->object_type_sales_receipt,
-                                $this->DATE,
-                                0
-                            );
+                            $this->accountJournalServices->AccountSwitch( $this->UNDEPOSITED_FUNDS_ACCOUNT_ID, $data->UNDEPOSITED_FUNDS_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->CUSTOMER_ID, $this->ID, $this->salesReceiptServices->object_type_sales_receipt, $this->DATE, 0 );
                             // OUTPUT_TAX_ACCOUNT_ID
-
-                            $this->accountJournalServices->AccountSwitch(
-                                $this->OUTPUT_TAX_ACCOUNT_ID,
-                                $data->OUTPUT_TAX_ACCOUNT_ID,
-                                $this->LOCATION_ID,
-                                $JNO,
-                                $data->CUSTOMER_ID,
-                                $this->ID,
-                                $this->salesReceiptServices->object_type_sales_receipt,
-                                $this->DATE,
-                                1
-                            );
+                            $this->accountJournalServices->AccountSwitch( $this->OUTPUT_TAX_ACCOUNT_ID, $data->OUTPUT_TAX_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->CUSTOMER_ID, $this->ID, $this->salesReceiptServices->object_type_sales_receipt, $this->DATE, 1 );
                         }
                     }
                 }

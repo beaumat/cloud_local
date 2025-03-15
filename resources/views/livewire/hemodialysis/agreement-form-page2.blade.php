@@ -78,6 +78,7 @@
                     $limit = 2;
                     $total = 0;
                 @endphp
+                
                 @foreach ($itemList as $list)
                     @php
                         $limit--;
