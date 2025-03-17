@@ -47,14 +47,15 @@
                                     <tr>
 
                                         <th class="col-2">Type</th>
-                                        <th class="col-1">Line #</th>
+                                        <th class="">Line #</th>
                                         <th class="col-2">Item </th>
                                         <th class="col-1">Unit </th>
                                         <th class="col-1">Rate </th>
+                                        <th class="col-1">Brand</th>
                                         <th class="col-1">Dosage</th>
                                         <th class="col-1">Route</th>
                                         <th class="col-1">Frequency</th>
-                                        <th class="col-1 text-center">Actual Base</th>
+                                        <th class="col-1 text-center">Is Actual</th>
                                         <th class="col-2 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -115,6 +116,16 @@
 
                                             <td>
                                                 @if ($list->ID == $editid)
+                                                    <input name="editBRAND" type="text" class="w-100"
+                                                        wire:model='editBRAND' />
+                                                @else
+                                                    {{ $list->BRAND }}
+                                                @endif
+                                            </td>
+
+
+                                            <td>
+                                                @if ($list->ID == $editid)
                                                     <input name="editDOSAGE" type="text" class="w-100"
                                                         wire:model='editDOSAGE' />
                                                 @else
@@ -149,10 +160,10 @@
                                                     @if ($list->ACTUAL_BASE)
                                                         <button class="btn btn-info btn-xs"
                                                             wire:click='OpenActualBase({{ $list->ID }})'><i
-                                                                class="fa fa-list" aria-hidden="true"></i> Modify
+                                                                class="fa fa-list" aria-hidden="true"></i>
                                                         </button>
                                                     @else
-                                                        &nbsp;
+                                                     
                                                     @endif
                                                 @endif
                                             </td>
@@ -224,6 +235,9 @@
                                             <td>
                                                 <input step="0.01" type="number" class="w-100"
                                                     wire:model='RATE' />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="w-100" wire:model='BRAND' />
                                             </td>
                                             <td>
                                                 <input type="text" class="w-100" wire:model='DOSAGE' />

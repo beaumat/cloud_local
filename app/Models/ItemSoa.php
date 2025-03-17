@@ -23,6 +23,7 @@ class ItemSoa extends Model
         'ACTUAL_BASE',
         'DOSAGE',
         'ROUTE',
-        'FREQUENCY'
+        'FREQUENCY',
+        'BRAND'
     ];
 }

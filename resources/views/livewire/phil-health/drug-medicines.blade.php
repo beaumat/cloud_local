@@ -160,7 +160,14 @@
                             <td> <button class="btn btn-xs btn-info" wire:click='AutoFillUp()'
                                     wire:confirm='Are you sure?'>Auto Set</button></td>
                         </tr>
+                    @else
+                        <tr>
+
+                            <td> <button class="btn btn-xs btn-danger" wire:click='DeleteAll()'
+                                    wire:confirm='Are you sure to remove all?'>Remove All</button></td>
+                        </tr>
                     @endif
+
                 @endif
             </tbody>
         </table>

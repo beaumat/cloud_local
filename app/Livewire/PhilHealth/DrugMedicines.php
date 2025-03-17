@@ -191,6 +191,10 @@ class DrugMedicines extends Component
         $this->philhealthDrugsMedicineServices->DrugMedicineDelete($ID);
         $this->clearField();
     }
+    public function DeleteAll() {
+        $this->philhealthDrugsMedicineServices->DrugMedicineDeleteAll($this->PHILHEALTH_ID);
+        $this->clearField();
+    }
     public function AutoFillUp()
     {
         $exists = $this->philhealthDrugsMedicineServices->drugMedicineAlreadyEntry($this->PHILHEALTH_ID);
@@ -210,25 +214,21 @@ class DrugMedicines extends Component
 
         $itemList = $this->itemSoaServices->GetMedicineList($this->LOCATION_ID);
         foreach ($itemList as $list) {
-
             if ($list->ACTUAL_BASE) {
-                $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual(
-                    $dateList,
-                    $this->LOCATION_ID,
-                    $this->CONTACT_ID,
-                    $list->ID,
-                );
+                $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual($dateList, $this->LOCATION_ID, $this->CONTACT_ID, $list->ID, );
                 $AMOUNT = $defult_Qty * $list->RATE ?? 0;
-
             } else {
                 $defult_Qty = $qty;
                 $AMOUNT = $qty * $list->RATE ?? 0;
             }
 
             if ($AMOUNT > 0) {
+
+                $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
+
                 $this->philhealthDrugsMedicineServices->DrugMedicineStore(
                     $this->PHILHEALTH_ID,
-                    $list->ITEM_NAME,
+                    $list->ITEM_NAME . $GEN_NAME,
                     $defult_Qty,
                     $list->DOSAGE ?? '',
                     $list->ROUTE ?? '',
