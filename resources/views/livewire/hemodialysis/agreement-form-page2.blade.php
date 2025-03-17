@@ -90,7 +90,13 @@
                         $limit--;
                         $total = $total + ($list->QUANTITY * $list->RATE ?? 0);
                     @endphp
-                    <div class="col-6 top-line2 right-line2 "> &nbsp; {{ $list->DESCRIPTION }} </div>
+                    <div class="col-6 top-line2 right-line2 "> &nbsp;
+                        @if ($list->DESCRIPTION)
+                            {{ $list->DESCRIPTION }}
+                        @else
+                            <strong class="text-danger font-weight-bold">N/A</strong>
+                        @endif
+                    </div>
                     <div class="col-3 top-line2 right-line2 text-center"> &nbsp; {{ $list->QUANTITY }} </div>
                     <div class="col-3 top-line2 text-center "> &nbsp; {{ number_format($list->RATE, 2) }} </div>
                 @endforeach
