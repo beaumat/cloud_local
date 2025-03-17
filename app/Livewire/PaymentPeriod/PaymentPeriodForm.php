@@ -139,9 +139,7 @@ class PaymentPeriodForm extends Component
                 if ($TAX_CREDIT_ID > 0) {
                     $TAX_JOURNAL_NO = $this->accountJournalServices->getRecord($this->taxCreditServices->object_type_tax_credit, $TAX_CREDIT_ID);
                     $this->accountJournalServices->updateObjectDate($TAX_JOURNAL_NO, $this->DATE);
-
                 }
-
                 // BILL
                 if ($list->BILL_ID) {
                     $this->billingServices->billingUpdateDateOnly($list->BILL_ID, $this->DATE);

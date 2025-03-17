@@ -102,9 +102,7 @@
                     <div class="col-3 top-line2 right-line2 "> &nbsp; </div>
                     <div class="col-3 top-line2  "> &nbsp; </div>
                 @endfor
-
-
-
+                
                 <div class="col-6 top-line2  right-line2"> &nbsp; </div>
                 <div class="col-3 top-line2  right-line2 "> &nbsp; </div>
                 <div class="col-3 top-line2 font-weight-bold ">
