@@ -28,8 +28,7 @@
                                             titleName="Inlclude Zero balance" :isDisabled=false />
                                     </div>
                                     <div class="col-md-5">
-                                        {{-- <livewire:date-input name="DATE_TO" titleName="(SC) To"
-                                            wire:model.live='DATE_TO' :isDisabled="false" /> --}}
+                                     
                                     </div>
                                 </div>
                             </div>
@@ -78,6 +77,9 @@
                                     wire:loading.attr='disabled'>Generate</button>
                                 <button class="btn btn-sm btn-success" wire:click='export()'
                                     wire:loading.attr='disabled'>Export</button>
+
+
+                                    
                             </div>
                             <div class="col-6">
 

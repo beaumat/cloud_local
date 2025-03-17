@@ -23,9 +23,7 @@
                                 PHILHEALTH ACCREDITED :
                             </b>
                         </div>
-                        {{-- <div class="col-4 text-center mb-1">
-                            <h4>STATEMENT OF ACCOUNT</h4>
-                        </div> --}}
+    
                         <div class="col-5">
                             <div class="row">
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
@@ -40,7 +38,7 @@
                         <div class="col-7">
                             <div class="row">
 
-                                <div class="col-12 text-right">
+                                <div class="col-12 text-right"  @if ($HEADER) style="opacity: 0.0" @endif>
                                     <i>DATEBIRTH</i>: <b>{{ $DATE_BIRTH }}</b>
                                 </div>
                                 <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
@@ -83,7 +81,7 @@
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">
                                     PHILHEALTH NO. :
                                 </div>
-                                <div class="col-6 @if ($OUTPUT_SIGN) bottom-line2 @endif">
+                                <div class="col-6 @if ($OUTPUT_SIGN) bottom-line2 @endif"   @if ($HEADER) style="opacity: 0.0" @endif>
                                     {{ substr($PIN, 0, 1) . substr($PIN, 1, 1) . '-' . substr($PIN, 2, 1) . substr($PIN, 3, 1) . substr($PIN, 4, 1) . substr($PIN, 5, 1) . substr($PIN, 6, 1) . substr($PIN, 7, 1) . substr($PIN, 8, 1) . substr($PIN, 9, 1) . substr($PIN, 10, 1) . '-' . substr($PIN, 11, 1) }}
 
                                 </div>
@@ -117,9 +115,7 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="col-12 text-center" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
-                    <b class="text-lg">SUMMARY OF FEES</b>
-                </div> --}}
+             
                 <div class="col-12" id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <div class="row top-line2 right-line2 left-line2 text-center mt-1 ">
                         <div class="col-12 font-weight-bold text-danger text-sm">SUMMARY OF FEES</div>
@@ -138,16 +134,11 @@
                         <div class="col-1  left-line2">
                         </div>
                     </div>
-
                     <div class="row bottom-line2 right-line2 left-line2 text-sm">
                         <div class="col-3 text-center ">
-                            <div class="top" style="top:0">
-                                PARTICULARS
-
-                            </div>
+                            <div class="top" style="top:0"> PARTICULARS </div>
                             <div class="bottom font-weight-bold" style="bottom: 0;">
                                 <br />
-
                                 HCI FEES
                             </div>
                         </div>
@@ -176,29 +167,7 @@
                             OUT OF POCKET OF PATIENT
                         </div>
                     </div>
-
-                    {{-- <div class="row bottom-line2 right-line2 left-line2 text-sm">
-                        <div id="p-particular" class="col-3 text-center font-weight-bold ">
-                          
-                        </div>
-                        <div id="p-charge" class="col-1 text-center left-line2">
-                        </div>
-                        <div id="p-vat" class="col-1 text-center  left-line2">
-                        </div>
-                        <div id="p-sp" class="col-1 text-center   left-line2">
-                        </div>
-                        <div id="p-gov" class="col-2 text-center  left-line2 text-xs">
-                        </div>
-                        <div id="p-after-disc" class="col-1 text-center  left-line2">
-                        </div>
-                        <div id="p-first" class="col-1  left-line2 text-center ">
-                        </div>
-                        <div id="p-second" class="col-1 left-line2 text-center ">
-                        </div>
-                        <div id="p-pocket" class="col-1 text-center left-line2">
-                        </div>
-                    </div> --}}
-                    @if ($CHARGES_ROOM_N_BOARD > 0)
+                    @if ($CHARGES_ROOM_N_BOARD > 0 )
                         <div class="row bottom-line2 right-line2 left-line2 text-sm">
                             <div id="p-particular" class="col-3 text-left ">
                                 ROOM AND BOARD
@@ -229,7 +198,7 @@
                             <div id="p-pocket" class="col-1 text-center left-line2"> </div>
                         </div>
                     @endif
-                    @if ($CHARGES_DRUG_N_MEDICINE > 0)
+                    @if ($CHARGES_DRUG_N_MEDICINE > 0 || $PRE_SIGN_DATA == true)
                         <div class="row bottom-line2 right-line2 left-line2 text-sm">
                             <div id="p-particular" class="col-3 text-left ">
                                 DRUGS AND MEDICINES
@@ -266,7 +235,7 @@
                             </div>
                         </div>
                     @endif
-                    @if ($CHARGES_SUPPLIES > 0)
+                    @if ($CHARGES_SUPPLIES > 0 || $PRE_SIGN_DATA == true)
                         <div class="row bottom-line2 right-line2 left-line2 text-sm">
                             <div id="p-particular" class="col-3 text-left ">
                                 SUPPLIES
@@ -300,7 +269,7 @@
                             </div>
                         </div>
                     @endif
-                    @if ($CHARGES_LAB_N_DIAGNOSTICS > 0)
+                    @if ($CHARGES_LAB_N_DIAGNOSTICS > 0 || $PRE_SIGN_DATA == true)
                         <div class="row bottom-line2 right-line2 left-line2 text-sm">
                             <div id="p-particular" class="col-3 text-left ">
                                 LABORATORY & DIAGNOSTIC
@@ -337,7 +306,7 @@
                             </div>
                         </div>
                     @endif
-                    @if ($CHARGES_OPERATING_ROOM_FEE > 0)
+                    @if ($CHARGES_OPERATING_ROOM_FEE > 0 || $PRE_SIGN_DATA == true)
                         <div class="row bottom-line2 right-line2 left-line2 text-sm">
                             <div id="p-particular" class="col-3 text-left ">
                                 OPERATING ROOM FEES
@@ -370,7 +339,7 @@
                             </div>
                         </div>
                     @endif
-                    @if ($CHARGES_OTHERS > 0)
+                    @if ($CHARGES_OTHERS > 0 )
                         <div class="row bottom-line2 right-line2 left-line2 text-sm">
                             <div id="p-particular" class="col-3 text-left ">
                                 ADMINISTRATIVE & OTHER FEES
@@ -612,7 +581,7 @@
                         </div>
                     </div>
 
-                    @livewire('PhilHealth.PrintItemized2', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED, 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID])
+                    @livewire('PhilHealth.PrintItemized2', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED ?? null, 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID, 'OUTPUT_SIGN' => $OUTPUT_SIGN])
 
                 </div>
 

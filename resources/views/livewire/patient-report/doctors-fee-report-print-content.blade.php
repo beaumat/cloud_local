@@ -13,10 +13,7 @@
                 </div>
                 <div class="col-md-12">
                     <table class="w-100 " border="1">
-                        <thead class="">
-
-
-                        
+                        <thead class="">    
                             <tr>
                                 <th class="col-1 h5 text-center">#</th>
                                 <th class="col-3 h5">PATIENT NAME</th>

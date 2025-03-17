@@ -26,7 +26,6 @@ class PhilHealthProfFeeServices {
 
             ])
             ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
-
             ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
             ->where('PHIC_ID', $ID)
             ->orderBy('LINE_NO', 'asc')

@@ -146,7 +146,13 @@ class PrintSoa4 extends Component
     public function profFeeList($PHIC_ID)
     {
         $this->i = 0;
-        $this->feeList = $this->philHealthProfFeeServices->getProfFee($PHIC_ID);
+ 
+        if($this->PRE_SIGN_DATA) {
+            $this->feeList = ['ID' => 0, 'CONTACT_ID' => 'ok']; 
+        }
+        else{
+            $this->feeList = $this->philHealthProfFeeServices->getProfFee($PHIC_ID);
+        }
     }
 
     public function mount(int $PRINT_ID, int $PATIENT_ID = 0, bool $OUTPUT = true)

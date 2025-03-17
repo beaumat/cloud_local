@@ -7,8 +7,6 @@
     @foreach ($PRINT_ID as $ID)
         @livewire('PatientReport.DoctorsFeeReportPrintContent', ['DOCTOR_ID' => $ID, 'LOCATION_ID' => $locationid])
         <div class="page-break"></div>
-        {{-- @livewire('PhilHealth.PrintTreatment', ['PRINT_ID' => $ID]) --}}
-        {{-- <div class="page-break"></div> --}}
     @endforeach
 </div>
 
