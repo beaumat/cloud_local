@@ -20,6 +20,7 @@ class AgreementFormPage2 extends Component
     public $WITNESS_NAME = "";
     public string $DATE;
     public int $LOCATION_ID;
+    public bool $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE;
     public $typeFiveList = [];
     public $typeSixList = [];
 
@@ -47,6 +48,7 @@ class AgreementFormPage2 extends Component
             $dataLoc = $this->locationServices->get($this->LOCATION_ID);
         
             if ($dataLoc) {
+                $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE = $dataLoc->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE ?? false;
                 $hdcon = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID , 2);
                 if ($hdcon) {
                     $this->HD_FACILITY_REP_NAME = $hdcon->NAME ?? '';
