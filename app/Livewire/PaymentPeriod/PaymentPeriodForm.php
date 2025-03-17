@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PaymentPeriod;
 
+use App\Exports\PaymentPeriodExport;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\BillingServices;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Payment Period (ACPN)')]
 class PaymentPeriodForm extends Component
@@ -81,6 +83,14 @@ class PaymentPeriodForm extends Component
         } catch (\Throwable $th) {
             return Redirect::route('patientspayment_period')->with('error', $th->getMessage());
         }
+    }
+    public function exportGenerate()
+    {
+        $dataExport = $this->paymentServices->getListInvoicePaymentTaxBillPhic($this->ID);
+        return Excel::download(new PaymentPeriodExport(
+            $dataExport,
+            $this->TOTAL_PAYMENT
+        ), 'payment-period-export.xlsx');
     }
     public function save()
     {

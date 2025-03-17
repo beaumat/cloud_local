@@ -22,6 +22,7 @@ class PaidList extends Component
     private function loadData() {
         $this->dataList = $this->paymentServices->getListInvoicePaymentTaxBillPhic($this->PAYMENT_PERIOD_ID);
     }
+
     public function render()
     {   
 

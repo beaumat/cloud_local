@@ -69,6 +69,7 @@ use App\Services\OtherServices;
                 <td class="text-orange font-weight-bold text-right">
 
                 </td>
+            </tr>
             <tr>
                 <td></td>
                 <td></td>
@@ -85,6 +86,7 @@ use App\Services\OtherServices;
                 <td class="text-orange font-weight-bold text-right">
 
                 </td>
+            </tr>
         </tbody>
     </table>
 </div>

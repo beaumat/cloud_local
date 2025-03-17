@@ -112,11 +112,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                @can('patient.payment-period.edit')
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-6 col-6">
 
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6 col-6">
+                                            @can('patient.payment-period.edit')
                                                 @if ($Modify)
                                                     <button type="submit" class="btn btn-sm btn-primary"> <i
                                                             class="fa fa-floppy-o" aria-hidden="true"></i>
@@ -133,10 +133,15 @@
                                                         <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                     </button>
                                                 @endif
-                                            </div>
+                                            @endcan
+                                        </div>
+                                        <div class="col-md-6 col-6 text-right">
+                                            <button class="btn btn-success btn-sm"
+                                                wire:click='exportGenerate()'>Export</button>
                                         </div>
                                     </div>
-                                @endcan
+                                </div>
+
                             </div>
 
                         </form>
