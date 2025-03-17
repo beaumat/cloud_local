@@ -97,7 +97,7 @@ class TimerServices
         $this->GenerateItemServiceCharges($transDate);
     }
 
-    private function getPosted(int $CONTACT_ID, string $DATE, int  $LOCATION_ID)
+    public function getPosted(int $CONTACT_ID, string $DATE, int  $LOCATION_ID)
     {
         try {
 

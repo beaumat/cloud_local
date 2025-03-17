@@ -46,6 +46,7 @@ class LocationForm extends Component
     public int $HD_FACILITY_REP_ID;
 
     public bool $ITEMIZED_BASE;
+    public bool $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE;
     public $managerList = [];
     public $inchargeList = [];
     public $physicianList = [];
@@ -104,6 +105,7 @@ class LocationForm extends Component
                 $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
                 $this->HD_FACILITY_REP_ID = $data->HD_FACILITY_REP_ID ?? 0;
                 $this->ITEMIZED_BASE = $data->ITEMIZED_BASE ?? false;
+                $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE = $data->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE ?? false;
                 return;
             }
 
@@ -138,6 +140,7 @@ class LocationForm extends Component
         $this->PREPARED_BY_ID = 0;
         $this->HD_FACILITY_REP_ID = 0;
         $this->ITEMIZED_BASE = false;
+        $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE = false;
     }
 
     public function save()
@@ -177,7 +180,8 @@ class LocationForm extends Component
                     $this->PREPARED_BY_ID,
                     $this->HD_FACILITY_REP_ID,
                     $this->ITEMIZED_BASE,
-                    $this->PHIC_INCHARGE2_ID
+                    $this->PHIC_INCHARGE2_ID,
+                    $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE
                 );
 
                 Redirect::route('maintenancesettingslocation_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -210,7 +214,8 @@ class LocationForm extends Component
                     $this->PREPARED_BY_ID,
                     $this->HD_FACILITY_REP_ID,
                     $this->ITEMIZED_BASE,
-                    $this->PHIC_INCHARGE2_ID
+                    $this->PHIC_INCHARGE2_ID,
+                    $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE
                 );
                 session()->flash('message', 'Successfully updated');
             }

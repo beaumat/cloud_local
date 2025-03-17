@@ -104,10 +104,11 @@
                                                 isDisabled="{{ false }}" :zero="true"
                                                 titleName="Phic In-charge" wire:model.live='PHIC_INCHARGE_ID' />
                                         </div>
-                                         <div class="col-md-2">
+                                        <div class="col-md-2">
                                             <livewire:select-option name="PHIC_INCHARGE2_ID" :options="$inchargeList"
                                                 isDisabled="{{ false }}" :zero="true"
-                                                titleName="Phic In-charge(other form)" wire:model.live='PHIC_INCHARGE2_ID' />
+                                                titleName="Phic In-charge(other form)"
+                                                wire:model.live='PHIC_INCHARGE2_ID' />
                                         </div>
                                         <div class="col-md-2">
                                             <livewire:select-option name="PREPARED_BY_ID" :options="$preparedByList"
@@ -176,16 +177,23 @@
                                                 isDisabled="{{ false }}" titleName="Itemized Base"
                                                 wire:model='ITEMIZED_BASE' />
                                         </div>
-                                        <div class="col-md-9">
+                                        <div class="col-md-6">
                                             <livewire:text-input name="DOCTOR_ORDER_DEFAULT"
                                                 isDisabled="{{ false }}" titleName="DOCTOR ORDER DEFAULT :"
                                                 wire:model='DOCTOR_ORDER_DEFAULT' maxlength='500' />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <livewire:custom-check-box name="LEAVE_BLANK_AG_ADMIN_OFFICE_FEE"
+                                                isDisabled="{{ false }}"
+                                                titleName="Leave Blank AG Administrative and Office Fee"
+                                                wire:model='LEAVE_BLANK_AG_ADMIN_OFFICE_FEE' />
                                         </div>
                                         <div class="col-md-3">
                                             <livewire:custom-check-box name="OTHER_SIGN"
                                                 isDisabled="{{ false }}"
                                                 titleName="Watcher Sign on Treatment Sheet" wire:model='OTHER_SIGN' />
                                         </div>
+
                                     </div>
                                 </div>
                             </div>

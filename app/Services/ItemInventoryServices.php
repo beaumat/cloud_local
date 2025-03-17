@@ -375,6 +375,9 @@ class ItemInventoryServices
 
         if ($itsHave) {
             // stop to procceed.
+
+
+            // make it auto compute
             return;
         }
 
@@ -421,6 +424,7 @@ class ItemInventoryServices
 
     public function InventoryExecute($data, int $LOCATION_ID, int $SOURCE_REF_TYPE, $SOURCE_REF_DATE, bool $Is_Added)
     {
+
 
         foreach ($data as $list) {
             $COST = 0;
