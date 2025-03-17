@@ -136,7 +136,7 @@
                                             @endcan
                                         </div>
                                         <div class="col-md-6 col-6 text-right">
-                                            <button class="btn btn-success btn-sm"
+                                            <button type="button" class="btn btn-success btn-sm"
                                                 wire:click='exportGenerate()'>Export</button>
                                         </div>
                                     </div>

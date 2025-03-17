@@ -25,18 +25,18 @@ class PaymentPeriodExport implements FromCollection, ShouldAutoSize
         $finalData = [];
 
         $headers = [
-            'DATE_TRANSMIT' => 'date Transmitted',
-            'LHIO_NO' => 'lhio No.',
-            'PATIENT' => 'patient',
-            'ADMITTED' => 'admitted',
-            'DISCHARGE' => 'Discharge',
-            'NO_OF_TREATMENT' => 'No. of Treatment',
-            'CONFINEMENT_PERIOD' => 'Confinement of Period',
-            'FIRST_CASE_AMOUNT' => 'First Case',
-            'PAID_AMOUNT' => 'Paid Amount',
-            'WTAX_AMOUNT' => 'WTax Amount',
-            'PF_AMOUNT' => 'PF Amount',
-            'DOCTOR_NAME' => 'Doctor'
+            'DATE_TRANSMIT' => 'DATE TRANSMITTED',
+            'LHIO_NO' => 'LHIO No.',
+            'PATIENT' => 'PATIENT',
+            'ADMITTED' => 'ADMITTED',
+            'DISCHARGE' => 'DISCHARED',
+            'NO_OF_TREATMENT' => 'NO. OF TREATMENT',
+            'CONFINEMENT_PERIOD' => 'CONFINEMENT PERIOD',
+            'FIRST_CASE_AMOUNT' => 'FIRST CASE',
+            'PAID_AMOUNT' => 'PAID AMOUNT',
+            'WTAX_AMOUNT' => 'WTAX AMOUNT',
+            'PF_AMOUNT' => 'PF AMOUNT',
+            'DOCTOR_NAME' => 'DOCTOR NAME'
         ];
         $finalData[] = array_values($headers);
         $TEMP_NAME = "";
