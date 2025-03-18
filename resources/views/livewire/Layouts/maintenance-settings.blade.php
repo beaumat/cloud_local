@@ -55,5 +55,16 @@
                   </li>
               @endcan
 
+              @can('option')
+                  <li class="nav-item">
+                      <a href="{{ route('maintenancesettingsimport') }}"
+                          class="nav-link {{ request()->is('maintenance/settings/import*') ? 'text-warning font-weight-bold' : '' }}">
+                          <i class="fa fa-upload nav-icon"></i>
+                          
+                          <p>Import</p>
+                      </a>
+                  </li>
+              @endcan
           </ul>
       </li>
+      d

@@ -29,8 +29,8 @@ class BillingForm extends Component
 
 
     use WithFileUploads;
-    public bool $showFileName = true;
     public $PDF = null;
+    public bool $showFileName = true;
     public string $FILE_NAME;
     public string $FILE_PATH;
     public bool $IS_CONFIRM;

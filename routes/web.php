@@ -58,6 +58,7 @@ use App\Livewire\Hemodialysis\PrintFormBack;
 use App\Livewire\Hemodialysis\PrintFormFrontBack;
 use App\Livewire\HemodialysisMachine\HemoMachineForm;
 use App\Livewire\HemodialysisMachine\HemoMachineList;
+use App\Livewire\Import\XeroImportForm;
 use App\Livewire\IncomeStatement\IncomeStatementAccountDetails;
 use App\Livewire\InventoryAdjustment\InventoryAdjustmentForm;
 use App\Livewire\InventoryAdjustment\InventoryAdjustmentList;
@@ -624,6 +625,10 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('/option')->group(function () {
                 Route::get('/', OptionSettings::class)->name('option')->middleware(['permission:option']);
+            });
+
+            Route::prefix('/import')->group(function () {
+                Route::get('/', XeroImportForm::class)->name('import')->middleware(['permission:option']);
             });
         });
     });
