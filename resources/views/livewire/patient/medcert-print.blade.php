@@ -72,7 +72,9 @@
                             <br />
                             {{-- --}}
                             <div class="font-weight-bold ">
-                                NOT VALID WITHOUT SEAL
+                                @if ($LOCATION_ID == 1)
+                                    NOT VALID WITHOUT SEAL
+                                @endif
                             </div>
                         </div>
                     </div>

@@ -16,6 +16,7 @@ use Livewire\Component;
 class MedcertPrint extends Component
 {
     public $id;
+    public $LOCATION_ID;
     public string $REPORT_HEADER_1;
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
@@ -58,7 +59,7 @@ class MedcertPrint extends Component
             $this->FULLNAME = $data->NAME ?? '';
             $this->AGE = $this->contactServices->calculateUserAge($data->DATE_OF_BIRTH);
             $this->GENDER = $data->GENDER == 'Male' ? 'Male' : 'Female';
-
+            $this->LOCATION_ID = $data->LOCATION_ID ?? 0;
 
             $address = [
                 $data->ADDRESS_UNIT_ROOM_FLOOR,    // Unit/Room/Floor
