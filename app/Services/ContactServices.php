@@ -651,8 +651,28 @@ class ContactServices
 						->orWhere('d.PRINT_NAME_AS', 'like', '%' . $search . '%');
 				});
 			})
-			->when($locationId > 0, function ($query) use (&$locationId) {
-				$query->where('contact.LOCATION_ID', '=', $locationId);
+			->when($locationId > 0, function ($query) use (&$locationId, &$search) {
+				$query->where('contact.LOCATION_ID', '=', $locationId)
+					->orWhereExists(function ($q) use (&$locationId, &$search) {
+						$q->select(DB::raw(1))
+							->from('service_charges as sc')
+							->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 'sc.ID')
+							->whereColumn('sc.PATIENT_ID', 'contact.ID')
+							->where('sc.LOCATION_ID', $locationId)
+							->where(function ($sql) use ($search) {
+								$sql->where('contact.NAME', 'like', '%' . $search . '%')
+									->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%')
+									->orWhere('contact.PIN', 'like', '%' . $search . '%')
+									->orWhere('contact.COMPANY_NAME', 'like', '%' . $search . '%')
+									->orWhere('contact.FIRST_NAME', 'like', '%' . $search . '%')
+									->orWhere('contact.LAST_NAME', 'like', '%' . $search . '%')
+									->orWhere('contact.PRINT_NAME_AS', 'like', '%' . $search . '%')
+									->orWhere('contact.MOBILE_NO', 'like', '%' . $search . '%')
+									->orWhere('contact.EMAIL', 'like', '%' . $search . '%')
+									->orWhere('d.PRINT_NAME_AS', 'like', '%' . $search . '%');
+							});
+
+					});
 			})
 			->orderBy($sortBy, $isDesc ? 'desc' : 'asc')
 			->paginate($perPage);

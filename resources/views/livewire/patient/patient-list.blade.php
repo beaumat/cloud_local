@@ -138,10 +138,9 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        
+
                                         <th>
-                                            <span name="ageSort" type="button"
-                                                wire:click="sorting('AGE')">Age</span>
+                                            <span name="ageSort" type="button" wire:click="sorting('AGE')">Age</span>
                                             @if ($sortby == 'AGE')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -163,7 +162,7 @@
                                                 @endif
                                             @endif
                                         </th>
-                                    
+
                                         <th class="col-1">
                                             <span name="philhealthSort" type="button"
                                                 wire:click="sorting('contact.PIN')">Philhealth
@@ -260,7 +259,7 @@
                                         <tr class="@if (!$list->IS_COMPLETE) text-secondary @endif">
                                             <td>
                                                 <a
-                                                    href="{{ route('maintenancecontactpatients_edit', ['id' => $list->ID]) }}">
+                                                    href="{{ route('maintenancecontactpatients_view', ['id' => $list->ID, 'locationid' => $locationid]) }}">
                                                     {{ $list->ACCOUNT_NO }}
                                                 </a>
                                             </td>
@@ -297,7 +296,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <a type='button' title="View Details"
-                                                    href="{{ route('maintenancecontactpatients_edit', ['id' => $list->ID]) }}"
+                                                    href="{{ route('maintenancecontactpatients_view', ['id' => $list->ID, 'locationid' => $locationid]) }}"
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>

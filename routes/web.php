@@ -458,6 +458,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', PatientList::class)->name('patients')->middleware(['permission:contact.patient.view']);
                 Route::get('/create', PatientForm::class)->name('patients_create')->middleware(['permission:contact.patient.create']);
                 Route::get('/{id}/edit', PatientForm::class)->name('patients_edit')->middleware(['permission:contact.patient.view']);
+                Route::get('/{id}/{locationid}/edit', PatientForm::class)->name('patients_view')->middleware(['permission:contact.patient.view']);
                 Route::get('/{id}/{year}/{locationid}', PrintAvailment::class)->name('print_availment');
                 Route::get('/{id}/medical-certificate', MedcertPrint::class)->name('print_medical_cert');
             });

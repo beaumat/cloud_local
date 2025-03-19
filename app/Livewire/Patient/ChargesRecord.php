@@ -51,7 +51,7 @@ class ChargesRecord extends Component
     #[On('refresh-service-charge-record')]
     public function render()
     {
-        $dataList = $this->serviceChargeServices->PatientRecord($this->search, $this->CONTACT_ID, 15, $this->LOCATION_ID);
+        $dataList = $this->serviceChargeServices->PatientRecord($this->search, $this->CONTACT_ID, 15, $this->LOCK_LOCATION_ID);
         return view('livewire.patient.charges-record', ['dataList' => $dataList]);
     }
 
