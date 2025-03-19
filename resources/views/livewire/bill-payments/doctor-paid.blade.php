@@ -52,9 +52,14 @@ use App\Services\OtherServices;
                                                 <td class="text-right">{{ number_format($list->BALANCE_DUE, 2) }} </td>
                                                 <td>
                                                     <button type="button" class="btn btn-xs btn-success w-100"
+                                                        wire:loading.attr='hidden'
                                                         wire:click="addItem('{{ $list->ID }}', '{{ $list->BALANCE_DUE }}')">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                     </button>
+
+                                                    <div wire:loading.delay>
+                                                        <span class='spinner'></span>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
