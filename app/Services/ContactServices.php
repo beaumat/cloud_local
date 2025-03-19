@@ -638,6 +638,7 @@ class ContactServices
 				$query->where('pd.DOCTOR_ID', $doctorId);
 			})
 			->when($search, function ($query) use (&$search) {
+
 				$query->where(function ($q) use ($search) {
 					$q->where('contact.NAME', 'like', '%' . $search . '%')
 						->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%')
@@ -651,14 +652,17 @@ class ContactServices
 						->orWhere('d.PRINT_NAME_AS', 'like', '%' . $search . '%');
 				});
 			})
-			->when($locationId > 0, function ($query) use (&$locationId, &$search) {
+			->when($locationId > 0, function ($query) use (&$locationId, &$search, &$doctorId) {
 				$query->where('contact.LOCATION_ID', '=', $locationId)
-					->orWhereExists(function ($q) use (&$locationId, &$search) {
+					->orWhereExists(function ($q) use (&$locationId, &$search, &$doctorId) {
 						$q->select(DB::raw(1))
 							->from('service_charges as sc')
 							->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 'sc.ID')
 							->whereColumn('sc.PATIENT_ID', 'contact.ID')
 							->where('sc.LOCATION_ID', $locationId)
+							->when($doctorId > 0, function ($query) use (&$doctorId) {
+								$query->where('pd.DOCTOR_ID', $doctorId);
+							})
 							->where(function ($sql) use ($search) {
 								$sql->where('contact.NAME', 'like', '%' . $search . '%')
 									->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%')
