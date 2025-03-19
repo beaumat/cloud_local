@@ -50,7 +50,7 @@ class MedcertPrint extends Component
     public function mount($id = null)
     {
 
-        $this->DATE = date('M/d/Y', strtotime($this->dateServices->NowDate()));
+        $this->DATE = date('F j, Y', strtotime($this->dateServices->NowDate()));
         $this->id = $id;
         $data = $this->contactServices->getPatientByMed($id);
         if ($data) {
