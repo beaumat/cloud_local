@@ -22,11 +22,11 @@
                 @foreach ($typeFiveList as $list)
                     <div class="col-7 top-line2 right-line2">{{ $list->LINE }}. {{ $list->DESCRIPTION }}
                     </div>
-                    <div class="col-5 top-line2 text-center">
+                    <div class="col-5 top-line2 text-center text-md">
                         @if ($list->IS_CHECK)
-                            <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                            <i class="fa fa-check " aria-hidden="true"></i>
                         @else
-                            <i class="fa fa-times text-danger" aria-hidden="true"></i>
+                            <i class="fa fa-times " aria-hidden="true"></i>
                         @endif
                     </div>
                 @endforeach
@@ -37,11 +37,11 @@
                 @foreach ($typeSixList as $list)
                     <div class="col-7 top-line2 right-line2"> {{ $list->DESCRIPTION }}
                     </div>
-                    <div class="col-5 top-line2 text-center">
+                    <div class="col-5 top-line2 text-center text-md">
                         @if ($list->IS_CHECK)
-                            <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                            <i class="fa fa-check " aria-hidden="true"></i>
                         @else
-                            <i class="fa fa-times text-danger" aria-hidden="true"></i>
+                            <i class="fa fa-times " aria-hidden="true"></i>
                         @endif
                     </div>
                 @endforeach
@@ -50,18 +50,18 @@
                 @if (!$LEAVE_BLANK_AG_ADMIN_OFFICE_FEE)
                     <div class="col-7 top-line2 right-line2">&nbsp; HD MACHINE
                     </div>
-                    <div class="col-5 top-line2 text-center"> &nbsp;
-                        <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                    <div class="col-5 top-line2 text-center text-md"> &nbsp;
+                        <i class="fa fa-check " aria-hidden="true"></i>
                     </div>
                     <div class="col-7 top-line2 right-line2">&nbsp; FACILITY FEES
                     </div>
-                    <div class="col-5 top-line2 text-center"> &nbsp;
-                        <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                    <div class="col-5 top-line2 text-center text-md"> &nbsp;
+                        <i class="fa fa-check " aria-hidden="true"></i>
                     </div>
                     <div class="col-7 top-line2 right-line2">&nbsp; UTILITIES/OPERATING FEES
                     </div>
-                    <div class="col-5 top-line2 text-center"> &nbsp;
-                        <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                    <div class="col-5 top-line2 text-center text-md"> &nbsp;
+                        <i class="fa fa-check " aria-hidden="true"></i>
                     </div>
                 @endif
 
@@ -97,7 +97,7 @@
 
                 @for ($n = 1; $n <= $limit; $n++)
                     <div class="col-6 top-line2 right-line2 text-center "> &nbsp;
-                        <strong class="text-danger font-weight-bold">N/A</strong>
+                        <strong class=" font-weight-bold">N/A</strong>
                     </div>
                     <div class="col-3 top-line2 right-line2 "> &nbsp; </div>
                     <div class="col-3 top-line2  "> &nbsp; </div>
