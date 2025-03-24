@@ -161,7 +161,7 @@
                                         <div class="col-md-4">
                                             <livewire:text-input name="PHIC_SOA_FORMAT" titleName="SOA FORMAT"
                                                 isDisabled="{{ false }}" wire:model='PHIC_SOA_FORMAT'
-                                                maxlength='10' />
+                                                maxlength='20' />
                                         </div>
                                         <div class="col-md-4">
                                             <livewire:custom-check-box name="PHIC_FORM_MODIFY"
