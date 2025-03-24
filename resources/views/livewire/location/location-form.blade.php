@@ -64,7 +64,15 @@
                                                 isDisabled="{{ false }}" wire:model='ACCREDITATION_NO'
                                                 maxlength='20' />
                                         </div>
-                                        <div class="col-md-6"></div>
+
+                                        <div class="col-md-4">
+
+                                        </div>
+                                        <div class="col-md-2">
+                                            <livewire:select-option name="PF_TAX_ID" :options="$taxList" :zero="true"
+                                                isDisabled="{{ false }}" titleName="Tax PF"
+                                                wire:model.live='PF_TAX_ID' :key="$taxList->pluck('ID')->join('_')" />
+                                        </div>
                                         <div class="col-md-3">
                                             <livewire:text-input name="BLDG_NAME_LOT_BLOCK"
                                                 titleName="Bldg No./Name/Lot/Block" wire:model='BLDG_NAME_LOT_BLOCK'

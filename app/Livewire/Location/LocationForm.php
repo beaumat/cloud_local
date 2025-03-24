@@ -6,6 +6,7 @@ use App\Models\LocationGroup;
 use App\Models\PriceLevels;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
+use App\Services\TaxServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -47,17 +48,23 @@ class LocationForm extends Component
 
     public bool $ITEMIZED_BASE;
     public bool $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE;
+    public int $PF_TAX_ID;
+
     public $managerList = [];
     public $inchargeList = [];
     public $physicianList = [];
     public $preparedByList = [];
     public $hdFacilityRepList = [];
+    public $taxList =[];
     private $locationServices;
     private $contactServices;
-    public function boot(LocationServices $locationServices, ContactServices $contactServices)
+    private $taxServices;
+    public function boot(LocationServices $locationServices, ContactServices $contactServices, TaxServices  $taxServices)
     {
         $this->locationServices = $locationServices;
         $this->contactServices = $contactServices;
+        $this->taxServices = $taxServices;
+    
     }
     public function loadDropDown()
     {
@@ -69,6 +76,7 @@ class LocationForm extends Component
         $this->physicianList = $contactList;
         $this->preparedByList = $contactList;
         $this->hdFacilityRepList = $contactList;
+        $this->taxList = $this->taxServices->getWTax();
     }
     public function mount($id = null)
     {
@@ -106,6 +114,7 @@ class LocationForm extends Component
                 $this->HD_FACILITY_REP_ID = $data->HD_FACILITY_REP_ID ?? 0;
                 $this->ITEMIZED_BASE = $data->ITEMIZED_BASE ?? false;
                 $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE = $data->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE ?? false;
+                $this->PF_TAX_ID = $data->PF_TAX_ID ?? 0;
                 return;
             }
 
@@ -141,6 +150,7 @@ class LocationForm extends Component
         $this->HD_FACILITY_REP_ID = 0;
         $this->ITEMIZED_BASE = false;
         $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE = false;
+        $this->PF_TAX_ID = 0;
     }
 
     public function save()
@@ -181,7 +191,8 @@ class LocationForm extends Component
                     $this->HD_FACILITY_REP_ID,
                     $this->ITEMIZED_BASE,
                     $this->PHIC_INCHARGE2_ID,
-                    $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE
+                    $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE,
+                    $this->PF_TAX_ID
                 );
 
                 Redirect::route('maintenancesettingslocation_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -215,7 +226,8 @@ class LocationForm extends Component
                     $this->HD_FACILITY_REP_ID,
                     $this->ITEMIZED_BASE,
                     $this->PHIC_INCHARGE2_ID,
-                    $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE
+                    $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE,
+                    $this->PF_TAX_ID
                 );
                 session()->flash('message', 'Successfully updated');
             }
