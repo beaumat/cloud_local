@@ -558,11 +558,8 @@
                             ZERO COPAY
                         </div>
                     </div>
-
                     @livewire('PhilHealth.PrintItemized2', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED ?? null, 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID, 'OUTPUT_SIGN' => $OUTPUT_SIGN])
-
                 </div>
-
                 <div class="col-12 ">
                     <div class="row">
                         <div class="col-5">
