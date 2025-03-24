@@ -368,7 +368,6 @@ class WithholdingTaxServices
                 DB::commit();
                 $data = $this->get($WTAX_ID);
                 if ($data) {
-
                     return true;
                 }
             }

@@ -5,6 +5,7 @@ namespace App\Livewire\BillPayments;
 use App\Services\AccountJournalServices;
 use App\Services\BillingServices;
 use App\Services\BillPaymentServices;
+use App\Services\LocationServices;
 use App\Services\TaxServices;
 use App\Services\WithholdingTaxServices;
 use Illuminate\Support\Facades\DB;
@@ -55,18 +56,21 @@ class BillList extends Component
     private $accountJournalServices;
     private $withholdingTaxServices;
     private $taxServices;
+    private $locationServices;
     public function boot(
         BillPaymentServices $billPaymentServices,
         BillingServices $billingServices,
         AccountJournalServices $accountJournalServices,
         WithholdingTaxServices $withholdingTaxServices,
-        TaxServices $taxServices
+        TaxServices $taxServices,
+        LocationServices $locationServices
     ) {
         $this->billPaymentServices = $billPaymentServices;
         $this->billingServices = $billingServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->withholdingTaxServices = $withholdingTaxServices;
         $this->taxServices = $taxServices;
+        $this->locationServices = $locationServices;
 
     }
     public function edit(int $ID, int $BILL_ID, float $Applied)
@@ -157,10 +161,16 @@ class BillList extends Component
         $this->LOCATION_ID = $LOCATION_ID;
         $this->AMOUNT = $AMOUNT;
         $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
+
+        $locData = $this->locationServices->get($this->LOCATION_ID);
+        if ($locData) {
+            $this->EWT_ID = $locData->PF_TAX_ID ?? 10;
+        }
     }
 
     public function getSetTax(float $BALANCE_DUE)
     {
+
         $tax = $this->taxServices->get($this->EWT_ID);
         if ($tax) {
             $this->EWT_RATE = $tax->RATE ?? 0;
@@ -168,6 +178,9 @@ class BillList extends Component
             $this->EWT_ACCOUNT_ID = $tax->TAX_ACCOUNT_ID ?? 0;
             $this->BILL_PAID = $BALANCE_DUE - $this->AMOUNT_WITHHELD;
         }
+
+
+
     }
     public function addingTax(int $ID, int $BILL_ID, float $AMOUNT)
     {
@@ -193,6 +206,9 @@ class BillList extends Component
     }
     public function addTax(int $BILL_ID, float $AMOUNT)
     {
+
+
+
         if ($this->EWT_ID == 0) {
             return false;
         }
@@ -205,7 +221,7 @@ class BillList extends Component
             $this->DATE,
             $this->VENDOR_ID,
             $this->EWT_RATE,
-        $this->EWT_ID,
+            $this->EWT_ID,
             $this->EWT_ACCOUNT_ID,
             $this->LOCATION_ID,
             '',

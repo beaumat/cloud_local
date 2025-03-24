@@ -66,6 +66,11 @@ class DoctorPaid extends Component
 
     public function openModal()
     {
+
+        $locData = $this->locationServices->get($this->LOCATION_ID);
+        if ($locData) {
+            $this->EWT_ID = $locData->PF_TAX_ID ?? 10;
+        }
         $this->showModal = true;
     }
     public function closeModal()
@@ -99,7 +104,7 @@ class DoctorPaid extends Component
 
 
     public function addItem(int $BILL_ID, float $BILL_AMOUNT)
-    {   
+    {
 
         DB::beginTransaction();
         try {
@@ -122,6 +127,7 @@ class DoctorPaid extends Component
     }
     public function getSetTax(float $BALANCE_DUE)
     {
+
         $tax = $this->taxServices->get($this->EWT_ID);
         if ($tax) {
             $this->EWT_RATE = $tax->RATE ?? 0;
@@ -129,6 +135,9 @@ class DoctorPaid extends Component
             $this->EWT_ACCOUNT_ID = $tax->TAX_ACCOUNT_ID ?? 0;
             $this->BILL_PAID = $BALANCE_DUE - $this->AMOUNT_WITHHELD;
         }
+
+
+
     }
     public function AddTAX(int $BILL_ID, float $AMOUNT)
     {
