@@ -13,7 +13,14 @@ class AgreementForm extends Component
     public function mount($id)
     {
         $this->HEMO_ID = $id;
+
+        $this->getAuto();
+
+
         $this->dispatch('preview_print');
+    }
+    private function getAuto() {
+
     }
     #[On('preview_print')]
     public function print()

@@ -397,6 +397,9 @@ class ServiceChargeForm extends Component
         $data = [
             'HEMO_ID' => $this->HEMO_ID
         ];
+
+
+        
         $this->dispatch('open-agreement-form', data: $data);
     }
     public function render()
