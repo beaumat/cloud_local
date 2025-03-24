@@ -42,6 +42,7 @@ class Locations extends Model
         'HD_FACILITY_REP_ID',
         'ITEMIZED_BASE',
         'PHIC_INCHARGE2_ID',
-        'LEAVE_BLANK_AG_ADMIN_OFFICE_FEE'  
+        'LEAVE_BLANK_AG_ADMIN_OFFICE_FEE' ,
+        'PF_TAX_ID' 
     ];
 }
