@@ -46,7 +46,7 @@ class ContactServices
 		$result = contacts::query()->select([
 			DB::raw("CONCAT( contact.FIRST_NAME, ' ', LEFT(contact.MIDDLE_NAME, 1),'. ', contact.LAST_NAME, '  ', IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as NAME")
 
-		])->where('ID', '=', $ID)->where('INACTIVE', '=', '0')->first();
+		])->where('ID', '=', $ID)->first();
 		if ($result) {
 			return $result->NAME ?? '';
 		}
@@ -58,7 +58,7 @@ class ContactServices
 			"NAME",
 			"NICKNAME"
 
-		])->where('ID', '=', $ID)->where('INACTIVE', '=', '0')->first();
+		])->where('ID', '=', $ID)->first();
 		if ($result) {
 			$name = $result->NAME ?? '';
 			$pos = $result->NICKNAME ?? '';
