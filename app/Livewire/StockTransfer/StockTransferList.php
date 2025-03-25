@@ -43,7 +43,7 @@ class StockTransferList extends Component
 
         if ($data) {
 
-            if ($data->STATUS ==  0) {
+            if ($data->STATUS ==  0 || $data->STATUS == 16) {
                 
                 try {
                     $this->stockTransferServices->Delete($id);

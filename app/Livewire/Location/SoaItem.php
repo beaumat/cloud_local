@@ -136,7 +136,6 @@ class SoaItem extends Component
 
         if ($data) {
             $this->editid = (int) $data->ID ?? 0;
-
             $this->editTYPE = $data->TYPE;
             $this->editITEM_NAME = $data->ITEM_NAME ?? '';
             $this->editUNIT_NAME = $data->UNIT_NAME ?? '';
