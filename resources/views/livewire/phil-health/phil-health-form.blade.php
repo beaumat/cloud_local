@@ -137,7 +137,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer" >
+                            <div class="card-footer">
                                 <div class="row">
                                     <div class="col-md-6 col-6">
                                         @if ($STATUS == 0)
@@ -170,7 +170,16 @@
                                                             <i class="fa fa-user-md" aria-hidden="true"></i> Change PF
                                                         </button>
                                                     @endcan
+
+                                                    @if ($AR_NO == null)
+                                                        <button type="button" wire:click="getComputation()"
+                                                            class="btn btn-danger active btn-sm text-xs" wire:confirm='Are you sure to re-calculate the computation?'>
+                                                            <i class="fa fa-user-md" aria-hidden="true"></i> Re-Computation
+                                                            
+                                                        </button>
+                                                    @endif
                                                 @endif
+
                                             @endif
                                         @endif
                                     </div>
