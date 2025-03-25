@@ -103,7 +103,11 @@ class ItemSoaServices
         ItemSoa::where('ID', '=', $ID)
             ->delete();
     }
-
+    public function UpdateInactive(int $ID, bool $INACTIVE)
+    {
+        ItemSoa::where('ID', '=', $ID)
+            ->update(['INACTIVE' => $INACTIVE]);
+    }
     public function Search($search, int $LOCATION_ID): object
     {
         $result = ItemSoa::query()
@@ -119,7 +123,8 @@ class ItemSoaServices
                 'soa_item.DOSAGE',
                 'soa_item.ROUTE',
                 'soa_item.FREQUENCY',
-                'soa_item.BRAND'
+                'soa_item.BRAND',
+                'soa_item.INACTIVE'
 
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
@@ -152,6 +157,7 @@ class ItemSoaServices
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('INACTIVE', '=', false)
             ->orderBy('TYPE', 'asc')
             ->orderBy('LINE', 'asc')
             ->get();

@@ -23,10 +23,7 @@ class PatientReportServices
 
     public function generateSalesReportData(string $scFrom, string $scTo, int $locatoinId, array $patientData = [], array $itemData = [], array $methodData = []): object
     {
-
         $isWhole = (bool) $this->dateServices->isWholeMonth($scFrom, $scTo);
-
-
         $results = DB::table('service_charges_items as sci')
             ->select([
                 'sc.ID as SC_ID',

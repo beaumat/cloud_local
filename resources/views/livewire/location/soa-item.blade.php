@@ -46,9 +46,9 @@
                                 <thead class="text-xs bg-sky">
                                     <tr>
 
-                                        <th class="col-2">Type</th>
-                                        <th class="">Line #</th>
-                                        <th class="col-2">Item </th>
+                                        <th class="col-1">Type</th>
+                                        <th class="col-1">Line #</th>
+                                        <th class="col-1">Item </th>
                                         <th class="col-1">Unit </th>
                                         <th class="col-1">Rate </th>
                                         <th class="col-1">Brand</th>
@@ -163,7 +163,6 @@
                                                                 class="fa fa-list" aria-hidden="true"></i>
                                                         </button>
                                                     @else
-                                                     
                                                     @endif
                                                 @endif
                                             </td>
@@ -184,7 +183,7 @@
 
                                                             <button name="btnCanceled" title="Cancel" type="button"
                                                                 class="btn btn-xs btn-secondary w-100"
-                                                                wire:wire:confirm='Are you sure to cancel?'
+                                                                wire:confirm='Are you sure to cancel?'
                                                                 wire:click='Canceled()'>
                                                                 <i class="fa fa-ban" aria-hidden="true"></i>
                                                             </button>
@@ -199,12 +198,23 @@
                                                         </div>
 
                                                         <div class="col-6">
-                                                            <button name="btnDelete" title="Delete" type="button"
-                                                                class='btn btn-xs btn-danger w-100'
-                                                                wire:confirm='Are you sure to delete?'
-                                                                wire:click='Delete({{ $list->ID }})'><i
-                                                                    class="fa fa-trash"
-                                                                    aria-hidden="true"></i></button>
+                                                            @if ($list->INACTIVE == false)
+                                                                <button name="btnDelete" title="Inactive"
+                                                                    type="button"
+                                                                    class='btn btn-xs btn-dark w-100'
+                                                                    wire:confirm='Are you sure to Inactive?'
+                                                                    wire:click='Delete({{ $list->ID }},{{ true }})'>
+                                                                    Inactive
+                                                                </button>
+                                                            @else
+                                                                <button name="btnDelete" title="Inactive"
+                                                                    type="button"
+                                                                    class='btn btn-xs btn-secondary w-100'
+                                                                    wire:confirm='Are you sure to Active?'
+                                                                    wire:click='Delete({{ $list->ID }},{{ false }})'>
+                                                                    Active
+                                                                </button>
+                                                            @endif
                                                         </div>
                                                     @endif
                                                 </div>

@@ -326,18 +326,9 @@ class PhilHealthServices
         $data = $this->get($ID);
         if ($data) {
             //Get Default Custom Variable
-            $this->CustomSoa(
-                $data->CONTACT_ID,
-                $data->LOCATION_ID,
-                $data->DATE_DISCHARGED
-            );
+            $this->CustomSoa( $data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_DISCHARGED );
 
-            $NO_OF_TREATMENT = $this->getNumberOfTreatment(
-                $data->CONTACT_ID,
-                $data->LOCATION_ID,
-                $data->DATE_ADMITTED,
-                $data->DATE_DISCHARGED
-            );
+            $NO_OF_TREATMENT = $this->getNumberOfTreatment( $data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED, $data->DATE_DISCHARGED );
 
             $A_DRUG_N_MEDINE_AMOUNT = 0;
             $A_SUPPLIES = 0;

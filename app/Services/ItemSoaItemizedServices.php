@@ -111,6 +111,7 @@ class ItemSoaItemizedServices
         $dataList = ItemSoa::where('TYPE', '=', $SOA_TYPE)
             ->where('LOCATION_ID', '=', $locationid)
             ->where('ACTUAL_BASE', '=', true)
+            ->where('INACTIVE','=',false)
             ->get();
 
         foreach ($dataList as $list) {

@@ -185,8 +185,16 @@ class SoaItem extends Component
         }
     }
     public function Delete(int $ID)
-    {
-        $this->itemSoaServices->Delete($ID);
+    {   
+
+        $data  = $this->itemSoaServices->Get($ID);
+        if($data->INACTIVE) {
+            $this->itemSoaServices->UpdateInactive($ID, false);
+        }
+        else{
+            $this->itemSoaServices->UpdateInactive($ID, true);
+        }
+        // $this->itemSoaServices->Delete($ID);
     }
     public function OpenActualBase(int $SOA_ITEM_ID)
     {
@@ -238,6 +246,6 @@ class SoaItem extends Component
     {
 
         $this->refreshList();
-        return view('livewire.location.soa-item');
+        return view(view: 'livewire.location.soa-item');
     }
 }

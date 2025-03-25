@@ -24,6 +24,7 @@ class ItemSoa extends Model
         'DOSAGE',
         'ROUTE',
         'FREQUENCY',
-        'BRAND'
+        'BRAND',
+        'INACTIVE'
     ];
 }
