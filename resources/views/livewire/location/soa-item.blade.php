@@ -56,6 +56,7 @@
                                         <th class="col-1">Route</th>
                                         <th class="col-1">Frequency</th>
                                         <th class="col-1 text-center">Is Actual</th>
+                                        <th class="col-1 text-center">Group</th>
                                         <th class="col-2 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -152,7 +153,7 @@
                                             </td>
 
 
-                                            <td class="text-center">
+                                            <td class="text-center col-1">
                                                 @if ($list->ID == $editid)
                                                     <input type="checkbox" class="check-input mt-2"
                                                         wire:model='editACTUAL_BASE' />
@@ -164,6 +165,14 @@
                                                         </button>
                                                     @else
                                                     @endif
+                                                @endif
+                                            </td>
+                                            <td class="col-1">
+                                                @if ($list->ID == $editid)
+                                                    <input name="editGROUP_ID" type="number" class="w-100"
+                                                        wire:model='editGROUP_ID' />
+                                                @else
+                                                    {{ $list->GROUP_ID }}
                                                 @endif
                                             </td>
                                             <td class="text-center">

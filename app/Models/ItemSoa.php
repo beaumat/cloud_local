@@ -25,6 +25,7 @@ class ItemSoa extends Model
         'ROUTE',
         'FREQUENCY',
         'BRAND',
-        'INACTIVE'
+        'INACTIVE',
+        'GROUP_ID'
     ];
 }

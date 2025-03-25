@@ -27,7 +27,7 @@ class SoaItem extends Component
     public string $ROUTE;
     public string $FREQUENCY;
     public string $BRAND;
-
+    public int $GROUP_ID;
 
     public $locationList = [];
     public $TO_LOCATION_ID;
@@ -44,6 +44,7 @@ class SoaItem extends Component
     public string $editROUTE;
     public string $editFREQUENCY;
     public string $editBRAND;
+    public int $editGROUP_ID;
     public $dataList = [];
     public $search;
     public $typeList = [];
@@ -81,6 +82,8 @@ class SoaItem extends Component
         $this->RATE = 0;
         $this->ACTUAL_BASE = false;
         $this->LINE = 0;
+        $this->BRAND = '';
+        $this->GROUP_ID = 0;
 
     }
     public function Add()
@@ -115,7 +118,8 @@ class SoaItem extends Component
                 $this->DOSAGE,
                 $this->ROUTE,
                 $this->FREQUENCY,
-                $this->BRAND
+                $this->BRAND,
+                $this->GROUP_ID
             );
 
             $this->CleanAdd();
@@ -143,6 +147,7 @@ class SoaItem extends Component
             $this->editROUTE = $data->ROUTE ?? '';
             $this->editFREQUENCY = $data->FREQUENCTY ?? '';
             $this->editBRAND = $data->BRAND ?? '';
+            $this->editGROUP_ID = $data->GROUP_ID ?? 0;
         }
     }
     public function Update()
@@ -177,7 +182,8 @@ class SoaItem extends Component
                 $this->editDOSAGE,
                 $this->editROUTE,
                 $this->editFREQUENCY,
-                $this->editBRAND
+                $this->editBRAND,
+                $this->editGROUP_ID
             );
             $this->Canceled();
         } catch (\Exception $e) {
@@ -185,13 +191,12 @@ class SoaItem extends Component
         }
     }
     public function Delete(int $ID)
-    {   
+    {
 
-        $data  = $this->itemSoaServices->Get($ID);
-        if($data->INACTIVE) {
+        $data = $this->itemSoaServices->Get($ID);
+        if ($data->INACTIVE) {
             $this->itemSoaServices->UpdateInactive($ID, false);
-        }
-        else{
+        } else {
             $this->itemSoaServices->UpdateInactive($ID, true);
         }
         // $this->itemSoaServices->Delete($ID);

@@ -43,11 +43,10 @@ class ItemSoaServices
         string $DOSAGE,
         string $ROUTE,
         string $FREQUENCY,
-        string $BRAND
+        string $BRAND,
+        int $GROUP_ID
     ) {
         $ID = $this->object->ObjectNextID('SOA_ITEM');
-
-
 
         ItemSoa::create(
             [
@@ -62,7 +61,8 @@ class ItemSoaServices
                 'DOSAGE' => $DOSAGE,
                 'ROUTE' => $ROUTE,
                 'FREQUENCY' => $FREQUENCY,
-                'BRAND' => $BRAND
+                'BRAND' => $BRAND,
+                'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null
             ]
         );
 
@@ -79,7 +79,8 @@ class ItemSoaServices
         string $DOSAGE,
         string $ROUTE,
         string $FREQUENCY,
-        string $BRAND
+        string $BRAND,
+        int $GROUP_ID
     ) {
         ItemSoa::where('ID', '=', $ID)
             ->update(
@@ -94,7 +95,8 @@ class ItemSoaServices
                     'DOSAGE' => $DOSAGE,
                     'ROUTE' => $ROUTE,
                     'FREQUENCY' => $FREQUENCY,
-                    'BRAND' => $BRAND
+                    'BRAND' => $BRAND,
+                    'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null
                 ]
             );
     }
@@ -124,8 +126,8 @@ class ItemSoaServices
                 'soa_item.ROUTE',
                 'soa_item.FREQUENCY',
                 'soa_item.BRAND',
-                'soa_item.INACTIVE'
-
+                'soa_item.INACTIVE',
+                'soa_item.GROUP_ID'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -184,6 +186,7 @@ class ItemSoaServices
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('INACTIVE', '=', false)
             ->where('TYPE', '=', 1)
             ->orderBy('TYPE', 'asc')
             ->orderBy('LINE', 'asc')
@@ -245,7 +248,8 @@ class ItemSoaServices
                 $list->DOSAGE,
                 $list->ROUTE,
                 $list->FREQUENCY,
-                $list->BRAND
+                $list->BRAND,
+                $list->GROUP_ID > 0 ? $list->GROUP_ID : null
             );
 
             if ($list->ACTUAL_BASE) {
