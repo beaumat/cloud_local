@@ -432,7 +432,7 @@
                             @if ($OP_SUB_TOTAL > 0)
                                 {{ number_format($OP_SUB_TOTAL, 2) }}
                             @else
-                                &nbsp;
+                                &nbsp;-
                             @endif
 
                         </div>
@@ -479,7 +479,7 @@
                             </div>
                             <div id="p-gov" class="col-1 text-right  left-line2 text-xs font-italic"> </div>
                             <div id="p-pocket" class="col-1 text-right left-line2">
-                                &nbsp;
+                                &nbsp;-
                             </div>
                         </div>
 
@@ -539,7 +539,7 @@
 
                         </div>
                         <div id="p-pocket" class="col-1 text-right left-line2 ">
-
+                                -
                         </div>
                     </div>
 
