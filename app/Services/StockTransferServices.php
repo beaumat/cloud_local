@@ -227,7 +227,8 @@ class StockTransferServices
                 'item.CODE',
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
-                'u.SYMBOL'
+                'u.SYMBOL',
+                'stock_transfer_items.ASSET_ACCOUNT_ID'
             ])
             ->leftJoin('item', 'item.ID', '=', 'stock_transfer_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'stock_transfer_items.UNIT_ID')

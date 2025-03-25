@@ -131,6 +131,8 @@ class ItemInventoryServices
             $SOURCE_REF_DATE,
             0
         );
+
+        // make auto fix quatity
     }
     private function getNextEndingUpdate(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $ID)
     {
