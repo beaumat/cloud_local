@@ -113,8 +113,9 @@ class ItemSoaItemizedServices
             ->where('ACTUAL_BASE', '=', true)
             ->where('INACTIVE','=',false)
             ->get();
-
+       
         foreach ($dataList as $list) {
+   
             $QTY = $this->getQty($DATE_ADMITTED, $DATE_DISCHARGED, $locationid, $patientid, $list->ID);
             $AMOUNT  = $QTY * $list->RATE ?? 0;
             $TOTAL = $TOTAL + $AMOUNT;

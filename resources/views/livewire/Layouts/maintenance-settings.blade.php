@@ -67,4 +67,3 @@
               @endcan
           </ul>
       </li>
-      d

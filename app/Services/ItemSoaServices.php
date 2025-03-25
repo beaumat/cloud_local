@@ -217,6 +217,7 @@ class ItemSoaServices
         $result = ItemSoa::where('TYPE', '=', $TYPE)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->where('ACTUAL_BASE', '=', false)
+            ->where('INACTIVE', '=', false)
             ->sum('RATE');
 
         if ($result > 0) {

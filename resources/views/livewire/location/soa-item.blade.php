@@ -201,10 +201,10 @@
                                                             @if ($list->INACTIVE == false)
                                                                 <button name="btnDelete" title="Inactive"
                                                                     type="button"
-                                                                    class='btn btn-xs btn-dark w-100'
+                                                                    class='btn btn-xs btn-success w-100'
                                                                     wire:confirm='Are you sure to Inactive?'
                                                                     wire:click='Delete({{ $list->ID }},{{ true }})'>
-                                                                    Inactive
+                                                                    Active
                                                                 </button>
                                                             @else
                                                                 <button name="btnDelete" title="Inactive"
@@ -212,7 +212,7 @@
                                                                     class='btn btn-xs btn-secondary w-100'
                                                                     wire:confirm='Are you sure to Active?'
                                                                     wire:click='Delete({{ $list->ID }},{{ false }})'>
-                                                                    Active
+                                                                    Inactve
                                                                 </button>
                                                             @endif
                                                         </div>
