@@ -139,7 +139,6 @@
                     <div class="row top-line2 bottom-line2 right-line2 left-line2 text-sm">
                         <div class="col-3 text-center ">
                             <div class="top" style="top:0"> PARTICULARS </div>
-
                         </div>
                         <div class="col-1 text-center left-line2 ">
                             ACTUAL <br /> CHARGES

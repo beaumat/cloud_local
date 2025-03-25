@@ -1,5 +1,6 @@
 <?php
 use App\Services\ItemSoaItemizedServices;
+use App\Services\ItemSoaServices;
 ?>
 
 <div class="row bottom-line2 right-line2 left-line2 text-sm">
@@ -29,7 +30,11 @@ use App\Services\ItemSoaItemizedServices;
             <tbody class='text-xs'>
                 @php
                     $GRAND_TOTAL = 0;
+                    $tempGroup = 0;
+                    $oneTimeQty = 0;
+                    $oneTimeTotal = 0;
                 @endphp
+
                 @foreach ($dataList as $list)
                     @if ($TYPE == '')
                     @elseif ($TYPE != $list->TYPE_NAME)
@@ -85,13 +90,37 @@ use App\Services\ItemSoaItemizedServices;
                         <td class="pb-0 pt-0">{{ $list->ITEM_NAME }}</td>
                         <td class="text-center">{{ $list->UNIT_NAME }}</td>
                         <td class="text-right  pb-0 pt-0">{{ number_format($list->RATE, 2) }}</td>
-                        <td class="text-center pb-0 pt-0"> {{ $defult_Qty }}</td>
 
-                        <td class="text-right pb-0 pt-0">{{ number_format($AMOUNT, 2) }}</td>
+                        @if ($list->GROUP_ID > 0)
+                            @if ($oneTimeQty == 0)
+                                @php
+                                    $oneTimeQty = $defult_Qty;
+                                    $oneTimeTotal = ItemSoaServices::getTotal($list->GROUP_ID, $LOCATION_ID);
+                                @endphp
+                                <td class="text-center pb-0 pt-0 " style="border-bottom-color: white;"> {{ $oneTimeQty }}</td>
+                                <td class="text-right pb-0 pt-0" style="border-bottom-color: white;"> {{ number_format($oneTimeTotal, 2) }}</td>
+                            @else
+                                <td class="text-center pb-0 pt-0" style="border-top-color:white;"> </td>
+                                <td class="text-right pb-0 pt-0"   style="border-top-color:white;"></td>
+                            @endif
+                        @else
+                            @php
+                                $oneTimeQty = 0;
+                                $oneTimeTotal = 0.0;
+                            @endphp
+                            <td class="text-center pb-0 pt-0 "> {{ $defult_Qty }}</td>
+                            <td class="text-right pb-0 pt-0">{{ number_format($AMOUNT, 2) }}</td>
+                        @endif
+
                         @php
                             $GRAND_TOTAL = $GRAND_TOTAL + $AMOUNT ?? 0;
                         @endphp
                     </tr>
+
+
+                    @php
+                        $tempGroup = $list->GROUP_ID ?? 0;
+                    @endphp
                 @endforeach
 
                 <tr class="font-weight-bold">

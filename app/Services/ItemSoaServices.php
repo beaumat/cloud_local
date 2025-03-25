@@ -155,7 +155,8 @@ class ItemSoaServices
                 'soa_item.ITEM_NAME',
                 'soa_item.UNIT_NAME',
                 'soa_item.RATE',
-                'soa_item.ACTUAL_BASE'
+                'soa_item.ACTUAL_BASE',
+                'soa_item.GROUP_ID'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -166,7 +167,13 @@ class ItemSoaServices
 
         return $result;
     }
-
+    public static function getTotal(int $GROUP_ID, int $LOCATION_ID): float
+    {
+        return (float) ItemSoa::where('soa_item.GROUP_ID', '=', $GROUP_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('INACTIVE', '=', false)
+            ->sum('RATE');
+    }
     public function GetMedicineList(int $LOCATION_ID)
     {
         $result = ItemSoa::query()
