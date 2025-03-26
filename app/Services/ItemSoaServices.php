@@ -194,7 +194,8 @@ class ItemSoaServices
                 'soa_item.DOSAGE',
                 'soa_item.ROUTE',
                 'soa_item.FREQUENCY',
-                'soa_item.BRAND'
+                'soa_item.BRAND',
+                'soa_item.SC_BASE'
 
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')

@@ -47,17 +47,11 @@ class StockTransferList extends Component
     }
     private function DeleteEntry(int $id)
     {
-
-
         $data = $this->stockTransferServices->Get($id);
         if ($data) {
-
             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->stockTransferServices->object_type_stock_transfer, $data->ID);
-
-
             $this->accountJournalServices->DeleteJournal($data->ACCOUNT_ID, $data->LOCATION_ID, $JOURNAL_NO, 0, $data->ID, $this->stockTransferServices->object_type_stock_transfer, $data->DATE, 1);
             $this->accountJournalServices->DeleteJournal($data->ACCOUNT_ID, $data->TRANSFER_TO_ID, $JOURNAL_NO, 0, $data->ID, $this->stockTransferServices->object_type_stock_transfer, $data->DATE, 0);
-
             $stItem = $this->stockTransferServices->ItemView($id);
             foreach ($stItem as $list) {
                 // Jounral
@@ -67,9 +61,7 @@ class StockTransferList extends Component
                 // Inventory
                 $this->itemInventoryServices->DeleteInv($list->ITEM_ID, $data->LOCATION_ID, $this->stockTransferServices->document_type_id, $list->ID, $data->DATE);
                 $this->itemInventoryServices->DeleteInv($list->ITEM_ID, $data->TRANSFER_TO_ID, $this->stockTransferServices->document_type_id, $list->ID, $data->DATE);
-
             }
-
         }
 
     }
@@ -77,7 +69,6 @@ class StockTransferList extends Component
     {
 
         $data = $this->stockTransferServices->Get($id);
-
         if ($data) {
 
             if ($data->STATUS == 0 || $data->STATUS == 16) {

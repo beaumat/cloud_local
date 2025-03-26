@@ -191,7 +191,8 @@ class DrugMedicines extends Component
         $this->philhealthDrugsMedicineServices->DrugMedicineDelete($ID);
         $this->clearField();
     }
-    public function DeleteAll() {
+    public function DeleteAll()
+    {
         $this->philhealthDrugsMedicineServices->DrugMedicineDeleteAll($this->PHILHEALTH_ID);
         $this->clearField();
     }
@@ -214,13 +215,21 @@ class DrugMedicines extends Component
 
         $itemList = $this->itemSoaServices->GetMedicineList($this->LOCATION_ID);
         foreach ($itemList as $list) {
-            if ($list->ACTUAL_BASE) {
+            if ($list->SC_BASE) {
                 $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual($dateList, $this->LOCATION_ID, $this->CONTACT_ID, $list->ID, );
                 $AMOUNT = $defult_Qty * $list->RATE ?? 0;
             } else {
-                $defult_Qty = $qty;
-                $AMOUNT = $qty * $list->RATE ?? 0;
+                if ($list->ACTUAL_BASE) {
+                    $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual($dateList, $this->LOCATION_ID, $this->CONTACT_ID, $list->ID, );
+                    $AMOUNT = $defult_Qty * $list->RATE ?? 0;
+                } else {
+                    $defult_Qty = $qty;
+                    $AMOUNT = $qty * $list->RATE ?? 0;
+                }
             }
+
+
+
 
             if ($AMOUNT > 0) {
 
