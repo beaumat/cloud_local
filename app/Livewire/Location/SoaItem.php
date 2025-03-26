@@ -28,6 +28,7 @@ class SoaItem extends Component
     public string $FREQUENCY;
     public string $BRAND;
     public int $GROUP_ID;
+    public bool $SC_BASE;
 
     public $locationList = [];
     public $TO_LOCATION_ID;
@@ -45,6 +46,8 @@ class SoaItem extends Component
     public string $editFREQUENCY;
     public string $editBRAND;
     public int $editGROUP_ID;
+    public bool $editSC_BASE;
+
     public $dataList = [];
     public $search;
     public $typeList = [];
@@ -84,7 +87,7 @@ class SoaItem extends Component
         $this->LINE = 0;
         $this->BRAND = '';
         $this->GROUP_ID = 0;
-
+        $this->SC_BASE = false;
     }
     public function Add()
     {
@@ -119,7 +122,8 @@ class SoaItem extends Component
                 $this->ROUTE,
                 $this->FREQUENCY,
                 $this->BRAND,
-                $this->GROUP_ID
+                $this->GROUP_ID,
+                $this->SC_BASE
             );
 
             $this->CleanAdd();
@@ -147,6 +151,7 @@ class SoaItem extends Component
             $this->editFREQUENCY = $data->FREQUENCTY ?? '';
             $this->editBRAND = $data->BRAND ?? '';
             $this->editGROUP_ID = $data->GROUP_ID ?? 0;
+            $this->editSC_BASE = $data->SC_BASE ?? false;
         }
     }
     public function Update()
@@ -182,7 +187,8 @@ class SoaItem extends Component
                 $this->editROUTE,
                 $this->editFREQUENCY,
                 $this->editBRAND,
-                $this->editGROUP_ID
+                $this->editGROUP_ID,
+                $this->editSC_BASE
             );
             $this->Canceled();
         } catch (\Exception $e) {

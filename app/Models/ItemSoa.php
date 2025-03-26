@@ -26,6 +26,7 @@ class ItemSoa extends Model
         'FREQUENCY',
         'BRAND',
         'INACTIVE',
-        'GROUP_ID'
+        'GROUP_ID',
+        'SC_BASE'
     ];
 }

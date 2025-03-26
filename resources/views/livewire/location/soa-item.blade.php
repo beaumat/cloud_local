@@ -46,8 +46,8 @@
                                 <thead class="text-xs bg-sky">
                                     <tr>
 
-                                        <th class="col-1">Type</th>
-                                        <th class="col-1">Line #</th>
+                                        <th class="">Type</th>
+                                        <th class="">Line #</th>
                                         <th class="col-1">Item </th>
                                         <th class="col-1">Unit </th>
                                         <th class="col-1">Rate </th>
@@ -55,7 +55,8 @@
                                         <th class="col-1">Dosage</th>
                                         <th class="col-1">Route</th>
                                         <th class="col-1">Frequency</th>
-                                        <th class="col-1 text-center">Is Actual</th>
+                                        <th class=" text-center">Is Actual</th>
+                                        <th class=" text-center">SC Base</th>
                                         <th class="col-1 text-center">Group</th>
                                         <th class="col-2 text-center">Action</th>
                                     </tr>
@@ -160,6 +161,21 @@
                                                 @else
                                                     @if ($list->ACTUAL_BASE)
                                                         <button class="btn btn-info btn-xs"
+                                                            wire:click='OpenActualBase({{ $list->ID }})'><i
+                                                                class="fa fa-list" aria-hidden="true"></i>
+                                                        </button>
+                                                    @else
+                                                    @endif
+                                                @endif
+                                            </td>
+
+                                            <td class="text-center col-1">
+                                                @if ($list->ID == $editid)
+                                                    <input type="checkbox" class="check-input mt-2"
+                                                        wire:model='editSC_BASE' />
+                                                @else
+                                                    @if ($list->SC_BASE)
+                                                        <button class="btn btn-warning btn-xs"
                                                             wire:click='OpenActualBase({{ $list->ID }})'><i
                                                                 class="fa fa-list" aria-hidden="true"></i>
                                                         </button>
@@ -272,6 +288,10 @@
                                             <td class="text-center">
                                                 <input type="checkbox" class="check-input mt-2"
                                                     wire:model='ACTUAL_BASE' />
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="checkbox" class="check-input mt-2"
+                                                    wire:model='SC_BASE' />
                                             </td>
                                             <td>
                                                 <button type="submit" class="btn btn-xs btn-success w-100">

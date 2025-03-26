@@ -44,7 +44,8 @@ class ItemSoaServices
         string $ROUTE,
         string $FREQUENCY,
         string $BRAND,
-        int $GROUP_ID
+        int $GROUP_ID,
+        bool $SC_BASE
     ) {
         $ID = $this->object->ObjectNextID('SOA_ITEM');
 
@@ -62,7 +63,8 @@ class ItemSoaServices
                 'ROUTE' => $ROUTE,
                 'FREQUENCY' => $FREQUENCY,
                 'BRAND' => $BRAND,
-                'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null
+                'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
+                'SC_BASE' => $SC_BASE
             ]
         );
 
@@ -80,7 +82,8 @@ class ItemSoaServices
         string $ROUTE,
         string $FREQUENCY,
         string $BRAND,
-        int $GROUP_ID
+        int $GROUP_ID,
+        bool $SC_BASE
     ) {
         ItemSoa::where('ID', '=', $ID)
             ->update(
@@ -96,7 +99,8 @@ class ItemSoaServices
                     'ROUTE' => $ROUTE,
                     'FREQUENCY' => $FREQUENCY,
                     'BRAND' => $BRAND,
-                    'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null
+                    'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
+                    'SC_BASE' => $SC_BASE
                 ]
             );
     }
@@ -110,6 +114,7 @@ class ItemSoaServices
         ItemSoa::where('ID', '=', $ID)
             ->update(['INACTIVE' => $INACTIVE]);
     }
+
     public function Search($search, int $LOCATION_ID): object
     {
         $result = ItemSoa::query()
@@ -127,7 +132,8 @@ class ItemSoaServices
                 'soa_item.FREQUENCY',
                 'soa_item.BRAND',
                 'soa_item.INACTIVE',
-                'soa_item.GROUP_ID'
+                'soa_item.GROUP_ID',
+                'soa_item.SC_BASE'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -256,7 +262,8 @@ class ItemSoaServices
                 $list->ROUTE,
                 $list->FREQUENCY,
                 $list->BRAND,
-                $list->GROUP_ID > 0 ? $list->GROUP_ID : null
+                $list->GROUP_ID > 0 ? $list->GROUP_ID : null,
+                $list->SC_BASE
             );
 
             if ($list->ACTUAL_BASE) {
