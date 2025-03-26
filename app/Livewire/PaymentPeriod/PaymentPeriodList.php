@@ -46,7 +46,7 @@ class PaymentPeriodList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    
+  
 
     public function render()
     {

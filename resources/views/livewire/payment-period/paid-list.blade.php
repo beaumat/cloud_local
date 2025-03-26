@@ -17,7 +17,8 @@ use App\Services\OtherServices;
                 <th class="text-right">Paid Amt</th>
                 <th class="text-right">WTax Amt</th>
                 <th class="text-right">PF Amt</th>
-                <th class="col-2">Doctor Name</th>
+                <th class="">Doctor Name</th>
+                <th class="">Delete</th>
             </tr>
         </thead>
         <tbody class="text-xs">
@@ -45,6 +46,9 @@ use App\Services\OtherServices;
                     <td class="text-right">{{ number_format($list->TAX_AMOUNT, 2) }}</td>
                     <td class="text-right text-info">{{ number_format($list->BILL_AMOUNT, 2) }}</td>
                     <td class="text-info">{{ $list->DOCTOR_NAME }}</td>
+                    <td><button class="btn btn-xs btn-danger w-100" wire:confirm='Are you sure to delete this paid?' wire:click='DeletePaid({{ $list->INVOICE_ID }})'>
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button></td>
                     @php
                         $TOTAL_INVOICE += $list->INVOICE_AMOUNT;
                         $TOTAL_PAID += $list->PAYMENT_AMOUNT;
@@ -69,6 +73,7 @@ use App\Services\OtherServices;
                 <td class="text-orange font-weight-bold text-right">
 
                 </td>
+                <td></td>
             </tr>
             <tr>
                 <td></td>
@@ -86,6 +91,7 @@ use App\Services\OtherServices;
                 <td class="text-orange font-weight-bold text-right">
 
                 </td>
+                <td></td>
             </tr>
         </tbody>
     </table>

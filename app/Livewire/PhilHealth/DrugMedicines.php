@@ -211,14 +211,34 @@ class DrugMedicines extends Component
             $dateList[] = $list->DATE;
             $qty++;
         }
-
-
-        $itemList = $this->itemSoaServices->GetMedicineList($this->LOCATION_ID);
-        foreach ($itemList as $list) {
-            if ($list->SC_BASE) {
+        if ($this->itemSoaServices->HaveServiceChargeBase($this->LOCATION_ID)) {
+            $itemList = $this->itemSoaServices->GetMedicineListBySCBase($this->LOCATION_ID);
+            foreach ($itemList as $list) {
                 $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual($dateList, $this->LOCATION_ID, $this->CONTACT_ID, $list->ID, );
                 $AMOUNT = $defult_Qty * $list->RATE ?? 0;
-            } else {
+                if ($AMOUNT > 0) {
+                    $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
+                    $this->philhealthDrugsMedicineServices->DrugMedicineStore(
+                        $this->PHILHEALTH_ID,
+                        $list->ITEM_NAME . $GEN_NAME,
+                        $defult_Qty,
+                        $list->DOSAGE ?? '',
+                        $list->ROUTE ?? '',
+                        $list->FREQUENCY ?? '',
+                        $AMOUNT,
+                        "",
+                        0,
+                        "",
+                        "",
+                        "",
+                        0,
+                    );
+                }
+            }
+
+        } else {
+            $itemList = $this->itemSoaServices->GetMedicineList($this->LOCATION_ID);
+            foreach ($itemList as $list) {
                 if ($list->ACTUAL_BASE) {
                     $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual($dateList, $this->LOCATION_ID, $this->CONTACT_ID, $list->ID, );
                     $AMOUNT = $defult_Qty * $list->RATE ?? 0;
@@ -226,36 +246,29 @@ class DrugMedicines extends Component
                     $defult_Qty = $qty;
                     $AMOUNT = $qty * $list->RATE ?? 0;
                 }
+
+                if ($AMOUNT > 0) {
+                    $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
+                    $this->philhealthDrugsMedicineServices->DrugMedicineStore(
+                        $this->PHILHEALTH_ID,
+                        $list->ITEM_NAME . $GEN_NAME,
+                        $defult_Qty,
+                        $list->DOSAGE ?? '',
+                        $list->ROUTE ?? '',
+                        $list->FREQUENCY ?? '',
+                        $AMOUNT,
+                        "",
+                        0,
+                        "",
+                        "",
+                        "",
+                        0,
+                    );
+                }
             }
-
-
-
-
-            if ($AMOUNT > 0) {
-
-                $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
-
-                $this->philhealthDrugsMedicineServices->DrugMedicineStore(
-                    $this->PHILHEALTH_ID,
-                    $list->ITEM_NAME . $GEN_NAME,
-                    $defult_Qty,
-                    $list->DOSAGE ?? '',
-                    $list->ROUTE ?? '',
-                    $list->FREQUENCY ?? '',
-                    $AMOUNT,
-                    "",
-                    0,
-                    "",
-                    "",
-                    "",
-                    0,
-                );
-            }
-
-
-
-
         }
+
+
         $this->clearField();
     }
     public function render()

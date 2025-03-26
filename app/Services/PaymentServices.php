@@ -528,4 +528,13 @@ class PaymentServices
         Payment::where('ID', '=', $ID)
             ->update(['DATE' => $DATE]);
     }
+    public function getPaymentIdViaInvoiceID(int $INVOICE_ID): int
+    {
+        $data = PaymentInvoices::where('INVOICE_ID', '=', $INVOICE_ID)->first();
+        if ($data) {
+            return (int) $data->PAYMENT_ID;
+        }
+
+        return 0;
+    }
 }

@@ -180,6 +180,44 @@ class ItemSoaServices
             ->where('INACTIVE', '=', false)
             ->sum('RATE');
     }
+    public function HaveServiceChargeBase(int $LOCATION_ID): bool
+    {
+        return (bool) ItemSoa::where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('INACTIVE', '=', false)
+            ->where('TYPE', '=', 1)
+            ->where('SC_BASE', '=', true)
+            ->exists();
+    }
+    public function GetMedicineListBySCBase(int $LOCATION_ID)
+    {
+        $result = ItemSoa::query()
+            ->select([
+                'soa_item.ID',
+                'soa_item.TYPE',
+                'soa_item_type.DESCRIPTION as TYPE_NAME',
+                'soa_item.ITEM_NAME',
+                'soa_item.UNIT_NAME',
+                'soa_item.RATE',
+                'soa_item.ACTUAL_BASE',
+                'soa_item.DOSAGE',
+                'soa_item.ROUTE',
+                'soa_item.FREQUENCY',
+                'soa_item.BRAND',
+                'soa_item.SC_BASE'
+
+            ])
+            ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('INACTIVE', '=', false)
+            ->where('TYPE', '=', 1)
+            ->where('SC_BASE', '=', true)
+            ->orderBy('TYPE', 'asc')
+            ->orderBy('LINE', 'asc')
+            ->get();
+
+        return $result;
+
+    }
     public function GetMedicineList(int $LOCATION_ID)
     {
         $result = ItemSoa::query()

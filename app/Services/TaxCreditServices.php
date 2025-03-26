@@ -430,4 +430,13 @@ class TaxCreditServices
 
 
     }
+
+    public function getTaxCreditIdViaInvoiceID(int $INVOICE_ID): int
+    {
+        $data = TaxCreditInvoices::where('INVOICE_ID', '=', $INVOICE_ID)->first();
+        if ($data) {
+            return (int) $data->TAX_CREDIT_ID;
+        }
+        return 0;
+    }
 }

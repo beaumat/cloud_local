@@ -173,9 +173,11 @@
 
                                                     @if ($AR_NO == null)
                                                         <button type="button" wire:click="getComputation()"
-                                                            class="btn btn-danger active btn-sm text-xs" wire:confirm='Are you sure to re-calculate the computation?'>
-                                                            <i class="fa fa-user-md" aria-hidden="true"></i> Re-Computation
-                                                            
+                                                            class="btn btn-danger active btn-sm text-xs"
+                                                            wire:confirm='Are you sure to re-calculate the computation?'>
+                                                            <i class="fa fa-user-md" aria-hidden="true"></i>
+                                                            Re-compute
+
                                                         </button>
                                                     @endif
                                                 @endif
