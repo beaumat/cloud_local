@@ -370,10 +370,10 @@ class PhilHealthServices
             $SP_SUB_TOTAL = (float) $C_SUB_TOTAL * ($this->DISCOUNT_PERCENT / 100);
             if ($this->ITEMIZED_BASE) {
                 $NEW_RATE = $this->FIRST_CASE_RATE_AMOUNT * $NO_OF_TREATMENT;
-                $AD_SUB_TOTAL = $NEW_RATE;
-                $GOV_SUB_TOTAL = ($C_SUB_TOTAL - $SP_SUB_TOTAL) - $AD_SUB_TOTAL;
+                $AD_SUB_TOTAL = $C_SUB_TOTAL - $SP_SUB_TOTAL;
+                $GOV_SUB_TOTAL = ($C_SUB_TOTAL - $SP_SUB_TOTAL) - $NEW_RATE;
 
-                $P1_SUB_TOTAL = $AD_SUB_TOTAL;
+                $P1_SUB_TOTAL = $NEW_RATE;
                 $OP_SUB_TOTAL = 0;
             } else {
                 $AD_SUB_TOTAL = $C_SUB_TOTAL - $SP_SUB_TOTAL;
