@@ -281,7 +281,7 @@
                             </div>
                         </div>
                     @endif
-                    @if ($CHARGES_LAB_N_DIAGNOSTICS > 0 || $PRE_SIGN_DATA == true)
+                    @if ($CHARGES_LAB_N_DIAGNOSTICS > 0 || $CHARGES_LAB_N_DIAGNOSTICS  = 0 || $PRE_SIGN_DATA == true)
                         <div class="row bottom-line2 right-line2 left-line2 text-sm">
                             <div id="p-particular" class="col-3 text-left ">
                                 LABORATORY & DIAGNOSTIC
@@ -289,6 +289,8 @@
                             <div id="p-charge" class="col-1 text-right  left-line2 font-italic">
                                 @if ($CHARGES_LAB_N_DIAGNOSTICS > 0)
                                     {{ number_format($CHARGES_LAB_N_DIAGNOSTICS, 2) }}
+                                @else
+                                    -
                                 @endif
                             </div>
                             <div id="p-vat" class="col-1 text-right  left-line2">
