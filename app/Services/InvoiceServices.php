@@ -164,7 +164,7 @@ class InvoiceServices
             'SHIP_DATE' => $SHIP_DATE ?? null,
             'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
             'DUE_DATE' => $DUE_DATE ?? null,
-            'DISCOUNT_DATE' => $DISCOUNT_DATE ?? null,
+            'DISCOUNT_DATE' => $this->dateServices->isValidDateFormat($DISCOUNT_DATE) ? $DISCOUNT_DATE : null,
             'DISCOUNT_PCT' => $DISCOUNT_PCT ?? null,
             'NOTES' => $NOTES ?? null,
             'AMOUNT' => 0,

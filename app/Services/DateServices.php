@@ -7,6 +7,10 @@ use DateTime;
 
 class DateServices
 {
+   public function isValidDateFormat($date, $format = 'Y-m-d') {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) === $date;
+    }
 
     public function GetFirstDay_Year(string $BASE_DATE): string
     {
