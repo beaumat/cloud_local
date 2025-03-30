@@ -213,7 +213,7 @@
                                                             </button>
                                                         </div>
                                                     @else
-                                                        <div class="col-6">
+                                                        <div class="col-4">
                                                             <button name="btnEdit" title="Edit" type="button"
                                                                 class='btn btn-xs btn-primary w-100'
                                                                 wire:click='Edit({{ $list->ID }})'><i
@@ -221,24 +221,33 @@
                                                                     aria-hidden="true"></i></button>
                                                         </div>
 
-                                                        <div class="col-6">
+                                                        <div class="col-4">
                                                             @if ($list->INACTIVE == false)
-                                                                <button name="btnDelete" title="Inactive"
+                                                                <button name="btnActive" title="Actve"
                                                                     type="button"
                                                                     class='btn btn-xs btn-success w-100'
                                                                     wire:confirm='Are you sure to Inactive?'
-                                                                    wire:click='Delete({{ $list->ID }},{{ true }})'>
-                                                                    Active
+                                                                    wire:click='StatusActive({{ $list->ID }},{{ true }})'>
+                                                                    <i class="fa fa-thumbs-up" aria-hidden="true"></i>
                                                                 </button>
                                                             @else
-                                                                <button name="btnDelete" title="Inactive"
+                                                                <button name="btnInactive" title="Inactive"
                                                                     type="button"
                                                                     class='btn btn-xs btn-secondary w-100'
                                                                     wire:confirm='Are you sure to Active?'
-                                                                    wire:click='Delete({{ $list->ID }},{{ false }})'>
-                                                                    Inactve
+                                                                    wire:click='StatusActive({{ $list->ID }},{{ false }})'>
+                                                                    <i class="fa fa-thumbs-down"
+                                                                        aria-hidden="true"></i>
                                                                 </button>
                                                             @endif
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button name="btnDelete" title="Delete" type="button"
+                                                                class='btn btn-xs btn-danger w-100'
+                                                                wire:confirm='Are you sure to Delete?'
+                                                                wire:click='Delete({{ $list->ID }})'>
+                                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                                            </button>
                                                         </div>
                                                     @endif
                                                 </div>

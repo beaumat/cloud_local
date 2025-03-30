@@ -195,7 +195,7 @@ class SoaItem extends Component
             session()->flash('error', $e->getMessage());
         }
     }
-    public function Delete(int $ID)
+    public function StatusActive(int $ID)
     {
 
         $data = $this->itemSoaServices->Get($ID);
@@ -204,7 +204,12 @@ class SoaItem extends Component
         } else {
             $this->itemSoaServices->UpdateInactive($ID, true);
         }
-        // $this->itemSoaServices->Delete($ID);
+      
+    }
+
+    public function Delete(int $ID)
+    {
+        $this->itemSoaServices->Delete($ID);
     }
     public function OpenActualBase(int $SOA_ITEM_ID)
     {
