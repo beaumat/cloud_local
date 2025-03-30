@@ -50,10 +50,10 @@
                                         <th class="col-1">Item </th>
                                         <th class="col-1">Unit </th>
                                         <th class="col-1">Rate </th>
-                                        <th class="col-1">Brand</th>
-                                        <th class="col-1">Dosage</th>
-                                        <th class="col-1">Route</th>
-                                        <th class="col-1">Frequency</th>
+                                        <th class="">Brand</th>
+                                        <th class="">Dosage</th>
+                                        <th class="">Route</th>
+                                        <th class="">Frequency</th>
                                         <th class=" text-center">Is Actual</th>
                                         <th class=" text-center">SC Base</th>
                                         <th class="col-1 text-center">Group</th>
