@@ -61,13 +61,7 @@ class TransactionJournalReport extends Component
     {
         $this->TOTAL_DEBIT = 0;
         $this->TOTAL_CREDIT = 0;
-        $this->dataList = $this->accountJournalServices->getTransactionJournal(
-            $this->DATE_FROM,
-            $this->DATE_TO,
-            $this->LOCATION_ID,
-            $this->selectedAccount,
-            $this->selectedAccountType
-        );
+        $this->dataList = $this->accountJournalServices->getTransactionJournal( $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, $this->selectedAccount, $this->selectedAccountType );
     }
     public function updatedlocationid()
     {

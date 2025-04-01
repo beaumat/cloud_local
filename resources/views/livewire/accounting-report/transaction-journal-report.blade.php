@@ -77,9 +77,8 @@
                     </div>
                 </div>
                 <div class="col-md-12" style="max-height: 80vh; overflow-y: auto;">
-                    {{-- @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')]) --}}
-
-                    <table class="table table-sm">
+                    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+                    <table class="table table-sm table-hover">
                         <thead class="text-xs bg-sky">
                             <tr>
                                 <td>Jrnl#</td>
