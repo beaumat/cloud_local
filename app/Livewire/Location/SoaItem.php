@@ -175,21 +175,7 @@ class SoaItem extends Component
 
 
         try {
-            $this->itemSoaServices->update(
-                $this->editid,
-                $this->editTYPE,
-                $this->editLINE,
-                $this->editITEM_NAME,
-                $this->editUNIT_NAME,
-                $this->editRATE,
-                $this->editACTUAL_BASE,
-                $this->editDOSAGE,
-                $this->editROUTE,
-                $this->editFREQUENCY,
-                $this->editBRAND,
-                $this->editGROUP_ID,
-                $this->editSC_BASE
-            );
+            $this->itemSoaServices->update( $this->editid, $this->editTYPE, $this->editLINE, $this->editITEM_NAME, $this->editUNIT_NAME, $this->editRATE, $this->editACTUAL_BASE, $this->editDOSAGE, $this->editROUTE, $this->editFREQUENCY, $this->editBRAND, $this->editGROUP_ID, $this->editSC_BASE );
             $this->Canceled();
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());

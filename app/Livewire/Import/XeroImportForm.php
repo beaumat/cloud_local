@@ -3,7 +3,9 @@
 namespace App\Livewire\Import;
 
 use App\Imports\ExcelDataImport;
+use App\Services\DateServices;
 use App\Services\LocationServices;
+use App\Services\XeroDataServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -18,31 +20,50 @@ class XeroImportForm extends Component
     use WithFileUploads;
     public $file = null;
 
-    public $data = [];
+    public $dataList = [];
     public $locationList = [];
+    public $year;
+    public $month;
+
+    public $yearList = [];
+    public $monthList = [];
+
     public $locationid = 0;
     private $locationServices;
-    public function boot(LocationServices $locationServices)
+    private $xeroDataServices;
+    private $dateServices;
+    public function boot(LocationServices $locationServices, XeroDataServices $xeroDataServices, DateServices $dateServices)
     {
         $this->locationServices = $locationServices;
+        $this->xeroDataServices = $xeroDataServices;
+        $this->dateServices = $dateServices;
     }
-    public function import()
+
+    public function generate()
     {
+
         $this->validate([
-            'file' => 'required|mimes:xlsx,xls,csv|max:2548',
+            'locationid' => 'required|exists:location,id'
+        ], [], [
+            'locationid' => 'Location'
         ]);
 
-        // Read the file without inserting into the database
-        $import = new ExcelDataImport();
-        Excel::import($import, $this->file->getRealPath());
 
-        $this->data = $import->data; // Store the imported data in the component
+        $this->dataList = $this->xeroDataServices->viewData($this->locationid, $this->year, $this->month);
 
-        session()->flash('message', 'Excel data imported successfully!');
+    }
+    public function makeEntry()
+    {
+
     }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
+        $this->yearList = $this->dateServices->YearList();
+        $this->monthList = $this->dateServices->MonthList();
+
+        $this->year = $this->dateServices->NowYear();
+        $this->month = $this->dateServices->NowMonth();
     }
     public function render()
     {

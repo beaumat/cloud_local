@@ -72,12 +72,7 @@ use App\Services\ItemSoaServices;
                             @endphp
                             @php
                                 if ($list->ACTUAL_BASE) {
-                                    $defult_Qty = ItemSoaItemizedServices::getQuantityActual(
-                                        $dateList,
-                                        $LOCATION_ID,
-                                        $PATIENT_ID,
-                                        $list->ID,
-                                    );
+                                    $defult_Qty = ItemSoaItemizedServices::getQuantityActual( $dateList, $LOCATION_ID, $PATIENT_ID, $list->ID, );
                                     $AMOUNT = $defult_Qty * $list->RATE ?? 0;
                                 } else {
                                     $defult_Qty = $qty;
@@ -87,10 +82,11 @@ use App\Services\ItemSoaServices;
                                 $TOTAL = $TOTAL + $AMOUNT;
                             @endphp
                         </td>
-                        <td class="pb-0 pt-0">{{ $list->ITEM_NAME }}</td>
+
+
+                        <td class="pb-0 pt-0">{{  $list->ITEM_NAME }}</td>
                         <td class="text-center">{{ $list->UNIT_NAME }}</td>
                         <td class="text-right  pb-0 pt-0">{{ number_format($list->RATE, 2) }}</td>
-
                         @if ($list->GROUP_ID > 0)
                             @if ($oneTimeQty == 0)
                                 @php

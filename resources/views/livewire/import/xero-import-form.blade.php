@@ -24,34 +24,6 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mt-0">
-                                                <label class="text-sm">Excel File:</label>
-                                                <div class="input-group input-group-xs">
-                                                    <div class="custom-file text-xs">
-                                                        <input type="file" class="custom-file-input text-xs"
-                                                            id="fileUpload" wire:model='file'>
-                                                        <label class="custom-file-label text-xs" for="fileUpload">
-                                                            @if ($file)
-                                                                {{ $file->getClientOriginalName() }}
-                                                            @else
-                                                                Choose file
-                                                            @endif
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="mt-4">
-                                                <button type="button" class="mt-1 btn btn-sm btn-success"
-                                                   wire:loading.attr='hidden' wire:click='import()'> Upload</button>
-
-                                                <div wire:loading.delay>
-                                                    <span class='spinner'></span>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
@@ -66,49 +38,81 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+                                            <button class="btn btn-danger btn-xs mt-2"
+                                                wire:click='generate()'>Generate</button>
+                                        </div>
+                                        <div class="col-md-3">
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mt-0">
+                                                <label class="text-sm">Year:</label>
+                                                <select name="location" wire:model.live='year'
+                                                    class="form-control form-control-sm">
+                                                    <option value="0"></option>
+                                                    @foreach ($yearList as $item)
+                                                        <option value="{{ $item['ID'] }}"> {{ $item['NAME'] }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mt-0">
+                                                <label class="text-sm">Month:</label>
+                                                <select name="location" wire:model.live='month'
+                                                    class="form-control form-control-sm">
+                                                    <option value="0"></option>
+                                                    @foreach ($monthList as $item)
+                                                        <option value="{{ $item['ID'] }}"> {{ $item['NAME'] }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {{-- <table class="table table-sm table-bordered table-hover">
-                                <thead class="text-xs bg-sky">
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Source</th>
-                                        <th>Description</th>
-                                        <th>Reference</th>
-                                        <th>Debit</th>
-                                        <th>Credit</th>
-                                        <th>Balance</th>
-                                        <th>Gross</th>
-                                        <th>Tax</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-xs">
+                            <div class="col-md-12">
+                                <div style="max-height: 73vh; overflow-y: auto;" class="border">
+                                    <div style="width:1500px;max-width:1900px;">
+                                        <table class="table table-sm table-bordered table-hover">
+                                            <thead class="text-xs bg-sky sticky-header">
+                                                <tr>
+                                                    <th>ACCOUNT</th>
+                                                    <th>DATE</th>
+                                                    <th>SOURCE TYPE</th>
+                                                    <th class="col-3">DESCRIPTION</th>
+                                                    <th class="text-center ">REFERENCE</th>
+                                                    <th class="text-center ">DEBIT</th>
+                                                    <th class="text-center ">CREDIT</th>
+                                                    <th class="text-center ">BALANCE</th>
+                                                    <th class="text-center ">GROSS</th>
+                                                    <th class="text-center ">TAX</th>
+                                                </tr>
+                                            </thead>
 
-                                </tbody>
-                            </table> --}}
-
-
-                            @if ($data)
-                                <h3>Imported Data:</h3>
-                                <table border="1">
-                                    <tr>
-                                        @foreach ($data[0] as $header)
-                                            <th>{{ $header }}</th>
-                                        @endforeach
-                                    </tr>
-                                    @foreach ($data as $index => $row)
-                                        @if ($index > 0)
-                                            <tr>
-                                                @foreach ($row as $cell)
-                                                    <td>{{ $cell }}</td>
+                                            {{-- end of pending --}}
+                                            <tbody class="text-xs">
+                                                @foreach ($dataList as $list)
+                                                    <tr>
+                                                        <td>{{ $list->ACCOUNT }}</td>
+                                                        <td>{{ $list->DATE }}</td>
+                                                        <td>{{ $list->SOURCE_TYPE }}</td>
+                                                        <td>{{ $list->DESCRIPTION }}</td>
+                                                        <td>{{ $list->REFERENCE }}</td>
+                                                        <td>{{ $list->DEBIT }}</td>
+                                                        <td>{{ $list->CREDIT }}</td>
+                                                        <td>{{ $list->BALANCE }}</td>
+                                                        <td>{{ $list->GROSS }}</td>
+                                                        <td>{{ $list->TAX }}</td>
+                                                    </tr>
                                                 @endforeach
-                                            </tr>
-                                        @endif
-                                    @endforeach
-                                </table>
-                            @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
