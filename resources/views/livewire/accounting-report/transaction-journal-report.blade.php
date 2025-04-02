@@ -35,12 +35,16 @@
                                     </div>
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
-                                            <button class="btn btn-danger btn-xs w-25" wire:click='generate()'>
+                                            <button class="btn btn-danger btn-xs w-25"   wire:loading.attr='disabled' wire:click='generate()'>
                                                 Generate
                                             </button>
-                                            <button class="btn btn-success btn-xs w-25" wire:click='export()'>
+                                            <button class="btn btn-success btn-xs w-25"   wire:loading.attr='disabled' wire:click='export()'>
                                                 Export
                                             </button>
+
+                                            <div wire:loading.delay>
+                                                <span class='spinner'></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
