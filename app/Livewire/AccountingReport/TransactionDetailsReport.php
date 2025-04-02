@@ -87,9 +87,7 @@ class TransactionDetailsReport extends Component
             session()->flash('error', 'Please generate first.');
             return;
         }
-        // return Excel::download(new GeneralLedgerExport(
-        //     $this->dataList
-        // ), 'general-ledger-export.xlsx');
+
     }
 
     public function render()

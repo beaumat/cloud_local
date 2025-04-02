@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ItemSoa;
 use App\Models\ItemSoaType;
+use Illuminate\Support\Facades\DB;
 
 class ItemSoaServices
 {
@@ -178,6 +179,37 @@ class ItemSoaServices
 
         return $result;
     }
+    public function GetListTypeFixedQty(int $LOCATION_ID, int $TYPE, int $QTY = 1)
+    {
+
+
+        $result = ItemSoa::query()
+            ->select([
+                'soa_item.ID',
+                'soa_item.TYPE',
+                'soa_item_type.DESCRIPTION as TYPE_NAME',
+                'soa_item.ITEM_NAME',
+                'soa_item.UNIT_NAME',
+                'soa_item.ACTUAL_BASE',
+                'soa_item.DOSAGE',
+                'soa_item.ROUTE',
+                'soa_item.FREQUENCY',
+                'soa_item.BRAND',
+                'soa_item.SC_BASE',
+                DB::raw(" ($QTY * soa_item.RATE) as RATE")
+
+            ])
+            ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('INACTIVE', '=', false)
+            ->where('TYPE', '=', $TYPE)
+            ->where('SOA_BASE', '=', true)
+            ->orderBy('TYPE', 'asc')
+            ->orderBy('LINE', 'asc')
+            ->get();
+
+        return $result;
+    }
     public static function getTotal(int $GROUP_ID, int $LOCATION_ID): float
     {
         return (float) ItemSoa::where('soa_item.GROUP_ID', '=', $GROUP_ID)
@@ -191,6 +223,14 @@ class ItemSoaServices
             ->where('INACTIVE', '=', false)
             ->where('TYPE', '=', 1)
             ->where('SC_BASE', '=', true)
+            ->exists();
+    }
+    public function HaveSOABase(int $LOCATION_ID): bool
+    {
+        return (bool) ItemSoa::where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('INACTIVE', '=', false)
+            ->where('TYPE', '=', 1)
+            ->where('SOA_BASE', '=', true)
             ->exists();
     }
     public function GetMedicineListBySCBase(int $LOCATION_ID)
