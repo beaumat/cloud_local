@@ -2,6 +2,7 @@
 
 namespace App\Livewire\AccountingReport;
 
+use App\Exports\TransactionDetailsExport;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\DateServices;
@@ -9,10 +10,11 @@ use App\Services\LocationServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Account Transaction Report')]
 class TransactionDetailsReport extends Component
-{   
+{
 
 
     public string $TEMP_ACCOUNT = "";
@@ -22,16 +24,16 @@ class TransactionDetailsReport extends Component
 
     public float $TOTAL_DEBIT = 0;
     public float $TOTAL_CREDIT = 0;
-    public float $BALANCE  = 0;
+    public float $BALANCE = 0;
     public string $DATE_FROM;
     public string $DATE_TO;
     public int $LOCATION_ID;
     public $locationList = [];
-    public $accountList  = [];
+    public $accountList = [];
     public $accountTypeList = [];
     public array $selectedAccount = [];
     public array $selectedAccountType = [];
-    public $dataList =  [];
+    public $dataList = [];
     private $accountJournalServices;
     private $dateServices;
     private $locationServices;
@@ -65,7 +67,7 @@ class TransactionDetailsReport extends Component
     {
         $this->DATE_FROM = $this->dateServices->NowDate();
         $this->DATE_TO = $this->dateServices->NowDate();
-        $this->LOCATION_ID =  $this->userServices->getLocationDefault();
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
         $this->accountList = $this->accountServices->getAccount(false);
         $this->accountTypeList = $this->accountServices->GetTypeList();
@@ -88,6 +90,9 @@ class TransactionDetailsReport extends Component
             return;
         }
 
+        return Excel::download(new TransactionDetailsExport(
+            $this->dataList
+        ), 'transaction-journal-export.xlsx');
     }
 
     public function render()

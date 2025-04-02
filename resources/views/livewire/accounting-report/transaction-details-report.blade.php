@@ -36,10 +36,13 @@
                                     </div>
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
-                                            <button class="btn btn-danger btn-xs w-25"
-                                                wire:click='generate()'>Generate</button>
-                                            <button class="btn btn-success btn-xs w-25"
-                                                wire:click='export()'>Export</button>
+                                            <button class="btn btn-danger btn-xs w-25" wire:click='generate()'
+                                                wire:loading.attr='disabled'>Generate</button>
+                                            <button class="btn btn-success btn-xs w-25" wire:click='export()'
+                                                wire:loading.attr='disabled'>Export</button>
+                                            <div wire:loading.delay>
+                                                <span class='spinner'></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -150,48 +153,40 @@
                                     @endif
                                 @endif
 
+                                @php
+                                    if ($list->DEBIT > 0) {
+                                        $TOTAL_DEBIT = $TOTAL_DEBIT + $list->DEBIT;
+                                    }
+
+                                    if ($list->CREDIT > 0) {
+                                        $TOTAL_CREDIT = $TOTAL_CREDIT + $list->CREDIT;
+                                    }
+
+                                    if ($list->DEBIT > 0) {
+                                        $BALANCE = $BALANCE + $list->DEBIT ?? 0;
+                                    } else {
+                                        $BALANCE = $BALANCE - $list->CREDIT ?? 0;
+                                    }
+                                @endphp
+
                                 <tr>
                                     <td>
                                         @if ($list->JOURNAL_NO != 'F')
                                             {{ date('m/d/Y', strtotime($list->DATE)) }}
                                         @endif
-
                                     </td>
                                     <td>{{ $list->TYPE }}</td>
                                     <td>{{ $list->TX_NAME }}</td>
                                     <td>{{ $list->TX_CODE }}</td>
-
                                     <td>{{ $list->LOCATION }}</td>
-
-                                    @php
-                                        if ($list->DEBIT > 0) {
-                                            $TOTAL_DEBIT = $TOTAL_DEBIT + $list->DEBIT;
-                                        }
-
-                                        if ($list->CREDIT > 0) {
-                                            $TOTAL_CREDIT = $TOTAL_CREDIT + $list->CREDIT;
-                                        }
-                                    @endphp
-
                                     <td class="text-right">{{ $list->DEBIT > 0 ? number_format($list->DEBIT, 2) : '' }}
                                     </td>
                                     <td class="text-right">
-                                        {{ $list->CREDIT > 0 ? number_format($list->CREDIT, 2) : '' }}
-                                    </td>
-
-                                    @php
-                                        if ($list->DEBIT > 0) {
-                                            $BALANCE = $BALANCE + $list->DEBIT ?? 0;
-                                        } else {
-                                            $BALANCE = $BALANCE - $list->CREDIT ?? 0;
-                                        }
-                                    @endphp
+                                        {{ $list->CREDIT > 0 ? number_format($list->CREDIT, 2) : '' }} </td>
                                     <td
                                         class="font-weight-bold text-right   @if ($list->JOURNAL_NO == 'F') text-info @endif">
-
                                         {{ $BALANCE > 0 ? number_format($BALANCE, 2) : '(' . number_format(str_replace('-', '', $BALANCE), 2) . ')' }}
                                     </td>
-
                                     <td class="text-right text-primary">
                                         @if ($list->JOURNAL_NO != 'F')
                                             {{ $list->DEBIT > 0 ? number_format($list->DEBIT, 2) : '(' . number_format($list->CREDIT, 2) . ')' }}
@@ -204,7 +199,6 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-
                                 <td></td>
                                 <td class="text-right text-info">
                                     <div class="border-top border-secondary">
@@ -221,10 +215,8 @@
                                     </div>
                                 </td>
                                 <td>
-
                                 </td>
                             </tr>
-
                         </tbody>
                     </table>
                 </div>
