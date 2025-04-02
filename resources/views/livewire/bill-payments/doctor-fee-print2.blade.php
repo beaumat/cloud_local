@@ -62,21 +62,26 @@
                                         {{ number_format($list->AMOUNT, 2) }} &nbsp;</td>
                                 </tr>
                             @endforeach
-                            <tr>
+
+                        </tbody>
+                    </table>
+                    <table class="w-100 mt-4">
+                    
+                        <tbody>
+                                <tr>
                                 <th></th>
-                                <th>TOTAL : <span class="text-danger">{{ $TOTAL_TREATMENT }}</span></th>
+                                <th class="text-danger h5">No. Treatment : <span class="">{{ $TOTAL_TREATMENT }}</span></th>
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
                
                                 <th class="text-right h5 text-danger"> </th>
-                                <th class="text-right h5 text-danger">{{ number_format($TOTAL_PAID,2) }} </th>
-                                <th class="text-right h5 text-danger">{{ number_format($TOTAL_TAX,2) }} </th>
-                                <th class="text-right h5 text-danger">{{ number_format($TOTAL_AMOUNT, 2) }}
+                                <th class="text-right h5 text-danger">Paid: {{ number_format($TOTAL_PAID,2) }} </th>
+                                <th class="text-right h5 text-danger">WTax: {{ number_format($TOTAL_TAX,2) }} </th>
+                                <th class="text-right h5 text-danger">Total: {{ number_format($TOTAL_AMOUNT, 2) }}
                                 </th>
                             </tr>
                         </tbody>
                     </table>
-              
                 </div>
 
                 <div class="col-12 mt-4">
