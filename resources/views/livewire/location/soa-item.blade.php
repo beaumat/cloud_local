@@ -297,7 +297,6 @@
                                             <td>
                                                 <input type="text" class="w-100" wire:model='DOSAGE' />
                                             </td>
-
                                             <td>
                                                 <input type="text" class="w-100" wire:model='ROUTE' />
                                             </td>
@@ -316,6 +315,10 @@
                                             <td class="text-center">
                                                 <input type="checkbox" class="check-input mt-2"
                                                     wire:model='SOA_BASE' />
+                                            </td>
+                                            <td>
+                                                <input name="GROUP_ID" type="number" class="w-100"
+                                                    wire:model='GROUP_ID' />
                                             </td>
                                             <td>
                                                 <button type="submit" class="btn btn-xs btn-success w-100">

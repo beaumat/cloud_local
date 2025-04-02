@@ -20,16 +20,16 @@ class SoaItem extends Component
     public int $ID;
     public int $TYPE;
     public int $LINE;
-    public string $ITEM_NAME;
-    public string $UNIT_NAME;
-    public float $RATE;
-    public string $DOSAGE;
-    public string $ROUTE;
-    public string $FREQUENCY;
-    public string $BRAND;
-    public int $GROUP_ID;
-    public bool $SC_BASE;
-    public bool $SOA_BASE;
+    public string $ITEM_NAME = '';
+    public string $UNIT_NAME = '';
+    public float $RATE = 0;
+    public string $DOSAGE = '';
+    public string $ROUTE = '';
+    public string $FREQUENCY = '';
+    public string $BRAND = '';
+    public int $GROUP_ID = 0;
+    public bool $SC_BASE = false;
+    public bool $SOA_BASE = false;
     public $locationList = [];
     public $TO_LOCATION_ID;
     public bool $ACTUAL_BASE;
@@ -177,7 +177,7 @@ class SoaItem extends Component
 
 
         try {
-            $this->itemSoaServices->update( $this->editid, $this->editTYPE, $this->editLINE, $this->editITEM_NAME, $this->editUNIT_NAME, $this->editRATE, $this->editACTUAL_BASE, $this->editDOSAGE, $this->editROUTE, $this->editFREQUENCY, $this->editBRAND, $this->editGROUP_ID, $this->editSC_BASE, $this->editSOA_BASE );
+            $this->itemSoaServices->update($this->editid, $this->editTYPE, $this->editLINE, $this->editITEM_NAME, $this->editUNIT_NAME, $this->editRATE, $this->editACTUAL_BASE, $this->editDOSAGE, $this->editROUTE, $this->editFREQUENCY, $this->editBRAND, $this->editGROUP_ID, $this->editSC_BASE, $this->editSOA_BASE);
             $this->Canceled();
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
@@ -192,7 +192,7 @@ class SoaItem extends Component
         } else {
             $this->itemSoaServices->UpdateInactive($ID, true);
         }
-      
+
     }
 
     public function Delete(int $ID)
