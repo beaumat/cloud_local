@@ -4,6 +4,7 @@ namespace App\Livewire\BillPayments;
 
 use App\Services\BillingServices;
 use App\Services\BillPaymentServices;
+use App\Services\LocationServices;
 use App\Services\TaxServices;
 use App\Services\WithholdingTaxServices;
 use Illuminate\Support\Facades\DB;
@@ -44,16 +45,19 @@ class DoctorPaid extends Component
     private $billPaymentServices;
     private $withholdingTaxServices;
     private $taxServices;
+    private $locationServices;
     public function boot(
         BillingServices $billingServices,
         BillPaymentServices $billPaymentServices,
         WithholdingTaxServices $withholdingTaxServices,
-        TaxServices $taxServices
+        TaxServices $taxServices,
+        LocationServices $locationServices
     ) {
         $this->billingServices = $billingServices;
         $this->billPaymentServices = $billPaymentServices;
         $this->withholdingTaxServices = $withholdingTaxServices;
         $this->taxServices = $taxServices;
+        $this->locationServices = $locationServices;
     }
     public function mount(int $VENDOR_ID, int $LOCATION_ID, int $CHECK_ID, float $AMOUNT, float $AMOUNT_APPLIED)
     {
