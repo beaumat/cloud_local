@@ -27,6 +27,7 @@ class ItemSoa extends Model
         'BRAND',
         'INACTIVE',
         'GROUP_ID',
-        'SC_BASE'
+        'SC_BASE',
+        'SOA_BASE'
     ];
 }

@@ -56,6 +56,7 @@
                                         <th class="">Frequency</th>
                                         <th class=" text-center">Is Actual</th>
                                         <th class=" text-center">SC Base</th>
+                                        <th class=" text-center">SOA Base</th>
                                         <th class="col-1 text-center">Group</th>
                                         <th class="col-2 text-center">Action</th>
                                     </tr>
@@ -182,6 +183,17 @@
                                                     @endif
                                                 @endif
                                             </td>
+                                            <td class="text-center col-1">
+                                                @if ($list->ID == $editid)
+                                                    <input type="checkbox" class="check-input mt-2"
+                                                        wire:model='editSOA_BASE' />
+                                                @else
+                                                    @if ($list->SOA_BASE)
+                                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                                    @endif
+                                                @endif
+                                            </td>
+
                                             <td class="col-1">
                                                 @if ($list->ID == $editid)
                                                     <input name="editGROUP_ID" type="number" class="w-100"
@@ -300,6 +312,10 @@
                                             <td class="text-center">
                                                 <input type="checkbox" class="check-input mt-2"
                                                     wire:model='SC_BASE' />
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="checkbox" class="check-input mt-2"
+                                                    wire:model='SOA_BASE' />
                                             </td>
                                             <td>
                                                 <button type="submit" class="btn btn-xs btn-success w-100">

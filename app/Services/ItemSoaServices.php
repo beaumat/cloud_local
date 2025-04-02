@@ -45,7 +45,8 @@ class ItemSoaServices
         string $FREQUENCY,
         string $BRAND,
         int $GROUP_ID,
-        bool $SC_BASE
+        bool $SC_BASE,
+        bool $SOA_BASE
     ) {
         $ID = $this->object->ObjectNextID('SOA_ITEM');
 
@@ -64,7 +65,8 @@ class ItemSoaServices
                 'FREQUENCY' => $FREQUENCY,
                 'BRAND' => $BRAND,
                 'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-                'SC_BASE' => $SC_BASE
+                'SC_BASE' => $SC_BASE,
+                'SOA_BASE' => $SOA_BASE
             ]
         );
 
@@ -83,7 +85,8 @@ class ItemSoaServices
         string $FREQUENCY,
         string $BRAND,
         int $GROUP_ID,
-        bool $SC_BASE
+        bool $SC_BASE,
+        bool $SOA_BASE
     ) {
         ItemSoa::where('ID', '=', $ID)
             ->update(
@@ -100,7 +103,8 @@ class ItemSoaServices
                     'FREQUENCY' => $FREQUENCY,
                     'BRAND' => $BRAND,
                     'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-                    'SC_BASE' => $SC_BASE
+                    'SC_BASE' => $SC_BASE,
+                    'SOA_BASE' => $SOA_BASE
                 ]
             );
     }
@@ -133,7 +137,8 @@ class ItemSoaServices
                 'soa_item.BRAND',
                 'soa_item.INACTIVE',
                 'soa_item.GROUP_ID',
-                'soa_item.SC_BASE'
+                'soa_item.SC_BASE',
+                'soa_item.SOA_BASE'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -211,6 +216,36 @@ class ItemSoaServices
             ->where('INACTIVE', '=', false)
             ->where('TYPE', '=', 1)
             ->where('SC_BASE', '=', true)
+            ->orderBy('TYPE', 'asc')
+            ->orderBy('LINE', 'asc')
+            ->get();
+
+        return $result;
+
+    }
+
+    public function GetMedicineListBySOA_Base(int $LOCATION_ID)
+    {
+        $result = ItemSoa::query()
+            ->select([
+                'soa_item.ID',
+                'soa_item.TYPE',
+                'soa_item_type.DESCRIPTION as TYPE_NAME',
+                'soa_item.ITEM_NAME',
+                'soa_item.UNIT_NAME',
+                'soa_item.RATE',
+                'soa_item.ACTUAL_BASE',
+                'soa_item.DOSAGE',
+                'soa_item.ROUTE',
+                'soa_item.FREQUENCY',
+                'soa_item.BRAND',
+                'soa_item.SC_BASE'
+            ])
+            ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('INACTIVE', '=', false)
+            ->where('TYPE', '=', 1)
+            ->where('SOA_BASE', '=', true)
             ->orderBy('TYPE', 'asc')
             ->orderBy('LINE', 'asc')
             ->get();
@@ -302,7 +337,8 @@ class ItemSoaServices
                 $list->FREQUENCY,
                 $list->BRAND,
                 $list->GROUP_ID > 0 ? $list->GROUP_ID : null,
-                $list->SC_BASE
+                $list->SC_BASE,
+                $list->SOA_BASE
             );
 
             if ($list->ACTUAL_BASE) {

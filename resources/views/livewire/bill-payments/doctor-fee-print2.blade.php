@@ -55,7 +55,6 @@
                                     <td class="text-center h5 font-weight-normal">{{ $list->NO_TREATMENT }}</td>
                                     <td class="text-right h5 font-weight-normal">
                                         {{ number_format($list->AMOUNT_PAID, 2) }} &nbsp;</td>
-
                                     <td class="text-right h5 font-weight-normal">
                                         {{ number_format($list->TAX_AMOUNT, 2) }} &nbsp;</td>
                                     <td class="text-right h5 font-weight-normal">

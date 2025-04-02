@@ -29,7 +29,7 @@ class SoaItem extends Component
     public string $BRAND;
     public int $GROUP_ID;
     public bool $SC_BASE;
-
+    public bool $SOA_BASE;
     public $locationList = [];
     public $TO_LOCATION_ID;
     public bool $ACTUAL_BASE;
@@ -47,7 +47,7 @@ class SoaItem extends Component
     public string $editBRAND;
     public int $editGROUP_ID;
     public bool $editSC_BASE;
-
+    public bool $editSOA_BASE;
     public $dataList = [];
     public $search;
     public $typeList = [];
@@ -123,7 +123,8 @@ class SoaItem extends Component
                 $this->FREQUENCY,
                 $this->BRAND,
                 $this->GROUP_ID,
-                $this->SC_BASE
+                $this->SC_BASE,
+                $this->SOA_BASE
             );
 
             $this->CleanAdd();
@@ -152,6 +153,7 @@ class SoaItem extends Component
             $this->editBRAND = $data->BRAND ?? '';
             $this->editGROUP_ID = $data->GROUP_ID ?? 0;
             $this->editSC_BASE = $data->SC_BASE ?? false;
+            $this->editSOA_BASE = $data->SOA_BASE ?? false;
         }
     }
     public function Update()
@@ -175,7 +177,7 @@ class SoaItem extends Component
 
 
         try {
-            $this->itemSoaServices->update( $this->editid, $this->editTYPE, $this->editLINE, $this->editITEM_NAME, $this->editUNIT_NAME, $this->editRATE, $this->editACTUAL_BASE, $this->editDOSAGE, $this->editROUTE, $this->editFREQUENCY, $this->editBRAND, $this->editGROUP_ID, $this->editSC_BASE );
+            $this->itemSoaServices->update( $this->editid, $this->editTYPE, $this->editLINE, $this->editITEM_NAME, $this->editUNIT_NAME, $this->editRATE, $this->editACTUAL_BASE, $this->editDOSAGE, $this->editROUTE, $this->editFREQUENCY, $this->editBRAND, $this->editGROUP_ID, $this->editSC_BASE, $this->editSOA_BASE );
             $this->Canceled();
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
