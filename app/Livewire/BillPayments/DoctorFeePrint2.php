@@ -24,6 +24,8 @@ class DoctorFeePrint2 extends Component
     public $DOCTOR_NAME;
     public $LOCATION_NAME;
     public float $TOTAL_TREATMENT = 0;
+    public float $TOTAL_TAX =0;
+    public float $TOTAL_PAID  =  0;
     public float $TOTAL_AMOUNT = 0;
     public string $USER_NAME;
     public string $PERIOD;

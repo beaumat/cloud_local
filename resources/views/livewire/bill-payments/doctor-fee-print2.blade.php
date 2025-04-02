@@ -40,7 +40,9 @@
                                 @php
                                     $n = $n + 1;
                                     $TOTAL_TREATMENT = $TOTAL_TREATMENT + $list->NO_TREATMENT;
-                                    $TOTAL_AMOUNT = $TOTAL_AMOUNT + $list->AMOUNT;
+                                    $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT_PAID ?? 0;
+                                    $TOTAL_TAX = $TOTAL_TAX + $list->TAX_AMOUNT ?? 0;
+                                    $TOTAL_AMOUNT = $TOTAL_AMOUNT + $list->AMOUNT ?? 0;
                                 @endphp
                                 <tr>
                                     <th class="text-center h5 font-weight-normalf">{{ $n }}</th>
@@ -66,10 +68,12 @@
                     <table class="w-100 mt-4">
                         <thead>
                             <tr>
-                                <th class="col-1 h5"></th>
-                                <th class="col-3 h5"></th>
+                              <th class="col-1 h5 text-center"></th>
+                                <th class="col-3 h5"> </th>
                                 <th class="col-2 text-center h5"></th>
                                 <th class="col-2 text-center h5"></th>
+                                <th class="col-1 text-center h5"></th>
+                                <th class="col-1 text-center h5"></th>
                                 <th class="col-1 text-center h5"></th>
                                 <th class="col-2 text-center h5"></th>
                             </tr>
@@ -79,9 +83,12 @@
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
+                                <th>&nbsp;</th>
                                 <th class="text-center h5 text-danger">TOTAL</th>
-                                <th class="text-center h5 text-danger">{{ $TOTAL_TREATMENT }} &nbsp;&nbsp;</th>
-                                <th class="text-right h5 text-danger">{{ number_format($TOTAL_AMOUNT, 2) }}&nbsp;&nbsp;
+                                <th class="text-right h5 text-danger">{{ $TOTAL_TREATMENT }} </th>
+                                <th class="text-right h5 text-danger">{{ $TOTAL_PAID }} </th>
+                                <th class="text-right h5 text-danger">{{ $TOTAL_TAX }} </th>
+                                <th class="text-right h5 text-danger">{{ number_format($TOTAL_AMOUNT, 2) }}
                                 </th>
                             </tr>
                         </tbody>
