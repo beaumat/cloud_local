@@ -92,7 +92,7 @@ class TransactionDetailsReport extends Component
 
         return Excel::download(new TransactionDetailsExport(
             $this->dataList
-        ), 'transaction-journal-export.xlsx');
+        ), 'account-transaction-details-export.xlsx');
     }
 
     public function render()
