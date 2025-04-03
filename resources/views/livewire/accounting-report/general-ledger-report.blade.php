@@ -34,10 +34,14 @@
                                     </div>
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
-                                            <button class="btn btn-danger btn-xs w-25"
+                                            <button class="btn btn-danger btn-xs w-25" wire:loading.attr='disabled'
                                                 wire:click='generate()'>Generate</button>
-                                            <button class="btn btn-success btn-xs w-25"
+                                            <button class="btn btn-success btn-xs w-25" wire:loading.attr='disabled'
                                                 wire:click='export()'>Export</button>
+
+                                                 <div wire:loading.delay>
+                                                <span class='spinner'></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -80,12 +84,12 @@
                         <thead class="bg-sky h1">
                             <tr>
 
-                                <th>Type</th>
+                                <th >Type</th>
                                 <th>Date</th>
-                                <th>Reference No.</th>
-                                <th class="col-2">Name/Details</th>
+                                <th class="col-1">Reference No.</th>
+                                <th class="col-4">Name/Details</th>
                                 <th>Location</th>
-                                <th class="col-2">Notes</th>
+                                <th class="col-1">Notes</th>
                                 <th class="text-right">Debit</th>
                                 <th class="text-right">Credit</th>
                                 <th class="text-right">Balance</th>
@@ -148,7 +152,10 @@
                                 <tr>
                                     <td>{{ $list->TYPE }}</td>
                                     <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                    <td>{{ $list->TX_CODE }}</td>
+                                    <td>
+                                        <span class="text-primary" type="button" wire:click='openDetails({{ $list->JOURNAL_NO }})'>
+                                            {{ $list->TX_CODE }}</span>
+                                    </td>
                                     <td>{{ $list->TX_NAME }}</td>
                                     <td>{{ $list->LOCATION }}</td>
                                     <td>{{ $list->TX_NOTES }}</td>
@@ -185,8 +192,14 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td class="text-right text-info"> <div class="border-top border-secondary"> {{ $TEMP_DEBIT > 0 ? number_format($TEMP_DEBIT, 2) : '0.00' }} </div> </td>
-                                <td class="text-right text-info"> <div class="border-top border-secondary"> {{ $TEMP_CREDIT > 0 ? number_format($TEMP_CREDIT, 2) : '0.00' }} </div> </td>
+                                <td class="text-right text-info">
+                                    <div class="border-top border-secondary">
+                                        {{ $TEMP_DEBIT > 0 ? number_format($TEMP_DEBIT, 2) : '0.00' }} </div>
+                                </td>
+                                <td class="text-right text-info">
+                                    <div class="border-top border-secondary">
+                                        {{ $TEMP_CREDIT > 0 ? number_format($TEMP_CREDIT, 2) : '0.00' }} </div>
+                                </td>
                                 <td></td>
                             </tr>
                             <tr>

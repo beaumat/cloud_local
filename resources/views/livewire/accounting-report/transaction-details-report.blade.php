@@ -177,7 +177,12 @@
                                     </td>
                                     <td>{{ $list->TYPE }}</td>
                                     <td>{{ $list->TX_NAME }}</td>
-                                    <td>{{ $list->TX_CODE }}</td>
+                                    <td>
+                                        <span class="text-primary" type="button"
+                                            wire:click='openDetails({{ $list->JOURNAL_NO }})'>
+                                            {{ $list->TX_CODE }}
+                                        </span>
+                                    </td>
                                     <td>{{ $list->LOCATION }}</td>
                                     <td class="text-right">{{ $list->DEBIT > 0 ? number_format($list->DEBIT, 2) : '' }}
                                     </td>
