@@ -94,7 +94,13 @@ class TransactionDetailsReport extends Component
             $this->dataList
         ), 'account-transaction-details-export.xlsx');
     }
-
+    public function openDetails(int $JN)
+    {
+        $url = $this->accountJournalServices->getUrlBy($JN);
+        
+       $this->js("window.open('$url', '_blank')");
+        
+    }
     public function render()
     {
         return view('livewire.accounting-report.transaction-details-report');

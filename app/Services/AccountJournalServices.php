@@ -589,7 +589,7 @@ class AccountJournalServices
                 'aj.OBJECT_DATE as DATE',
                 'a.TAG as ACCOUNT_CODE',
                 'a.NAME as ACCOUNT_TITLE',
-                'd.DESCRIPTION as TYPE',
+                DB::raw("if(d.ID = 21, $this->CHECK_TYPE, d.DESCRIPTION) as TYPE"),
                 'l.NAME as LOCATION',
                 DB::raw($this->TX_CODE),
                 DB::raw($this->TX_NOTES),
@@ -615,7 +615,7 @@ class AccountJournalServices
                 'aj.OBJECT_DATE as DATE',
                 'a.TAG as ACCOUNT_CODE',
                 'a.NAME as ACCOUNT_TITLE',
-                'd.DESCRIPTION as TYPE',
+                DB::raw("if(d.ID = 21, $this->CHECK_TYPE, d.DESCRIPTION) as TYPE"),
                 'l.NAME as LOCATION',
                 DB::raw($this->TX_CODE),
                 DB::raw($this->TX_NOTES),
@@ -731,7 +731,7 @@ class AccountJournalServices
         $result = DB::table('account_journal as aj')
             ->select([
                 'aj.OBJECT_DATE as DATE',
-                'd.DESCRIPTION as TYPE',
+                DB::raw("if(d.ID = 21, $this->CHECK_TYPE, d.DESCRIPTION) as TYPE"),
                 'l.NAME as LOCATION',
                 DB::raw($this->TX_CODE),
                 DB::raw($this->TX_NOTES),
@@ -791,7 +791,7 @@ class AccountJournalServices
                 'aj.OBJECT_DATE as DATE',
                 'a.TAG as ACCOUNT_CODE',
                 'a.NAME as ACCOUNT_TITLE',
-                'd.DESCRIPTION as TYPE',
+                DB::raw("if(d.ID = 21, $this->CHECK_TYPE, d.DESCRIPTION) as TYPE"),
                 'l.NAME as LOCATION',
                 DB::raw($this->TX_NAME),
                 DB::raw($this->TX_CODE),
@@ -814,13 +814,7 @@ class AccountJournalServices
                 $query->whereIn('a.TYPE', $accountType);
             });
 
-        //     $forwardedQuery = DB::table('forwarded_table')
-        //     ->select('TAG', 'OBJECT_DATE')
-        //     ->where('some_condition', true);
 
-        // $resultQuery = DB::table('result_table')
-        //     ->select('TAG', 'OBJECT_DATE')
-        //     ->where('another_condition', true);
 
         $final_result = DB::query()
             ->fromSub(
@@ -841,7 +835,7 @@ class AccountJournalServices
                 'aj.OBJECT_DATE as DATE',
                 'a.TAG as ACCOUNT_CODE',
                 'a.NAME as ACCOUNT_TITLE',
-                'd.DESCRIPTION as TYPE',
+                DB::raw("if(d.ID = 21, $this->CHECK_TYPE, d.DESCRIPTION) as TYPE"),
                 'l.NAME as LOCATION',
                 DB::raw($this->TX_CODE),
                 DB::raw($this->TX_NOTES),
@@ -938,12 +932,7 @@ class AccountJournalServices
                         } else {
                             $URL = route('vendorsbill_payment_edit', ['id' => $result->OBJECT_ID]);  // bill payment
                         }
-
                     }
-
-
-
-
                     break;
                 case 22:
                     $URL = route('bankingdeposit_edit', ['id' => $result->OBJECT_ID]);  // deposit
