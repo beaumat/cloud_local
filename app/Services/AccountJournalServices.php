@@ -862,7 +862,7 @@ class AccountJournalServices
             ->join('object_type_map as o', 'o.ID', '=', 'account_journal.OBJECT_TYPE')
             ->join('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->where('account_journal.JOURNAL_NO', '=', $Journal_no)
-            ->whereIn('account_journal.OBJECT_TYPE', ['2', '12', '16', '19', '23', '38', '41', '52', '59', '57', '67', '70', '72', '81', '83', '93', '95', '113', '121', '127', '135'])
+            ->whereIn('account_journal.OBJECT_TYPE', ['2', '12', '16', '19', '23', '38', '41', '52', '59', '57', '67', '70', '72', '81', '83', '84', '93', '95', '113', '121', '127', '135'])
             ->first();
 
 
@@ -915,7 +915,11 @@ class AccountJournalServices
                     $URL = route('bankingdeposit_edit', ['id' => $result->OBJECT_ID]);  // deposit
                     break;
                 case 23:
-                    $URL = route('companygeneral_journal_edit', ['id' => $result->OBJECT_ID]);  // general journal
+
+                    $dataRes = DB::table("general_journal_details")->select(['GENERAL_JOURNAL_ID'])->where('ID', '=', $result->OBJECT_ID)->first();
+                    if ($dataRes) {
+                        $URL = route('companygeneral_journal_edit', ['id' => $dataRes->GENERAL_JOURNAL_ID]);  // general journal
+                    }
                     break;
                 case 26:
                     $URL = route('bankingfund_transfer_edit', ['id' => $result->OBJECT_ID]);  // fund transfer

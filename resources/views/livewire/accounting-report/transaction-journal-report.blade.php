@@ -105,7 +105,7 @@
                                     <td>{{ $list->JOURNAL_NO }}</td>
                                     <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                     <td>{{ $list->TYPE }}</td>
-                                    <td class="text-primary" wire:click='openDetails({{ $list->JOURNAL_NO }})'>
+                                    <td class="text-primary" type="button" wire:click='openDetails({{ $list->JOURNAL_NO }})'>
                                         {{ $list->TX_CODE }}</td>
                                     <td>{{ $list->TX_NAME }}</td>
                                     <td>{{ $list->LOCATION }}</td>
