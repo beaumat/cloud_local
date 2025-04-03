@@ -160,7 +160,7 @@
             </div>
         </div>
     </section>
-    <script>
+    {{-- <script>
         window.open("{{ $url }}", "_blank");
-    </script>
+    </script> --}}
 </div>

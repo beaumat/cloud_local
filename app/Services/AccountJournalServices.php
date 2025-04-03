@@ -857,33 +857,93 @@ class AccountJournalServices
     }
     public function getUrlBy(int $Journal_no): string
     {
-        $URL  = ""; 
+        $URL = "";
         $result = AccountJournal::select(['d.ID as DOC_ID', 'account_journal.OBJECT_ID'])
             ->join('object_type_map as o', 'o.ID', '=', 'account_journal.OBJECT_TYPE')
             ->join('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
-            ->where('JOURNAL_NO', '=', $Journal_no)
-            ->whereIn('OBJECT_ID', ['2', '12', '16', '19', '23', '38', '41', '52', '59', '57', '67', '70', '72', '81', '83', '93', '95', '113', '121', '127', '135'])
+            ->where('account_journal.JOURNAL_NO', '=', $Journal_no)
+            ->whereIn('account_journal.OBJECT_TYPE', ['2', '12', '16', '19', '23', '38', '41', '52', '59', '57', '67', '70', '72', '81', '83', '93', '95', '113', '121', '127', '135'])
             ->first();
 
-            dd($result);
+
         if ($result) {
 
             $DOC_ID = (int) $result->DOC_ID;
 
-       
+
             switch ($DOC_ID) {
                 case 1:
-
-                    $URL = route('vendorsbills_edit', ['id', $result->OBJECT_ID]);
-                        break;
+                    $URL = route('vendorsbills_edit', ['id' => $result->OBJECT_ID]); // bill
+                    break;
+                case 2:
+                    $URL = route('vendorsbill_payment_edit', ['id' => $result->OBJECT_ID]);  // bill payment
+                    break;
+                case 3:
+                    $URL = route('vendorsbill_credit_edit', ['id' => $result->OBJECT_ID]);  // bill credit
+                    break;
+                case 6:
+                    $URL = route('companyinventory_adjustment_edit', ['id' => $result->OBJECT_ID]);  // inventory adjustment
+                    break;
+                case 7:
+                    $URL = route('companystock_transfer_edit', ['id' => $result->OBJECT_ID]);  // stock transfer
+                    break;
+                case 10:
+                    $URL = route('customersinvoice_edit', ['id' => $result->OBJECT_ID]);  // invoice
+                    break;
+                case 11:
+                    $URL = route('customerspayment_edit', ['id' => $result->OBJECT_ID]);  // payment
+                    break;
+                case 12:
+                    $URL = route('customerscredit_memo_edit', ['id' => $result->OBJECT_ID]);  // credit_memo
+                    break;
+                case 13:
+                    $URL = route('customerssales_receipt_edit', ['id' => $result->OBJECT_ID]);  // sales receipt
+                    break;
+                case 18:
+                    $URL = route('vendorswithholding_tax_edit', ['id' => $result->OBJECT_ID]);  // withholding tax
+                    break;
+                case 19:
+                    $URL = route('companybuild_assembly_edit', ['id' => $result->OBJECT_ID]);  // build assembply
+                    break;
+                case 20:
+                    $URL = route('customerstax_credit_edit', ['id' => $result->OBJECT_ID]);  // tax credit
+                    break;
+                case 21:
+                    $URL = route('bankingmake_cheque_edit', ['id' => $result->OBJECT_ID]);  // write check
+                    break;
+                case 22:
+                    $URL = route('bankingdeposit_edit', ['id' => $result->OBJECT_ID]);  // deposit
+                    break;
+                case 23:
+                    $URL = route('companygeneral_journal_edit', ['id' => $result->OBJECT_ID]);  // general journal
+                    break;
+                case 26:
+                    $URL = route('bankingfund_transfer_edit', ['id' => $result->OBJECT_ID]);  // fund transfer
+                    break;
+                case 27:
+                    $URL = route('patientshemo_edit', ['id' => $result->OBJECT_ID]);  // fund transfer
+                    break;
+                case 31:
+                    $URL = route('companypull_out_edit', ['id' => $result->OBJECT_ID]);  // pull out
+                    break;
+                case 32:
+                    $URL = route('bankingbank_recon_edit', ['id' => $result->OBJECT_ID]);  // bank recon
+                    break;
+                case 33:
+                    $URL = route('companydepreciation_edit', ['id' => $result->OBJECT_ID]);  // depreciation
+                    break;
+                case 34:
+                    $URL = route('bankingbank_transfer_credit', ['id' => $result->OBJECT_ID]);  // bank transfer
+                    break;
                 default:
                     # code...
-                break;
+                    break;
             }
 
-      
+
 
         }
+
         return $URL;
     }
 
