@@ -8,6 +8,27 @@ use Illuminate\Support\Facades\DB;
 
 class AccountJournalServices
 {
+    public string $CHECK_TYPE = "(
+        (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where  check.ID = aj.OBJECT_ID limit 1 )
+        union 
+        (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )
+        union
+        (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1 )
+        union
+        (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1 )
+    )";
+
+
+    public string $CHECK_TYPE_ID = "(
+        (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where  check.ID = aj.OBJECT_ID limit 1 )
+        union 
+        (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )
+        union
+        (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1 )
+        union
+        (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1 )
+    )";
+
     public string $TX_PO = '
     CASE
         WHEN o.`ID` = 2     THEN ( select bill.`CUSTOM_FIELD1` from bill  where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
@@ -676,7 +697,7 @@ class AccountJournalServices
                 'aj.OBJECT_DATE as DATE',
                 'a.TAG as ACCOUNT_CODE',
                 'a.NAME as ACCOUNT_TITLE',
-                'd.DESCRIPTION as TYPE',
+                DB::raw("if(d.ID = 21, $this->CHECK_TYPE, d.DESCRIPTION) as TYPE"),
                 'l.NAME as LOCATION',
                 DB::raw($this->TX_CODE),
                 DB::raw($this->TX_NOTES),
@@ -909,7 +930,20 @@ class AccountJournalServices
                     $URL = route('customerstax_credit_edit', ['id' => $result->OBJECT_ID]);  // tax credit
                     break;
                 case 21:
-                    $URL = route('bankingmake_cheque_edit', ['id' => $result->OBJECT_ID]);  // write check
+
+                    $dataResult = DB::table('check')->select(['TYPE'])->where('ID', '=', $result->OBJECT_ID)->first();
+                    if ($dataResult) {
+                        if ($dataResult->TYPE == 0) {
+                            $URL = route('bankingmake_cheque_edit', ['id' => $result->OBJECT_ID]);  // write check
+                        } else {
+                            $URL = route('vendorsbill_payment_edit', ['id' => $result->OBJECT_ID]);  // bill payment
+                        }
+
+                    }
+
+
+
+
                     break;
                 case 22:
                     $URL = route('bankingdeposit_edit', ['id' => $result->OBJECT_ID]);  // deposit
@@ -937,6 +971,8 @@ class AccountJournalServices
                     $URL = route('companydepreciation_edit', ['id' => $result->OBJECT_ID]);  // depreciation
                     break;
                 case 34:
+
+
                     $URL = route('bankingbank_transfer_credit', ['id' => $result->OBJECT_ID]);  // bank transfer
                     break;
                 default:
