@@ -35,10 +35,12 @@
                                     </div>
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
-                                            <button class="btn btn-danger btn-xs w-25"   wire:loading.attr='disabled' wire:click='generate()'>
+                                            <button class="btn btn-danger btn-xs w-25" wire:loading.attr='disabled'
+                                                wire:click='generate()'>
                                                 Generate
                                             </button>
-                                            <button class="btn btn-success btn-xs w-25"   wire:loading.attr='disabled' wire:click='export()'>
+                                            <button class="btn btn-success btn-xs w-25" wire:loading.attr='disabled'
+                                                wire:click='export()'>
                                                 Export
                                             </button>
 
@@ -103,7 +105,8 @@
                                     <td>{{ $list->JOURNAL_NO }}</td>
                                     <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                     <td>{{ $list->TYPE }}</td>
-                                    <td>{{ $list->TX_CODE }}</td>
+                                    <td class="text-primary" wire:click='openDetails({{ $list->JOURNAL_NO }})'>
+                                        {{ $list->TX_CODE }}</td>
                                     <td>{{ $list->TX_NAME }}</td>
                                     <td>{{ $list->LOCATION }}</td>
                                     <td>{{ $list->ACCOUNT_TITLE }}</td>
@@ -157,4 +160,7 @@
             </div>
         </div>
     </section>
+    <script>
+        window.open("{{ $url }}", "_blank");
+    </script>
 </div>

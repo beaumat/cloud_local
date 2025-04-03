@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AccountJournal;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 
 class AccountJournalServices
@@ -854,4 +855,37 @@ class AccountJournalServices
 
         AccountJournal::where($where)->update($update);
     }
+    public function getUrlBy(int $Journal_no): string
+    {
+        $URL  = ""; 
+        $result = AccountJournal::select(['d.ID as DOC_ID', 'account_journal.OBJECT_ID'])
+            ->join('object_type_map as o', 'o.ID', '=', 'account_journal.OBJECT_TYPE')
+            ->join('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->where('JOURNAL_NO', '=', $Journal_no)
+            ->whereIn('OBJECT_ID', ['2', '12', '16', '19', '23', '38', '41', '52', '59', '57', '67', '70', '72', '81', '83', '93', '95', '113', '121', '127', '135'])
+            ->first();
+
+            dd($result);
+        if ($result) {
+
+            $DOC_ID = (int) $result->DOC_ID;
+
+       
+            switch ($DOC_ID) {
+                case 1:
+
+                    $URL = route('vendorsbills_edit', ['id', $result->OBJECT_ID]);
+                        break;
+                default:
+                    # code...
+                break;
+            }
+
+      
+
+        }
+        return $URL;
+    }
+
+
 }

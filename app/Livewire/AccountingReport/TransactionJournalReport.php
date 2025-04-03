@@ -17,8 +17,8 @@ class TransactionJournalReport extends Component
 {
 
 
-    public  $TOTAL_DEBIT = 0;
-    public  $TOTAL_CREDIT = 0;
+    public $TOTAL_DEBIT = 0;
+    public $TOTAL_CREDIT = 0;
     public string $DATE_FROM;
     public string $DATE_TO;
     public int $LOCATION_ID;
@@ -27,7 +27,7 @@ class TransactionJournalReport extends Component
     public array $selectedAccount = [];
     public $accountTypeList = [];
     public array $selectedAccountType = [];
-
+    public string $url;
     public $dataList = [];
     private $accountJournalServices;
     private $dateServices;
@@ -52,7 +52,7 @@ class TransactionJournalReport extends Component
     {
         $this->DATE_TO = $this->dateServices->NowDate();
         $this->DATE_FROM = $this->dateServices->GetFirstDay_Month($this->DATE_TO);
-        $this->LOCATION_ID =  $this->userServices->getLocationDefault();
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
         $this->accountList = $this->accountServices->getAccount(false);
         $this->accountTypeList = $this->accountServices->GetTypeList();
@@ -61,7 +61,7 @@ class TransactionJournalReport extends Component
     {
         $this->TOTAL_DEBIT = 0;
         $this->TOTAL_CREDIT = 0;
-        $this->dataList = $this->accountJournalServices->getTransactionJournal( $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, $this->selectedAccount, $this->selectedAccountType );
+        $this->dataList = $this->accountJournalServices->getTransactionJournal($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, $this->selectedAccount, $this->selectedAccountType);
     }
     public function updatedlocationid()
     {
@@ -84,6 +84,13 @@ class TransactionJournalReport extends Component
         return Excel::download(new TransactionJournalReportExport(
             $this->dataList
         ), 'transaction-journal-export.xlsx');
+    }
+    public function openDetails(int $JN)
+    {
+        $this->url = $this->accountJournalServices->getUrlBy($JN);
+        dd($this->url);
+       $this->js("window.open('$this->url', '_blank')");
+        
     }
 
     public function render()
