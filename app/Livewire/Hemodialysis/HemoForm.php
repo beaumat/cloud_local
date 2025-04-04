@@ -376,70 +376,72 @@ class HemoForm extends Component
                 'LOCATION_ID' => 'Location'
             ]
         );
+        if ($this->IS_INCOMPLETE == false) {
+            if ($this->ID > 0) {
 
-        if ($this->ID > 0) {
 
+                //Make it restricted
+                if (empty($this->PRE_WEIGHT) && empty($this->PRE_BLOOD_PRESSURE) && empty($this->PRE_BLOOD_PRESSURE2) && empty($this->PRE_HEART_RATE) && empty($this->PRE_O2_SATURATION) && empty($this->PRE_TEMPERATURE) && empty($this->TIME_START) && empty($this->POST_WEIGHT) && empty($this->POST_BLOOD_PRESSURE) && empty($this->POST_BLOOD_PRESSURE2) && empty($this->POST_HEART_RATE) && empty($this->POST_O2_SATURATION) && empty($this->POST_TEMPERATURE) && empty($this->TIME_END)) {
 
-            //Make it restricted
-            if (empty($this->PRE_WEIGHT) && empty($this->PRE_BLOOD_PRESSURE) && empty($this->PRE_BLOOD_PRESSURE2) && empty($this->PRE_HEART_RATE) && empty($this->PRE_O2_SATURATION) && empty($this->PRE_TEMPERATURE) && empty($this->TIME_START) && empty($this->POST_WEIGHT) && empty($this->POST_BLOOD_PRESSURE) && empty($this->POST_BLOOD_PRESSURE2) && empty($this->POST_HEART_RATE) && empty($this->POST_O2_SATURATION) && empty($this->POST_TEMPERATURE) && empty($this->TIME_END)) {
-            } else {
+                } else {
 
-                $this->validate(
-                    [
-                        'PRE_WEIGHT' => 'required|not_in:0',
-                        'PRE_BLOOD_PRESSURE' => 'required|not_in:0',
-                        'PRE_BLOOD_PRESSURE2' => 'required|not_in:0',
-                        'PRE_HEART_RATE' => 'required|not_in:0',
-                        'PRE_O2_SATURATION' => 'required',
-                        'PRE_TEMPERATURE' => 'required',
-                        'TIME_START' => 'required',
-                    ],
-                    [],
-                    [
+                    $this->validate(
+                        [
+                            'PRE_WEIGHT' => 'required|not_in:0',
+                            'PRE_BLOOD_PRESSURE' => 'required|not_in:0',
+                            'PRE_BLOOD_PRESSURE2' => 'required|not_in:0',
+                            'PRE_HEART_RATE' => 'required|not_in:0',
+                            'PRE_O2_SATURATION' => 'required',
+                            'PRE_TEMPERATURE' => 'required',
+                            'TIME_START' => 'required',
+                        ],
+                        [],
+                        [
 
-                        'PRE_WEIGHT' => 'Pre weight',
-                        'PRE_BLOOD_PRESSURE' => 'Pre blood pressure [1]',
-                        'PRE_BLOOD_PRESSURE2' => 'Pre blood pressure [2]',
-                        'PRE_HEART_RATE' => 'Pre heart rate',
-                        'PRE_O2_SATURATION' => 'Pre 02 saturation',
-                        'PRE_TEMPERATURE' => 'Pre temperature',
-                        'TIME_START' => 'Time Start',
-                    ]
-                );
+                            'PRE_WEIGHT' => 'Pre weight',
+                            'PRE_BLOOD_PRESSURE' => 'Pre blood pressure [1]',
+                            'PRE_BLOOD_PRESSURE2' => 'Pre blood pressure [2]',
+                            'PRE_HEART_RATE' => 'Pre heart rate',
+                            'PRE_O2_SATURATION' => 'Pre 02 saturation',
+                            'PRE_TEMPERATURE' => 'Pre temperature',
+                            'TIME_START' => 'Time Start',
+                        ]
+                    );
 
-                // }
+                    // }
 
-                if (empty($this->TIME_START) == false) {
+                    if (empty($this->TIME_START) == false) {
 
-                    if (empty($this->POST_WEIGHT) == false || empty($this->POST_BLOOD_PRESSURE) == false || empty($this->POST_BLOOD_PRESSURE2) == false || empty($this->POST_HEART_RATE) == false || empty($this->POST_O2_SATURATION) == false || empty($this->POST_TEMPERATURE) == false || empty($this->TIME_END) == false) {
+                        if (empty($this->POST_WEIGHT) == false || empty($this->POST_BLOOD_PRESSURE) == false || empty($this->POST_BLOOD_PRESSURE2) == false || empty($this->POST_HEART_RATE) == false || empty($this->POST_O2_SATURATION) == false || empty($this->POST_TEMPERATURE) == false || empty($this->TIME_END) == false) {
 
-                        if ($this->IS_INCOMPLETE == false) {
+                            if ($this->IS_INCOMPLETE == false) {
 
-                            if (empty($this->POST_WEIGHT) || empty($this->POST_BLOOD_PRESSURE) || empty($this->POST_BLOOD_PRESSURE2) || empty($this->POST_HEART_RATE) || empty($this->POST_O2_SATURATION) || empty($this->POST_TEMPERATURE) || empty($this->TIME_END)) {
+                                if (empty($this->POST_WEIGHT) || empty($this->POST_BLOOD_PRESSURE) || empty($this->POST_BLOOD_PRESSURE2) || empty($this->POST_HEART_RATE) || empty($this->POST_O2_SATURATION) || empty($this->POST_TEMPERATURE) || empty($this->TIME_END)) {
 
-                                $this->validate(
-                                    [
-                                        'POST_WEIGHT' => 'required',
-                                        'POST_BLOOD_PRESSURE' => 'required',
-                                        'POST_BLOOD_PRESSURE2' => 'required',
-                                        'POST_HEART_RATE' => 'required',
-                                        'POST_O2_SATURATION' => 'required',
-                                        'POST_TEMPERATURE' => 'required',
-                                        'TIME_END' => 'required',
-                                    ],
-                                    [],
-                                    [
+                                    $this->validate(
+                                        [
+                                            'POST_WEIGHT' => 'required',
+                                            'POST_BLOOD_PRESSURE' => 'required',
+                                            'POST_BLOOD_PRESSURE2' => 'required',
+                                            'POST_HEART_RATE' => 'required',
+                                            'POST_O2_SATURATION' => 'required',
+                                            'POST_TEMPERATURE' => 'required',
+                                            'TIME_END' => 'required',
+                                        ],
+                                        [],
+                                        [
 
-                                        'POST_WEIGHT' => 'Post weight',
-                                        'POST_BLOOD_PRESSURE' => 'Post blood pressure [1]',
-                                        'POST_BLOOD_PRESSURE2' => 'Post blood pressure [2]',
-                                        'POST_HEART_RATE' => 'Post heart rate',
-                                        'POST_O2_SATURATION' => 'Post 02 saturation',
-                                        'POST_TEMPERATURE' => 'Post temperature',
-                                        'TIME_END' => 'Time End',
+                                            'POST_WEIGHT' => 'Post weight',
+                                            'POST_BLOOD_PRESSURE' => 'Post blood pressure [1]',
+                                            'POST_BLOOD_PRESSURE2' => 'Post blood pressure [2]',
+                                            'POST_HEART_RATE' => 'Post heart rate',
+                                            'POST_O2_SATURATION' => 'Post 02 saturation',
+                                            'POST_TEMPERATURE' => 'Post temperature',
+                                            'TIME_END' => 'Time End',
 
-                                    ]
-                                );
+                                        ]
+                                    );
+                                }
                             }
                         }
                     }
@@ -521,44 +523,44 @@ class HemoForm extends Component
             return;
         }
 
+        if ($this->IS_INCOMPLETE == false) {
+            $this->validate(
+                [
+                    'PRE_WEIGHT' => 'required|not_in:0',
+                    'PRE_BLOOD_PRESSURE' => 'required|not_in:0',
+                    'PRE_BLOOD_PRESSURE2' => 'required|not_in:0',
+                    'PRE_HEART_RATE' => 'required|not_in:0',
+                    'PRE_O2_SATURATION' => 'required',
+                    'PRE_TEMPERATURE' => 'required',
+                    'TIME_START' => 'required',
+                    'POST_WEIGHT' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
+                    'POST_BLOOD_PRESSURE' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
+                    'POST_BLOOD_PRESSURE2' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
+                    'POST_HEART_RATE' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
+                    'POST_O2_SATURATION' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
+                    'POST_TEMPERATURE' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
+                    'TIME_END' => 'required',
+                ],
+                [],
+                [
+                    'PRE_WEIGHT' => 'Pre weight',
+                    'PRE_BLOOD_PRESSURE' => 'Pre Blood Pressure[1]',
+                    'PRE_BLOOD_PRESSURE2' => 'Pre Blood Pressure[2]',
+                    'PRE_HEART_RATE' => 'Pre Heart Rate',
+                    'PRE_O2_SATURATION' => 'Pre 02 Saturation',
+                    'PRE_TEMPERATURE' => 'Pre Temperature',
+                    'POST_WEIGHT' => 'Post Weight',
+                    'POST_BLOOD_PRESSURE' => 'Post Blood Pressure[1]',
+                    'POST_BLOOD_PRESSURE2' => 'Post Blood Pressure[2]',
+                    'POST_HEART_RATE' => 'Post Heart Rate',
+                    'POST_O2_SATURATION' => 'Post 02 Saturation',
+                    'POST_TEMPERATURE' => 'Post Temperature',
+                    'TIME_START' => 'Time Start',
+                    'TIME_END' => 'Time End'
 
-        $this->validate(
-            [
-                'PRE_WEIGHT' => 'required|not_in:0',
-                'PRE_BLOOD_PRESSURE' => 'required|not_in:0',
-                'PRE_BLOOD_PRESSURE2' => 'required|not_in:0',
-                'PRE_HEART_RATE' => 'required|not_in:0',
-                'PRE_O2_SATURATION' => 'required',
-                'PRE_TEMPERATURE' => 'required',
-                'TIME_START' => 'required',
-                'POST_WEIGHT' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
-                'POST_BLOOD_PRESSURE' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
-                'POST_BLOOD_PRESSURE2' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
-                'POST_HEART_RATE' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
-                'POST_O2_SATURATION' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
-                'POST_TEMPERATURE' => $this->IS_INCOMPLETE ? 'nullable' : 'required',
-                'TIME_END' => 'required',
-            ],
-            [],
-            [
-                'PRE_WEIGHT' => 'Pre weight',
-                'PRE_BLOOD_PRESSURE' => 'Pre Blood Pressure[1]',
-                'PRE_BLOOD_PRESSURE2' => 'Pre Blood Pressure[2]',
-                'PRE_HEART_RATE' => 'Pre Heart Rate',
-                'PRE_O2_SATURATION' => 'Pre 02 Saturation',
-                'PRE_TEMPERATURE' => 'Pre Temperature',
-                'POST_WEIGHT' => 'Post Weight',
-                'POST_BLOOD_PRESSURE' => 'Post Blood Pressure[1]',
-                'POST_BLOOD_PRESSURE2' => 'Post Blood Pressure[2]',
-                'POST_HEART_RATE' => 'Post Heart Rate',
-                'POST_O2_SATURATION' => 'Post 02 Saturation',
-                'POST_TEMPERATURE' => 'Post Temperature',
-                'TIME_START' => 'Time Start',
-                'TIME_END' => 'Time End'
-
-            ]
-        );
-
+                ]
+            );
+        }
         $this->PostStatus();
     }
     private function PostStatus()
