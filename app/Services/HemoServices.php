@@ -496,7 +496,8 @@ class HemoServices
                 'CVC_CLOTTED_A',
                 'CVC_CLOTTED_V',
                 'AT_LEFT',
-                'EMPLOYEE_ID'
+                'EMPLOYEE_ID',
+                'DRY_WEIGHT'
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->where('hemodialysis.ID', '=', $ID)
@@ -572,7 +573,8 @@ class HemoServices
                     'FLUSHING' => $data->FLUSHING ?? null,
                     'DIALSATE_N' => $data->DIALSATE_N ?? null,
                     'DIALSATE_K' => $data->DIALSATE_K ?? null,
-                    'DIALSATE_C' => $data->DIALSATE_C ?? null
+                    'DIALSATE_C' => $data->DIALSATE_C ?? null,
+                    'DRY_WEIGHT' => $data->DRY_WEIGHT ?? null
                 ]);
         }
     }
@@ -615,8 +617,103 @@ class HemoServices
                 'EMPLOYEE_ID' => $EMPLOYEE_ID > 0 ? $EMPLOYEE_ID : null,
             ]);
     }
-    public function SaveOthers(int $ID, string $SE_DETAILS, string $SO_DETAILS, int $BFR, int $DFR, int $DURATION, string $DIALYZER, string $DIALSATE_N, string $DIALSATE_K, string $DIALSATE_C, bool $DETAILS_USE_NEXT, bool $ORDER_USE_NEXT, string $SE_DETAILS_NEXT, string $HEPARIN, string $REUSE_NO, string $REUSE_NEXT, string $FLUSHING, string $UF_GOAL, bool $DB_STANDARD_HCOA, bool $DB_ACID, bool $SC_MACHINE_TEST, bool $SC_SECURED_CONNECTIONS, bool $SC_SALINE_LINE_DOUBLE_CLAMP, string $SC_CONDUCTIVITY, string $SC_DIALYSATE_TEMP, bool $SC_RESIDUAL_TEST_NEGATIVE, bool $AT_FISTULA, bool $AT_GRAFT, bool $AT_RIGHT, bool $AT_LEFT, bool $B_STRONG, bool $B_WEEK, bool $B_ABSENT, bool $T_STRONG, bool $T_WEAK, bool $T_ABSENT, bool $H_PRESENT, bool $H_ABSENT, string $H_OTHER_NOTES, bool $CVC_SUBCATH, bool $CVC_JUGCATH, bool $CVC_FEMCATCH, bool $CVC_PERMACATH, bool $CVC_RIGHT, bool $CVC_LEFT, bool $CVC_GOOD_FLOW_A, bool $CVC_GOOD_FLOW_V, bool $CVC_W_RESISTANCE_A, bool $CVC_W_RESISTANCE_V, bool $CVC_CLOTTED_A, bool $CVC_CLOTTED_V, bool $PRE_AMBULATORY, bool $PRE_AMBULATORY_W_ASSIT, bool $PRE_WHEEL_CHAIR, bool $PRE_CONSCIOUS, bool $PRE_COHERENT, bool $PRE_DISORIENTED, bool $PRE_DROWSY, bool $PRE_CLEAR, bool $PRE_CRACKLES, bool $PRE_RHONCHI, bool $PRE_WHEEZES, bool $PRE_RALES, bool $PRE_DISTENDED_JUGULAR_VIEW, bool $PRE_ASCITES, bool $PRE_EDEMA, bool $PRE_LOCATION, string $PRE_LOCATION_NOTES, bool $PRE_DEPTH, string $PRE_DEPTH_NOTES, bool $PRE_REGULAR, bool $PRE_IRREGULAR, bool $POST_AMBULATORY, bool $POST_AMBULATORY_W_ASSIT, bool $POST_WHEEL_CHAIR, bool $POST_CONSCIOUS, bool $POST_COHERENT, bool $POST_DISORIENTED, bool $POST_DROWSY, bool $POST_CLEAR, bool $POST_CRACKLES, bool $POST_RHONCHI, bool $POST_WHEEZES, bool $POST_RALES, bool $POST_DISTENDED_JUGULAR_VIEW, bool $POST_ASCITES, bool $POST_EDEMA, bool $POST_LOCATION, string $POST_LOCATION_NOTES, bool $POST_DEPTH, string $POST_DEPTH_NOTES, bool $POST_REGULAR, bool $POST_IRREGULAR, int $MACHINE_NO)
-    {
+    public function SaveOthers(
+        int $ID,
+        string $SE_DETAILS,
+        string $SO_DETAILS,
+        int $BFR,
+        int $DFR,
+        int $DURATION,
+        string $DIALYZER,
+        string $DIALSATE_N,
+        string $DIALSATE_K,
+        string $DIALSATE_C,
+        bool $DETAILS_USE_NEXT,
+        bool $ORDER_USE_NEXT,
+        string $SE_DETAILS_NEXT,
+        string $HEPARIN,
+        string $REUSE_NO,
+        string $REUSE_NEXT,
+        string $FLUSHING,
+        string $UF_GOAL,
+        bool $DB_STANDARD_HCOA,
+        bool $DB_ACID,
+        bool $SC_MACHINE_TEST,
+        bool $SC_SECURED_CONNECTIONS,
+        bool $SC_SALINE_LINE_DOUBLE_CLAMP,
+        string $SC_CONDUCTIVITY,
+        string $SC_DIALYSATE_TEMP,
+        bool $SC_RESIDUAL_TEST_NEGATIVE,
+        bool $AT_FISTULA,
+        bool $AT_GRAFT,
+        bool $AT_RIGHT,
+        bool $AT_LEFT,
+        bool $B_STRONG,
+        bool $B_WEEK,
+        bool $B_ABSENT,
+        bool $T_STRONG,
+        bool $T_WEAK,
+        bool $T_ABSENT,
+        bool $H_PRESENT,
+        bool $H_ABSENT,
+        string $H_OTHER_NOTES,
+        bool $CVC_SUBCATH,
+        bool $CVC_JUGCATH,
+        bool $CVC_FEMCATCH,
+        bool $CVC_PERMACATH,
+        bool $CVC_RIGHT,
+        bool $CVC_LEFT,
+        bool $CVC_GOOD_FLOW_A,
+        bool $CVC_GOOD_FLOW_V,
+        bool $CVC_W_RESISTANCE_A,
+        bool $CVC_W_RESISTANCE_V,
+        bool $CVC_CLOTTED_A,
+        bool $CVC_CLOTTED_V,
+        bool $PRE_AMBULATORY,
+        bool $PRE_AMBULATORY_W_ASSIT,
+        bool $PRE_WHEEL_CHAIR,
+        bool $PRE_CONSCIOUS,
+        bool $PRE_COHERENT,
+        bool $PRE_DISORIENTED,
+        bool $PRE_DROWSY,
+        bool $PRE_CLEAR,
+        bool $PRE_CRACKLES,
+        bool $PRE_RHONCHI,
+        bool $PRE_WHEEZES,
+        bool $PRE_RALES,
+        bool $PRE_DISTENDED_JUGULAR_VIEW,
+        bool $PRE_ASCITES,
+        bool $PRE_EDEMA,
+        bool $PRE_LOCATION,
+        string $PRE_LOCATION_NOTES,
+        bool $PRE_DEPTH,
+        string $PRE_DEPTH_NOTES,
+        bool $PRE_REGULAR,
+        bool $PRE_IRREGULAR,
+        bool $POST_AMBULATORY,
+        bool $POST_AMBULATORY_W_ASSIT,
+        bool $POST_WHEEL_CHAIR,
+        bool $POST_CONSCIOUS,
+        bool $POST_COHERENT,
+        bool $POST_DISORIENTED,
+        bool $POST_DROWSY,
+        bool $POST_CLEAR,
+        bool $POST_CRACKLES,
+        bool $POST_RHONCHI,
+        bool $POST_WHEEZES,
+        bool $POST_RALES,
+        bool $POST_DISTENDED_JUGULAR_VIEW,
+        bool $POST_ASCITES,
+        bool $POST_EDEMA,
+        bool $POST_LOCATION,
+        string $POST_LOCATION_NOTES,
+        bool $POST_DEPTH,
+        string $POST_DEPTH_NOTES,
+        bool $POST_REGULAR,
+        bool $POST_IRREGULAR,
+        int $MACHINE_NO,
+        string $DRY_WEIGHT
+    ) {
         Hemodialysis::where('ID', $ID)
             ->update([
 
@@ -712,8 +809,8 @@ class HemoServices
                 'SC_CONDUCTIVITY' => $SC_CONDUCTIVITY,
                 'SC_DIALYSATE_TEMP' => $SC_DIALYSATE_TEMP,
                 'SC_RESIDUAL_TEST_NEGATIVE' => $SC_RESIDUAL_TEST_NEGATIVE,
-                'MACHINE_NO' => $MACHINE_NO
-
+                'MACHINE_NO' => $MACHINE_NO,
+                'DRY_WEIGHT' => $DRY_WEIGHT
             ]);
     }
     public function UpdatedSpecialOrder(int $ID): bool

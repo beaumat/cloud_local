@@ -61,6 +61,7 @@ class PrintContent extends Component
 
     public string $SE_DETAILS;
     public string $SO_DETAILS;
+   
     public int $BFR;
     public int $DFR;
     public int $DURATION;
@@ -154,7 +155,7 @@ class PrintContent extends Component
     public string $POST_DEPTH_NOTES;
     public bool $POST_REGULAR;
     public bool $POST_IRREGULAR;
-
+    public string $DRY_WEIGHT_VALUE;
     public bool $DRY_WEIGHT = true;
     public $noteList = [];
 
@@ -349,6 +350,7 @@ class PrintContent extends Component
             $this->DIALSATE_N =  $data->DIALSATE_N ?? '';
             $this->DIALSATE_K = $data->DIALSATE_K ?? '';
             $this->DIALSATE_C = $data->DIALSATE_C ?? '';
+            $this->DRY_WEIGHT_VALUE = $data->DRY_WEIGHT ?? '';
             $this->SE_COUNT = 0;
             $this->SE_PARTS = str_split($this->SE_DETAILS, 40);
 

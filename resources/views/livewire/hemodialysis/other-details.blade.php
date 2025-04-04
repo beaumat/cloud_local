@@ -82,6 +82,13 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row">
+                                            <div class="col-6 text-right"> <label class='text-xs '>DRY WEIGHT </label></div>
+                                            <div class="col-6"> <input type='text' class='w-75 text-xs'
+                                                    wire:model='DRY_WEIGHT'
+                                                    @if ($Modify == false) disabled @endif />
+                                            </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-6 text-right"> <label class='text-xs '>BFR </label></div>
                                             <div class="col-6"> <input type='number' class='w-50 text-xs' wire:model='BFR'
                                                     @if ($Modify == false) disabled @endif />

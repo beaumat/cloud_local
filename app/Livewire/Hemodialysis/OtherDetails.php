@@ -115,7 +115,7 @@ class OtherDetails extends Component
     public bool $POST_REGULAR;
     public bool $POST_IRREGULAR;
     public int $MACHINE_NO;
-
+    public string $DRY_WEIGHT;
 
     private $hemoServices;
     public function boot(HemoServices $hemoServices)
@@ -227,6 +227,7 @@ class OtherDetails extends Component
             $this->POST_REGULAR = $data->POST_REGULAR ?? false;
             $this->POST_IRREGULAR = $data->POST_IRREGULAR ?? false;
             $this->MACHINE_NO = $data->MACHINE_NO  ?? 0;
+            $this->DRY_WEIGHT = $data->DRY_WEIGHT ?? '';
         }
     }
     #[On('save-other')]
@@ -331,8 +332,8 @@ class OtherDetails extends Component
                 $this->POST_DEPTH_NOTES,
                 $this->POST_REGULAR,
                 $this->POST_IRREGULAR,
-                $this->MACHINE_NO
-
+                $this->MACHINE_NO,
+                $this->DRY_WEIGHT
             );
             DB::commit();
         } catch (\Throwable $th) {

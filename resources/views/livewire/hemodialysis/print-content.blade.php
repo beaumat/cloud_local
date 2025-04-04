@@ -40,12 +40,14 @@
                 <div class="col-12 top-line left-line right-line">
                     <div class="row font-weight-bold" id="firstfloor">
                         <div class="col-4">NAME:
-                            <label class="text-purple font-weight-bold font-weight-bold text-uppercase">{{ $FULL_NAME }}</label>
+                            <label
+                                class="text-purple font-weight-bold font-weight-bold text-uppercase">{{ $FULL_NAME }}</label>
                         </div>
 
                         <div class="col-2">
                             AGE:
-                            <label class="text-purple font-weight-bold font-weight-bold text-uppercase">{{ $AGE }}</label>
+                            <label
+                                class="text-purple font-weight-bold font-weight-bold text-uppercase">{{ $AGE }}</label>
                         </div>
                         <div class="col-2">NO. OF TREATMENT:
                             <label class="text-purple font-weight-bold font-weight-bold">{{ $NO_OF_TREATMENT }}</label>
@@ -66,10 +68,16 @@
                             <div class="row text-center font-weight-bold">
                                 <div class="col-12 bottom-line-hide">
 
-                                    <p class="up-space down-space"> &nbsp;@if ($DRY_WEIGHT)
-                                            DRY WEIGHT: _________
+                                    <div class="up-space down-space row p-1">
+                                        @if ($DRY_WEIGHT)
+                                            <div class="col-7">
+                                                DRY WEIGHT:
+                                            </div>
+                                            <div class="col-5 bottom-line">
+                                                &nbsp;{{ $DRY_WEIGHT_VALUE }}
+                                            </div>
                                         @endif
-                                    </p>
+                                    </div>
 
                                 </div>
                                 <div class="col-12 bottom-line up-space">
@@ -393,21 +401,24 @@
                                         <div class="col-12 text-center">
                                             <div class="row text-xs mt-3">
                                                 <div class="col-3 text-right"> Na :</div>
-                                                <div class="col-3 bottom-line2 text-purple font-weight-bold">&nbsp;{{ $DIALSATE_N }}
+                                                <div class="col-3 bottom-line2 text-purple font-weight-bold">
+                                                    &nbsp;{{ $DIALSATE_N }}
                                                 </div>
                                                 <div class="col-3">meq/L </div>
                                             </div>
 
                                             <div class="row text-xs ">
                                                 <div class="col-3 text-right"> K+ :</div>
-                                                <div class="col-3 bottom-line2 text-purple font-weight-bold">&nbsp;{{ $DIALSATE_K }}
+                                                <div class="col-3 bottom-line2 text-purple font-weight-bold">
+                                                    &nbsp;{{ $DIALSATE_K }}
                                                 </div>
                                                 <div class="col-3">meq/L </div>
                                             </div>
 
                                             <div class="row text-xs ">
                                                 <div class="col-3 text-right"> Ca+ :</div>
-                                                <div class="col-3 bottom-line2 text-purple font-weight-bold">&nbsp;{{ $DIALSATE_C }}
+                                                <div class="col-3 bottom-line2 text-purple font-weight-bold">
+                                                    &nbsp;{{ $DIALSATE_C }}
                                                 </div>
                                                 <div class="col-3">meq/L </div>
                                             </div>
@@ -425,7 +436,8 @@
                             <label class="text-sm">NEPHROLOGIST:</label>
                             <div class="form-group px-3">
                                 <div class="row ">
-                                    <div class="col-12 bottom-line2 text-uppercase text-center text-purple font-weight-bold">
+                                    <div
+                                        class="col-12 bottom-line2 text-uppercase text-center text-purple font-weight-bold">
                                         &nbsp;{{ $NEPRHO_NAME }}
                                     </div>
                                     <div class="col-12  text-center">
@@ -454,7 +466,8 @@
                             <label class="text-sm">DIAGNOSIS:</label>
                             <div class="form-group px-3">
                                 <div class="row">
-                                    <div class="col-12 bottom-line2 text-uppercase text-center text-purple font-weight-bold">
+                                    <div
+                                        class="col-12 bottom-line2 text-uppercase text-center text-purple font-weight-bold">
                                         &nbsp; {{ $DIAGNOSIS }}
                                     </div>
                                     <div class="col-12  text-center">
@@ -820,7 +833,8 @@
                                             SIGNATURE:
                                         </div>
                                         <div class="col-6 text-left bottom-line2">
-                                            <span class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span>
+                                            <span
+                                                class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span>
                                         </div>
 
                                     </div>
@@ -981,7 +995,8 @@
                                             SIGNATURE:
                                         </div>
                                         <div class="col-6 text-left bottom-line2">
-                                            <span class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span>
+                                            <span
+                                                class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span>
                                         </div>
 
                                     </div>
@@ -1142,7 +1157,8 @@
                                             <b>GIVEN&nbsp;BY: </b>
                                         </div>
                                         <div class="col-8 text-sm text-left bottom-line2">
-                                            <span class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span>
+                                            <span
+                                                class="text-purple font-weight-bold">{{ $EMPLOYEE_NAME }}&nbsp;</span>
                                         </div>
                                     </div>
                                 </div>
