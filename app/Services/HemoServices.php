@@ -543,6 +543,7 @@ class HemoServices
             ->where('DATE', '<', $DATE)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->where('ID', '<>', $HEMO_ID)
+            ->where('STATUS_ID', '=', '2')
             ->orderBy('DATE', 'desc')
             ->first();
 
@@ -1615,7 +1616,7 @@ class HemoServices
             ->where('DATE', '<=', $DATE) // Add a condition to filter by year
             ->whereBetween('STATUS_ID', [1, 2])
             ->count();
-     
+
 
         $sc = (int) PhilhealthItemAdjustment::where('PATIENT_ID', '=', $CUSTOMER_ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
