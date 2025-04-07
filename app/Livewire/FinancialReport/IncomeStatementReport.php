@@ -85,13 +85,12 @@ class IncomeStatementReport extends Component
 
     public function export()
     {
-        if (!$this->dataList) {
-            session()->flash('error', 'Please generate first.');
-            return;
+        if ($this->isDate) {
+            $this->dispatch('income-date-range-export', result: ['DATE_FROM' => $this->DATE_FROM, 'DATE_TO' => $this->DATE_TO, 'LOCATION_ID' => $this->LOCATION_ID]);
+        } else {
+            $this->dispatch('income-monthly-export', result: ['YEAR' => $this->YEAR, 'LOCATION_ID' => $this->LOCATION_ID]);
         }
-        return Excel::download(new IncomeStatementExport(
-            $this->dataList
-        ), 'income-statement-export.xlsx');
+
     }
     public function render()
     {

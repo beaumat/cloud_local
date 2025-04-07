@@ -2,10 +2,12 @@
 
 namespace App\Livewire\IncomeStatement;
 
+use App\Exports\IncomeStatementMonthlyExport;
 use App\Services\FinancialStatementServices;
 use App\Services\NumberServices;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class IncomeStatementMonthly extends Component
 {
@@ -31,7 +33,7 @@ class IncomeStatementMonthly extends Component
         $this->LOCATION_ID = (int) $result['LOCATION_ID'];
         $this->dataList = [];
 
-        $revenueList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([10], $this->YEAR, $this->LOCATION_ID, true,$this->isRun, $this->isFocus);
+        $revenueList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([10], $this->YEAR, $this->LOCATION_ID, true, $this->isRun, $this->isFocus);
         $r = $this->SetData($revenueList, "Trading Income");
 
         $costList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([11], $this->YEAR, $this->LOCATION_ID, false, $this->isRun, $this->isFocus);
@@ -72,7 +74,7 @@ class IncomeStatementMonthly extends Component
         );
 
 
-        $otherincome = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([13], $this->YEAR, $this->LOCATION_ID, true,$this->isRun, $this->isFocus);
+        $otherincome = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([13], $this->YEAR, $this->LOCATION_ID, true, $this->isRun, $this->isFocus);
         $i = $this->SetData($otherincome, "");
 
         $expense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([12], $this->YEAR, $this->LOCATION_ID, false, $this->isRun, $this->isFocus);
@@ -113,7 +115,7 @@ class IncomeStatementMonthly extends Component
 
 
 
-        $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([14], $this->YEAR, $this->LOCATION_ID, true,$this->isRun,$this->isFocus);
+        $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([14], $this->YEAR, $this->LOCATION_ID, true, $this->isRun, $this->isFocus);
         $ex = $this->SetData($otherExpense, "");
 
         // NET profit
@@ -131,7 +133,7 @@ class IncomeStatementMonthly extends Component
         $NET_DEC = $OP_DEC + $i['DEC'] - $ex['DEC'];
         $NET_TOTAL = $OP_TOTAL + $i['TOTAL'] - $ex['TOTAL'];
 
-     
+
 
 
         $this->dataList[] = $this->getInsert(
@@ -407,6 +409,14 @@ class IncomeStatementMonthly extends Component
     {
 
         $this->dispatch('open-income-account-details', result: ['ACCOUNT_ID' => $ACCOUNT_ID, 'MONTH' => $MONTH, 'YEAR' => $this->YEAR, 'LOCATION_ID' => $this->LOCATION_ID]);
+    }
+
+    #[On('income-monthly-export')]
+    public function exporting()
+    {
+        return Excel::download(new IncomeStatementMonthlyExport(
+            $this->dataList
+        ), "income-statement-monthly-$this->YEAR.xlsx");
     }
     public function render()
     {

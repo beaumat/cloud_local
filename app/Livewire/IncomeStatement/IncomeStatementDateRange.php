@@ -2,11 +2,13 @@
 
 namespace App\Livewire\IncomeStatement;
 
+use App\Exports\IncomeStatementExport;
 use App\Services\FinancialStatementServices;
 use App\Services\NumberServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class IncomeStatementDateRange extends Component
 {
@@ -62,7 +64,13 @@ class IncomeStatementDateRange extends Component
         $this->dataList[] = $this->getInsert( 0, 'Net Proft ', 'grand', $NET_TOTAL != 0 ? $this->numberServices->AcctFormat($NET_TOTAL) : '-' );
 
     }
-
+    #[On('income-date-range-export')]
+    public function exporting() {
+        
+        return Excel::download(new IncomeStatementExport(
+            $this->dataList
+        ), 'income-statement-export.xlsx');
+    }
     private function getInsert(int $ID, string $NAME, string $TYPE, string $TOTAL = ''): array
     {
 

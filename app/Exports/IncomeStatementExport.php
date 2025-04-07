@@ -23,15 +23,13 @@ class IncomeStatementExport implements FromCollection, ShouldAutoSize
 
         $headers = [
             'ACCOUNT'    => 'ACCOUNT',
-            'AMOUNT'     => 'AMOUNT',
             'TOTAL'      => 'TOTAL'
         ];
         $finalData[] = array_values($headers);
 
         foreach ($this->dataList as $list) {
             $rowData = [
-                'ACCOUNT'  => $list['ACCOUNT'],
-                'AMOUNT'   => $list['AMOUNT'],
+                'ACCOUNT'  => $list['ACCOUNT_NAME'],
                 'TOTAL'    => $list['TOTAL'],
             ];
 

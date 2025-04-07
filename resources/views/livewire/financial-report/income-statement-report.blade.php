@@ -39,8 +39,7 @@
                                         <div class="form-group">
                                             <button class="btn btn-danger btn-xs w-25"
                                                 wire:click='generate()'>Generate</button>
-                                            <button class="btn btn-success btn-xs w-25"
-                                                wire:click='export()'>Export</button>
+
                                         </div>
                                     </div>
                                 </div>
@@ -59,7 +58,7 @@
 
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
-                                            <button class="btn btn-danger btn-xs w-25"
+                                            <button class="btn btn-warning btn-xs w-25"
                                                 wire:click='generateYear()'>Generate</button>
 
                                         </div>
@@ -72,19 +71,28 @@
 
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="mt-0">
-                                            <label class="text-xs ">Location:</label>
-                                            <select
-                                                @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
-                                                name="location" wire:model.live='LOCATION_ID'
-                                                class="form-control form-control-sm text-xs ">
-                                                <option value="0"> All Location</option>
-                                                @foreach ($locationList as $item)
-                                                    <option value="{{ $item->ID }}"> {{ $item->NAME }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="mt-0">
+                                                    <label class="text-xs ">Location:</label>
+                                                    <select
+                                                        @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                        name="location" wire:model.live='LOCATION_ID'
+                                                        class="form-control form-control-sm text-xs ">
+                                                        <option value="0"> All Location</option>
+                                                        @foreach ($locationList as $item)
+                                                            <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <button class="btn btn-success btn-xs w-100"
+                                                    wire:click='export()'>Export</button>
+                                            </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>

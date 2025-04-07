@@ -18,6 +18,12 @@ class NumberServices
 
         return sprintf('%.2f', $AMOUNT);
     }
+    public static function Decimal2Only(string $formatted): float {
+        $number = (float) str_replace(',', '', $formatted);
+        
+        return $number;
+    
+    }
     public function doubleNumber($Num)
     {
         return (float) str_replace(',', '', $Num);
