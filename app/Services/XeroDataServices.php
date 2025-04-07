@@ -7,6 +7,11 @@ use App\Models\XeroData;
 class XeroDataServices
 {
 
+    public function __construct() {
+
+    }
+
+
 
     public function viewData(int $locationId, int $year = 0, int $month = 0)
     {
@@ -23,4 +28,9 @@ class XeroDataServices
         return $result;
 
     }
+
+    public function RunData() {
+            
+    }
+
 }
