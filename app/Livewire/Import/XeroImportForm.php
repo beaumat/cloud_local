@@ -56,6 +56,9 @@ class XeroImportForm extends Component
     {
 
     }
+    public function GetReferenceEntry(string $REF) {
+        
+    }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();

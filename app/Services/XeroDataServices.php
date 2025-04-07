@@ -7,7 +7,8 @@ use App\Models\XeroData;
 class XeroDataServices
 {
 
-    public function __construct() {
+    public function __construct()
+    {
 
     }
 
@@ -25,12 +26,28 @@ class XeroDataServices
                 $query->whereMonth('DATE', $month);
             })
             ->get();
+
         return $result;
 
     }
+    public function callReference(string $ref)
+    {
+        $result = XeroData::query()
+            ->where('REFERENCE','=', $ref)
+            ->orderBy('DATE')
+            ->orderBy('SOURCE_TYPE')
+            ->orderBy('REFERENCE')
+            ->get();
 
-    public function RunData() {
-            
+        foreach ($result as $item) {
+
+        }
+    }
+    public function RunData($data)
+    {
+
+
+
     }
 
 }
