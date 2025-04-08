@@ -91,7 +91,7 @@
                                 <div class="col-7 h5 text-center bottom-line">
                                     <strong>&nbsp; {{ $USER_NAME }}</strong>
                                 </div>
-                                <div class="col-7 text-center "><i>Prepered By :</i></div>
+                                <div class="col-7 text-center "><i>Prepared By :</i></div>
                             </div>
                         </div>
                         <div class="col-4">
