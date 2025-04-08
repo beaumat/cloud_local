@@ -100,7 +100,7 @@
                                 <div class="col-12 text-center"><i>Received By:</i></div>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-5">
                             <div class="form-group row  mt-4">
                                 <div class="col-7 h5 text-left bottom-line">
                                     <strong class="" style="position:absolute; width:250px;">
