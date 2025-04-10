@@ -30,6 +30,20 @@ class XeroDataServices
         return $result;
 
     }
+    public function viewDataPerGroupReference(int $locationId, int $year = 0, int $month = 0) {
+        $result = XeroData::where('LOCATION_ID', '=', $locationId)
+        ->where('POSTED', '=', 0)
+        ->when($year > 0, function ($query) use (&$year) {
+            $query->whereYear('DATE', $year);
+        })
+        ->when($month > 0, function ($query) use (&$month) {
+            $query->whereMonth('DATE', $month);
+        })
+        ->groupBy(['REFERENCE','DATE','SOURCE_TYPE'])
+        ->get();
+
+    return $result;
+    }
     public function callReference(string $ref)
     {
         $result = XeroData::query()
@@ -39,9 +53,7 @@ class XeroDataServices
             ->orderBy('REFERENCE')
             ->get();
 
-        foreach ($result as $item) {
-
-        }
+        return $result;
     }
     public function RunData($data)
     {

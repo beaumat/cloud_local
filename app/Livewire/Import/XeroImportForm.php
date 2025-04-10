@@ -3,6 +3,7 @@
 namespace App\Livewire\Import;
 
 use App\Imports\ExcelDataImport;
+use App\Services\BillingServices;
 use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\XeroDataServices;
@@ -32,13 +33,17 @@ class XeroImportForm extends Component
     private $locationServices;
     private $xeroDataServices;
     private $dateServices;
-    public function boot(LocationServices $locationServices, XeroDataServices $xeroDataServices, DateServices $dateServices)
+
+
+    private $billingServices;
+    public function boot(LocationServices $locationServices, XeroDataServices $xeroDataServices, DateServices $dateServices,BillingServices $billingServices)
     {
         $this->locationServices = $locationServices;
         $this->xeroDataServices = $xeroDataServices;
         $this->dateServices = $dateServices;
+        $this->billingServices = $billingServices;
     }
-
+    
     public function generate()
     {
 
@@ -54,11 +59,15 @@ class XeroImportForm extends Component
     }
     public function makeEntry()
     {
-
-    }
-    public function GetReferenceEntry(string $REF) {
         
     }
+    public function GetReferenceEntry(string $REF) {
+       $data = $this->xeroDataServices->callReference($REF);
+        if($data) {
+
+        }
+
+    }                   
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
