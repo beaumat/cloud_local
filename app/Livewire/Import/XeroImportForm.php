@@ -63,9 +63,10 @@ class XeroImportForm extends Component
     }
     public function GetReferenceEntry(string $REF) {
        $data = $this->xeroDataServices->callReference($REF);
-        if($data) {
-
-        }
+        
+       foreach($data as $list) {
+            
+       }
 
     }                   
     public function mount()
