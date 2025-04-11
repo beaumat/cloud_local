@@ -20,7 +20,7 @@ class UserServices
     {
         if (Auth::user()->trans_date == null) {
 
-            return  $this->dateServices->NowDate();
+            return $this->dateServices->NowDate();
         }
 
         return Auth::user()->trans_date;
@@ -39,7 +39,7 @@ class UserServices
 
         $locId = Auth::user()->location_id;
 
-        return intval($locId) > 0 ? (int)$locId : $this->systemSetting->GetValue('DefaultLocationId');
+        return intval($locId) > 0 ? (int) $locId : $this->systemSetting->GetValue('DefaultLocationId');
     }
     public function UserId(): int
     {
@@ -49,17 +49,17 @@ class UserServices
     {
 
         $user = User::create([
-            'name'              => $Username,
-            'email'             => null,
+            'name' => $Username,
+            'email' => null,
             'email_verified_at' => now(),
-            'password'          => Hash::make($Password),
-            'remember_token'    => Str::random(10),
-            'contact_id'        => $Contact_id ? $Contact_id : null,
-            'inactive'          => $Inactive,
-            'location_id'       => $Location_id > 0 ? $Location_id : 0,
-            'trans_date'        => $trans_date == '' ? null : $trans_date,
-            'locked_location'   => $locked_location,
-            'date_enabled'      => $date_enabled
+            'password' => Hash::make($Password),
+            'remember_token' => Str::random(10),
+            'contact_id' => $Contact_id ? $Contact_id : null,
+            'inactive' => $Inactive,
+            'location_id' => $Location_id > 0 ? $Location_id : 0,
+            'trans_date' => $trans_date == '' ? null : $trans_date,
+            'locked_location' => $locked_location,
+            'date_enabled' => $date_enabled
         ]);
 
         return $user->id;
@@ -72,14 +72,14 @@ class UserServices
     {
         if ($Password) {
             User::where('id', $id)->update([
-                'name'              => $Username,
-                'password'          => Hash::make($Password),
-                'contact_id'        => $Contact_id ? $Contact_id : null,
-                'inactive'          => $Inactive,
-                'location_id'       => $Location_id > 0 ? $Location_id : 0,
-                'trans_date'        => $trans_date == '' ? null : $trans_date,
-                'locked_location'   => $locked_location,
-                'date_enabled'      => $date_enabled
+                'name' => $Username,
+                'password' => Hash::make($Password),
+                'contact_id' => $Contact_id ? $Contact_id : null,
+                'inactive' => $Inactive,
+                'location_id' => $Location_id > 0 ? $Location_id : 0,
+                'trans_date' => $trans_date == '' ? null : $trans_date,
+                'locked_location' => $locked_location,
+                'date_enabled' => $date_enabled
             ]);
 
             return;
@@ -87,13 +87,13 @@ class UserServices
 
         User::where('id', $id)
             ->update([
-                'name'              => $Username,
-                'contact_id'        => $Contact_id ? $Contact_id : null,
-                'inactive'          => $Inactive,
-                'location_id'       => $Location_id > 0 ? $Location_id : 0,
-                'trans_date'        => $trans_date == '' ? null : $trans_date,
-                'locked_location'   => $locked_location,
-                'date_enabled'      => $date_enabled
+                'name' => $Username,
+                'contact_id' => $Contact_id ? $Contact_id : null,
+                'inactive' => $Inactive,
+                'location_id' => $Location_id > 0 ? $Location_id : 0,
+                'trans_date' => $trans_date == '' ? null : $trans_date,
+                'locked_location' => $locked_location,
+                'date_enabled' => $date_enabled
             ]);
     }
     public function IsPasswordCorrect(int $userID, string $Password): bool
@@ -153,7 +153,7 @@ class UserServices
             ->orderBy('users.id', 'asc')
             ->get();
 
-        return   $result;
+        return $result;
     }
 
     public function SwapLocation(int $LOCATION_ID)
@@ -167,5 +167,16 @@ class UserServices
             ->update([
                 'location_id' => $LOCATION_ID
             ]);
+    }
+
+    public function UserListByLocation(int $LOCATION_ID)
+    {
+        $result = User::query()
+            ->select(['contact.ID', 'contact.NAME'])
+            ->join('contact', 'contact.ID', '=', 'users.contact_id')
+            ->where('users.location_id', '=', $LOCATION_ID)
+            ->get();
+
+        return $result;
     }
 }
