@@ -245,4 +245,11 @@ class LocationServices
                 'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null
             ]);
     }
+    public function UpdatePhicIncharge(int $ID, int $PHIC_INCHARGE_ID)
+    {
+        Locations::where('ID', '=', $ID)
+            ->update([
+                'PHIC_INCHARGE2_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null
+            ]);
+    }
 }

@@ -18,9 +18,11 @@ class AgreementFormConforme extends Component
     public string $PATIENT_REP_NAME;
     public int $HD_FACILITY_REP_ID;
     public string $PHIC_INCHARGE_NAME;
+    public int $PHIC_INCHARGE_ID;
     public int $LOCATION_ID;
     public int $PATIENT_ID;
     public $empList = [];
+    public $phicList = [];
     private $contactServices;
     private $locationServices;
     private $hemoServices;
@@ -52,12 +54,18 @@ class AgreementFormConforme extends Component
 
             $loc = $this->locationServices->get($this->LOCATION_ID);
             if ($loc) {
-                $PHIC_INCHARGE_ID = (int) $loc->PHIC_INCHARGE_ID > 0 ? $loc->PHIC_INCHARGE_ID : Auth()->user()->contact_id;
-                $this->PHIC_INCHARGE_NAME = $this->contactServices->getName($PHIC_INCHARGE_ID);
+                $this->PHIC_INCHARGE_ID = (int) $loc->PHIC_INCHARGE2_ID > 0 ? $loc->PHIC_INCHARGE2_ID : 0;
+                $this->phicList = $this->userServices->UserListByLocation($this->LOCATION_ID);
+
+                // $this->PHIC_INCHARGE_NAME = $this->contactServices->getName($PHIC_INCHARGE_ID);
                 $this->HD_FACILITY_REP_ID = $loc->HD_FACILITY_REP_ID ?? 0;
             }
             $this->empList = $this->contactServices->getList(2);
+         
         }
+    }
+    public function updatedPHICINCHARGEID () {
+        $this->locationServices->UpdatePhicIncharge($this->LOCATION_ID, $this->PHIC_INCHARGE_ID);
     }
     public function updatedHDFACILITYREPID()
     {

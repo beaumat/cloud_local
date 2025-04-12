@@ -1,9 +1,12 @@
 <div>
     <div class="form-group">
-        PHIC INCHARGE is <b class="text-primary">{{ $PHIC_INCHARGE_NAME }}</b>
+      
 
 
-        
+
+        <livewire:select-option name="PHIC_INCHARGE_ID" titleName="Philhealth In-charge" :options="$phicList"
+            :zero="true" wire:model.live='PHIC_INCHARGE_ID' :vertical="false" :withLabel="true"
+            isDisabled="{{ false }}" />
     </div>
     <div class="form-group">
         <livewire:select-option name="HD_FACILITY_REP_ID" titleName="HD Facility Representative" :options="$empList"
