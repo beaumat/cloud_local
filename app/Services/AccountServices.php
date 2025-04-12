@@ -71,7 +71,7 @@ class AccountServices
     }
     public function getIncome()
     {
-        return Accounts::whereIn('TYPE', ['10', '13'])
+        return Accounts::whereIn('TYPE', ['7','8','10', '13'])
             ->where('INACTIVE', '=', '0')
             ->orderBy('NAME', 'asc')
             ->get();

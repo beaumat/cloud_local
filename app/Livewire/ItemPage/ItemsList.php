@@ -66,7 +66,7 @@ class ItemsList extends Component
     public function render()
     {
 
-        $items = $this->itemServices->Search($this->search, $this->perPage, $this->locationId);
+        $items = $this->itemServices->search($this->search, $this->perPage, $this->locationId);
 
         return view('livewire.item-page.items-list', ['items' => $items]);
     }
